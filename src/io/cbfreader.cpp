@@ -7,7 +7,7 @@
 
 //Implementation of the class CBFReader
 
-#include "cbf.hpp"
+#include "cbfreader.hpp"
 #include "strutils.hpp"
 #include "../exceptions.hpp"
 
@@ -94,6 +94,8 @@ void CBFReader::read(){
             //algorithm used. However, we do not have to make this
             //decision by ourself - the header object will act as a
             //factory for the reader
+
+
 
         }else{
             //if there are no other things to do we add the

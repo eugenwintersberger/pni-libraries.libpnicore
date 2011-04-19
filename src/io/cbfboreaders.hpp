@@ -65,17 +65,31 @@ template<typename T> CBFBinReaderByteOffset<T>::read(std::ifstream &stream){
         	_data[ecnt] += (char)buffer;
         	//now we have to increment the element counter
         	ecnt ++;
-
-
+        	if(ecnt>=nelements_) break;
+        	_data[ecnt] = _data[ecnt-1];
+        	//reset the buffer so that all bits are set to 0
         	buffer = 0;
-        	ecnt++;
         	continue;
         }
 
-        if(((unsigned short)buffer)!=8x8000){
-        	_data[ecnt] = buffer;
+        if(((unsigned short)buffer)!=0x8000){
+        	_data[ecnt] = (short)buffer;
+        	//increase the element counter
+        	ecnt ++;
+        	if(ecnt>=nelements_) break;
+        	_data[ecnt] = _data[ecnt-1];
+        	//reset the buffer so that all bits are set to 0
         	buffer = 0;
-        	ecnt++;
+        	continue;
+        }
+
+        if(((unsigned int)buffer)!=0x800000){
+        	_data[ecnt] = (int)buffer;
+        	//increase the element counter
+        	ecnt ++;
+        	if(ecnt>=nelements_) break;
+        	_data[ecnt] = _data[ecnt-1];
+        	buffer = 0;
         	continue;
         }
 
