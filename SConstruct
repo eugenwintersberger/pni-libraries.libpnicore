@@ -1,5 +1,7 @@
 env = Environment()
 
+debug = ARGUMENTS.get("DEBUG",0)
+
 #set the proper compiler
 env.Replace(CXX = "g++")
 
@@ -20,7 +22,10 @@ opt_env.Append(CXXFLAGS = ["-O2"])
 dbg_env = env.Clone()
 dbg_env.Append(CXXFLAGS = ["-O0","-g"])
 
-build_env = opt_env.Clone()
+if debug:
+    build_env = dbg_env.Clone()
+else:
+    build_env = opt_env.Clone()
 
 Export("build_env")
 

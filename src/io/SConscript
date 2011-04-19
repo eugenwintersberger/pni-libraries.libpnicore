@@ -1,0 +1,7 @@
+Import("build_env")
+
+sources = ["cbfreader.cpp","strutils.cpp","cifbinheader.cpp",
+           "pcifbinheader.cpp","cbfbinreader.cpp"]
+
+objects = build_env.SharedObject(sources)
+Return("objects")

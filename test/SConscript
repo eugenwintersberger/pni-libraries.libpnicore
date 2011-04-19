@@ -14,5 +14,6 @@ sources_list.extend(["libpniutils_array.cpp"])
 sources_list.extend(["libpniutils_arrayshape.cpp"])
 
 pniutils_test = test_env.Program("pniutilstest",sources_list)
-test_env.Alias("test",[pniutils_test])
-test_env.Alias("all",[pniutils_test])
+cbfreader_test = test_env.Program("cbf_reader_test",["cbf_reader_test.cpp"])
+test_env.Alias("test",[pniutils_test,cbfreader_test])
+test_env.Alias("all",[pniutils_test,cbfreader_test])

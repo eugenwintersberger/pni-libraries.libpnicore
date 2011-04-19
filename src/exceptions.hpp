@@ -170,5 +170,29 @@ public:
 	virtual ~IndexError(){}
 };
 
+//! file error
+
+//! Raised typically in case of File IO problems
+class FileError:public Exception{
+public:
+	//! default constructor
+	FileError():Exception("FileError"){}
+	//! constructor
+
+	//! \param w name or ID of the exception issuer
+	//! \param d description of the exception
+	FileError(const std::string &w,const std::string &d)
+	:Exception("FileError",w,d){}
+	//! constructor
+
+	//! \param w name or ID of the exception issuer
+	//! \param d description of the exception
+	FileError(const char *w,const char *d)
+	:Exception("FileError",w,d){}
+	//! destructor
+	virtual ~FileError(){}
+
+};
+
 
 #endif
