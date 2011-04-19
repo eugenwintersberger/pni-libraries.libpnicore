@@ -116,18 +116,6 @@ class CBFBinReader{
 
 };
 
-template<typename T> class CBFBinReaderByteOffset:public CBFBinReader{
-    private:
-        T *data_;
-    public:
-        CBFBinReaderByteOffset():CBFBinReader(){}
-        CBFBinReaderByteOffset(unsigned long);
-
-        const T* getData(); //returns the data
-
-
-
-};
 
 
 
