@@ -1,0 +1,15 @@
+Import("build_env")
+
+test_env = build_env.Clone()
+
+test_env.Append(LIBPATH=["../src/"])
+test_env.Append(LIBS=["pniutils","cppunit"])
+test_env.Append(CPPPATH=["../src/"])
+
+sources_list = ["pniutilstest.cpp"]
+sources_list.extend(["libpniutils_datavalue.cpp"])
+sources_list.extend(["libpniutils_scalar.cpp"])
+
+pniutils_test = test_env.Program("pniutilstest",sources_list)
+test_env.Alias("test",[pniutils_test])
+test_env.Alias("all",[pniutils_test])

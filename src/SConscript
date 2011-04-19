@@ -1,0 +1,12 @@
+Import("build_env")
+
+source_list = ["datavalue.cpp","array.cpp",
+               "arrayshape.cpp","scalar.cpp","exceptions.cpp"]
+
+libpniutils=build_env.SharedLibrary("pniutils",source_list)
+build_env.Alias("all",[libpniutils])
+build_env.Alias("library",[libpniutils])
+
+libpniutils_inst = build_env.Install("install/lib/",[libpniutils])
+incpniutils_inst = build_env.Install("install/include/",Glob("*.hpp"))
+build_env.Alias("install",[libpniutils_inst,incpniutils_inst])
