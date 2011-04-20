@@ -3,10 +3,12 @@
 #ifndef __ARRAY_HPP__
 #define __ARRAY_HPP__
 
+#include<iostream>
 #include<utility>
 #include<complex>
 #include<cstdarg>
 #include<cstdio>
+#include<typeinfo>
 
 #include "buffer.hpp"
 #include "arrayshape.hpp"
@@ -34,6 +36,7 @@ template<typename T> Array<T> operator/ (const T&, const Array<T>&);
 
 template<typename T> bool operator== (const Array<T> &,const Array<T> &);
 template<typename T> bool operator!= (const Array<T> &,const Array<T> &);
+template<typename T> std::ostream &operator<< (std::ostream &o,const Array<T> &a);
 
 //! multi-dimensional array class
 
@@ -143,9 +146,20 @@ template<typename T> class Array:public DataValue{
         //operators for comparison
         friend bool operator== <> (const Array<T> &b1,const Array<T> &b2);
         friend bool operator!= <> (const Array<T> &b1,const Array<T> &b2);
+        friend std::ostream &operator<< <> (std::ostream &o,const Array<T> &a);
 
         
 };
+
+template<typename T> std::ostream &operator<< (std::ostream &o,const Array<T> &a){
+	o<<"Array of shape (";
+	for(unsigned int i=0;i<a._shape->getRank();i++){
+		o<<(*a._shape)[i];
+		if(i<a._shape->getRank()-1) o<<", ";
+	}
+	o<<") "<<typeid(a).name();
+	return o;
+}
 
 template<typename T> bool operator== (const Array<T> &b1,const Array<T> &b2){
 	if((b1._shape==b2._shape)&&(b1._data==b2._data)){

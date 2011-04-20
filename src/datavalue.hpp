@@ -9,6 +9,8 @@
 #include<string>
 #include<vector>
 
+#include "buffer.hpp"
+
 typedef std::string String;
 
 #define DEFAULT_VALUE_DESCRIPTION String("none")
@@ -30,13 +32,20 @@ class DataValue{
         virtual ~DataValue(){}  //destructor - default
         
         void setUnit(String value) { _unit = value;}
-        const String &getUnit() { return _unit;}
+        void setUnit(const char *v) { _unit = std::string(v);}
+        const String &getUnit() const { return _unit;}
         
         void setName(String value) { _name = value;}
-        const String& getName() { return _name;}
+        void setName(const char *v) { _name = std::string(v);}
+        const String& getName() const { return _name;}
         
         const String& getDescription() const { return _description; }
         void setDescription(const String &desc) { _description = desc; }
+        void setDescription(const char *v) { _description = std::string(v);}
+
+        virtual AbstractBuffer *getBuffer() { return NULL;}
+
+        friend std::ostream &operator<<(std::ostream &o,const DataValue &v);
 };
 
 #endif

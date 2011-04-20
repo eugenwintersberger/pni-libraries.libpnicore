@@ -15,6 +15,9 @@ std::string strip(std::string &s,const char *begrem,const char *endrem){
     start = s.find_first_not_of(begrem);
     stop = s.find_last_not_of(endrem);
 
+    //return an empty substring
+    if(stop<=start) return std::string("");
+
     return s.substr(start,(stop-start));
 }
 

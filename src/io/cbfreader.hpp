@@ -15,6 +15,7 @@
 #include<cstdlib>
 
 #include "cbfheader.hpp"
+#include "../datavalue.hpp"
 
 #define CIF_BINARY_SECTION "--CIF-BINARY-FORMAT-SECTION--"
 #define CIF_HEADER_CONVENTION "_array_data.header_convention"
@@ -23,48 +24,20 @@
 
 class CBFReader{
     private:
-        std::ifstream *stream_;
-        std::string header_convention_;
-        char buffer_[1024];
-        CIFBinaryHeader binheader;
+        std::ifstream *stream_;			 //!< input stream from which to read data
+        std::string header_convention_;  //!< string defining the header convention
+        char buffer_[1024];              //!< buffer for what ever purpose
+        CIFBinaryHeader *_binheader;       //!< header object
 
     public:
-        CBFReader(){ stream_=NULL;}
+        CBFReader(){ stream_=NULL; _binheader=NULL;}
         CBFReader(const char* filename);
         ~CBFReader();
 
         void setFileName(const char* filename);
-        void read();
-
-
+        DataValue *read();
 };
 
-
-//! binary CBF data reader
-
-//! This is the base class for all binary CBF reades. The aim of all this
-//! classes is to decode the binary data stream in a CBF file and
-//! store it to a buffer for further processing.
-class CBFBinReader{
-    protected:
-        unsigned long nelements_;   //!< total number of elements to read
-        unsigned int  elemsize_;    //!< size of each element in bytes (depends on the type)
-
-    public:
-        //! default constructor
-        CBFBinReader();
-        //! copy constructor
-        CBFBinReader(const CBFBinReader &);
-        //! constructor
-
-        //! \param n number of elements to read from the stream.
-        CBFBinReader(unsigned long n);
-        virtual ~CBFBinReader();
-
-        void freeBuffer(); //free the data buffer
-        void allocateBuffer(); //allocate data buffer
-
-};
 
 
 #endif /* CBFREADER_HPP_ */

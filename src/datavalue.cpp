@@ -39,3 +39,9 @@ DataValue::DataValue(const String &n,const String &u,const String &d){
     _unit = u;
     _description = d;
 }
+
+std::ostream &operator<<(std::ostream &o,const DataValue &v){
+	o<<"Data value: "<<v.getName()<<" in units of "<<v.getUnit()<<std::endl;
+	o<<"Description: "<<v.getDescription();
+	return o;
+}

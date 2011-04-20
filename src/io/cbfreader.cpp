@@ -10,6 +10,7 @@
 #include "cbfreader.hpp"
 #include "strutils.hpp"
 #include "../exceptions.hpp"
+#include "../datavalue.hpp"
 
 CBFReader::CBFReader(const char* filename){
     stream_ = new std::ifstream(filename,std::ios::binary);
@@ -23,10 +24,14 @@ CBFReader::CBFReader(const char* filename){
         FileError e("CBFReader::CBFReader(const char* filename)",desc);
         throw e;
     }
+
+    _binheader = NULL;
 }
 
 CBFReader::~CBFReader(){
+	//closes the file on object destruction.
     stream_->close();
+    if(_binheader!=NULL) delete _binheader;
 }
 
 void CBFReader::setFileName(const char *filename){
@@ -41,15 +46,18 @@ void CBFReader::setFileName(const char *filename){
         FileError e("CBFReader::CBFReader(const char* filename)",desc);
         throw e;
     }
+
+    if(_binheader != NULL) delete _binheader;
 }
 
 
 
-void CBFReader::read(){
+DataValue *CBFReader::read(){
     std::ifstream &ref = *stream_;
     unsigned char byte;
     std::string linebuffer;
     std::string key,value;
+    DataValue *v;
 
     while(!ref.eof()){
         byte = ref.get();
@@ -81,21 +89,25 @@ void CBFReader::read(){
                     //if the header convention identifies the file as a
                     //Dectris CBF file we use this particular reader
                     //for the binary section
-                    binheader = PCIFBinaryHeader(ref);
+                    _binheader = new PCIFBinaryHeader(ref);
                 }
-                std::cout<<binheader<<std::endl;
-                break;
+                std::cout<<*_binheader<<std::endl;
             }
             linebuffer.clear();
             continue;
-        }else if(byte == 0xd5){
+        }else if(((unsigned char)byte) == 0xd5){
             //ok here comes the tricky part - we have to start the
             //binary reader - this depends mainly on the compression
             //algorithm used. However, we do not have to make this
             //decision by ourself - the header object will act as a
             //factory for the reader
-
-
+        	std::cout<<"create the binary stream reader!"<<std::endl;
+        	CBFBinStreamReader *reader = _binheader->createBinaryReader();
+        	v = _binheader->createArray();
+        	reader->setStream(stream_);
+        	reader->setBuffer(v->getBuffer());
+        	//call the reader method
+        	reader->read();
 
         }else{
             //if there are no other things to do we add the
@@ -104,5 +116,5 @@ void CBFReader::read(){
         }
 
     }
-
+    return v;
 }

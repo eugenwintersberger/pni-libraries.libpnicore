@@ -16,6 +16,10 @@ template<typename T> class Buffer;
 template<typename T> bool operator==(const Buffer<T> &,const Buffer<T> &);
 template<typename T> bool operator!=(const Buffer<T> &,const Buffer<T> &);
 
+class AbstractBuffer{
+
+};
+
 //! general Buffer type
 
 //! Class Buffer describes a contiguous region of memory holding
@@ -32,7 +36,7 @@ template<typename T> bool operator!=(const Buffer<T> &,const Buffer<T> &);
 //! Furthermore the Buffer class acts as a smart pointer (in future) - this
 //! feature is not implemented yet.
 
-template<typename T>class Buffer{
+template<typename T>class Buffer:public AbstractBuffer{
 protected:
 	T *_data;               //!< pointer to the data held by the buffer
 	unsigned long _size;    //!< number of elements in the buffer

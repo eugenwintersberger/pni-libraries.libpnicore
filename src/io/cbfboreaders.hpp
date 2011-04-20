@@ -8,45 +8,40 @@
 #ifndef CBFBOREADERS_HPP_
 #define CBFBOREADERS_HPP_
 
-#include "cbf.hpp"
+#include "cbfbinstreamreader.hpp"
 #include "../exceptions.hpp"
+#include "../buffer.hpp"
 
-template<typename T> class CBFBinReaderByteOffset:public CBFBinReader{
-    private:
-        T *_data;
+template<typename T> class CBFBinReaderByteOffset:public CBFBinStreamReader{
+private:
+	Buffer<T> *_buffer;
     public:
-        CBFBinReaderByteOffset():CBFBinReader(){}
+        CBFBinReaderByteOffset();
         CBFBinReaderByteOffset(unsigned long);
+        virtual ~CBFBinReaderByteOffset();
 
-        const T* getData(); //returns the data
-
-
+        virtual void read();
+        virtual void setBuffer(AbstractBuffer *b) { _buffer = (Buffer<T> *)b;}
 
 };
 
-template<typename T> CBFBinReaderByteOffset<T>::CBFBinReaderByteOffset():CBFBinReader(){
-	_data = NULL;
+template<typename T> CBFBinReaderByteOffset<T>::CBFBinReaderByteOffset():CBFBinStreamReader(){
+	_buffer = NULL;
 }
 
 
-template<typename T> CBFBinReaderByteOffset::CBFBinReaderByteOffset(unsigned long n)
-    :CBFBinReader(n)
+template<typename T> CBFBinReaderByteOffset<T>::CBFBinReaderByteOffset(unsigned long n)
+    :CBFBinStreamReader(n)
 {
-    unsigned long i;
-    _data = NULL;
-
     elemsize_ = sizeof(T);
-
-    _data = new T[nelements_];
-    if(!_data){
-    	MemoryAllocationError e("CBFBinReaderByteOffset::CBFBinReaderByteOffset(unsigned long n)",
-    			"Error allocating memory for data");
-    	throw e;
-    }
-
+    _buffer = NULL;
 };
 
-template<typename T> CBFBinReaderByteOffset<T>::read(std::ifstream &stream){
+template<typename T> CBFBinReaderByteOffset<T>::~CBFBinReaderByteOffset(){
+	_buffer = NULL;
+}
+
+template<typename T> void CBFBinReaderByteOffset<T>::read(){
     unsigned long i;
     unsigned long ecnt;  // element counter
     T buffer;
@@ -55,45 +50,52 @@ template<typename T> CBFBinReaderByteOffset<T>::read(std::ifstream &stream){
     ecnt = 0;
 
     //initialize all data values with 0
-    for(i=0;i<nelements_;i++) _data[i] = 0;
+    *_buffer = 0;
 
-    while((!stream.eof())&&(ecnt!=nelements_)){
+    std::cout<<"start with reading binary data ..."<<std::endl;
+    while((!_stream->eof())&&(ecnt!=nelements_)){
 
-        stream.read(&buffer,1);
+        _stream->read((char *)(&buffer),1);
         if(((unsigned char)buffer)!=0x80){
         	//this byte is a valid offset
-        	_data[ecnt] += (char)buffer;
+        	(*_buffer)[ecnt] += (char)buffer;
         	//now we have to increment the element counter
         	ecnt ++;
         	if(ecnt>=nelements_) break;
-        	_data[ecnt] = _data[ecnt-1];
+        	(*_buffer)[ecnt] = (*_buffer)[ecnt-1];
         	//reset the buffer so that all bits are set to 0
         	buffer = 0;
         	continue;
         }
 
+        _stream->read((char *)(&buffer),2);
         if(((unsigned short)buffer)!=0x8000){
-        	_data[ecnt] = (short)buffer;
+        	(*_buffer)[ecnt] += (short)buffer;
         	//increase the element counter
         	ecnt ++;
         	if(ecnt>=nelements_) break;
-        	_data[ecnt] = _data[ecnt-1];
+        	(*_buffer)[ecnt] = (*_buffer)[ecnt-1];
         	//reset the buffer so that all bits are set to 0
         	buffer = 0;
         	continue;
         }
 
+        _stream->read((char*)(&buffer),4);
         if(((unsigned int)buffer)!=0x800000){
-        	_data[ecnt] = (int)buffer;
+        	(*_buffer)[ecnt] += (int)buffer;
         	//increase the element counter
         	ecnt ++;
         	if(ecnt>=nelements_) break;
-        	_data[ecnt] = _data[ecnt-1];
+        	(*_buffer)[ecnt] = (*_buffer)[ecnt-1];
         	buffer = 0;
         	continue;
         }
 
     }
+    std::cout<<"read "<<ecnt<<" elements to the data buffer"<<std::endl;
 }
+
+typedef CBFBinReaderByteOffset<short> CBFBinStreamBOInt16;
+typedef CBFBinReaderByteOffset<int> CBFBinStreamBOInt32;
 
 #endif /* CBFBOREADERS_HPP_ */
