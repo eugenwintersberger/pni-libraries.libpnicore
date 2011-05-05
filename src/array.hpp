@@ -49,6 +49,8 @@ template<typename T> std::ostream &operator<< (std::ostream &o,const Array<T> &a
 
 template<typename T> class Array:public DataValue{
     protected:
+		bool _allocated;              //!< is true if the Buffer belongs to the array instance
+		                              //!< in other words: the buffer was allocated by the array instance
         Buffer<T> *_data;             //!< Buffer object holding the data
         ArrayShape *_shape;           //!< shape object describing the shape of the array
                                       //!< and managing the access to the data
@@ -92,6 +94,7 @@ template<typename T> class Array:public DataValue{
         virtual void setBuffer(const Buffer<T> &b) { *_data = b;}
         virtual Buffer<T> *getBuffer() { return _data;}
         virtual const Buffer<T> *getBuffer() const { return _data;}
+        virtual void allocate();
 
 
         //overloaded assignment operators
@@ -206,12 +209,14 @@ template<typename T> Array<T>::Array(){
     _data = NULL;
     _shape = NULL;
     _index_buffer = NULL;
+    _allocated = false;
 }
 
 template<typename T> Array<T>::Array(const unsigned int &r,const unsigned int s[]){
     _shape = new ArrayShape(r,s);
     _data = new Buffer<T>(_shape->getSize());
     _index_buffer = new unsigned int[_shape->getSize()];
+    _allocated = true;
 }
 
 //copy constructor
@@ -223,6 +228,7 @@ template<typename T> Array<T>::Array(const Array<T> &a){
 
     //allocate memory
     _data = new Buffer<T>(a._shape->getSize());
+    _allocated = true;
 
     //copy existing data to the new array
     for(i=0;i<a._shape->getSize();i++) (*_data)[i] = (*(a._data))[i];

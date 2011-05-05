@@ -17,7 +17,11 @@ template<typename T> bool operator==(const Buffer<T> &,const Buffer<T> &);
 template<typename T> bool operator!=(const Buffer<T> &,const Buffer<T> &);
 
 class AbstractBuffer{
-
+public:
+	virtual unsigned long getSize(){return 0;}
+	virtual unsigned long getMemSize(){return 0;}
+	virtual void resize(unsigned long n){}
+	virtual void allocate(unsigned long n){}
 };
 
 //! general Buffer type
@@ -55,7 +59,7 @@ public:
 
 	//! Using this constructor the buffer will automatically allocate memory.
 	Buffer(unsigned long _size);
-	~Buffer();
+	virtual ~Buffer();
 
 	//! resize the buffer
 
@@ -69,7 +73,7 @@ public:
 	//! memory allocation and along with this a copy process of original data
 	//! to the new memory locations. Therefore this operation should be handled with care.
 	//! \param n number of elements for which memory should be allocated
-	void resize(unsigned long n);
+	virtual void resize(unsigned long n);
 	//! allocate memory in the buffer
 
 	//! This method can be called if the buffer was created by the default
@@ -77,15 +81,15 @@ public:
 	//! is already allocated. If the buffer is already allocated use the
 	//! resize method in order to change the amount of memory allocated by the buffer.
 	//! \param n number of elements in the buffer for which data should be allocated
-	void allocate(unsigned long n);
+	virtual void allocate(unsigned long n);
 	//! get the size of the buffer
 
 	//! \return number of elements of type T in the buffer
-	unsigned long getSize() const {return _size;}
+	virtual unsigned long getSize() const {return _size;}
 	//! get memory consumption of the buffer
 
 	//! \return number of bytes occupied by the buffer data
-	unsigned long getMemSize() const { return (unsigned long)(sizeof(T)*_size);}
+	virtual unsigned long getMemSize() const { return (unsigned long)(sizeof(T)*_size);}
 
 	//! return a pointer to the data
 
@@ -139,7 +143,7 @@ template<typename T> Buffer<T>::Buffer(unsigned long n){
 	_data = new T[n];
 	if(_data==NULL){
 		//if memory allocation fails - throw an MemoryAllocationException
-		MemoryAllocationError e(std::string("Buffer"),
+		MemoryAllocationError e(std::string("Buffer<T>"),
 								std::string("Cannot allocate Buffer memory in constructor!"));
 		throw e;
 	}
@@ -161,7 +165,7 @@ template<typename T> void Buffer<T>::resize(unsigned long n){
 		T *_new_data = new T[n];
 		if(_new_data == NULL){
 			//if memory allocation fails - throw an MemoryAllocationException
-				MemoryAllocationError e(std::string("Buffer"),
+				MemoryAllocationError e(std::string("Buffer<T>"),
 										std::string("Cannot allocate Buffer memory in constructor!"));
 				throw e;
 		}
