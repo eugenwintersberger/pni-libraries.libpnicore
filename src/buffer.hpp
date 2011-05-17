@@ -10,6 +10,7 @@
 
 #include <iostream>
 #include <string>
+#include <boost/shared_array.hpp>
 #include "exceptions.hpp"
 
 template<typename T> class Buffer;
@@ -42,7 +43,7 @@ public:
 
 template<typename T>class Buffer:public AbstractBuffer{
 protected:
-	T *_data;               //!< pointer to the data held by the buffer
+	boost::shared_array<T> _data;  //!< pointer to the data held by the buffer
 	unsigned long _size;    //!< number of elements in the buffer
 public:
 	//! default constructor
@@ -135,13 +136,13 @@ public:
 };
 
 template<typename T> Buffer<T>::Buffer(){
-	_data = NULL;
+	_data.reset();
 	_size = 0;
 }
 
 template<typename T> Buffer<T>::Buffer(unsigned long n){
-	_data = new T[n];
-	if(_data==NULL){
+	_data.reset(new T[n]);
+	if(_data.get()==NULL){
 		//if memory allocation fails - throw an MemoryAllocationException
 		MemoryAllocationError e(std::string("Buffer<T>"),
 								std::string("Cannot allocate Buffer memory in constructor!"));
@@ -151,7 +152,7 @@ template<typename T> Buffer<T>::Buffer(unsigned long n){
 }
 
 template<typename T> Buffer<T>::~Buffer(){
-	if(_data != NULL) delete [] _data;
+	_data.reset();
 }
 
 template<typename T> void Buffer<T>::resize(unsigned long n){

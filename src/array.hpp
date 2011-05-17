@@ -14,6 +14,7 @@
 #include "arrayshape.hpp"
 #include "datavalue.hpp"
 #include "exceptions.hpp"
+#include "types.hpp"
 
 template<typename T> class Array;
 
@@ -61,6 +62,9 @@ template<typename T> class Array:public DataValue{
         //! copy constructor
         Array(const Array<T> &);
         //! constructor where rank and dimension are set
+        //! In this case a shape object is created and memory allocated.
+        //! The shape object as well as the data buffer will be managed
+        //! by the resulting Array object.
 
         //! \param r rank of the array
         //! \param s array with number of elements along each direction
@@ -91,7 +95,16 @@ template<typename T> class Array:public DataValue{
         virtual void setShape(ArrayShape &s);
         virtual const ArrayShape &getShape() const;
         
-        virtual void setBuffer(const Buffer<T> &b) { *_data = b;}
+        virtual void setBuffer(const Buffer<T> *b) {
+        	if ((_data!=NULL)&&(_allocated)){
+        		delete _data;
+        		//the callee is responsible for freeing memory
+        		_allocated = false;
+        	}
+
+
+        	_data = b;
+        }
         virtual Buffer<T> *getBuffer() { return _data;}
         virtual const Buffer<T> *getBuffer() const { return _data;}
         virtual void allocate();
@@ -630,17 +643,19 @@ template<typename T> Array<T> &Array<T>::operator /= (const Array<T> &v){
 }
 
 //define here some standard array tpyes
-typedef Array<char> Int8Array;
-typedef Array<unsigned char> UInt8Array;
-typedef Array<short> Int16Array;
-typedef Array<unsigned short> UInt16Array;
-typedef Array<int> Int32Array;
-typedef Array<unsigned int> UInt32Array;
-typedef Array<long> Int64Array;
-typedef Array<unsigned long> UInt64Array;
-typedef Array<float> Float32Array;
-typedef Array<double> Float64Array;
-typedef Array<std::complex<float> > Complex32Array;
-typedef Array<std::complex<double> > Complex64Array;
+typedef Array<Int8>       Int8Array;
+typedef Array<UInt8>      UInt8Array;
+typedef Array<Int16>      Int16Array;
+typedef Array<UInt16>     UInt16Array;
+typedef Array<Int32>      Int32Array;
+typedef Array<UInt32>     UInt32Array;
+typedef Array<Int64>      Int64Array;
+typedef Array<UInt64>     UInt64Array;
+typedef Array<Float32>    Float32Array;
+typedef Array<Float64>    Float64Array;
+typedef Array<Float128>   Float128Array;
+typedef Array<Complex32>  Complex32Array;
+typedef Array<Complex64>  Complex64Array;
+typedef Array<Complex128> Complex128Array;
 
 #endif
