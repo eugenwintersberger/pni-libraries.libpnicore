@@ -10,7 +10,7 @@
 #include<vector>
 
 #include "buffer.hpp"
-#include "types.hpp"
+#include "pnitypes.hpp"
 
 //default values for name, unit, and description of a DataValue
 #define DEFAULT_VALUE_DESCRIPTION String("none")

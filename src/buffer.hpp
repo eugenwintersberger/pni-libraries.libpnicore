@@ -38,12 +38,10 @@ public:
 
 //! Future implementations of this structure may include thread safety using
 //! the BOOST threading classes.
-//! Furthermore the Buffer class acts as a smart pointer (in future) - this
-//! feature is not implemented yet.
 
 template<typename T>class Buffer:public AbstractBuffer{
 protected:
-	boost::shared_array<T> _data;  //!< pointer to the data held by the buffer
+	T* _data;  //!< pointer to the data held by the buffer
 	unsigned long _size;    //!< number of elements in the buffer
 public:
 	//! default constructor
@@ -136,13 +134,13 @@ public:
 };
 
 template<typename T> Buffer<T>::Buffer(){
-	_data.reset();
+	_data = NULL;
 	_size = 0;
 }
 
 template<typename T> Buffer<T>::Buffer(unsigned long n){
-	_data.reset(new T[n]);
-	if(_data.get()==NULL){
+	_data = new T[n];
+	if(_data ==NULL){
 		//if memory allocation fails - throw an MemoryAllocationException
 		MemoryAllocationError e(std::string("Buffer<T>"),
 								std::string("Cannot allocate Buffer memory in constructor!"));
@@ -152,7 +150,7 @@ template<typename T> Buffer<T>::Buffer(unsigned long n){
 }
 
 template<typename T> Buffer<T>::~Buffer(){
-	_data.reset();
+	if(_data!=NULL) delete _data;
 }
 
 template<typename T> void Buffer<T>::resize(unsigned long n){

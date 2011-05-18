@@ -125,25 +125,52 @@ class MemoryAllocationError:public Exception{
 
 //! This exception is usually raised in cases where array operations require shape matching
 //! of the involved arrays but their shapes are different.
-class ArrayShapeMissmatchError:public Exception{
+class ShapeMissmatchError:public Exception{
     public:
 		//! default constructor
-        ArrayShapeMissmatchError():Exception("ArrayShapeMissmatchError"){}
+        ShapeMissmatchError():Exception("ArrayShapeMissmatchError"){}
         //! constructor
 
         //! \param who name or ID of the exceptions issuer
         //! \param desc description of the exception
-        ArrayShapeMissmatchError(const std::string &who,const std::string &desc)
+        ShapeMissmatchError(const std::string &who,const std::string &desc)
             :Exception("ArrayShapeMissmatchError",who,desc){}
         //! constructor
 
         //! \param w name or ID of the exceptions issuer
         //! \param d description of the exception
-        ArrayShapeMissmatchError(const char *w,const char *d)
+        ShapeMissmatchError(const char *w,const char *d)
             :Exception("ArrayShapeMissmatchError",w,d){}
         //! destructor
-        virtual ~ArrayShapeMissmatchError(){}
+        virtual ~ShapeMissmatchError(){}
         
+};
+
+//! Size missmatch error
+
+//! This exception will be raised in cases where buffer sizes do not meet the
+//! requirements. A typical situation would be that a buffer is passed to an Array
+//! object whos size does not match the size given by the ArrayShape object of the
+//! Array.
+class SizeMissmatchError:public Exception{
+public:
+	//! default constructor
+	SizeMissmatchError():Exception("SizeMissmatchError"){}
+	//! constructor
+
+	//! \param who name or ID of the exception issuer
+	//! \param desc description of the exception
+	SizeMissmatchError(const std::string &who,const std::string &desc)
+	:Exception("SizeMissmatchError",who,desc){}
+	//! constructor
+
+	//! \param who name or ID of the exception issuer
+	//! \param desc description of the exception
+	SizeMissmatchError(const char *who,const char *desc)
+	:Exception("SizeMissmatchError",who,desc){}
+
+	//! destructor
+	virtual ~SizeMissmatchError(){}
 };
 
 //! index error

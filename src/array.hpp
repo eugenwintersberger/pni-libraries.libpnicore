@@ -9,12 +9,13 @@
 #include<cstdarg>
 #include<cstdio>
 #include<typeinfo>
+#include<boost/shared_ptr.hpp>
 
 #include "buffer.hpp"
 #include "arrayshape.hpp"
 #include "datavalue.hpp"
 #include "exceptions.hpp"
-#include "types.hpp"
+#include "pnitypes.hpp"
 
 template<typename T> class Array;
 
@@ -45,16 +46,31 @@ template<typename T> std::ostream &operator<< (std::ostream &o,const Array<T> &a
 //! components: a pointer to an instance of type Buffer and a pointer to an instance
 //! of type ArrayShape. From the point of object oriented programming such an array can
 //! be considered as a special view on the linear data stream represented by the Buffer
-//! object. The data buffer as well as the array shape object are owned by the array object
-//! and will therefore be destroyed if it goes out of scope.
+//! object. The ArrayShape and Buffer object of the array are hold by smart pointers
+//! which allows sharing of these objects between different arrays or other
+//! program instances. How data is handled depends on which constructors are used
+//! to create the array and which methods are used to modify data elements of an
+//! instance of Array. Usually set and get methods as well as constructors come
+//! in two flavors: one where constant references of native objects are passed to them
+//! and one where smart pointers are used. In the former case the objects will be
+//! recreated by the Array object and their content will be copied.
+//! In the later case of the smart pointer versions only the pointers
+//! will be changed which allows sharing of data between the Array and external
+//! instances of the program using the array. The boost::shared_ptr avoids
+//! problems with object ownership and makes it quite simple to implement this
+//! behavior.
 
-template<typename T> class Array:public DataValue{
+//! The motivation for the reallocation and copy processes for the reference type
+//! methods and constructors is quite simple: one cannot be sure that the
+//! instance which created the object or a simple pointer will not destroy the
+//! object while still being used in the array. Therefore the copy process is
+//! absolutely necessary.
+
+template<typename T> class Array{
     protected:
-		bool _allocated;              //!< is true if the Buffer belongs to the array instance
-		                              //!< in other words: the buffer was allocated by the array instance
-        Buffer<T> *_data;             //!< Buffer object holding the data
-        ArrayShape *_shape;           //!< shape object describing the shape of the array
-                                      //!< and managing the access to the data
+        boost::shared_ptr<Buffer<T> > _data;   //!< Buffer object holding the data
+        boost::shared_ptr<ArrayShape> _shape;  //!< shape object describing the shape of the array
+                                               //!< and managing the access to the data
         unsigned int *_index_buffer;  //!< a buffer used to hold index variables.
     public:
         //! default constructor
@@ -69,49 +85,133 @@ template<typename T> class Array:public DataValue{
         //! \param r rank of the array
         //! \param s array with number of elements along each direction
         Array(const unsigned int &r,const unsigned int s[]);
-        //! constructor where the array shape object is set
+        //! constructor with an array shape pointer
 
-        //! In this case the content of the shape object passed to the constructor
-        //! will be copied to the one created by the constructor. By using
-        //! this constructor buffer memory will be allocated according to the
-        //! array size provided by the shape object.
+        //! The pointer to an existing ArrayShape object is used to construct
+        //! the Array-object.
+        //!
+        //! \param s - reference to a shape object
+        //! \sa Array(const boost::shared_ptr<ArrayShape> &s)
         Array(const ArrayShape &s);
+        //! constructor with a smart pointer to an array shape
+
+        //! Since a smart pointer is used the the shape object of the
+        //! created Array object will be shared with the array's creator.
+
+        //! \param &s reference to a smart pointer to a shape object
+        Array(const boost::shared_ptr<ArrayShape> &s);
         //! constructor where array shape and buffer object are set
 
-        //! The constructor takes a reference to a shape object and a buffer
+        //! The constructor takes pointers to a shape object and a buffer
         //! object. An exception will be raised if their sizes do not match.
-        //! Additionally the content of the buffer passed to the constructor
-        //! will be copied to the internal buffer of the array object.
+        //! To keep ownership the objects will be copied.
 
-        //! \param s reference to a shape object
-        //! \param b reference to a buffer object
+        //! \param s pointer to a shape object
+        //! \param b pointer to a buffer object
+        //! \sa rray(const boost::shared_ptr<ArrayShape> &s,const boost::shared_ptr<Buffer<T> > &b)
         Array(const ArrayShape &s,const Buffer<T> &b);
+        //! constructor with smart pointers
+
+        //! This constructor passes smart pointers on the shape and buffer object
+        //! to the array. The shape and buffer objects will be shared with the
+        //! array's creator.
+
+        //! \param s smart pointer to the array shape object
+        //! \param b smart pointer to the buffer object
+        Array(const boost::shared_ptr<ArrayShape> &s,const boost::shared_ptr<Buffer<T> > &b);
+
         //! destructor
         virtual ~Array();
         
         //! set the shape of the array
 
-        //! The new shape must not lead to more entries
-        virtual void setShape(ArrayShape &s);
+        //! The size of the shape array and that of the existing array must match
+        //! otherwise and exception will be raised. Since a reference to a plain
+        //! ArrayShape object is passed the Array object creates a new ArrayShape
+        //! instance and copies the content from the existing one.
+
+        //! \param s reference to the existing shape object
+        //! \sa void setShape(boost::shared_ptr<ArrayShape> &s)
+        virtual void setShape(const ArrayShape &s);
+        //! set the shape of the array
+
+        //! The size of the shape array and that of the existing array must match
+        //! otherwise and exception will be raised. Here a shared smart pointer
+        //! is passed to the method. Thus the calling instance and the array
+        //! will share the shape object -  no copy process takes place.
+
+        //! \param s reference to the existing shape object
+        //! \sa void setShape(const ArrayShape &s)
+        virtual void setShape(boost::shared_ptr<ArrayShape> &s);
+        //! obtain the shape of an array
+
+        //! returns a constant reference to the shape object of the array.
+        //! The reference is constant to avoid changes of the shape object while
+        //! being used by the array.
+
+        //! \return constant reference to the shape object
         virtual const ArrayShape &getShape() const;
+        //! obtain the shape of an array
+
+        //! returns a constant reference to the smart pointer holding the
+        //! address of the shape object. The fact that the smart pointer
+        //! is set constant should prevent users from accidently changing
+        //! the shape of the array without informing the array.
+
+        //! \return refrence to the smart pointer object holding the shape object
+        virtual const boost::shared_ptr<ArrayShape> &getShape() const;
+        //! set the buffer of the array
+
+        //! Manually set the Buffer object of the array. Here a reference to an
+        //! existing Buffer object is passed to the method. In this case
+        //! the Array object will allocate new memory and copy the content
+        //! from the argument Buffer to the newly allocated.
+        //! If the size of the Buffer object and the ArrayShape object in the
+        //! Array do not match an exception will be raised.
         
-        virtual void setBuffer(const Buffer<T> *b) {
-        	if ((_data!=NULL)&&(_allocated)){
-        		delete _data;
-        		//the callee is responsible for freeing memory
-        		_allocated = false;
-        	}
+        //! \param b reference to a Buffer object
+        virtual void setBuffer(const Buffer<T> &b);
+        //! set the array buffer
+
+        //! Manually set the Buffer object of an array. A smart pointer is
+        //! passed here. Thus the caller and the array share the Buffer
+        //! object. The Buffer's size and that of the ArrayShape object
+        //! in the array must match otherwise and exception will be raised.
+
+        //! \param b reference to a smart pointer to a Buffer object
+        virtual void setBuffer(const boost::shared_ptr<Buffer<T> > &b);
+        //! obtain a reference to the array's Buffer
+
+        //! Returns a constant reference to the Buffer object of the
+        //! Array. The content of the Buffer can be changed from external
+        //! sources. In this case one gets only a reference. This means
+        //! that this will lead to undefined behavior in the case that the
+        //! Array object which owns the Buffer object is destroyed.
+
+        //! \return reference to the Buffer object
+        virtual const Buffer<T> &getBuffer() const;
+        //! obtain a smart pointer to the array Buffer
+
+        //! Returns a smart Pointer to the array's Buffer object.
+        //! The advantage of this is that in this case the Buffer
+        //! will remain in memory even if the Array object is destroyed.
+
+        //! \return reference to the smart pointer holding the Array object
+        virtual const boost::shared_ptr<Buffer<T> > &getBuffer() const;
 
 
-        	_data = b;
-        }
-        virtual Buffer<T> *getBuffer() { return _data;}
-        virtual const Buffer<T> *getBuffer() const { return _data;}
-        virtual void allocate();
+        //! assign a native type to the array
 
-
-        //overloaded assignment operators
+        //! Here a value of a native type will be assigned to the Array.
+        //! The value is assigned to all elements of the array. Thus, this
+        //! operator can be used for a quick initialization of an array with numbers.
         Array<T> &operator = (const T&);
+        //! assignment between two arrays
+
+        //! This operation is only possible if the shapes of the two arrays are equal.
+        //! If this is not the case an exception will be raised. The content of the
+        //! array on the r.h.s of the operator is copied to the array on the l.h.s.
+        //! of the operator. No memory allocation is done - only copying.
         Array<T> &operator = (const Array<T>&);
         
         
@@ -134,22 +234,90 @@ template<typename T> class Array:public DataValue{
         
         //these operators are important because they are performed
         //in-place - no new array is allocated
+        //! addition operator - unary
+
+        //! Adds a single native value of type T to all elements in the Array.
+        //! This unary operator performs the operation in-place. No temporary
+        //! array will be allocated.
         Array<T> &operator += (const T&);
+        //! addition operator - unary
+
+        //! Adds the array on the r.h.s to that on the l.h.s. of the operator.
+        //! The operation is performed in-place without the allocation of a
+        //! temporary array. The shapes of the tow arrays must match otherwise
+        //! a ShapeMissmatchError exception will be raised.
         Array<T> &operator += (const Array<T>&);
+        //! subtraction operator - unary
+
+        //! Subtracts a single value of type T on the r.h.s. of the operator
+        //! to the array on the l.h.s. The operation is performed in-place without
+        //! creation of a temporary array.
         Array<T> &operator -= (const T&);
+        //! subtraction operator - unary
+
+        //! Subtracts the  array on the r.h.s. of the operator from that on the
+        //! l.h.s. The operation is performed in-place without allocation of a
+        //! temporary array. The shapes of the arrays must match otherwise a
+        //! ShapeMissmatchError exception will be raised.
         Array<T> &operator -= (const Array<T>&);
+        //! multiplication operator - unary
+
+        //! Multiplies the single value of type T on the r.h.s. of the operator
+        //! with all elements of the array on the l.h.s. The operation is performed
+        //! in-place without allocation of a temporary array.
         Array<T> &operator *= (const T&);
+        //! multiplication operator - unary
+
+        //! Element wise multiplication of the array on the r.h.s of the operator
+        //! with the array of the l.h.s. The operation is stored in-place without
+        //! allocation of a temporary array. The shapes of the arrays must match
+        //! otherwise a ShapeMissmatchError exception will be raised.
         Array<T> &operator *= (const Array<T>&);
+        //! Division operator - unary
+
+        //! Divide the elements of the array on the l.h.s. of the operator by the
+        //! single value of type T on the r.h.s. THe operation is performed in-place
+        //! without allocation of a temporary array.
         Array<T> &operator /= (const T&);
+        //! Division operator - unary
+
+        //! Element wise division of the array on the l.h.s. with the array on the
+        //! r.h.s. The operation is done in-place without allocation of a temporary array.
+        //! The arrays must match in shape otherwise a ShapeMissmatchError exception will be raised.
         Array<T> &operator /= (const Array<T>&);
         
         //some functions that are of importance for arrays
 
+        //! compute the sum of all element in the array
+
+        //! Computes the sum of all elements stored in the array.
+        //! \return number of type T
         T Sum() const;
+        //! minimum value
+
+        //! returns the minimum element in the array.
+        //! \return value of type T
         T Min() const;
+        //! maximum value
+
+        //! returns the maximum element in the array
+        //! \return value of type T
         T Max() const;
+        //! minimum and maximum in the array
+
+        //! returns the minimum and maximum values in the array.
+        //! \param min minimum value
+        //! \param max maximum value
         void MinMax(T &min,T &max) const;
+        //! clip the array data
+
+        //! Set values greater or equal maxth to maxth and those smaller or equal minth
+        //! to minth.
+
+        //! \param minth minimum threshold
+        //! \param maxth maximum threshold
         void Clip(T minth,T maxth);
+        void Clip(T minth,T minval,T maxth,T maxval);
         void MinClip(T threshold);
         void MinClip(T threshold, T value);
         void MaxClip(T threshold);
@@ -160,13 +328,163 @@ template<typename T> class Array:public DataValue{
         T& operator[](unsigned int i) { return (*_data)[i];}
 
         //operators for comparison
+
+        //! equality between arrays
+
+        //! Tow arrays are considered equal if they coincide in shape and data content.
         friend bool operator== <> (const Array<T> &b1,const Array<T> &b2);
+        //! inequality between arrays
+
+        //! Tow arrays are considered different if they have different shape or
+        //! content.
         friend bool operator!= <> (const Array<T> &b1,const Array<T> &b2);
         friend std::ostream &operator<< <> (std::ostream &o,const Array<T> &a);
 
         
 };
 
+
+//===============================Constructors and destructors===================================
+//default constructor
+template<typename T> Array<T>::Array()
+{
+	//in the default constructor we set all pointers to NULL
+    _data.reset();
+    _shape.reset();
+    _index_buffer = NULL;
+}
+
+//simple constructor using rank and dimensions
+template<typename T> Array<T>::Array(const unsigned int &r,const unsigned int s[])
+{
+	//here all objects are newly generated by the array object
+    _shape.reset(new ArrayShape(r,s));
+    _data.reset(new Buffer<T>(_shape->getSize()));
+    _index_buffer = new unsigned int[_shape->getRank()];
+}
+
+//copy constructor - allocate new memory and really copy the data
+template<typename T> Array<T>::Array(const Array<T> &a)
+{
+    unsigned int i;
+    //set shape object
+    _shape.reset(new ArrayShape(*(a._shape)));
+    if(!_shape){
+    	//raise an exception here if memory allocation fails
+    	MemoryAllocationError e("Array<T>::Array","Cannot allocate memory for ArrayShape instance!");
+    	throw e;
+    }
+
+    _index_buffer = new unsigned int[_shape->getRank()];
+
+    //set buffer object
+    _data.reset(new Buffer<T>(*(a._data)));
+    if(!_data){
+    	//raise an exception here if memory allocation failes
+    	MemoryAllocationError e("Array<T>::Array","Cannot allocate memory for Buffer instance!");
+    	throw e;
+    }
+}
+
+//construct a new array from a shape object - the recommended way
+template<typename T> Array<T>::Array(const ArrayShape &s){
+	MemoryAllocationError e("Array<T>::Array()");
+
+    _shape.reset(new ArrayShape(s));
+    if(!_shape){
+    	e.setDescription("Cannot allocate memory for ArrayShape object!");
+    	throw e;
+    }
+
+    _data.reset(new Buffer<T>(s.getSize()));
+    if(!_data){
+    	e.setDescription("Cannot allocate memory for Buffer object!");
+    	throw e;
+    }
+
+    _index_buffer = new unsigned int[_shape->getRank()];
+    if(_index_buffer == NULL){
+    	e.setDescription("Cannot allocate memory for index buffer!");
+    	throw e;
+    }
+}
+
+
+template<typename T> Array<T>::Array(const boost::shared_ptr<ArrayShape> &s){
+	_shape = s; //the shape is now shared with the array creator (will increment reference counter)
+
+	MemoryAllocationError e("Array<T>::Array");
+	_data.reset(new Buffer<T>(_shape->getSize()));
+	if(!_data){
+		e.setDescription("Cannot allocate memory for Buffer object!");
+		throw e;
+	}
+
+	_index_buffer = new unsigned int[_shape->getRank()];
+	if(_index_buffer == NULL){
+		e.setDescription("Cannot allocate memory for index buffer!");
+		throw e;
+	}
+}
+
+template<typename T> Array<T>::Array(const ArrayShape &s,const Buffer<T> &b){
+	//first we need to check if buffer and shape have matching sizes
+	if(s.getSize()!=b.getSize()){
+		SizeMissmatchError e("Array<T>::Array()","Size of shape and buffer objects do not match!");
+		throw e;
+	}
+
+	MemoryAllocationError e("Array<T>::Array()");
+
+	_shape.reset(new ArrayShape(s));
+	if(!_shape){
+		e.setDescription("Cannot allocate memory for ArrayShape object!");
+		throw e;
+	}
+
+	_data.reset(new Buffer<T>(b));
+	if(!_data){
+		e.setDescription("Cannot allocate memory for Buffer object!");
+		throw e;
+	}
+
+	_index_buffer = new unsigned int[_shape->getRank()];
+	if(_index_buffer == NULL){
+		e.setDescription("Cannot allocate memory for index buffer!");
+		throw e;
+	}
+}
+
+template<typename T> Array<T>::Array(const boost::shared_ptr<ArrayShape> &s,const boost::shared_ptr<Buffer<T> > &b){
+	//nee to check if sizes of shape and buffer object match
+	if(s->getSize()!=b->getSize()){
+		SizeMissmatchError e("Array<T>::Array()","Size of shape and buffer objects do not match!");
+		throw e;
+	}
+
+	//share pointers
+	_data = b;
+	_shape = s;
+
+	//allocate memory for the index buffer
+	_index_buffer = new unsigned int[_shape->getRank()];
+	if(_index_buffer == NULL){
+		MemoryAllocationError e("Array<T>::Array()","Cannot allocate memory for index buffer!");
+		throw e;
+	}
+
+}
+
+//destructor for the array object
+template<typename T>Array<T>::~Array(){
+	if(_index_buffer!=NULL) delete [] _index_buffer;
+	_shape.reset();
+	_data.reset();
+}
+
+
+
+//===============================output operators===============================================
 template<typename T> std::ostream &operator<< (std::ostream &o,const Array<T> &a){
 	o<<"Array of shape (";
 	for(unsigned int i=0;i<a._shape->getRank();i++){
@@ -177,27 +495,77 @@ template<typename T> std::ostream &operator<< (std::ostream &o,const Array<T> &a
 	return o;
 }
 
-template<typename T> bool operator== (const Array<T> &b1,const Array<T> &b2){
-	if((b1._shape==b2._shape)&&(b1._data==b2._data)){
-		return true;
+//======================Methods for data access and array manipulation==========================
+template<typename T> void Array<T>::setShape(const ArrayShape &s){
+	if(s.getSize()!=_data->getSize()){
+		//raise an exception if the size of the new shape object
+		//and the buffer object do not fit.
+		SizeMissmatchError e("Array<T>::setShape","shape and array size do not match!");
+		throw e;
 	}
-	return false;
+	//create a new shape object
+	_shape.reset(new ArrayShape(s));
+
+	if(_index_buffer != NULL) delete [] _index_buffer;
+
+	_index_buffer = new unsigned int[_shape->getRank()];
+	if(_index_buffer == NULL){
+		MemoryAllocationError e("Array<T>::setShape()","Cannot allocate memory for index buffer!");
+		throw e;
+	}
 }
 
-template<typename T> bool operator!= (const Array<T> &b1,const Array<T> &b2){
-	if((b1._shape!=b2._shape)&&(b1._data!=b2._data)){
-		return true;
+template<typename T> void Array<T>::setShape(boost::shared_ptr<ArrayShape> &s){
+	if(s->getSize()!=_data->getSize()){
+		//raise and exception if the size of the new shape object
+		//and the buffer object do not match
+		SizeMissmatchError e("Array<T>::setShape","shape and array size do not match!");
+		throw e;
 	}
-	return false;
-}
 
-template<typename T> void Array<T>::setShape(ArrayShape &s){
-	*_shape = s;
-	_data->resize(s.getSize());
+	_shape = s;
+
+	if(_index_buffer != NULL) delete [] _index_buffer;
+	_index_buffer = new unsigned int[_shape->getRank()];
+	if(_index_buffer == NULL){
+		MemoryAllocationError e("Array<T>::setShape()","Cannot allocate memory for index buffer!");
+		throw e;
+	}
 }
 
 template<typename T> const ArrayShape &Array<T>::getShape() const{
 	return *_shape;
+}
+
+template<typename T> const boost::shared_ptr<ArrayShape> &Array<T>::getShape() const{
+	return _shape;
+}
+
+template<typename T> void Array<T>::setBuffer(const Buffer<T> &b) {
+    if(b.getSize()!=_shape->getSize()){
+    	//raise an exception
+    	SizeMissmatchError e("Array<T>::setBuffer","Buffser and array size do not match!");
+    	throw e;
+    }
+    _data.reset(new Buffer<T>(b));
+
+}
+
+template<typename T> void Array<T>::setBuffer(const boost::shared_ptr<Buffer<T> > &b){
+	if(b->getSize()!=_shape->getSize()){
+		//raise exception if sizes do not match
+		SizeMissmatchError e("Array<T>::setBuffer()","Buffer and array size do not match!");
+		throw e;
+	}
+	_data = b;
+}
+
+template<typename T> const Buffer<T> &getBuffer() const {
+	return *_data;
+}
+
+template<typename T> const boost::shared_ptr<Buffer<T> > &Array<T>::getBuffer() const {
+	return _data;
 }
 
 template<typename T> T& Array<T>::operator()(unsigned int i,...){
@@ -218,62 +586,41 @@ template<typename T> T& Array<T>::operator()(unsigned int i,...){
 	return (*_data)[_shape->getOffset(_index_buffer)];
 }
 
-template<typename T> Array<T>::Array(){
-    _data = NULL;
-    _shape = NULL;
-    _index_buffer = NULL;
-    _allocated = false;
+//===============================Comparison operators===========================================
+template<typename T> bool operator== (const Array<T> &b1,const Array<T> &b2){
+	if((b1._shape==b2._shape)&&(b1._data==b2._data)){
+		return true;
+	}
+	return false;
 }
 
-template<typename T> Array<T>::Array(const unsigned int &r,const unsigned int s[]){
-    _shape = new ArrayShape(r,s);
-    _data = new Buffer<T>(_shape->getSize());
-    _index_buffer = new unsigned int[_shape->getSize()];
-    _allocated = true;
+template<typename T> bool operator!= (const Array<T> &b1,const Array<T> &b2){
+	if((b1._shape!=b2._shape)&&(b1._data!=b2._data)){
+		return true;
+	}
+	return false;
 }
 
-//copy constructor
-template<typename T> Array<T>::Array(const Array<T> &a){
-    unsigned int i;
-    _shape = new ArrayShape(*(a._shape));
-
-    _index_buffer = new unsigned int[_shape->getSize()];
-
-    //allocate memory
-    _data = new Buffer<T>(a._shape->getSize());
-    _allocated = true;
-
-    //copy existing data to the new array
-    for(i=0;i<a._shape->getSize();i++) (*_data)[i] = (*(a._data))[i];
-}
-
-//construct a new array from a shape object - the recommended way
-template<typename T> Array<T>::Array(const ArrayShape &s){
-    _shape = new ArrayShape(s);
-    _data = new Buffer<T>(s.getSize());
-    _index_buffer = new unsigned int[_shape->getSize()];
-}
-
-
-template<typename T>Array<T>::~Array(){
-	if(_index_buffer!=NULL) delete [] _index_buffer;
-}
-
+//==============Methods for in-place array manipulation===========================================
 template<typename T> T Array<T>::Sum() const{
     unsigned long i;
     T result = 0;
+    Buffer<T> &d = *_data;
 
-    for(i=0;i<_shape->getSize();i++) result += (*_data)[i];
+    for(i=0;i<_shape->getSize();i++) result += d[i];
 
     return result;
 
 }
+
+
 template<typename T> T Array<T>::Min() const{
     unsigned long i;
     T result = 0;
+    Buffer<T> &d = *_data;
 
     for(i=0;i<_shape->getSize();i++){
-        if((*_data)[i] < result) result = (*_data)[i];
+        if(d[i] < result) result = d[i];
     }
 
     return result;
@@ -299,7 +646,6 @@ template<typename T> void Array<T>::MinMax(T &min,T &max) const{
         if((*_data)[i] < min) min = (*_data)[i];
     }
 }
-
 
 template<typename T> void Array<T>::Clip(T minth,T maxth){
     unsigned long i;
@@ -342,11 +688,14 @@ template<typename T> void Array<T>::MaxClip(T threshold, T value){
     }
 }
 
+//==============================Assignment operators=======================================
+
 template<typename T> Array<T> &Array<T>::operator = (const T &v){
     unsigned int i;
+    Buffer<T> &d = *_data;
     
     for(i=0;i<_shape->getSize();i++){
-        (*_data)[i] = v;
+        d[i] = v;
     }
     
     return *this;
@@ -354,25 +703,26 @@ template<typename T> Array<T> &Array<T>::operator = (const T &v){
 
 template<typename T> Array<T> &Array<T>::operator = (const Array<T> &v){
     unsigned int i;
+    Buffer<T> &dout = *_data;
+    Buffer<T> &din = *(v._data);
     
     if(this != &v){
         //arrays of different shape cannot be assigned to each other
-        if(_shape != v._shape){
+        if(*_shape != *(v._shape)){
             //raise a exception for shape mismatch
+        	ShapeMissmatchError e("Array<T>::operator=","Array shapes do not match!");
+        	throw e;
         }
         
-        for(i=0;i<_shape->getSize();i++){
-            (*_data)[i] = (*v._data)[i];
-        }
+        //copy from one array to the other
+        for(i=0;i<_shape->getSize();i++) dout[i] = din[i];
     }
     
     return *this;
 }
 
-//many of the simple operations shown here may can be improved by 
-//using vectorization - most probably we would need inline assembler 
-//to do this. Byte alignment should be no problem at all.
 
+//==============================binary arithmetic operators===============================
 template<typename T> Array<T> operator+(const Array<T> &a, const T &b){
     Array<T> tmp = a;
     unsigned long i;
@@ -399,7 +749,7 @@ template<typename T> Array<T> operator+(const Array<T> &a, const Array<T> &b){
     unsigned long i;
     
     if(a._shape != b._shape){
-        ArrayShapeMissmatchError error;
+        ShapeMissmatchError error;
         error.setSource("Array<T> operator+(const Array<T> &a, const Array<T> &b)");
         error.setDescription("shapes of arrays a and b do not match!");
         throw(error);
@@ -439,7 +789,7 @@ template<typename T> Array<T> operator-(const Array<T> &a, const Array<T> &b){
     unsigned long i;
     
     if(a._shape != b._shape){
-        ArrayShapeMissmatchError error;
+        ShapeMissmatchError error;
         error.setSource("Array<T> operator-(const Array<T> &a, const Array<T> &b)");
         error.setDescription("shapes of arrays a and b do not match!");
         throw(error);
@@ -479,7 +829,7 @@ template<typename T> Array<T> operator*(const Array<T> &a, const Array<T> &b){
     unsigned long i;
     
     if(a._shape != b._shape){
-        ArrayShapeMissmatchError error;
+        ShapeMissmatchError error;
         error.setSource("Array<T> operator*(const Array<T> &a, const Array<T> &b)");
         error.setDescription("shapes of arrays a and b do not match!");
         throw(error);
@@ -519,7 +869,7 @@ template<typename T> Array<T> operator/(const Array<T> &a, const Array<T> &b){
     unsigned long i;
     
     if(a._shape != b._shape){
-        ArrayShapeMissmatchError error;
+        ShapeMissmatchError error;
         error.setSource("Array<T> operator/(const Array<T> &a, const Array<T> &b)");
         error.setDescription("shapes of arrays a and b do not match!");
         throw(error);
@@ -533,116 +883,112 @@ template<typename T> Array<T> operator/(const Array<T> &a, const Array<T> &b){
     return tmp;
 }
 
-
+//=======================Unary arithmetic operations=========================================
 template<typename T> Array<T> &Array<T>::operator += (const T &v){
     unsigned long i;
+    Buffer<T> &d = *(this->_data);
     
-    for(i=0;i<this->_shape->getSize();i++){
-        (*(this->_data))[i] += v;
-    }
+    for(i=0;i<this->_shape->getSize();i++) d[i] += v;
     
     return *this;
 }
 
 template<typename T> Array<T> &Array<T>::operator += (const Array<T> &v){
     unsigned long i;
+    Buffer<T> &dlhs = *(this->_data);
+    Buffer<T> &drhs = *(v._data);
     
-    if(this->_shape != v._shape){
-        ArrayShapeMissmatchError error;
+    if(*(this->_shape) != *(v._shape)){
+        ShapeMissmatchError error;
         error.setSource("Array<T> &Array<T>::operator += (const Array<T> &v)");
         error.setDescription("shapes of arrays on left and right side of += do not match!");
         throw(error);
     }
     
-    for(i=0;i<this->_shape->getSize();i++){
-        (*(this->_data))[i] += (*v._data)[i];
-    }
+    for(i=0;i<this->_shape->getSize();i++) dlhs[i] += drhs[i];
     
     return *this;
 }
 
 template<typename T> Array<T> &Array<T>::operator -= (const T &v){
     unsigned long i;
+    Buffer<T> &dlhs = *(this->_data);
     
-    for(i=0;i<this->_shape->getSize();i++){
-        (*(this->_data))[i] -= v;
-    }
+    for(i=0;i<this->_shape->getSize();i++) dlhs[i] -= v;
     
     return *this;
 }
 
 template<typename T> Array<T> &Array<T>::operator -= (const Array<T> &v){
     unsigned long i;
+    Buffer<T> &dlhs = *(this->_data);
+    Buffer<T> &drhs = *(v._data);
     
-    if(this->_shape != v._shape){
-        ArrayShapeMissmatchError error;
+    if(*(this->_shape) != *(v._shape)){
+        ShapeMissmatchError error;
         error.setSource("Array<T> &Array<T>::operator -= (const Array<T> &v)");
         error.setDescription("shapes of arrays on left and right side of -= do not match!");
         throw(error);
     }
     
-    for(i=0;i<this->_shape->getSize();i++){
-        (*(this->_data))[i] -= (*v._data)[i];
-    }
+    for(i=0;i<this->_shape->getSize();i++) dlhs[i] -= drhs[i];
     
     return *this;
 }
 
 template<typename T> Array<T> &Array<T>::operator *= (const T &v){
     unsigned long i;
+    Buffer<T> &dlhs = *(this->_data);
     
-    for(i=0;i<this->_shape->getSize();i++){
-        (*(this->_data))[i] *= v;
-    }
+    for(i=0;i<this->_shape->getSize();i++) dlhs[i] *= v;
     
     return *this;
 }
 
 template<typename T> Array<T> &Array<T>::operator *= (const Array<T> &v){
     unsigned long i;
+    Buffer<T> &dlhs = *(this->_data);
+    Buffer<T> &drhs = *(v._data);
     
-    if(this->_shape != v._shape){
-        ArrayShapeMissmatchError error;
+    if(*(this->_shape) != *(v._shape)){
+        ShapeMissmatchError error;
         error.setSource("Array<T> &Array<T>::operator *= (const Array<T> &v)");
         error.setDescription("shapes of arrays on left and right side of *= do not match!");
         throw(error);
     }
     
-    for(i=0;i<this->_shape->getSize();i++){
-        (*(this->_data))[i] *= (*v._data)[i];
-    }
+    for(i=0;i<this->_shape->getSize();i++) dlhs[i] *= drhs[i];
     
     return *this;
 }
 
 template<typename T> Array<T> &Array<T>::operator /= (const T &v){
     unsigned long i;
+    Buffer<T> &dlhs = *(this->_data);
     
-    for(i=0;i<this->_shape->getSize();i++){
-        (*(this->_data))[i] /= v;
-    }
+    for(i=0;i<this->_shape->getSize();i++) dlhs[i] /= v;
     
     return *this;
 }
 
 template<typename T> Array<T> &Array<T>::operator /= (const Array<T> &v){
     unsigned long i;
+    Buffer<T> &dlhs = *(this->_data);
+    Buffer<T> &drhs = *(v._data);
     
-    if(this->_shape != v._shape){
-        ArrayShapeMissmatchError error;
+    if(*(this->_shape) != *(v._shape)){
+        ShapeMissmatchError error;
         error.setSource("Array<T> &Array<T>::operator /= (const Array<T> &v)");
         error.setDescription("shapes of arrays on left and right side of /= do not match!");
         throw(error);
     }
     
-    for(i=0;i<this->_shape->getSize();i++){
-        (*(this->_data))[i] *= (*v._data)[i];
-    }
+    for(i=0;i<this->_shape->getSize();i++) dlhs[i] *= drhs[i];
     
     return *this;
 }
 
-//define here some standard array tpyes
+//===============================definition of some standard arrays===============================
 typedef Array<Int8>       Int8Array;
 typedef Array<UInt8>      UInt8Array;
 typedef Array<Int16>      Int16Array;
