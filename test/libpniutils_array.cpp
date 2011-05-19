@@ -3,8 +3,10 @@
 #include<cppunit/extensions/HelperMacros.h>
 
 #include <iostream>
+#include <boost/shared_ptr.hpp>
 
 #include "array.hpp"
+#include "buffer.hpp"
 #include "arrayshape.hpp"
 #include "libpniutils_array.hpp"
 
@@ -20,8 +22,8 @@ void ArrayTest::setUp(){
 	_s1[0] = 3; _s1[1] = 4;
 	_s2[0] = 2; _s2[1] = 3; _s2[2] = 5;
 
-	_sh1 = new ArrayShape(_r1,_s1);
-	_sh2 = new ArrayShape(_r2,_s2);
+	_sh1 = ArrayShape(_r1,_s1);
+	_sh2 = ArrayShape(_r2,_s2);
 }
 
 void ArrayTest::tearDown(){
@@ -31,10 +33,26 @@ void ArrayTest::tearDown(){
 
 void ArrayTest::testConstructors(){
 	//check for simple array-construction
-	Array<double> a1(*_sh1);
+	Array<double> a1(_sh1);
 	Array<double> a2(_r2,_s2);
 
-	Array<double> a3()
+}
+
+void ArrayTest::testConstructorsShared(){
+	boost::shared_ptr<ArrayShape> shape(new ArrayShape(_r1,_s1));
+	boost::shared_ptr<Buffer<double> > buffer(new Buffer<double>(shape->getSize()));
+
+	Array<double> *a = new Array<double>(shape,buffer);
+
+	for(unsigned long i;i<shape->getSize();i++) CPPUNIT_ASSERT((*a)[i]=(*buffer)[i]);
+
+	CPPUNIT_ASSERT(shape.use_count()==2);
+	CPPUNIT_ASSERT(buffer.use_count()==2);
+
+	delete a;
+
+	CPPUNIT_ASSERT(shape.use_count()==1);
+	CPPUNIT_ASSERT(buffer.use_count()==1);
 
 }
 

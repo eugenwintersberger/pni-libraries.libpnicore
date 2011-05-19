@@ -16,18 +16,18 @@
 //! Each array is stored as a linear sequence of data values. To
 //! mimic the behavior of a multidimensional array we need to map
 //! each tuple of indices to a linear memory location. Consider an
-//! array of M dimension and N_i elements along each dimension.
+//! array of \f$M\f$ dimension and \f$N_i\f$ elements along each dimension.
 //! Furthermore we assume an multidimensional index for an array element
-//! (i_0,i_1,....,i_(M-1)). From this the linear memory location can be
+//! \f$(i_0,i_1,....,i_{(M-1)})\f$. From this the linear memory location can be
 //! obtained with
-//!
-//! offset = sum_{j=0}^{M-1} i_j*S_j
-//!
+//!\f[
+//! 	o = \sum_{j=0}^{M-1} i_jS_j
+//!\f]
 //! where S_j is the stride of each dimension which is determined by
-//!
-//! S_j = prod_{k=j}^{M-2} N_{k+1}
+//!\f[
+//! S_j = \prod_{k=j}^{M-2} N_{k+1}
 //! with S_{M-1} = 1
-//!
+//!\f]
 //! After an ArrayShape object has been instantiated all its parameters
 //! can be adjusted dynamically to whatever values are required.
 //! The class takes care about all kinds of adoptions.
@@ -135,6 +135,7 @@ class ArrayShape{
 
         //! This operator allows reading access to the array dimensions. You cannot
         //! use this operator to set array dimensions.
+        //! \sa void setDimensions(const unsigned int *s), void setDimension(const unsigned int &i,const unsigned int &d)
         const unsigned int operator[](unsigned int i) const { return _shape[i];}
 };
 

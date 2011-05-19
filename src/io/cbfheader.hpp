@@ -9,7 +9,6 @@
 #define CBFHEADER_HPP_
 
 #include "cbfbinstreamreader.hpp"
-#include "../datavalue.hpp"
 
 #define CIF_DATA_TYPE_KEY  "X-Binary-Element-Type"
 #define CIF_DATA_SIGNED_INT32  "\"signed 32-bit integer\""

@@ -149,6 +149,20 @@ template<typename T> Buffer<T>::Buffer(unsigned long n){
 	_size = n;
 }
 
+template<typename T> Buffer<T>::Buffer(const Buffer<T> &b){
+	_data = new T[b._size];
+	if(_data == NULL){
+		//if memory allocation fails - throw an MemoryAllocationException
+		MemoryAllocationError e(std::string("Buffer<T>"),
+		     					std::string("Cannot allocate Buffer memory in constructor!"));
+		throw e;
+	}
+
+	_size = b._size;
+
+	for(unsigned long i;i<_size;i++) _data[i] = b._data[i];
+}
+
 template<typename T> Buffer<T>::~Buffer(){
 	if(_data!=NULL) delete _data;
 }

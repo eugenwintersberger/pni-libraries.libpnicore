@@ -15,7 +15,6 @@
 #include<cstdlib>
 
 #include "cbfheader.hpp"
-#include "../datavalue.hpp"
 
 #define CIF_BINARY_SECTION "--CIF-BINARY-FORMAT-SECTION--"
 #define CIF_HEADER_CONVENTION "_array_data.header_convention"

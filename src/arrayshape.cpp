@@ -97,10 +97,19 @@ void ArrayShape::setRank(const unsigned int &r){
     if(_shape==NULL){
         //the shape points has not been allocated yet
         _shape = new unsigned int[r];
+        //throw an exception if memory allocation fails
+        if(_shape == NULL) throw SHAPE_ALLOC_ERROR;
         _dimstrides = new unsigned int[r];
+        //throw an exception if memory allocation fails
+        if(_dimstrides == NULL){
+        	if(_shape != NULL) delete [] _shape;
+        	throw DIMSTRIDE_ALLOC_ERROR;
+        }
+        //set the number of elements along each dimension to 1
+        //default value
         for(i=0;i<r;i++) _shape[i] = 1;
     }else{
-        //the shape pointer is allready allocated
+        //the shape pointer is already allocated
         unsigned int *new_shape;
         unsigned int *new_dimstrides;
         new_shape = new unsigned int[r];

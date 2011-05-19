@@ -853,6 +853,7 @@ HTML_ALIGN_MEMBERS     = YES
 # Netscape 6.0+, Internet explorer 5.0+, Konqueror, or Safari).
 
 HTML_DYNAMIC_SECTIONS  = NO
+GENERATE_TREEVIEW = YES
 
 # If the GENERATE_DOCSET tag is set to YES, additional index files
 # will be generated that can be used as input for Apple's Xcode 3
@@ -1628,3 +1629,5 @@ GENERATE_LEGEND        = YES
 # the various graphs.
 
 DOT_CLEANUP            = YES
+
+USE_MATHJAX = YES

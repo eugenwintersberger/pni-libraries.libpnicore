@@ -13,7 +13,6 @@
 
 #include "buffer.hpp"
 #include "arrayshape.hpp"
-#include "datavalue.hpp"
 #include "exceptions.hpp"
 #include "pnitypes.hpp"
 
@@ -153,13 +152,12 @@ template<typename T> class Array{
         virtual const ArrayShape &getShape() const;
         //! obtain the shape of an array
 
-        //! returns a constant reference to the smart pointer holding the
-        //! address of the shape object. The fact that the smart pointer
-        //! is set constant should prevent users from accidently changing
-        //! the shape of the array without informing the array.
+        //! Set the smart pointer ptr to the value of the pointer holding the
+        //! ArrayShape-object in the Array. After this call ptr and the Array
+        //! share the shape object.
 
-        //! \return refrence to the smart pointer object holding the shape object
-        virtual const boost::shared_ptr<ArrayShape> &getShape() const;
+        //! \param ptr reference to the target smart pointer
+        virtual void getShape(boost::shared_ptr<ArrayShape> &ptr) const;
         //! set the buffer of the array
 
         //! Manually set the Buffer object of the array. Here a reference to an
@@ -192,12 +190,12 @@ template<typename T> class Array{
         virtual const Buffer<T> &getBuffer() const;
         //! obtain a smart pointer to the array Buffer
 
-        //! Returns a smart Pointer to the array's Buffer object.
-        //! The advantage of this is that in this case the Buffer
-        //! will remain in memory even if the Array object is destroyed.
+        //! Sets the smart pointer ptr to the value of the buffer pointer.
+        //! After this call ptr and the Array share the Buffer-object contained
+        //! in the Array.
 
-        //! \return reference to the smart pointer holding the Array object
-        virtual const boost::shared_ptr<Buffer<T> > &getBuffer() const;
+        //! \param ptr reference to the target smart pointer
+        virtual void getBuffer(boost::shared_ptr<Buffer<T> > &ptr) const;
 
 
         //! assign a native type to the array
@@ -317,14 +315,47 @@ template<typename T> class Array{
         //! \param minth minimum threshold
         //! \param maxth maximum threshold
         void Clip(T minth,T maxth);
+        //! clip the array data
+
+        //! Set values smaller or equal to minth to minval and those larger or equal than
+        //! maxth to maxval.
+
+        //! \param minth minimum threshold
+        //! \param minval value for numbers smaller or equal to minth
+        //! \param maxth maximum threshold
+        //! \param maxval value for numbers larger or equal to maxth
         void Clip(T minth,T minval,T maxth,T maxval);
+        //! clip minimum values
+
+        //! Set value smaller or equal to a threshold value to threshold.
+
+        //! \param threshold threshold value
         void MinClip(T threshold);
+        //! clip minimum values
+
+        //! Set values smaller or equal than a threshold value to value
+        //! \param threshold threshold value
+        //! \param value value to set the numbers to
         void MinClip(T threshold, T value);
+        //! clip maximum values
+
+        //! Set values larger or equal than threshold to threshold.
+        //! \param threshold threshold value
         void MaxClip(T threshold);
+        //! clip maximum values
+
+        //! Set values larger or equal than threshold to value.
+
+        //! \param threshold the threshold value for the clip operation
+        //! \param value the value to set the numbers to
         void MaxClip(T threshold, T value);
         
         //operators for data access
         T& operator()(unsigned int i,...);
+        //! bracket operator - accessing linear data
+
+        //! Using the []-operator allows to access the data stored in the array
+        //! in a linear manner as it is stored by the buffer object.
         T& operator[](unsigned int i) { return (*_data)[i];}
 
         //operators for comparison
@@ -366,7 +397,6 @@ template<typename T> Array<T>::Array(const unsigned int &r,const unsigned int s[
 //copy constructor - allocate new memory and really copy the data
 template<typename T> Array<T>::Array(const Array<T> &a)
 {
-    unsigned int i;
     //set shape object
     _shape.reset(new ArrayShape(*(a._shape)));
     if(!_shape){
@@ -388,7 +418,8 @@ template<typename T> Array<T>::Array(const Array<T> &a)
 
 //construct a new array from a shape object - the recommended way
 template<typename T> Array<T>::Array(const ArrayShape &s){
-	MemoryAllocationError e("Array<T>::Array()");
+	MemoryAllocationError e;
+	e.setSource("Array<T>::Array()");
 
     _shape.reset(new ArrayShape(s));
     if(!_shape){
@@ -537,8 +568,8 @@ template<typename T> const ArrayShape &Array<T>::getShape() const{
 	return *_shape;
 }
 
-template<typename T> const boost::shared_ptr<ArrayShape> &Array<T>::getShape() const{
-	return _shape;
+template<typename T> void Array<T>::getShape(boost::shared_ptr<ArrayShape> &ptr) const{
+	ptr = _shape;
 }
 
 template<typename T> void Array<T>::setBuffer(const Buffer<T> &b) {
@@ -560,12 +591,12 @@ template<typename T> void Array<T>::setBuffer(const boost::shared_ptr<Buffer<T> 
 	_data = b;
 }
 
-template<typename T> const Buffer<T> &getBuffer() const {
+template<typename T> const Buffer<T> &Array<T>::getBuffer() const {
 	return *_data;
 }
 
-template<typename T> const boost::shared_ptr<Buffer<T> > &Array<T>::getBuffer() const {
-	return _data;
+template<typename T> void Array<T>::getBuffer(boost::shared_ptr<Buffer<T> > &ptr) const{
+	ptr = _data;
 }
 
 template<typename T> T& Array<T>::operator()(unsigned int i,...){
@@ -629,9 +660,10 @@ template<typename T> T Array<T>::Min() const{
 template<typename T> T Array<T>::Max() const{
     unsigned long i;
     T result = 0;
+    Buffer<T> &d = *_data;
 
-    for(i=0;i<_shape->getSize();i++){
-        if((*_data)[i] > result) result = (*_data)[i];
+    for(i=0;i<d.getSize();i++){
+        if(d[i] > result) result = d[i];
     }
     return result;
 }
@@ -640,51 +672,67 @@ template<typename T> void Array<T>::MinMax(T &min,T &max) const{
     unsigned long i;
     min = 0;
     max = 0;
+    Buffer<T> &d = *_data;
 
-    for(i=0;i<_shape->getSize();i++){
-        if((*_data)[i] > max) max = (*_data)[i];
-        if((*_data)[i] < min) min = (*_data)[i];
+    for(i=0;i<d.getSize();i++){
+        if(d[i] > max) max = d[i];
+        if(d[i] < min) min = d[i];
     }
 }
 
 template<typename T> void Array<T>::Clip(T minth,T maxth){
     unsigned long i;
+    Buffer<T> &d = *_data;
 
-    for(i=0;i<_shape->getSize();i++){
-        if((*_data)[i]<minth) (*_data)[i] = minth;
-        if((*_data)[i]>maxth) (*_data)[i] = maxth;
+    for(i=0;i<d.getSize();i++){
+        if(d[i]<minth) d[i] = minth;
+        if(d[i]>maxth) d[i] = maxth;
     }
+}
+
+template<typename T> void Array<T>::Clip(T minth,T minval,T maxth,T maxval){
+	unsigned long i;
+	Buffer<T> &d = *_data;
+
+	for(i=0;i<d.getSize();i++){
+		if(d[i]<=minth) d[i] = minval;
+		if(d[i]>=maxth) d[i] = maxval;
+	}
 }
 
 template<typename T> void Array<T>::MinClip(T threshold){
     unsigned long i;
+    Buffer<T> &d = *_data;
 
-    for(i=0;i<_shape->getSize();i++){
-        if((*_data)[i]<threshold) (*_data)[i] = threshold;
+    for(i=0;i<d.getSize();i++){
+        if(d[i]<threshold) d[i] = threshold;
     }
 }
 
 template<typename T> void Array<T>::MinClip(T threshold, T value){
     unsigned long i;
+    Buffer<T> &d = *_data;
 
-    for(i=0;i<_shape->getSize();i++){
-        if((*_data)[i]<threshold) (*_data)[i] = value;
+    for(i=0;i<d.getSize();i++){
+        if(d[i]<threshold) d[i] = value;
     }
 }
 
 template<typename T> void Array<T>::MaxClip(T threshold){
     unsigned long i;
+    Buffer<T> &d = *_data;
 
-    for(i=0;i<_shape->getSize();i++){
-        if((*_data)[i]>threshold) (*_data)[i] = threshold;
+    for(i=0;i<d.getSize();i++){
+        if(d[i]>threshold) d[i] = threshold;
     }
 }
 
 template<typename T> void Array<T>::MaxClip(T threshold, T value){
     unsigned long i;
+    Buffer<T> &d = *_data;
 
-    for(i=0;i<_shape->getSize();i++){
-        if((*_data)[i]>threshold) (*_data)[i] = value;
+    for(i=0;i<d.getSize();i++){
+        if(d[i]>threshold) d[i] = value;
     }
 }
 
@@ -748,7 +796,7 @@ template<typename T> Array<T> operator+(const T &a, const Array<T> &b){
 template<typename T> Array<T> operator+(const Array<T> &a, const Array<T> &b){
     unsigned long i;
     
-    if(a._shape != b._shape){
+    if(*(a._shape) != *(b._shape)){
         ShapeMissmatchError error;
         error.setSource("Array<T> operator+(const Array<T> &a, const Array<T> &b)");
         error.setDescription("shapes of arrays a and b do not match!");
@@ -778,7 +826,7 @@ template<typename T> Array<T> operator-(const T &a, const Array<T> &b){
     unsigned long i;
     
     for(i=0;i<b._shape->getSize();i++){
-        (*tmp._data)[i] = (*b._data)[i] - a;
+        (*tmp._data)[i] = a-(*b._data)[i];
     }
     
     return tmp;
@@ -788,7 +836,7 @@ template<typename T> Array<T> operator-(const T &a, const Array<T> &b){
 template<typename T> Array<T> operator-(const Array<T> &a, const Array<T> &b){
     unsigned long i;
     
-    if(a._shape != b._shape){
+    if(*(a._shape) != *(b._shape)){
         ShapeMissmatchError error;
         error.setSource("Array<T> operator-(const Array<T> &a, const Array<T> &b)");
         error.setDescription("shapes of arrays a and b do not match!");
@@ -828,7 +876,7 @@ template<typename T> Array<T> operator*(const T &a, const Array<T> &b){
 template<typename T> Array<T> operator*(const Array<T> &a, const Array<T> &b){
     unsigned long i;
     
-    if(a._shape != b._shape){
+    if(*(a._shape) != *(b._shape)){
         ShapeMissmatchError error;
         error.setSource("Array<T> operator*(const Array<T> &a, const Array<T> &b)");
         error.setDescription("shapes of arrays a and b do not match!");
@@ -858,7 +906,7 @@ template<typename T> Array<T> operator/(const T &a, const Array<T> &b){
     unsigned long i;
     
     for(i=0;i<b._shape->getSize();i++){
-        (*tmp._data)[i] = (*b._data)[i] / a;
+        (*tmp._data)[i] = a/(*b._data)[i];
     }
     
     return tmp;
@@ -868,7 +916,7 @@ template<typename T> Array<T> operator/(const T &a, const Array<T> &b){
 template<typename T> Array<T> operator/(const Array<T> &a, const Array<T> &b){
     unsigned long i;
     
-    if(a._shape != b._shape){
+    if(*(a._shape) != *(b._shape)){
         ShapeMissmatchError error;
         error.setSource("Array<T> operator/(const Array<T> &a, const Array<T> &b)");
         error.setDescription("shapes of arrays a and b do not match!");
@@ -983,7 +1031,7 @@ template<typename T> Array<T> &Array<T>::operator /= (const Array<T> &v){
         throw(error);
     }
     
-    for(i=0;i<this->_shape->getSize();i++) dlhs[i] *= drhs[i];
+    for(i=0;i<this->_shape->getSize();i++) dlhs[i] /= drhs[i];
     
     return *this;
 }

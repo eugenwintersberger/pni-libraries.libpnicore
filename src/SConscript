@@ -1,7 +1,6 @@
 Import("build_env")
 
-source_list = ["datavalue.cpp","array.cpp",
-               "arrayshape.cpp","scalar.cpp","exceptions.cpp"]
+source_list = ["array.cpp","arrayshape.cpp","exceptions.cpp"]
                
 obj = build_env.SharedObject(source_list)
 #obj.append(SConscript("io/SConscript"))

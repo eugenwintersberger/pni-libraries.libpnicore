@@ -11,7 +11,6 @@
 #include<typeinfo>
 
 #include "../src/io/cbfreader.hpp"
-#include "../src/datavalue.hpp"
 #include "../src/array.hpp"
 
 
