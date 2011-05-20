@@ -34,4 +34,11 @@ typedef std::complex<long double> Complex128;
 
 typedef std::string String;
 
+
+//enum types for typecodes
+
+enum PNITypeID { INT8,UINT8,INT16,UINT16,INT32,UINT32,INT64,UINT64,
+	                FLOAT32,FLOAT64,FLOAT128,
+	                COMPLEX32,COMPLEX64,COMPLEX128,STRING};
+
 #endif /* TYPES_HPP_ */

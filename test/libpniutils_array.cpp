@@ -54,6 +54,15 @@ void ArrayTest::testConstructorsShared(){
 	CPPUNIT_ASSERT(shape.use_count()==1);
 	CPPUNIT_ASSERT(buffer.use_count()==1);
 
+	a = new Array<double>(_r2,_s2);
+	a->getShape(shape);
+    a->getBuffer(buffer);
+
+	CPPUNIT_ASSERT(shape.use_count()==2);
+	CPPUNIT_ASSERT(buffer.use_count()==2);
+
+	CPPUNIT_ASSERT(*shape==_sh2);
+
 }
 
 void ArrayTest::testSetAndGet(){

@@ -1,6 +1,30 @@
 env = Environment()
 
+#need a builder to run doxygen
+
+#need something to build debian and RPM packages automatically 
+#or at least some shell scripts that do the job
+
 debug = ARGUMENTS.get("DEBUG",0)
+prefix= ARGUMENTS.get("PREFIX","")
+instroot= ARGUMENTS.get("INSTALLROOT",0)
+
+import os.path as path
+
+install_prefix=""
+if instroot:
+    install_prefix += instroot
+else:
+    install_prefix += "./install"
+    
+if prefix:
+    install_prefix = path.join(install_prefix,prefix)
+else:
+    install_prefix = path.join(install_prefix,"/")
+    
+env.SetDefault(INSTALL_PREFIX=install_prefix)
+print "install prefix: ",env["INSTALL_PREFIX"]
+    
 
 #set the proper compiler
 env.Replace(CXX = "g++")
