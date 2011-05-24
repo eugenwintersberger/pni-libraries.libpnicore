@@ -13,7 +13,27 @@ statlibpniutils = build_env.StaticLibrary("pniutils",aobj)
 build_env.Alias("all",[libpniutils,statlibpniutils])
 build_env.Alias("library",[libpniutils,statlibpniutils])
 
-libpniutils_inst = build_env.Install(path.join(build_env["ENV"]["INSTALL_PREFIX"],"lib"),[libpniutils,statlibpniutils])
-incpniutils_inst = build_env.Install(path.join(build_env["ENV"]["INSTALL_PREFIX"],"include/pni"),Glob("*.hpp"))
-build_env.Alias("install",[libpniutils_inst,incpniutils_inst])
+fname = "pniutils.pc"
+
+lib_inst_path = path.join(build_env["ENV"]["INSTALL_PREFIX"],"lib")
+hdr_inst_path = path.join(build_env["ENV"]["INSTALL_PREFIX"],"include/pni")
+
+if "install" in COMMAND_LINE_TARGETS:
+    fid = open(fname,"w")
+    fid.write("prefix=%s\n" %(build_env["PREFIX"]))
+    fid.write("exec_prefix=${prefix}\n")
+    fid.write("includedir=${prefix}/include\n")
+    fid.write("libdir=${prefix}/lib\n\n")
+    fid.write("Name: pniutils\n")
+    fid.write("Description: a stupid library\n")
+    fid.write("Version: 0.0.1\n");
+    fid.write("Cflags: -I${includedir}\n")
+    fid.write("Libs: -L${libdir} -lpniutils")
+    fid.close()
+
+
+libpniutils_inst = build_env.Install(lib_inst_path,[libpniutils,statlibpniutils])
+pkgc_inst = build_env.Install(path.join(lib_inst_path,"pkgconfig"),[fname])
+incpniutils_inst = build_env.Install(hdr_inst_path,Glob("*.hpp"))
+build_env.Alias("install",[libpniutils_inst,incpniutils_inst,pkgc_inst])
 
