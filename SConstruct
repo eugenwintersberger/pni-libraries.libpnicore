@@ -1,32 +1,27 @@
-env = Environment()
-
-#need a builder to run doxygen
+#load python modules
+import os.path as path
 
 #need something to build debian and RPM packages automatically 
 #or at least some shell scripts that do the job
 
 debug = ARGUMENTS.get("DEBUG",0)
-prefix= ARGUMENTS.get("PREFIX","")
-instroot= ARGUMENTS.get("INSTALLROOT",0)
 
-import os.path as path
+var = Variables()
+var.Add(PathVariable("PREFIX","set installation prefix","/usr/local"))
+var.Add(PathVariable("DESTDIR","set destination directory","/",PathVariable.PathAccept))
 
-install_prefix=""
-if instroot:
-    install_prefix += instroot
-else:
-    install_prefix += "./install"
-    
-if prefix:
-    install_prefix = path.join(install_prefix,prefix)
-else:
-    install_prefix = path.join(install_prefix,"/")
-    
-env.SetDefault(INSTALL_PREFIX=install_prefix)
-print "install prefix: ",env["INSTALL_PREFIX"]
+
+#create the build environment
+env = Environment(variables=var)
+
+#set the prefix for the installation
+if env["PREFIX"][0] == "/": env["PREFIX"]=env["PREFIX"][1:]
+
+env["ENV"]["INSTALL_PREFIX"]=path.join(env["DESTDIR"],env["PREFIX"])
     
 
-#set the proper compiler
+#set the proper compiler - this should be changed to something 
+#more general - independent of the underlying operating system
 env.Replace(CXX = "g++")
 
 #set default libraries
@@ -34,8 +29,6 @@ env.Replace(CXX = "g++")
 
 #set default compiler flags
 env.Append(CXXFLAGS = ["-Wall"])
-
-
 
 #create optimized environment
 opt_env = env.Clone()

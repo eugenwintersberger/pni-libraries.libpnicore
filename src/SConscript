@@ -1,15 +1,19 @@
+import os.path as path
+
 Import("build_env")
 
 source_list = ["array.cpp","arrayshape.cpp","exceptions.cpp"]
                
 obj = build_env.SharedObject(source_list)
+aobj = build_env.StaticObject(source_list)
 #obj.append(SConscript("io/SConscript"))
 
 libpniutils=build_env.SharedLibrary("pniutils",obj)
-build_env.Alias("all",[libpniutils])
-build_env.Alias("library",[libpniutils])
+statlibpniutils = build_env.StaticLibrary("pniutils",aobj)
+build_env.Alias("all",[libpniutils,statlibpniutils])
+build_env.Alias("library",[libpniutils,statlibpniutils])
 
-libpniutils_inst = build_env.Install("../install/lib/",[libpniutils])
-incpniutils_inst = build_env.Install("../install/include/",Glob("*.hpp"))
+libpniutils_inst = build_env.Install(path.join(build_env["ENV"]["INSTALL_PREFIX"],"lib"),[libpniutils,statlibpniutils])
+incpniutils_inst = build_env.Install(path.join(build_env["ENV"]["INSTALL_PREFIX"],"include/pni"),Glob("*.hpp"))
 build_env.Alias("install",[libpniutils_inst,incpniutils_inst])
 

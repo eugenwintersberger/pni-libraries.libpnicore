@@ -1,0 +1,26 @@
+Source: libpniutils
+Priority: extra
+Maintainer: Eugen Wintersberger <eugen.wintersberger@desy.de>
+Build-Depends: debhelper (>= 7.0.50~)
+Standards-Version: 3.9.1
+Section: libs
+Homepage: http://www.eugen-wintersberger.desy.de/pniutils
+#Vcs-Git: git://git.debian.org/collab-maint/libpniutils.git
+#Vcs-Browser: http://git.debian.org/?p=collab-maint/libpniutils.git;a=summary
+
+Package: libpniutils-dev
+Section: libdevel
+Architecture: any
+Depends: libpniutils0 (= ${binary:Version})
+Description: PNI utilities libraray - developer package
+ Provides header files and static libraries necessary to write code 
+ using the PNI utilities library.
+
+Package: libpniutils0
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: PNI utilities library
+ Utility library of the PNI software pool. This library provides useful
+ objects for programmers which should write code for PNI facilities.
+ It is the basement of a couple of tools and libraries provided by DESY.
