@@ -6,6 +6,9 @@
 #include "arrayshape.hpp"
 #include "exceptions.hpp"
 
+namespace pni{
+namespace utils{
+
 const MemoryAllocationError ArrayShape::SHAPE_ALLOC_ERROR(std::string("ArrayShape"),
 		                      std::string("Cannot allocate memory for shape buffer!"));
 const MemoryAllocationError ArrayShape::DIMSTRIDE_ALLOC_ERROR(std::string("ArrayShape"),
@@ -261,5 +264,8 @@ bool operator!=(const ArrayShape &a,const ArrayShape &b){
     }
 
     return false;
+}
+
+}
 }
 

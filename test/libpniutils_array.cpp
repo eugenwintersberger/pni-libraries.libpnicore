@@ -22,8 +22,8 @@ void ArrayTest::setUp(){
 	_s1[0] = 3; _s1[1] = 4;
 	_s2[0] = 2; _s2[1] = 3; _s2[2] = 5;
 
-	_sh1 = ArrayShape(_r1,_s1);
-	_sh2 = ArrayShape(_r2,_s2);
+	_sh1 = pni::utils::ArrayShape(_r1,_s1);
+	_sh2 = pni::utils::ArrayShape(_r2,_s2);
 }
 
 void ArrayTest::tearDown(){
@@ -33,16 +33,16 @@ void ArrayTest::tearDown(){
 
 void ArrayTest::testConstructors(){
 	//check for simple array-construction
-	Array<double> a1(_sh1);
-	Array<double> a2(_r2,_s2);
+	pni::utils::Array<double> a1(_sh1);
+	pni::utils::Array<double> a2(_r2,_s2);
 
 }
 
 void ArrayTest::testConstructorsShared(){
-	boost::shared_ptr<ArrayShape> shape(new ArrayShape(_r1,_s1));
-	boost::shared_ptr<Buffer<double> > buffer(new Buffer<double>(shape->getSize()));
+	boost::shared_ptr<pni::utils::ArrayShape> shape(new pni::utils::ArrayShape(_r1,_s1));
+	boost::shared_ptr<pni::utils::Buffer<double> > buffer(new pni::utils::Buffer<double>(shape->getSize()));
 
-	Array<double> *a = new Array<double>(shape,buffer);
+	pni::utils::Array<double> *a = new pni::utils::Array<double>(shape,buffer);
 
 	for(unsigned long i;i<shape->getSize();i++) CPPUNIT_ASSERT((*a)[i]=(*buffer)[i]);
 
@@ -54,7 +54,7 @@ void ArrayTest::testConstructorsShared(){
 	CPPUNIT_ASSERT(shape.use_count()==1);
 	CPPUNIT_ASSERT(buffer.use_count()==1);
 
-	a = new Array<double>(_r2,_s2);
+	a = new pni::utils::Array<double>(_r2,_s2);
 	a->getShape(shape);
     a->getBuffer(buffer);
 
@@ -66,7 +66,7 @@ void ArrayTest::testConstructorsShared(){
 }
 
 void ArrayTest::testSetAndGet(){
-	Array<double> a1(_r1,_s1);
+	pni::utils::Array<double> a1(_r1,_s1);
 	unsigned int i,j;
 
 	//access via [] operator
@@ -90,10 +90,10 @@ void ArrayTest::testSetAndGet(){
 }
 
 void ArrayTest::testComparison(){
-	Array<double> a1(_sh1);
-	Array<double> b1(_sh1);
-	Array<double> a2(_sh2);
-	Array<double> b2(_sh2);
+	pni::utils::Array<double> a1(_sh1);
+	pni::utils::Array<double> b1(_sh1);
+	pni::utils::Array<double> a2(_sh2);
+	pni::utils::Array<double> b2(_sh2);
 	unsigned int i,j,k;
 
 	for(i=0;i<a1.getShape()[0];i++){
@@ -121,9 +121,9 @@ void ArrayTest::testComparison(){
 }
 
 void ArrayTest::testBinaryOperations(){
-	Array<double> a1(_sh1);
-	Array<double> b1(_sh1);
-	Array<double> c1(_sh1);
+	pni::utils::Array<double> a1(_sh1);
+	pni::utils::Array<double> b1(_sh1);
+	pni::utils::Array<double> c1(_sh1);
 	double b,a;
 	unsigned long i;
 
@@ -173,8 +173,8 @@ void ArrayTest::testBinaryOperations(){
 }
 
 void ArrayTest::testUnaryOperations(){
-	Array<double> a1(_sh1);
-	Array<double> b1(_sh1);
+	pni::utils::Array<double> a1(_sh1);
+	pni::utils::Array<double> b1(_sh1);
 	double b,a;
 	unsigned long i;
 

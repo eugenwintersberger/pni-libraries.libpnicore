@@ -24,7 +24,7 @@ void ArrayShapeTest::tearDown(){
 }
 
 void ArrayShapeTest::testConstruction(){
-	ArrayShape s;
+	pni::utils::ArrayShape s;
 	unsigned int i;
 	const unsigned int *shape;
 
@@ -51,7 +51,7 @@ void ArrayShapeTest::testConstruction(){
 		CPPUNIT_ASSERT(s[i]==_s2[i]);
 	}
 
-	ArrayShape s1(_r1,_s1);
+	pni::utils::ArrayShape s1(_r1,_s1);
 	//check here if all parameters are set correctly
 	CPPUNIT_ASSERT(_r1==s1.getRank());
 	shape = s1.getDimensions();
@@ -63,8 +63,8 @@ void ArrayShapeTest::testConstruction(){
 }
 
 void ArrayShapeTest::testComparison(){
-	ArrayShape s1(_r1,_s1);
-	ArrayShape s2(_r2,_s2);
+	pni::utils::ArrayShape s1(_r1,_s1);
+	pni::utils::ArrayShape s2(_r2,_s2);
 
 	CPPUNIT_ASSERT(s1 == s1);
 	CPPUNIT_ASSERT(s2 == s2);
@@ -72,8 +72,8 @@ void ArrayShapeTest::testComparison(){
 }
 
 void ArrayShapeTest::testOffset(){
-	ArrayShape s1(_r1,_s1);
-	ArrayShape s2(_r2,_s2);
+	pni::utils::ArrayShape s1(_r1,_s1);
+	pni::utils::ArrayShape s2(_r2,_s2);
 	unsigned int *i1,*i2;
 
 	i1 = new unsigned int [_r1];

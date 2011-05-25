@@ -13,6 +13,10 @@
 #include <boost/shared_array.hpp>
 #include "exceptions.hpp"
 
+namespace pni{
+namespace utils{
+
+
 template<typename T> class Buffer;
 template<typename T> bool operator==(const Buffer<T> &,const Buffer<T> &);
 template<typename T> bool operator!=(const Buffer<T> &,const Buffer<T> &);
@@ -284,4 +288,7 @@ template<typename T> T Buffer<T>::operator[](unsigned long n) const {
 	return _data[n];
 }
 
+
+}
+}
 #endif /* BUFFER_HPP_ */

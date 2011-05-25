@@ -18,7 +18,7 @@ private:
 	unsigned int *_s1;
 	unsigned int _r1,_r2;
 	unsigned int *_s2;
-	ArrayShape _sh1,_sh2;
+	pni::utils::ArrayShape _sh1,_sh2;
 public:
 	void setUp();
 	void tearDown();

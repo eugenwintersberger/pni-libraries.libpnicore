@@ -17,7 +17,7 @@ void BufferTest::tearDown(){
 }
 
 void BufferTest::testAllocation(){
-	Buffer<double> dbuffer;
+	pni::utils::Buffer<double> dbuffer;
 	unsigned long n;
 
 	n = 100;
@@ -37,7 +37,7 @@ void BufferTest::testAllocation(){
 }
 
 void BufferTest::testAccess(){
-	Buffer<double> dbuffer(1000);
+	pni::utils::Buffer<double> dbuffer(1000);
 
 	for(unsigned long i=0;i<1000;i++) dbuffer[i] = (double)i;
 

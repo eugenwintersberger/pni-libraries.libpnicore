@@ -7,6 +7,10 @@
 
 #include "exceptions.hpp"
 
+
+namespace pni{
+namespace utils{
+
 //! Shape object
 
 //! ArrayShape objects describe the shape of an array. In particular
@@ -138,5 +142,8 @@ class ArrayShape{
         //! \sa void setDimensions(const unsigned int *s), void setDimension(const unsigned int &i,const unsigned int &d)
         const unsigned int operator[](unsigned int i) const { return _shape[i];}
 };
+
+}
+}
 
 #endif

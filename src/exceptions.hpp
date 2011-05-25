@@ -6,6 +6,10 @@
 #include<iostream>
 #include<string>
 
+namespace pni{
+namespace utils{
+
+
 //! Exceptions base class
 
 //! The base class for all exceptions in the library. Constructors are design
@@ -221,5 +225,6 @@ public:
 
 };
 
-
+}
+}
 #endif

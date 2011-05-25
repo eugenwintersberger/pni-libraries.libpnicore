@@ -5,6 +5,10 @@
 
 #include "exceptions.hpp"
 
+namespace pni{
+namespace utils{
+
+
 Exception::Exception(const std::string &n){
     _name = n;
 }
@@ -43,4 +47,7 @@ std::ostream &operator<<(std::ostream &ostr,const Exception &ex){
     ostr<<ex._desc<<std::endl;
     
     return ostr;
+}
+
+}
 }

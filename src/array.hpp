@@ -16,6 +16,10 @@
 #include "exceptions.hpp"
 #include "pnitypes.hpp"
 
+namespace pni{
+namespace utils{
+
+
 template<typename T> class Array;
 
 //binary operators must be defined here since they are implemented as friend operators
@@ -1051,5 +1055,8 @@ typedef Array<Float128>   Float128Array;
 typedef Array<Complex32>  Complex32Array;
 typedef Array<Complex64>  Complex64Array;
 typedef Array<Complex128> Complex128Array;
+
+}
+}
 
 #endif
