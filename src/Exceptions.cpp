@@ -3,7 +3,7 @@
 #include<iostream>
 #include<string>
 
-#include "exceptions.hpp"
+#include "Exceptions.hpp"
 
 namespace pni{
 namespace utils{

@@ -2,11 +2,13 @@ import os.path as path
 
 Import("build_env")
 
-source_list = ["array.cpp","arrayshape.cpp","exceptions.cpp"]
+source_list = ["Array.cpp","ArrayShape.cpp","Exceptions.cpp","DataObject.cpp"]
                
 obj = build_env.SharedObject(source_list)
 aobj = build_env.StaticObject(source_list)
-#obj.append(SConscript("io/SConscript"))
+(sioobj,aioobj) = SConscript("io/SConscript")
+obj.append(sioobj)
+aobj.append(aioobj)
 
 libpniutils=build_env.SharedLibrary("pniutils",obj,so_version="0")
 statlibpniutils = build_env.StaticLibrary("pniutils",aobj)

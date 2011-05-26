@@ -5,7 +5,7 @@
 
 #include <string>
 
-#include "exceptions.hpp"
+#include "Exceptions.hpp"
 
 
 namespace pni{

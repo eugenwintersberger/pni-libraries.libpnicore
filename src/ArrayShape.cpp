@@ -3,8 +3,8 @@
 #include<iostream>
 #include<string>
 
-#include "arrayshape.hpp"
-#include "exceptions.hpp"
+#include "ArrayShape.hpp"
+#include "Exceptions.hpp"
 
 namespace pni{
 namespace utils{

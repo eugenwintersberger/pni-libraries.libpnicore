@@ -5,4 +5,4 @@
  *      Author: Eugen Wintersberger
  */
 
-#include "array.hpp"
+#include "Array.hpp"

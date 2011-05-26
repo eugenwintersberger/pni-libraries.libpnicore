@@ -8,7 +8,12 @@
 #ifndef CBFHEADER_HPP_
 #define CBFHEADER_HPP_
 
-#include "cbfbinstreamreader.hpp"
+#include "CBFBinStreamReader.hpp"
+#include "../DataObject.hpp"
+
+namespace pni{
+namespace utils{
+
 
 #define CIF_DATA_TYPE_KEY  "X-Binary-Element-Type"
 #define CIF_DATA_SIGNED_INT32  "\"signed 32-bit integer\""
@@ -61,7 +66,7 @@ class CIFBinaryHeader{
         friend std::ostream &operator<<(std::ostream &o,const CIFBinaryHeader &h);
 
         virtual CBFBinStreamReader *createBinaryReader(){ return NULL;}
-        virtual DataValue *createArray();
+        virtual DataObject *createArray();
         unsigned long getNumberOfElements() const { return _nofelements;}
         unsigned int getNumberOfDimensions() const { return _ndims;}
         const unsigned long *getDimensions() const { return _dims;}
@@ -76,6 +81,9 @@ class PCIFBinaryHeader:public CIFBinaryHeader{
     virtual CBFBinStreamReader *createBinaryReader();
 };
 
+//end of namespace
+}
+}
 
 
 #endif /* CBFHEADER_HPP_ */

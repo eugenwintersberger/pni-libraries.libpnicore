@@ -11,7 +11,7 @@
 #include <iostream>
 #include <string>
 #include <boost/shared_array.hpp>
-#include "exceptions.hpp"
+#include "Exceptions.hpp"
 
 namespace pni{
 namespace utils{
@@ -21,7 +21,7 @@ template<typename T> class Buffer;
 template<typename T> bool operator==(const Buffer<T> &,const Buffer<T> &);
 template<typename T> bool operator!=(const Buffer<T> &,const Buffer<T> &);
 
-class AbstractBuffer{
+class BufferObject{
 public:
 	virtual unsigned long getSize(){return 0;}
 	virtual unsigned long getMemSize(){return 0;}
@@ -43,7 +43,7 @@ public:
 //! Future implementations of this structure may include thread safety using
 //! the BOOST threading classes.
 
-template<typename T>class Buffer:public AbstractBuffer{
+template<typename T>class Buffer:public BufferObject{
 protected:
 	T* _data;  //!< pointer to the data held by the buffer
 	unsigned long _size;    //!< number of elements in the buffer
