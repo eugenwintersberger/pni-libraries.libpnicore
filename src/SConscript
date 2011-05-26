@@ -8,7 +8,7 @@ obj = build_env.SharedObject(source_list)
 aobj = build_env.StaticObject(source_list)
 #obj.append(SConscript("io/SConscript"))
 
-libpniutils=build_env.SharedLibrary("pniutils",obj)
+libpniutils=build_env.SharedLibrary("pniutils",obj,so_version="0")
 statlibpniutils = build_env.StaticLibrary("pniutils",aobj)
 build_env.Alias("all",[libpniutils,statlibpniutils])
 build_env.Alias("library",[libpniutils,statlibpniutils])
