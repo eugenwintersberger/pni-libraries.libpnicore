@@ -47,7 +47,7 @@ public:
 	}
 	;
 
-	virtual void setBuffer(AbstractBuffer *b) {
+	virtual void setBuffer(BufferObject *b) {
 		std::cout << "call base class - does nothing!" << std::endl;
 	}
 
