@@ -5,7 +5,7 @@
 
 #include<cppunit/TestFixture.h>
 #include<cppunit/extensions/HelperMacros.h>
-#include "arrayshape.hpp"
+#include "ArrayShape.hpp"
 
 class ArrayShapeTest: public CppUnit::TestFixture {
 	CPPUNIT_TEST_SUITE(ArrayShapeTest);

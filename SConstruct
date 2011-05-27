@@ -9,7 +9,7 @@ debug = ARGUMENTS.get("DEBUG",0)
 var = Variables()
 var.Add(PathVariable("PREFIX","set installation prefix","/usr/local"))
 var.Add(PathVariable("DESTDIR","set destination directory","/",PathVariable.PathAccept))
-var.Add("LIBSONAME","set SONAME for the library","")
+var.Add("LIBSONAME","set SONAME for the library","libpniutils.so")
 
 
 #create the build environment
@@ -30,9 +30,7 @@ env.Replace(CXX = "g++")
 
 #set default compiler flags
 env.Append(CXXFLAGS = ["-Wall"])
-#the next line is necessary for the linker on Debian system - this needs 
-#a bit more information
-env.Append(LINKFLAGS=["-Wl,-h$LIBSONAME"])
+
 
 #create optimized environment
 opt_env = env.Clone()
@@ -48,7 +46,13 @@ if debug:
 else:
     build_env = opt_env.Clone()
 
+
+test_build_env = build_env.Clone()
+#the next line is necessary for the linker on Debian system - this needs 
+#a bit more information
+build_env.Append(LINKFLAGS=["-Wl,-h$LIBSONAME"])
 Export("build_env")
+Export("test_build_env")
 
 
 #build

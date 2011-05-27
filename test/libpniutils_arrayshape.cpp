@@ -2,7 +2,7 @@
 
 #include<cppunit/extensions/HelperMacros.h>
 
-#include "arrayshape.hpp"
+#include "ArrayShape.hpp"
 #include "libpniutils_arrayshape.hpp"
 
 CPPUNIT_TEST_SUITE_REGISTRATION(ArrayShapeTest);

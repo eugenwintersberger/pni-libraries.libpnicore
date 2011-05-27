@@ -9,6 +9,7 @@
 #define CBFBINSTREAMREADER_HPP_
 
 #include<iostream>
+#include<boost/shared_ptr.hpp>
 
 #include "../Buffer.hpp"
 
@@ -47,8 +48,8 @@ public:
 	}
 	;
 
-	virtual void setBuffer(BufferObject *b) {
-		std::cout << "call base class - does nothing!" << std::endl;
+	virtual void setBuffer(boost::shared_ptr<BufferObject> buffer){
+		std::cout<<"call base class - does nothing!"<<std::endl;
 	}
 
 };

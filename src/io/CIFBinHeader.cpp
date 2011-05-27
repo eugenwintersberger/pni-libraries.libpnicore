@@ -9,9 +9,12 @@
 
 #include<iostream>
 
-#include "cbfheader.hpp"
-#include "../datavalue.hpp"
-#include "../array.hpp"
+#include "CBFHeader.hpp"
+#include "../DataObject.hpp"
+#include "../Array.hpp"
+
+namespace pni{
+namespace utils{
 
 std::ostream &operator<<(std::ostream &o,const CIFBinaryHeader &h){
     long i;
@@ -44,7 +47,7 @@ std::ostream &operator<<(std::ostream &o,const CIFBinaryHeader &h){
     return o;
 }
 
-DataValue *CIFBinaryHeader::createArray(){
+ArrayObject *CIFBinaryHeader::createArray(){
 	unsigned int *dims;
 	dims = new unsigned int[_ndims];
 	for(unsigned int i=0;i<_ndims;i++){
@@ -53,13 +56,16 @@ DataValue *CIFBinaryHeader::createArray(){
 	}
 
 	switch(_data_type){
-	case(SIGNED_INT_32): return new Array<int>(_ndims,dims); break;
-	case(SIGNED_INT_16): return new Array<short>(_ndims,dims); break;
+	case(SIGNED_INT_32): return (ArrayObject*)(new Array<int>(_ndims,dims)); break;
+	case(SIGNED_INT_16): return (ArrayObject*)(new Array<short>(_ndims,dims)); break;
 	default: return NULL;
 	}
 
 	delete [] dims;
 }
 
+//end of namespace
+}
+}
 
 

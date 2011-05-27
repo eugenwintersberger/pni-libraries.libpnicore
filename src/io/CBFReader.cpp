@@ -10,11 +10,17 @@
 #include "CBFReader.hpp"
 #include "strutils.hpp"
 #include "../Exceptions.hpp"
+#include "../Array.hpp"
 #include "../DataObject.hpp"
 #include "../PNITypes.hpp"
 
 namespace pni{
 namespace utils{
+
+CBFReader::CBFReader():Reader()
+{
+	_binheader = NULL;
+}
 
 CBFReader::CBFReader(const char* filename):Reader(filename)
 {
@@ -30,7 +36,7 @@ DataObject *CBFReader::read(){
     UInt8 byte;
     String linebuffer;
     String key,value;
-    DataObject *v;
+    ArrayObject *v;
 
     while(!_istream.eof()){
         byte = _istream.get();
@@ -86,9 +92,12 @@ DataObject *CBFReader::read(){
         	v->setDescription("Dectris CBF detector data");
 
         	reader->setStream(&_istream);
-        	reader->setBuffer(v->getBuffer());
+        	boost::shared_ptr<BufferObject> o = v->getBuffer();
+        	reader->setBuffer(o);
         	//call the reader method
         	reader->read();
+
+        	std::cout<<"finished with reading data!"<<std::endl;
 
         	//once we are done we have to destroy the reader again and leave the
         	//loop

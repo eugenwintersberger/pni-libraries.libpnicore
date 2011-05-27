@@ -3,7 +3,7 @@
 #include<cppunit/extensions/HelperMacros.h>
 
 #include "libpniutils_buffer.hpp"
-#include "buffer.hpp"
+#include "Buffer.hpp"
 
 //register the test at the test suite
 CPPUNIT_TEST_SUITE_REGISTRATION(BufferTest);

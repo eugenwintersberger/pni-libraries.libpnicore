@@ -18,7 +18,7 @@
 #include "../DataObject.hpp"
 
 #include "Reader.hpp"
-#include "cbfheader.hpp"
+#include "CBFHeader.hpp"
 
 
 #define CIF_BINARY_SECTION "--CIF-BINARY-FORMAT-SECTION--"

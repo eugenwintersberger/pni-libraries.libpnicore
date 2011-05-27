@@ -10,6 +10,7 @@
 
 #include "CBFBinStreamReader.hpp"
 #include "../DataObject.hpp"
+#include "../Array.hpp"
 
 namespace pni{
 namespace utils{
@@ -66,7 +67,7 @@ class CIFBinaryHeader{
         friend std::ostream &operator<<(std::ostream &o,const CIFBinaryHeader &h);
 
         virtual CBFBinStreamReader *createBinaryReader(){ return NULL;}
-        virtual DataObject *createArray();
+        virtual ArrayObject *createArray();
         unsigned long getNumberOfElements() const { return _nofelements;}
         unsigned int getNumberOfDimensions() const { return _ndims;}
         const unsigned long *getDimensions() const { return _dims;}

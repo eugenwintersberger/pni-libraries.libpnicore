@@ -8,44 +8,55 @@
 #ifndef CBFBOREADERS_HPP_
 #define CBFBOREADERS_HPP_
 
-#include "cbfbinstreamreader.hpp"
+#include <boost/shared_ptr.hpp>
+
+#include "CBFBinStreamReader.hpp"
 #include "../Exceptions.hpp"
 #include "../Buffer.hpp"
 
+
+namespace pni{
+namespace utils{
+
+
 template<typename T> class CBFBinReaderByteOffset: public CBFBinStreamReader {
 private:
-	Buffer<T> *_buffer;
+	boost::shared_ptr<Buffer<T> > _buffer;
 public:
 	CBFBinReaderByteOffset();
 	CBFBinReaderByteOffset(unsigned long);
 	virtual ~CBFBinReaderByteOffset();
 
 	virtual void read();
-	virtual void setBuffer(AbstractBuffer *b) {
-		_buffer = (Buffer<T> *) b;
+	virtual boost::shared_ptr<Buffer<T> > &getBuffer(){
+		return _buffer;
+	}
+
+	virtual void setBuffer(boost::shared_ptr<BufferObject > buffer){
+		_buffer = boost::shared_static_cast<Buffer<T> >(buffer);
 	}
 
 };
 
 template<typename T> CBFBinReaderByteOffset<T>::CBFBinReaderByteOffset() :
 	CBFBinStreamReader() {
-	_buffer = NULL;
+	_buffer.reset();
 }
 
 template<typename T> CBFBinReaderByteOffset<T>::CBFBinReaderByteOffset(
 		unsigned long n) :
 	CBFBinStreamReader(n) {
 	elemsize_ = sizeof(T);
-	_buffer = NULL;
+	_buffer.reset();
 }
 ;
 
 template<typename T> CBFBinReaderByteOffset<T>::~CBFBinReaderByteOffset() {
-	_buffer = NULL;
+	_buffer.reset();
 }
 
 template<typename T> void CBFBinReaderByteOffset<T>::read() {
-	unsigned long i;
+	//unsigned long i;
 	unsigned long ecnt; // element counter
 	T buffer;
 
@@ -103,5 +114,10 @@ template<typename T> void CBFBinReaderByteOffset<T>::read() {
 
 typedef CBFBinReaderByteOffset<short> CBFBinStreamBOInt16;
 typedef CBFBinReaderByteOffset<int> CBFBinStreamBOInt32;
+
+//end of namespaces
+}
+}
+
 
 #endif /* CBFBOREADERS_HPP_ */

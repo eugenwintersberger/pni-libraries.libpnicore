@@ -7,7 +7,7 @@
 
 #include<cppunit/TestFixture.h>
 #include<cppunit/extensions/HelperMacros.h>
-#include "buffer.hpp"
+#include "Buffer.hpp"
 
 class BufferTest : public CppUnit::TestFixture{
 	CPPUNIT_TEST_SUITE(BufferTest);

@@ -1,8 +1,8 @@
 Import("build_env")
 
 
-sources = ["Reader.cpp","CBFReader.cpp","strutils.cpp","cifbinheader.cpp",
-           "pcifbinheader.cpp","CBFBinStreamReader.cpp"]
+sources = ["Reader.cpp","CBFReader.cpp","strutils.cpp","CIFBinHeader.cpp",
+           "PCIFBinHeader.cpp","CBFBinStreamReader.cpp"]
 
 sobjs = build_env.SharedObject(sources)
 aobjs = build_env.StaticObject(sources)

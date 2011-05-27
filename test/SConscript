@@ -1,6 +1,6 @@
-Import("build_env")
+Import("test_build_env")
 
-test_env = build_env.Clone()
+test_env = test_build_env.Clone()
 
 test_env.Append(LIBPATH=["../src/"])
 test_env.Append(LIBS=["pniutils","cppunit"])
@@ -12,6 +12,6 @@ sources_list.extend(["libpniutils_array.cpp"])
 sources_list.extend(["libpniutils_arrayshape.cpp"])
 
 pniutils_test = test_env.Program("pniutilstest",sources_list)
-#cbfreader_test = test_env.Program("cbf_reader_test",["cbf_reader_test.cpp"])
-test_env.Alias("test",[pniutils_test])
-test_env.Alias("all",[pniutils_test])
+cbfreader_test = test_env.Program("cbf_reader_test",["cbf_reader_test.cpp"])
+test_env.Alias("test",[pniutils_test,cbfreader_test])
+test_env.Alias("all",[pniutils_test,cbfreader_test])

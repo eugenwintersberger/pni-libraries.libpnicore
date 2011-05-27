@@ -14,10 +14,14 @@
 #include<cstdio>
 #include<cstdlib>
 
-#include "cbfheader.hpp"
-#include "cbfbinstreamreader.hpp"
-#include "cbfboreaders.hpp"
+#include "CBFHeader.hpp"
+#include "CBFBinStreamReader.hpp"
+#include "CBFBOReaders.hpp"
 #include "strutils.hpp"
+
+namespace pni{
+namespace utils{
+
 
 PCIFBinaryHeader::PCIFBinaryHeader(std::ifstream &stream){
     unsigned char byte;
@@ -120,5 +124,9 @@ CBFBinStreamReader *PCIFBinaryHeader::createBinaryReader(){
 	default:
 		return NULL;
 	}
+}
+
+//end of namespace
+}
 }
 

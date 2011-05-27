@@ -7,7 +7,10 @@
 
 //Implementation of class CBFBinReader
 
-#include "cbfbinstreamreader.hpp"
+#include "CBFBinStreamReader.hpp"
+
+namespace pni{
+namespace utils{
 
 
 CBFBinStreamReader::CBFBinStreamReader(){
@@ -34,3 +37,6 @@ CBFBinStreamReader::~CBFBinStreamReader(){
 	_stream = NULL;
 }
 
+//end of namespaces
+}
+}
