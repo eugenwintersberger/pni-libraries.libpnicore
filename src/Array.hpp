@@ -27,11 +27,12 @@ public:
 	virtual ~ArrayObject(){}
 
 	virtual void setShape(const ArrayShape &s){}
-	virtual const boost::shared_ptr<ArrayShape> &getShape() const{}
+	virtual const boost::shared_ptr<ArrayShape> getShape() const{
+	}
 
 	virtual void setBuffer(const BufferObject &b){}
 	virtual void setBuffer(boost::shared_ptr<BufferObject> &b){}
-	virtual const boost::shared_ptr<BufferObject> &getBuffer() {}
+	virtual boost::shared_ptr<BufferObject> getBuffer() {}
 };
 
 
@@ -167,7 +168,7 @@ template<typename T> class Array:public ArrayObject{
         //! ArrayShape-object in the Array. After this call ptr and the Array
         //! share the shape object.
 
-        virtual const boost::shared_ptr<ArrayShape> &getShape() const;
+        virtual const boost::shared_ptr<ArrayShape> getShape() const;
         //! set the buffer of the array
 
         //! Manually set the Buffer object of the array. Here a reference to an
@@ -195,7 +196,7 @@ template<typename T> class Array:public ArrayObject{
         //! in the Array.
 
         //! \param ptr reference to the target smart pointer
-        virtual const boost::shared_ptr<Buffer<T> > &getBuffer() const;
+        virtual boost::shared_ptr<Buffer<T> > getBuffer();
 
 
         //! assign a native type to the array
@@ -569,7 +570,7 @@ template<typename T> void Array<T>::setShape(boost::shared_ptr<ArrayShape> &s){
 	}
 }
 
-template<typename T> const boost::shared_ptr<ArrayShape> &Array<T>::getShape() const{
+template<typename T> const boost::shared_ptr<ArrayShape> Array<T>::getShape() const{
 	return _shape;
 }
 
@@ -592,7 +593,7 @@ template<typename T> void Array<T>::setBuffer(const boost::shared_ptr<Buffer<T> 
 	_data = b;
 }
 
-template<typename T> const boost::shared_ptr<Buffer<T> > &Array<T>::getBuffer() const{
+template<typename T> boost::shared_ptr<Buffer<T> > Array<T>::getBuffer(){
 	return _data;
 }
 
