@@ -24,6 +24,7 @@
 #define CIF_BINARY_SECTION "--CIF-BINARY-FORMAT-SECTION--"
 #define CIF_HEADER_CONVENTION "_array_data.header_convention"
 #define CIF_HEADER_CONVENTION_SLS "\"SLS_1.0\""
+#define CIF_HEADER_CONVENTION_SLS_11 "\"SLS/DECTRIS_1.1\""
 
 namespace pni{
 namespace utils{

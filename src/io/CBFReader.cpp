@@ -55,7 +55,7 @@ DataObject *CBFReader::read(){
 
                 if(key == CIF_HEADER_CONVENTION){
                     //need to set the proper header convention
-                    if(value == CIF_HEADER_CONVENTION_SLS){
+                    if((value == CIF_HEADER_CONVENTION_SLS)||(value==CIF_HEADER_CONVENTION_SLS_11)){
                         _header_convention_ = CIF_HEADER_CONVENTION_SLS;
                         std::cout<<"header convention "<<_header_convention_<<std::endl;
                     }
