@@ -4,6 +4,7 @@
 #define __ARRAYSHAPE_HPP__
 
 #include <string>
+#include <boost/shared_ptr.hpp>
 
 #include "Exceptions.hpp"
 
@@ -58,6 +59,8 @@ class ArrayShape{
     public:
         static const MemoryAllocationError DIMSTRIDE_ALLOC_ERROR;
         static const MemoryAllocationError SHAPE_ALLOC_ERROR;
+
+        typedef boost::shared_ptr<ArrayShape> sptr;  //define a smart pointer to this object
         //! default constructor
         ArrayShape();
         //! copy constructor
@@ -142,6 +145,7 @@ class ArrayShape{
         //! \sa void setDimensions(const unsigned int *s), void setDimension(const unsigned int &i,const unsigned int &d)
         const unsigned int operator[](unsigned int i) const { return _shape[i];}
 };
+
 
 }
 }

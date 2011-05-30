@@ -48,9 +48,10 @@ public:
 	}
 	;
 
-	virtual void setBuffer(boost::shared_ptr<BufferObject> buffer){
+	virtual void setBuffer(BufferObject::sptr &buffer){
 		std::cout<<"call base class - does nothing!"<<std::endl;
 	}
+
 
 };
 

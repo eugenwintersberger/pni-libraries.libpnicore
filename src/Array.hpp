@@ -20,6 +20,7 @@
 namespace pni{
 namespace utils{
 
+
 class ArrayObject:public DataObject{
 private:
 public:
@@ -27,12 +28,13 @@ public:
 	virtual ~ArrayObject(){}
 
 	virtual void setShape(const ArrayShape &s){}
-	virtual const boost::shared_ptr<ArrayShape> getShape() const{
+	virtual void setShape(const ArrayShape::sptr &s) {}
+	virtual const ArrayShape::sptr &getShape() const{
 	}
 
 	virtual void setBuffer(const BufferObject &b){}
-	virtual void setBuffer(boost::shared_ptr<BufferObject> &b){}
-	virtual boost::shared_ptr<BufferObject> getBuffer() {}
+	virtual void setBuffer(BufferObject::sptr &b){}
+	virtual const BufferObject::sptr &getBuffer() const {}
 };
 
 
@@ -92,6 +94,7 @@ template<typename T> class Array:public ArrayObject{
                                                //!< and managing the access to the data
         unsigned int *_index_buffer;  //!< a buffer used to hold index variables.
     public:
+        typedef boost::shared_ptr<Array<T> > sptr;
         //! default constructor
         Array();
         //! copy constructor
@@ -118,7 +121,7 @@ template<typename T> class Array:public ArrayObject{
         //! created Array object will be shared with the array's creator.
 
         //! \param &s reference to a smart pointer to a shape object
-        Array(const boost::shared_ptr<ArrayShape> &s);
+        Array(const ArrayShape::sptr &s);
         //! constructor where array shape and buffer object are set
 
         //! The constructor takes pointers to a shape object and a buffer
@@ -137,7 +140,7 @@ template<typename T> class Array:public ArrayObject{
 
         //! \param s smart pointer to the array shape object
         //! \param b smart pointer to the buffer object
-        Array(const boost::shared_ptr<ArrayShape> &s,const boost::shared_ptr<Buffer<T> > &b);
+        Array(const ArrayShape::sptr &s,const typename Buffer<T>::sptr &b);
 
         //! destructor
         virtual ~Array();
@@ -168,7 +171,7 @@ template<typename T> class Array:public ArrayObject{
         //! ArrayShape-object in the Array. After this call ptr and the Array
         //! share the shape object.
 
-        virtual const boost::shared_ptr<ArrayShape> getShape() const;
+        virtual const ArrayShape::sptr &getShape() const;
         //! set the buffer of the array
 
         //! Manually set the Buffer object of the array. Here a reference to an
@@ -188,7 +191,7 @@ template<typename T> class Array:public ArrayObject{
         //! in the array must match otherwise and exception will be raised.
 
         //! \param b reference to a smart pointer to a Buffer object
-        virtual void setBuffer(const boost::shared_ptr<Buffer<T> > &b);
+        virtual void setBuffer(const typename Buffer<T>::sptr &b);
         //! obtain a smart pointer to the array Buffer
 
         //! Sets the smart pointer ptr to the value of the buffer pointer.
@@ -196,8 +199,7 @@ template<typename T> class Array:public ArrayObject{
         //! in the Array.
 
         //! \param ptr reference to the target smart pointer
-        virtual boost::shared_ptr<Buffer<T> > getBuffer();
-
+        virtual const BufferObject::sptr &getBuffer() const;
 
         //! assign a native type to the array
 
@@ -490,7 +492,7 @@ template<typename T> Array<T>::Array(const ArrayShape &s,const Buffer<T> &b):Arr
 	}
 }
 
-template<typename T> Array<T>::Array(const boost::shared_ptr<ArrayShape> &s,const boost::shared_ptr<Buffer<T> > &b)
+template<typename T> Array<T>::Array(const ArrayShape::sptr &s,const typename Buffer<T>::sptr &b)
 		                      :ArrayObject()
 {
 	//nee to check if sizes of shape and buffer object match
@@ -552,7 +554,7 @@ template<typename T> void Array<T>::setShape(const ArrayShape &s){
 	}
 }
 
-template<typename T> void Array<T>::setShape(boost::shared_ptr<ArrayShape> &s){
+template<typename T> void Array<T>::setShape(ArrayShape::sptr &s){
 	if(s->getSize()!=_data->getSize()){
 		//raise and exception if the size of the new shape object
 		//and the buffer object do not match
@@ -570,7 +572,7 @@ template<typename T> void Array<T>::setShape(boost::shared_ptr<ArrayShape> &s){
 	}
 }
 
-template<typename T> const boost::shared_ptr<ArrayShape> Array<T>::getShape() const{
+template<typename T> const ArrayShape::sptr &Array<T>::getShape() const{
 	return _shape;
 }
 
@@ -584,7 +586,7 @@ template<typename T> void Array<T>::setBuffer(const Buffer<T> &b) {
 
 }
 
-template<typename T> void Array<T>::setBuffer(const boost::shared_ptr<Buffer<T> > &b){
+template<typename T> void Array<T>::setBuffer(const typename Buffer<T>::sptr &b){
 	if(b->getSize()!=_shape->getSize()){
 		//raise exception if sizes do not match
 		SizeMissmatchError e("Array<T>::setBuffer()","Buffer and array size do not match!");
@@ -593,8 +595,8 @@ template<typename T> void Array<T>::setBuffer(const boost::shared_ptr<Buffer<T> 
 	_data = b;
 }
 
-template<typename T> boost::shared_ptr<Buffer<T> > Array<T>::getBuffer(){
-	return _data;
+template<typename T> const BufferObject::sptr &Array<T>::getBuffer() const {
+	return (BufferObject::sptr &)_data;
 }
 
 template<typename T> T& Array<T>::operator()(unsigned int i,...){
@@ -1049,6 +1051,23 @@ typedef Array<Float128>   Float128Array;
 typedef Array<Complex32>  Complex32Array;
 typedef Array<Complex64>  Complex64Array;
 typedef Array<Complex128> Complex128Array;
+
+//define some useful smart pointers (_sptr - is the common suffix for shared pointers)
+typedef boost::shared_ptr<Int8Array>       Int8Array_sptr;
+typedef boost::shared_ptr<UInt8Array>      UInt8Array_sptr;
+typedef boost::shared_ptr<Int16Array>      Int16Array_sptr;
+typedef boost::shared_ptr<UInt16Array>     UInt16Array_sptr;
+typedef boost::shared_ptr<Int32Array>      Int32Array_sptr;
+typedef boost::shared_ptr<UInt32Array>     UInt32Array_sptr;
+typedef boost::shared_ptr<Int64Array>      Int64Array_sptr;
+typedef boost::shared_ptr<UInt64Array>     UInt64Array_sptr;
+typedef boost::shared_ptr<Float32Array>    Float32Array_sptr;
+typedef boost::shared_ptr<Float64Array>    Float64Array_sptr;
+typedef boost::shared_ptr<Float128Array>   Float128Array_sptr;
+typedef boost::shared_ptr<Complex32Array>  Complex32Array_sptr;
+typedef boost::shared_ptr<Complex64Array>  Complex64Array_sptr;
+typedef boost::shared_ptr<Complex128Array> Complex128Array_sptr;
+
 
 }
 }

@@ -23,13 +23,14 @@ template<typename T> bool operator!=(const Buffer<T> &,const Buffer<T> &);
 
 class BufferObject{
 public:
+	typedef boost::shared_ptr<BufferObject> sptr;  //smart ptr
 	virtual unsigned long getSize(){return 0;}
 	virtual unsigned long getMemSize(){return 0;}
 	virtual void resize(unsigned long n){}
 	virtual void allocate(unsigned long n){}
 };
 
-//! general Buffer type
+//! buffer template
 
 //! Class Buffer describes a contiguous region of memory holding
 //! data. The class is implemented as a template and can hold all
@@ -48,6 +49,7 @@ protected:
 	T* _data;  //!< pointer to the data held by the buffer
 	unsigned long _size;    //!< number of elements in the buffer
 public:
+	typedef boost::shared_ptr<Buffer<T> > sptr; //smart pointer
 	//! default constructor
 
 	//! If this constructor is used no memory will be allocated. For that purpose

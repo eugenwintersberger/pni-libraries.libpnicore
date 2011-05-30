@@ -21,7 +21,7 @@ namespace utils{
 
 template<typename T> class CBFBinReaderByteOffset: public CBFBinStreamReader {
 private:
-	boost::shared_ptr<Buffer<T> > _buffer;
+	typename Buffer<T>::sptr _buffer;
 public:
 	CBFBinReaderByteOffset();
 	CBFBinReaderByteOffset(unsigned long);
@@ -32,8 +32,8 @@ public:
 		return _buffer;
 	}
 
-	virtual void setBuffer(boost::shared_ptr<BufferObject > buffer){
-		_buffer = boost::shared_static_cast<Buffer<T> >(buffer);
+	virtual void setBuffer(BufferObject::sptr &buffer){
+		_buffer = (typename Buffer<T>::sptr &)buffer;
 	}
 
 };

@@ -39,8 +39,8 @@ void ArrayTest::testConstructors(){
 }
 
 void ArrayTest::testConstructorsShared(){
-	boost::shared_ptr<pni::utils::ArrayShape> shape(new pni::utils::ArrayShape(_r1,_s1));
-	boost::shared_ptr<pni::utils::Buffer<double> > buffer(new pni::utils::Buffer<double>(shape->getSize()));
+	pni::utils::ArrayShape::sptr shape(new pni::utils::ArrayShape(_r1,_s1));
+	pni::utils::Buffer<double>::sptr buffer(new pni::utils::Buffer<double>(shape->getSize()));
 
 	pni::utils::Array<double> *a = new pni::utils::Array<double>(shape,buffer);
 
@@ -56,7 +56,7 @@ void ArrayTest::testConstructorsShared(){
 
 	a = new pni::utils::Array<double>(_r2,_s2);
 	shape = a->getShape();
-    buffer = a->getBuffer();
+    buffer = (pni::utils::Buffer<double>::sptr &)a->getBuffer();
 
 	CPPUNIT_ASSERT(shape.use_count()==2);
 	CPPUNIT_ASSERT(buffer.use_count()==2);

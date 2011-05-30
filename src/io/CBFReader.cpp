@@ -92,7 +92,7 @@ DataObject *CBFReader::read(){
         	v->setDescription("Dectris CBF detector data");
 
         	reader->setStream(&_istream);
-        	boost::shared_ptr<BufferObject> o = v->getBuffer();
+        	BufferObject::sptr o = v->getBuffer();
         	reader->setBuffer(o);
         	//call the reader method
         	reader->read();
