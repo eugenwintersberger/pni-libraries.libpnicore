@@ -158,7 +158,7 @@ int main(int argc,char **argv){
     pni::utils::DataObject *v = NULL;
     PlotArray *plotter;
 
-    reader.setFileName("LAOS3_05461.cbf");
+    reader.setFileName("test_data/pr531_100k_1_1_0256.cbf");
     reader.open();
     v = reader.read();
     reader.close();
@@ -173,6 +173,7 @@ int main(int argc,char **argv){
     	std::cout<<a->Min()<<" "<<a->Max()<<std::endl;
     	std::cout<<a->Sum()<<std::endl;
 
+    	std::cout<<*(a->getShape())<<std::endl;
     	plotter = new PlotArray(a->getShape());
     	plotter->image_plot<int>(a);
     	std::cout<<"finished with plotting!"<<std::endl;

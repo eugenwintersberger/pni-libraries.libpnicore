@@ -266,6 +266,16 @@ bool operator!=(const ArrayShape &a,const ArrayShape &b){
     return false;
 }
 
+std::ostream &operator<<(std::ostream &o,const ArrayShape &s){
+	o<<"Rank = "<<s.getRank()<<":";
+	o<<"( ";
+	for(unsigned long i=0;i<s.getRank();i++) o<<s[i]<<" ";
+	o<<")";
+	return o;
+
+
+}
+
 }
 }
 

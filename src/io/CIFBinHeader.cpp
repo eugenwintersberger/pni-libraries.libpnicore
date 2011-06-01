@@ -52,7 +52,7 @@ ArrayObject *CIFBinaryHeader::createArray(){
 	dims = new unsigned int[_ndims];
 	for(unsigned int i=0;i<_ndims;i++){
 		std::cout<<_dims[2-i]<<std::endl;
-		dims[i]=_dims[2-i];
+		dims[_ndims-1-i]=_dims[2-i];
 	}
 
 	switch(_data_type){

@@ -144,6 +144,8 @@ class ArrayShape{
         //! use this operator to set array dimensions.
         //! \sa void setDimensions(const unsigned int *s), void setDimension(const unsigned int &i,const unsigned int &d)
         const unsigned int operator[](unsigned int i) const { return _shape[i];}
+
+        friend std::ostream &operator<<(std::ostream &o,const ArrayShape &s);
 };
 
 
