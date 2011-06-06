@@ -44,7 +44,7 @@ void ArrayTest::testConstructorsShared(){
 
 	pni::utils::Array<double> *a = new pni::utils::Array<double>(shape,buffer);
 
-	for(unsigned long i;i<shape->getSize();i++) CPPUNIT_ASSERT((*a)[i]=(*buffer)[i]);
+	for(unsigned long i=0;i<shape->getSize();i++) CPPUNIT_ASSERT((*a)[i]=(*buffer)[i]);
 
 	CPPUNIT_ASSERT(shape.use_count()==2);
 	CPPUNIT_ASSERT(buffer.use_count()==2);

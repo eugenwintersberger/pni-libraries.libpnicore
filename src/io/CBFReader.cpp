@@ -36,7 +36,7 @@ DataObject *CBFReader::read(){
     UInt8 byte;
     String linebuffer;
     String key,value;
-    ArrayObject *v;
+    ArrayObject *v = NULL;
 
     while(!_istream.eof()){
         byte = _istream.get();

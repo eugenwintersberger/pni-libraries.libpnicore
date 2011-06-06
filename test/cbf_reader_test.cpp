@@ -158,7 +158,8 @@ int main(int argc,char **argv){
     pni::utils::DataObject *v = NULL;
     PlotArray *plotter;
 
-    reader.setFileName("test_data/pr531_100k_1_1_0256.cbf");
+    //reader.setFileName("test_data/pr531_100k_1_1_0256.cbf");
+    reader.setFileName("LAOS3_05461.cbf");
     reader.open();
     v = reader.read();
     reader.close();

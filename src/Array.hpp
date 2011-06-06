@@ -17,6 +17,8 @@
 #include "PNITypes.hpp"
 #include "DataObject.hpp"
 
+#include "ArrayTrait.hpp"
+
 namespace pni {
 namespace utils {
 
@@ -90,6 +92,10 @@ public:
 	virtual void setBuffer(BufferObject::sptr &b);
 	virtual const BufferObject::sptr &getBuffer() const;
 };
+
+
+
+
 
 template<typename T> class Array;
 
@@ -316,7 +322,7 @@ public:
 
 	//! Computes the sum of all elements stored in the array.
 	//! \return number of type T
-	T Sum() const;
+	typename ArrayType<T>::Type Sum() const;
 	//! minimum value
 
 	//! returns the minimum element in the array.
@@ -507,24 +513,32 @@ template<typename T> std::ostream &operator<<(std::ostream &o,
 //======================Methods for data access and array manipulation==========================
 
 template<typename T> void Array<T>::setBuffer(const Buffer<T> &b) {
-	if (b.getSize() != _shape->getSize()) {
-		//raise an exception
-		SizeMissmatchError e("Array<T>::setBuffer",
-				"Buffser and array size do not match!");
-		throw e;
+	if (_shape) {
+		//if there exists already a shape object we have to check the size
+		if (b.getSize() != _shape->getSize()) {
+			//raise an exception
+			SizeMissmatchError e("Array<T>::setBuffer",
+					"Buffser and array size do not match!");
+			throw e;
+		}
 	}
 	_data.reset(new Buffer<T> (b));
+	_data_object = (BufferObject::sptr)(_data);
 
 }
 
 template<typename T> void Array<T>::setBuffer(const typename Buffer<T>::sptr &b) {
-	if (b->getSize() != _shape->getSize()) {
-		//raise exception if sizes do not match
-		SizeMissmatchError e("Array<T>::setBuffer()",
-				"Buffer and array size do not match!");
-		throw e;
+	if (_shape) {
+		//if there exists already a shape object we have to check the size
+		if (b->getSize() != _shape->getSize()) {
+			//raise exception if sizes do not match
+			SizeMissmatchError e("Array<T>::setBuffer()",
+					"Buffer and array size do not match!");
+			throw e;
+		}
 	}
 	_data = b;
+	_data_object = (BufferObject::sptr)(b);
 }
 
 template<typename T> const BufferObject::sptr &Array<T>::getBuffer() const {
@@ -565,9 +579,9 @@ template<typename T> bool operator!=(const Array<T> &b1, const Array<T> &b2) {
 }
 
 //==============Methods for in-place array manipulation===========================================
-template<typename T> T Array<T>::Sum() const {
+template<typename T> typename ArrayType<T>::Type Array<T>::Sum() const {
 	unsigned long i;
-	T result = 0;
+	typename ArrayType<T>::Type result = 0;
 	Buffer<T> &d = *_data;
 
 	for (i = 0; i < _shape->getSize(); i++)

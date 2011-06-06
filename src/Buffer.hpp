@@ -16,19 +16,25 @@
 namespace pni{
 namespace utils{
 
+class BufferObject{
+protected:
+	unsigned long _size;       //!< number of elements in the buffer
+	unsigned long _elem_size; //!< size of a single element
+public:
+	typedef boost::shared_ptr<BufferObject> sptr;  //smart ptr
+	BufferObject();
+	BufferObject(const BufferObject &b);
+	BufferObject(unsigned long n,unsigned long es);
+	virtual ~BufferObject();
+	virtual unsigned long getSize(){return _size;}
+	virtual unsigned long getMemSize(){return _size*_elem_size;}
+	virtual void resize(unsigned long n){}
+	virtual void allocate(unsigned long n){}
+};
 
 template<typename T> class Buffer;
 template<typename T> bool operator==(const Buffer<T> &,const Buffer<T> &);
 template<typename T> bool operator!=(const Buffer<T> &,const Buffer<T> &);
-
-class BufferObject{
-public:
-	typedef boost::shared_ptr<BufferObject> sptr;  //smart ptr
-	virtual unsigned long getSize(){return 0;}
-	virtual unsigned long getMemSize(){return 0;}
-	virtual void resize(unsigned long n){}
-	virtual void allocate(unsigned long n){}
-};
 
 //! buffer template
 
@@ -46,8 +52,7 @@ public:
 
 template<typename T>class Buffer:public BufferObject{
 protected:
-	T* _data;  //!< pointer to the data held by the buffer
-	unsigned long _size;    //!< number of elements in the buffer
+	T* _data;            //!< pointer to the data held by the buffer
 public:
 	typedef boost::shared_ptr<Buffer<T> > sptr; //smart pointer
 	//! default constructor
@@ -63,7 +68,7 @@ public:
 	//! constructor with buffer size
 
 	//! Using this constructor the buffer will automatically allocate memory.
-	Buffer(unsigned long _size);
+	Buffer(unsigned long n);
 	virtual ~Buffer();
 
 	//! resize the buffer
@@ -139,12 +144,12 @@ public:
 
 };
 
-template<typename T> Buffer<T>::Buffer(){
+template<typename T> Buffer<T>::Buffer():BufferObject(){
 	_data = NULL;
-	_size = 0;
+	_elem_size = sizeof(T);
 }
 
-template<typename T> Buffer<T>::Buffer(unsigned long n){
+template<typename T> Buffer<T>::Buffer(unsigned long n):BufferObject(n,sizeof(T)){
 	_data = new T[n];
 	if(_data ==NULL){
 		//if memory allocation fails - throw an MemoryAllocationException
@@ -152,10 +157,9 @@ template<typename T> Buffer<T>::Buffer(unsigned long n){
 								std::string("Cannot allocate Buffer memory in constructor!"));
 		throw e;
 	}
-	_size = n;
 }
 
-template<typename T> Buffer<T>::Buffer(const Buffer<T> &b){
+template<typename T> Buffer<T>::Buffer(const Buffer<T> &b):BufferObject(b){
 	_data = new T[b._size];
 	if(_data == NULL){
 		//if memory allocation fails - throw an MemoryAllocationException
@@ -164,9 +168,8 @@ template<typename T> Buffer<T>::Buffer(const Buffer<T> &b){
 		throw e;
 	}
 
-	_size = b._size;
-
-	for(unsigned long i;i<_size;i++) _data[i] = b._data[i];
+	//copy data from the original buffer to the new one
+	for(unsigned long i=0;i<_size;i++) _data[i] = b._data[i];
 }
 
 template<typename T> Buffer<T>::~Buffer(){
@@ -290,7 +293,7 @@ template<typename T> T Buffer<T>::operator[](unsigned long n) const {
 	return _data[n];
 }
 
-
+//end of namespace
 }
 }
 #endif /* BUFFER_HPP_ */

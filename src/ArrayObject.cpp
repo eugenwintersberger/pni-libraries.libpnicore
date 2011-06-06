@@ -71,7 +71,7 @@ ArrayObject::~ArrayObject(){
 }
 
 void ArrayObject::setShape(const ArrayShape &s){
-	if (s.getSize() != _data->getSize()) {
+	if (s.getSize() != _data_object->getSize()) {
 		//raise an exception if the size of the new shape object
 		//and the buffer object do not fit.
 		SizeMissmatchError e("Array<T>::setShape",
@@ -93,7 +93,7 @@ void ArrayObject::setShape(const ArrayShape &s){
 }
 
 void ArrayObject::setShape(const ArrayShape::sptr &s){
-	if (s->getSize() != _data->getSize()) {
+	if (s->getSize() != _data_object->getSize()) {
 		//raise and exception if the size of the new shape object
 		//and the buffer object do not match
 		SizeMissmatchError e("Array<T>::setShape",
@@ -115,6 +115,18 @@ void ArrayObject::setShape(const ArrayShape::sptr &s){
 
 const ArrayShape::sptr &ArrayObject::getShape() const{
 	return _shape;
+}
+
+void ArrayObject::setBuffer(const BufferObject &b){
+	_data_object.reset(new BufferObject(b));
+}
+
+void ArrayObject::setBuffer(BufferObject::sptr &b){
+	_data_object = b;
+}
+
+const BufferObject::sptr &ArrayObject::getBuffer() const{
+	return _data_object;
 }
 
 //end of namespace
