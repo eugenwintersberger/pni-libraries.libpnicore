@@ -11,6 +11,9 @@
 #include <string>
 
 //define some standard types
+namespace pni{
+namespace utils{
+
 
 //integer types
 typedef char           Int8;
@@ -40,5 +43,9 @@ typedef std::string String;
 enum PNITypeID { INT8,UINT8,INT16,UINT16,INT32,UINT32,INT64,UINT64,
 	                FLOAT32,FLOAT64,FLOAT128,
 	                COMPLEX32,COMPLEX64,COMPLEX128,STRING};
+
+//end of namespace
+}
+}
 
 #endif /* TYPES_HPP_ */
