@@ -224,3 +224,67 @@ void ArrayTest::testUnaryOperations(){
 	for(i=0;i<s.getSize();i++) CPPUNIT_ASSERT(a1[i]==(a/b));
 
 }
+
+void ArrayTest::testTypeInfo(){
+	pni::utils::ArrayObject *ptr;
+
+	ptr = new pni::utils::ArrayObject();
+	CPPUNIT_ASSERT(ptr->getElementTypeID()==pni::utils::NONE);
+	delete ptr;
+
+	ptr = new pni::utils::Int8Array();
+	CPPUNIT_ASSERT(ptr->getElementTypeID()==pni::utils::INT8);
+	delete ptr;
+
+	ptr = new pni::utils::UInt8Array();
+	CPPUNIT_ASSERT(ptr->getElementTypeID()==pni::utils::UINT8);
+	delete ptr;
+
+	ptr = new pni::utils::Int16Array();
+	CPPUNIT_ASSERT(ptr->getElementTypeID()==pni::utils::INT16);
+	delete ptr;
+
+	ptr = new pni::utils::UInt16Array();
+	CPPUNIT_ASSERT(ptr->getElementTypeID()==pni::utils::UINT16);
+	delete ptr;
+
+	ptr = new pni::utils::Int32Array();
+	CPPUNIT_ASSERT(ptr->getElementTypeID()==pni::utils::INT32);
+	delete ptr;
+
+	ptr = new pni::utils::UInt32Array();
+	CPPUNIT_ASSERT(ptr->getElementTypeID()==pni::utils::UINT32);
+	delete ptr;
+
+	ptr = new pni::utils::Int64Array();
+	CPPUNIT_ASSERT(ptr->getElementTypeID()==pni::utils::INT64);
+	delete ptr;
+
+	ptr = new pni::utils::UInt64Array();
+	CPPUNIT_ASSERT(ptr->getElementTypeID()==pni::utils::UINT64);
+	delete ptr;
+
+	ptr = new pni::utils::Float32Array();
+	CPPUNIT_ASSERT(ptr->getElementTypeID()==pni::utils::FLOAT32);
+	delete ptr;
+
+	ptr = new pni::utils::Float64Array();
+	CPPUNIT_ASSERT(ptr->getElementTypeID()==pni::utils::FLOAT64);
+	delete ptr;
+
+	ptr = new pni::utils::Float128Array();
+	CPPUNIT_ASSERT(ptr->getElementTypeID()==pni::utils::FLOAT128);
+	delete ptr;
+
+	ptr = new pni::utils::Complex32Array();
+	CPPUNIT_ASSERT(ptr->getElementTypeID()==pni::utils::COMPLEX32);
+	delete ptr;
+
+	ptr = new pni::utils::Complex64Array();
+	CPPUNIT_ASSERT(ptr->getElementTypeID()==pni::utils::COMPLEX64);
+	delete ptr;
+
+	ptr = new pni::utils::Complex128Array();
+	CPPUNIT_ASSERT(ptr->getElementTypeID()==pni::utils::COMPLEX128);
+	delete ptr;
+}

@@ -13,6 +13,7 @@ class ArrayTest : public CppUnit::TestFixture{
 	CPPUNIT_TEST(testUnaryOperations);
 	CPPUNIT_TEST(testComparison);
 	CPPUNIT_TEST(testConstructorsShared);
+	CPPUNIT_TEST(testTypeInfo);
 	CPPUNIT_TEST_SUITE_END();
 private:
 	unsigned int *_s1;
@@ -28,6 +29,7 @@ public:
 	void testBinaryOperations();
 	void testUnaryOperations();
 	void testComparison();
+	void testTypeInfo();
 
 
 };

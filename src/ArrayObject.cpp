@@ -5,7 +5,8 @@
  *      Author: Eugen Wintersberger
  */
 
-#include "Array.hpp"
+#include "ArrayShape.hpp"
+#include "ArrayObject.hpp"
 
 namespace pni{
 namespace utils{
@@ -68,6 +69,10 @@ ArrayObject::~ArrayObject(){
 	if (_index_buffer != NULL)
 		delete[] _index_buffer;
 	_shape.reset();
+}
+
+PNITypeID ArrayObject::getElementTypeID() const {
+	return NONE;
 }
 
 void ArrayObject::setShape(const ArrayShape &s){
