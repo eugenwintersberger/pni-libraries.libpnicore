@@ -9,15 +9,20 @@
 #define SCALAROBJECT_HPP_
 
 #include "PNITypes.hpp"
-#include "DataObject.hpp"
+#include "NumericObject.hpp"
 
 namespace pni{
 namespace utils{
 
 
-class ScalarObject:public DataObject {
+class ScalarObject:public NumericObject {
 public:
-	ScalarObject();
+	ScalarObject():NumericObject(){}
+	ScalarObject(const ScalarObject &o):NumericObject(o){}
+	ScalarObject(const String &n,const String &u):NumericObject(n,u){}
+	ScalarObject(const char *n,const char *u):NumericObject(n,u){}
+	ScalarObject(const String &n,const String &d,const String &u):NumericObject(n,d,u){}
+	ScalarObject(const char *n,const char *d,const char *u):NumericObject(n,d,u){}
 	virtual ~ScalarObject();
 };
 

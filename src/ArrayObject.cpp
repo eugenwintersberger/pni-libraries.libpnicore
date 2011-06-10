@@ -12,12 +12,12 @@ namespace pni{
 namespace utils{
 
 
-ArrayObject::ArrayObject():DataObject(){
+ArrayObject::ArrayObject():NumericObject(){
 	_shape.reset();
 	_index_buffer = NULL;
 }
 
-ArrayObject::ArrayObject(const ArrayObject &a):DataObject(a){
+ArrayObject::ArrayObject(const ArrayObject &a):NumericObject(a){
 	//set shape object
 	_shape.reset(new ArrayShape(*(a._shape)));
 	if (!_shape) {
@@ -32,12 +32,12 @@ ArrayObject::ArrayObject(const ArrayObject &a):DataObject(a){
 }
 
 
-ArrayObject::ArrayObject(const unsigned int &r, const unsigned int s[]):DataObject(){
+ArrayObject::ArrayObject(const unsigned int &r, const unsigned int s[]):NumericObject(){
 	_shape.reset(new ArrayShape(r, s));
 	_index_buffer = new unsigned int[_shape->getRank()];
 }
 
-ArrayObject::ArrayObject(const ArrayShape &s):DataObject(){
+ArrayObject::ArrayObject(const ArrayShape &s):NumericObject(){
 	MemoryAllocationError e;
 	e.setSource("Array<T>::Array()");
 
@@ -53,7 +53,7 @@ ArrayObject::ArrayObject(const ArrayShape &s):DataObject(){
 	}
 }
 
-ArrayObject::ArrayObject(const ArrayShape::sptr &s):DataObject(){
+ArrayObject::ArrayObject(const ArrayShape::sptr &s):NumericObject(){
 	_shape = s; //the shape is now shared with the array creator (will increment reference counter)
 
 	MemoryAllocationError e;
@@ -71,7 +71,7 @@ ArrayObject::~ArrayObject(){
 	_shape.reset();
 }
 
-PNITypeID ArrayObject::getElementTypeID() const {
+PNITypeID ArrayObject::getTypeID() const {
 	return NONE;
 }
 

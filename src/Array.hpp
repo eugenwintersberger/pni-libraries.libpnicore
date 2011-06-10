@@ -19,7 +19,7 @@
 #include "ArrayObject.hpp"
 
 #include "ArrayTrait.hpp"
-#include "ArrayElementTypeInfo.hpp"
+#include "PNITypeInfo.hpp"
 
 namespace pni {
 namespace utils {
@@ -133,7 +133,7 @@ public:
 	//! destructor
 	virtual ~Array();
 
-	virtual PNITypeID getElementTypeID() const;
+	virtual PNITypeID getTypeID() const;
 
 	//! set the buffer of the array
 
@@ -433,8 +433,8 @@ template<typename T> Array<T>::~Array() {
 //==============================================================================================
 //Introspection of element type ID
 
-template<typename T> PNITypeID Array<T>::getElementTypeID() const {
-	return ArrayElementTypeInfo<T>::ElementTypeID;
+template<typename T> PNITypeID Array<T>::getTypeID() const {
+	return PNITypeInfo<T>::TypeID;
 }
 
 

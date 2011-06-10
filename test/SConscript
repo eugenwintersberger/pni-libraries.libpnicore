@@ -10,6 +10,7 @@ sources_list = ["pniutilstest.cpp"]
 sources_list.extend(["libpniutils_buffer.cpp"])
 sources_list.extend(["libpniutils_array.cpp"])
 sources_list.extend(["libpniutils_arrayshape.cpp"])
+sources_list.extend(["libpniutils_scalar.cpp"])
 
 pniutils_test = test_env.Program("pniutilstest",sources_list)
 cbfreader_test = test_env.Program("cbf_reader_test",["cbf_reader_test.cpp"])

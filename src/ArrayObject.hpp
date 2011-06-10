@@ -10,14 +10,14 @@
 
 #include "Buffer.hpp"
 #include "ArrayShape.hpp"
-#include "DataObject.hpp"
+#include "NumericObject.hpp"
 #include "boost/shared_ptr.hpp"
 
 namespace pni{
 namespace utils{
 
 //! Base class for numeric arrays
-class ArrayObject:public DataObject {
+class ArrayObject:public NumericObject {
 protected:
 	BufferObject::sptr _data_object; //!< general buffer object
 	ArrayShape::sptr _shape;     	 //!< shape object describing the shape of the array
@@ -55,7 +55,7 @@ public:
 	virtual ~ArrayObject();
 
 	//! get the type id of the elemnt type
-	virtual PNITypeID getElementTypeID() const;
+	virtual PNITypeID getTypeID() const;
 
 	//! set the shape of the array
 
