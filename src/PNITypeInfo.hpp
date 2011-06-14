@@ -13,15 +13,22 @@
 namespace pni{
 namespace utils{
 
+//! Type information class
 
+//! class that describes a PNI type as defined in PNITypes.hpp.
+//! This template is used to obtain information about types in other
+//! classes like arrays and scalars.
 template<typename T>
 class PNITypeInfo{
 private:
 public:
+	//! a type used to define objects
 	typedef T Type;
+	//! ID of the type
 	static const PNITypeID TypeID = NONE;
-
+	//! size of the type in bytes
 	static const size_t ByteSize = sizeof(T);
+	//! sign flag - tells if the type is signed
 	static const bool isSigned = false;
 
 	bool isNegative(const T &v){
@@ -33,6 +40,7 @@ public:
 	}
 };
 
+//! hello
 template<> class PNITypeInfo<Int8>{
 public:
 	typedef Int8 Type;

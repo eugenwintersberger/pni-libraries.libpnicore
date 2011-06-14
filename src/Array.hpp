@@ -26,7 +26,7 @@ namespace utils {
 
 
 
-
+//! \internal
 template<typename T> class Array;
 
 //binary operators must be defined here since they are implemented as friend operators
