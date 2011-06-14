@@ -8,126 +8,110 @@
 CPPUNIT_TEST_SUITE_REGISTRATION(ScalarTest);
 
 void ScalarTest::setUp(){
-    v1_char = -15;
-    v2_char = 5;
-    s1_char = new CharScalar(v1_char);
-    s2_char = new CharScalar(v2_char);
+    v1_i8 = -15; v2_i8 = 5;
+    s1_i8 = new pni::utils::Int8Scalar(v1_i8);
+    s2_i8 = new pni::utils::Int8Scalar(v2_i8);
+
+    v1_ui8 = 15; v2_ui8 = 5;
+    s1_ui8 = new pni::utils::UInt8Scalar(v1_ui8);
+    s2_ui8 = new pni::utils::UInt8Scalar(v2_ui8);
+
+    v1_i16 = -23; v2_i16 = 5012;
+    v1_ui16 = 100; v2_ui16 = 16000;
+
+    v1_i32 = -43000; v2_i32 = 100000;
+    v1_ui32 = 30212; v2_ui32 = 100000;
     
-    v1_uchar = 15;
-    v2_uchar = 5;
-    s1_uchar = new UCharScalar(v1_uchar);
-    s2_uchar = new UCharScalar(v2_uchar);
+    v1_i64 = 5000000000; v2_i64 = -500000;
+    v1_ui64 = 6000000000; v2_ui64 = 500000;
     
-    v1_short = -23;
-    v1_ushort = 100;
-    v1_int = -43000;
-    v1_uint = 30212;
-    v1_long = 5000000000;
-    v1_ulong = 6000000000;
-    v1_float = 34.567;
-    v1_double = 49.0498;
-    v1_string = "hello world";
-    v2_string = "this is a test";
-    
-    s1_string = new StringScalar(v1_string);
-    s2_string = new StringScalar(v2_string);
+
 }
 
 void ScalarTest::tearDown(){
-    delete s1_char;
-    delete s2_char;
-    
-    delete s1_uchar;
-    delete s2_uchar;
-    
-    delete s1_string;
-    delete s2_string;
+	if(s1_i8 != NULL) delete s1_i8;
+	if(s2_i8 != NULL) delete s2_i8;
+	if(s1_ui8 != NULL) delete s1_ui8;
+	if(s2_ui8 != NULL) delete s2_ui8;
 }
 
         
 void ScalarTest::testConstructors(){
     //use the char values to check the constructors
     //since we have a template everything should work
-    CharScalar s1(v1_char,"data");
-    CPPUNIT_ASSERT(s1.getValue() == v1_char);
-    s1 = CharScalar(v1_char,"data");
-    CPPUNIT_ASSERT(s1.getValue() == v1_char);
+    pni::utils::Int8Scalar s1(v1_i8,"data","");
+    CPPUNIT_ASSERT(s1.getValue() == v1_i8);
     CPPUNIT_ASSERT(s1.getName() == "data");
     
-    s1 = CharScalar(v1_char,"data","degree");
-    CPPUNIT_ASSERT(s1.getValue() == v1_char);
-    CPPUNIT_ASSERT(s1.getName() == "data");
+    s1 = pni::utils::Int8Scalar(v1_i8,"data2","degree");
+    CPPUNIT_ASSERT(s1.getValue() == v1_i8);
+    CPPUNIT_ASSERT(s1.getName() == "data2");
     CPPUNIT_ASSERT(s1.getUnit() == "degree");
     
-    s1 = CharScalar(v1_char,"data","degree","test data");
-    CPPUNIT_ASSERT(s1.getValue() == v1_char);
-    CPPUNIT_ASSERT(s1.getName() == "data");
+    s1 = pni::utils::Int8Scalar(v1_i8,"data3","degree","test data");
+    CPPUNIT_ASSERT(s1.getValue() == v1_i8);
+    CPPUNIT_ASSERT(s1.getName() == "data3");
     CPPUNIT_ASSERT(s1.getUnit() == "degree");
     CPPUNIT_ASSERT(s1.getDescription() == "test data");
     
-    StringScalar s2("hello world");
-    CPPUNIT_ASSERT(s2.getValue() == "hello world");
-    s2 = StringScalar("1","text");
-    CPPUNIT_ASSERT(s2.getValue() == "1");
-    CPPUNIT_ASSERT(s2.getName() == "text");
 }
 
 void ScalarTest::testCharOperations(){
-    char result;
+    pni::utils::Int8 result;
     
     //check division operator
-    result = v1_char/v2_char;
-    CPPUNIT_ASSERT(((*s1_char)/(*s2_char)) == result);
-    CPPUNIT_ASSERT(((*s1_char)/v2_char) == result);
-    CPPUNIT_ASSERT((v1_char/(*s2_char)) == result);
+    result = v1_i8/v2_i8;
+    CPPUNIT_ASSERT(((*s1_i8)/(*s2_i8)) == result);
+    CPPUNIT_ASSERT(((*s1_i8)/v2_i8) == result);
+    CPPUNIT_ASSERT((v1_i8/(*s2_i8)) == result);
     
     //check addition operator
-    result = v1_char + v2_char;
-    CPPUNIT_ASSERT(((*s1_char)+(*s2_char)) == result);
-    CPPUNIT_ASSERT(((*s1_char)+v2_char) == result);
-    CPPUNIT_ASSERT((v1_char + (*s2_char)) == result);
+    result = v1_i8 + v2_i8;
+    CPPUNIT_ASSERT(((*s1_i8)+(*s2_i8)) == result);
+    CPPUNIT_ASSERT(((*s1_i8)+v2_i8) == result);
+    CPPUNIT_ASSERT((v1_i8 + (*s2_i8)) == result);
     
     //check multiplication operator
-    result = v1_char * v2_char;
-    CPPUNIT_ASSERT(((*s1_char)*(*s2_char)) == result);
-    CPPUNIT_ASSERT(((*s1_char)*v2_char) == result);
-    CPPUNIT_ASSERT((v1_char*(*s2_char)) == result);
+    result = v1_i8 * v2_i8;
+    CPPUNIT_ASSERT(((*s1_i8)*(*s2_i8)) == result);
+    CPPUNIT_ASSERT(((*s1_i8)*v2_i8) == result);
+    CPPUNIT_ASSERT((v1_i8*(*s2_i8)) == result);
     
     //check the subtraction operator
-    result = v1_char - v2_char;
-    CPPUNIT_ASSERT(((*s1_char)-(*s2_char)) == result);
-    CPPUNIT_ASSERT(((*s1_char)-v2_char) == result);
-    CPPUNIT_ASSERT((v1_char-(*s2_char)) == result);
+    result = v1_i8 - v2_i8;
+    CPPUNIT_ASSERT(((*s1_i8)-(*s2_i8)) == result);
+    CPPUNIT_ASSERT(((*s1_i8)-v2_i8) == result);
+    CPPUNIT_ASSERT((v1_i8-(*s2_i8)) == result);
 
 
 }
 
 void ScalarTest::testUCharOperations(){
-    unsigned char result;
+    pni::utils::UInt8 result;
     
     //check division operator
-    result = v1_uchar/v2_uchar;
-    CPPUNIT_ASSERT(((*s1_uchar)/(*s2_uchar)) == result);
-    CPPUNIT_ASSERT(((*s1_uchar)/v2_uchar) == result);
-    CPPUNIT_ASSERT((v1_uchar/(*s2_uchar)) == result);
+    result = v1_ui8/v2_ui8;
+    CPPUNIT_ASSERT(((*s1_ui8)/(*s2_ui8)) == result);
+    CPPUNIT_ASSERT(((*s1_ui8)/v2_ui8) == result);
+    CPPUNIT_ASSERT((v1_ui8/(*s2_ui8)) == result);
     
     //check addition operator
-    result = v1_uchar + v2_uchar;
-    CPPUNIT_ASSERT(((*s1_uchar)+(*s2_uchar)) == result);
-    CPPUNIT_ASSERT(((*s1_uchar)+v2_uchar) == result);
-    CPPUNIT_ASSERT((v1_uchar + (*s2_uchar)) == result);
+    result = v1_ui8 + v2_ui8;
+    CPPUNIT_ASSERT(((*s1_ui8)+(*s2_ui8)) == result);
+    CPPUNIT_ASSERT(((*s1_ui8)+v2_ui8) == result);
+    CPPUNIT_ASSERT((v1_ui8 + (*s2_ui8)) == result);
     
     //check multiplication operator
-    result = v1_uchar * v2_uchar;
-    CPPUNIT_ASSERT(((*s1_uchar)*(*s2_uchar)) == result);
-    CPPUNIT_ASSERT(((*s1_uchar)*v2_uchar) == result);
-    CPPUNIT_ASSERT((v1_uchar*(*s2_uchar)) == result);
+    result = v1_ui8 * v2_ui8;
+    CPPUNIT_ASSERT(((*s1_ui8)*(*s2_ui8)) == result);
+    CPPUNIT_ASSERT(((*s1_ui8)*v2_ui8) == result);
+    CPPUNIT_ASSERT((v1_ui8*(*s2_ui8)) == result);
     
     //check the subtraction operator
-    result = v1_uchar - v2_uchar;
-    CPPUNIT_ASSERT(((*s1_uchar)-(*s2_uchar)) == result);
-    CPPUNIT_ASSERT(((*s1_uchar)-v2_uchar) == result);
-    CPPUNIT_ASSERT((v1_uchar-(*s2_uchar)) == result);
+    result = v1_ui8 - v2_ui8;
+    CPPUNIT_ASSERT(((*s1_ui8)-(*s2_ui8)) == result);
+    CPPUNIT_ASSERT(((*s1_ui8)-v2_ui8) == result);
+    CPPUNIT_ASSERT((v1_ui8-(*s2_ui8)) == result);
     
 
 }

@@ -17,7 +17,9 @@ class ScalarTest : public CppUnit::TestFixture{
     private:
         //create some variables of native types
         pni::utils::Int8 v1_i8,v2_i8;
+        pni::utils::Int8Scalar *s1_i8, *s2_i8;
         pni::utils::UInt8 v1_ui8,v2_ui8;
+        pni::utils::UInt8Scalar *s1_ui8,*s2_ui8;
         pni::utils::Int16 v1_i16,v2_i16;
         pni::utils::UInt16 v1_ui16,v2_ui16;
         pni::utils::Int32 v1_i32,v2_i32;

@@ -11,13 +11,23 @@ namespace pni{
 namespace utils{
 
 
-ScalarObject::ScalarObject():DataObject() {
+ScalarObject::ScalarObject():NumericObject() {
 	// TODO Auto-generated constructor stub
 
 }
 
 ScalarObject::~ScalarObject() {
 	// TODO Auto-generated destructor stub
+}
+
+ScalarObject &ScalarObject::operator=(const ScalarObject &o){
+	if(this != &o){
+		_name = o._name;
+		_unit = o._unit;
+		_description = o._description;
+	}
+
+	return *this;
 }
 
 //end of namespace

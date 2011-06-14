@@ -2,7 +2,8 @@ import os.path as path
 
 Import("build_env")
 
-source_list = ["Scalar.cpp","BufferObject.cpp","ArrayObject.cpp","Array.cpp","ArrayShape.cpp","Exceptions.cpp","DataObject.cpp","NumericObject.cpp"]
+source_list = ["ScalarObject.cpp","Scalar.cpp","BufferObject.cpp","ArrayObject.cpp",
+               "Array.cpp","ArrayShape.cpp","Exceptions.cpp","DataObject.cpp","NumericObject.cpp"]
                
 obj = build_env.SharedObject(source_list)
 aobj = build_env.StaticObject(source_list)

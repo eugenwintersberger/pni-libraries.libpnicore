@@ -17,13 +17,15 @@ namespace utils{
 
 class ScalarObject:public NumericObject {
 public:
-	ScalarObject():NumericObject(){}
+	ScalarObject();
 	ScalarObject(const ScalarObject &o):NumericObject(o){}
 	ScalarObject(const String &n,const String &u):NumericObject(n,u){}
 	ScalarObject(const char *n,const char *u):NumericObject(n,u){}
-	ScalarObject(const String &n,const String &d,const String &u):NumericObject(n,d,u){}
-	ScalarObject(const char *n,const char *d,const char *u):NumericObject(n,d,u){}
+	ScalarObject(const String &n,const String &u,const String &d):NumericObject(n,u,d){}
+	ScalarObject(const char *n,const char *u,const char *d):NumericObject(n,u,d){}
 	virtual ~ScalarObject();
+
+	ScalarObject &operator=(const ScalarObject &o);
 };
 
 

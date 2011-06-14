@@ -36,11 +36,11 @@ NumericObject::NumericObject(const char *n,const char *u):DataObject(n){
 	_unit = String(u);
 }
 
-NumericObject::NumericObject(const String &n,const String &d,const String &u):DataObject(n,d){
+NumericObject::NumericObject(const String &n,const String &u,const String &d):DataObject(n,d){
 	_unit = u;
 }
 
-NumericObject::NumericObject(const char *n,const char *d,const char *u):DataObject(n,d){
+NumericObject::NumericObject(const char *n,const char *u,const char *d):DataObject(n,d){
 	_unit = String(u);
 }
 
@@ -48,7 +48,7 @@ NumericObject::~NumericObject(){
 
 }
 
-String NumericObject::getUnit() const{
+String NumericObject::getUnit() const {
 	return _unit;
 }
 
@@ -62,6 +62,16 @@ void NumericObject::setUnit(const String &u){
 
 PNITypeID NumericObject::getTypeID() const{
 	return NONE;
+}
+
+NumericObject &NumericObject::operator=(const NumericObject &o){
+	if (this != &o) {
+		_name = o._name;
+		_description = o._description;
+		_unit = o._unit;
+	}
+
+	return *this;
 }
 
 //end of namespace

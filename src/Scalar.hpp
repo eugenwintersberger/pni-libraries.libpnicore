@@ -60,6 +60,7 @@ public:
 	Scalar(const T &v, const char *n, const char *u);
 	Scalar(const T &v, const String &n, const String &d, const String &u);
 	Scalar(const T &v, const char *n, const char *d, const char *u);
+
 	Scalar(const String &n, const String &u);
 	Scalar(const char *n, const char *u);
 	Scalar(const String &n, const String &d, const String &u);

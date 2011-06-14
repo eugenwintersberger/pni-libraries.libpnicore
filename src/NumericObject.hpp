@@ -41,8 +41,8 @@ public:
 	NumericObject(const String &n,const String &u);
 	NumericObject(const char *n,const char *u);
 	//! full constructor for a DataObject
-	NumericObject(const String &n,const String &d,const String &u);
-	NumericObject(const char *n,const char *d,const char *u);
+	NumericObject(const String &n,const String &u,const String &d);
+	NumericObject(const char *n,const char *u,const char *d);
 	//! destructor
 	virtual ~NumericObject();
 
@@ -59,6 +59,8 @@ public:
 	virtual void setUnit(const String &u);
 
 	virtual PNITypeID getTypeID() const;
+
+	NumericObject &operator=(const NumericObject &o);
 };
 
 
