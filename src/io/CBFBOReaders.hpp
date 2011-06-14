@@ -66,7 +66,7 @@ template<typename T> void CBFBinReaderByteOffset<T>::read() {
 	//initialize all data values with 0
 	*_buffer = 0;
 
-	std::cout << "start with reading binary data ..." << std::endl;
+	//std::cout << "start with reading binary data ..." << std::endl;
 	while ((!_stream->eof()) && (ecnt != nelements_)) {
 
 		_stream->read((char *) (&buffer), 1);
@@ -109,7 +109,7 @@ template<typename T> void CBFBinReaderByteOffset<T>::read() {
 		}
 
 	}
-	std::cout << "read " << ecnt << " elements to the data buffer" << std::endl;
+	//std::cout << "read " << ecnt << " elements to the data buffer" << std::endl;
 }
 
 typedef CBFBinReaderByteOffset<short> CBFBinStreamBOInt16;

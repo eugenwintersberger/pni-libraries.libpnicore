@@ -57,7 +57,7 @@ DataObject *CBFReader::read(){
                     //need to set the proper header convention
                     if((value == CIF_HEADER_CONVENTION_SLS)||(value==CIF_HEADER_CONVENTION_SLS_11)){
                         _header_convention_ = CIF_HEADER_CONVENTION_SLS;
-                        std::cout<<"header convention "<<_header_convention_<<std::endl;
+                        //std::cout<<"header convention "<<_header_convention_<<std::endl;
                     }
                 }
             }catch(...){
@@ -68,14 +68,14 @@ DataObject *CBFReader::read(){
 
             if(linebuffer == CIF_BINARY_SECTION){
             	//ok we reached the binary section of the file
-            	std::cout<<"found binary section"<<std::endl;
+            	//std::cout<<"found binary section"<<std::endl;
                 if(_header_convention_ == CIF_HEADER_CONVENTION_SLS){
                     //if the header convention identifies the file as a
                     //Dectris CBF file we use this particular reader
                     //for the binary section
                     _binheader = new PCIFBinaryHeader(_istream);
                 }
-                std::cout<<*_binheader<<std::endl;
+                //std::cout<<*_binheader<<std::endl;
             }
             linebuffer.clear();
             continue;
@@ -85,7 +85,7 @@ DataObject *CBFReader::read(){
             //algorithm used. However, we do not have to make this
             //decision by ourself - the header object will act as a
             //factory for the reader
-        	std::cout<<"create the binary stream reader!"<<std::endl;
+        	//std::cout<<"create the binary stream reader!"<<std::endl;
         	CBFBinStreamReader *reader = _binheader->createBinaryReader();
         	v = _binheader->createArray();
         	v->setName(_fname);
@@ -97,7 +97,7 @@ DataObject *CBFReader::read(){
         	//call the reader method
         	reader->read();
 
-        	std::cout<<"finished with reading data!"<<std::endl;
+        	//std::cout<<"finished with reading data!"<<std::endl;
 
         	//once we are done we have to destroy the reader again and leave the
         	//loop
