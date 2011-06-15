@@ -51,6 +51,7 @@ test_build_env = build_env.Clone()
 #the next line is necessary for the linker on Debian system - this needs 
 #a bit more information
 build_env.Append(LINKFLAGS=["-Wl,-h$LIBSONAME"])
+build_env.Append(LIBS=["tiff"])
 Export("build_env")
 Export("test_build_env")
 
