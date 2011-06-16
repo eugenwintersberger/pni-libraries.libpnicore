@@ -41,9 +41,10 @@ void TIFFReader::close(){
 }
 
 DataObject *TIFFReader::read(){
-	UInt32Array *array;
 	UInt32 shape[2];
 	uint32 w,h;
+	uint32 *raster;
+	UInt64 i,j;
 
 	//determine the dimension of the image
 	TIFFGetField(_tiff,TIFFTAG_IMAGEWIDTH,&w);
@@ -51,15 +52,32 @@ DataObject *TIFFReader::read(){
 	shape[0] = (UInt64)h;
 	shape[1] = (UInt64)w;
 
+	//fetch some tags to obtain information about the
+	//image data
+	UInt16 sperpix,bpersamp,dtype;
+	TIFFGetField(_tiff,TIFFTAG_SAMPLESPERPIXEL,&sperpix);
+	TIFFGetField(_tiff,TIFFTAG_BITSPERSAMPLE,&bpersamp);
+	TIFFGetField(_tiff,TIFFTAG_DATATYPE,&dtype);
+	std::cout<<"Samples per pixel: "<<sperpix<<std::endl;
+	std::cout<<"Bits per sample: "<<bpersamp<<std::endl;
 
-	//allocate array memory
-	array = new UInt32Array(2,shape);
-	Buffer<UInt32>::sptr buffer = boost::static_pointer_cast<Buffer<UInt32> >(array->getBuffer());
+	if(TIFFIsByteSwapped(_tiff)){
+		std::cout<<"byte swapped data"<<std::endl;
+	}
 
-	TIFFReadRGBAImage(_tiff,w,h,buffer->getPtr(),0);
 
-	//in the end we have to return the array data
-	return array;
+	raster = (uint32 *)_TIFFmalloc(w*h*sizeof(uint32));
+	TIFFReadRGBAImage(_tiff, w, h,raster, 0);
+	UInt32Array *array = new UInt32Array(2, shape);
+	for(i=0;i<h*w;i++){
+		(*array)[i] = (UInt32)raster[i];
+	}
+
+	std::cout<<array->Min()<<" "<<array->Max()<<std::endl;
+
+	_TIFFfree(raster);
+	return (DataObject *)array;
+
 }
 
 

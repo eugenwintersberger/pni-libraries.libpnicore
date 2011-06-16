@@ -18,6 +18,7 @@
 #include "../src/DataObject.hpp"
 #include "../src/Array.hpp"
 #include "../src/ArrayShape.hpp"
+#include "../src/io/TIFFFile.hpp"
 
 template<typename T> class PlPlotArrayDecorator:public Contourable_Data{
 private:
@@ -143,7 +144,7 @@ template<typename T> void PlotArray::image_plot(const pni::utils::ArrayObject *d
 	//copy data to image buffer
 	for(i=0;i<_nx;i++){
 		for(j=0;j<_ny;j++){
-			_image_buffer[i][j] = std::log10(a(i,j));
+			_image_buffer[i][j] = (PLFLT)a(i,j);
 		}
 	}
 
@@ -158,8 +159,15 @@ int main(int argc,char **argv){
     pni::utils::DataObject *v = NULL;
     PlotArray *plotter;
 
+    pni::utils::TIFFFile f;
+    f.setFileName("water_00259.tif");
+    f.open();
+    std::cout<<f;
+    f.close();
+    return 0;
+
     //reader.setFileName("test_data/pr531_100k_1_1_0256.cbf");
-    reader.setFileName("test.tif");
+    reader.setFileName("mscp03_au_sputter2_00057.tif");
     reader.open();
     v = reader.read();
     reader.close();
@@ -167,14 +175,14 @@ int main(int argc,char **argv){
     std::cout<<"finished with reading data"<<std::endl;
     std::cout<<typeid(*v).name()<<std::endl;
 
-   	pni::utils::Int32Array *a = (pni::utils::Int32Array *) v;
+   	pni::utils::UInt32Array *a = (pni::utils::UInt32Array *)v;
 
 	std::cout << a->Min() << " " << a->Max() << std::endl;
 	std::cout << a->Sum() << std::endl;
 
 	std::cout << *(a->getShape()) << std::endl;
 	plotter = new PlotArray(a->getShape());
-	plotter->image_plot<int> (a);
+	plotter->image_plot<pni::utils::UInt32> (a);
 	std::cout<<"finished with plotting!"<<std::endl;
 
 
