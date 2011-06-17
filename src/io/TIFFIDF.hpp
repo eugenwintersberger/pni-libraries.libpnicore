@@ -14,6 +14,9 @@
 
 #include "../PNITypes.hpp"
 
+#include "TIFFIDFAbstractEntry.hpp"
+#include "TIFFIDFEntry.hpp"
+
 namespace pni{
 namespace utils{
 
@@ -37,6 +40,10 @@ protected:
 	Int32 _idf_offset;  //!< starting offset of the IDF
 	Int32 _idf_next_offset; //!< offset to the next IDF (0 if this is the last);
 	UInt16 _number_of_idf_entries; //!< number of IDF entries
+	typedef std::vector<IDFAbstractEntry *> _IDFEntryList;
+	typedef _IDFEntryList::iterator _iterator;
+	typedef _IDFEntryList::const_iterator _const_iterator;
+	_IDFEntryList _entry_list;
 public:
 	TIFFIDF();
 	TIFFIDF(const TIFFIDF &o);
@@ -46,6 +53,9 @@ public:
 	virtual Int32 getNextOffset() const;
 	virtual Int32 getOffset() const;
 	virtual void setOffset(const Int32 &o);
+
+	IDFAbstractEntry *operator[](const UInt16 i);
+	IDFAbstractEntry *operator[](const String &n);
 
 	friend std::ifstream &operator>>(std::ifstream &i,TIFFIDF &idf);
 	friend std::ostream &operator<<(std::ostream &o,const TIFFIDF &idf);

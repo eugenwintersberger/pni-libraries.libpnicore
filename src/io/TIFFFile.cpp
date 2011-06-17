@@ -108,8 +108,7 @@ void TIFFFile::close(){
 }
 
 UInt64 TIFFFile::getNumberOfIFDs() const{
-
-	return 0;
+	return _idf_list.size();
 }
 
 bool TIFFFile::isLittleEndian() const{
@@ -119,6 +118,12 @@ bool TIFFFile::isLittleEndian() const{
 bool TIFFFile::isBigEndian() const{
 	return _is_big_endian;
 }
+
+TIFFIDF &TIFFFile::operator[](const UInt16 i){
+	//need a check here
+	return _idf_list[i];
+}
+
 
 std::ostream &operator<<(std::ostream &o,const TIFFFile &f){
 	o<<"TIFF File: "<<f.getFileName()<<std::endl;

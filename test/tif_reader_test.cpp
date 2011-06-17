@@ -160,7 +160,8 @@ int main(int argc,char **argv){
     PlotArray *plotter;
 
     pni::utils::TIFFFile f;
-    f.setFileName("water_00259.tif");
+    //f.setFileName("water_00259.tif");
+    f.setFileName("mscp03_au_sputter2_00057.tif");
     f.open();
     std::cout<<f;
     f.close();

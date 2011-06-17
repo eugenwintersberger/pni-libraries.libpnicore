@@ -47,6 +47,10 @@ public:
 	virtual bool isLittleEndian() const;
 	virtual bool isBigEndian() const;
 
+	//need an operator to access the IFDs
+	TIFFIDF &operator[](const UInt16 i);
+	TIFFIDF &operator[](const String &n);
+
 	friend std::ostream &operator<<(std::ostream &o,const TIFFFile &f);
 
 };
