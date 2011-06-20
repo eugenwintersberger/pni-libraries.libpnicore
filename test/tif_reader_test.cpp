@@ -19,6 +19,7 @@
 #include "../src/Array.hpp"
 #include "../src/ArrayShape.hpp"
 #include "../src/io/TIFFFile.hpp"
+#include "../src/io/TIFFIFD.hpp"
 
 template<typename T> class PlPlotArrayDecorator:public Contourable_Data{
 private:
@@ -163,28 +164,30 @@ int main(int argc,char **argv){
     //f.setFileName("water_00259.tif");
     f.setFileName("mscp03_au_sputter2_00057.tif");
     f.open();
-    std::cout<<f;
+    std::cout<<f<<std::endl;
+    pni::utils::TIFFIFD &idf = f[0];
+    //pni::utils::ArrayObject *a = idf.getData();
     f.close();
     return 0;
 
     //reader.setFileName("test_data/pr531_100k_1_1_0256.cbf");
-    reader.setFileName("mscp03_au_sputter2_00057.tif");
-    reader.open();
-    v = reader.read();
-    reader.close();
-
-    std::cout<<"finished with reading data"<<std::endl;
-    std::cout<<typeid(*v).name()<<std::endl;
-
-   	pni::utils::UInt32Array *a = (pni::utils::UInt32Array *)v;
-
-	std::cout << a->Min() << " " << a->Max() << std::endl;
-	std::cout << a->Sum() << std::endl;
-
-	std::cout << *(a->getShape()) << std::endl;
-	plotter = new PlotArray(a->getShape());
-	plotter->image_plot<pni::utils::UInt32> (a);
-	std::cout<<"finished with plotting!"<<std::endl;
+//    reader.setFileName("mscp03_au_sputter2_00057.tif");
+//    reader.open();
+//    v = reader.read();
+//    reader.close();
+//
+//    std::cout<<"finished with reading data"<<std::endl;
+//    std::cout<<typeid(*v).name()<<std::endl;
+//
+//   	pni::utils::UInt32Array *a = (pni::utils::UInt32Array *)v;
+//
+//	std::cout << a->Min() << " " << a->Max() << std::endl;
+//	std::cout << a->Sum() << std::endl;
+//
+//	std::cout << *(a->getShape()) << std::endl;
+//	plotter = new PlotArray(a->getShape());
+//	plotter->image_plot<pni::utils::UInt32> (a);
+//	std::cout<<"finished with plotting!"<<std::endl;
 
 
 

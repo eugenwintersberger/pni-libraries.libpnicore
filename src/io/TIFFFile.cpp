@@ -37,8 +37,11 @@ TIFFFile::~TIFFFile(){
 	_is_little_endian = false;
 	_is_big_endian = false;
 
+	_ifd_list.clear();
 	//close stream if it is still open
 	close();
+
+
 }
 
 void TIFFFile::setFileName(const String &n){
@@ -92,12 +95,11 @@ void TIFFFile::open(){
 
 	//read IDFs from the file
 	do{
+		TIFFIFD::IFDSptr idf(new TIFFIFD());
 		_ifstream.seekg(idf_offset, std::ios::beg);
-		TIFFIDF idf;
-		_ifstream >> idf;
-		std::cout << idf;
-		_idf_list.push_back(idf);
-		idf_offset = idf.getNextOffset();
+		_ifstream >> *idf;
+		_ifd_list.push_back(idf);
+		idf_offset = idf->getNextOffset();
 	}while(idf_offset);
 
 	//here we should place some parsing code
@@ -108,7 +110,7 @@ void TIFFFile::close(){
 }
 
 UInt64 TIFFFile::getNumberOfIFDs() const{
-	return _idf_list.size();
+	return _ifd_list.size();
 }
 
 bool TIFFFile::isLittleEndian() const{
@@ -119,9 +121,9 @@ bool TIFFFile::isBigEndian() const{
 	return _is_big_endian;
 }
 
-TIFFIDF &TIFFFile::operator[](const UInt16 i){
+TIFFIFD &TIFFFile::operator[](const UInt16 i){
 	//need a check here
-	return _idf_list[i];
+	return *(_ifd_list[i]);
 }
 
 
@@ -131,7 +133,94 @@ std::ostream &operator<<(std::ostream &o,const TIFFFile &f){
 	if(f.isBigEndian()) o<<"big endian"<<std::endl;
 	if(f.isLittleEndian()) o<<"little endian"<<std::endl;
 
+	//iterate over all IFDs
+	for(TIFFIFD::const_IFDIterator iter = f._ifd_list.begin();iter!=f._ifd_list.end();iter++){
+		std::cout<<*(*iter)<<std::endl;
+	}
+
 	return o;
+}
+
+TIFFImageData::sptr TIFFFile::getData(UInt64 i) const {
+	UInt64 dims[2];
+	IFDAbstractEntry::sptr e;
+	TIFFIFD &idf = *(_ifd_list[i]);
+	//ArrayObject *a;
+
+	//need to determine the dimension of the image
+	e = idf["ImageWidth"];
+	switch(e->getEntryTypeCode()){
+	case IDFE_SHORT:
+		dims[1] = (*boost::dynamic_pointer_cast<ShortEntry>(e))[0]; break;
+	case IDFE_LONG:
+		dims[1] = (*boost::dynamic_pointer_cast<LongEntry>(e))[0]; break;
+	default:
+		std::cerr<<"Unknown image width!"<<std::endl;
+		dims[1] = 0;
+	}
+
+	e = idf["ImageLength"];
+	switch(e->getEntryTypeCode()){
+	case IDFE_SHORT:
+		dims[0] = (*boost::dynamic_pointer_cast<ShortEntry>(e))[0]; break;
+	case IDFE_LONG:
+		dims[0] = (*boost::dynamic_pointer_cast<LongEntry>(e))[0];break;
+	default:
+		std::cerr<<"Unkown image length!"<<std::endl;
+		dims[0] = 0;
+	}
+
+	std::cout<<dims[0]<<" x "<<dims[1]<<std::endl;
+
+	//next task is to determine the data type
+	//determine the Bits per Sample
+	e = idf["BitsPerSample"];
+	UInt16 pbs = (*boost::dynamic_pointer_cast<ShortEntry>(e))[0];
+
+	//determine the data type used to store the data
+	e = idf["SampleFormat"];
+	UInt16 dtype;
+	if(e != NULL){
+		dtype = (*boost::dynamic_pointer_cast<ShortEntry>(e))[0];
+	}else{
+		dtype = 1;
+	}
+
+	//determine the number of samples per image
+	UInt16 ns;
+	e = idf["SamplesPerPixel"];
+	ns = 1;
+	if(e!=NULL) ns = (*boost::dynamic_pointer_cast<ShortEntry>(e))[0];
+
+	//determine the number of rows per strip
+	UInt16 rps = 1;
+	e = idf["RowsPerStrip"];
+	if(e!=NULL){
+		switch(e->getEntryTypeCode()){
+		case IDFE_SHORT:
+			rps = (*boost::dynamic_pointer_cast<ShortEntry>(e))[0]; break;
+		case IDFE_LONG:
+			rps = (*boost::dynamic_pointer_cast<LongEntry>(e))[0]; break;
+		default:
+			std::cerr<<"Numb of rows per strip is of unknown type!"<<std::endl;
+		}
+	}
+
+
+
+	//with the value of dtype and pbs one can determine the data type
+	//used to store the data
+
+	//create new image data object
+	TIFFImageData::sptr idata(new TIFFImageData());
+
+	//first loop over each strip
+	UInt64 strip_index;
+	for(strip_index = 0;strip_index < nstrips;)
+
+
+
+	return idata;
 }
 
 //end of namespace

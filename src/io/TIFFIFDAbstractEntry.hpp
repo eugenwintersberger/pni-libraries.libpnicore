@@ -8,6 +8,9 @@
 #ifndef TIFFIDFABSTRACTENTRY_HPP_
 #define TIFFIDFABSTRACTENTRY_HPP_
 
+#include <boost/shared_ptr.hpp>
+#include <vector>
+
 #include "../PNITypes.hpp"
 
 namespace pni{
@@ -18,19 +21,23 @@ enum IDFEntryTypeCode {IDFE_BYTE,IDFE_ASCII,IDFE_SHORT,IDFE_LONG,IDFE_RATIONAL,
                        IDFE_SLONG,IDFE_SRATIONAL,IDFE_FLOAT,IDFE_DOUBLE};
 
 
-class IDFAbstractEntry{
+class IFDAbstractEntry{
 protected:
 	String _name;   //!<name of the entry
 	UInt32 _cnt;    //!<number of elements
 public:
+	typedef boost::shared_ptr<IFDAbstractEntry> sptr; //!< a shared pointer to an abstract entry
+	typedef std::vector<sptr> list;
+	typedef list::iterator iterator;
+	typedef list::const_iterator const_iterator;
 	//! default constructor
-	IDFAbstractEntry();
+	IFDAbstractEntry();
 	//! copy constructor
-	IDFAbstractEntry(const IDFAbstractEntry &o);
+	IFDAbstractEntry(const IFDAbstractEntry &o);
 	//! standard constructor
-	IDFAbstractEntry(const String &n,const UInt32 cnt);
+	IFDAbstractEntry(const String &n,const UInt32 cnt);
 	//! destructor
-	virtual ~IDFAbstractEntry();
+	virtual ~IFDAbstractEntry();
 
 	//! set the name of the entry
 
@@ -49,7 +56,7 @@ public:
 		return IDFE_UNDEFINED;
 	}
 
-	friend std::ostream &operator<<(std::ostream &o,const IDFAbstractEntry &e);
+	friend std::ostream &operator<<(std::ostream &o,const IFDAbstractEntry &e);
 
 };
 

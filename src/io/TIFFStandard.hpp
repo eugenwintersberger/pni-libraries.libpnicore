@@ -20,7 +20,7 @@ private:
 	//class cannot be copied
 	TIFFStandard(const TIFFStandard &o){}
 	//cannot be assigned
-	TIFFStandard &operator=(const TIFFStandard &){}
+	TIFFStandard &operator=(const TIFFStandard &){return *this;}
 protected:
 	typedef std::map<UInt16,String> _TAGNameMap;
 	_TAGNameMap _tifftags;    //!< map for standard TIFF tags
