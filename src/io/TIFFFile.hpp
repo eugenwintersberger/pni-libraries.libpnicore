@@ -29,7 +29,9 @@ private:
 	//copied
 	TIFFFile(const TIFFFile &o){}
 
-
+	template<typename T> void _read_strip_data(UInt64 nchans,UInt64 dims[],UInt64 nstrips,Int32 strip_offsets[],
+		    TIFFImageData::sptr &data);
+	template<typename T> void _read_tile_data();
 protected:
 	bool   _is_little_endian;    //!<true if file is little endian
 	bool   _is_big_endian;       //!<true if file is big endian
@@ -74,6 +76,32 @@ public:
 	friend std::ostream &operator<<(std::ostream &o,const TIFFFile &f);
 
 };
+
+template<typename T> void TIFFFile::_read_tile_data(){
+
+}
+
+
+template<typename T> void TIFFFile::_read_strip_data(UInt64 nchans,UInt64 dims[],UInt64 nstrips,Int32 strip_offsets[],
+		    TIFFImageData::sptr &data){
+	UInt64 width,height;
+
+	height = dims[0];
+	width = dims[1];
+
+	//create arrays
+	for(UInt64 i=0;i<nchans;i++) data->appendChannel(Array<T>::sptr(new Array<T>(2,dims)));
+
+	//loop over all strips
+	for(UInt64 i=0;i<nstrips;i++){
+		//place stream object to the strip position
+		_ifstream.seekg(strip_offsets[i],std::ios::beg);
+
+
+	}
+
+
+}
 
 //end of namespace
 }

@@ -6,6 +6,7 @@
  */
 
 #include <iostream>
+#include <cmath>
 
 #include "../Exceptions.hpp"
 
@@ -186,7 +187,8 @@ TIFFImageData::sptr TIFFFile::getData(UInt64 i) const {
 		dtype = 1;
 	}
 
-	//determine the number of samples per image
+	//determine the number of samples per image - in other words
+	//determines the number of channels
 	UInt16 ns;
 	e = idf["SamplesPerPixel"];
 	ns = 1;
@@ -202,9 +204,14 @@ TIFFImageData::sptr TIFFFile::getData(UInt64 i) const {
 		case IDFE_LONG:
 			rps = (*boost::dynamic_pointer_cast<LongEntry>(e))[0]; break;
 		default:
-			std::cerr<<"Numb of rows per strip is of unknown type!"<<std::endl;
+			std::cerr<<"Number of rows per strip is of unknown type!"<<std::endl;
 		}
 	}
+
+	//from rows per strip and the number image height dim[0] one can determine
+	//how many strips are used to assemble the image
+	UInt64 nstrips = 1;
+	nstrips = (UInt64)std::floor((dims[0]+rps-1)/rps);
 
 
 
@@ -216,7 +223,7 @@ TIFFImageData::sptr TIFFFile::getData(UInt64 i) const {
 
 	//first loop over each strip
 	UInt64 strip_index;
-	for(strip_index = 0;strip_index < nstrips;)
+
 
 
 
