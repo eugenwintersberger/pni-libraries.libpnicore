@@ -11,6 +11,7 @@ var.Add(PathVariable("PREFIX","set installation prefix","/usr/local"))
 var.Add(PathVariable("DESTDIR","set destination directory","/",PathVariable.PathAccept))
 var.Add(PathVariable("BOOSTPREFIX","set the installation prefix for boost","/usr"))
 var.Add("LIBSONAME","set SONAME for the library","libpniutils.so")
+var.Add("CXX","set the compiler to use","g++")
 
 
 #create the build environment
@@ -24,7 +25,7 @@ env["ENV"]["INSTALL_PREFIX"]=path.join(env["DESTDIR"],env["PREFIX"])
 
 #set the proper compiler - this should be changed to something 
 #more general - independent of the underlying operating system
-env.Replace(CXX = "g++")
+env.Replace(CXX = env["CXX"])
 
 #set default libraries
 
