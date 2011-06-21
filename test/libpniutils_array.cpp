@@ -56,7 +56,7 @@ void ArrayTest::testConstructorsShared(){
 
 	a = new pni::utils::Array<double>(_r2,_s2);
 	shape = a->getShape();
-    buffer = (pni::utils::Buffer<double>::sptr &)a->getBuffer();
+    buffer = boost::dynamic_pointer_cast<pni::utils::Buffer<double> >(a->getBuffer());
 
 	CPPUNIT_ASSERT(shape.use_count()==2);
 	CPPUNIT_ASSERT(buffer.use_count()==2);

@@ -83,11 +83,11 @@ public:
 	//! Set the smart pointer ptr to the value of the pointer holding the
 	//! ArrayShape-object in the Array. After this call ptr and the Array
 	//! share the shape object.
-	virtual const ArrayShape::sptr &getShape() const;
+	virtual const ArrayShape::sptr getShape() const;
 
 	virtual void setBuffer(const BufferObject &b);
 	virtual void setBuffer(BufferObject::sptr &b);
-	virtual const BufferObject::sptr &getBuffer() const;
+	virtual const BufferObject::sptr getBuffer() const;
 };
 
 

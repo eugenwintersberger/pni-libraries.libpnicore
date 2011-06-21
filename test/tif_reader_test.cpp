@@ -14,12 +14,13 @@
 #include<plplot/plplot.h>
 #include<plplot/plstream.h>
 
-#include "../src/io/TIFFReader.hpp"
+//#include "../src/io/TIFFReader.hpp"
 #include "../src/DataObject.hpp"
 #include "../src/Array.hpp"
 #include "../src/ArrayShape.hpp"
 #include "../src/io/TIFFFile.hpp"
 #include "../src/io/TIFFIFD.hpp"
+#include "../src/io/TIFFImageData.hpp"
 
 template<typename T> class PlPlotArrayDecorator:public Contourable_Data{
 private:
@@ -156,7 +157,6 @@ template<typename T> void PlotArray::image_plot(const pni::utils::ArrayObject *d
 
 
 int main(int argc,char **argv){
-    pni::utils::TIFFReader reader;
     pni::utils::DataObject *v = NULL;
     PlotArray *plotter;
 

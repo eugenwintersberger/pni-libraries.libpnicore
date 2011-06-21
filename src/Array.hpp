@@ -162,7 +162,7 @@ public:
 	//! in the Array.
 
 	//! \param ptr reference to the target smart pointer
-	virtual const BufferObject::sptr &getBuffer() const;
+	virtual const BufferObject::sptr getBuffer() const;
 
 	//! assign a native type to the array
 
@@ -484,8 +484,8 @@ template<typename T> void Array<T>::setBuffer(const typename Buffer<T>::sptr &b)
 	_data_object = (BufferObject::sptr)(b);
 }
 
-template<typename T> const BufferObject::sptr &Array<T>::getBuffer() const {
-	return (BufferObject::sptr &) _data;
+template<typename T> const BufferObject::sptr Array<T>::getBuffer() const {
+	return boost::dynamic_pointer_cast<BufferObject>(_data);
 }
 
 

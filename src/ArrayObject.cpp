@@ -118,7 +118,7 @@ void ArrayObject::setShape(const ArrayShape::sptr &s){
 	}
 }
 
-const ArrayShape::sptr &ArrayObject::getShape() const{
+const ArrayShape::sptr ArrayObject::getShape() const{
 	return _shape;
 }
 
@@ -130,7 +130,7 @@ void ArrayObject::setBuffer(BufferObject::sptr &b){
 	_data_object = b;
 }
 
-const BufferObject::sptr &ArrayObject::getBuffer() const{
+const BufferObject::sptr ArrayObject::getBuffer() const{
 	return _data_object;
 }
 
