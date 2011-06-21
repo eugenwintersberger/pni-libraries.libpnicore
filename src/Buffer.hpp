@@ -1,5 +1,5 @@
 /*
- * buffer.hpp
+ * Buffer.hpp
  *
  *  Created on: Apr 11, 2011
  *      Author: Eugen Wintersberger
@@ -16,10 +16,11 @@
 namespace pni{
 namespace utils{
 
+
 class BufferObject{
 protected:
 	unsigned long _size;       //!< number of elements in the buffer
-	unsigned long _elem_size; //!< size of a single element
+	unsigned long _elem_size;  //!< size of a single element
 public:
 	typedef boost::shared_ptr<BufferObject> sptr;  //smart ptr
 	BufferObject();

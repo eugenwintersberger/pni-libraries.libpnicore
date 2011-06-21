@@ -1,0 +1,51 @@
+Installing pniutils
+===================
+
+Requirements
+------------
+Minimum requirements:
+C++ Compiler g++ >= 4.1
+Boost library > 1.4
+
+Requirements for test code
+cppunit and plplot
+
+The later libraries are only needed if the testing code should be 
+compiled. 
+
+The compiler should be provided by your operation system's distribution.
+In paritcular for old Linux distributions (like Scientific Linux) the Boost
+libraries are too old for a successfull build. In this case you have to 
+install the Boost libraries manually.
+
+Download the source code distribution from the boost website (www.boost.org).
+For Linux systems tarballs compressed with bzip2 or gzip are available.
+
+
+
+Simple build and install
+------------------------
+To build the library on an up-to-date Linux system simply type
+
+> scons library 
+
+this should usually build the library. 
+If you have the Boost library on a costum site you can add the path 
+to the Boost installation prefix with
+
+> scons BOOSTPREFIX=/opt/boost library
+
+To install the library to /home/eugen/Applications/inst use
+
+> scons PREFIX=/home/eugen/Applications/inst BOOSTPREFIX=/opt/boost install
+
+In order to install to a system wide location root permissions are required 
+of coarse. 
+
+
+
+Building Debian packages
+------------------------
+
+Building RPM packages
+---------------------

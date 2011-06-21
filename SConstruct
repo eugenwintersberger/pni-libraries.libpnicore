@@ -9,6 +9,7 @@ debug = ARGUMENTS.get("DEBUG",0)
 var = Variables()
 var.Add(PathVariable("PREFIX","set installation prefix","/usr/local"))
 var.Add(PathVariable("DESTDIR","set destination directory","/",PathVariable.PathAccept))
+var.Add(PathVariable("BOOSTPREFIX","set the installation prefix for boost","/usr"))
 var.Add("LIBSONAME","set SONAME for the library","libpniutils.so")
 
 
@@ -30,6 +31,8 @@ env.Replace(CXX = "g++")
 
 #set default compiler flags
 env.Append(CXXFLAGS = ["-Wall"])
+env.Append(LIBPATH=path.join(env["BOOSTPREFIX"],"lib"))
+env.Append(CPPPATH=path.join(env["BOOSTPREFIX"],"include"))
 
 
 #create optimized environment
