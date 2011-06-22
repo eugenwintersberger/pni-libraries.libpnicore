@@ -51,7 +51,7 @@ template<typename T> bool operator!=(const Array<T> &, const Array<T> &);
 template<typename T> std::ostream &operator<<(std::ostream &o,
 		const Array<T> &a);
 
-//! multi-dimensional array class
+//! template for a multi-dimensional array class
 
 //! This class represents a multidimensional array of data values. It consists of two
 //! components: a pointer to an instance of type Buffer and a pointer to an instance
@@ -971,21 +971,7 @@ typedef Array<Complex32> Complex32Array;
 typedef Array<Complex64> Complex64Array;
 typedef Array<Complex128> Complex128Array;
 
-//define some useful smart pointers (_sptr - is the common suffix for shared pointers)
-typedef boost::shared_ptr<Int8Array> Int8Array_sptr;
-typedef boost::shared_ptr<UInt8Array> UInt8Array_sptr;
-typedef boost::shared_ptr<Int16Array> Int16Array_sptr;
-typedef boost::shared_ptr<UInt16Array> UInt16Array_sptr;
-typedef boost::shared_ptr<Int32Array> Int32Array_sptr;
-typedef boost::shared_ptr<UInt32Array> UInt32Array_sptr;
-typedef boost::shared_ptr<Int64Array> Int64Array_sptr;
-typedef boost::shared_ptr<UInt64Array> UInt64Array_sptr;
-typedef boost::shared_ptr<Float32Array> Float32Array_sptr;
-typedef boost::shared_ptr<Float64Array> Float64Array_sptr;
-typedef boost::shared_ptr<Float128Array> Float128Array_sptr;
-typedef boost::shared_ptr<Complex32Array> Complex32Array_sptr;
-typedef boost::shared_ptr<Complex64Array> Complex64Array_sptr;
-typedef boost::shared_ptr<Complex128Array> Complex128Array_sptr;
+
 
 }
 }

@@ -18,7 +18,12 @@
 namespace pni{
 namespace utils {
 
-//! Reader - base class for file reader objects
+//! \defgroup IO
+//! The pni::utils namespace contains classes primarily for reading data stored in  various
+//! file formats. These classes are described here in the IO module.
+
+//! \ingroup IO
+//! base class for file reader objects
 
 //! The Reader class is the basement for all data readers.
 //! It provides the basic functionality for opening and closing data streams.
@@ -27,10 +32,21 @@ namespace utils {
 //! The copy constructor is not public, thus such objects cannot be copied
 //! which should avoid confusion on the file sytem level if systems do not
 //! support parallel read.
-
+//!
+//! The reader object holds a stream as a member variable. Since stream objects
+//! must not be copied or assigned to the copy constructor and assignment operator
+//! are defined as private and cannot be used outside the class.
 class Reader{
 private:
-	Reader(const Reader &r){} //readers cannot be copied
+	//reader classes cannot be copied - the reason for this is
+	//that stream objects must not be copied (due to standard
+	//definitions). Thus no copy constructor will be provided.
+	//The same is valid for assignment of streams. Therefore
+	//Reader objects must not be assigned.
+	Reader(const Reader &r){}
+	//the return statement is here only for syntactical reasons
+	//to avoid compiler warnings
+	Reader &operator=(const Reader &o){return *this;}
 protected:
 	std::ifstream _istream; //!< input stream for the data
 	std::string   _fname;   //!< string with the name of the file from which to read data
@@ -41,6 +57,7 @@ public:
 	Reader(const std::string &fname);
 	//! standard constructor taking the filename as pointer to char
 	Reader(const char *fname);
+	//! destructor
 	virtual ~Reader();
 
 	//! set the filename as string object
@@ -68,6 +85,7 @@ public:
 	//! closes the file
 	virtual void close();
 
+	//! read data from a file
 	virtual DataObject *read();
 };
 

@@ -14,27 +14,41 @@ namespace pni{
 namespace utils{
 
 
-//some type traits neede for the array operations
+//! template for Array operation return types
+
+//! This particular template is used to determine the return type of
+//! accumulative array operations as a function of the array's element
+//! type. This should handle the problem that for very "small" data types
+//! like 8Bit integer values accumulative operations over large arrays
+//! most probably would lead to overflows.
+//! Several specializations of this template should avoid this problem.
+//! In the default case the return type of the accululative operations
+//! is the same as that of the array's element.
 template<typename T> class ArrayType{
 public:
 	typedef T Type;
 };
 
+
+//! template specialization for 8 Bit signed integer
 template<> class ArrayType<Int8>{
 public:
 	typedef Int64 Type;
 };
 
+//! template specialization for 16 Byte signed integer
 template<> class ArrayType<Int16>{
 public:
 	typedef Int64 Type;
 };
 
+//! template specialization for 32 Byte signed integer
 template<> class ArrayType<Int32>{
 public:
 	typedef Int64 Type;
 };
 
+//! template specialization for 64 Byte signed integer
 template<> class ArrayType<Int64>{
 public:
 	typedef Int64 Type;
@@ -89,8 +103,6 @@ template<> class ArrayType<Complex128>{
 public:
 	typedef Complex128 Type;
 };
-
-
 
 }
 }

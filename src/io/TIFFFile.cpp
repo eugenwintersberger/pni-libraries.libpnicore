@@ -11,6 +11,7 @@
 #include "../Exceptions.hpp"
 
 #include "TIFFFile.hpp"
+#include "TIFFStripReader.hpp"
 
 namespace pni{
 namespace utils{
@@ -144,34 +145,36 @@ std::ostream &operator<<(std::ostream &o,const TIFFFile &f){
 
 TIFFImageData::sptr TIFFFile::getData(UInt64 i) const {
 	UInt64 dims[2];
+	UInt64 uibuffer;
 	IFDAbstractEntry::sptr e;
 	TIFFIFD &idf = *(_ifd_list[i]);
+	TIFFStripReader reader;
 	//ArrayObject *a;
 
 	//need to determine the dimension of the image
 	e = idf["ImageWidth"];
 	switch(e->getEntryTypeCode()){
 	case IDFE_SHORT:
-		dims[1] = (*boost::dynamic_pointer_cast<ShortEntry>(e))[0]; break;
+		uibuffer = (*boost::dynamic_pointer_cast<ShortEntry>(e))[0]; break;
 	case IDFE_LONG:
-		dims[1] = (*boost::dynamic_pointer_cast<LongEntry>(e))[0]; break;
+		uibuffer = (*boost::dynamic_pointer_cast<LongEntry>(e))[0]; break;
 	default:
 		std::cerr<<"Unknown image width!"<<std::endl;
-		dims[1] = 0;
+		uibuffer = 0;
 	}
+	reader.setWidth(uibuffer);
 
 	e = idf["ImageLength"];
 	switch(e->getEntryTypeCode()){
 	case IDFE_SHORT:
-		dims[0] = (*boost::dynamic_pointer_cast<ShortEntry>(e))[0]; break;
+		uibuffer = (*boost::dynamic_pointer_cast<ShortEntry>(e))[0]; break;
 	case IDFE_LONG:
-		dims[0] = (*boost::dynamic_pointer_cast<LongEntry>(e))[0];break;
+		uibuffer = (*boost::dynamic_pointer_cast<LongEntry>(e))[0];break;
 	default:
 		std::cerr<<"Unkown image length!"<<std::endl;
-		dims[0] = 0;
+		uibuffer = 0;
 	}
-
-	std::cout<<dims[0]<<" x "<<dims[1]<<std::endl;
+	reader.setHeight(uibuffer);
 
 	//next task is to determine the data type
 	//determine the Bits per Sample
@@ -193,6 +196,7 @@ TIFFImageData::sptr TIFFFile::getData(UInt64 i) const {
 	e = idf["SamplesPerPixel"];
 	ns = 1;
 	if(e!=NULL) ns = (*boost::dynamic_pointer_cast<ShortEntry>(e))[0];
+	reader.setNumberOfChannels(ns);
 
 	//determine the number of rows per strip
 	UInt16 rps = 1;
@@ -210,19 +214,107 @@ TIFFImageData::sptr TIFFFile::getData(UInt64 i) const {
 
 	//from rows per strip and the number image height dim[0] one can determine
 	//how many strips are used to assemble the image
-	UInt64 nstrips = 1;
-	nstrips = (UInt64)std::floor((dims[0]+rps-1)/rps);
+	Int64 nstrips = 1;
+	nstrips = (UInt64)std::floor((double)(reader.getHeight()+rps-1)/rps);
+	reader.setNumberOfStrips((UInt64)nstrips);
 
+	//in the next step we need to determine the strip offsets
+	e = idf["StripOffsets"];
+	if(e==NULL){
+		//raise an exception if there are no strip offsets
+	}
+	for(UInt64 i=0;i<nstrips;i++){
+		switch(e->getEntryTypeCode()){
+		case IDFE_SHORT:
+			uibuffer = (*boost::dynamic_pointer_cast<ShortEntry>(e))[i]; break;
+		case IDFE_LONG:
+			uibuffer = (*boost::dynamic_pointer_cast<LongEntry>(e))[i]; break;
+		default:
+			std::cerr<<"Strip offset uses unknown type!"<<std::endl;
+		}
+		reader.setStripOffset(i,uibuffer);
+	}
 
+	//finally we need the byte count for each strip
+	e = idf["StripByteCounts"];
+	if(e==NULL){
+		//raise an exception here
+	}
+	for (UInt64 i = 0; i < nstrips; i++) {
+		switch (e->getEntryTypeCode()) {
+		case IDFE_SHORT:
+			uibuffer = (*boost::dynamic_pointer_cast<ShortEntry>(e))[i];
+			break;
+		case IDFE_LONG:
+			uibuffer = (*boost::dynamic_pointer_cast<LongEntry>(e))[i];
+			break;
+		default:
+			std::cerr << "Strip offset uses unknown type!" << std::endl;
+			//raise an exception here
+		}
+		reader.setStripByteCount(i, uibuffer);
+	}
 
-	//with the value of dtype and pbs one can determine the data type
-	//used to store the data
 
 	//create new image data object
 	TIFFImageData::sptr idata(new TIFFImageData());
 
-	//first loop over each strip
-	UInt64 strip_index;
+	//the reader configuration is done - now we can start with reading
+	//data
+	std::cout<<"start reader ..."<<std::endl;
+	switch(pbs){
+	case 8:
+		switch(dtype){
+		case 1: //unsigned data
+			reader.read<UInt8>((std::ifstream &)_ifstream,idata); break;
+		case 2: //signed data
+			reader.read<Int8>((std::ifstream &)_ifstream,idata); break;
+		default:
+			std::cerr<<"unsupported sample format for 8Bit samples!"<<std::endl;
+			//raise an exception here
+		}
+		break;
+	case 16:
+		switch(dtype){
+		case 1: //unsigned data
+			reader.read<UInt16>((std::ifstream &)_ifstream,idata); break;
+		case 2: //signed data
+			reader.read<Int16>((std::ifstream &)_ifstream,idata); break;
+		default:
+			std::cerr<<"unsupported sample format for 16 bit samples!"<<std::endl;
+			//raise an exception here
+		}
+		break;
+	case 32:
+		switch(dtype){
+		case 1: //unsigned data
+			reader.read<UInt32>((std::ifstream &)_ifstream,idata); break;
+		case 2: //signed data
+			reader.read<Int32>((std::ifstream &)_ifstream,idata); break;
+		case 3: //float data
+			reader.read<Float32>((std::ifstream &)_ifstream,idata); break;
+		default:
+			std::cerr<<"unsupported sample format for 32Bit samples!"<<std::endl;
+			//raise an exception here
+		}
+		break;
+	case 64:
+		switch(dtype){
+		case 1: //unsigned data
+			reader.read<UInt64>((std::ifstream &)_ifstream,idata); break;
+		case 2: //signed data
+			reader.read<Int64>((std::ifstream &)_ifstream,idata); break;
+		case 3:
+			reader.read<Float64>((std::ifstream &)_ifstream,idata); break;
+		default:
+			std::cerr<<"unsupported sample format for 64Bit samples!"<<std::endl;
+			//raise an exception here
+		}
+		break;
+	default:
+		std::cerr<<"unsupported number of bits per sample!"<<std::endl;
+		//raise an exception here
+	}
 
 
 

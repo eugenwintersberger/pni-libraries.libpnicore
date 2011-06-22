@@ -6,7 +6,7 @@ Import("build_env")
 sources = ["Reader.cpp","CBFReader.cpp","strutils.cpp","CIFBinHeader.cpp",
            "PCIFBinHeader.cpp","CBFBinStreamReader.cpp","TIFFReader.cpp","TIFFFile.cpp",
            "TIFFIFD.cpp","TIFFIFDAbstractEntry.cpp","TIFFStandard.cpp",
-           "TIFFIFDEntry.cpp","TIFFImageData.cpp"]
+           "TIFFIFDEntry.cpp","TIFFImageData.cpp","TIFFStripReader.cpp"]
 
 sobjs = build_env.SharedObject(sources)
 aobjs = build_env.StaticObject(sources)

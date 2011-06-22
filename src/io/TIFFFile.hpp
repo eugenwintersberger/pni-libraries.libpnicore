@@ -29,9 +29,6 @@ private:
 	//copied
 	TIFFFile(const TIFFFile &o){}
 
-	template<typename T> void _read_strip_data(UInt64 nchans,UInt64 dims[],UInt64 nstrips,Int32 strip_offsets[],
-		    UInt64 strip_byte_count[],TIFFImageData::sptr &data);
-	template<typename T> void _read_tile_data();
 protected:
 	bool   _is_little_endian;    //!<true if file is little endian
 	bool   _is_big_endian;       //!<true if file is big endian
@@ -77,44 +74,6 @@ public:
 
 };
 
-template<typename T> void TIFFFile::_read_tile_data(){
-
-}
-
-
-template<typename T> void TIFFFile::_read_strip_data(UInt64 nchans,UInt64 dims[],UInt64 nstrips,Int32 strip_offsets[],
-		    UInt64 strip_byte_count[],TIFFImageData::sptr &data){
-	UInt64 width,height;
-	UInt64 ssize = sizeof(T);
-	UInt64 nsamps = data->getNumberOfChannels();
-	T buffer = 0;
-	UInt64 ecnt = 0;
-
-	height = dims[0];
-	width = dims[1];
-
-	//create arrays
-	for(UInt64 i=0;i<nchans;i++) data->appendChannel(Array<T>::sptr(new Array<T>(2,dims)));
-
-	//loop over all strips
-	for(UInt64 i=0;i<nstrips;i++){
-		//place stream object to the strip position
-		_ifstream.seekg(strip_offsets[i],std::ios::beg);
-
-		//for each strip we have to loop over all elements
-		UInt64 nruns = strip_byte_count[i]/ssize/nsamps;
-		for(UInt64 j=0;j<nruns;j++){
-
-			//loop over all channels (samples)
-			for(UInt64 k=0;k<nsamps;k++){
-				Array<T> &a = *data->getChannel(k);
-				_ifstream.read((char*)(&buffer),ssize);
-				a[ecnt] = (T)buffer;
-			}
-			ecnt++;
-		}
-	}
-}
 
 //end of namespace
 }

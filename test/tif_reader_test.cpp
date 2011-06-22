@@ -66,7 +66,7 @@ public:
 	PlotArray(const pni::utils::ArrayShape::sptr &s);
 	virtual ~PlotArray();
 
-	template<typename T> void image_plot(const pni::utils::ArrayObject *data);
+	template<typename T> void image_plot(const pni::utils::ArrayObject::sptr data);
 	template<typename T> void contour_plot(const pni::utils::ArrayObject *data){}
 };
 
@@ -126,9 +126,9 @@ PlotArray::~PlotArray(){
 }
 
 
-template<typename T> void PlotArray::image_plot(const pni::utils::ArrayObject *data){
-	pni::utils::Array<T> &a = *(pni::utils::Array<T> *)data;
-	PlPlotArrayDecorator<T> adec((pni::utils::Array<T> *)data);
+template<typename T> void PlotArray::image_plot(const pni::utils::ArrayObject::sptr data){
+	pni::utils::Array<T> &a = *boost::dynamic_pointer_cast<pni::utils::Array<T> >(data);
+	//PlPlotArrayDecorator<T> adec((pni::utils::Array<T> *)data);
 	int i,j;
 
 	int nx = a.getShape()->getDimension(0);
@@ -157,39 +157,32 @@ template<typename T> void PlotArray::image_plot(const pni::utils::ArrayObject *d
 
 
 int main(int argc,char **argv){
-    pni::utils::DataObject *v = NULL;
     PlotArray *plotter;
+    pni::utils::TIFFImageData::sptr idata;
 
     pni::utils::TIFFFile f;
-    //f.setFileName("water_00259.tif");
-    f.setFileName("mscp03_au_sputter2_00057.tif");
+    f.setFileName("water_00259.tif");
+    //f.setFileName("mscp03_au_sputter2_00057.tif");
     f.open();
     std::cout<<f<<std::endl;
-    pni::utils::TIFFIFD &idf = f[0];
+    std::cout<<"read data"<<std::endl;
+    idata = f.getData(0);
+    std::cout<<"print image data"<<std::endl;
+    pni::utils::ArrayObject::sptr a = idata->getChannel(0);
+
     //pni::utils::ArrayObject *a = idf.getData();
     f.close();
-    return 0;
 
-    //reader.setFileName("test_data/pr531_100k_1_1_0256.cbf");
-//    reader.setFileName("mscp03_au_sputter2_00057.tif");
-//    reader.open();
-//    v = reader.read();
-//    reader.close();
-//
-//    std::cout<<"finished with reading data"<<std::endl;
-//    std::cout<<typeid(*v).name()<<std::endl;
-//
-//   	pni::utils::UInt32Array *a = (pni::utils::UInt32Array *)v;
-//
-//	std::cout << a->Min() << " " << a->Max() << std::endl;
-//	std::cout << a->Sum() << std::endl;
-//
-//	std::cout << *(a->getShape()) << std::endl;
-//	plotter = new PlotArray(a->getShape());
-//	plotter->image_plot<pni::utils::UInt32> (a);
-//	std::cout<<"finished with plotting!"<<std::endl;
+    std::cout<<*idata<<std::endl;
+    std::cout<<*a<<std::endl;
+    pni::utils::UInt16Array &b = *boost::dynamic_pointer_cast<pni::utils::UInt16Array>(a);
+    std::cout<<b<<std::endl;
+    //start with plotting
+	plotter = new PlotArray(a->getShape());
+	plotter->image_plot<pni::utils::UInt16>(a);
+	std::cout<<"finished with plotting!"<<std::endl;
 
-
+	delete plotter;
 
     return 0;
 }

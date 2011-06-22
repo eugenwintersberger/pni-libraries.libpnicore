@@ -18,7 +18,8 @@
 namespace pni{
 namespace utils{
 
-
+//! \ingroup IO
+//! CBF reader for byte-offset compressed data
 template<typename T> class CBFBinReaderByteOffset: public CBFBinStreamReader {
 private:
 	typename Buffer<T>::sptr _buffer;
@@ -32,6 +33,7 @@ public:
 		return _buffer;
 	}
 
+	//this mess here nees to be fixed.
 	virtual void setBuffer(BufferObject::sptr &buffer){
 		_buffer = (typename Buffer<T>::sptr &)buffer;
 	}

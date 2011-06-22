@@ -9,6 +9,7 @@
 #define TIFFIMAGEDATA_HPP_
 
 #include <vector>
+#include <iostream>
 #include <boost/shared_ptr.hpp>
 
 #include "../ArrayObject.hpp"
@@ -39,7 +40,11 @@ public:
 	TIFFImageData &operator=(const TIFFImageData &o);
 
 	TIFFImageData::iterator begin();
+	TIFFImageData::const_iterator begin() const;
 	TIFFImageData::iterator end();
+	TIFFImageData::const_iterator end() const;
+
+	friend std::ostream &operator<<(std::ostream &o,const TIFFImageData &d);
 
 };
 
