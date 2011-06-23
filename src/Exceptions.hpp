@@ -9,7 +9,10 @@
 namespace pni{
 namespace utils{
 
+//! \defgroup Exceptions
+//! Exception object used throughout the library for Error handling.
 
+//! \ingroup Exceptions
 //! Exceptions base class
 
 //! The base class for all exceptions in the library. Constructors are design
@@ -101,6 +104,7 @@ class Exception{
         
 };
 
+//! \ingroup Exceptions
 //! memory allocation error
 
 //! This exception is typically raised if memory allocation fails. In other words if
@@ -125,6 +129,7 @@ class MemoryAllocationError:public Exception{
         virtual ~MemoryAllocationError(){}
 };
 
+//! \ingroup Exceptions
 //! Shape mismatch error
 
 //! This exception is usually raised in cases where array operations require shape matching
@@ -150,6 +155,7 @@ class ShapeMissmatchError:public Exception{
         
 };
 
+//! \ingroup Exceptions
 //! Size missmatch error
 
 //! This exception will be raised in cases where buffer sizes do not meet the
@@ -177,6 +183,7 @@ public:
 	virtual ~SizeMissmatchError(){}
 };
 
+//! \ingroup Exceptions
 //! index error
 
 //! Raised typically in cases where the [] operator is used to access a data element but the
@@ -201,6 +208,7 @@ public:
 	virtual ~IndexError(){}
 };
 
+//! \ingroup Exceptions
 //! file error
 
 //! Raised typically in case of File IO problems

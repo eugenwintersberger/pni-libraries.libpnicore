@@ -5,6 +5,8 @@
  *      Author: eugen
  */
 
+#include "../Exceptions.hpp"
+
 #include "TIFFStripReader.hpp"
 
 namespace pni {
@@ -43,7 +45,10 @@ TIFFStripReader::~TIFFStripReader() {
 
 void TIFFStripReader::setStripOffsets(UInt64 offsets[]){
 	if(_nstrips == 0){
-		//raise an exception
+		IndexError e;
+		e.setSource("TIFFStripReader::setStripOffsets");
+		e.setDescription("Number of strips not set or 0!");
+		throw e;
 	}
 	for(UInt64 i=0;i<_nstrips;i++){
 		_strip_offsets[i] = offsets[i];
@@ -52,7 +57,10 @@ void TIFFStripReader::setStripOffsets(UInt64 offsets[]){
 
 void TIFFStripReader::setStripOffset(UInt64 i,UInt64 offset){
 	if(i>=_nstrips){
-		//raise an exception here
+		IndexError e;
+		e.setSource("TIFFStripReader::setStripOffset");
+		e.setDescription("Strip index exceeds number of strip or number of strips not set!");
+		throw e;
 	}
 	_strip_offsets[i] = offset;
 }
@@ -67,21 +75,30 @@ std::vector<UInt64> TIFFStripReader::getStripOffsets() const{
 
 UInt64 TIFFStripReader::getStripOffset(UInt64 index) const{
 	if(index>=_nstrips){
-		//raise an exception here
+		IndexError e;
+		e.setSource("TIFFStripReader::getStripOffset");
+		e.setDescription("Strip index exceeds number of strips or number of strip is not set!");
+		throw e;
 	}
 	return _strip_offsets[index];
 }
 
 void TIFFStripReader::setStripByteCounts(UInt64 bcounts[]){
-	if(_nstrips!=0){
-		//raise an exception
+	if(_nstrips==0){
+		IndexError e;
+		e.setSource("TIFFStripReader::setStripByteCounts");
+		e.setDescription("Number of strips not set!");
+		throw e;
 	}
 	for(UInt64 i=0;i<_nstrips;i++) _strip_byte_counts[i] = bcounts[i];
 }
 
 void TIFFStripReader::setStripByteCount(UInt64 i,UInt64 bcount){
 	if(_nstrips>=_nstrips){
-		//raise an exception
+		IndexError e;
+		e.setSource("TIFFStripReader::setStripByteCount");
+		e.setDescription("Strip index exceeds number of strips or number of strips is not set!");
+		throw e;
 	}
 	_strip_byte_counts[i] = bcount;
 }

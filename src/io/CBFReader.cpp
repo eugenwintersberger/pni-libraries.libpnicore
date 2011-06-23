@@ -92,8 +92,7 @@ DataObject *CBFReader::read(){
         	v->setDescription("Dectris CBF detector data");
 
         	reader->setStream(&_istream);
-        	BufferObject::sptr o = v->getBuffer();
-        	reader->setBuffer(o);
+        	reader->setBuffer(v->getBuffer());
         	//call the reader method
         	reader->read();
 

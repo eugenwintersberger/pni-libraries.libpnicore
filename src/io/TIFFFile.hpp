@@ -21,14 +21,34 @@
 namespace pni{
 namespace utils{
 
-//! TIFFFile - class representing a TIFF file
+//! \ingroup IO
+//! \brief class representing a TIFF file
 
+//! The TIFF file object represents data stored in the Tagged Image File Format.
+//! At the moment only reading of uncompressed data is supported. Writing data and
+//! using data compression may be added in future.
+//!
+//! TIFF files are organized in so called Image File Directories (IFDs). Each IFD
+//! corresponds to a particular image in the filed. Consequently multiple images
+//! can be stored in a single file. The IFD of an image stored in the file
+//! contains all the information needed to read the image data from the file.
+//! This includes information about the datatype, the number of pixles in each dimension,
+//! or information about how the image data is organized within the file.
+//! When a TIFF file object is opened all IFDs are read from the file.
+//! Thus a TIFFFile object can be considered as a container for the IFDs.
+//! The IFDs are represented by TIFFIFD objects.
+//!
+//! The data that belongs to a particular IFD can be obtaind using the getData
+//! method of the TIFFFile class. This method returns an object of type
+//! TIFFImageData which holds the entire bunch of data that belongs
+//! to an image.
 class TIFFFile {
 private:
 	//the copy constructor is protected - the file cannot be
-	//copied
+	//copied (would cause problems with the _ifstream object
+	//in the class)
 	TIFFFile(const TIFFFile &o){}
-
+	TIFFFile &operator=(const TIFFFile &o){ return *this;}
 protected:
 	bool   _is_little_endian;    //!<true if file is little endian
 	bool   _is_big_endian;       //!<true if file is big endian
@@ -64,12 +84,15 @@ public:
 	//! true if data is stored as big endian
 	virtual bool isBigEndian() const;
 
-	//need an operator to access the IFDs
+	//! operator to access an individual IFD
 	TIFFIFD &operator[](const UInt16 i);
+	//! operator to access an individual IFD
 	TIFFIFD operator[](const UInt16 i) const;
 
+	//! read image data from IFD i
 	TIFFImageData::sptr getData(UInt64 i) const;
 
+	//! output operator for console output
 	friend std::ostream &operator<<(std::ostream &o,const TIFFFile &f);
 
 };

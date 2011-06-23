@@ -19,24 +19,39 @@ namespace utils{
 template<typename T> class Rational;
 template<typename T> std::ostream &operator<<(std::ostream &o,const Rational<T> &r);
 
+//! \ingroup IO
+//! \brief rational type for TIFF IFD entries
+
+//! IFD entries in TIFF files can consist of a rational number. This class
+//! implements such a type as a template.
 template<typename T> class Rational{
 protected:
-	T _numerator;
-	T _denominator;
+	T _numerator;    //!< numerator of the rational number
+	T _denominator;  //!< denominator of the rational number
 public:
+	//! default constructor
 	Rational();
+	//! copy constructor
 	Rational(const Rational &o);
+	//! standard constructor
 	Rational(const T &,const T&);
+	//! destructor
 	virtual ~Rational(){}
 
+	//! set the numerator
 	virtual void setNumerator(const T &);
+	//! get the numerator
 	virtual T getNumerator() const;
 
+	//! assignment operator
 	virtual Rational<T> &operator=(const Rational<T> &r);
 
+	//! set the denominator
 	virtual void setDenominator(const T &);
+	//! get the denominator
 	virtual T getDenominator() const;
 
+	//! operator for console output
 	friend std::ostream &operator<<<> (std::ostream &o,const Rational<T> &r);
 
 };

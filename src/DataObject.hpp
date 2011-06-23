@@ -16,12 +16,15 @@
 namespace pni{
 namespace utils{
 
-//! DataObject - base class for all data holding objects
+//! \defgroup Data-objects
+//! Data holding objects in memory
+
+//! \ingroup Data-objects
+//! \brief base class for all data holding objects
 
 //! This class is the basement for all data holding classes in the pni::utils
 //! namespace. It holds the basic information each data object must provide:
 //! a name and a description.
-
 class DataObject {
 protected:
 	String _name;         //!< name of the data object
@@ -31,9 +34,29 @@ public:
 	DataObject();
 	//! copy constructor
 	DataObject(const DataObject &);
+	//! constructor
+
+	//! This constructor sets only the name of the DataObject class.
+	//! \param n object name as String
 	DataObject(const String &n);
+	//! constructor
+
+	//! Constructor setting name and description of an object
+	//! \param n object name as String
+	//! \param d object description as String
 	DataObject(const String &n,const String &d);
+	//! constructor
+
+	//! Constructor setting only the name of the object using a
+	//! C-type string.
+	//! \param n object name as character array
 	DataObject(const char *n);
+	//! constructor
+
+	//! Constructor setting name and description of an object using
+	//! C-type strings.
+	//! \param n object name as character array
+	//! \param d object description as character array
 	DataObject(const char *n,const char *d);
 	//! destructor
 	virtual ~DataObject();

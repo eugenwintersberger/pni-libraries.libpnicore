@@ -19,67 +19,69 @@ namespace pni{
 namespace utils{
 
 //! \ingroup IO
-//! CBF reader for byte-offset compressed data
+//! \brief CBF reader for byte-offset compressed data
+
+//! This template provides a reader object for binary data stored in CBF files
+//! using the Byte-Offset compression. The template parameter determines the
+//! datatype used to store the data.
 template<typename T> class CBFBinReaderByteOffset: public CBFBinStreamReader {
-private:
-	typename Buffer<T>::sptr _buffer;
 public:
+	//! default constructor
 	CBFBinReaderByteOffset();
+	//! standard constructor
 	CBFBinReaderByteOffset(unsigned long);
+	//! destructor
 	virtual ~CBFBinReaderByteOffset();
 
-	virtual void read();
-	virtual boost::shared_ptr<Buffer<T> > &getBuffer(){
-		return _buffer;
-	}
+	//! reading data from the file
 
-	//this mess here nees to be fixed.
-	virtual void setBuffer(BufferObject::sptr &buffer){
-		_buffer = (typename Buffer<T>::sptr &)buffer;
-	}
+	//! This is the concrete implementation of the read method provided
+	//! by the CBFBinStreamReader base class.
+	virtual void read();
+
+
+
 
 };
 
 template<typename T> CBFBinReaderByteOffset<T>::CBFBinReaderByteOffset() :
 	CBFBinStreamReader() {
-	_buffer.reset();
 }
 
 template<typename T> CBFBinReaderByteOffset<T>::CBFBinReaderByteOffset(
 		unsigned long n) :
 	CBFBinStreamReader(n) {
 	elemsize_ = sizeof(T);
-	_buffer.reset();
 }
 ;
 
 template<typename T> CBFBinReaderByteOffset<T>::~CBFBinReaderByteOffset() {
-	_buffer.reset();
 }
 
 template<typename T> void CBFBinReaderByteOffset<T>::read() {
 	//unsigned long i;
 	unsigned long ecnt; // element counter
 	T buffer;
+	Buffer<T> &dbuffer = *boost::dynamic_pointer_cast<Buffer<T> >(_buffer);
 
 	buffer = 0;
 	ecnt = 0;
 
 	//initialize all data values with 0
-	*_buffer = 0;
+	dbuffer = 0;
 
 	//std::cout << "start with reading binary data ..." << std::endl;
 	while ((!_stream->eof()) && (ecnt != nelements_)) {
 
 		_stream->read((char *) (&buffer), 1);
-		if (((unsigned char) buffer) != 0x80) {
+		if (((unsigned char) buffer) != 0x80){
 			//this byte is a valid offset
-			(*_buffer)[ecnt] += (char) buffer;
+			dbuffer[ecnt] += (char) buffer;
 			//now we have to increment the element counter
 			ecnt++;
 			if (ecnt >= nelements_)
 				break;
-			(*_buffer)[ecnt] = (*_buffer)[ecnt - 1];
+			dbuffer[ecnt] = dbuffer[ecnt - 1];
 			//reset the buffer so that all bits are set to 0
 			buffer = 0;
 			continue;
@@ -87,12 +89,12 @@ template<typename T> void CBFBinReaderByteOffset<T>::read() {
 
 		_stream->read((char *) (&buffer), 2);
 		if (((unsigned short) buffer) != 0x8000) {
-			(*_buffer)[ecnt] += (short) buffer;
+			dbuffer[ecnt] += (short) buffer;
 			//increase the element counter
 			ecnt++;
 			if (ecnt >= nelements_)
 				break;
-			(*_buffer)[ecnt] = (*_buffer)[ecnt - 1];
+			dbuffer[ecnt] = dbuffer[ecnt - 1];
 			//reset the buffer so that all bits are set to 0
 			buffer = 0;
 			continue;
@@ -100,12 +102,12 @@ template<typename T> void CBFBinReaderByteOffset<T>::read() {
 
 		_stream->read((char*) (&buffer), 4);
 		if (((unsigned int) buffer) != 0x800000) {
-			(*_buffer)[ecnt] += (int) buffer;
+			dbuffer[ecnt] += (int) buffer;
 			//increase the element counter
 			ecnt++;
 			if (ecnt >= nelements_)
 				break;
-			(*_buffer)[ecnt] = (*_buffer)[ecnt - 1];
+			dbuffer[ecnt] = dbuffer[ecnt - 1];
 			buffer = 0;
 			continue;
 		}
@@ -114,6 +116,7 @@ template<typename T> void CBFBinReaderByteOffset<T>::read() {
 	//std::cout << "read " << ecnt << " elements to the data buffer" << std::endl;
 }
 
+//standard reader actually supported
 typedef CBFBinReaderByteOffset<short> CBFBinStreamBOInt16;
 typedef CBFBinReaderByteOffset<int> CBFBinStreamBOInt32;
 

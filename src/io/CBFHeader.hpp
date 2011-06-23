@@ -42,7 +42,7 @@ namespace utils{
 #define CIF_DATA_NELEMENTS_KEY  "X-Binary-Number-of-Elements"
 
 //! \ingroup IO
-//! Header of a binary CIF file
+//! \brief Header of a binary CIF file
 
 //! CIFBinaryHeader represents the header structure of a binary CIF file. The structure
 //! of such a header differs slightly from that of a pure ASCII CIF file.
@@ -132,7 +132,7 @@ public:
 };
 
 //! \ingroup IO
-//! Dectris Pilatus CBF header class
+//! \brief Dectris Pilatus CBF header class
 
 //! As usual Dectris is not following all the CIF conventions strictly. As a descendant of
 //! CIFBinaryHeader this class provides a custom constructor for extracting the header

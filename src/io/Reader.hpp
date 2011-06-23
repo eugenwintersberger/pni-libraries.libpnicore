@@ -23,7 +23,7 @@ namespace utils {
 //! file formats. These classes are described here in the IO module.
 
 //! \ingroup IO
-//! base class for file reader objects
+//! \brief base class for file reader objects
 
 //! The Reader class is the basement for all data readers.
 //! It provides the basic functionality for opening and closing data streams.

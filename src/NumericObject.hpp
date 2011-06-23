@@ -15,7 +15,8 @@
 namespace pni{
 namespace utils{
 
-//! numeric object - base class for numerical objects
+//! \ingroup Data-objects
+//! base class for numerical objects
 
 //! NumericObject is the base class for all objects in the
 //! PNI utility name space that hold numeric data. As a descendant of
@@ -33,15 +34,41 @@ public:
 	NumericObject();
 	//! copy constructor
 	NumericObject(const NumericObject &);
-	//! constructor with unit as string argument
+	//! constructor
+
+	//! Constructor setting only the physical unit of the object.
+	//! \param u unit as string
 	NumericObject(const String &u);
-	//! constructor with unit as char* argument
+	//! constructor
+
+	//! Constructor setting only the physical unit of the object.
+	//! \param u unit as character array
 	NumericObject(const char *u);
-	//! full constructor for a data object with name and unit
+	//! constructor
+
+	//! Constructor setting name and unit of the object.
+	//! \param n object name as String
+	//! \param u object unit as String
 	NumericObject(const String &n,const String &u);
+	//! constructor
+
+	//! Constructor setting name and physical unit of the object.
+	//! \param n object name as character array
+	//! \param u object unit as character array
 	NumericObject(const char *n,const char *u);
-	//! full constructor for a DataObject
+	//! constructor
+
+	//! This constructor sets the object's name, physical unit, and description.
+	//! \param n object name as String
+	//! \param u object unit as String
+	//! \param d object description as String
 	NumericObject(const String &n,const String &u,const String &d);
+	//! constructor
+
+	//! This constructor sets the object's name, physical unit, and description.
+	//! \param n object name as character array
+	//! \param u object unit as character array
+	//! \param d object description as character array
 	NumericObject(const char *n,const char *u,const char *d);
 	//! destructor
 	virtual ~NumericObject();
@@ -56,10 +83,20 @@ public:
 	//! Set the physical unit string
 	//! \param u char* to the unit string.
 	virtual void setUnit(const char *u);
-	virtual void setUnit(const String &u);
+	//! set the physical unit
 
+	//! Set the physical unit of the object.
+	//! \param u unit as String
+	virtual void setUnit(const String &u);
+	//! get the ID of the data type
+
+	//! This virtual function is overloaded by the concrete implementations
+	//! of numerical types. It returns the ID of the type used to store
+	//! the data.
+	//! \return PNITypeID ID value of the type
 	virtual PNITypeID getTypeID() const;
 
+	//! assignment operator
 	NumericObject &operator=(const NumericObject &o);
 };
 

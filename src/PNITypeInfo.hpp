@@ -13,7 +13,8 @@
 namespace pni{
 namespace utils{
 
-//! Type information class
+//! \ingroup Data-objects
+//! type information class
 
 //! class that describes a PNI type as defined in PNITypes.hpp.
 //! This template is used to obtain information about types in other
@@ -31,10 +32,12 @@ public:
 	//! sign flag - tells if the type is signed
 	static const bool isSigned = false;
 
+	//! returns true if type allows negative numbers
 	bool isNegative(const T &v){
 		return false;
 	}
 
+	//! return the zero element of a type
 	T getZeroElement(){
 		return 0;
 	}

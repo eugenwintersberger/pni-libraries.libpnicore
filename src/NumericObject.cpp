@@ -12,11 +12,13 @@ namespace pni{
 namespace utils{
 
 
-NumericObject::NumericObject(){
+NumericObject::NumericObject():DataObject(){
 	_unit = String("NONE");
 }
 
-NumericObject::NumericObject(const NumericObject &o):DataObject(o){
+NumericObject::NumericObject(const NumericObject &o){
+	_name = o._name;
+	_description = o._description;
 	_unit = o._unit;
 }
 

@@ -36,9 +36,20 @@ namespace utils{
 #define ENTRY_TYPE_FLOAT 11
 #define ENTRY_TYPE_DOUBLE 12
 
-//! TIFFIFD - Image File Directory class
+//! \ingroup IO
+//! \brief TIFFIFD - Image File Directory class
 
 //! This class describes an Image File Directory (IFD) block in a TIFF file.
+//! Each IFD is associated with a single image. An IFD can be considered as a
+//! container for IFD entries. Each of this entries has a particular type and
+//! one or several values of this type. The entries can be obtained
+//! using the [] operator together with an integer index as its argument.
+//! Each entry has a unique tag. The TIFF specification defines a group of
+//! standard entries with defines names. Such entries can be obtained using the []
+//! operator along with a string holding the name of an entrie as defines by the
+//! TIFF standard.
+//!
+//! The type of an entry is usually not standardized. Therefore
 class TIFFIFD {
 protected:
 	Int32 _idf_offset;             //!< starting offset of the IFD
@@ -47,10 +58,10 @@ protected:
 	IFDAbstractEntry::list _entry_list; //!< list of IFD entries
 public:
 	//some data types that can be useful for IFDs
-	typedef boost::shared_ptr<TIFFIFD> IFDSptr;        //!<shared pointer to an IDF entry
-	typedef std::vector<IFDSptr>       IFDList;        //!<vector to IDF entries
-	typedef IFDList::iterator       IFDIterator;       //!<iterator over IDF entries in IDFList
-	typedef IFDList::const_iterator const_IFDIterator; //!const. iterator over IDF entries in IDF List
+	typedef boost::shared_ptr<TIFFIFD> IFDSptr;        //!< shared pointer to an IDF entry
+	typedef std::vector<IFDSptr>       IFDList;        //!< vector to IDF entries
+	typedef IFDList::iterator       IFDIterator;       //!< iterator over IDF entries in IDFList
+	typedef IFDList::const_iterator const_IFDIterator; //!< const. iterator over IDF entries in IDF List
 
 	//! default constructor
 	TIFFIFD();
@@ -71,7 +82,24 @@ public:
 	//! set the offset of this IFD in the file
 	virtual void setOffset(const Int32 &o);
 
+	//! operator to obtain an entry by index
+
+	//! This woks for all entries stored in the IFD also for those
+	//! not defined by the TIFF specification. If the index requested
+	//! exceeds the number of entries stored in the IFD an exception
+	//! will be raised.
+
+	//! \param i unsigned integer with the index of the entry
+	//! \return smart pointer to an IFDAbstractEntry object
 	IFDAbstractEntry::sptr operator[](const UInt16 i);
+	//! operator to obtain an entry by its name
+
+	//! This operator works only for entries which are defined in the
+	//! TIFF specification. If the requrested entry is not available
+	//! an exception will be raised.
+
+	//! \param n a string with the name of the entry
+	//! \return smart pointer to an IFDAbstractEntry
 	IFDAbstractEntry::sptr operator[](const String &n);
 
 	//! overloaded ifstream operator for stream reading

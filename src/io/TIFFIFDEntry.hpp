@@ -12,6 +12,7 @@
 #include <fstream>
 
 #include "../PNITypes.hpp"
+#include "../Exceptions.hpp"
 
 #include "TIFFIFDAbstractEntry.hpp"
 #include "TIFFRational.hpp"
@@ -19,103 +20,162 @@
 namespace pni{
 namespace utils{
 
+//! \ingroup IO
+//! \brief type trait for TIFF IFD entries
 
-//define here traits to handle entry type codes
+//! This trait is used to set the type code in the
+//! getEntryTypeCode method of the IDFEntry template.
+//! The trait is specialized for all available data types for
+//! TIFF IFD entries.
 template<typename T> class IFDEntryTypeTrait{
 public:
-	static const IDFEntryTypeCode TypeCode;
+	static const IFDEntryTypeCode TypeCode;  //!< typecode of the IDF entry
 };
 
+//! \ingroup IO
+//! \brief trait specialization for 8Bit unsigned integer entries
 template<> class IFDEntryTypeTrait<UInt8>{
 public:
-	static const IDFEntryTypeCode TypeCode = IDFE_BYTE;
+	static const IFDEntryTypeCode TypeCode = IDFE_BYTE; //!< IDFEntryTypeCode value
 };
 
+//! \ingroup IO
+//! \brief trait specialization for 8Bit signed integer entries
 template<> class IFDEntryTypeTrait<Int8>{
 public:
-	static const IDFEntryTypeCode TypeCode = IDFE_SBYTE;
+	static const IFDEntryTypeCode TypeCode = IDFE_SBYTE; //!< IDFEntryTypeCode value
 };
 
+//! \ingroup IO
+//! \brief trait specialization for 16Bit unsigned integer entries
 template<> class IFDEntryTypeTrait<UInt16>{
 public:
-	static const IDFEntryTypeCode TypeCode = IDFE_SHORT;
+	static const IFDEntryTypeCode TypeCode = IDFE_SHORT; //!< IDFEntryTypeCode value
 };
 
+//! \ingroup IO
+//! \brief trait specialization for 16Bit signed integer entries
 template<> class IFDEntryTypeTrait<Int16>{
 public:
-	static const IDFEntryTypeCode TypeCode = IDFE_SSHORT;
+	static const IFDEntryTypeCode TypeCode = IDFE_SSHORT; //!< IDFEntryTypeCode value
 };
 
+//! \ingroup IO
+//! \brief trait specialization for 32Bit unsigned integer entries
 template<> class IFDEntryTypeTrait<UInt32>{
 public:
-	static const IDFEntryTypeCode TypeCode = IDFE_LONG;
+	static const IFDEntryTypeCode TypeCode = IDFE_LONG; //!< IDFEntryTypeCode value
 };
 
+//! \ingroup IO
+//! \brief trait specialization for 32Bit signed integer entries
 template<> class IFDEntryTypeTrait<Int32>{
 public:
-	static const IDFEntryTypeCode TypeCode = IDFE_SLONG;
+	static const IFDEntryTypeCode TypeCode = IDFE_SLONG; //!< IDFEntryTypeCode value
 };
 
+//! \ingroup IO
+//! \brief trait specialization for 32Bit IEEE float entries
 template<> class IFDEntryTypeTrait<Float32>{
 public:
-	static const IDFEntryTypeCode TypeCode = IDFE_FLOAT;
+	static const IFDEntryTypeCode TypeCode = IDFE_FLOAT; //!< IDFEntryTypeCode value
 };
 
+//! \ingroup IO
+//! \brief trait specialization for 64Bit IEEE float entries
 template<> class IFDEntryTypeTrait<Float64>{
 public:
-	static const IDFEntryTypeCode TypeCode = IDFE_DOUBLE;
+	static const IFDEntryTypeCode TypeCode = IDFE_DOUBLE; //!< IDFEntryTypeCode value
 };
 
+//! \ingroup IO
+//! \brief trait specialization for 32Bit unsigned integer Rational entries
 template<> class IFDEntryTypeTrait<URational>{
 public:
-	static const IDFEntryTypeCode TypeCode = IDFE_RATIONAL;
+	static const IFDEntryTypeCode TypeCode = IDFE_RATIONAL; //!< IDFEntryTypeCode value
 };
 
+//! \ingroup IO
+//! \brief trait specialization for 32Bit signed integer Rational entries
 template<> class IFDEntryTypeTrait<SRational>{
 public:
-	static const IDFEntryTypeCode TypeCode = IDFE_SRATIONAL;
+	static const IFDEntryTypeCode TypeCode = IDFE_SRATIONAL; //!< IDFEntryTypeCode value
 };
 
+//! \ingroup IO
+//! \brief trait specialization for String entries
 template<> class IFDEntryTypeTrait<String>{
 public:
-	static const IDFEntryTypeCode TypeCode = IDFE_ASCII;
+	static const IFDEntryTypeCode TypeCode = IDFE_ASCII; //!< IDFEntryTypeCode value
 };
 
 template<typename T> class IFDEntry;
 template<typename T> std::ifstream &operator>>(std::ifstream &,IFDEntry<T> &);
 template<typename T> std::ostream &operator<<(std::ostream &,const IFDEntry<T> &);
 
+//! \ingroup IO
+//! \brief typed IFDEntry
 
+//! The IFDEntry template represents an IFD entry. Read/write access to the
+//! elements stored is given by the [] operator along with the integer index of
+//! the element that should be addressed.
 template<typename T>
 class IFDEntry:public IFDAbstractEntry{
 protected:
-	typedef typename std::vector<T>::iterator _iterator;
-	typedef typename std::vector<T>::const_iterator _const_iterator;
-	std::vector<T> _values;
+	typedef typename std::vector<T>::iterator _iterator;  //!< iterator over the element entries
+	typedef typename std::vector<T>::const_iterator _const_iterator; //!< const iterator over the element entries
+	std::vector<T> _values; //!< vector holding the entry elements
 public:
-	typedef boost::shared_ptr<IFDEntry<T> > sptr;
-	typedef std::vector<sptr> list;
-	typedef typename list::iterator iterator;
-	typedef typename list::const_iterator const_iterator;
+	typedef boost::shared_ptr<IFDEntry<T> > sptr;          //!< smart pointer to an entry
+	typedef std::vector<sptr> list;                        //!< vector type of IFD smart pointers
+	typedef typename list::iterator iterator;              //!< iterator over an entry list
+	typedef typename list::const_iterator const_iterator;  //!< const iterator over an entry list
 	//! default constructor
 	IFDEntry();
 	//! copy constructor
 	IFDEntry(const IFDEntry<T> &o);
-	//! standard constructor
+	//! standard constructor with initialization
+
+	//! \param n name of the entry
+	//! \param cnt number of elements
+	//! \param values pointer to a cnt values which belong to the element
 	IFDEntry(const String &n, const UInt32 &cnt,const T *values);
+	//! standard constructor without initialization
+
+	//! \param n name of the entry
+	//! \param cnt number of elements in the entry
 	IFDEntry(const String &n, const UInt32 &cnt);
+	//! destructor
 	virtual ~IFDEntry();
 
+	//! assignment operator
 	IFDEntry<T> &operator=(const IFDEntry &);
 
+	//! [] operator for read/write access
+
+	//! if i exceeds the number of elements in the entry an IndexError
+	//! exception will be thrown.
+	//! \param i index of the element
 	T &operator[](const UInt64 &i);
+
+	//! [] operator for read access
+
+	//! if i exceeds the number of elements in the entry an IndexError
+	//! exception will be thrown.
+	//! \param i index of the element
 	T operator[](const UInt64 &i) const;
 
-	virtual IDFEntryTypeCode getEntryTypeCode() const{
+	//! return the entries type code
+
+	//! This method can be used to obtain the type code of a particular
+	//! entry at runtime.
+	virtual IFDEntryTypeCode getEntryTypeCode() const{
 		return IFDEntryTypeTrait<T>::TypeCode;
 	}
 
+	//! ifstream operator to read the entry from a binary stream
 	friend std::ifstream &operator>><> (std::ifstream &in,IFDEntry<T> &e);
+	//! ostream operator to write the content of an entry to standard out
 	friend std::ostream &operator<<<> (std::ostream &,const IFDEntry<T> &e);
 };
 
@@ -165,10 +225,24 @@ template<typename T> IFDEntry<T> &IFDEntry<T>::operator=(const IFDEntry<T> &o){
 }
 
 template<typename T> T &IFDEntry<T>::operator[](const UInt64 &i){
+	if(i>=_cnt){
+		//raise an exception here
+		IndexError e;
+		e.setSource("IDFEntry<T>::operator[]");
+		e.setDescription("IFD entry element out of bound!");
+		throw e;
+	}
 	return _values[i];
 }
 
 template<typename T> T IFDEntry<T>::operator[](const UInt64 &i) const {
+	if (i >= _cnt) {
+		//raise an exception here
+		IndexError e;
+		e.setSource("IDFEntry<T>::operator[]");
+		e.setDescription("IFD entry element out of bound!");
+		throw e;
+	}
 	return _values[i];
 }
 
