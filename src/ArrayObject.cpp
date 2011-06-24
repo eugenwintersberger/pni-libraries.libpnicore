@@ -122,11 +122,8 @@ const ArrayShape::sptr ArrayObject::getShape() const{
 	return _shape;
 }
 
-void ArrayObject::setBuffer(const BufferObject &b){
-	_data_object.reset(new BufferObject(b));
-}
 
-void ArrayObject::setBuffer(BufferObject::sptr &b){
+void ArrayObject::setBuffer(BufferObject::sptr b){
 	_data_object = b;
 }
 

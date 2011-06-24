@@ -57,10 +57,10 @@ class ArrayShape{
         //! once the shape is changed in a way so that the size is changed.
         void _compute_size();
     public:
-        static const MemoryAllocationError DIMSTRIDE_ALLOC_ERROR;
-        static const MemoryAllocationError SHAPE_ALLOC_ERROR;
+        static const MemoryAllocationError DIMSTRIDE_ALLOC_ERROR; //!< error: cannot allocate buffer for dimension strides
+        static const MemoryAllocationError SHAPE_ALLOC_ERROR;     //!< error: cannot allocate buffer for array dimensions
 
-        typedef boost::shared_ptr<ArrayShape> sptr;  //define a smart pointer to this object
+        typedef boost::shared_ptr<ArrayShape> sptr;  //!< smart pointer to an ArrayShape object
         //! default constructor
         ArrayShape();
         //! copy constructor
@@ -120,11 +120,12 @@ class ArrayShape{
         //! characterized by the indices in index. The offset is the address of
         //! the element in a linear buffer.
 
-        //! \params *index pointer to an array of element indices
+        //! \param *index pointer to an array of element indices
         virtual unsigned int getOffset(const unsigned int *index);
         
         //the assignment operator must be a member function
         //and cannot be declared as a friend function
+        //! assignment operator
         ArrayShape &operator=(const ArrayShape &);
         
         //! equality operator for array shapes
@@ -145,6 +146,7 @@ class ArrayShape{
         //! \sa void setDimensions(const unsigned int *s), void setDimension(const unsigned int &i,const unsigned int &d)
         const unsigned int operator[](unsigned int i) const { return _shape[i];}
 
+        //! operator for console output
         friend std::ostream &operator<<(std::ostream &o,const ArrayShape &s);
 };
 

@@ -12,25 +12,57 @@
 #include <string>
 #include <boost/shared_array.hpp>
 #include "Exceptions.hpp"
+#include "PNITypes.hpp"
 
 namespace pni{
 namespace utils{
 
+//! \addtogroup Data-objects
+//! @{
 
+//! BufferObject - base class for data buffers
+
+//! BufferObject is the base class for the Buffer<T> template.
+//! This class can be used for polymorphic operations for accessing
+//! instances of Buffer<T> objects of unknown data type.
 class BufferObject{
 protected:
-	unsigned long _size;       //!< number of elements in the buffer
-	unsigned long _elem_size;  //!< size of a single element
+	UInt64 _size;       //!< number of elements in the buffer
+	UInt64 _elem_size;  //!< size of a single element
 public:
-	typedef boost::shared_ptr<BufferObject> sptr;  //smart ptr
+	typedef boost::shared_ptr<BufferObject> sptr;  //!< smart pointer to a BufferObject
+	//! default constructor
 	BufferObject();
+	//! copy constructor
 	BufferObject(const BufferObject &b);
-	BufferObject(unsigned long n,unsigned long es);
+	//! constructor
+
+	//! Constructor for a BufferObject that initializes the number of elements
+	//! in the buffer and the element size (in bytes).
+	//! \param n number of elements in the buffer
+	//! \param es element size
+	BufferObject(UInt64 n,UInt64 es);
+	//! destructor
 	virtual ~BufferObject();
-	virtual unsigned long getSize(){return _size;}
-	virtual unsigned long getMemSize(){return _size*_elem_size;}
-	virtual void resize(unsigned long n){}
-	virtual void allocate(unsigned long n){}
+
+	//! return the number of elements in the buffer
+	virtual UInt64 getSize(){return _size;}
+	//! return the total amount of memory allocated by the buffer
+	virtual UInt64 getMemSize(){return _size*_elem_size;}
+
+	//! resize an allready allocated buffer
+
+	//! This method must be allocated by the concrete implementation
+	//! of a buffer class - in other words by the child class.
+	//! \param n new number of elements in the buffer
+	virtual void resize(UInt64 n){}
+	//! initial memory allocation
+
+	//! Use this method to allocate memory the first time after
+	//! creating a buffer object. This method must be implemented
+	//! by child classes of DataBuffer.
+	//! \param n number of elements in the buffer
+	virtual void allocate(UInt64 n){}
 };
 
 template<typename T> class Buffer;
@@ -47,10 +79,9 @@ template<typename T> bool operator!=(const Buffer<T> &,const Buffer<T> &);
 //! for a buffer from the user. Until now there is not too much secret in
 //! this class. Since we assume actually only numerical values to be
 //! stored the compiler should ensure correct memory alignment in any case.
-
+//!
 //! Future implementations of this structure may include thread safety using
 //! the BOOST threading classes.
-
 template<typename T>class Buffer:public BufferObject{
 protected:
 	T* _data;            //!< pointer to the data held by the buffer
@@ -70,6 +101,7 @@ public:
 
 	//! Using this constructor the buffer will automatically allocate memory.
 	Buffer(unsigned long n);
+	//! destructor
 	virtual ~Buffer();
 
 	//! resize the buffer
@@ -294,6 +326,8 @@ template<typename T> T Buffer<T>::operator[](unsigned long n) const {
 	return _data[n];
 }
 
+
+//! @}
 //end of namespace
 }
 }

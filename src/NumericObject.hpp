@@ -16,7 +16,7 @@ namespace pni{
 namespace utils{
 
 //! \ingroup Data-objects
-//! base class for numerical objects
+//! \brief base class for numerical objects
 
 //! NumericObject is the base class for all objects in the
 //! PNI utility name space that hold numeric data. As a descendant of

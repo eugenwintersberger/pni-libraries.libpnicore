@@ -6,6 +6,9 @@
 #include<iostream>
 #include<string>
 
+#include "Exceptions.hpp"
+#include "PNITypes.hpp"
+
 namespace pni{
 namespace utils{
 
@@ -209,8 +212,7 @@ public:
 };
 
 //! \ingroup Exceptions
-//! file error
-
+//! \brief indicates file IO problems
 //! Raised typically in case of File IO problems
 class FileError:public Exception{
 public:
@@ -231,6 +233,30 @@ public:
 	//! destructor
 	virtual ~FileError(){}
 
+};
+
+//! \ingroup Exceptions
+//! \brief data type errors
+
+//! This exception is raised in cases of data type errors.
+class TypeError:public Exception{
+public:
+	//! default constructor
+	TypeError():Exception("TypeError"){}
+	//! constructor
+
+	//! Constructor setting source and description of the error
+	//! \param w error source as String
+	//! \param d error description as String
+	TypeError(const String &w,const String &d):Exception("TypeError",w,d){}
+	//! constructor
+
+	//! Constructor setting source and description of the error
+	//! \param w error as character array
+	//! \param d error description as character array
+	TypeError(const char *w,const char *d):Exception("TypeError",w,d){}
+	//! destructor
+	virtual ~TypeError(){}
 };
 
 }

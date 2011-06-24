@@ -13,8 +13,10 @@
 namespace pni{
 namespace utils{
 
+//! \addtogroup Data-objects
+//! @{
 
-//! template for Array operation return types
+//! \brief template for Array operation return types
 
 //! This particular template is used to determine the return type of
 //! accumulative array operations as a function of the array's element
@@ -26,84 +28,94 @@ namespace utils{
 //! is the same as that of the array's element.
 template<typename T> class ArrayType{
 public:
-	typedef T Type;
+	typedef T Type; //!< data type for accumulative operations
 };
-
 
 //! template specialization for 8 Bit signed integer
 template<> class ArrayType<Int8>{
 public:
-	typedef Int64 Type;
+	typedef Int64 Type; //!< result type for Int8 array operations
 };
 
-//! template specialization for 16 Byte signed integer
+//! template specialization for 16 Bit signed integer
 template<> class ArrayType<Int16>{
 public:
-	typedef Int64 Type;
+	typedef Int64 Type; //!< result type for Int16 array operations
 };
 
-//! template specialization for 32 Byte signed integer
+//! template specialization for 32 Bit signed integer
 template<> class ArrayType<Int32>{
 public:
-	typedef Int64 Type;
+	typedef Int64 Type; //!< result type for Int32 array operations
 };
 
-//! template specialization for 64 Byte signed integer
+//! template specialization for 64 Bit signed integer
 template<> class ArrayType<Int64>{
 public:
-	typedef Int64 Type;
+	typedef Int64 Type; //!< result type for Int64 array operations
 };
 
+//! template specialization for 8Bit unsigned integer
 template<> class ArrayType<UInt8>{
 public:
-	typedef UInt64 Type;
+	typedef UInt64 Type; //!< result type for UInt8 array operations
 };
 
+//! template specialization for 16Bit unsigned integer
 template<> class ArrayType<UInt16>{
 public:
-	typedef UInt64 Type;
+	typedef UInt64 Type; //!< result type for UInt16 array operations
 };
 
+//! template specialization for 32Bit unsigned integer
 template<> class ArrayType<UInt32>{
 public:
-	typedef UInt64 Type;
+	typedef UInt64 Type; //!< result type for UInt32 array operations
 };
 
+//! template specialization for 64Bit unsigned integer
 template<> class ArrayType<UInt64>{
 public:
-	typedef UInt64 Type;
+	typedef UInt64 Type; //!< result type for UInt64 array operations
 };
 
+//! template specialization for 32Bit IEEE floating point numbers
 template<> class ArrayType<Float32>{
 public:
-	typedef Float128 Type;
+	typedef Float128 Type; //!< result type for Float32 array operations
 };
 
+//! template specialization for 64Bit IEEE floating point numbers
 template<> class ArrayType<Float64>{
 public:
-	typedef Float128 Type;
+	typedef Float128 Type; //!< result type for Float64 array operations
 };
 
+//! template specialization for 128Bit IEEE floating point numbers
 template<> class ArrayType<Float128>{
 public:
-	typedef Float128 Type;
+	typedef Float128 Type; //!< result type for Float128 point numbers
 };
 
+//! template specialization for 32Bit IEEE complex floating point numbers
 template<> class ArrayType<Complex32>{
 public:
-	typedef Complex128 Type;
+	typedef Complex128 Type; //!< result type for Complex32 array operations
 };
 
+//! template specialization for 64Bit IEEE complex floating point numbers
 template<> class ArrayType<Complex64>{
 public:
-	typedef Complex128 Type;
+	typedef Complex128 Type; //!< result type for Complex64 array operations
 };
 
+//! template specialization for 128Bit IEEE complex floating point numbers
 template<> class ArrayType<Complex128>{
 public:
-	typedef Complex128 Type;
+	typedef Complex128 Type; //!< result type for Complex128 array operations
 };
 
+//! @}
 }
 }
 

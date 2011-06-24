@@ -51,7 +51,8 @@ template<typename T> bool operator!=(const Array<T> &, const Array<T> &);
 template<typename T> std::ostream &operator<<(std::ostream &o,
 		const Array<T> &a);
 
-//! template for a multi-dimensional array class
+//! \ingroup Data-objects
+//! \brief template for a multi-dimensional array class
 
 //! This class represents a multidimensional array of data values. It consists of two
 //! components: a pointer to an instance of type Buffer and a pointer to an instance
@@ -81,8 +82,8 @@ template<typename T> class Array: public ArrayObject {
 protected:
 	typename Buffer<T>::sptr _data; //!< Buffer object holding the data
 public:
-	typedef T ElementType;
-	typedef boost::shared_ptr<Array<T> > sptr;
+	typedef T ElementType;  //!< type of an array element
+	typedef boost::shared_ptr<Array<T> > sptr; //!< shared pointer to an Array<T>
 	//! default constructor
 	Array();
 	//! copy constructor
@@ -156,12 +157,6 @@ public:
 	//! \param b reference to a smart pointer to a Buffer object
 	virtual void setBuffer(const typename Buffer<T>::sptr &b);
 	//! obtain a smart pointer to the array Buffer
-
-	//! Sets the smart pointer ptr to the value of the buffer pointer.
-	//! After this call ptr and the Array share the Buffer-object contained
-	//! in the Array.
-
-	//! \param ptr reference to the target smart pointer
 	virtual const BufferObject::sptr getBuffer() const;
 
 	//! assign a native type to the array
@@ -179,20 +174,70 @@ public:
 	Array<T> &operator =(const Array<T>&);
 
 	//overloaded simple binary arithmetic operators
+	//! binary + operator for arrays
+
+	//! This version of the operator implements Array<T> + T operations.
+	//! During the operation a temporary array object is created.
 	friend Array<T> operator+<> (const Array<T>&, const T&);
+	//overloaded simple binary arithmetic operators
+	//! binary + operator for arrays
+
+	//! This version of the operator implements T + Array<T> operations.
+	//! During the operation a temporary array object is created.
 	friend Array<T> operator+<> (const T&, const Array<T>&);
+	//overloaded simple binary arithmetic operators
+	//! binary + operator for arrays
+
+	//! This version of the operator implements Array<T> + Array<T> operations.
+	//! During the operation a temporary array object is created.
 	friend Array<T> operator+<> (const Array<T>&, const Array<T>&);
 
+	//! binary - operator for arrays
+
+	//! This version of the operator implements Array<T> - T operations.
+	//! During the operation a temporary array object is created.
 	friend Array<T> operator-<> (const Array<T>&, const T&);
+	//! binary - operator for arrays
+
+	//! This version of the operator implements Array<T> - Array<T> operations.
+	//! During the operation a temporary array object is created.
 	friend Array<T> operator-<> (const Array<T>&, const Array<T>&);
+	//! binary - operator for arrays
+
+	//! This version of the operator implements T - Array<T> operations.
+	//! During the operation a temporary array object is created.
 	friend Array<T> operator-<> (const T&, const Array<T>&);
 
+	//! binary * operator for arrays
+
+	//! This version of the operator implements Array<T> * T operations.
+	//! During the operation a temporary array object is created.
 	friend Array<T> operator*<> (const Array<T>&, const T&);
+	//! binary * operator for arrays
+
+	//! This version of the operator implements Array<T> * Array<T> operations.
+	//! During the operation a temporary array object is created.
 	friend Array<T> operator*<> (const Array<T>&, const Array<T>&);
+	//! binary * operator for arrays
+
+	//! This version of the operator implements T * Array<T> operations.
+	//! During the operation a temporary array object is created.
 	friend Array<T> operator*<> (const T&, const Array<T>&);
 
+	//! binary / operator for arrays
+
+	//! This version of the operator implements Array<T> / T operations.
+	//! During the operation a temporary array object is created.
 	friend Array<T> operator /<> (const Array<T>&, const T&);
+	//! binary / operator for arrays
+
+	//! This version of the operator implements Array<T> / Array<T> operations.
+	//! During the operation a temporary array object is created.
 	friend Array<T> operator /<> (const Array<T>&, const Array<T>&);
+	//! binary / operator for arrays
+
+	//! This version of the operator implements T / Array<T> operations.
+	//! During the operation a temporary array object is created.
 	friend Array<T> operator /<> (const T&, const Array<T>&);
 
 	//these operators are important because they are performed
@@ -315,8 +360,19 @@ public:
 	//! \param value the value to set the numbers to
 	void MaxClip(T threshold, T value);
 
-	//operators for data access
+	//! operator for data accees
+
+	//! To access the elements of a multidimensional array the () operator
+	//! is overloaded. This version takes the indices of the requested element
+	//! as a variable number of arguments in the argument list. This is most
+	//! probably the most natural way to access the elements of an array.
 	T& operator()(unsigned int i, ...);
+	//! operator for data access
+
+	//! The () operator is overloaded to access the elements of a multidimensional
+	//! array. This version takes single array whose size is that of the rank of the
+	//! array. This array holds the indices of the requested element.
+	//! \param *index pointer to an index array
 	T& operator()(unsigned int *index);
 	//! bracket operator - accessing linear data
 
@@ -337,6 +393,7 @@ public:
 	//! Tow arrays are considered different if they have different shape or
 	//! content.
 	friend bool operator!=<> (const Array<T> &b1, const Array<T> &b2);
+	//! output operator for console output
 	friend std::ostream &operator<<<> (std::ostream &o, const Array<T> &a);
 
 };

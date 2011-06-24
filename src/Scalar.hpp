@@ -45,27 +45,90 @@ template<typename T> bool operator==(const Scalar<T> &a, const Scalar<T> &b);
 template<typename T> bool operator==(const T& a, const Scalar<T> &b);
 template<typename T> bool operator==(const Scalar<T> &a, const T& b);
 
+//! \ingroup Data-objects
+//! \brief Scalar template for scalar values
+
+//! Basically one can consider this as a concrete implementation of
+//! the class ScalarObject. Along with all other attributes of a NumericObject
+//! this template holds data in a single (scalar) value.
+//!
+//! To make such a template useful it must not only provide support copy and
+//! assignment operations, in addition full support for basic arithmetic operations
+//! must be available.
 template<typename T> class Scalar: public ScalarObject {
 protected:
-	T _value;
+	T _value; //!< object holding the value of the Scalar object
 public:
-	//default constructor
+	//! default constructor
 	Scalar();
-	//copy constructor
+	//! copy constructor
 	Scalar(const Scalar<T> &);
-	//setting value  bue use default constructor for the
-	//base class
-	Scalar(const T &v);
-	Scalar(const T &v, const String &n, const String &u);
-	Scalar(const T &v, const char *n, const char *u);
-	Scalar(const T &v, const String &n, const String &d, const String &u);
-	Scalar(const T &v, const char *n, const char *d, const char *u);
+	//! constructor
 
+	//! Constructor setting the value of the Scalar object.
+	//! \param v value of type T
+	Scalar(const T &v);
+	//! constructor
+
+	//! Constructor setting the value, name, and physical unit of the Scalar
+	//! object.
+	//! \param v value of type T
+	//! \param n name of the object as String
+	//! \param u unit of the object as String
+	Scalar(const T &v, const String &n, const String &u);
+	//! constructor
+
+	//! Constructor setting the value, name, and physical unit of the Scalar
+	//! object.
+	//! \param v value of type T
+	//! \param n name of the object as character array
+	//! \param u unit of the object as character array
+	Scalar(const T &v, const char *n, const char *u);
+	//! constructor
+
+	//! Constructor setting the value, name, description, and physical unit of the Scalar
+	//! object.
+	//! \param v value of type T
+	//! \param n name of the object as String
+	//! \param u unit of the object as String
+	//! \param d description of the object as String
+	Scalar(const T &v, const String &n, const String &u, const String &d);
+	//! constructor
+
+	//! Constructor setting the value, name, description, and physical unit of the Scalar
+	//! object.
+	//! \param v value of type T
+	//! \param n name of the object as character array
+	//! \param u unit of the object as character array
+	//! \param d description of the object as character array
+	Scalar(const T &v, const char *n, const char *u, const char *d);
+	//! constructor
+
+	//! Constructor setting name and unit of the Scalar object.
+	//! \param n name of the object as String
+	//! \param u physical unit of the object as String
 	Scalar(const String &n, const String &u);
+	//! constructor
+
+	//! Constructor setting name and unit of the Scalar object.
+	//! \param n name of the object as character array
+	//! \param u physical unit of the object as character array
 	Scalar(const char *n, const char *u);
-	Scalar(const String &n, const String &d, const String &u);
-	Scalar(const char *n, const char *d, const char *u);
-	//destructor
+	//! constructor
+
+	//! Constructor setting name, description, and unit of the Scalar object.
+	//! \param n name of the object as String
+	//! \param u physical unit of the object as String
+	//! \param d description of the object as String
+	Scalar(const String &n, const String &u, const String &d);
+	//! constructor
+
+	//! Constructor setting name, description, and unit of the Scalar object.
+	//! \param n name of the object as character array
+	//! \param u physical unit of the object as character array
+	//! \param d description of the object as character array
+	Scalar(const char *n, const char *u, const char *d);
+	//! destructor
 	virtual ~Scalar();
 
 	//for the assignment operator two cases must be considered
@@ -76,23 +139,55 @@ public:
 	//What is still missing here is the case that the r-value of the
 	//expression is of different type than T. This case still requires
 	//handling to avoid problems later on.
+
+	//! assignment operator from a variable of type T
+
+	//! Here a simple object of type T (in most cases this will be a native
+	//! variable) is assigned to the _value member of a Scalar<T> object.
+	//! This flavor of the assignment operator makes the usage of Scalar<T> objects
+	//! easy - they behave just like normal variables.
+	//! \param &v reference to a native variable of type T
 	Scalar<T> &operator=(const T &v);
+	//! assignment operator from a Scalar<T> object
 	Scalar<T> &operator=(const Scalar<T> &v);
 
-	//this is some canonical operation that should be
-	//implemented nearly everywhere
-	const T& getValue() {
+	//! return the value of a Scalar object
+	T& getValue() {
 		return _value;
 	}
+
+	//! return the value of a Scalar object
+	T getValue() const {
+		return _value;
+	}
+
+	//! template to set the value of a Scalar
+
+	//! Template method to set the value of a Scalar object
+	//! from a Scalar object of different type. This method is
+	//! useful if only a pointer exists to a Scalar<T> object
+	//! and therefore the = operator cannot be called in an easy manner.
+	//! \param &v reference to a Scalar object of type U
+	template<typename U> void setValue(const Scalar<U> &v);
+	//! template to set the value of a Scalar
+
+	//! Template method to set the value of a Scalar object
+	//! from a native variable of type U. This method is particularly
+	//! useful if only a pointer to a Scalar<T> object exists
+	//! and the = operator cannot be called in a simple manner.
+	//! \param &v reference to a variable of type U
+	template<typename U> void setValue(const U &v);
 
 	//what cannot be done with the assignement operator:
 	//an object of type Scalar is assigned to an object of type T
 	//this is done here with the conversion operator!
+	//! conversion operator
 	operator T() {
 		return _value;
 	}
 
 	//clearly - the ostream operator must be overloaded
+	//! stream operator for console output
 	friend std::ostream &operator<<<> (std::ostream &, const Scalar<T> &);
 
 	//for each of the arithmetic operators three cases must be
@@ -104,34 +199,57 @@ public:
 	//this is no problem even if the result will be assigned to an
 	//object of type T (in this case the conversion operator
 	//does the job).
+	//! operator + for Scalar<T> + Scalar<T>
 	friend Scalar<T> operator+<> (const Scalar<T> &a, const Scalar<T> &b);
+	//! operator + for T + Scalar<T>
 	friend Scalar<T> operator+<> (const T& a, const Scalar<T> &b);
+	//! operator + for Scalar<T> + T
 	friend Scalar<T> operator+<> (const Scalar<T> &a, const T&b);
 
+	//! operator - for Scalar<T> - Scalar<T>
 	friend Scalar<T> operator-<> (const Scalar<T> &a, const Scalar<T> &b);
+	//! operator - for T - Scalar<T>
 	friend Scalar<T> operator-<> (const T& a, const Scalar<T> &b);
+	//! operator - for Scalar<T> - T
 	friend Scalar<T> operator-<> (const Scalar<T> &a, const T &b);
 
+	//! operator * for Scalar<T> * Scalar<T>
 	friend Scalar<T> operator*<> (const Scalar<T> &a, const Scalar<T> &b);
+	//! operator * for T * Scalar<T>
 	friend Scalar<T> operator*<> (const T& a, const Scalar<T> &b);
+	//! operator * for Scalar<T>*T
 	friend Scalar<T> operator*<> (const Scalar<T> &a, const T& b);
 
+	//! operator / for Scalar<T> / Scalar<T>
 	friend Scalar<T> operator/<> (const Scalar<T> &a, const Scalar<T> &b);
+	//! operator / for T / Scalar<T>
 	friend Scalar<T> operator/<> (const T& a, const Scalar<T> &b);
+	//! operator / for Scalar<T>/T
 	friend Scalar<T> operator/<> (const Scalar<T> &a, const T &b);
 
+	//! comparison operator == for Scalar<T> == Scalar<T>
 	friend bool operator==<> (const Scalar<T> &a, const Scalar<T> &b);
+	//! comparison operator == for Scalar<T>==T
 	friend bool operator==<> (const Scalar<T> &a, const T &b);
+	//! comparison operator == for T == Scalar<T>
 	friend bool operator==<> (const T &a, const Scalar<T> &b);
 
 	//overload combind arithmetics and assignment operators
+	//! unary and inplace / operator for Scalar<T> /= T
 	Scalar<T> &operator/=(const T &);
+	//! unary and inplace / operator for Scalar<T> /= Scalar<T>
 	Scalar<T> &operator/=(const Scalar<T> &v);
+	//! unary and inplace + operator for Scalar<T> += T
 	Scalar<T> &operator+=(const T &v);
+	//! unary and inplace + operator for Scalar<T> += Scalar<T>
 	Scalar<T> &operator+=(const Scalar<T> &v);
+	//! unary and inplace - operator for Scalar<T> -= T
 	Scalar<T> &operator-=(const T &v);
+	//! unary and inplace - operator for Scalar<T> -= Scalar<T>
 	Scalar<T> &operator-=(const Scalar<T> &v);
+	//! unary and inplace * operator for Scalar<T> *= T
 	Scalar<T> &operator*=(const T &v);
+	//! unary and inplace * operator for Scalar<T> *= Scalar<T>
 	Scalar<T> &operator*=(const Scalar<T> &v);
 
 };
@@ -165,14 +283,14 @@ template<typename T> Scalar<T>::Scalar(const T &v, const char *n, const char *u)
 }
 
 template<typename T> Scalar<T>::Scalar(const T &v, const String &n,
-		const String &d, const String &u) :
-	ScalarObject(n, d, u) {
+		const String &u, const String &d) :
+	ScalarObject(n, u, d) {
 	_value = v;
 }
 
 template<typename T> Scalar<T>::Scalar(const T &v, const char *n,
-		const char *d, const char *u) :
-	ScalarObject(n, d, u) {
+		const char *u, const char *d) :
+	ScalarObject(n, u, d) {
 	_value = v;
 }
 
@@ -186,20 +304,32 @@ template<typename T> Scalar<T>::Scalar(const char *n, const char *u) :
 	_value = 0;
 }
 
-template<typename T> Scalar<T>::Scalar(const String &n, const String &d,
-		const String &u) :
-	ScalarObject(n, d, u) {
+template<typename T> Scalar<T>::Scalar(const String &n, const String &u,
+		const String &d) :
+	ScalarObject(n, u, d) {
 	_value = 0;
 }
 
-template<typename T> Scalar<T>::Scalar(const char *n, const char *d,
-		const char *u) :
-	ScalarObject(n, d, u) {
+template<typename T> Scalar<T>::Scalar(const char *n, const char *u,
+		const char *d) :
+	ScalarObject(n, u, d) {
 	_value = 0;
 }
 
 template<typename T> Scalar<T>::~Scalar() {
 	_value = 0;
+}
+
+//==========methods for accessing the data of a scalar in a typesafe way===================
+template<typename T> template<typename U> void Scalar<T>::setValue(const U &v){
+	_value = (T)v;
+
+}
+
+template<typename T> template<typename U> void Scalar<T>::setValue(const Scalar<U> &s){
+	U v = s._value();
+
+	setValue(v);
 }
 
 //======================unary arithmetic operators=========================================

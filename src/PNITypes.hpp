@@ -39,24 +39,23 @@ typedef std::complex<long double> Complex128; //!< 128Bit complex floating point
 typedef std::string String; //!< String type
 
 
-//enum types for typecodes
-
-enum PNITypeID {NONE,
-				INT8,
-				UINT8,
-				INT16,
-				UINT16,
-				INT32,
-				UINT32,
-				INT64,
-				UINT64,
-	            FLOAT32,
-	            FLOAT64,
-	            FLOAT128,
-	            COMPLEX32,
-	            COMPLEX64,
-	            COMPLEX128,
-	            STRING
+//! type codes for PNI data types
+enum PNITypeID {NONE,   //!< no data type
+				INT8,   //!< signed 8Bit integer
+				UINT8,  //!< unsigned 8Bit integer
+				INT16,  //!< signed 16Bit integer
+				UINT16, //!< unsigned 16Bit integer
+				INT32,  //!< signed 32Bit integer
+				UINT32, //!< unsigned 32Bit integer
+				INT64,  //!< signed 64Bit integer
+				UINT64, //!< unsigned 64Bit integer
+	            FLOAT32,  //!< 32Bit IEEE floating point
+	            FLOAT64,  //!< 64Bit IEEE floating point
+	            FLOAT128, //!< 128Bit IEEE floating point
+	            COMPLEX32,  //!< 32Bit IEEE floating point complex
+	            COMPLEX64,  //!< 64Bit IEEE floating point complex
+	            COMPLEX128, //!< 128Bit IEEE floating point complex
+	            STRING      //!< String type
 				};
 
 //! @}

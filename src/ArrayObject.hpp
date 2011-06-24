@@ -16,7 +16,8 @@
 namespace pni{
 namespace utils{
 
-//! Base class for numeric arrays
+//! \ingroup Data-objects
+//! \brief Base class for numeric arrays
 class ArrayObject:public NumericObject {
 protected:
 	BufferObject::sptr _data_object; //!< general buffer object
@@ -24,7 +25,7 @@ protected:
 								 	 //!< and managing the access to the data
 	unsigned int *_index_buffer; 	 //!< a buffer used to hold index variables.
 public:
-	typedef boost::shared_ptr<ArrayObject> sptr;
+	typedef boost::shared_ptr<ArrayObject> sptr;  //!< shared pointer to an ArrayObject
 	//! default constructor
 	ArrayObject();
 	//! copy constructor
@@ -85,8 +86,9 @@ public:
 	//! share the shape object.
 	virtual const ArrayShape::sptr getShape() const;
 
-	virtual void setBuffer(const BufferObject &b);
-	virtual void setBuffer(BufferObject::sptr &b);
+	//! set the BufferObject that belongs to an array
+	virtual void setBuffer(BufferObject::sptr b);
+	//! get a shared pointer to a BufferObject belonging to an array
 	virtual const BufferObject::sptr getBuffer() const;
 };
 
