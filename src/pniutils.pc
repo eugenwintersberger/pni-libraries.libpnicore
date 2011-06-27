@@ -1,4 +1,4 @@
-prefix=home/eugen/Applications/inst
+prefix=usr
 exec_prefix=${prefix}
 includedir=${prefix}/include
 libdir=${prefix}/lib
