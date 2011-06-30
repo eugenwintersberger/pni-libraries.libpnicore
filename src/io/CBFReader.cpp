@@ -32,7 +32,7 @@ CBFReader::~CBFReader(){
     if(_binheader!=NULL) delete _binheader;
 }
 
-DataObject *CBFReader::read(){
+DataObject::sptr CBFReader::read(){
     UInt8 byte;
     String linebuffer;
     String key,value;
@@ -110,7 +110,7 @@ DataObject *CBFReader::read(){
         }
 
     }
-    return v;
+    return boost::dynamic_pointer_cast<DataObject>(ArrayObject::sptr(v));
 }
 
 

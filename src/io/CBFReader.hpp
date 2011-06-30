@@ -74,7 +74,7 @@ public:
 	//! Data is read from the CBF file and returned as a general
 	//! DataObject. This DataObject is typically an instance of Array<T>
 	//! - at least in the case of CBF files.
-	virtual DataObject *read();
+	virtual DataObject::sptr read();
 };
 
 }

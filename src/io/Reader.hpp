@@ -86,7 +86,7 @@ public:
 	virtual void close();
 
 	//! read data from a file
-	virtual DataObject *read();
+	virtual DataObject::sptr read();
 };
 
 

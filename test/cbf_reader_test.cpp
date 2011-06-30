@@ -155,7 +155,7 @@ template<typename T> void PlotArray::image_plot(const pni::utils::ArrayObject *d
 
 int main(int argc,char **argv){
     pni::utils::CBFReader reader;
-    pni::utils::DataObject *v = NULL;
+    pni::utils::DataObject::sptr v ;
     PlotArray *plotter;
 
     //reader.setFileName("test_data/pr531_100k_1_1_0256.cbf");
@@ -169,20 +169,20 @@ int main(int argc,char **argv){
 
     if(typeid(*v).name()==typeid((pni::utils::Int32Array())).name()){
     	std::cout<<"this is an Int32Array()"<<std::endl;
-    	pni::utils::Int32Array *a = (pni::utils::Int32Array *)v;
+    	pni::utils::Int32Array::sptr a = boost::dynamic_pointer_cast<pni::utils::Int32Array>(v);
 
     	std::cout<<a->Min()<<" "<<a->Max()<<std::endl;
     	std::cout<<a->Sum()<<std::endl;
 
     	std::cout<<*(a->getShape())<<std::endl;
     	plotter = new PlotArray(a->getShape());
-    	plotter->image_plot<int>(a);
+    	plotter->image_plot<int>(a.get());
     	std::cout<<"finished with plotting!"<<std::endl;
 
 
     }else if(typeid(*v).name()==typeid((pni::utils::Int16Array())).name()){
     	std::cout<<"data is an Int16Array()"<<std::endl;
-    	pni::utils::Int16Array &a = *(pni::utils::Int16Array *)v;
+    	pni::utils::Int16Array &a = *boost::dynamic_pointer_cast<pni::utils::Int16Array>(v);
 
     	std::cout<<a.Min()<<" "<<a.Max()<<std::endl;
     	std::cout<<a.Sum()<<std::endl;

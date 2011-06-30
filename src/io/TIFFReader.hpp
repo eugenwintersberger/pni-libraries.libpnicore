@@ -8,12 +8,13 @@
 #ifndef TIFFREADER_HPP_
 #define TIFFREADER_HPP_
 
+#include <boost/shared_ptr.hpp>
 
 #include "Reader.hpp"
+#include "TIFFFile.hpp"
+#include "TIFFImageData.hpp"
 
-extern "C"{
-#include <tiffio.h>
-}
+
 
 namespace pni{
 namespace utils{
@@ -21,16 +22,19 @@ namespace utils{
 
 class TIFFReader:public Reader {
 private:
+	//like all other derivatives of Reader the TIFFReader
+	//cannot be copied or assigned to.
 	TIFFReader(const TIFFReader &){}
+	TIFFReader &operator=(const TIFFReader &o){return *this;}
 protected:
-	TIFF *_tiff;
+	TIFFFile _file;
 public:
 	TIFFReader();
 	virtual ~TIFFReader();
 
 	virtual void open();
 	virtual void close();
-	virtual DataObject *read();
+	virtual DataObject::sptr read();
 };
 
 //end of namespace

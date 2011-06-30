@@ -64,8 +64,8 @@ void Reader::setFileName(const char *s){
 	setFileName(std::string(s));
 }
 
-DataObject *Reader::read(){
-	return NULL;
+DataObject::sptr Reader::read(){
+	return DataObject::sptr();
 }
 
 
