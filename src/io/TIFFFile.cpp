@@ -261,7 +261,6 @@ TIFFImageData::sptr TIFFFile::getData(UInt64 i) const {
 
 	//the reader configuration is done - now we can start with reading
 	//data
-	std::cout<<"start reader ..."<<std::endl;
 	switch(pbs){
 	case 8:
 		switch(dtype){

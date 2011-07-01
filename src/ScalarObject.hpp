@@ -70,6 +70,9 @@ public:
 
 	//! output operator for console output
 	friend std::ostream &operator<<(std::ostream &o,const ScalarObject &s);
+
+	//! get void pointer to the data value
+	virtual void *getVoidPtr(){ return NULL; }
 };
 
 

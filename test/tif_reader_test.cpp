@@ -169,8 +169,6 @@ int main(int argc,char **argv){
     idata = f.getData(0);
     std::cout<<"print image data"<<std::endl;
     pni::utils::ArrayObject::sptr a = idata->getChannel(0);
-
-    //pni::utils::ArrayObject *a = idf.getData();
     f.close();
 
     std::cout<<*idata<<std::endl;

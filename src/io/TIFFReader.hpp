@@ -32,6 +32,9 @@ public:
 	TIFFReader();
 	virtual ~TIFFReader();
 
+	virtual void setFileName(const String &n);
+	virtual void setFileName(const char *n);
+
 	virtual void open();
 	virtual void close();
 	virtual DataObject::sptr read();

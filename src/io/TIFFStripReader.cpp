@@ -94,7 +94,7 @@ void TIFFStripReader::setStripByteCounts(UInt64 bcounts[]){
 }
 
 void TIFFStripReader::setStripByteCount(UInt64 i,UInt64 bcount){
-	if(_nstrips>=_nstrips){
+	if(i>=_nstrips){
 		IndexError e;
 		e.setSource("TIFFStripReader::setStripByteCount");
 		e.setDescription("Strip index exceeds number of strips or number of strips is not set!");

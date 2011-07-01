@@ -30,6 +30,14 @@ void TIFFReader::close(){
 	_file.close();
 }
 
+void TIFFReader::setFileName(const String &n){
+	_file.setFileName(n);
+}
+
+void TIFFReader::setFileName(const char *n){
+	_file.setFileName(n);
+}
+
 DataObject::sptr TIFFReader::read(){
 	TIFFImageData::sptr idata;
 

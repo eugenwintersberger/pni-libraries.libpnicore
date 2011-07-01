@@ -63,6 +63,9 @@ public:
 	//! by child classes of DataBuffer.
 	//! \param n number of elements in the buffer
 	virtual void allocate(UInt64 n){}
+
+	//! return a void pointer to the allocated memory
+	virtual void *getVoidPtr(){ return NULL; }
 };
 
 template<typename T> class Buffer;
@@ -142,6 +145,9 @@ public:
 
 	//! \return pointer to the memory allocated by the buffer
 	T* getPtr() { return _data;}
+
+	//! return a void pointer to the allocate data
+	virtual void *getVoidPtr(){ return (void *)_data;}
 
 	//! [] operator for read and write access
 

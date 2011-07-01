@@ -252,6 +252,15 @@ public:
 	//! unary and inplace * operator for Scalar<T> *= Scalar<T>
 	Scalar<T> &operator*=(const Scalar<T> &v);
 
+	//! get a void pointer to the data
+	virtual void *getVoidPtr(){
+		return (void *)(&_value);
+	}
+
+	virtual PNITypeID getTypeID() const{
+		return PNITypeInfo<T>::TypeID;
+	}
+
 };
 
 //======================Constructors and destructors=======================================

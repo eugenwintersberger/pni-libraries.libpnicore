@@ -79,7 +79,7 @@ IFDAbstractEntry::sptr TIFFIFD::operator[](const String &n){
 			return e;
 		}
 	}
-	std::cerr<<"cannot find entry with name: "<<n<<std::endl;
+	//std::cerr<<"cannot find entry with name: "<<n<<std::endl;
 	e.reset();
 	return e;
 }
