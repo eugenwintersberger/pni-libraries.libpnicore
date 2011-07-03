@@ -59,6 +59,7 @@ template<typename T> class Scalar: public ScalarObject {
 protected:
 	T _value; //!< object holding the value of the Scalar object
 public:
+	typedef boost::shared_ptr<Scalar<T> > sptr;
 	//! default constructor
 	Scalar();
 	//! copy constructor
