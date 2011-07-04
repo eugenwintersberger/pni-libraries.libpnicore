@@ -38,6 +38,28 @@ void ArrayTest::testConstructors(){
 
 }
 
+void ArrayTest::testSlowArrayConstruction(){
+	pni::utils::ArrayShape s;
+	pni::utils::Int32Array a;
+
+	//construct the shape object
+	s.setRank(2);
+	s.setDimension(0,1024);
+	s.setDimension(1,2048);
+
+	a.setShape(s);
+	pni::utils::Buffer<pni::utils::Int32> buffer;
+	buffer.allocate(s.getSize());
+	a.setBuffer(buffer);
+
+	a(100,100) = 1000;
+	a(50,23) = -10;
+	a(1023,2047) = 50;
+
+	CPPUNIT_ASSERT(a.Min() == -10);
+	CPPUNIT_ASSERT(a.Max() == 1000);
+}
+
 void ArrayTest::testConstructorsShared(){
 	pni::utils::ArrayShape::sptr shape(new pni::utils::ArrayShape(_r1,_s1));
 	pni::utils::Buffer<double>::sptr buffer(new pni::utils::Buffer<double>(shape->getSize()));

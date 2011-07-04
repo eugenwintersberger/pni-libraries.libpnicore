@@ -523,7 +523,7 @@ template<typename T> void Array<T>::setBuffer(const Buffer<T> &b) {
 		}
 	}
 	_data.reset(new Buffer<T> (b));
-	_data_object = (BufferObject::sptr)(_data);
+	_data_object = boost::dynamic_pointer_cast<BufferObject>(_data);
 
 }
 
@@ -538,7 +538,7 @@ template<typename T> void Array<T>::setBuffer(const typename Buffer<T>::sptr &b)
 		}
 	}
 	_data = b;
-	_data_object = (BufferObject::sptr)(b);
+	_data_object = boost::dynamic_pointer_cast<BufferObject>(b);
 }
 
 template<typename T> const BufferObject::sptr Array<T>::getBuffer() const {

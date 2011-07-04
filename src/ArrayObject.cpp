@@ -14,6 +14,7 @@ namespace utils{
 
 ArrayObject::ArrayObject():NumericObject(){
 	_shape.reset();
+	_data_object.reset();
 	_index_buffer = NULL;
 }
 
@@ -76,12 +77,18 @@ PNITypeID ArrayObject::getTypeID() const {
 }
 
 void ArrayObject::setShape(const ArrayShape &s){
-	if (s.getSize() != _data_object->getSize()) {
-		//raise an exception if the size of the new shape object
-		//and the buffer object do not fit.
-		SizeMissmatchError e("Array<T>::setShape",
-				"shape and array size do not match!");
-		throw e;
+	if(_data_object){
+		//an exception occurs typically here in cases where
+		//no data buffer object has been set
+		if (s.getSize() != _data_object->getSize()) {
+			//raise an exception if the size of the new shape object
+			//and the buffer object do not fit.
+			SizeMissmatchError e("Array<T>::setShape",
+					"shape and array size do not match!");
+			throw e;
+		}
+	}else{
+		std::cerr<<"Data buffer not set yet!"<<std::endl;
 	}
 	//create a new shape object
 	_shape.reset(new ArrayShape(s));
@@ -98,12 +105,14 @@ void ArrayObject::setShape(const ArrayShape &s){
 }
 
 void ArrayObject::setShape(const ArrayShape::sptr &s){
-	if (s->getSize() != _data_object->getSize()) {
-		//raise and exception if the size of the new shape object
-		//and the buffer object do not match
-		SizeMissmatchError e("Array<T>::setShape",
-				"shape and array size do not match!");
-		throw e;
+	if (_data_object) {
+		if (s->getSize() != _data_object->getSize()) {
+			//raise and exception if the size of the new shape object
+			//and the buffer object do not match
+			SizeMissmatchError e("Array<T>::setShape",
+					"shape and array size do not match!");
+			throw e;
+		}
 	}
 
 	_shape = s;

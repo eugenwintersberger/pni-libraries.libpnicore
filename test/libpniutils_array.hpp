@@ -14,6 +14,7 @@ class ArrayTest : public CppUnit::TestFixture{
 	CPPUNIT_TEST(testComparison);
 	CPPUNIT_TEST(testConstructorsShared);
 	CPPUNIT_TEST(testTypeInfo);
+	CPPUNIT_TEST(testSlowArrayConstruction);
 	CPPUNIT_TEST_SUITE_END();
 private:
 	unsigned int *_s1;
@@ -30,6 +31,7 @@ public:
 	void testUnaryOperations();
 	void testComparison();
 	void testTypeInfo();
+	void testSlowArrayConstruction();
 
 
 };

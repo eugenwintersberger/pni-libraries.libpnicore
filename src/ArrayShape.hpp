@@ -7,6 +7,7 @@
 #include <boost/shared_ptr.hpp>
 
 #include "Exceptions.hpp"
+#include "PNITypes.hpp"
 
 
 namespace pni{
@@ -40,10 +41,10 @@ namespace utils{
 
 class ArrayShape{
     protected:
-        unsigned int _rank;          //!< the number of dimensions
-        unsigned int *_dimstrides;   //!< the strides for the offset calculation
-        unsigned int *_shape;        //!< the number of values along each dimension
-        unsigned long _size;         //!< the total number of elements in the array
+        UInt32 _rank;         //!< the number of dimensions
+        UInt32 *_dimstrides;  //!< the strides for the offset calculation
+        UInt32 *_shape;       //!< the number of values along each dimension
+        UInt64 _size;         //!< the total number of elements in the array
         
         //! compute dimension strides
 
@@ -69,7 +70,7 @@ class ArrayShape{
 
         //! \param r rank (the number of dimensions) of the array
         //! \param s number of elements in each dimension
-        ArrayShape(const unsigned int r,const unsigned int *s);
+        ArrayShape(const UInt32 r,const UInt32 *s);
         //! destructor
         virtual ~ArrayShape();
         
@@ -77,17 +78,17 @@ class ArrayShape{
 
         //! sets the number of dimensions for the array
         //! \param r number of dimensions (rank)
-        virtual void setRank(const unsigned int &r);
+        virtual void setRank(const UInt32 &r);
         //! return the array rank
 
         //! \return array rank
-        virtual unsigned int getRank() const;
+        virtual UInt32 getRank() const;
         //! set the dimensions of the array
 
         //! This methods is used to set all dimension of an array in a single
         //! method call.
         //! \param *s array with number of elements in each direction
-        virtual void setDimensions(const unsigned int *s);
+        virtual void setDimensions(const UInt32 *s);
         //! set a single dimension of the shape object
 
         //! Use this method to set a single dimension in an array to a new value.
@@ -95,24 +96,24 @@ class ArrayShape{
         //! will be raised.
         //! \param i index of the dimension to set
         //! \param d new number of elements along dimension i
-        virtual void setDimension(const unsigned int &i,const unsigned int &d);
+        virtual void setDimension(const UInt32 &i,const UInt32 &d);
         //! get all dimensions of the shape
 
         //! Returns a constant pointer to the dimension array of the shape object.
         //! The returned pointer is const and thus its content cannot be altered.
         //! \return pointer to dimensions
-        virtual const unsigned int *getDimensions() const;
+        virtual const UInt32 *getDimensions() const;
         //! get a single dimension of the shape
 
         //! return the number of elements along dimension i. Raises an exception
         //! if i is larger than the rank of the shape.
         //! \param i index of the dimension
         //! \return the number of elements along dimension i
-        virtual unsigned int getDimension(const unsigned int &i) const;
+        virtual UInt32 getDimension(const UInt32 &i) const;
         //! get total number of elements in the array
 
         //! \return number of elements available in an array of this shape
-        virtual unsigned int getSize() const {return _size;}
+        virtual UInt64 getSize() const {return _size;}
         
         //! compute element offset
 
@@ -121,7 +122,7 @@ class ArrayShape{
         //! the element in a linear buffer.
 
         //! \param *index pointer to an array of element indices
-        virtual unsigned int getOffset(const unsigned int *index);
+        virtual UInt64 getOffset(const UInt32 *index);
         
         //the assignment operator must be a member function
         //and cannot be declared as a friend function
@@ -139,12 +140,12 @@ class ArrayShape{
         //! differ.
         //! \return boolean value
         friend bool operator!=(const ArrayShape &,const ArrayShape &);
-        //! [] operator
+        //! [] operator for read access
 
         //! This operator allows reading access to the array dimensions. You cannot
         //! use this operator to set array dimensions.
         //! \sa void setDimensions(const unsigned int *s), void setDimension(const unsigned int &i,const unsigned int &d)
-        const unsigned int operator[](unsigned int i) const { return _shape[i];}
+        const UInt32 operator[](UInt64 i) const { return _shape[i];}
 
         //! operator for console output
         friend std::ostream &operator<<(std::ostream &o,const ArrayShape &s);

@@ -2,6 +2,7 @@
 
 #include<cppunit/extensions/HelperMacros.h>
 
+#include "PNITypes.hpp"
 #include "ArrayShape.hpp"
 #include "libpniutils_arrayshape.hpp"
 

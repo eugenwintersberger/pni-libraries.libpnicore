@@ -21,16 +21,16 @@ ArrayShape::ArrayShape(){
     _size = 0;
 }
 
-ArrayShape::ArrayShape(const unsigned int r,const unsigned int *s){
-    unsigned int i;
+ArrayShape::ArrayShape(const UInt32 r,const UInt32 *s){
+    UInt32 i;
     _rank = r;
     _shape = NULL;
     _dimstrides = NULL;
     
     //allocate memory for the shape pointer
-    _shape = new unsigned int[r];
+    _shape = new UInt32[r];
     if (_shape == NULL) throw SHAPE_ALLOC_ERROR;
-    _dimstrides = new unsigned int[r];
+    _dimstrides = new UInt32[r];
     if (_dimstrides == NULL){
     	if(_shape!= NULL) delete [] _shape;
     	throw DIMSTRIDE_ALLOC_ERROR;
@@ -49,9 +49,9 @@ ArrayShape::ArrayShape(const ArrayShape &s){
     unsigned int i;
     
     _rank = s._rank;
-    _shape = new unsigned int[_rank];
+    _shape = new UInt32[_rank];
     if(_shape==NULL) throw SHAPE_ALLOC_ERROR;
-    _dimstrides = new unsigned int [_rank];
+    _dimstrides = new UInt32 [_rank];
     if(_dimstrides == NULL){
     	if(_shape != NULL) delete [] _shape;
     	throw DIMSTRIDE_ALLOC_ERROR;
@@ -74,11 +74,11 @@ ArrayShape::~ArrayShape(){
 
 void ArrayShape::_compute_dimstrides()
 {
-    int i;
+    Int32 i;
     
     //compute the dimension  strides
     for(i=_rank-1;i>=0;i--){
-        if(((unsigned int)i)==_rank-1){
+        if(((UInt32)i)==_rank-1){
             _dimstrides[i] = 1;
             continue;
         }
@@ -87,22 +87,24 @@ void ArrayShape::_compute_dimstrides()
 }
 
 void ArrayShape::_compute_size(){
-    unsigned int i;
+    UInt32 i;
     
     _size = 1;
     for(i=0;i<_rank;i++) _size *= _shape[i];
 }
 
 void ArrayShape::setRank(const unsigned int &r){
-    unsigned int i;
+    UInt32 i;
 
     
     if(_shape==NULL){
         //the shape points has not been allocated yet
-        _shape = new unsigned int[r];
+    	//this is usually the case when the shape object was
+    	//created using the default constructor
+        _shape = new UInt32[r];
         //throw an exception if memory allocation fails
         if(_shape == NULL) throw SHAPE_ALLOC_ERROR;
-        _dimstrides = new unsigned int[r];
+        _dimstrides = new UInt32[r];
         //throw an exception if memory allocation fails
         if(_dimstrides == NULL){
         	if(_shape != NULL) delete [] _shape;
@@ -112,12 +114,13 @@ void ArrayShape::setRank(const unsigned int &r){
         //default value
         for(i=0;i<r;i++) _shape[i] = 1;
     }else{
-        //the shape pointer is already allocated
-        unsigned int *new_shape;
-        unsigned int *new_dimstrides;
-        new_shape = new unsigned int[r];
+        //the shape pointer is already allocated - the rank is
+    	//changed after initialization
+        UInt32 *new_shape;
+        UInt32 *new_dimstrides;
+        new_shape = new UInt32[r];
         if(new_shape == NULL) throw SHAPE_ALLOC_ERROR;
-        new_dimstrides = new unsigned int[r];
+        new_dimstrides = new UInt32[r];
         if(new_dimstrides == NULL){
         	if(new_shape != NULL) delete [] new_shape;
         	throw DIMSTRIDE_ALLOC_ERROR;
@@ -155,7 +158,7 @@ void ArrayShape::setDimensions(const unsigned int *s){
     //here the only thing we have to take care is, that the new 
     //shape is not smaller then the old one - that is up to the 
     //programmer
-    unsigned int i;
+    UInt32 i;
     
     for(i=0;i<_rank;i++) _shape[i] = s[i];
     
@@ -179,11 +182,11 @@ void ArrayShape::setDimension(const unsigned int &i,const unsigned int &d){
 	_compute_size();
 }
 
-const unsigned int *ArrayShape::getDimensions() const{
+const UInt32 *ArrayShape::getDimensions() const{
     return _shape;
 }
 
-unsigned int ArrayShape::getDimension(const unsigned int &i) const{
+UInt32 ArrayShape::getDimension(const unsigned int &i) const{
 	if(i>=_rank){
 		IndexError e;
 		e.setSource("ArrayShape::setDimension");
@@ -194,9 +197,9 @@ unsigned int ArrayShape::getDimension(const unsigned int &i) const{
 	return _shape[i];
 }
 
-unsigned int ArrayShape::getOffset(const unsigned int *index){
-    unsigned int i;
-    unsigned int offset = 0;
+UInt64 ArrayShape::getOffset(const unsigned int *index){
+    UInt32 i;
+    UInt64 offset = 0;
     
     for(i=0;i<_rank;i++){
         offset += index[i]*_dimstrides[i];
@@ -204,7 +207,7 @@ unsigned int ArrayShape::getOffset(const unsigned int *index){
     return offset;
 }
 ArrayShape &ArrayShape::operator=(const ArrayShape &a){
-    unsigned int i;
+    UInt32 i;
     
     //avoid assigning the object to itself
     if(this != &a){
@@ -276,6 +279,7 @@ std::ostream &operator<<(std::ostream &o,const ArrayShape &s){
 
 }
 
+//end of namespace
 }
 }
 
