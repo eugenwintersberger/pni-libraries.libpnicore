@@ -205,10 +205,8 @@ int main(int argc,char **argv){
     	std::cout<<a->Min()<<" "<<a->Max()<<std::endl;
     	std::cout<<a->Sum()<<std::endl;
 
-    	//each array consists of two components: a Buffer object holding the data
-    	//in memory and a ArrayShape object describing the layout of the data.
-    	//If we would like
-    	shape = a->getShape();
+    	//to access the raw pointer from an array use
+    	//void *ptr = a->getBuffer()->getVoidPtr();
 
     	std::cout<<*(a->getShape())<<std::endl;
     	plotter = new PlotArray(a->getShape());
