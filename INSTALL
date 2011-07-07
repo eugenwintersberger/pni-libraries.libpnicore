@@ -56,3 +56,5 @@ library versions easier.
 
 Building RPM packages
 ---------------------
+No support for RPM packages is available right now. Should be added in future 
+maybe using the SCons RPM builder.
