@@ -7,6 +7,8 @@
 #include<cppunit/extensions/HelperMacros.h>
 #include "ArrayShape.hpp"
 
+using namespace pni::utils;
+
 class ArrayShapeTest: public CppUnit::TestFixture {
 	CPPUNIT_TEST_SUITE(ArrayShapeTest);
 	CPPUNIT_TEST(testConstruction);
@@ -16,7 +18,7 @@ private:
 	unsigned int *_s1;
 	unsigned int _r1, _r2;
 	unsigned int *_s2;
-	pni::utils::ArrayShape _sh1, _sh2;
+	ArrayShape _sh1, _sh2;
 public:
 	void setUp();
 	void tearDown();

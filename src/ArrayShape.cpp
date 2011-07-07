@@ -211,17 +211,6 @@ ArrayShape &ArrayShape::operator=(const ArrayShape &a){
     
     //avoid assigning the object to itself
     if(this != &a){
-    	//raise an exception if the two shapes do not have the same total size
-    	if(a.getSize()!=getSize()){
-    		String ExIssuer = "ArrayShape &ArrayShape::operator=(const ArrayShape &a)";
-    		String ExDescription = "Only shapes of equal total size can be assigned to each other!";
-    		SizeMissmatchError e;
-    		e.setDescription(ExDescription);
-    		e.setSource(ExIssuer);
-    		std::cerr<<e<<std::endl;
-    		throw e;
-    	}
-
     	//if the total number of elements described
     	//by the tow shapes is equal they can be assigned.
         _rank = a._rank;

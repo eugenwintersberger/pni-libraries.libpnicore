@@ -9,6 +9,7 @@
 #include<cppunit/extensions/HelperMacros.h>
 #include "Buffer.hpp"
 
+//testing Buffer<T> and BufferObject concepts.
 class BufferTest : public CppUnit::TestFixture{
 	CPPUNIT_TEST_SUITE(BufferTest);
 	CPPUNIT_TEST(testAllocation);

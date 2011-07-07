@@ -25,10 +25,11 @@ void ArrayShapeTest::tearDown(){
 }
 
 void ArrayShapeTest::testConstruction(){
-	pni::utils::ArrayShape s;
-	unsigned int i;
-	const unsigned int *shape;
+	ArrayShape s;
+	UInt32 i;
+	const UInt32 *shape;
 
+	//manual construction
 	s.setRank(_r1);
 	s.setDimensions(_s1);
 
@@ -52,7 +53,8 @@ void ArrayShapeTest::testConstruction(){
 		CPPUNIT_ASSERT(s[i]==_s2[i]);
 	}
 
-	pni::utils::ArrayShape s1(_r1,_s1);
+	//construction using directly the constructor
+	ArrayShape s1(_r1,_s1);
 	//check here if all parameters are set correctly
 	CPPUNIT_ASSERT(_r1==s1.getRank());
 	shape = s1.getDimensions();
@@ -61,31 +63,38 @@ void ArrayShapeTest::testConstruction(){
 		CPPUNIT_ASSERT(s1[i]==_s1[i]);
 	}
 
+	//copy constructor
+	ArrayShape s2(s);
+	CPPUNIT_ASSERT(s==s2);
+
+	//assignment operator
+	s1 = s;
+	CPPUNIT_ASSERT(s1==s);
+
 }
 
 void ArrayShapeTest::testComparison(){
-	pni::utils::ArrayShape s1(_r1,_s1);
-	pni::utils::ArrayShape s2(_r2,_s2);
+	ArrayShape s1(_r1,_s1);
+	ArrayShape s2(_r2,_s2);
+	ArrayShape s3(s2);
 
 	CPPUNIT_ASSERT(s1 == s1);
-	CPPUNIT_ASSERT(s2 == s2);
+	CPPUNIT_ASSERT(s2 == s3);
 	CPPUNIT_ASSERT(s1 != s2);
 }
 
 void ArrayShapeTest::testOffset(){
-	pni::utils::ArrayShape s1(_r1,_s1);
-	pni::utils::ArrayShape s2(_r2,_s2);
-	unsigned int *i1,*i2;
+	ArrayShape s1(_r1,_s1);
+	ArrayShape s2(_r2,_s2);
+	UInt32 *i1,*i2;
 
-	i1 = new unsigned int [_r1];
+	i1 = new UInt32 [_r1];
 	i1[0] = 2; i1[1] = 1;
 
-	i2 = new unsigned int [_r2];
+	i2 = new UInt32 [_r2];
 	i2[0] = 0; i2[1] = 1; i2[2] = 3;
 
 	CPPUNIT_ASSERT(s1.getOffset(i1)==9);
 	CPPUNIT_ASSERT(s2.getOffset(i2)==8);
-
-
 
 }

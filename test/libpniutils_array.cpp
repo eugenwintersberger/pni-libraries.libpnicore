@@ -10,7 +10,7 @@
 #include "ArrayShape.hpp"
 #include "libpniutils_array.hpp"
 
-CPPUNIT_TEST_SUITE_REGISTRATION(ArrayTest);
+//CPPUNIT_TEST_SUITE_REGISTRATION(ArrayTest);
 
 using namespace pni::utils;
 

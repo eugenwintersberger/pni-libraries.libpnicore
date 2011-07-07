@@ -106,7 +106,7 @@ public:
 	//! constructor with buffer size
 
 	//! Using this constructor the buffer will automatically allocate memory.
-	Buffer(unsigned long n);
+	Buffer(UInt64 n);
 	//! destructor
 	virtual ~Buffer();
 
@@ -122,7 +122,7 @@ public:
 	//! memory allocation and along with this a copy process of original data
 	//! to the new memory locations. Therefore this operation should be handled with care.
 	//! \param n number of elements for which memory should be allocated
-	virtual void resize(unsigned long n);
+	virtual void resize(UInt64 n);
 	//! allocate memory in the buffer
 
 	//! This method can be called if the buffer was created by the default
@@ -130,15 +130,15 @@ public:
 	//! is already allocated. If the buffer is already allocated use the
 	//! resize method in order to change the amount of memory allocated by the buffer.
 	//! \param n number of elements in the buffer for which data should be allocated
-	virtual void allocate(unsigned long n);
+	virtual void allocate(UInt64 n);
 	//! get the size of the buffer
 
 	//! \return number of elements of type T in the buffer
-	virtual unsigned long getSize() const {return _size;}
+	virtual UInt64 getSize() const {return _size;}
 	//! get memory consumption of the buffer
 
 	//! \return number of bytes occupied by the buffer data
-	virtual unsigned long getMemSize() const { return (unsigned long)(sizeof(T)*_size);}
+	virtual UInt64 getMemSize() const { return (UInt64)(sizeof(T)*_size);}
 
 	//! return a pointer to the data
 
@@ -157,23 +157,23 @@ public:
 	//! This operator will be used in expressions where the buffer access stands
 	//! on the left side of an assignment operation. In other words - when data should
 	//! be written to the buffer.
-	T& operator[](unsigned long n);
+	T& operator[](UInt64 n);
 	//! [] operator for read only access
 
 	//! This operator will be used in expressions where read only access to the
 	//! data values in the buffer is required.
-	T operator[](unsigned long n) const;
+	T operator[](UInt64 n) const;
 	//! overloaded assigment operator
 
 	//! the buffer is initialized with the content of an other buffer.
 	//! If the size of the two buffers matches data is only copied. Otherwise
 	//! memory will be reallocated in order to match the size of buffer b.
-	Buffer &operator=(const Buffer<T> &b);
+	Buffer<T> &operator=(const Buffer<T> &b);
 	//! initialization by a single value
 
 	//! The assignment operator (=) can be used to set all values of the buffer to a
 	//! single value v.
-	Buffer &operator=(const T &v);
+	Buffer<T> &operator=(const T &v);
 
 	//! == equality operator
 
@@ -191,7 +191,7 @@ template<typename T> Buffer<T>::Buffer():BufferObject(){
 	_elem_size = sizeof(T);
 }
 
-template<typename T> Buffer<T>::Buffer(unsigned long n):BufferObject(n,sizeof(T)){
+template<typename T> Buffer<T>::Buffer(UInt64 n):BufferObject(n,sizeof(T)){
 	_data = new T[n];
 	if(_data ==NULL){
 		//if memory allocation fails - throw an MemoryAllocationException
@@ -211,10 +211,11 @@ template<typename T> Buffer<T>::Buffer(const Buffer<T> &b):BufferObject(b){
 	}
 
 	//copy data from the original buffer to the new one
-	for(unsigned long i=0;i<_size;i++) _data[i] = b._data[i];
+	for(UInt64 i=0;i<_size;i++) _data[i] = b._data[i];
 }
 
 template<typename T> Buffer<T>::~Buffer(){
+	//free memory
 	if(_data!=NULL) delete _data;
 }
 

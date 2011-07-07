@@ -65,6 +65,8 @@ class ArrayShape{
         //! default constructor
         ArrayShape();
         //! copy constructor
+
+        //! Initialize an object of type ArrayShape with the content of an other ArrayShape object.
         ArrayShape(const ArrayShape &s);
         //! constructor taking the rank and shape of an array
 
@@ -128,12 +130,7 @@ class ArrayShape{
         //and cannot be declared as a friend function
         //! assignment operator
 
-        //! Two shapes can only be assigned if the total number of elements
-        //! remains constant. This makes sense from point of applications
-        //! that may want to use this object. For instance in the assignment
-        //! operator of a multidimensional array - the Buffer of the array
-        //! is not altered (no new memory is allocated) therefore, the total
-        //! number of elements in an array cannot be changed.
+        //! assignment operator
         ArrayShape &operator=(const ArrayShape &);
         
         //! equality operator for array shapes
@@ -150,7 +147,10 @@ class ArrayShape{
         //! [] operator for read access
 
         //! This operator allows reading access to the array dimensions. You cannot
-        //! use this operator to set array dimensions.
+        //! use this operator to set array dimensions. The reason for this is, that
+        //! once a single dimension has been changed we would have to recalculate
+        //! strides and recompute the size. However, this cannot be done easily
+        //! by operator overloading.
         //! \sa void setDimensions(const unsigned int *s), void setDimension(const unsigned int &i,const unsigned int &d)
         const UInt32 operator[](UInt64 i) const { return _shape[i];}
 
