@@ -19,6 +19,8 @@
 #include "../src/Array.hpp"
 #include "../src/ArrayShape.hpp"
 
+using namespace pni::utils;
+
 template<typename T> class PlPlotArrayDecorator:public Contourable_Data{
 private:
 	typename pni::utils::Array<T>::sptr _array;
@@ -153,26 +155,60 @@ template<typename T> void PlotArray::image_plot(const pni::utils::ArrayObject *d
 }
 
 
-int main(int argc,char **argv){
-    pni::utils::CBFReader reader;
-    pni::utils::DataObject::sptr v ;
-    PlotArray *plotter;
 
-    //reader.setFileName("test_data/pr531_100k_1_1_0256.cbf");
-    reader.setFileName("LAOS3_05461.cbf");
-    reader.open();
-    v = reader.read();
-    reader.close();
+
+int main(int argc,char **argv){
+    CBFReader reader;     //the reader object
+    DataObject::sptr v ;  //shared pointer to a data object (most general object to represent data)
+    PlotArray *plotter;
+    ArrayShape::sptr shape; //shared pointer to an ArrayShape object
+
+    reader.setFileName("LAOS3_05461.cbf"); //set the name of the file to read
+    reader.open();                         //open the file
+    v = reader.read();                     //read data
+    reader.close();                        //close the file
 
     std::cout<<"finished with reading data"<<std::endl;
-    std::cout<<typeid(*v).name()<<std::endl;
 
-    if(typeid(*v).name()==typeid((pni::utils::Int32Array())).name()){
-    	std::cout<<"this is an Int32Array()"<<std::endl;
+    //DataObject is an extremely general object - however, in reality the data we have
+    //obtained is at least of type ArrayObject. Now we need to find out what type of
+    //array the data is. Since DataObject provides actually no facility to obtain
+    //the type code of the data stored we have to do a little pointer casting
+    //to ArrayObject.
+    PNITypeID dtid = boost::dynamic_pointer_cast<ArrayObject>(v)->getTypeID();
+
+    //ArrayObject is the base class for all numeric arrays which are implemented as
+    //templates Array<T>. Each of these templates consists of a shared pointer to a
+    //Buffer<T> object representing the data in memory and an ArrayShape object
+    //describing the geometry of the array. While Buffer<T> depends on the
+    //concrete data type is appears only in the Array<T> template. The ArrayShape
+    //object is independent of the data type and is held by the base class ArrayObject.
+    //So in cases where we need some geometry information we have to obtain the
+    //shape object with
+
+    shape = boost::dynamic_pointer_cast<ArrayObject>(v)->getShape();
+    //the number of dimensions can be obtained with
+    std::cout<<shape->getRank()<<std::endl;
+    //The number of elements along each dimension with the getDimension(...) method
+    //described below
+    for(Int32 i = 0; i<shape->getRank();i++){
+    	std::cout<<shape->getDimension(i)<<std::endl;
+    }
+
+    //finally we need to access the data
+
+    if(dtid == INT32){
+    	//For Int32 data convert the ArrayObject ot an Int32 Array type
     	pni::utils::Int32Array::sptr a = boost::dynamic_pointer_cast<pni::utils::Int32Array>(v);
 
+    	//call some array methods just to see if they work
     	std::cout<<a->Min()<<" "<<a->Max()<<std::endl;
     	std::cout<<a->Sum()<<std::endl;
+
+    	//each array consists of two components: a Buffer object holding the data
+    	//in memory and a ArrayShape object describing the layout of the data.
+    	//If we would like
+    	shape = a->getShape();
 
     	std::cout<<*(a->getShape())<<std::endl;
     	plotter = new PlotArray(a->getShape());
@@ -180,7 +216,7 @@ int main(int argc,char **argv){
     	std::cout<<"finished with plotting!"<<std::endl;
 
 
-    }else if(typeid(*v).name()==typeid((pni::utils::Int16Array())).name()){
+    }else if(dtid == INT16){
     	std::cout<<"data is an Int16Array()"<<std::endl;
     	pni::utils::Int16Array &a = *boost::dynamic_pointer_cast<pni::utils::Int16Array>(v);
 

@@ -53,7 +53,11 @@ public:
 
 	//! \param &s reference to a smart pointer to a shape object
 	ArrayObject(const ArrayShape::sptr &s);
+	//! destructor
 	virtual ~ArrayObject();
+
+	//! assignment operator
+	ArrayObject &operator=(const ArrayObject &);
 
 	//! get the type id of the elemnt type
 	virtual PNITypeID getTypeID() const;

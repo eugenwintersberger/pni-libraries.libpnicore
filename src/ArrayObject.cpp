@@ -72,6 +72,23 @@ ArrayObject::~ArrayObject(){
 	_shape.reset();
 }
 
+ArrayObject &ArrayObject::operator=(const ArrayObject &o){
+	if(this != &o){
+		//ATTENTION: _shape is a shared pointer => we cannot simply
+		//copy the pointer because that is not what we want. We have
+		//to assign the CONTENT of the pointer.
+		*_shape = *o._shape;
+
+		//allocate memory for the new index buffer
+		if(_index_buffer != NULL) delete [] _index_buffer;
+		_index_buffer = new UInt32[_shape->getRank()];
+		//initialize the index buffer
+		for(Int32 i = 0; i < _shape->getRank(); i++) _index_buffer[i] = 0;
+	}
+
+	return *this;
+}
+
 PNITypeID ArrayObject::getTypeID() const {
 	return NONE;
 }

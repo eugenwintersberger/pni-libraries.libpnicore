@@ -32,6 +32,15 @@ BufferObject::~BufferObject(){
 	_elem_size = 0;
 }
 
+BufferObject &BufferObject::operator=(const BufferObject &o){
+	if(this != &o){
+		_size = o._size;
+		_elem_size = o._elem_size;
+	}
+
+	return *this;
+}
+
 //end of namespace
 }
 }

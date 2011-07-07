@@ -12,6 +12,8 @@
 
 CPPUNIT_TEST_SUITE_REGISTRATION(ArrayTest);
 
+using namespace pni::utils;
+
 void ArrayTest::setUp(){
 	_r1 = 2;
 	_r2 = 3;
@@ -22,8 +24,8 @@ void ArrayTest::setUp(){
 	_s1[0] = 3; _s1[1] = 4;
 	_s2[0] = 2; _s2[1] = 3; _s2[2] = 5;
 
-	_sh1 = pni::utils::ArrayShape(_r1,_s1);
-	_sh2 = pni::utils::ArrayShape(_r2,_s2);
+	_sh1 = ArrayShape(_r1,_s1);
+	_sh2 = ArrayShape(_r2,_s2);
 }
 
 void ArrayTest::tearDown(){
@@ -33,8 +35,12 @@ void ArrayTest::tearDown(){
 
 void ArrayTest::testConstructors(){
 	//check for simple array-construction
-	pni::utils::Array<double> a1(_sh1);
-	pni::utils::Array<double> a2(_r2,_s2);
+	Array<double> a1(_sh1);
+	Array<double> a2(_r2,_s2);
+
+	//this should check if third
+	Array<double> a3;
+	a3 = Array<double>(_r2,_s2);
 
 }
 

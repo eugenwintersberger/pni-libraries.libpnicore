@@ -45,6 +45,9 @@ public:
 	//! destructor
 	virtual ~BufferObject();
 
+	//! assignment operator
+	BufferObject &operator=(const BufferObject &o);
+
 	//! return the number of elements in the buffer
 	virtual UInt64 getSize(){return _size;}
 	//! return the total amount of memory allocated by the buffer

@@ -127,6 +127,13 @@ class ArrayShape{
         //the assignment operator must be a member function
         //and cannot be declared as a friend function
         //! assignment operator
+
+        //! Two shapes can only be assigned if the total number of elements
+        //! remains constant. This makes sense from point of applications
+        //! that may want to use this object. For instance in the assignment
+        //! operator of a multidimensional array - the Buffer of the array
+        //! is not altered (no new memory is allocated) therefore, the total
+        //! number of elements in an array cannot be changed.
         ArrayShape &operator=(const ArrayShape &);
         
         //! equality operator for array shapes
