@@ -16,10 +16,12 @@ statlibpniutils = build_env.StaticLibrary("pniutils",aobj)
 build_env.Alias("all",[libpniutils,statlibpniutils])
 build_env.Alias("library",[libpniutils,statlibpniutils])
 
+
+
 fname = "pniutils.pc"
 
-lib_inst_path = path.join(build_env["ENV"]["INSTALL_PREFIX"],"lib")
-hdr_inst_path = path.join(build_env["ENV"]["INSTALL_PREFIX"],"include/pni/utils")
+lib_inst_path = path.join(build_env["PREFIX"],"lib")
+hdr_inst_path = path.join(build_env["PREFIX"],"include/pni/utils")
 
 if "install" in COMMAND_LINE_TARGETS:
     fid = open(fname,"w")

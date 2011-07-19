@@ -11,7 +11,7 @@ sources = ["Reader.cpp","CBFReader.cpp","strutils.cpp","CIFBinHeader.cpp",
 sobjs = build_env.SharedObject(sources)
 aobjs = build_env.StaticObject(sources)
 
-hdr_inst_path = path.join(build_env["ENV"]["INSTALL_PREFIX"],"include/pni/utils/io")
+hdr_inst_path = path.join(build_env["PREFIX"],"include/pni/utils/io")
 incpniutils_inst = build_env.Install(hdr_inst_path,Glob("*.hpp"))
 build_env.Alias("install",[incpniutils_inst])
 
