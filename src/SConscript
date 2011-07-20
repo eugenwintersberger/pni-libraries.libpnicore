@@ -49,21 +49,6 @@ lib_inst_path = path.join(build_env["PREFIX"],"lib")
 hdr_inst_path = path.join(build_env["PREFIX"],"include/pni/utils")
 
 
-
-#if "install" in COMMAND_LINE_TARGETS:
-#    fid = open(fname,"w")
-#    fid.write("prefix=%s\n" %(build_env["PREFIX"]))
-#    fid.write("exec_prefix=${prefix}\n")
-#    fid.write("includedir=${prefix}/include\n")
-#    fid.write("libdir=${prefix}/lib\n\n")
-#    fid.write("Name: pniutils\n")
-#    fid.write("Description: a stupid library\n")
-#    fid.write("Version: 0.0.1\n");
-#    fid.write("Cflags: -I${includedir}\n")
-#    fid.write("Libs: -L${libdir} -lpniutils")
-#    fid.close()
-
-
 shared_library_install = build_env.Install(lib_inst_path,[shared_library])
 static_library_install = build_env.Install(lib_inst_path,[static_library])
 

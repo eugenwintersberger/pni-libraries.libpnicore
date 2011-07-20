@@ -13,21 +13,20 @@ var.Add("VERSION","library version","0.0.0")
 var.Add("LIBNAME","library name","pniutils")
 var.Add("SOVERSION","SOVersion of the library (binary interface version)","0")
 var.Add("CXX","set the compiler to use","g++")
+var.Add("MAINTAINER","package maintainer for the project","None")
+var.Add("MAINTAINER_MAIL","e-mail of the package maintainer","None")
 
 #need now to create the proper library suffix
-
 
 
 #create the build environment
 env = Environment(variables=var,tools=['default','packaging','textfile'])
 
-#setting global linker options and the correct suffix for shared libraries
 
 #the next line is necessary for the linker on Debian system - this needs 
 #a bit more information
 env.Append(LINKFLAGS=["-Wl,-h"+env["LIBPREFIX"]+env["LIBNAME"]+env["SHLIBSUFFIX"]+"."+env["SOVERSION"]])
-#set the suffix for the created shared library
-#env.Replace(SHLIBSUFFIX=env["SHLIBSUFFIX"]+"."+env["SOVERSION"]+"."+env["VERSION"])
+
     
 
 #set the proper compiler - this should be changed to something 
@@ -79,6 +78,6 @@ build_env.Alias("install",[api_html_doc_install,api_pdf_doc_install,api_man_doc_
 
 
 #build
-SConscript(["src/SConscript","test/SConscript"])
+SConscript(["src/SConscript","test/SConscript","debian/SConscript"])
 
 

@@ -6,7 +6,7 @@ pkg_name_root = build_env["LIBPREFIX"]+build_env["LIBNAME"]+build_env["SOVERSION
 #start with the generation of the control file
 control_source = ["Source: %s" %(build_env["LIBPREFIX"]+build_env["LIBNAME"]),
                   "Priority: extra",
-                  "Maintainer: %s <%s>" %(build_env["MAINTAINER"],build_env["MAINTAINER_EMAIL"]),
+                  "Maintainer: %s <%s>" %(build_env["MAINTAINER"],build_env["MAINTAINER_MAIL"]),
                   "Build-Depends: debhelper (>= 7.0.50~)",
                   "Standards-Version: 3.9.1",
                   "Section: libs",
