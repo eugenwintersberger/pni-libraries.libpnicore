@@ -5,40 +5,73 @@ Import("build_env")
 source_list = ["ScalarObject.cpp","Scalar.cpp","BufferObject.cpp","ArrayObject.cpp",
                "Array.cpp","ArrayShape.cpp","Exceptions.cpp","DataObject.cpp","NumericObject.cpp"]
                
-obj = build_env.SharedObject(source_list)
-aobj = build_env.StaticObject(source_list)
-(sioobj,aioobj) = SConscript("io/SConscript")
-obj.append(sioobj)
-aobj.append(aioobj)
+#build static and shared objects               
+shared_objects = build_env.SharedObject(source_list)
+static_objects = build_env.StaticObject(source_list)
+(shared_io_objects,static_io_objects) = SConscript("io/SConscript")
+shared_objects.append(shared_io_objects)
+static_objects.append(static_io_objects)
 
-libpniutils=build_env.SharedLibrary("pniutils",obj,so_version="0")
-statlibpniutils = build_env.StaticLibrary("pniutils",aobj)
-build_env.Alias("all",[libpniutils,statlibpniutils])
-build_env.Alias("library",[libpniutils,statlibpniutils])
+#link shared library
+temp_shared_library = build_env.SharedLibrary(build_env["LIBNAME"],shared_objects,so_version=build_env["SOVERSION"],
+                        SHLIBSUFFIX=build_env["SHLIBSUFFIX"]+"."+build_env["SOVERSION"]+"."+build_env["VERSION"]+"noperm")
+shared_library = build_env.Command(build_env["LIBPREFIX"]+build_env["LIBNAME"]+build_env["SHLIBSUFFIX"]+"."+build_env["SOVERSION"]+"."+build_env["VERSION"],
+                 temp_shared_library[0],
+                 [  Move("$TARGET","$SOURCE"),
+                    Chmod("$TARGET",0644)])
+                 
+#link static library
+static_library = build_env.StaticLibrary(build_env["LIBNAME"],static_objects)
+build_env.Alias("all",[temp_shared_library,shared_library,static_library])
+build_env.Alias("library",[temp_shared_library,shared_library,static_library])
 
 
 
-fname = "pniutils.pc"
+fname = build_env["LIBNAME"]+".pc"
 
 lib_inst_path = path.join(build_env["PREFIX"],"lib")
 hdr_inst_path = path.join(build_env["PREFIX"],"include/pni/utils")
 
-if "install" in COMMAND_LINE_TARGETS:
-    fid = open(fname,"w")
-    fid.write("prefix=%s\n" %(build_env["PREFIX"]))
-    fid.write("exec_prefix=${prefix}\n")
-    fid.write("includedir=${prefix}/include\n")
-    fid.write("libdir=${prefix}/lib\n\n")
-    fid.write("Name: pniutils\n")
-    fid.write("Description: a stupid library\n")
-    fid.write("Version: 0.0.1\n");
-    fid.write("Cflags: -I${includedir}\n")
-    fid.write("Libs: -L${libdir} -lpniutils")
-    fid.close()
+#build the pkg-config file
+pkg_source = ["prefix = %s" %(build_env["PREFIX"]),
+              "exec_prefix = ${prefix}",
+              "includedir = ${prefix}/include/pni/utils",
+              "libdir = ${prefix}/lib","",
+              "Name: %s" %(build_env["LIBNAME"]),
+              "Description: PNI utility library",
+              "Version: %s" %(build_env["VERSION"]),
+              "Cflags: -I${includedir}",
+              "Libs: -L${libdir} -l%s" %(build_env["LIBNAME"])]
+
+pkg_config_file = build_env.Texfile(build_env["LIBNAME"]+".pc",pkg_source)
+
+#if "install" in COMMAND_LINE_TARGETS:
+#    fid = open(fname,"w")
+#    fid.write("prefix=%s\n" %(build_env["PREFIX"]))
+#    fid.write("exec_prefix=${prefix}\n")
+#    fid.write("includedir=${prefix}/include\n")
+#    fid.write("libdir=${prefix}/lib\n\n")
+#    fid.write("Name: pniutils\n")
+#    fid.write("Description: a stupid library\n")
+#    fid.write("Version: 0.0.1\n");
+#    fid.write("Cflags: -I${includedir}\n")
+#    fid.write("Libs: -L${libdir} -lpniutils")
+#    fid.close()
 
 
-libpniutils_inst = build_env.Install(lib_inst_path,[libpniutils,statlibpniutils])
-pkgc_inst = build_env.Install(path.join(lib_inst_path,"pkgconfig"),[fname])
+shared_library_install = build_env.Install(lib_inst_path,[shared_library])
+static_library_install = build_env.Install(lib_inst_path,[static_library])
+
+#after installing the shared library we need to create some links to the shared library file
+#on Unix systems
+lib_name = str(shared_library[0])
+inst_path = path.dirname(str(shared_library_install[0]))
+outfile = build_env["LIBPREFIX"]+build_env["LIBNAME"]+build_env["SHLIBSUFFIX"]+"."+build_env["SOVERSION"]
+shlink1 = build_env.Command(outfile,lib_name,"cd "+inst_path+"; ln -s ${SOURCE.file} ${TARGET.file}")
+outfile = build_env["LIBPREFIX"]+build_env["LIBNAME"]+build_env["SHLIBSUFFIX"]
+shlink2 = build_env.Command(outfile,lib_name,"cd "+inst_path+"; ln -s ${SOURCE.file} ${TARGET.file}")
+
+pkgc_inst = build_env.Install(path.join(lib_inst_path,"pkgconfig"),[pkg_config_file])
 incpniutils_inst = build_env.Install(hdr_inst_path,Glob("*.hpp"))
-build_env.Alias("install",[libpniutils_inst,incpniutils_inst,pkgc_inst])
+build_env.Alias("install",[shared_library_install,static_library_install,incpniutils_inst,pkgc_inst,shlink1,shlink2])
 
