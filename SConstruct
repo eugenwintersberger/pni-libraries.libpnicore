@@ -19,7 +19,7 @@ var.Add("CXX","set the compiler to use","g++")
 
 
 #create the build environment
-env = Environment(variables=var,tools=['default','packaging'])
+env = Environment(variables=var,tools=['default','packaging','textfile'])
 
 #setting global linker options and the correct suffix for shared libraries
 

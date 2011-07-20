@@ -22,15 +22,11 @@ shared_library = build_env.Command(build_env["LIBPREFIX"]+build_env["LIBNAME"]+b
                  
 #link static library
 static_library = build_env.StaticLibrary(build_env["LIBNAME"],static_objects)
-build_env.Alias("all",[temp_shared_library,shared_library,static_library])
-build_env.Alias("library",[temp_shared_library,shared_library,static_library])
+
 
 
 
 fname = build_env["LIBNAME"]+".pc"
-
-lib_inst_path = path.join(build_env["PREFIX"],"lib")
-hdr_inst_path = path.join(build_env["PREFIX"],"include/pni/utils")
 
 #build the pkg-config file
 pkg_source = ["prefix = %s" %(build_env["PREFIX"]),
@@ -43,7 +39,16 @@ pkg_source = ["prefix = %s" %(build_env["PREFIX"]),
               "Cflags: -I${includedir}",
               "Libs: -L${libdir} -l%s" %(build_env["LIBNAME"])]
 
-pkg_config_file = build_env.Texfile(build_env["LIBNAME"]+".pc",pkg_source)
+pkg_config_file = build_env.Textfile(target=build_env["LIBNAME"],source=pkg_source,
+                  TEXTFILESUFFIX=".pc")
+
+build_env.Alias("all",[temp_shared_library,shared_library,static_library,pkg_config_file])
+build_env.Alias("library",[temp_shared_library,shared_library,static_library,pkg_config_file])
+
+lib_inst_path = path.join(build_env["PREFIX"],"lib")
+hdr_inst_path = path.join(build_env["PREFIX"],"include/pni/utils")
+
+
 
 #if "install" in COMMAND_LINE_TARGETS:
 #    fid = open(fname,"w")
