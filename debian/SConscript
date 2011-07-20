@@ -1,0 +1,55 @@
+Import("build_env")
+
+#basic package name
+pkg_name_root = build_env["LIBPREFIX"]+build_env["LIBNAME"]+build_env["SOVERSION"]
+
+#start with the generation of the control file
+control_source = ["Source: %s" %(build_env["LIBPREFIX"]+build_env["LIBNAME"]),
+                  "Priority: extra",
+                  "Maintainer: %s <%s>" %(build_env["MAINTAINER"],build_env["MAINTAINER_EMAIL"]),
+                  "Build-Depends: debhelper (>= 7.0.50~)",
+                  "Standards-Version: 3.9.1",
+                  "Section: libs",
+                  "Homepage: http://www.eugen-wintersberger.desy.de/pniutils",
+                  "",
+                  "Package: %s-dev" %(pkg_name_root),
+                  "Section: libdevel",
+                  "Architecture: any",
+                  "Depends: %s (= ${binary:Version})" %(pkg_name_root),
+                  "Description: PNI utilities libraray - developer package",
+                  " Provides header files and static libraries necessary to write code", 
+                  " using the PNI utilities library.",
+                  "",
+                  "Package: %s" %(pkg_name_root),
+                  "Section: libs",
+                  "Architecture: any",
+                  "Depends: ${shlibs:Depends}, ${misc:Depends}",
+                  "Description: PNI utilities library",
+                  " Utility library of the PNI software pool. This library provides useful",
+                  " objects for programmers which should write code for PNI facilities.",
+                  " It is the basement of a couple of tools and libraries provided by DESY.",
+                  "",
+                  "Package: %s-doc" %(pkg_name_root),
+                  "Section: doc",
+                  "Architecture: any",
+                  "Depends:",
+                  " Description: PNI utilities library - documentation",
+                  " Documentation for the PNI utilities library."]
+                  
+control_file = build_env.Textfile(target="control",source=control_source)
+compat_file = build_env.Textfile(target="compat",source=["7"])
+
+lib_pkg_dirs = build_env.Textfile(target=pkg_name_root,source=["usr/lib"],TEXTFILESUFFIX=".dirs")
+lib_pkg_install = build_env.Textfile(target=pkg_name_root,source=["usr/lib/lib*.so.*"],TEXTFILESUFFIX=".install")
+dev_pkg_dirs = build_env.Textfile(target=pkg_name_root+"-dev",source=["usr/lib","usr/include","usr/include/pni"],TEXTFILESUFFIX=".dirs")
+dev_pkg_install = build_env.Textfile(target=pkg_name_root+"-dev",source=["usr/include/*","usr/include/pni/*",
+                                                                         "usr/lib/lib*.a","usr/lib/lib*.so",
+                                                                         "usr/lib/pkgconfig/*"],TEXTFILESUFFIX=".install")
+doc_pkg_dirs = build_env.Textfile(target=pkg_name_root+"-doc",source=["usr/share/"+pkg_name_root+"-doc",
+                                                                      "usr/share/man"],TEXTFILESUFFIX=".dirs")
+doc_pkg_install = build_env.Textfile(target=pkg_name_root+"-doc",source=["usr/share/doc/"+pkg_name_root+"-doc/*",
+                                                                         "usr/share/man/*"],TEXTFILESUFFIX=".install")
+
+
+build_env.Alias("debian",[control_file,compat_file,lib_pkg_dirs,lib_pkg_install,dev_pkg_dirs,dev_pkg_install,
+                doc_pkg_dirs,doc_pkg_install])
