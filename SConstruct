@@ -65,8 +65,8 @@ Export("test_build_env")
 
 #need to manager here the build and installation of the documentation
 
-doxygen_api_doc = build_env.Command("doxygen.log",Glob("src/*.hpp"),"doxygen > $TARGET")
-pdf_api_doc = build_env.Command("doxygen_pdf.log","doc/api-doc/latex","cd $SOURCE; make > $TARGET")
+doxygen_api_doc = build_env.Command("doc/api-doc/html/index.html",Glob("src/*.hpp"),"doxygen")
+pdf_api_doc = build_env.Command("refman.pdf","doc/api-doc/latex/Makefile","cd doc/api-doc/latex; make")
 #man_api_doc = build_env.Command("zip.log","doc/api-doc/man/man3","cd $SOURCE; gzip -f *.3 > $TARGET")
 build_env.Alias("all",[doxygen_api_doc,pdf_api_doc])
 
@@ -81,14 +81,13 @@ build_env.Alias("install",[api_html_doc_install,api_pdf_doc_install,api_man_doc_
 SConscript(["src/SConscript","test/SConscript","debian/SConscript"])
 
 #build an RPM package
-tgz_test = build_env.Package(NAME = "test-dev",
-                   VERSION = "0.0.0",
+tgz_test = build_env.Package(NAME = "test",
+                   VERSION = "$VERSION",
                    PACKAGEVERSION = 0,
                    PACKAGETYPE = "targz",
                    LICENSE = "gpl",
                    SUMMARY = "a testing package",
                    DESCRIPTION = "a more verbose description",
                    X_RPM_GROUP = "Development/Libraries",
-                   SOURCE_URL = "http://nix.com",
-                   source = [pkgc_inst])
-build_env.Alias("install",[rpm_test])
+                   SOURCE_URL = "http://nix.com")
+build_env.Alias("all",[tgz_test])
