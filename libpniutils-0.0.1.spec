@@ -1,15 +1,28 @@
-Summary: utility library for PNI applications
-Name: libpniutils
-Version: 0.0.1
-Release: 0
-Copyright: GPL
+%define name libpniutils
+Name: %{name}
+License: gpl
+Summary: a testing package
+%define version 0.0.1
+Version: %{version}
+%define release 0
+Release: %{release}
 Group: Development/Libraries
+Source: http://nix.com
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}
+
 %description
-This library provides classes and functions useful for developers
-working for PNI facilities.
+a more verbose description
+
+%clean
+[ -n "$RPM_BUILD_ROOT" -a "$RPM_BUILD_ROOT" != / ] && rm -rf "$RPM_BUILD_ROOT"
+
+%prep
+[ -n "$RPM_BUILD_ROOT" -a "$RPM_BUILD_ROOT" != / ] && rm -rf "$RPM_BUILD_ROOT"
+%setup -q
 
 %build
-scons all
+mkdir "$RPM_BUILD_ROOT"
 
 %install
-scons PREFIX=/usr install
+scons --install-sandbox="$RPM_BUILD_ROOT" "$RPM_BUILD_ROOT"
+
