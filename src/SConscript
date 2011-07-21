@@ -65,3 +65,5 @@ pkgc_inst = build_env.Install(path.join(lib_inst_path,"pkgconfig"),[pkg_config_f
 incpniutils_inst = build_env.Install(hdr_inst_path,Glob("*.hpp"))
 build_env.Alias("install",[shared_library_install,static_library_install,incpniutils_inst,pkgc_inst,shlink1,shlink2])
 
+
+

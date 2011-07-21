@@ -80,4 +80,15 @@ build_env.Alias("install",[api_html_doc_install,api_pdf_doc_install,api_man_doc_
 #build
 SConscript(["src/SConscript","test/SConscript","debian/SConscript"])
 
-
+#build an RPM package
+tgz_test = build_env.Package(NAME = "test-dev",
+                   VERSION = "0.0.0",
+                   PACKAGEVERSION = 0,
+                   PACKAGETYPE = "targz",
+                   LICENSE = "gpl",
+                   SUMMARY = "a testing package",
+                   DESCRIPTION = "a more verbose description",
+                   X_RPM_GROUP = "Development/Libraries",
+                   SOURCE_URL = "http://nix.com",
+                   source = [pkgc_inst])
+build_env.Alias("install",[rpm_test])
