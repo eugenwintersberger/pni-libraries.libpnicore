@@ -2,7 +2,7 @@ import os.path as path
 
 Import("build_env")
 
-api_doc_dir = "api_doc"
+api_doc_dir = "api-doc"
 api_doc_man_dir = "man"
 api_doc_html_dir = "html"
 api_doc_latex_dir = "latex" 
@@ -88,7 +88,7 @@ doxyfile = build_env.Textfile("Doxyfile",[
             #---------------------------------------------------------------------------
             # configuration options related to the input files
             #---------------------------------------------------------------------------
-            "INPUT                  = src/",
+            "INPUT                  = ../src/",
             "INPUT_ENCODING         = UTF-8",
             "FILE_PATTERNS          =",
             "RECURSIVE              = YES",
@@ -253,26 +253,27 @@ doxyfile = build_env.Textfile("Doxyfile",[
             "DOT_CLEANUP            = YES",
             "USE_MATHJAX = YES"],TEXTFILESUFFIX="")
             
-doxygen_api_doc = build_env.Command(["api-doc/html","api-doc/man","api-doc/latex"],doxyfile,"doxygen $SOURCE ")
-#pdf_api_doc = build_env.Command("api-doc/latex/refman.pdf",doxygen_api_doc,"cd api-doc/latex; make")
-#man_api_doc = build_env.Command("zip.log",doxygen_api_doc,"cd api-doc/man; gzip -f *.3 > $TARGET")
-build_env.Alias("doc",[doxyfile,doxygen_api_doc])
+doxygen_api_doc = build_env.Command(["api-doc"],doxyfile,"cd doc; doxygen $SOURCE.file;cd api-doc/latex; make; cd ../man/man3; gzip -f *.3")
+print doxygen_api_doc
+Clean(doxygen_api_doc,"api-doc")
+build_env.Alias("doc",[doxygen_api_doc])
 
-#doc_install_path = "share/doc/libpniutils"+build_env["SOVERSION"]+"-doc/api-doc/"
-#api_html_doc_install = build_env.Install(path.join(build_env["PREFIX"],doc_install_path),"doc/api-doc/html")
-#api_pdf_doc_install = build_env.Install(path.join(build_env["PREFIX"],doc_install_path),"api-doc/latex/refman.pdf")
-#api_man_doc_install = build_env.Install(path.join(build_env["PREFIX"],"share/man/"),"api-doc/man/man3")
-#build_env.Alias("install",[api_html_doc_install,api_pdf_doc_install,api_man_doc_install])
+doc_install_path = "share/doc/libpniutils"+build_env["SOVERSION"]+"-doc/api-doc/"
+api_html_doc_install = build_env.Install(path.join(build_env["PREFIX"],doc_install_path),doxygen_api_doc)
+api_pdf_doc_install = build_env.Install(path.join(build_env["PREFIX"],doc_install_path),doxygen_api_doc)
+api_man_doc_install = build_env.Install(path.join(build_env["PREFIX"],"share/man/"),doxygen_api_doc)
+
+build_env.Alias("install",[api_html_doc_install,api_pdf_doc_install,api_man_doc_install])
 
 #build an RPM package
-#tgz_test = build_env.Package(NAME = "%s" %(build_env["LIBPREFIX"]+build_env["LIBNAME"]+"-doc"),
-#                             VERSION = "%s" %(build_env["VERSION"]),
-#                             PACKAGEVERSION = 0,
-#                             PACKAGETYPE = "rpm",
-#                             LICENSE = "gpl",
-#                             SUMMARY = "a testing package",
-#                             DESCRIPTION = "a more verbose description",
-#                             X_RPM_GROUP = "Development/Libraries",
-#                             SOURCE_URL = "http://nix.com",
-#                             source=[api_html_doc_install,api_pdf_doc_install,api_man_doc_install])
-#build_env.Alias("rpm",[tgz_test])
+tgz_test = build_env.Package(NAME = "%s" %(build_env["LIBPREFIX"]+build_env["LIBNAME"]+"-doc"),
+                             VERSION = "%s" %(build_env["VERSION"]),
+                             PACKAGEVERSION = 0,
+                             PACKAGETYPE = "rpm",
+                             LICENSE = "gpl",
+                             SUMMARY = "a testing package",
+                             DESCRIPTION = "a more verbose description",
+                             X_RPM_GROUP = "Development/Libraries",
+                             SOURCE_URL = "http://nix.com",
+                             source=[api_html_doc_install,api_pdf_doc_install,api_man_doc_install])
+build_env.Alias("rpm",[tgz_test])
