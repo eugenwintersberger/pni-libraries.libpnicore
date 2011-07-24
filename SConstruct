@@ -18,7 +18,6 @@ var.Add("MAINTAINER_MAIL","e-mail of the package maintainer","None")
 
 #need now to create the proper library suffix
 
-
 #create the build environment
 env = Environment(variables=var,tools=['default','packaging','textfile'])
 
@@ -63,15 +62,23 @@ Export("build_env")
 Export("test_build_env")
 
 
-#need to manager here the build and installation of the documentation
-
-
-
-#need to prepear installation of the documentation
-
-
-
 #build
-SConscript(["src/SConscript","test/SConscript","debian/SConscript","doc/SConscript"])
+SConscript(["src/SConscript"],variant_dir="build",duplicate=0)
+SConscript(["test/SConscript","debian/SConscript"])
+(api_html_doc_install,api_pdf_doc_install,api_man_doc_install) = SConscript(["doc/SConscript"])
 
 
+#build an RPM package
+rpm_doc = build_env.Package(
+                            #source=[api_html_doc_install,api_pdf_doc_install,api_man_doc_install],
+                            NAME = "%s" %(build_env["LIBPREFIX"]+build_env["LIBNAME"]+"-doc"),
+                            VERSION = "%s" %(build_env["VERSION"]),
+                            PACKAGEVERSION = 0,
+                            PACKAGETYPE = "rpm",
+                            LICENSE = "gpl",
+                            SUMMARY = "a testing package",
+                            DESCRIPTION = "a more verbose description",
+                            X_RPM_GROUP = "Development/Libraries",
+                            SOURCE_URL = "http://www.desy.de"
+                           )
+build_env.Alias("rpm",[rpm_doc])

@@ -13,9 +13,10 @@ shared_objects.append(shared_io_objects)
 static_objects.append(static_io_objects)
 
 #link shared library
+lib_suffix = build_env["SHLIBSUFFIX"]+"."+build_env["SOVERSION"]+"."+build_env["VERSION"]
 temp_shared_library = build_env.SharedLibrary(build_env["LIBNAME"],shared_objects,so_version=build_env["SOVERSION"],
-                        SHLIBSUFFIX=build_env["SHLIBSUFFIX"]+"."+build_env["SOVERSION"]+"."+build_env["VERSION"]+"noperm")
-shared_library = build_env.Command(build_env["LIBPREFIX"]+build_env["LIBNAME"]+build_env["SHLIBSUFFIX"]+"."+build_env["SOVERSION"]+"."+build_env["VERSION"],
+                        SHLIBSUFFIX=lib_suffix+"noperm")
+shared_library = build_env.Command(build_env["LIBPREFIX"]+build_env["LIBNAME"]+lib_suffix,
                  temp_shared_library[0],
                  [  Move("$TARGET","$SOURCE"),
                     Chmod("$TARGET",0644)])
