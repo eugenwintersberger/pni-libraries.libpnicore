@@ -256,18 +256,28 @@ doxyfile = build_env.Textfile("Doxyfile",[
             
 doxygen_api_doc = build_env.Command(["api-doc/html","api-doc/man/man3","api-doc/latex/refman.pdf"],
                                     doxyfile,
-                                    "cd doc; doxygen $SOURCE.file;cd api-doc/latex; make; cd ../man/man3; gzip -f *.3")
+                                    "cd doc; doxygen $SOURCE.file;cd api-doc/latex; make;")
+                                     #cd ../man/man3; gzip -f *.3
 
-print doxygen_api_doc
 Clean(doxygen_api_doc,"api-doc")
-build_env.Alias("doc",[doxygen_api_doc])
+admin_guide = SConscript("admin-guide/SConscript")
+users_guide = SConscript("users-guide/SConscript")
+
+
+
+build_env.Alias("doc",[doxygen_api_doc,admin_guide,users_guide])
 
 doc_install_path = "share/doc/libpniutils"+build_env["SOVERSION"]+"-doc/api-doc/"
 api_html_doc_install = build_env.Install(path.join(build_env["PREFIX"],doc_install_path),"api-doc/html")
 api_pdf_doc_install = build_env.Install(path.join(build_env["PREFIX"],doc_install_path),"api-doc/latex/refman.pdf")
 api_man_doc_install = build_env.Install(path.join(build_env["PREFIX"],"share/man/"),"api-doc/man/man3")
 
-build_env.Alias("install",[doxygen_api_doc,api_html_doc_install,api_pdf_doc_install,api_man_doc_install])
+guide_install_path = "share/doc/libpniutils"+build_env["SOVERSION"]+"-doc"
+admin_guide_install = build_env.Install(path.join(build_env["PREFIX"],guide_install_path),admin_guide)
+users_guide_install = build_env.Install(path.join(build_env["PREFIX"],guide_install_path),users_guide)
+
+build_env.Alias("install",[doxygen_api_doc,api_html_doc_install,api_pdf_doc_install,api_man_doc_install,
+                           admin_guide_install,users_guide_install])
 
 Return("api_html_doc_install api_pdf_doc_install api_man_doc_install")
 

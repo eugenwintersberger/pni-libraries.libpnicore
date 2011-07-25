@@ -6,20 +6,11 @@ Requirements to build the library
 Minimum requirements:
 C++ Compiler g++ >= 4.1
 Boost library > 1.4
-SCons build system >= ?
+SCons build system >= 2.0.0
 
-Requirements for test code
-cppunit and plplot
-
-The later libraries are only needed if the testing code should be 
-compiled. 
-
-The compiler should be provided by your operation system's distribution.
-In paritcular for old Linux distributions (like Scientific Linux) the Boost
-libraries are too old for a successful build. In this case you have to 
-install the Boost libraries manually.
-The sources for Boost can be downloaded from www.boost.org. For installation 
-follow the Boost documentation.
+To build the documentation doxygen should be installed.
+To get the test code compiled the cppunit and plplot libraries are 
+required.
 
 Simple build and install
 ------------------------
@@ -27,8 +18,17 @@ To build the library on an up-to-date Linux system simply type
 
 > scons library 
 
-this should usually build the library. 
-If you have the Boost library on a costum site you can add the path 
+for building the library along with the test code use
+
+> scons all
+
+Shared and static libraries will be found below src/ and the testing
+code below test/. 
+In order to get the documentation built use the "doc" target with
+
+> scons doc
+ 
+If you have the Boost library on a custom site you can add the path 
 to the Boost installation prefix with
 
 > scons BOOSTPREFIX=/opt/boost library
@@ -37,24 +37,38 @@ To install the library to /home/eugen/Applications/inst use
 
 > scons PREFIX=/home/eugen/Applications/inst BOOSTPREFIX=/opt/boost install
 
-In order to install to a system wide location root permissions are required 
-of coarse. 
+The default value of PREFIX is "/usr/local"
+Root privileges are required if you want to install the software in one 
+of the sytem directories. However, it is not recommended to install 
+this code directly to a system location - rather build a package for 
+your local operating system. This allows easy updating and removal of the 
+software. 
+For package maintainers it might be interesting to use the --install-sandbox
+provided by scons in connection with the DESTDIR environment variable. 
+For instance in a Makefile with 
 
+>scons install --install-sandbox=$(DESTDIR)
+
+
+Building MSI packages for Windows
+----------------------------------
+NOT SUPPORTED YET - still needs to be tested. 
 
 
 Building Debian packages
 ------------------------
 
 Actually there is rudimentary support for building Debian packages that should work 
-for all systems based on Debian GNU/Linux (Ubuntu and others). 
-For building the packages simply type 
+for all systems based on Debian GNU/Linux (Ubuntu and others).
+I use the deb-helper tools to create Debian packages. Thus you first need to 
+create the configuration files below debian/. This is done by calling 
+
+> scons debian
+
+A subsequent call to  
 
 >dpkg-buildpackage -uc -us
 
-This should be integrated in the build system later to make management of 
-library versions easier. 
-
-Building RPM packages
----------------------
-No support for RPM packages is available right now. Should be added in future 
-maybe using the SCons RPM builder.
+will create three Debian packages on level above the root directory of the 
+source tree. A binary package with the library, a devel package with the 
+header files, and a package including the documentation.

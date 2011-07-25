@@ -13,8 +13,8 @@ var.Add("VERSION","library version","0.0.0")
 var.Add("LIBNAME","library name","pniutils")
 var.Add("SOVERSION","SOVersion of the library (binary interface version)","0")
 var.Add("CXX","set the compiler to use","g++")
-var.Add("MAINTAINER","package maintainer for the project","None")
-var.Add("MAINTAINER_MAIL","e-mail of the package maintainer","None")
+var.Add("MAINTAINER","package maintainer for the project","Eugen Wintersberger")
+var.Add("MAINTAINER_MAIL","e-mail of the package maintainer","eugen.wintersberger@desy.de")
 
 #need now to create the proper library suffix
 
@@ -63,22 +63,7 @@ Export("test_build_env")
 
 
 #build
-SConscript(["src/SConscript"],variant_dir="build",duplicate=0)
+SConscript(["src/SConscript"])
 SConscript(["test/SConscript","debian/SConscript"])
 (api_html_doc_install,api_pdf_doc_install,api_man_doc_install) = SConscript(["doc/SConscript"])
 
-
-#build an RPM package
-rpm_doc = build_env.Package(
-                            #source=[api_html_doc_install,api_pdf_doc_install,api_man_doc_install],
-                            NAME = "%s" %(build_env["LIBPREFIX"]+build_env["LIBNAME"]+"-doc"),
-                            VERSION = "%s" %(build_env["VERSION"]),
-                            PACKAGEVERSION = 0,
-                            PACKAGETYPE = "rpm",
-                            LICENSE = "gpl",
-                            SUMMARY = "a testing package",
-                            DESCRIPTION = "a more verbose description",
-                            X_RPM_GROUP = "Development/Libraries",
-                            SOURCE_URL = "http://www.desy.de"
-                           )
-build_env.Alias("rpm",[rpm_doc])
