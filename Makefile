@@ -9,4 +9,4 @@ all:
 	$(SCONS) all
 
 install:
-	$(SCONS) PREFIX=/usr --install-sandbox=$(DESTDIR) install
+	$(SCONS) PREFIX=/usr --install-sandbox=$(DESTDIR) install CXX=$(CXX)
