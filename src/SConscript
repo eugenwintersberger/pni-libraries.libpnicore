@@ -1,9 +1,11 @@
 import os.path as path
-
 Import("build_env")
 
-source_list = ["ScalarObject.cpp","Scalar.cpp","BufferObject.cpp","ArrayObject.cpp",
-               "Array.cpp","ArrayShape.cpp","Exceptions.cpp","DataObject.cpp","NumericObject.cpp"]
+
+#----------------------Building object files------------------------------------
+source_list = ["ScalarObject.cpp","Scalar.cpp","BufferObject.cpp",
+               "ArrayObject.cpp","Array.cpp","ArrayShape.cpp","Exceptions.cpp",
+               "DataObject.cpp","NumericObject.cpp"]
                
 #build static and shared objects               
 shared_objects = build_env.SharedObject(source_list)
@@ -12,59 +14,72 @@ static_objects = build_env.StaticObject(source_list)
 shared_objects.append(shared_io_objects)
 static_objects.append(static_io_objects)
 
-#link shared library
-lib_suffix = build_env["SHLIBSUFFIX"]+"."+build_env["SOVERSION"]+"."+build_env["VERSION"]
-temp_shared_library = build_env.SharedLibrary(build_env["LIBNAME"],shared_objects,so_version=build_env["SOVERSION"],
-                        SHLIBSUFFIX=lib_suffix+"noperm")
-shared_library = build_env.Command(build_env["LIBPREFIX"]+build_env["LIBNAME"]+lib_suffix,
-                 temp_shared_library[0],
-                 [  Move("$TARGET","$SOURCE"),
-                    Chmod("$TARGET",0644)])
-                 
+#----------------------Linking libraries----------------------------------------
+#link temporary shared library
+temp_shared_library = build_env.SharedLibrary("temp",shared_objects,
+                      so_version="${SOVERSION}")
+#create real target library with proper permissions                                                                     
+shared_library = build_env.Command("${LIBFULLNAME}",temp_shared_library[0],
+                 [  Move("$TARGET","$SOURCE"), Chmod("$TARGET",0644)])
+
+#creating links to the target library according to GNU naming convention
+shared_library_link = build_env.Command("${LIBLINKNAME}",shared_library,
+                     "cd src/; ln -sf ${SOURCE.file} ${TARGET.file}")
+shared_library_so = build_env.Command("${LIBSONAME}",shared_library,
+                    "cd src/; ln -sf ${SOURCE.file} ${TARGET.file}")
+                                 
 #link static library
-static_library = build_env.StaticLibrary(build_env["LIBNAME"],static_objects)
+static_library = build_env.StaticLibrary("${LIBNAME}",static_objects)
 
 
-
-
-fname = build_env["LIBNAME"]+".pc"
-
-#build the pkg-config file
-pkg_source = ["prefix = %s" %(build_env["PREFIX"]),
+#---------------------build the pkg-config file---------------------------------
+pkg_source = ["prefix = ${PREFIX}",
               "exec_prefix = ${prefix}",
               "includedir = ${prefix}/include/pni/utils",
               "libdir = ${prefix}/lib","",
-              "Name: %s" %(build_env["LIBNAME"]),
+              "Name: ${LIBNAME}" ,
               "Description: PNI utility library",
-              "Version: %s" %(build_env["VERSION"]),
+              "Version: ${VERSION}" ,
               "Cflags: -I${includedir}",
-              "Libs: -L${libdir} -l%s" %(build_env["LIBNAME"])]
+              "Libs: -L${libdir} -l${LIBNAME}"]              
 
-pkg_config_file = build_env.Textfile(target=build_env["LIBNAME"],source=pkg_source,
+pkg_config_file = build_env.Textfile(target="${LIBNAME}",source=pkg_source,
                   TEXTFILESUFFIX=".pc")
 
-build_env.Alias("all",[temp_shared_library,shared_library,static_library,pkg_config_file])
-build_env.Alias("library",[temp_shared_library,shared_library,static_library,pkg_config_file])
+#-------------------adding everyting to the "all" and "library" target----------
+build_env.Alias("all",[temp_shared_library,
+                       shared_library,shared_library_link,shared_library_so,
+                       static_library,pkg_config_file])
+build_env.Alias("library",[temp_shared_library,
+                           shared_library,shared_library_link,shared_library_so,
+                           static_library,pkg_config_file])
 
-lib_inst_path = path.join(build_env["PREFIX"],"lib")
-hdr_inst_path = path.join(build_env["PREFIX"],"include/pni/utils")
+#---------------------installation----------------------------------------------
 
+#install libraries
+shared_library_install = build_env.Install("${LIBINSTPATH}",[shared_library])
+static_library_install = build_env.Install("${LIBINSTPATH}",[static_library])
 
-shared_library_install = build_env.Install(lib_inst_path,[shared_library])
-static_library_install = build_env.Install(lib_inst_path,[static_library])
+#create links for the link and so name versions of the library
+shared_library_link_install = \
+build_env.Command("${LIBINSTPATH}/${LIBLINKNAME}",shared_library_install,
+                  "cd ${SOURCE.dir}; ln -sf ${SOURCE.file} ${TARGET.file}")
+                  
+shared_library_so_install = \
+build_env.Command("${LIBINSTPATH}/${LIBSONAME}",shared_library_install,
+                  "cd ${SOURCE.dir}; ln -sf ${SOURCE.file} ${TARGET.file}")
 
-#after installing the shared library we need to create some links to the shared library file
-#on Unix systems
-lib_name = str(shared_library[0])
-inst_path = path.dirname(str(shared_library_install[0]))
-outfile = build_env["LIBPREFIX"]+build_env["LIBNAME"]+build_env["SHLIBSUFFIX"]+"."+build_env["SOVERSION"]
-shlink1 = build_env.Command(outfile,lib_name,"cd "+inst_path+"; ln -s ${SOURCE.file} ${TARGET.file}")
-outfile = build_env["LIBPREFIX"]+build_env["LIBNAME"]+build_env["SHLIBSUFFIX"]
-shlink2 = build_env.Command(outfile,lib_name,"cd "+inst_path+"; ln -s ${SOURCE.file} ${TARGET.file}")
+#install the package-config file
+pkgc_inst = build_env.Install("${LIBINSTPATH}/pkgconfig",[pkg_config_file])
 
-pkgc_inst = build_env.Install(path.join(lib_inst_path,"pkgconfig"),[pkg_config_file])
-incpniutils_inst = build_env.Install(hdr_inst_path,Glob("*.hpp"))
-build_env.Alias("install",[shared_library_install,static_library_install,incpniutils_inst,pkgc_inst,shlink1,shlink2])
+#install the header files
+incpniutils_inst = build_env.Install("${INCINSTPATH}",Glob("*.hpp"))
+
+#add all installation targets to the global "install" target
+build_env.Alias("install",[shared_library_install,static_library_install,
+                           incpniutils_inst,pkgc_inst,
+                           shared_library_link_install,
+                           shared_library_so_install])
 
 
 

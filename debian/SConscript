@@ -1,7 +1,5 @@
 Import("build_env")
 
-#basic package name
-pkg_name_root = build_env["LIBPREFIX"]+build_env["LIBNAME"]+build_env["SOVERSION"]
 
 #start with the generation of the control file
 control_source = ["Source: ${'$LIBPREFIX'+'$LIBNAME'}" ,
@@ -12,15 +10,15 @@ control_source = ["Source: ${'$LIBPREFIX'+'$LIBNAME'}" ,
                   "Section: libs",
                   "Homepage: http://www.eugen-wintersberger.desy.de/pniutils",
                   "",
-                  "Package: ${'$LIBPREFIX'+'$LIBNAME'+'$SOVERSION'}-dev",
+                  "Package: ${PKGNAMEROOT}-dev",
                   "Section: libdevel",
                   "Architecture: any",
-                  "Depends: ${'$LIBPREFIX'+'$LIBNAME'+'$SOVERSION'} (= $${binary:Version})",
+                  "Depends: ${PKGNAMEROOT} (= $${binary:Version})",
                   "Description: PNI utilities library - developer package",
                   " Provides header files and static libraries necessary to write code", 
                   " using the PNI utilities library.",
                   "",
-                  "Package: ${'$LIBPREFIX'+'$LIBNAME'+'$SOVERSION'}",
+                  "Package: ${PKGNAMEROOT}",
                   "Section: libs",
                   "Architecture: any",
                   "Depends: $${shlibs:Depends}, $${misc:Depends}",
@@ -29,36 +27,45 @@ control_source = ["Source: ${'$LIBPREFIX'+'$LIBNAME'}" ,
                   " objects for programmers which should write code for PNI facilities.",
                   " It is the basement of a couple of tools and libraries provided by DESY.",
                   "",
-                  "Package: ${'$LIBPREFIX'+'$LIBNAME'+'$SOVERSION'}-doc",
+                  "Package: ${PKGNAMEROOT}-doc",
                   "Section: doc",
                   "Architecture: any",
                   "Depends:",
                   "Description: PNI utilities library - documentation",
                   " Documentation for the PNI utilities library."]
                   
-control_file = build_env.Textfile(target="control",source=control_source,TEXTFILESUFFIX="")
+control_file = build_env.Textfile(target="control",source=control_source,
+                                  TEXTFILESUFFIX="")
 build_env.NoClean(control_file)
 compat_file = build_env.Textfile(target="compat",source=["7"],TEXTFILESUFFIX="")
 build_env.NoClean(compat_file)
 
-lib_pkg_dirs = build_env.Textfile(target=pkg_name_root,source=["usr/lib"],TEXTFILESUFFIX=".dirs")
+lib_pkg_dirs = build_env.Textfile(target="${PKGNAMEROOT}",
+               source=["${LIBINSTPATH}"],TEXTFILESUFFIX=".dirs")
 build_env.NoClean(lib_pkg_dirs)
-lib_pkg_install = build_env.Textfile(target=pkg_name_root,source=["usr/lib/lib*.so.*"],TEXTFILESUFFIX=".install")
+lib_pkg_install = build_env.Textfile(target="${PKGNAMEROOT}",
+                  source=["${LIBINSTPATH}/lib*.so.*"],TEXTFILESUFFIX=".install")
 build_env.NoClean(lib_pkg_install)
 
-dev_pkg_dirs = build_env.Textfile(target=pkg_name_root+"-dev",source=["usr/lib","usr/include","usr/include/pni"],TEXTFILESUFFIX=".dirs")
+dev_pkg_dirs = build_env.Textfile(target="${PKGNAMEROOT}-dev",
+               source=["${LIBINSTPATH}","${INCINSTPATH}"],
+               TEXTFILESUFFIX=".dirs")
 build_env.NoClean(dev_pkg_dirs)
-dev_pkg_install = build_env.Textfile(target=pkg_name_root+"-dev",source=["usr/include/*","usr/include/pni/*",
-                                                                         "usr/lib/lib*.a","usr/lib/lib*.so",
-                                                                         "usr/lib/pkgconfig/*"],TEXTFILESUFFIX=".install")
+dev_pkg_install = build_env.Textfile(target="${PKGNAMEROOT}-dev",
+                  source=["${INCINSTPATH}/*",
+                          "${LIBINSTPATH}/lib*.a","usr/lib/lib*.so",
+                          "${LIBINSTPATH}/pkgconfig/*"],
+                  TEXTFILESUFFIX=".install")
 build_env.NoClean(dev_pkg_install)                                                               
 
-doc_pkg_dirs = build_env.Textfile(target=pkg_name_root+"-doc",source=["usr/share/"+pkg_name_root+"-doc",
-                                                                      "usr/share/man"],TEXTFILESUFFIX=".dirs")
+doc_pkg_dirs = build_env.Textfile(target="${PKGNAMEROOT}-doc",
+                                  source=["${DOCDIR}"],TEXTFILESUFFIX=".dirs")
 build_env.NoClean(doc_pkg_dirs)                                                                      
-doc_pkg_install = build_env.Textfile(target=pkg_name_root+"-doc",source=["usr/share/doc/"+pkg_name_root+"-doc/*",
-                                                                         "usr/share/man/*"],TEXTFILESUFFIX=".install")
+doc_pkg_install = build_env.Textfile(target="${PKGNAMEROOT}-doc",
+                                     source=["${DOCDIR}/*"],
+                                     TEXTFILESUFFIX=".install")
 build_env.NoClean(doc_pkg_install)
 
-build_env.Alias("debian",[control_file,compat_file,lib_pkg_dirs,lib_pkg_install,dev_pkg_dirs,dev_pkg_install,
-                doc_pkg_dirs,doc_pkg_install])
+build_env.Alias("debian",[control_file,compat_file,lib_pkg_dirs,lib_pkg_install,
+                          dev_pkg_dirs,dev_pkg_install,
+                          doc_pkg_dirs,doc_pkg_install])

@@ -15,17 +15,45 @@ var.Add("SOVERSION","SOVersion of the library (binary interface version)","0")
 var.Add("CXX","set the compiler to use","g++")
 var.Add("MAINTAINER","package maintainer for the project","Eugen Wintersberger")
 var.Add("MAINTAINER_MAIL","e-mail of the package maintainer","eugen.wintersberger@desy.de")
+var.Add("DOCDIR","installation directory for the documentation","")
+var.Add("MANDIR","installation directory for man pages","share/man")
+var.Add("LIBSONAME","name of the library including the SO-version","")
+var.Add("LIBLINKNAME","name of the library used for linking","")
+var.Add("LIBFULLNAME","full name of the library binary","")
+var.Add("INCINSTPATH","installation path for header files","")
+var.Add("LIBINSTPATH","library installation path","")
+var.Add("PKGNAMEROOT","root package name (actually only used for Debian packages)","")
 
 #need now to create the proper library suffix
 
 #create the build environment
 env = Environment(variables=var,tools=['default','packaging','textfile'])
 
+#create library names
+env.Append(LIBFULLNAME = env["LIBPREFIX"]+env["LIBNAME"]+env["SHLIBSUFFIX"]+"."
+                         +env["SOVERSION"]+"."+env["VERSION"])
+env.Append(LIBSONAME = env["LIBPREFIX"]+env["LIBNAME"]+env["SHLIBSUFFIX"]+"."+
+                         env["SOVERSION"])
+env.Append(LIBLINKNAME = env["LIBPREFIX"]+env["LIBNAME"]+env["SHLIBSUFFIX"])
+
+#create installation paths
+env.Append(INCINSTPATH = path.join(env["PREFIX"],"include/pni/utils"))
+env.Append(LIBINSTPATH = path.join(env["PREFIX"],"lib"))
+
+if env["DOCDIR"] == "":
+    #set default documentation directory for installation
+    env.Append(DOCDIR = path.join(env["PREFIX"],"share/doc/"+
+                                  env["LIBPREFIX"]+env["LIBNAME"]
+                                  +env["SOVERSION"]+"-doc"))
+
+if env["PKGNAMEROOT"] == "":
+    env.Append(PKGNAMEROOT = env["LIBPREFIX"]+env["LIBNAME"]+env["SOVERSION"])
+
 
 #the next line is necessary for the linker on Debian system - this needs 
 #a bit more information
-env.Append(LINKFLAGS=["-Wl,-h"+env["LIBPREFIX"]+env["LIBNAME"]+env["SHLIBSUFFIX"]+"."+env["SOVERSION"]])
-
+env.Append(LINKFLAGS=["-Wl,-h$LIBSONAME"]) #+env["LIBPREFIX"]+env["LIBNAME"]+env["SHLIBSUFFIX"]+"."+env["SOVERSION"]])
+#print env["LINKFLAGS"]
     
 
 #set the proper compiler - this should be changed to something 
@@ -65,5 +93,5 @@ Export("test_build_env")
 #build
 SConscript(["src/SConscript"])
 SConscript(["test/SConscript","debian/SConscript"])
-(api_html_doc_install,api_pdf_doc_install,api_man_doc_install) = SConscript(["doc/SConscript"])
+SConscript(["doc/SConscript"])
 
