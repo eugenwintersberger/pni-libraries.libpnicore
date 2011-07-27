@@ -61,13 +61,14 @@ shared_library_install = build_env.Install("${LIBINSTPATH}",[shared_library])
 static_library_install = build_env.Install("${LIBINSTPATH}",[static_library])
 
 #create links for the link and so name versions of the library
-shared_library_link_install = \
-build_env.Command("${LIBINSTPATH}/${LIBLINKNAME}",shared_library_install,
+inst_path = path.dirname(str(shared_library_install[0]))
+shared_library_link_install = build_env.Command(inst_path+"/${LIBLINKNAME}",shared_library_install,
                   "cd ${SOURCE.dir}; ln -sf ${SOURCE.file} ${TARGET.file}")
                   
-shared_library_so_install = \
-build_env.Command("${LIBINSTPATH}/${LIBSONAME}",shared_library_install,
+shared_library_so_install = build_env.Command(inst_path+"/${LIBSONAME}",shared_library_install,
                   "cd ${SOURCE.dir}; ln -sf ${SOURCE.file} ${TARGET.file}")
+print shared_library_so_install
+print shared_library_install[0]                  
 
 #install the package-config file
 pkgc_inst = build_env.Install("${LIBINSTPATH}/pkgconfig",[pkg_config_file])

@@ -37,6 +37,16 @@ control_source = ["Source: ${'$LIBPREFIX'+'$LIBNAME'}" ,
 control_file = build_env.Textfile(target="control",source=control_source,
                                   TEXTFILESUFFIX="")
 build_env.NoClean(control_file)
+
+
+changelog_source = [ "libpniutils (${VERSION}) unstable; urgency=low",
+                     "",
+                     "* Initial Release.",
+                     "-- ${MAINTAINER} <${MAINTAINER_MAIL}>  Tue, 24 May 2011 11:15:08 +0200"]
+changelog_file = build_env.Textfile(target="changelog",source=changelog_source,
+                                    TEXTFILESUFFIX="")                                  
+build_env.NoClean(changelog_file)
+
 compat_file = build_env.Textfile(target="compat",source=["7"],TEXTFILESUFFIX="")
 build_env.NoClean(compat_file)
 
