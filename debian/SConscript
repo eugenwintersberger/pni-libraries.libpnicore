@@ -38,11 +38,11 @@ control_file = build_env.Textfile(target="control",source=control_source,
                                   TEXTFILESUFFIX="")
 build_env.NoClean(control_file)
 
-
 changelog_source = [ "libpniutils (${VERSION}) unstable; urgency=low",
                      "",
-                     "* Initial Release.",
-                     "-- ${MAINTAINER} <${MAINTAINER_MAIL}>  Tue, 24 May 2011 11:15:08 +0200"]
+                     "  * Initial Release.",
+                     " -- ${MAINTAINER} <${MAINTAINER_MAIL}>  Tue, 24 May 2011 11:15:08 +0200",
+                     ""]
 changelog_file = build_env.Textfile(target="changelog",source=changelog_source,
                                     TEXTFILESUFFIX="")                                  
 build_env.NoClean(changelog_file)
@@ -78,4 +78,4 @@ build_env.NoClean(doc_pkg_install)
 
 build_env.Alias("debian",[control_file,compat_file,lib_pkg_dirs,lib_pkg_install,
                           dev_pkg_dirs,dev_pkg_install,
-                          doc_pkg_dirs,doc_pkg_install])
+                          doc_pkg_dirs,doc_pkg_install,changelog_file])
