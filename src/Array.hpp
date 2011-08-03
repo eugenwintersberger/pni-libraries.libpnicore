@@ -85,17 +85,21 @@ public:
 	typedef T ElementType;  //!< type of an array element
 	typedef boost::shared_ptr<Array<T> > sptr; //!< shared pointer to an Array<T>
 	//! default constructor
+
+	//! Neither ArrayShape nor Buffer object will be allocated. It can be
+	//! easily
 	Array();
 	//! copy constructor
 	Array(const Array<T> &);
 	//! constructor where rank and dimension are set
+
 	//! In this case a shape object is created and memory allocated.
 	//! The shape object as well as the data buffer will be managed
 	//! by the resulting Array object.
 
 	//! \param r rank of the array
 	//! \param s array with number of elements along each direction
-	Array(const unsigned int &r, const unsigned int s[]);
+	Array(const UInt32 &r, const UInt32 s[]);
 	//! constructor with an array shape pointer
 
 	//! The pointer to an existing ArrayShape object is used to construct
@@ -119,7 +123,7 @@ public:
 
 	//! \param s pointer to a shape object
 	//! \param b pointer to a buffer object
-	//! \sa rray(const boost::shared_ptr<ArrayShape> &s,const boost::shared_ptr<Buffer<T> > &b)
+	//! \sa Array(const boost::shared_ptr<ArrayShape> &s,const boost::shared_ptr<Buffer<T> > &b)
 	Array(const ArrayShape &s, const Buffer<T> &b);
 	//! constructor with smart pointers
 
@@ -396,6 +400,8 @@ public:
 	//! output operator for console output
 	friend std::ostream &operator<<<> (std::ostream &o, const Array<T> &a);
 
+	virtual void Allocate();
+
 };
 
 //===============================Constructors and destructors===================================
@@ -408,7 +414,8 @@ template<typename T> Array<T>::Array():ArrayObject() {
 }
 
 //simple constructor using rank and dimensions
-template<typename T> Array<T>::Array(const unsigned int &r,const unsigned int s[]):ArrayObject(r,s){
+template<typename T> Array<T>::Array(const UInt32 &r,const UInt32 s[])
+		                      :ArrayObject(r,s){
 	_data.reset(new Buffer<T> (_shape->getSize()));
 
 }
@@ -438,6 +445,7 @@ template<typename T> Array<T>::Array(const ArrayShape &s) :
 	}
 }
 
+//construct the array from a shared pointer to a shape object
 template<typename T> Array<T>::Array(const boost::shared_ptr<ArrayShape> &s) :
 	ArrayObject(s) {
 
@@ -497,9 +505,9 @@ template<typename T> PNITypeID Array<T>::getTypeID() const {
 
 
 
-//===============================output operators===============================================
+//===============================output operators==============================
 template<typename T> std::ostream &operator<<(std::ostream &o,
-		const Array<T> &a) {
+		                                      const Array<T> &a){
 	o << "Array of shape (";
 	for (unsigned int i = 0; i < a._shape->getRank(); i++) {
 		o << (*a._shape)[i];
@@ -510,7 +518,7 @@ template<typename T> std::ostream &operator<<(std::ostream &o,
 	return o;
 }
 
-//======================Methods for data access and array manipulation==========================
+//======================Methods for data access and array manipulation=========
 
 template<typename T> void Array<T>::setBuffer(const Buffer<T> &b) {
 	if (_shape) {
@@ -564,22 +572,30 @@ template<typename T> T& Array<T>::operator()(unsigned int i, ...) {
 	return (*_data)[_shape->getOffset(_index_buffer)];
 }
 
-//===============================Comparison operators===========================================
+
+template<typename T> void Array<T>::Allocate(){
+	if(_shape){
+		_data.reset(new Buffer<T> (_shape->getSize()));
+		_data_object = boost::dynamic_pointer_cast<BufferObject>(_data);
+	}
+}
+
+//===============================Comparison operators==========================
 template<typename T> bool operator==(const Array<T> &b1, const Array<T> &b2) {
-	if ((b1._shape == b2._shape) && (b1._data == b2._data)) {
+	if ((*(b1._shape) == *(b2._shape)) && (*(b1._data) == *(b2._data))) {
 		return true;
 	}
 	return false;
 }
 
 template<typename T> bool operator!=(const Array<T> &b1, const Array<T> &b2) {
-	if ((b1._shape != b2._shape) && (b1._data != b2._data)) {
+	if ((*(b1._shape) != *(b2._shape)) && (*(b1._data) != *(b2._data))) {
 		return true;
 	}
 	return false;
 }
 
-//==============Methods for in-place array manipulation===========================================
+//==============Methods for in-place array manipulation========================
 template<typename T> typename ArrayType<T>::Type Array<T>::Sum() const {
 	unsigned long i;
 	typename ArrayType<T>::Type result = 0;
@@ -695,7 +711,7 @@ template<typename T> void Array<T>::MaxClip(T threshold, T value) {
 	}
 }
 
-//==============================Assignment operators=======================================
+//==============================Assignment operators===========================
 
 template<typename T> Array<T> &Array<T>::operator =(const T &v) {
 	unsigned int i;
@@ -730,7 +746,7 @@ template<typename T> Array<T> &Array<T>::operator =(const Array<T> &v) {
 	return *this;
 }
 
-//==============================binary arithmetic operators===============================
+//==============================binary arithmetic operators====================
 template<typename T> Array<T> operator+(const Array<T> &a, const T &b) {
 	Array<T> tmp = a;
 	unsigned long i;
@@ -895,7 +911,7 @@ template<typename T> Array<T> operator/(const Array<T> &a, const Array<T> &b) {
 	return tmp;
 }
 
-//=======================Unary arithmetic operations=========================================
+//=======================Unary arithmetic operations===========================
 template<typename T> Array<T> &Array<T>::operator +=(const T &v) {
 	unsigned long i;
 	Buffer<T> &d = *(this->_data);
@@ -1012,7 +1028,7 @@ template<typename T> Array<T> &Array<T>::operator /=(const Array<T> &v) {
 	return *this;
 }
 
-//===============================definition of some standard arrays===============================
+//===============================definition of some standard arrays============
 typedef Array<Int8> Int8Array;
 typedef Array<UInt8> UInt8Array;
 typedef Array<Int16> Int16Array;

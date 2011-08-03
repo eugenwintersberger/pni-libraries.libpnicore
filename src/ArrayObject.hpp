@@ -37,7 +37,7 @@ public:
 
 	//! \param r rank of the array
 	//! \param s array with number of elements along each direction
-	ArrayObject(const unsigned int &r, const unsigned int s[]);
+	ArrayObject(const UInt32 &r, const UInt32 s[]);
 	//! constructor with an array shape pointer
 
 	//! The pointer to an existing ArrayShape object is used to construct
@@ -94,6 +94,11 @@ public:
 	virtual void setBuffer(BufferObject::sptr b);
 	//! get a shared pointer to a BufferObject belonging to an array
 	virtual const BufferObject::sptr getBuffer() const;
+
+	//allocate memory according to the shape object
+	virtual void Allocate(){
+
+	}
 };
 
 
