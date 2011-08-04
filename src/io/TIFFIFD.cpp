@@ -130,7 +130,7 @@ std::ostream &operator<<(std::ostream &o,const TIFFIFD &idf){
 std::ifstream &operator>>(std::ifstream &in,TIFFIFD &idf){
 	UInt64 i;
 	UInt16 tag,ttype;
-	UInt32 cnt,vo;
+	UInt32 cnt;
 	IFDAbstractEntry::sptr e;
 	String ename;
 	TIFFStandard standard;

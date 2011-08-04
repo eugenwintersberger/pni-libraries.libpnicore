@@ -34,6 +34,7 @@ Reader::~Reader() {
 }
 
 void Reader::open(){
+	EXCEPTION_SETUP("void Reader::open()");
 	//before we open a file we have to check if the stream is already open
 	//and close it if this is the case
 	if(_istream.is_open()) _istream.close();
@@ -41,12 +42,8 @@ void Reader::open(){
 	_istream.open(_fname.c_str());
 
 	if(_istream.fail()){
-		FileError e;
-		std::string d("Error opening file");
-		d = d + " "+_fname + "!";
-		e.setSource("Reader::open");
-		e.setDescription(d);
-		throw e;
+		EXCEPTION_INIT(FileError,"Error opening file");
+		EXCEPTION_THROW();
 	}
 }
 

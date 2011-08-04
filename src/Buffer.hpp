@@ -316,22 +316,22 @@ template<typename T> bool operator!=(const Buffer<T> &b1,const Buffer<T> &b2){
 }
 
 template<typename T> T& Buffer<T>::operator[](unsigned long n){
+	EXCEPTION_SETUP("template<typename T> T& Buffer<T>::operator[](unsigned long n)");
+
 	if(n>=_size){
-		IndexError e;
-		e.setSource("Buffer<T>::operator[]");
-		e.setDescription("Index must not be larger or equal the size of the buffer!");
-		throw e;
+		EXCEPTION_INIT(IndexError,"Index must not be larger or equal the size of the buffer!");
+		EXCEPTION_THROW();
 	}
 
 	return _data[n];
 }
 
 template<typename T> T Buffer<T>::operator[](unsigned long n) const {
+	EXCEPTION_SETUP("template<typename T> T Buffer<T>::operator[](unsigned long n) const");
+
 	if(n>=_size){
-		IndexError e;
-		e.setSource("Buffer<T>::operator[]");
-		e.setDescription("Index must not be larger or equal the size of the buffer!");
-		throw e;
+		EXCEPTION_INIT(IndexError,"Index must not be larger or equal the size of the buffer!");
+		EXCEPTION_THROW();
 	}
 	return _data[n];
 }

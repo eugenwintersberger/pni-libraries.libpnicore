@@ -12,6 +12,22 @@
 namespace pni{
 namespace utils{
 
+#define EXCEPTION_SETUP(issuer) \
+	static String ExIssuer = (issuer);\
+	String ExDescription
+
+#define EXCEPTION_INIT(extype,exdesc)\
+	extype e;\
+	ExDescription = (exdesc);\
+	e.setName(ExIssuer);\
+	e.setDescription(ExDescription);
+
+
+#define EXCEPTION_THROW()\
+	std::cerr<<e<<std::endl;\
+	std::cerr<<"in line: "<<__LINE__<<" of file "<<__FILE__<<std::endl<<std::endl;\
+	throw e;
+
 //! \defgroup Exceptions
 //! Exception object used throughout the library for Error handling.
 
@@ -23,87 +39,76 @@ namespace utils{
 //! valid input arguments. This should provide maximum flexibility in exception
 //! creation.
 class Exception{
-    protected:
-        std::string _name;  //!< name of the exception
-        std::string _who;   //!< issuer of the exception
-        std::string _desc;  //!< description of the error occured
-    public:
-        //! default constructor
-        Exception(){}
-        //! constructor with name as string
+private:
+	String _name; //!< name of the exception
+	String _issuer; //!< issuer of the exception
+	String _description; //!< description of the error occured
+protected:
+	std::ostream &print(std::ostream &) const;
+public:
+	//! default constructor
+	Exception() {
+	}
+	//! constructor with name as string
 
-        //! \param n name of the exception
-        Exception(const std::string &n);
-        //! constructor with name as const char*
+	//! \param n name of the exception
+	Exception(const String &n);
+	//! constructor with name and source as string objects
 
-        //! \param n name of the exception
-        Exception(const char *n);
-        //! constructor with name and source as string objects
+	//! \param n name of the exception
+	//! \param i name or ID or the exceptions issuer
+	Exception(const String &n, const String &i);
+	//! constructor with name, source, and description as string
 
-        //! \param n name of the exception
-        //! \param w name or ID or the exceptions issuer
-        Exception(const std::string &n,const std::string &w);
-        //! constructor with name and source as const char*
+	//! \param n name of the exception
+	//! \param w name or ID of the exceptions issuer
+	//! \param d description of the exception
+	Exception(const String &n, const String &w, const String &d);
+	//! virtual destructor
+	virtual ~Exception() {
+	}
 
-        //! \param n name of the exception
-        //! \param w name or ID of the exceptions issuer
-        Exception(const char *n,const char *w);
-        //! constructor with name, source, and description as string
+	//! set the exception name
 
-        //! \param n name of the exception
-        //! \param w name or ID of the exceptions issuer
-        //! \param d description of the exception
-        Exception(const std::string &n,const std::string &w,const std::string &d);
-        //! constructor with name, source, and description as const char*
+	//! \param name exception name
+	void setName(const std::string &name) {
+		_name = name;
+	}
+	//! get the exceptions name
 
-        //! \param n name of the exception
-        //! \param w name or ID of the exceptions issuer
-        //! \param d description of the exception
-        Exception(const char *n,const char *w,const char *d);
-        //! virtual destructor
-        virtual ~Exception(){}
-        
-        //! set the exception name
+	//! \return reference to the string object holding the name
+	const String &getName() const {
+		return _name;
+	}
 
-        //! \param name exception name
-        void setName(const char *name) { _name = std::string(name); }
-        //! set the exception name
+	//! set the exception issuer
 
-        //! \param name exception name
-        void setName(const std::string &name) { _name = name; }
-        //! get the exceptions name
+	//! \param i name or some ID of the issuer
+	void setIssuer(const String &i) {
+		_issuer = i;
+	}
+	//! get the exceptions issuer
 
-        //! \return reference to the string object holding the name
-        const std::string &getName() const { return _name;}
+	//! \return reference to the string object with the exceptions ID or name
+	const String &getIssuer() const {
+		return _issuer;
+	}
 
-        //! set the exception issuer
+	//! set exception desccription
 
-        //! \param who name or some ID of the issuer
-        void setSource(const char *who) { _who = who;}
-        //! set the exception issuer
+	//! \param desc description of the exception
+	void setDescription(const std::string &desc) {
+		_description = desc;
+	}
+	//! get the exceptions description
 
-        //! \param who name or some ID of the issuer
-        void setSource(const std::string &who) {_who = who;}
-        //! get the exceptions issuer
+	//! \return reference to the string object with the exceptions description
+	const String &getDescription() const {
+		return _description;
+	}
 
-        //! \return reference to the string object with the exceptions ID or name
-        const std::string &getSource() const {return _who;}
-        
-        //! set exception description
-
-        //! \param desc description of the exception
-        void setDescription(const char *desc) {_desc = desc;}
-        //! set exception desccription
-
-        //! \param desc description of the exception
-        void setDescription(const std::string &desc) {_desc=desc;}
-        //! get the exceptions description
-
-        //! \return reference to the string object with the exceptions description
-        const std::string &getDescription() const {return _desc;}
-        
-        //! output operator for exceptions
-        friend std::ostream &operator<<(std::ostream &,const Exception &);
+	//! output operator for exceptions
+	friend std::ostream &operator<<(std::ostream &, const Exception &);
         
 };
 
@@ -112,24 +117,24 @@ class Exception{
 
 //! This exception is typically raised if memory allocation fails. In other words if
 //! a call of the new operator returns NULL.
-class MemoryAllocationError:public Exception{
-    public:
-		//! default constructor
-        MemoryAllocationError():Exception("MemoryAllocationError"){}
-        //! constructor
+class MemoryAllocationError: public Exception {
+public:
+	//! default constructor
+	MemoryAllocationError() :
+		Exception("MemoryAllocationError") {
+	}
+	//! constructor
 
-        //! \param who name or ID of the exceptions issuer
-        //! \param desc description of the exception
-        MemoryAllocationError(const std::string &who,const std::string &desc)
-                                  :Exception("MemoryAllocationError",who,desc){}
-        //! constructor
+	//! \param i name or ID of the exceptions issuer
+	//! \param d description of the exception
+	MemoryAllocationError(const String &i, const String &d) :
+		Exception("MemoryAllocationError", i, d) {
+	}
+	//! destructor
+	virtual ~MemoryAllocationError() {
+	}
 
-        //! \param w name or ID of the exceptions issuer
-        //! \param d description of the exception
-        MemoryAllocationError(const char *w,const char *d)
-        					 :Exception("MemoryAllocationError",w,d){}
-        //! destructor
-        virtual ~MemoryAllocationError(){}
+	friend std::ostream &operator<<(std::ostream &o,const MemoryAllocationError &e);
 };
 
 //! \ingroup Exceptions
@@ -137,25 +142,25 @@ class MemoryAllocationError:public Exception{
 
 //! This exception is usually raised in cases where array operations require shape matching
 //! of the involved arrays but their shapes are different.
-class ShapeMissmatchError:public Exception{
-    public:
-		//! default constructor
-        ShapeMissmatchError():Exception("ArrayShapeMissmatchError"){}
-        //! constructor
+class ShapeMissmatchError: public Exception {
+public:
+	//! default constructor
+	ShapeMissmatchError() :
+		Exception("ArrayShapeMissmatchError") {
+	}
+	//! constructor
 
-        //! \param who name or ID of the exceptions issuer
-        //! \param desc description of the exception
-        ShapeMissmatchError(const std::string &who,const std::string &desc)
-            :Exception("ArrayShapeMissmatchError",who,desc){}
-        //! constructor
+	//! \param i name or ID of the exceptions issuer
+	//! \param d description of the exception
+	ShapeMissmatchError(const String &i, const String &d) :
+		Exception("ArrayShapeMissmatchError", i, d) {
+	}
 
-        //! \param w name or ID of the exceptions issuer
-        //! \param d description of the exception
-        ShapeMissmatchError(const char *w,const char *d)
-            :Exception("ArrayShapeMissmatchError",w,d){}
-        //! destructor
-        virtual ~ShapeMissmatchError(){}
-        
+	//! destructor
+	virtual ~ShapeMissmatchError() {
+	}
+
+	friend std::ostream &operator<<(std::ostream &o,const ShapeMissmatchError &e);
 };
 
 //! \ingroup Exceptions
@@ -165,25 +170,25 @@ class ShapeMissmatchError:public Exception{
 //! requirements. A typical situation would be that a buffer is passed to an Array
 //! object whos size does not match the size given by the ArrayShape object of the
 //! Array.
-class SizeMissmatchError:public Exception{
+class SizeMissmatchError: public Exception {
 public:
 	//! default constructor
-	SizeMissmatchError():Exception("SizeMissmatchError"){}
+	SizeMissmatchError() :
+		Exception("SizeMissmatchError") {
+	}
 	//! constructor
 
-	//! \param who name or ID of the exception issuer
-	//! \param desc description of the exception
-	SizeMissmatchError(const std::string &who,const std::string &desc)
-	:Exception("SizeMissmatchError",who,desc){}
-	//! constructor
-
-	//! \param who name or ID of the exception issuer
-	//! \param desc description of the exception
-	SizeMissmatchError(const char *who,const char *desc)
-	:Exception("SizeMissmatchError",who,desc){}
+	//! \param i name or ID of the exception issuer
+	//! \param d description of the exception
+	SizeMissmatchError(const String &i, const std::string &d) :
+		Exception("SizeMissmatchError", i, d) {
+	}
 
 	//! destructor
-	virtual ~SizeMissmatchError(){}
+	virtual ~SizeMissmatchError() {
+	}
+
+	friend std::ostream &operator<<(std::ostream &o,const SizeMissmatchError &e);
 };
 
 //! \ingroup Exceptions
@@ -191,47 +196,48 @@ public:
 
 //! Raised typically in cases where the [] operator is used to access a data element but the
 //! provided index goes beyond the address space of the buffer or array.
-class IndexError:public Exception{
+class IndexError: public Exception {
 public:
 	//! default constructor
-	IndexError():Exception("IndexError"){}
+	IndexError() :
+		Exception("IndexError") {
+	}
 	//! constructor
 
-	//! \param who name or ID of the exceptions issuer
-	//! \param desc description of the exception
-	IndexError(const std::string &who,const std::string &desc)
-	:Exception("IndexError",who,desc){}
-	//! constructor
-
-	//! \param w name or ID of the exceptions issuer
+	//! \param i name or ID of the exceptions issuer
 	//! \param d description of the exception
-	IndexError(const char *w,const char *d)
-	:Exception("IndexError",w,d){}
+	IndexError(const String &i, const String &d) :
+		Exception("IndexError", i, d) {
+	}
 	//! destructor
-	virtual ~IndexError(){}
+	virtual ~IndexError() {
+	}
+
+	friend std::ostream &operator<<(std::ostream &o,const IndexError &e);
 };
 
 //! \ingroup Exceptions
 //! \brief indicates file IO problems
 //! Raised typically in case of File IO problems
-class FileError:public Exception{
+class FileError: public Exception {
 public:
 	//! default constructor
-	FileError():Exception("FileError"){}
+	FileError() :
+		Exception("FileError") {
+	}
 	//! constructor
 
-	//! \param w name or ID of the exception issuer
+	//! \param i name or ID of the exception issuer
 	//! \param d description of the exception
-	FileError(const std::string &w,const std::string &d)
-	:Exception("FileError",w,d){}
-	//! constructor
+	FileError(const String &i, const String &d) :
+		Exception("FileError", i, d) {
+	}
 
-	//! \param w name or ID of the exception issuer
-	//! \param d description of the exception
-	FileError(const char *w,const char *d)
-	:Exception("FileError",w,d){}
 	//! destructor
-	virtual ~FileError(){}
+	virtual ~FileError() {
+	}
+
+	friend std::ostream &operator<<(std::ostream &o,const FileError &e);
 
 };
 
@@ -239,24 +245,25 @@ public:
 //! \brief data type errors
 
 //! This exception is raised in cases of data type errors.
-class TypeError:public Exception{
+class TypeError: public Exception {
 public:
 	//! default constructor
-	TypeError():Exception("TypeError"){}
+	TypeError() :
+		Exception("TypeError") {
+	}
 	//! constructor
 
 	//! Constructor setting source and description of the error
 	//! \param w error source as String
-	//! \param d error description as String
-	TypeError(const String &w,const String &d):Exception("TypeError",w,d){}
-	//! constructor
-
-	//! Constructor setting source and description of the error
-	//! \param w error as character array
-	//! \param d error description as character array
-	TypeError(const char *w,const char *d):Exception("TypeError",w,d){}
+	//! \param i error description as String
+	TypeError(const String &i, const String &d) :
+		Exception("TypeError", i, d) {
+	}
 	//! destructor
-	virtual ~TypeError(){}
+	virtual ~TypeError() {
+	}
+
+	friend std::ostream &operator<<(std::ostream &o,const TypeError &e);
 };
 
 }

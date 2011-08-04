@@ -35,34 +35,33 @@ ArrayObject::ArrayObject(const ArrayObject &a):NumericObject(a){
 
 ArrayObject::ArrayObject(const unsigned int &r, const unsigned int s[]):NumericObject(){
 	_shape.reset(new ArrayShape(r, s));
-	_index_buffer = new unsigned int[_shape->getRank()];
+	_index_buffer = new UInt32[_shape->getRank()];
 }
 
 ArrayObject::ArrayObject(const ArrayShape &s):NumericObject(){
-	MemoryAllocationError e;
-	e.setSource("Array<T>::Array()");
+	EXCEPTION_SETUP("ArrayObject::ArrayObject(const ArrayShape &s):NumericObject()");
 
 	_shape.reset(new ArrayShape(s));
 	if (!_shape) {
-		e.setDescription("Cannot allocate memory for ArrayShape object!");
-		throw e;
+		EXCEPTION_INIT(MemoryAllocationError,"Cannot allocate memory for ArrayShape object!");
+		EXCEPTION_THROW();
 	}
-	_index_buffer = new unsigned int[_shape->getRank()];
+	_index_buffer = new UInt32[_shape->getRank()];
 	if (_index_buffer == NULL) {
-		e.setDescription("Cannot allocate memory for index buffer!");
-		throw e;
+		EXCEPTION_INIT(MemoryAllocationError,"Cannot allocate memory for index buffer!");
+		_shape.reset();
+		EXCEPTION_THROW();
 	}
 }
 
 ArrayObject::ArrayObject(const ArrayShape::sptr &s):NumericObject(){
+	EXCEPTION_SETUP("ArrayObject::ArrayObject(const ArrayShape::sptr &s):NumericObject()");
 	_shape = s; //the shape is now shared with the array creator (will increment reference counter)
 
-	MemoryAllocationError e;
-	e.setSource("Array<T>::Array");
-	_index_buffer = new unsigned int[_shape->getRank()];
+	_index_buffer = new UInt32[_shape->getRank()];
 	if (_index_buffer == NULL) {
-		e.setDescription("Cannot allocate memory for index buffer!");
-		throw e;
+		EXCEPTION_INIT(MemoryAllocationError,"Cannot allocate memory for index buffer!");
+		EXCEPTION_THROW();
 	}
 }
 
@@ -83,7 +82,7 @@ ArrayObject &ArrayObject::operator=(const ArrayObject &o){
 		if(_index_buffer != NULL) delete [] _index_buffer;
 		_index_buffer = new UInt32[_shape->getRank()];
 		//initialize the index buffer
-		for(Int32 i = 0; i < _shape->getRank(); i++) _index_buffer[i] = 0;
+		for(UInt32 i = 0; i < _shape->getRank(); i++) _index_buffer[i] = 0;
 	}
 
 	return *this;
@@ -94,15 +93,16 @@ PNITypeID ArrayObject::getTypeID() const {
 }
 
 void ArrayObject::setShape(const ArrayShape &s){
+	EXCEPTION_SETUP("void ArrayObject::setShape(const ArrayShape &s)");
+
 	if(_data_object){
 		//an exception occurs typically here in cases where
 		//no data buffer object has been set
 		if (s.getSize() != _data_object->getSize()) {
 			//raise an exception if the size of the new shape object
 			//and the buffer object do not fit.
-			SizeMissmatchError e("Array<T>::setShape",
-					"shape and array size do not match!");
-			throw e;
+			EXCEPTION_INIT(SizeMissmatchError,"shape and array size do not match!");
+			EXCEPTION_THROW();
 		}
 	}else{
 		std::cerr<<"Data buffer not set yet!"<<std::endl;
@@ -113,22 +113,22 @@ void ArrayObject::setShape(const ArrayShape &s){
 	if (_index_buffer != NULL)
 		delete[] _index_buffer;
 
-	_index_buffer = new unsigned int[_shape->getRank()];
+	_index_buffer = new UInt32[_shape->getRank()];
 	if (_index_buffer == NULL) {
-		MemoryAllocationError e("Array<T>::setShape()",
-				"Cannot allocate memory for index buffer!");
-		throw e;
+		EXCEPTION_INIT(MemoryAllocationError,"Cannot allocate memory for index buffer!");
+		EXCEPTION_THROW();
 	}
 }
 
 void ArrayObject::setShape(const ArrayShape::sptr &s){
+	EXCEPTION_SETUP("void ArrayObject::setShape(const ArrayShape::sptr &s)");
+
 	if (_data_object) {
 		if (s->getSize() != _data_object->getSize()) {
 			//raise and exception if the size of the new shape object
 			//and the buffer object do not match
-			SizeMissmatchError e("Array<T>::setShape",
-					"shape and array size do not match!");
-			throw e;
+			EXCEPTION_INIT(SizeMissmatchError,"shape and array size do not match!");
+			EXCEPTION_THROW();
 		}
 	}
 
@@ -136,11 +136,10 @@ void ArrayObject::setShape(const ArrayShape::sptr &s){
 
 	if (_index_buffer != NULL)
 		delete[] _index_buffer;
-	_index_buffer = new unsigned int[_shape->getRank()];
+	_index_buffer = new UInt32[_shape->getRank()];
 	if (_index_buffer == NULL) {
-		MemoryAllocationError e("Array<T>::setShape()",
-				"Cannot allocate memory for index buffer!");
-		throw e;
+		EXCEPTION_INIT(MemoryAllocationError,"Cannot allocate memory for index buffer!");
+		EXCEPTION_THROW();
 	}
 }
 

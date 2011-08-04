@@ -225,23 +225,19 @@ template<typename T> IFDEntry<T> &IFDEntry<T>::operator=(const IFDEntry<T> &o){
 }
 
 template<typename T> T &IFDEntry<T>::operator[](const UInt64 &i){
+	EXCEPTION_SETUP("template<typename T> T &IFDEntry<T>::operator[](const UInt64 &i)");
 	if(i>=_cnt){
-		//raise an exception here
-		IndexError e;
-		e.setSource("IDFEntry<T>::operator[]");
-		e.setDescription("IFD entry element out of bound!");
-		throw e;
+		EXCEPTION_INIT(IndexError,"IFD entry element out of bound!");
+		EXCEPTION_THROW();
 	}
 	return _values[i];
 }
 
 template<typename T> T IFDEntry<T>::operator[](const UInt64 &i) const {
+	EXCEPTION_SETUP("template<typename T> T IFDEntry<T>::operator[](const UInt64 &i) const");
 	if (i >= _cnt) {
-		//raise an exception here
-		IndexError e;
-		e.setSource("IDFEntry<T>::operator[]");
-		e.setDescription("IFD entry element out of bound!");
-		throw e;
+		EXCEPTION_INIT(IndexError,"IFD entry element out of bound!");
+		EXCEPTION_THROW();
 	}
 	return _values[i];
 }

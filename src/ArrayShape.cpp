@@ -168,11 +168,10 @@ void ArrayShape::setDimensions(const unsigned int *s){
 }
 
 void ArrayShape::setDimension(const unsigned int &i,const unsigned int &d){
+	EXCEPTION_SETUP("void ArrayShape::setDimension(const unsigned int &i,const unsigned int &d)");
 	if(i>=_rank){
-		IndexError e;
-		e.setSource("ArrayShape::setDimension");
-		e.setDescription("The dimension index must not be equal or exceed the rank of the shape object!");
-		throw e;
+		EXCEPTION_INIT(IndexError,"The dimension index must not be equal or exceed the rank of the shape object!");
+		EXCEPTION_THROW();
 	}
 
 	_shape[i] = d;
@@ -187,11 +186,10 @@ const UInt32 *ArrayShape::getDimensions() const{
 }
 
 UInt32 ArrayShape::getDimension(const unsigned int &i) const{
+	EXCEPTION_SETUP("UInt32 ArrayShape::getDimension(const unsigned int &i) const");
 	if(i>=_rank){
-		IndexError e;
-		e.setSource("ArrayShape::setDimension");
-		e.setDescription("The dimension index must not be equal or exceed the rank of the shape object!");
-		throw e;
+		EXCEPTION_INIT(IndexError,"The dimension index must not be equal or exceed the rank of the shape object!");
+		EXCEPTION_THROW();
 	}
 
 	return _shape[i];
@@ -207,6 +205,7 @@ UInt64 ArrayShape::getOffset(const unsigned int *index){
     return offset;
 }
 ArrayShape &ArrayShape::operator=(const ArrayShape &a){
+	EXCEPTION_SETUP("ArrayShape &ArrayShape::operator=(const ArrayShape &a)");
     UInt32 i;
     
     //avoid assigning the object to itself
@@ -217,9 +216,9 @@ ArrayShape &ArrayShape::operator=(const ArrayShape &a){
         if(_shape != NULL) delete [] _shape;
         if(_dimstrides != NULL) delete [] _dimstrides;
         
-        _shape = new unsigned int[_rank];
+        _shape = new UInt32[_rank];
         if(_shape==NULL) throw SHAPE_ALLOC_ERROR;
-        _dimstrides = new unsigned int[_rank];
+        _dimstrides = new UInt32[_rank];
         if(_dimstrides==NULL){
         	if(_shape!= NULL) delete [] _shape;
         	throw DIMSTRIDE_ALLOC_ERROR;
@@ -231,7 +230,6 @@ ArrayShape &ArrayShape::operator=(const ArrayShape &a){
         }
         
         _size = a._size;
-        
     }
  
     return *this;

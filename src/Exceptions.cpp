@@ -9,45 +9,57 @@ namespace pni{
 namespace utils{
 
 
-Exception::Exception(const std::string &n){
+Exception::Exception(const String &n){
     _name = n;
-}
-
-Exception::Exception(const char *n){
-	_name = std::string(n);
 }
      
-Exception::Exception(const std::string &n,const std::string &w){
+Exception::Exception(const String &n,const String &i){
     _name = n;
-    _who = w;
+    _issuer = i;
 }
 
-Exception::Exception(const char *n,const char *w){
-	_name = std::string(n);
-	_who = std::string(w);
-}
-
-
-Exception::Exception(const std::string &n,const std::string &w,
-                     const std::string &d)
+Exception::Exception(const String &n,const String &i,const String &d)
 {
     _name = n;
-    _who = w;
-    _desc = d;
+    _issuer = i;
+    _description = d;
 }
 
-Exception::Exception(const char *n,const char *w,const char *d){
-	_name = std::string(n);
-	_who  = std::string(w);
-	_desc = std::string(d);
+std::ostream &Exception::print(std::ostream &o) const {
+	o<<_name<<" by:  "<<_issuer<<std::endl;
+	o<<_description<<std::endl;
+
+	return o;
 }
 
 std::ostream &operator<<(std::ostream &ostr,const Exception &ex){
-    ostr<<ex._name<<"raised by "<<ex._who<<std::endl;
-    ostr<<ex._desc<<std::endl;
-    
-    return ostr;
+    return ex.print(ostr);
 }
 
+std::ostream &operator<<(std::ostream &o,const MemoryAllocationError &e){
+	return e.print(o);
+}
+
+std::ostream &operator<<(std::ostream &o,const ShapeMissmatchError &e){
+	return e.print(o);
+}
+
+std::ostream &operator<<(std::ostream &o,const SizeMissmatchError &e){
+	return e.print(o);
+}
+
+std::ostream &operator<<(std::ostream &o,const IndexError &e){
+	return e.print(o);
+}
+
+std::ostream &operator<<(std::ostream &o,const FileError &e){
+	return e.print(o);
+}
+
+std::ostream &operator<<(std::ostream &o,const TypeError &e){
+	return e.print(o);
+}
+
+//end of namespace
 }
 }

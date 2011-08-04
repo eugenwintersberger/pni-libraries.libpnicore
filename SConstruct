@@ -50,9 +50,7 @@ if env["PKGNAMEROOT"] == "":
     env.Append(PKGNAMEROOT = env["LIBPREFIX"]+env["LIBNAME"]+env["SOVERSION"])
 
 
-#the next line is necessary for the linker on Debian system - this needs 
-#a bit more information
-env.Append(LINKFLAGS=["-Wl,-h$LIBSONAME"]) #+env["LIBPREFIX"]+env["LIBNAME"]+env["SHLIBSUFFIX"]+"."+env["SOVERSION"]])
+
 #print env["LINKFLAGS"]
     
 
@@ -85,6 +83,9 @@ else:
 
 
 test_build_env = build_env.Clone()
+#the next line is necessary for the linker on Debian system - this needs 
+#a bit more information
+build_env.Append(LINKFLAGS=["-Wl,-h$LIBSONAME"]) #+env["LIBPREFIX"]+env["LIBNAME"]+env["SHLIBSUFFIX"]+"."+env["SOVERSION"]])
 
 Export("build_env")
 Export("test_build_env")

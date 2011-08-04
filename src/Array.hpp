@@ -422,38 +422,38 @@ template<typename T> Array<T>::Array(const UInt32 &r,const UInt32 s[])
 
 //copy constructor - allocate new memory and really copy the data
 template<typename T> Array<T>::Array(const Array<T> &a):ArrayObject(a){
+	EXCEPTION_SETUP("template<typename T> Array<T>::Array(const Array<T> &a):ArrayObject(a)");
 	//set buffer object
 	_data.reset(new Buffer<T> (*(a._data)));
 	if (!_data) {
 		//raise an exception here if memory allocation failes
-		MemoryAllocationError e("Array<T>::Array",
-				"Cannot allocate memory for Buffer instance!");
-		throw e;
+		EXCEPTION_INIT(MemoryAllocationError,"Cannot allocate memory for Buffer instance!");
+		EXCEPTION_THROW();
 	}
 }
 
 //construct a new array from a shape object - the recommended way
 template<typename T> Array<T>::Array(const ArrayShape &s) :
 	ArrayObject(s) {
-	MemoryAllocationError e;
-	e.setSource("Array<T>::Array()");
+	EXCEPTION_SETUP("template<typename T> Array<T>::Array(const ArrayShape &s)");
 
 	_data.reset(new Buffer<T> (s.getSize()));
 	if (!_data) {
-		e.setDescription("Cannot allocate memory for Buffer object!");
-		throw e;
+		EXCEPTION_INIT(MemoryAllocationError,"Cannot allocate memory for Buffer object!");
+		EXCEPTION_THROW();
 	}
 }
 
 //construct the array from a shared pointer to a shape object
 template<typename T> Array<T>::Array(const boost::shared_ptr<ArrayShape> &s) :
 	ArrayObject(s) {
+	EXCEPTION_SETUP("template<typename T> Array<T>::Array(const boost::shared_ptr<ArrayShape> &s)");
 
 	MemoryAllocationError e("Array<T>::Array");
 	_data.reset(new Buffer<T> (_shape->getSize()));
 	if (!_data) {
-		e.setDescription("Cannot allocate memory for Buffer object!");
-		throw e;
+		EXCEPTION_INIT(MemoryAllocationError,"Cannot allocate memory for Buffer object!");
+		EXCEPTION_THROW();
 	}
 
 
@@ -461,29 +461,32 @@ template<typename T> Array<T>::Array(const boost::shared_ptr<ArrayShape> &s) :
 
 template<typename T> Array<T>::Array(const ArrayShape &s, const Buffer<T> &b) :
 	ArrayObject(s) {
+	EXCEPTION_SETUP("template<typename T> Array<T>::Array(const ArrayShape &s, const Buffer<T> &b):ArrayObject(s)");
+
 	//first we need to check if buffer and shape have matching sizes
 	if (s.getSize() != b.getSize()) {
-		SizeMissmatchError e("Array<T>::Array()",
-				"Size of shape and buffer objects do not match!");
-		throw e;
+		EXCEPTION_INIT(SizeMissmatchError,"Size of shape and buffer objects do not match!");
+		EXCEPTION_THROW();
 	}
 
-	MemoryAllocationError e("Array<T>::Array()");
 	_data.reset(new Buffer<T> (b));
 	if (!_data) {
-		e.setDescription("Cannot allocate memory for Buffer object!");
-		throw e;
+		EXCEPTION_INIT(MemoryAllocationError,"Cannot allocate memory for Buffer object!");
+		EXCEPTION_THROW();
 	}
 }
 
 template<typename T> Array<T>::Array(const ArrayShape::sptr &s,
 		const typename Buffer<T>::sptr &b) :
 	ArrayObject(s) {
+	EXCEPTION_SETUP("template<typename T> Array<T>::Array("
+			         "const ArrayShape::sptr &s,"
+			         "const typename Buffer<T>::sptr &b) :ArrayObject(s)");
+
 	//nee to check if sizes of shape and buffer object match
 	if (s->getSize() != b->getSize()) {
-		SizeMissmatchError e("Array<T>::Array()",
-				"Size of shape and buffer objects do not match!");
-		throw e;
+		EXCEPTION_INIT(SizeMissmatchError,"Size of shape and buffer objects do not match!");
+		EXCEPTION_THROW();
 	}
 
 	//share pointers
@@ -521,13 +524,13 @@ template<typename T> std::ostream &operator<<(std::ostream &o,
 //======================Methods for data access and array manipulation=========
 
 template<typename T> void Array<T>::setBuffer(const Buffer<T> &b) {
+	EXCEPTION_SETUP("template<typename T> void Array<T>::setBuffer(const Buffer<T> &b)");
+
 	if (_shape) {
 		//if there exists already a shape object we have to check the size
 		if (b.getSize() != _shape->getSize()) {
-			//raise an exception
-			SizeMissmatchError e("Array<T>::setBuffer",
-					"Buffser and array size do not match!");
-			throw e;
+			EXCEPTION_INIT(SizeMissmatchError,"Buffser and array size do not match!");
+			EXCEPTION_THROW();
 		}
 	}
 	_data.reset(new Buffer<T> (b));
@@ -536,13 +539,13 @@ template<typename T> void Array<T>::setBuffer(const Buffer<T> &b) {
 }
 
 template<typename T> void Array<T>::setBuffer(const typename Buffer<T>::sptr &b) {
+	EXCEPTION_SETUP("template<typename T> void Array<T>::setBuffer(const typename Buffer<T>::sptr &b)");
+
 	if (_shape) {
 		//if there exists already a shape object we have to check the size
 		if (b->getSize() != _shape->getSize()) {
-			//raise exception if sizes do not match
-			SizeMissmatchError e("Array<T>::setBuffer()",
-					"Buffer and array size do not match!");
-			throw e;
+			EXCEPTION_INIT(SizeMissmatchError,"Buffer and array size do not match!");
+			EXCEPTION_THROW();
 		}
 	}
 	_data = b;
@@ -725,6 +728,7 @@ template<typename T> Array<T> &Array<T>::operator =(const T &v) {
 }
 
 template<typename T> Array<T> &Array<T>::operator =(const Array<T> &v) {
+	EXCEPTION_SETUP("template<typename T> Array<T> &Array<T>::operator =(const Array<T> &v)");
 	unsigned int i;
 	Buffer<T> &dout = *_data;
 	Buffer<T> &din = *(v._data);
@@ -732,10 +736,8 @@ template<typename T> Array<T> &Array<T>::operator =(const Array<T> &v) {
 	if (this != &v) {
 		//arrays of different shape cannot be assigned to each other
 		if (*_shape != *(v._shape)) {
-			//raise a exception for shape mismatch
-			ShapeMissmatchError e("Array<T>::operator=",
-					"Array shapes do not match!");
-			throw e;
+			EXCEPTION_INIT(ShapeMissmatchError,"Array shapes do not match!");
+			EXCEPTION_THROW();
 		}
 
 		//copy from one array to the other
@@ -770,14 +772,12 @@ template<typename T> Array<T> operator+(const T &a, const Array<T> &b) {
 }
 
 template<typename T> Array<T> operator+(const Array<T> &a, const Array<T> &b) {
+	EXCEPTION_SETUP("template<typename T> Array<T> operator+(const Array<T> &a, const Array<T> &b)");
 	unsigned long i;
 
 	if (*(a._shape) != *(b._shape)) {
-		ShapeMissmatchError error;
-		error.setSource(
-				"Array<T> operator+(const Array<T> &a, const Array<T> &b)");
-		error.setDescription("shapes of arrays a and b do not match!");
-		throw(error);
+		EXCEPTION_INIT(ShapeMissmatchError,"shapes of arrays a and b do not match!");
+		EXCEPTION_THROW();
 	}
 	Array<T> tmp = a;
 
@@ -811,14 +811,12 @@ template<typename T> Array<T> operator-(const T &a, const Array<T> &b) {
 }
 
 template<typename T> Array<T> operator-(const Array<T> &a, const Array<T> &b) {
+	EXCEPTION_SETUP("template<typename T> Array<T> operator-(const Array<T> &a, const Array<T> &b)");
 	unsigned long i;
 
 	if (*(a._shape) != *(b._shape)) {
-		ShapeMissmatchError error;
-		error.setSource(
-				"Array<T> operator-(const Array<T> &a, const Array<T> &b)");
-		error.setDescription("shapes of arrays a and b do not match!");
-		throw(error);
+		EXCEPTION_INIT(ShapeMissmatchError,"shapes of arrays a and b do not match!");
+		EXCEPTION_THROW();
 	}
 	Array<T> tmp = a;
 
@@ -852,14 +850,12 @@ template<typename T> Array<T> operator*(const T &a, const Array<T> &b) {
 }
 
 template<typename T> Array<T> operator*(const Array<T> &a, const Array<T> &b) {
+	EXCEPTION_SETUP("template<typename T> Array<T> operator*(const Array<T> &a, const Array<T> &b)");
 	unsigned long i;
 
 	if (*(a._shape) != *(b._shape)) {
-		ShapeMissmatchError error;
-		error.setSource(
-				"Array<T> operator*(const Array<T> &a, const Array<T> &b)");
-		error.setDescription("shapes of arrays a and b do not match!");
-		throw(error);
+		EXCEPTION_INIT(ShapeMissmatchError,"shapes of arrays a and b do not match!");
+		EXCEPTION_THROW();
 	}
 	Array<T> tmp = a;
 
@@ -893,14 +889,12 @@ template<typename T> Array<T> operator/(const T &a, const Array<T> &b) {
 }
 
 template<typename T> Array<T> operator/(const Array<T> &a, const Array<T> &b) {
+	EXCEPTION_SETUP("template<typename T> Array<T> operator/(const Array<T> &a, const Array<T> &b)");
 	unsigned long i;
 
 	if (*(a._shape) != *(b._shape)) {
-		ShapeMissmatchError error;
-		error.setSource(
-				"Array<T> operator/(const Array<T> &a, const Array<T> &b)");
-		error.setDescription("shapes of arrays a and b do not match!");
-		throw(error);
+		EXCEPTION_INIT(ShapeMissmatchError,"shapes of arrays a and b do not match!");
+		EXCEPTION_THROW();
 	}
 	Array<T> tmp = a;
 
@@ -923,16 +917,14 @@ template<typename T> Array<T> &Array<T>::operator +=(const T &v) {
 }
 
 template<typename T> Array<T> &Array<T>::operator +=(const Array<T> &v) {
+	EXCEPTION_SETUP("template<typename T> Array<T> &Array<T>::operator +=(const Array<T> &v)");
 	unsigned long i;
 	Buffer<T> &dlhs = *(this->_data);
 	Buffer<T> &drhs = *(v._data);
 
 	if (*(this->_shape) != *(v._shape)) {
-		ShapeMissmatchError error;
-		error.setSource("Array<T> &Array<T>::operator += (const Array<T> &v)");
-		error.setDescription(
-				"shapes of arrays on left and right side of += do not match!");
-		throw(error);
+		EXCEPTION_INIT(ShapeMissmatchError,"shapes of arrays on left and right side of += do not match!");
+		EXCEPTION_THROW();
 	}
 
 	for (i = 0; i < this->_shape->getSize(); i++)
@@ -952,16 +944,14 @@ template<typename T> Array<T> &Array<T>::operator -=(const T &v) {
 }
 
 template<typename T> Array<T> &Array<T>::operator -=(const Array<T> &v) {
+	EXCEPTION_SETUP("template<typename T> Array<T> &Array<T>::operator -=(const Array<T> &v)");
 	unsigned long i;
 	Buffer<T> &dlhs = *(this->_data);
 	Buffer<T> &drhs = *(v._data);
 
 	if (*(this->_shape) != *(v._shape)) {
-		ShapeMissmatchError error;
-		error.setSource("Array<T> &Array<T>::operator -= (const Array<T> &v)");
-		error.setDescription(
-				"shapes of arrays on left and right side of -= do not match!");
-		throw(error);
+		EXCEPTION_INIT(ShapeMissmatchError,"shapes of arrays on left and right side of -= do not match!");
+		EXCEPTION_THROW();
 	}
 
 	for (i = 0; i < this->_shape->getSize(); i++)
@@ -981,16 +971,14 @@ template<typename T> Array<T> &Array<T>::operator *=(const T &v) {
 }
 
 template<typename T> Array<T> &Array<T>::operator *=(const Array<T> &v) {
+	EXCEPTION_SETUP("template<typename T> Array<T> &Array<T>::operator *=(const Array<T> &v)");
 	unsigned long i;
 	Buffer<T> &dlhs = *(this->_data);
 	Buffer<T> &drhs = *(v._data);
 
 	if (*(this->_shape) != *(v._shape)) {
-		ShapeMissmatchError error;
-		error.setSource("Array<T> &Array<T>::operator *= (const Array<T> &v)");
-		error.setDescription(
-				"shapes of arrays on left and right side of *= do not match!");
-		throw(error);
+		EXCEPTION_INIT(ShapeMissmatchError,"shapes of arrays on left and right side of *= do not match!");
+		EXCEPTION_THROW();
 	}
 
 	for (i = 0; i < this->_shape->getSize(); i++)
@@ -1010,16 +998,14 @@ template<typename T> Array<T> &Array<T>::operator /=(const T &v) {
 }
 
 template<typename T> Array<T> &Array<T>::operator /=(const Array<T> &v) {
+	EXCEPTION_SETUP("template<typename T> Array<T> &Array<T>::operator /=(const Array<T> &v)");
 	unsigned long i;
 	Buffer<T> &dlhs = *(this->_data);
 	Buffer<T> &drhs = *(v._data);
 
 	if (*(this->_shape) != *(v._shape)) {
-		ShapeMissmatchError error;
-		error.setSource("Array<T> &Array<T>::operator /= (const Array<T> &v)");
-		error.setDescription(
-				"shapes of arrays on left and right side of /= do not match!");
-		throw(error);
+		EXCEPTION_INIT(ShapeMissmatchError,"shapes of arrays on left and right side of /= do not match!");
+		EXCEPTION_THROW();
 	}
 
 	for (i = 0; i < this->_shape->getSize(); i++)

@@ -62,16 +62,15 @@ String TIFFFile::getFileName() const{
 }
 
 void TIFFFile::open(){
+	EXCEPTION_SETUP("void TIFFFile::open()");
 	Int32 idf_offset;
 
 	//open the file if it is not already opened
 	if(!_ifstream.is_open()){
 		_ifstream.open(_fname.c_str(),std::ifstream::binary | std::ifstream::in );
 		if(_ifstream.fail()){
-			FileError e;
-			e.setSource("TIFFFile::open");
-			e.setDescription(String("Cannot open file ")+_fname+String(" for reading"));
-			throw e;
+			EXCEPTION_INIT(FileError,"Cannot open file "+_fname+" for reading");
+			EXCEPTION_THROW();
 		}
 	}
 
@@ -85,10 +84,8 @@ void TIFFFile::open(){
 	UInt16 magic;
 	_ifstream.read((char *)(&magic),2);
 	if(magic!=42){
-		FileError e;
-		e.setSource("TIFFFile::open");
-		e.setDescription(String("File ")+_fname+String("is not a valid TIFF file!"));
-		throw e;
+		EXCEPTION_INIT(FileError,"File "+_fname+"is not a valid TIFF file!");
+		EXCEPTION_THROW();
 	}
 
 	//read the first IDF offset
@@ -144,12 +141,10 @@ std::ostream &operator<<(std::ostream &o,const TIFFFile &f){
 }
 
 TIFFImageData::sptr TIFFFile::getData(UInt64 i) const {
-	UInt64 dims[2];
 	UInt64 uibuffer;
 	IFDAbstractEntry::sptr e;
 	TIFFIFD &idf = *(_ifd_list[i]);
 	TIFFStripReader reader;
-	//ArrayObject *a;
 
 	//need to determine the dimension of the image
 	e = idf["ImageWidth"];
@@ -223,7 +218,7 @@ TIFFImageData::sptr TIFFFile::getData(UInt64 i) const {
 	if(e==NULL){
 		//raise an exception if there are no strip offsets
 	}
-	for(UInt64 i=0;i<nstrips;i++){
+	for(UInt64 i=0;i<(UInt64)nstrips;i++){
 		switch(e->getEntryTypeCode()){
 		case IDFE_SHORT:
 			uibuffer = (*boost::dynamic_pointer_cast<ShortEntry>(e))[i]; break;
@@ -240,7 +235,7 @@ TIFFImageData::sptr TIFFFile::getData(UInt64 i) const {
 	if(e==NULL){
 		//raise an exception here
 	}
-	for (UInt64 i = 0; i < nstrips; i++) {
+	for (UInt64 i = 0; i < (UInt64)nstrips; i++) {
 		switch (e->getEntryTypeCode()) {
 		case IDFE_SHORT:
 			uibuffer = (*boost::dynamic_pointer_cast<ShortEntry>(e))[i];
