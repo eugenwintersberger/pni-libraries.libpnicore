@@ -292,7 +292,7 @@ template<typename T> Buffer<T> &Buffer<T>::operator=(const T &d){
 }
 
 template<typename T> bool operator==(const Buffer<T> &b1,const Buffer<T> &b2){
-	unsigned long i;
+	UInt64 i;
 
 	if(b1._size!=b2._size) return false;
 
@@ -304,12 +304,10 @@ template<typename T> bool operator==(const Buffer<T> &b1,const Buffer<T> &b2){
 }
 
 template<typename T> bool operator!=(const Buffer<T> &b1,const Buffer<T> &b2){
-	unsigned long i;
+	UInt64 i;
 
-	if(b1._size!=b2._size) return true;
-
-	for(i=0;i<b1._size;i++){
-		if(b1._data[i]!=b2._data[i]) return true;
+	if(!(b1==b2)){
+		return true;
 	}
 
 	return false;

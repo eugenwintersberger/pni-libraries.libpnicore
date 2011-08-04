@@ -10,7 +10,7 @@
 #include "ArrayShape.hpp"
 #include "libpniutils_array.hpp"
 
-//CPPUNIT_TEST_SUITE_REGISTRATION(ArrayTest);
+CPPUNIT_TEST_SUITE_REGISTRATION(ArrayTest);
 
 using namespace pni::utils;
 
@@ -42,11 +42,17 @@ void ArrayTest::testConstructors(){
 	Array<double> a3;
 	a3 = Array<double>(_r2,_s2);
 
+	Int16Array a4;
+	a4 = Int16Array();
+	a4 = Int16Array();
+
+	a3 = Array<double>();
+
 }
 
 void ArrayTest::testSlowArrayConstruction(){
-	pni::utils::ArrayShape s;
-	pni::utils::Int32Array a;
+	ArrayShape s;
+	Int32Array a;
 
 	//construct the shape object
 	s.setRank(2);
@@ -54,7 +60,7 @@ void ArrayTest::testSlowArrayConstruction(){
 	s.setDimension(1,2048);
 
 	a.setShape(s);
-	pni::utils::Buffer<pni::utils::Int32> buffer;
+	Buffer<Int32> buffer;
 	buffer.allocate(s.getSize());
 	a.setBuffer(buffer);
 
@@ -119,17 +125,17 @@ void ArrayTest::testSetAndGet(){
 }
 
 void ArrayTest::testComparison(){
-	pni::utils::Array<double> a1(_sh1);
-	pni::utils::Array<double> b1(_sh1);
-	pni::utils::Array<double> a2(_sh2);
-	pni::utils::Array<double> b2(_sh2);
-	unsigned int i,j,k;
+	Float64Array a1(_sh1);
+	Float64Array b1(_sh1);
+	Float64Array a2(_sh2);
+	Float64Array b2(_sh2);
+	UInt32 i,j,k;
 
-	pni::utils::ArrayShape s = *(a1.getShape());
+	ArrayShape s = *(a1.getShape());
 	for(i=0;i<s[0];i++){
 		for(j=0;j<s[1];j++){
-			a1(i,j) = (double)i;
-			b1(i,j) = (double)i*10;
+			a1(i,j) = (Float64)i;
+			b1(i,j) = (Float64)i*10;
 		}
 	}
 	CPPUNIT_ASSERT(a1==a1);
@@ -140,8 +146,8 @@ void ArrayTest::testComparison(){
 	for(i=0;i<s[0];i++){
 		for(j=0;j<s[1];j++){
 			for(k=0;k<s[2];k++){
-				a2(i,j,k) = (double)i;
-				b2(i,j,k) = (double)i*10;
+				a2(i,j,k) = (Float64)i;
+				b2(i,j,k) = (Float64)i*10;
 			}
 		}
 	}

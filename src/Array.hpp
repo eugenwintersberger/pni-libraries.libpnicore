@@ -592,7 +592,7 @@ template<typename T> bool operator==(const Array<T> &b1, const Array<T> &b2) {
 }
 
 template<typename T> bool operator!=(const Array<T> &b1, const Array<T> &b2) {
-	if ((*(b1._shape) != *(b2._shape)) && (*(b1._data) != *(b2._data))) {
+	if (!(b1 == b2)) {
 		return true;
 	}
 	return false;
@@ -717,7 +717,7 @@ template<typename T> void Array<T>::MaxClip(T threshold, T value) {
 //==============================Assignment operators===========================
 
 template<typename T> Array<T> &Array<T>::operator =(const T &v) {
-	unsigned int i;
+	UInt32 i;
 	Buffer<T> &d = *_data;
 
 	for (i = 0; i < _shape->getSize(); i++) {
@@ -729,21 +729,24 @@ template<typename T> Array<T> &Array<T>::operator =(const T &v) {
 
 template<typename T> Array<T> &Array<T>::operator =(const Array<T> &v) {
 	EXCEPTION_SETUP("template<typename T> Array<T> &Array<T>::operator =(const Array<T> &v)");
-	unsigned int i;
-	Buffer<T> &dout = *_data;
-	Buffer<T> &din = *(v._data);
 
-	if (this != &v) {
-		//arrays of different shape cannot be assigned to each other
-		if (*_shape != *(v._shape)) {
-			EXCEPTION_INIT(ShapeMissmatchError,"Array shapes do not match!");
-			EXCEPTION_THROW();
+	if(this != &v){
+		//check the array shapes
+
+		if(v._shape){
+			_shape = ArrayShape::sptr(new ArrayShape(*(v._shape)));
+		}else{
+			_shape.reset();
 		}
 
-		//copy from one array to the other
-		for (i = 0; i < _shape->getSize(); i++)
-			dout[i] = din[i];
+		if(v._data){
+			_data = typename Buffer<T>::sptr(new Buffer<T>(*(v._data)));
+		}else{
+			_data.reset();
+		}
+
 	}
+
 
 	return *this;
 }
@@ -751,7 +754,7 @@ template<typename T> Array<T> &Array<T>::operator =(const Array<T> &v) {
 //==============================binary arithmetic operators====================
 template<typename T> Array<T> operator+(const Array<T> &a, const T &b) {
 	Array<T> tmp = a;
-	unsigned long i;
+	UInt64 i;
 
 	for (i = 0; i < a._shape->getSize(); i++) {
 		(*tmp._data)[i] = (*a._data)[i] + b;
