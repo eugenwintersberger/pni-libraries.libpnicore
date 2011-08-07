@@ -1,14 +1,23 @@
 #load python modules
 import os.path as path
+import platform
+import os
 
-#need something to build debian and RPM packages automatically 
-#or at least some shell scripts that do the job
 
 debug = ARGUMENTS.get("DEBUG",0)
 
+
 var = Variables('BuildConfig.py')
-var.Add(PathVariable("PREFIX","set installation prefix","/usr/local"))
-var.Add(PathVariable("BOOSTPREFIX","set the installation prefix for boost","/usr"))
+if os.name == "nt":
+	var.Add(PathVariable("PREFIX","set installation prefix","C:\\Program Files\\libpniutils",PathVariable.PathAccept))
+elif os.name=="posix":
+	var.Add(PathVariable("PREFIX","set installation prefix","/usr/local"))
+
+if os.name == "nt":
+	var.Add(PathVariable("BOOSTPREFIX","set the installation prefix for boost","C:\\Program Files\\boost",PathVariable.PathAccept))
+elif os.name == "posix":	
+	var.Add(PathVariable("BOOSTPREFIX","set the installation prefix for boost","/usr"))
+	
 var.Add("VERSION","library version","0.0.0")
 var.Add("LIBNAME","library name","pniutils")
 var.Add("SOVERSION","SOVersion of the library (binary interface version)","0")
@@ -27,14 +36,20 @@ var.Add("PKGNAMEROOT","root package name (actually only used for Debian packages
 #need now to create the proper library suffix
 
 #create the build environment
-env = Environment(variables=var,tools=['default','packaging','textfile'])
+env = Environment(variables=var,ENV={'PATH':os.environ['PATH']},tools=['default','packaging','textfile'])
 
 #create library names
-env.Append(LIBFULLNAME = env["LIBPREFIX"]+env["LIBNAME"]+env["SHLIBSUFFIX"]+"."
-                         +env["SOVERSION"]+"."+env["VERSION"])
-env.Append(LIBSONAME = env["LIBPREFIX"]+env["LIBNAME"]+env["SHLIBSUFFIX"]+"."+
-                         env["SOVERSION"])
-env.Append(LIBLINKNAME = env["LIBPREFIX"]+env["LIBNAME"]+env["SHLIBSUFFIX"])
+if os.name == "posix":
+	env.Append(LIBFULLNAME = env["LIBPREFIX"]+env["LIBNAME"]+env["SHLIBSUFFIX"]+"."
+    	                     +env["SOVERSION"]+"."+env["VERSION"])
+	env.Append(LIBSONAME = env["LIBPREFIX"]+env["LIBNAME"]+env["SHLIBSUFFIX"]+"."+
+    	                     env["SOVERSION"])
+	env.Append(LIBLINKNAME = env["LIBPREFIX"]+env["LIBNAME"]+env["SHLIBSUFFIX"])
+elif os.name == "nt":
+	env.Append(LIBFULLNAME = env["LIBPREFIX"]+env["LIBNAME"]+"."+env["SOVERSION"]+
+	                         "."+env["VERSION"]+env["SHLIBSUFFIX"])
+	env.Append(LIBSONAME = env["LIBPREFIX"]+env["LIBNAME"]+"."+env["SOVERSION"]+env["SHLIBSUFFIX"])
+	env.Append(LIBLINKNAME = env["LIBPREFIX"]+env["LIBNAME"]+env["SHLIBSUFFIX"])
 
 #create installation paths
 env.Append(INCINSTPATH = path.join(env["PREFIX"],"include/pni/utils"))
@@ -65,6 +80,7 @@ env.Replace(CXX = env["CXX"])
 env.Append(CXXFLAGS = ["-Wall"])
 env.Append(LIBPATH=path.join(env["BOOSTPREFIX"],"lib"))
 env.Append(CPPPATH=path.join(env["BOOSTPREFIX"],"include"))
+print env["CPPPATH"]
 
 
 #create optimized environment
@@ -85,7 +101,8 @@ else:
 test_build_env = build_env.Clone()
 #the next line is necessary for the linker on Debian system - this needs 
 #a bit more information
-build_env.Append(LINKFLAGS=["-Wl,-h$LIBSONAME"]) #+env["LIBPREFIX"]+env["LIBNAME"]+env["SHLIBSUFFIX"]+"."+env["SOVERSION"]])
+if os.name == "posix":
+	build_env.Append(LINKFLAGS=["-Wl,-h$LIBSONAME"]) #+env["LIBPREFIX"]+env["LIBNAME"]+env["SHLIBSUFFIX"]+"."+env["SOVERSION"]])
 
 Export("build_env")
 Export("test_build_env")
