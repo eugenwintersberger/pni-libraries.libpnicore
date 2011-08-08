@@ -400,7 +400,7 @@ public:
 	//! output operator for console output
 	friend std::ostream &operator<<<> (std::ostream &o, const Array<T> &a);
 
-	virtual void Allocate();
+	virtual void allocate();
 
 };
 
@@ -576,7 +576,7 @@ template<typename T> T& Array<T>::operator()(unsigned int i, ...) {
 }
 
 
-template<typename T> void Array<T>::Allocate(){
+template<typename T> void Array<T>::allocate(){
 	if(_shape){
 		_data.reset(new Buffer<T> (_shape->getSize()));
 		_data_object = boost::dynamic_pointer_cast<BufferObject>(_data);

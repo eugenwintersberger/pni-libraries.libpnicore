@@ -104,8 +104,6 @@ void ArrayObject::setShape(const ArrayShape &s){
 			EXCEPTION_INIT(SizeMissmatchError,"shape and array size do not match!");
 			EXCEPTION_THROW();
 		}
-	}else{
-		std::cerr<<"Data buffer not set yet!"<<std::endl;
 	}
 	//create a new shape object
 	_shape.reset(new ArrayShape(s));

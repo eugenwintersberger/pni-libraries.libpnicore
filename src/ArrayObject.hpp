@@ -96,7 +96,7 @@ public:
 	virtual const BufferObject::sptr getBuffer() const;
 
 	//allocate memory according to the shape object
-	virtual void Allocate(){
+	virtual void allocate(){
 
 	}
 };
