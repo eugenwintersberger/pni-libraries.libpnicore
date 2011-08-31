@@ -99,6 +99,11 @@ public:
 	virtual void allocate(){
 
 	}
+
+	//return the size of the object
+	virtual UInt64 size(){
+		return _shape->getSize();
+	}
 };
 
 

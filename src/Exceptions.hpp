@@ -266,6 +266,34 @@ public:
 	friend std::ostream &operator<<(std::ostream &o,const TypeError &e);
 };
 
+//! \ingroup Exceptions
+//! \brief data range error
+
+//! This exception is raised in cases where data values exceed the range
+//! spanned by their data type.
+class RangeError: public Exception {
+public:
+	//! default constructor
+	RangeError():
+		Exception("RangeError"){
+	}
+
+	//! constructor
+
+	//! Constructor setting source and description of the error
+	//! \param i error issuer as string
+	//! \param d error description as string
+	RangeError(const String &i,const String &d):
+		Exception("RangeError",i,d){
+	}
+
+	//! destructor
+	virtual ~RangeError(){
+	}
+
+	friend std::ostream &operator<<(std::ostream &o,const RangeError &e);
+};
+
 }
 }
 #endif

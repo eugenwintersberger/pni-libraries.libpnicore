@@ -27,8 +27,9 @@ namespace utils{
 //! instances of Buffer<T> objects of unknown data type.
 class BufferObject{
 protected:
+	void   *_ptr;       //!< pointer to the allocated memory region
 	UInt64 _size;       //!< number of elements in the buffer
-	UInt64 _elem_size;  //!< size of a single element
+	UInt64 _elem_size;  //!< size of a single element in byte
 public:
 	typedef boost::shared_ptr<BufferObject> sptr;  //!< smart pointer to a BufferObject
 	//! default constructor
@@ -38,7 +39,9 @@ public:
 	//! constructor
 
 	//! Constructor for a BufferObject that initializes the number of elements
-	//! in the buffer and the element size (in bytes).
+	//! in the buffer and the element size (in bytes). Thus using this
+	//! constructor memory is allocated at object creation.
+	//! \throws MemoryAllocationError if memory allocation fails
 	//! \param n number of elements in the buffer
 	//! \param es element size
 	BufferObject(UInt64 n,UInt64 es);
@@ -52,18 +55,11 @@ public:
 	virtual UInt64 getSize(){return _size;}
 	//! return the total amount of memory allocated by the buffer
 	virtual UInt64 getMemSize(){return _size*_elem_size;}
+	//! memory allocation
 
-	//! resize an allready allocated buffer
-
-	//! This method must be allocated by the concrete implementation
-	//! of a buffer class - in other words by the child class.
-	//! \param n new number of elements in the buffer
-	virtual void resize(UInt64 n){}
-	//! initial memory allocation
-
-	//! Use this method to allocate memory the first time after
-	//! creating a buffer object. This method must be implemented
-	//! by child classes of DataBuffer.
+	//! Allocates memory for the requested number of elements.
+	//! This method must be implemented by child classes of DataBuffer.
+	//! \throws MemoryAllocationError if memory allocation failes
 	//! \param n number of elements in the buffer
 	virtual void allocate(UInt64 n){}
 
@@ -109,20 +105,6 @@ public:
 	Buffer(UInt64 n);
 	//! destructor
 	virtual ~Buffer();
-
-	//! resize the buffer
-
-	//! Reallocate memory to store n elements of type T in the Buffer. The
-	//! operation does not alter or reset the content of the buffer. If the
-	//! new size of the buffer is larger then the original one the last data value
-	//! from the original content will be copied to the newly allocated additional
-	//! positions. If the  new size is smaller then the original one, data whose
-	//! position would exceed the new size is discarded.
-	//! One should to keep in mind that resizing a buffer always requires new
-	//! memory allocation and along with this a copy process of original data
-	//! to the new memory locations. Therefore this operation should be handled with care.
-	//! \param n number of elements for which memory should be allocated
-	virtual void resize(UInt64 n);
 	//! allocate memory in the buffer
 
 	//! This method can be called if the buffer was created by the default
@@ -131,6 +113,7 @@ public:
 	//! resize method in order to change the amount of memory allocated by the buffer.
 	//! \param n number of elements in the buffer for which data should be allocated
 	virtual void allocate(UInt64 n);
+	virtual void allocate();
 	//! get the size of the buffer
 
 	//! \return number of elements of type T in the buffer
@@ -219,47 +202,6 @@ template<typename T> Buffer<T>::~Buffer(){
 	if(_data!=NULL) delete _data;
 }
 
-template<typename T> void Buffer<T>::resize(unsigned long n){
-	unsigned long i;
-	unsigned long nmax;
-
-	//check here if the buffer has already allocated memory
-	if(_data != NULL){
-		//if data has been already allocated - acquire new
-		//heap memory from the system and raise an exception if this fails
-		T *_new_data = new T[n];
-		if(_new_data == NULL){
-			//if memory allocation fails - throw an MemoryAllocationException
-				MemoryAllocationError e(std::string("Buffer<T>"),
-										std::string("Cannot allocate Buffer memory in constructor!"));
-				throw e;
-		}
-
-		//if the size of the new buffer is larger then the first
-		//elements up to _n values correspond to the original data
-		//otherwise the content of the original buffer exceeding the
-		//size of the new one will be discarded.
-		if(n>_size){
-			nmax = _size;
-		}else{
-			nmax = n;
-		}
-
-		for(i=0;i<nmax;i++){
-			_new_data[i] = _data[i];
-		}
-
-		//finally we can free the old buffer
-		delete [] _data;
-		_data = _new_data;
-		_size = n;
-
-	}else{
-		//in this case the buffer was not allocated - we can simple
-		//call the allocate() method
-		allocate(n);
-	}
-}
 
 template<typename T> void Buffer<T>::allocate(unsigned long n){
 	//allcoate memory for the buffer

@@ -60,6 +60,10 @@ std::ostream &operator<<(std::ostream &o,const TypeError &e){
 	return e.print(o);
 }
 
+std::ostream &operator<<(std::ostream &o,const RangeError &e){
+	return e.print(o);
+}
+
 //end of namespace
 }
 }

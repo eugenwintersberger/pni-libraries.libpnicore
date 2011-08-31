@@ -271,6 +271,7 @@ api_html_doc_install = build_env.Install("${DOCDIR}/api","api-doc/html")
 admin_guide_install = build_env.Install("${DOCDIR}",admin_guide)
 users_guide_install = build_env.Install("${DOCDIR}",users_guide)
 
+build_env.Alias("all",[doxygen_api_doc,admin_guide,users_guide])
 build_env.Alias("install",[api_html_doc_install,admin_guide_install,
                            users_guide_install])
 
