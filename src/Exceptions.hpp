@@ -294,6 +294,35 @@ public:
 	friend std::ostream &operator<<(std::ostream &o,const RangeError &e);
 };
 
+//! \ingroup Exceptions
+//! \brief not implemented exception
+
+//! This exception can be used to mark methods of abstract or base classes
+//! as not implemented. Such an approach can be quite usefull for debugging
+//! and development.
+class NotImplementedError:public Exception{
+public:
+	//! default construtor
+	NotImplementedError():
+		Exception("NotImplementedError"){
+	}
+
+	//! constructor
+
+	//! Constructor setting source and description of the error
+	//! \param i issuer of the exception
+	//! \param d error description
+	NotImplementedError(const String &i,const String &d):
+		Exception("NotImplementedError",i,d){
+	}
+
+	//! destructor
+	virtual ~NotImplementedError(){
+	}
+
+	friend std::ostream &operator<<(std::ostream &o,const NotImplementedError &e);
+};
+
 }
 }
 #endif
