@@ -79,10 +79,14 @@ public:
 	//! \throws MemoryAllocationError if memory allocation failes
 	//! \param n number of elements in the buffer
 	virtual void allocate();
+	virtual void free();
 
 	//! return a void pointer to the allocated memory
 	virtual void *getVoidPtr();
 	virtual const void *getVoidPtr() const;
+
+	friend bool operator==(const BufferObject &a,const BufferObject &b);
+	friend bool operator!=(const BufferObject &a,const BufferObject &b);
 };
 
 //end of namespace

@@ -61,7 +61,8 @@ void ArrayTest::testSlowArrayConstruction(){
 
 	a.setShape(s);
 	Buffer<Int32> buffer;
-	buffer.allocate(s.getSize());
+	buffer.setSize(s.getSize());
+	buffer.allocate();
 	a.setBuffer(buffer);
 
 	a(100,100) = 1000;

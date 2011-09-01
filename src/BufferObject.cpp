@@ -34,7 +34,7 @@ BufferObject::BufferObject(const BufferObject &b){
 
 	try{
 		allocate();
-	}catch(MemoryAllocationError &e){
+	}catch(MemoryAllocationError &error){
 		EXCEPTION_INIT(MemoryAllocationError,"Cannot allocate memory for data buffer!");
 		EXCEPTION_THROW();
 	}
@@ -58,7 +58,7 @@ BufferObject::BufferObject(UInt64 n,UInt64 es){
 
 	try{
 		allocate();
-	}catch(MemoryAllocationError &e){
+	}catch(MemoryAllocationError &error){
 		EXCEPTION_INIT(MemoryAllocationError,"Memory allocation for buffer failed!");
 		EXCEPTION_THROW();
 	}
@@ -74,8 +74,7 @@ BufferObject::~BufferObject(){
 	_elem_size = 0;
 	_tot_size = 0;
 
-	char *this_ptr = (char *)_ptr;
-	if(_ptr != NULL) delete [] this_ptr;
+	free();
 }
 
 //==================Methods to influence Buffer size============================
@@ -112,6 +111,13 @@ void BufferObject::allocate(){
 	}
 }
 
+void BufferObject::free(){
+	if(_ptr != NULL){
+		char *this_ptr = (char *)_ptr;
+		delete [] this_ptr;
+	}
+}
+
 void *BufferObject::getVoidPtr(){
 	return _ptr;
 }
@@ -142,6 +148,33 @@ BufferObject &BufferObject::operator=(const BufferObject &o){
 	}
 
 	return *this;
+}
+
+bool operator==(const BufferObject &a,const BufferObject &b){
+	//check the number of elements for equality
+	if(a.getSize() != b.getSize()){
+		return false;
+	}
+
+	//check the element size for equality
+	if(a.getElementSize() != b.getElementSize()){
+		return false;
+	}
+
+	//check values
+	char *a_ptr = (char *)a.getVoidPtr();
+	char *b_ptr = (char *)b.getVoidPtr();
+	for(UInt64 i=0;i<a.getMemSize();i++){
+		if(a_ptr[i] != b_ptr[i]) return false;
+	}
+
+	return true;
+}
+
+bool operator!=(const BufferObject &a,const BufferObject &b){
+	if(!(a==b)) return true;
+
+	return false;
 }
 
 //end of namespace

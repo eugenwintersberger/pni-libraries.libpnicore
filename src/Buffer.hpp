@@ -19,7 +19,6 @@ namespace pni{
 namespace utils{
 
 
-
 template<typename T> class Buffer;
 template<typename T> bool operator==(const Buffer<T> &,const Buffer<T> &);
 template<typename T> bool operator!=(const Buffer<T> &,const Buffer<T> &);
@@ -101,7 +100,7 @@ public:
 };
 
 template<typename T> Buffer<T>::Buffer():BufferObject(){
-	_elem_size = sizeof(T);
+	setElementSize((UInt64)sizeof(T));
 }
 
 template<typename T> Buffer<T>::Buffer(UInt64 n):BufferObject(n,sizeof(T)){
@@ -116,9 +115,16 @@ template<typename T> Buffer<T>::~Buffer(){
 
 
 template<typename T> Buffer<T> &Buffer<T>::operator=(const Buffer<T> &b){
+	EXCEPTION_SETUP("template<typename T> Buffer<T> &Buffer<T>::operator=(const Buffer<T> &b)");
+
 	unsigned long i;
 	if(&b != this){
-		(BufferObject)(*this) = (BufferObject)b;
+		try{
+			(BufferObject)(*this) = (BufferObject)b;
+		}catch(MemoryAllocationError &error){
+			EXCEPTION_INIT(MemoryAllocationError,"Memory allocation failed during buffer assignment!");
+			EXCEPTION_THROW();
+		}
 	}
 
 	return *this;
@@ -135,10 +141,10 @@ template<typename T> Buffer<T> &Buffer<T>::operator=(const T &d){
 template<typename T> bool operator==(const Buffer<T> &b1,const Buffer<T> &b2){
 	UInt64 i;
 
-	if(b1.getMemSize()!=b2.getMemSize()) return false;
+	if(b1.getSize()!=b2.getSize()) return false;
 
-	for(i=0;i<b1._size;i++){
-		if(b1._data[i]!=b2._data[i]) return false;
+	for(i=0;i<b1.getSize();i++){
+		if(b1[i]!=b2[i]) return false;
 	}
 
 	return true;

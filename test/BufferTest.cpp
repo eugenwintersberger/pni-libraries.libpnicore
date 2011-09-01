@@ -2,7 +2,7 @@
 
 #include<cppunit/extensions/HelperMacros.h>
 
-#include "libpniutils_buffer.hpp"
+#include "BufferTest.hpp"
 #include "Buffer.hpp"
 
 //register the test at the test suite
@@ -21,14 +21,16 @@ void BufferTest::testAllocation(){
 	unsigned long n;
 
 	n = 100;
-	dbuffer.allocate(n);
+	dbuffer.setSize(n);
+	dbuffer.allocate();
 	CPPUNIT_ASSERT(dbuffer.getSize()==n);
 	CPPUNIT_ASSERT(dbuffer.getMemSize()==(sizeof(double)*n));
 
 	for(unsigned long i=0;i<n;i++) dbuffer[i] = (double)i;
 
 	n = 100000000;
-	dbuffer.resize(n);
+	dbuffer.setSize(n);
+	dbuffer.allocate();
 	CPPUNIT_ASSERT(dbuffer.getSize()==n);
 	CPPUNIT_ASSERT(dbuffer.getMemSize()==(sizeof(double)*n));
 
