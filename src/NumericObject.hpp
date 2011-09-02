@@ -44,21 +44,10 @@ public:
 	NumericObject(const String &u);
 	//! constructor
 
-	//! Constructor setting only the physical unit of the object.
-	//! \param u unit as character array
-	NumericObject(const char *u);
-	//! constructor
-
 	//! Constructor setting name and unit of the object.
 	//! \param n object name as String
 	//! \param u object unit as String
 	NumericObject(const String &n,const String &u);
-	//! constructor
-
-	//! Constructor setting name and physical unit of the object.
-	//! \param n object name as character array
-	//! \param u object unit as character array
-	NumericObject(const char *n,const char *u);
 	//! constructor
 
 	//! This constructor sets the object's name, physical unit, and description.
@@ -66,13 +55,6 @@ public:
 	//! \param u object unit as String
 	//! \param d object description as String
 	NumericObject(const String &n,const String &u,const String &d);
-	//! constructor
-
-	//! This constructor sets the object's name, physical unit, and description.
-	//! \param n object name as character array
-	//! \param u object unit as character array
-	//! \param d object description as character array
-	NumericObject(const char *n,const char *u,const char *d);
 	//! destructor
 	virtual ~NumericObject();
 
@@ -81,11 +63,6 @@ public:
 	//! Returns a copy of the unit string of the object.
 	//! \return - the unit as String object
 	virtual String getUnit() const;
-	//! set the physical unit
-
-	//! Set the physical unit string
-	//! \param u char* to the unit string.
-	virtual void setUnit(const char *u);
 	//! set the physical unit
 
 	//! Set the physical unit of the object.

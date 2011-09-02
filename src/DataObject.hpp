@@ -47,39 +47,45 @@ public:
 	//! \param n object name as String
 	//! \param d object description as String
 	DataObject(const String &n,const String &d);
-	//! constructor
-
-	//! Constructor setting only the name of the object using a
-	//! C-type string.
-	//! \param n object name as character array
-	DataObject(const char *n);
-	//! constructor
-
-	//! Constructor setting name and description of an object using
-	//! C-type strings.
-	//! \param n object name as character array
-	//! \param d object description as character array
-	DataObject(const char *n,const char *d);
 	//! destructor
 	virtual ~DataObject();
 
-	//! set the name of the object as String object
+	//! set name
+
+	//! Set the name of the object.
+	//! \param n name of the object
 	virtual void setName(const String &n);
-	//! set the name of the object as pointer to char
-	virtual void setName(const char *n);
-	//! get the name of the data object
+
+	//! get name
+
+	//! Returns the name of the object.
+	//! \return object name
 	virtual const String &getName() const;
 
-	//! set the object's description as String object
+	//! set description
+
+	//! Set the description for the.
+	//! \param d object's description
 	virtual void setDescription(const String &d);
-	//! set the object's description as pointer to char
-	virtual void setDescription(const char *d);
-	//! return the description of the object as String
+
+	//! get description
+
+	//! Gets the description of the object.
+	//! \return object description
 	virtual const String &getDescription() const;
 
-	//! overloaded assignment operator
+	//! assignment operator
+
+	//! Assignment operator setting the values of an existing object
+	//! to the value of an already existing one.
 	DataObject &operator=(const DataObject &o);
-	//! overloaded output operator
+
+	//! print object
+
+	//! Prints object data to an output stream.
+	//! \param os output stream
+	//! \param o object to print
+	//! \return output stream
 	friend std::ostream &operator<<(std::ostream &os,const DataObject &o);
 
 };

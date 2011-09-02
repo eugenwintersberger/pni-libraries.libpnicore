@@ -29,15 +29,6 @@ DataObject::DataObject(const std::string &n,const std::string &d){
 	_description = d;
 }
 
-DataObject::DataObject(const char *n){
-	_name = String(n);
-}
-
-DataObject::DataObject(const char *n,const char *d){
-	_name = String(n);
-	_description = String(d);
-}
-
 DataObject::~DataObject() {
 	//empty the string variables
 	_name.clear();
@@ -48,20 +39,12 @@ void DataObject::setName(const std::string &n){
 	_name = n;
 }
 
-void DataObject::setName(const char *n){
-	_name = String(n);
-}
-
 const String &DataObject::getName() const{
 	return _name;
 }
 
 void DataObject::setDescription(const String &d){
 	_description = d;
-}
-
-void DataObject::setDescription(const char *d){
-	_description = String(d);
 }
 
 const String &DataObject::getDescription() const{
