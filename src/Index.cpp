@@ -34,16 +34,21 @@ Index::Index(UInt32 rank){
 Index::Index(const Index &o){
 	EXCEPTION_SETUP("Index::Index(const Index &o)");
 
+	//default initialization of the member variables
+	_rank = 0;
+	_index = NULL;
+
+	//if the rank of o is not zero
 	if(o._rank != 0){
 		_index = NULL;
-		_index = new UInt32[o._rank];
+		_index = new UInt32[o.getRank()];
 		if(_index == NULL){
 			EXCEPTION_INIT(MemoryAllocationError,"Cannot allocate memory for index buffer!");
 			EXCEPTION_THROW();
 		}
-	}else{
-		_index = NULL;
-		_rank = 0;
+		_rank = o.getRank();
+		//need to copy the content of the index
+		for(UInt64 i=0;i<getRank();i++) _index[i] = o[i];
 	}
 }
 
@@ -114,7 +119,7 @@ void Index::setRank(UInt32 rank){
 		if(_index != NULL) delete [] _index;
 
 		_index = new UInt32[rank];
-		if(_index != NULL){
+		if(_index == NULL){
 			EXCEPTION_INIT(MemoryAllocationError,"Cannot allocate memory for index buffer!");
 			EXCEPTION_THROW();
 		}
@@ -156,8 +161,8 @@ void Index::increment(UInt32 index){
 
 	try{
 		(*this)[index]++;
-	}catch(IndexError &e){
-		EXCEPTION_INIT(IndexError,e.getDescription());
+	}catch(IndexError &error){
+		EXCEPTION_INIT(IndexError,error.getDescription());
 		EXCEPTION_THROW();
 	}
 }
@@ -172,11 +177,35 @@ void Index::decrement(UInt32 index){
 		}
 
 		(*this)[index]--;
-	}catch(IndexError &e){
-		EXCEPTION_INIT(IndexError,e.getDescription());
+	}catch(IndexError &error){
+		EXCEPTION_INIT(IndexError,error.getDescription());
 		EXCEPTION_THROW();
 	}
 
+}
+
+std::ostream &operator<<(std::ostream &o,const Index &index){
+	o<<"Index ("<<index.getRank()<<"): ";
+	for(UInt32 i=0;i<index.getRank();i++){
+		o<<index[i]<<" ";
+	}
+
+	return o;
+}
+
+bool operator==(const Index &i1,const Index &i2){
+	if(i1.getRank() != i2.getRank()) return false;
+
+	for(UInt32 i=0;i<i1.getRank();i++){
+		if(i1[i] != i2[i]) return false;
+	}
+
+	return true;
+}
+
+bool operator!=(const Index &i1,const Index &i2){
+	if(i1 == i2) return false;
+	return true;
 }
 
 //end of namespace

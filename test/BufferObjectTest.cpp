@@ -57,15 +57,21 @@ void BufferObjectTest::testAccess(){
 void BufferObjectTest::testComparison(){
 	BufferObject a,b;
 
-	a.setSize(100);
-	a.setElementSize(1);
-	a.allocate();
+	CPPUNIT_ASSERT_NO_THROW(a.setSize(100));
+	CPPUNIT_ASSERT_NO_THROW(a.setElementSize(1));
+	CPPUNIT_ASSERT_NO_THROW(a.allocate());
 
-	b.setSize(200);
-	b.setElementSize(2);
-	b.allocate();
+	CPPUNIT_ASSERT_NO_THROW(b.setSize(200));
+	CPPUNIT_ASSERT_NO_THROW(b.setElementSize(2));
+	CPPUNIT_ASSERT_NO_THROW(b.allocate());
 
 	CPPUNIT_ASSERT(a!=b);
+
+	CPPUNIT_ASSERT_NO_THROW(b.setSize(100));
+	CPPUNIT_ASSERT_NO_THROW(b.setElementSize(1));
+	CPPUNIT_ASSERT_NO_THROW(b.allocate());
+
+	CPPUNIT_ASSERT(a==b);
 
 }
 
@@ -97,10 +103,32 @@ void BufferObjectTest::testAllocation(){
 }
 
 void BufferObjectTest::testAssignment(){
+	BufferObject a,b;
 
+	CPPUNIT_ASSERT_NO_THROW(a.setSize(100));
+	CPPUNIT_ASSERT_NO_THROW(a.setElementSize(1));
+	CPPUNIT_ASSERT_NO_THROW(a.allocate());
+
+	CPPUNIT_ASSERT_NO_THROW(b.setSize(200));
+	CPPUNIT_ASSERT_NO_THROW(b.setElementSize(2));
+	CPPUNIT_ASSERT_NO_THROW(b.allocate());
+
+	CPPUNIT_ASSERT(a!=b);
+
+	a = b;
+
+	CPPUNIT_ASSERT(a==b);
 }
 
 void BufferObjectTest::testCopyConstructor(){
+	BufferObject a;
+	CPPUNIT_ASSERT_NO_THROW(a.setSize(100));
+	CPPUNIT_ASSERT_NO_THROW(a.setElementSize(1));
+	CPPUNIT_ASSERT_NO_THROW(a.allocate());
+
+	BufferObject b(a);
+
+	CPPUNIT_ASSERT(a==b);
 
 }
 

@@ -4,7 +4,8 @@
 
 #include "PNITypes.hpp"
 #include "ArrayShape.hpp"
-#include "libpniutils_arrayshape.hpp"
+#include "ArrayShapeTest.hpp"
+#include "Index.hpp"
 
 CPPUNIT_TEST_SUITE_REGISTRATION(ArrayShapeTest);
 
@@ -86,6 +87,7 @@ void ArrayShapeTest::testComparison(){
 void ArrayShapeTest::testOffset(){
 	ArrayShape s1(_r1,_s1);
 	ArrayShape s2(_r2,_s2);
+	Index index;
 	UInt32 *i1,*i2;
 
 	i1 = new UInt32 [_r1];
@@ -96,5 +98,16 @@ void ArrayShapeTest::testOffset(){
 
 	CPPUNIT_ASSERT(s1.getOffset(i1)==9);
 	CPPUNIT_ASSERT(s2.getOffset(i2)==8);
+
+	index.setRank(s1.getRank());
+	index[0] = 2;
+	index[1] = 1;
+	CPPUNIT_ASSERT(s1.getOffset(index)==9);
+
+	index.setRank(s2.getRank());
+	index[0] = 0;
+	index[1] = 1;
+	index[2] = 3;
+	CPPUNIT_ASSERT(s2.getOffset(index)==8);
 
 }

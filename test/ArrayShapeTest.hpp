@@ -13,6 +13,7 @@ class ArrayShapeTest: public CppUnit::TestFixture {
 	CPPUNIT_TEST_SUITE(ArrayShapeTest);
 	CPPUNIT_TEST(testConstruction);
 	CPPUNIT_TEST(testComparison);
+	//CPPUNIT_TEST(testOffset);
 	CPPUNIT_TEST_SUITE_END();
 private:
 	unsigned int *_s1;

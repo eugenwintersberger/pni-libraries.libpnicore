@@ -98,6 +98,30 @@ public:
 	//! \throws IndexError if index exceeds the rank of the Index object
 	//! \return index value
 	UInt32 &operator[](UInt32 index);
+
+	//! output operator
+
+	//! Prints the content of the index object to an output stream.
+	//! \param o reference to a stream object
+	//! \param index reference to the Index object to print
+	//! \return reference to an outstream object
+	friend std::ostream &operator<<(std::ostream &o,const Index &index);
+
+	//! equality operator
+
+	//! Returns true if the rank and the indices of two Index object are identical.
+	//! \param i1 reference to the first Index object
+	//! \param i2 reference to the second Index object
+	//! \return true if equal false otherwise
+	friend bool operator==(const Index &i1,const Index &i2);
+	//! inequality operator
+
+	//! Is the counterpart of the equality operator.
+	//! \see bool operator==(const Index &i1,const Index &i2)
+	//! \param i1 reference to the first Index object
+	//! \param i2 reference to the second Index object
+	//! \return true if the tow object are not equal
+	friend bool operator!=(const Index &i1,const Index &i2);
 };
 
 //end of namespace

@@ -75,16 +75,16 @@ public:
 				         std::numeric_limits<Float32>::max());
 	}
 
-	static bool isInteger(){
-		return false;
-	}
-
 	static bool isSigned(){
 		return true;
 	}
 
 	static bool isComplex(){
 		return true;
+	}
+
+	static bool isInteger(){
+		return false;
 	}
 };
 
@@ -120,7 +120,6 @@ public:
 	static bool isInteger(){
 		return false;
 	}
-
 };
 
 //! \ingroup Data-objects
@@ -155,7 +154,6 @@ public:
 	static bool isInteger(){
 		return false;
 	}
-
 };
 
 

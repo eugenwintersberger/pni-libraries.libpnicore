@@ -7,6 +7,7 @@
 #include <boost/shared_ptr.hpp>
 
 #include "Exceptions.hpp"
+#include "Index.hpp"
 #include "PNITypes.hpp"
 
 
@@ -58,8 +59,6 @@ class ArrayShape{
         //! once the shape is changed in a way so that the size is changed.
         void _compute_size();
     public:
-        static const MemoryAllocationError DIMSTRIDE_ALLOC_ERROR; //!< error: cannot allocate buffer for dimension strides
-        static const MemoryAllocationError SHAPE_ALLOC_ERROR;     //!< error: cannot allocate buffer for array dimensions
 
         typedef boost::shared_ptr<ArrayShape> sptr;  //!< smart pointer to an ArrayShape object
         //! default constructor
@@ -126,6 +125,8 @@ class ArrayShape{
         //! \param *index pointer to an array of element indices
         virtual UInt64 getOffset(const UInt32 *index);
         
+        virtual UInt64 getOffset(const Index &i);
+
         //the assignment operator must be a member function
         //and cannot be declared as a friend function
         //! assignment operator

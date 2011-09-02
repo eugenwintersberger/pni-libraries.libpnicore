@@ -54,6 +54,7 @@ BufferObject::BufferObject(UInt64 n,UInt64 es){
 	//initialize member variables
 	_size = n;
 	_elem_size = es;
+	_compute_total_size();
 	_ptr = NULL;
 
 	try{
@@ -99,15 +100,39 @@ UInt64 BufferObject::getSize() const{
 void BufferObject::allocate(){
 	EXCEPTION_SETUP("void BufferObject::allocate()");
 
+	//before allocation we check if all values are set correctly
+	if( _elem_size == 0){
+		EXCEPTION_INIT(MemoryAllocationError,"Element size for the buffer not set!");
+		EXCEPTION_THROW();
+	}
+
+	if(_size == 0){
+		EXCEPTION_INIT(MemoryAllocationError,"Number of elements for the buffer not set!");
+		EXCEPTION_THROW();
+	}
+
+	if(_tot_size==0){
+		EXCEPTION_INIT(MemoryAllocationError,"No memory must be allocated at all - check initialization!");
+		EXCEPTION_THROW();
+	}
+
+	//free memory if it is already allocated
 	if(_ptr != NULL){
 		char *this_ptr = (char *)_ptr;
 		delete [] this_ptr;
 	}
 
+	//allocate new memory and raise an exception if this fails
 	_ptr = new char[_tot_size];
 	if(_ptr == NULL){
 		EXCEPTION_INIT(MemoryAllocationError,"Memory allocation for buffer failed!");
 		EXCEPTION_THROW();
+	}
+
+	//initialize newly allocated memory
+	char *this_ptr = (char *)_ptr;
+	for(UInt64 i=0;i<getMemSize();i++){
+		this_ptr[i] = 0;
 	}
 }
 
@@ -116,6 +141,8 @@ void BufferObject::free(){
 		char *this_ptr = (char *)_ptr;
 		delete [] this_ptr;
 	}
+	//need to reset the pointer to NULL here
+	_ptr = NULL;
 }
 
 void *BufferObject::getVoidPtr(){
@@ -129,17 +156,30 @@ const void *BufferObject::getVoidPtr() const{
 
 //====================Operators=================================================
 BufferObject &BufferObject::operator=(const BufferObject &o){
+	EXCEPTION_SETUP("BufferObject &BufferObject::operator=(const BufferObject &o)");
+
+	UInt64 size = o.getSize();
+	UInt64 esize = o.getElementSize();
+
 	if(this != &o){
 		//have two possibilities here
 		if(getMemSize() != o.getMemSize()){
 			//need to reallocate memory
+			void *ptr = new char[size*esize];
+			if(ptr == NULL){
+				EXCEPTION_INIT(MemoryAllocationError,"Memory allocation for buffer failed during assignment!");
+				EXCEPTION_THROW();
+			}
 
-		}else{
-			//only need to copy data
-			_size = o._size;
-			_elem_size = o._elem_size;
-			_compute_total_size();
+			//if memory allocation was successful we have to free the actually
+			//allocated buffer and assigne the new address
+			free();
+			_ptr = ptr;
 		}
+
+		_size = size;
+		_elem_size = esize;
+		_compute_total_size();
 
 		//in the end in all cases we need to copy data
 		char *this_ptr = (char *)_ptr;

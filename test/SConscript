@@ -8,9 +8,10 @@ test_env.Append(CPPPATH=["../src/"])
 
 sources_list = ["pniutilstest.cpp"]
 sources_list.extend(["BufferObjectTest.cpp"])
-#sources_list.extend(["BufferTest.cpp"])
+sources_list.extend(["BufferTest.cpp"])
+sources_list.extend(["IndexTest.cpp"])
 #sources_list.extend(["libpniutils_array.cpp"])
-#sources_list.extend(["libpniutils_arrayshape.cpp"])
+sources_list.extend(["ArrayShapeTest.cpp"])
 #sources_list.extend(["libpniutils_scalar.cpp"])
 #sources_list.extend(["libpniutils_typeinfo.cpp"])
 #sources_list.extend(["InplaceArithmeticsTest.cpp"])

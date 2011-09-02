@@ -14,32 +14,23 @@
 #include "Exceptions.hpp"
 #include "PNITypes.hpp"
 #include "BufferObject.hpp"
+#include "TypeInfo.hpp"
 
 namespace pni{
 namespace utils{
 
+//! \addtogroup Data-objects
+//! @{
 
-template<typename T> class Buffer;
-template<typename T> bool operator==(const Buffer<T> &,const Buffer<T> &);
-template<typename T> bool operator!=(const Buffer<T> &,const Buffer<T> &);
+//! \brief buffer template
 
-//! buffer template
-
-//! Class Buffer describes a contiguous region of memory holding
-//! data. The class is implemented as a template and can hold all
-//! kind of data. Memory is allocated in a way that it is always
-//! aligned correctly to optimize access performance.
-//! The basic idea of this class is to hide details of memory allocation
-//! for a buffer from the user. Until now there is not too much secret in
-//! this class. Since we assume actually only numerical values to be
-//! stored the compiler should ensure correct memory alignment in any case.
-//!
-//! Future implementations of this structure may include thread safety using
-//! the BOOST threading classes.
+//! This template acts as a type-safe wrapper for the BufferObject class. It allows
+//! typed access to data stored in the BufferObject. The template itself
+//! holds no data at all. It simply wraps the access to BufferObject.
 template<typename T>class Buffer:public BufferObject{
 protected:
 public:
-	typedef boost::shared_ptr<Buffer<T> > sptr; //smart pointer
+	typedef boost::shared_ptr<Buffer<T> > sptr; //!< smart pointer to a typed buffer
 	//! default constructor
 
 	//! If this constructor is used no memory will be allocated. For that purpose
@@ -57,47 +48,75 @@ public:
 	//! destructor
 	virtual ~Buffer();
 
+	//! buffer conversion
 
-	//! \return pointer to the memory allocated by the buffer
-	const T* getPtr() const { return (T *)_ptr; }
-	//! return a pointer to the data
+	//! This method allows conversion between different types of typed buffers.
+	//! The method can be used for instance to convert an existing integer buffer to a float buffer.
+	//! This method works only for numeric types defined in PNITypes.hpp.
+	//! However, there are several restrictions that you should keep in mind before
+	//! using this method
+	//! - complex numbers can only be converted to other complex numbers
+	//! - the size of the target type must be equal or larger than that of the source
+	//! - signed numbers can only be converted to unsigned if the source buffer contains no negative values
+	//!
+	//! If one of these conditions is not satisfied an exception will be raised.
+	//! If necessary the target buffer will be reallocated to fit the size of the source buffer. This
+	//! must not be a performance issue in cases where the target buffer has not been initialized yet.
+	//! \throws TypeError if condition 1 and to are not meet
+	//! \throws RangeError if you try to convert to an unsigned type though the buffer holds negative values
+	//! \throws MemoryAllocationError
+	template <typename U> void convert(Buffer<U> &b) const;
 
-	//! \return pointer to the memory allocated by the buffer
-	T* getPtr() { return (T *)_ptr;}
+	//! return data pointer
+
+	//! Returns a typed const pointer to the allocated memory. The pointer must not be used to
+	//! modify data values.
+	//! \return pointer to allocated memory
+	const T* getPtr() const { return (T *)getVoidPtr(); }
+	//! return data pointer
+
+	//! Returns a typed pointer to the allocated memory. The pointer can be used for altering the
+	//! buffer content.
+	//! \return pointer to allocated memory
+	T* getPtr() { return (T *)getVoidPtr();}
 
 	//! [] operator for read and write access
 
 	//! This operator will be used in expressions where the buffer access stands
 	//! on the left side of an assignment operation. In other words - when data should
 	//! be written to the buffer.
+	//! \throws IndexError if n is larger than the number of elements in the buffer
+	//! \param n index of element to fetch
+	//! \return reference to the n-th element in the buffer
 	T& operator[](UInt64 n);
 	//! [] operator for read only access
 
 	//! This operator will be used in expressions where read only access to the
 	//! data values in the buffer is required.
+	//! \throws IndexError if n is larger than the number of elements in the buffer
+	//! \param n index of the element to fetch
+	//! \return value of the buffer at position n
 	T operator[](UInt64 n) const;
-	//! overloaded assigment operator
+	//! assigment operator
 
-	//! the buffer is initialized with the content of an other buffer.
-	//! If the size of the two buffers matches data is only copied. Otherwise
-	//! memory will be reallocated in order to match the size of buffer b.
+	//! The buffer is initialized with the content of an other buffer.
+	//! If the size of the buffers do not match new memory is allocated.
+	//! \throws MemoryAllocationError if memory allocation fails
+	//! \param b Buffer whose content will be assigned to this buffer
+	//! \return reference to a Buffer<T> object
 	Buffer<T> &operator=(const Buffer<T> &b);
-	//! initialization by a single value
+	//! assignment operator
 
-	//! The assignment operator (=) can be used to set all values of the buffer to a
-	//! single value v.
+	//! This special form of the assignment operator can be used to assign
+	//! a single value to all elements of the buffer. Thus, it is quite useful
+	//! for initializing a buffer object.
+	//! \param v value which to assigne to all buffer elements
+	//! \return reference to a buffer object
 	Buffer<T> &operator=(const T &v);
 
-	//! == equality operator
-
-	//! Two buffers are considered equal if their size and content matches.
-	friend bool operator== <> (const Buffer<T> &b1,const Buffer<T> &b2);
-	//! != inequality operator
-
-	//! The inverse of the == operator.
-	friend bool operator!= <> (const Buffer<T> &b1,const Buffer<T> &b2);
-
 };
+
+//! @}
 
 template<typename T> Buffer<T>::Buffer():BufferObject(){
 	setElementSize((UInt64)sizeof(T));
@@ -112,15 +131,67 @@ template<typename T> Buffer<T>::Buffer(const Buffer<T> &b):BufferObject(b){
 template<typename T> Buffer<T>::~Buffer(){
 }
 
+template<typename T>
+template<typename U> void Buffer<T>::convert(Buffer<U> &b) const{
+	EXCEPTION_SETUP("template<typename T> template<typename U> Buffer<U> Buffer<T>::convert() const");
+	//check if type conversion is possible
+	const Buffer<T> &s = *this;
 
+	//you cannot convert a complex number fo a non-complex number
+	if((TypeInfo<T>::isComplex())&&(!TypeInfo<U>::isComplex())){
+		EXCEPTION_INIT(TypeError,"You try to convert a complex to a non-complex number!");
+		EXCEPTION_THROW();
+	}
+
+	//you cannot convert a larger type to a smaller type
+	if(TypeInfo<T>::getSize() > TypeInfo<U>::getSize()){
+		EXCEPTION_INIT(TypeError,"Sizes of types do not match!");
+		EXCEPTION_THROW();
+	}
+
+	//check if the target is an integer while the source a float
+	if((TypeInfo<U>::isInteger())&&(!TypeInfo<T>::isInteger())){
+		EXCEPTION_INIT(TypeError,"You try to convert a float buffer to an integer buffer - does not work");
+		EXCEPTION_THROW();
+	}
+
+	//check if sign is ok - you cannot convert a buffer of a signed type to an unsigned
+	//the other direction always works
+	if((!TypeInfo<U>::isSigned())&&(TypeInfo<T>::isSigned())){
+		//want to convert a signed type to an unsigned - we have to check if
+		//there are negative values in this buffer
+		for(UInt64 i = 0; i<getSize();i++){
+			if(s[i] < 0){
+				EXCEPTION_INIT(RangeError,"You try to convert a signed to an unsigned buffer but the source contains negative numbers!");
+				EXCEPTION_THROW();
+			}
+		}
+	}
+
+	//reallocate the target buffer if necessary.
+	if(b.getSize()!=getSize()){
+		b.free();
+		b.setSize(getSize());
+		try{
+			b.allocate();
+		}catch(MemoryAllocationError &error){
+			EXCEPTION_INIT(MemoryAllocationError,"Memory allocation failed during buffer conversion!");
+			EXCEPTION_THROW();
+		}
+	}
+
+	for(UInt64 i=0;i<b.getSize();i++) b[i] = s[i];
+
+}
 
 template<typename T> Buffer<T> &Buffer<T>::operator=(const Buffer<T> &b){
 	EXCEPTION_SETUP("template<typename T> Buffer<T> &Buffer<T>::operator=(const Buffer<T> &b)");
 
-	unsigned long i;
 	if(&b != this){
 		try{
-			(BufferObject)(*this) = (BufferObject)b;
+			BufferObject &this_buffer = (BufferObject &)(*this);
+			BufferObject &that_buffer = (BufferObject &)(b);
+			this_buffer = that_buffer;
 		}catch(MemoryAllocationError &error){
 			EXCEPTION_INIT(MemoryAllocationError,"Memory allocation failed during buffer assignment!");
 			EXCEPTION_THROW();
@@ -138,28 +209,6 @@ template<typename T> Buffer<T> &Buffer<T>::operator=(const T &d){
 	return *this;
 }
 
-template<typename T> bool operator==(const Buffer<T> &b1,const Buffer<T> &b2){
-	UInt64 i;
-
-	if(b1.getSize()!=b2.getSize()) return false;
-
-	for(i=0;i<b1.getSize();i++){
-		if(b1[i]!=b2[i]) return false;
-	}
-
-	return true;
-}
-
-template<typename T> bool operator!=(const Buffer<T> &b1,const Buffer<T> &b2){
-	UInt64 i;
-
-	if(!(b1==b2)){
-		return true;
-	}
-
-	return false;
-}
-
 template<typename T> T& Buffer<T>::operator[](UInt64 n){
 	EXCEPTION_SETUP("template<typename T> T& Buffer<T>::operator[](unsigned long n)");
 
@@ -168,7 +217,7 @@ template<typename T> T& Buffer<T>::operator[](UInt64 n){
 		EXCEPTION_THROW();
 	}
 
-	return ((T *)getVoidPtr())[n];
+	return (getPtr()[n]);
 }
 
 template<typename T> T Buffer<T>::operator[](UInt64 n) const {
@@ -178,11 +227,11 @@ template<typename T> T Buffer<T>::operator[](UInt64 n) const {
 		EXCEPTION_INIT(IndexError,"Index must not be larger or equal the size of the buffer!");
 		EXCEPTION_THROW();
 	}
-	return ((T *)getVoidPtr())[n];
+	return (getPtr()[n]);
 }
 
 
-//! @}
+
 //end of namespace
 }
 }
