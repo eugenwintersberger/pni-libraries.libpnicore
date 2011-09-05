@@ -14,9 +14,13 @@ class ScalarTest : public CppUnit::TestFixture{
     CPPUNIT_TEST_SUITE(ScalarTest);
     CPPUNIT_TEST(testConstructors);
 
-    CPPUNIT_TEST(testCharOperations);
-    CPPUNIT_TEST(testUCharOperations);
+    //CPPUNIT_TEST(testCharOperations);
+    //CPPUNIT_TEST(testUCharOperations);
     CPPUNIT_TEST(testConversion);
+    CPPUNIT_TEST(testAssignment);
+    CPPUNIT_TEST(testSetGetValue);
+    CPPUNIT_TEST(testBinaryAddOperation);
+    CPPUNIT_TEST(testUnaryAddOperation);
     CPPUNIT_TEST_SUITE_END();
     private:
         //create some variables of native types
@@ -43,8 +47,10 @@ class ScalarTest : public CppUnit::TestFixture{
         void setUp();
         
         void testConstructors();
-        void testCharOperations();
-        void testUCharOperations();
+        void testAssignment();
+        void testSetGetValue();
+        void testBinaryAddOperation();
+        void testUnaryAddOperation();
         void testConversion();
 };
 

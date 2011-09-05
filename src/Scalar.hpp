@@ -24,10 +24,9 @@ template<typename T> class Scalar;
 template<typename T> std::ostream &operator<<(std::ostream &o,
 		const Scalar<T> &v);
 
-template<typename T> Scalar<T>
-		operator+(const Scalar<T> &a, const Scalar<T> &b);
-template<typename T> Scalar<T> operator+(const T& a, const Scalar<T> &b);
-template<typename T> Scalar<T> operator+(const Scalar<T> &a, const T&b);
+
+
+
 
 template<typename T> Scalar<T>
 		operator-(const Scalar<T> &a, const Scalar<T> &b);
@@ -58,11 +57,26 @@ template<typename T> bool operator==(const Scalar<T> &a, const T& b);
 //! To make such a template useful it must not only provide support copy and
 //! assignment operations, in addition full support for basic arithmetic operations
 //! must be available.
+//!
+//! In connection with the Scalar object the assignment and conversion operator
+//! need some special care.
+//! The assignment operator comes in several flavors. Basically two cases
+//! of assignment involving a Scalar<T> object must be considered
+//! - an object of type Scalar<T> is assigned to an other object of type Scalar<T>
+//! - an object of type T is assigned to an object of type Scalar
+//!
+//! Thus, the assignment operator handles all cases where the Scalar object is
+//! the l-value of an expression. Indeed the assignment operator must also
+//! handle situations where the r-value of such an expression has a different
+//! data-type than T. This is done by templates.
+//!
+//! An other situation is that the l-value of an expression is a simple variable
+//! of native type T and the r-value an object of type Scalar<T>. This is
+//! managed by the conversion operator. In cases where the type of the r-value and
+//! the l-value differ there should be no problem aslong as there is an implicit
+//! conversion between the two types.
 template<typename T> class Scalar: public ScalarObject {
 private:
-	//method raises an exception if the two types are not compatible
-	template<typename U> void _type_is_compatible(const U &v) const;
-protected:
 	T _value; //!< object holding the value of the Scalar object
 public:
 	typedef boost::shared_ptr<Scalar<T> > sptr;
@@ -110,44 +124,79 @@ public:
 	virtual ~Scalar();
 
 
-	//for the assignment operator two cases must be considered
-	//1.) An object of type Scalar is assigned to a Scalar instance
-	//2.) An object of type T is assigned to a Scalar instance
-	//basically the assignment operator handles cases where the Scalar object
-	//is an l-value of an expression.
-	//What is still missing here is the case that the r-value of the
-	//expression is of different type than T. This case still requires
-	//handling to avoid problems later on.
-
 	//! assignment operator from a variable of type T
 
 	//! Here a simple object of type T (in most cases this will be a native
 	//! variable) is assigned to the _value member of a Scalar<T> object.
 	//! This flavor of the assignment operator makes the usage of Scalar<T> objects
-	//! easy - they behave just like normal variables.
+	//! easy - they behave just like normal variables. For cases where the r-value
+	//! is not of type T there is no problem as long as there exists some implicit
+	//! type conversion between T and the type of the variable.
 	//! \param &v reference to a native variable of type T
 	Scalar<T> &operator=(const T &v);
-	//! assignment operator from a Scalar<T> object
-	template <typename U> Scalar<T> &operator=(const Scalar<U> &v);
+	template<typename U> Scalar<T> &operator=(const U &v);
+	//! assignment operator from Scalar<T>
+
+	//! This is the most trivial case. An object of type Scalar<T> is assigned
+	//! to an other object of type Scalar<T>.
 	Scalar<T> &operator=(const Scalar<T> &v);
 
-	//what cannot be done with the assignement operator:
-	//an object of type Scalar is assigned to an object of type T
-	//this is done here with the conversion operator!
-	//! conversion operator
-	operator T() {
+	//! assignment operator from a Scalar<U> to Scalar<T>
+
+	//! The most complex situation of assignment - an object of Scalar<U> is
+	//! assigned to an object of Scalar<T> where U and T are different types.
+	//! The template method performs type checking in order to figure out
+	//! if the types are compatible or not at runtime and raises an exception
+	//! if this is not the case.
+	//! \throws TypeError thrown if U cannot be assigned to T
+	//! \param v reference to an object of type Scalar<U>
+	template <typename U> Scalar<T> &operator=(const Scalar<U> &v);
+
+	//! conversion operator (read-only)
+
+	//! The conversion operator handles cases where an object of type Scalar<T> is
+	//! the r-value of an assignment expression while the l-value is a simple
+	//! variable of type T. If the l-value is not of type T there should be no
+	//! problem as long as there is an explicit conversion between the T and the
+	//! type of the l-value variable.
+	//!
+	//! This implementation of the conversion operator returns the value of
+	//! a scalar object. Thus, it cannot be used to alter the content of  the
+	//! object.
+	operator T() const{
 		return _value;
 	}
 
 	//! return the value of a Scalar object
-	T& getValue() {
-		return _value;
-	}
 
-	//! return the value of a Scalar object
+	//! Returns the value stored in the scalar Object. Since the value is returns
+	//! this method cannot be used to alter the content of a Scalar object.
+	//! Since we can use the conversion operator for the same purpose this
+	//! method was implemented just for convenience and might be useful if a
+	//! pointer to a scalar object is used.
+	//! \return value of the Scalar object
 	T getValue() const {
 		return _value;
 	}
+
+	//! set value from scalar object
+
+	//! Sets the value of the object from an other object of type Scalar<T>.
+	//! No type checking is needed in this case because the objects are of same type.
+	//! Unlike the assignment operator only the value of the two Scalar<T> objects
+	//! are equal afer a call to this method. All other attributes of the class
+	//! remain the same.
+	//! \param v reference to the object from which the value should be taken
+	void setValue(const Scalar<T> &v);
+	//! set value from variable
+
+	//! Sets the value of the object from a variable of type T. Since the variable
+	//! is of same data type than the template type of the scalar object no type
+	//! checking is needed. This method does the same as the corresponding
+	//! assignment operator.
+	//! \see Scalar<T> &operator=(const T &v)
+	//! \param v reference to a variable of type T
+	void setValue(const T &v);
 
 	//! template to set the value of a Scalar
 
@@ -181,12 +230,6 @@ public:
 	//this is no problem even if the result will be assigned to an
 	//object of type T (in this case the conversion operator
 	//does the job).
-	//! operator + for Scalar<T> + Scalar<T>
-	friend Scalar<T> operator+<> (const Scalar<T> &a, const Scalar<T> &b);
-	//! operator + for T + Scalar<T>
-	friend Scalar<T> operator+<> (const T& a, const Scalar<T> &b);
-	//! operator + for Scalar<T> + T
-	friend Scalar<T> operator+<> (const Scalar<T> &a, const T&b);
 
 	//! operator - for Scalar<T> - Scalar<T>
 	friend Scalar<T> operator-<> (const Scalar<T> &a, const Scalar<T> &b);
@@ -218,21 +261,29 @@ public:
 
 	//overload combind arithmetics and assignment operators
 	//! unary and inplace / operator for Scalar<T> /= T
-	Scalar<T> &operator/=(const T &);
+	Scalar<T> &operator/=(const T &v);
+	template<typename U> Scalar<T> &operator/=(const U &v);
 	//! unary and inplace / operator for Scalar<T> /= Scalar<T>
 	Scalar<T> &operator/=(const Scalar<T> &v);
+	template<typename U> Scalar<T> &operator/=(const Scalar<U> &v);
 	//! unary and inplace + operator for Scalar<T> += T
 	Scalar<T> &operator+=(const T &v);
+	template<typename U> Scalar<T> &operator+=(const U &v);
 	//! unary and inplace + operator for Scalar<T> += Scalar<T>
 	Scalar<T> &operator+=(const Scalar<T> &v);
+	template<typename U> Scalar<T> &operator+=(const Scalar<U> &v);
 	//! unary and inplace - operator for Scalar<T> -= T
 	Scalar<T> &operator-=(const T &v);
+	template<typename U> Scalar<T> &operator-=(const U &v);
 	//! unary and inplace - operator for Scalar<T> -= Scalar<T>
 	Scalar<T> &operator-=(const Scalar<T> &v);
+	template<typename U> Scalar<T> &operator-=(const Scalar<U> &v);
 	//! unary and inplace * operator for Scalar<T> *= T
 	Scalar<T> &operator*=(const T &v);
+	template<typename U> Scalar<T> &operator*=(const U &v);
 	//! unary and inplace * operator for Scalar<T> *= Scalar<T>
 	Scalar<T> &operator*=(const Scalar<T> &v);
+	template<typename U> Scalar<T> &operator*=(const Scalar<U> &v);
 
 	//! get a void pointer to the data
 	virtual void *getVoidPtr(){
@@ -246,37 +297,7 @@ public:
 };
 
 //==================private check methods==================================================
-template<typename T>
-template<typename U> void Scalar<T>::_type_is_compatible(const U &v) const{
-	EXCEPTION_SETUP("template<typename T> template<typename U> bool Scalar<T>::_type_is_compatible()");
 
-	//one cannot assign a complex number to a non-complex float number
-	if((!TypeInfo<T>::isComplex())&&(TypeInfo<U>::isComplex())){
-		EXCEPTION_INIT(TypeError,"Cannot convert a complex scalar to a non complex type!");
-		EXCEPTION_THROW();
-	}
-
-	//one cannot assign securely assign a float number to an integer
-	if((TypeInfo<T>::isInteger())&&(!TypeInfo<U>::isInteger())){
-		EXCEPTION_INIT(TypeError,"Cannot convert a float value to an integer!");
-		EXCEPTION_THROW();
-	}
-
-	//in general we can assign values only to numbers
-	if(TypeInfo<T>::getSize() < TypeInfo<U>::getSize()){
-		EXCEPTION_INIT(SizeMissmatchError,"Cannot convert scalar to a smalle type!");
-		EXCEPTION_THROW();
-	}
-
-	//if we made it until here we have to check for sign
-	if((!TypeInfo<T>::isSigned())&&(TypeInfo<T>::isSigned())){
-		//we have to check the size of the
-		if(v<0){
-			EXCEPTION_INIT(RangeError,"Cannot assign a negative number to an unsigned type!");
-			EXCEPTION_THROW();
-		}
-	}
-}
 
 //======================Constructors and destructors=======================================
 //default constructor
@@ -324,69 +345,144 @@ template<typename T> Scalar<T>::~Scalar() {
 }
 
 //==========methods for accessing the data of a scalar in a typesafe way===================
+template<typename T> void Scalar<T>::setValue(const T &v){
+	_value = v;
+}
+template<typename T> void Scalar<T>::setValue(const Scalar<T> &v){
+	EXCEPTION_SETUP("template<typename T> void Scalar<T>::setValue(const Scalar<T> &v)");
+
+	setValue(v.getValue());
+}
+
 template<typename T> template<typename U> void Scalar<T>::setValue(const U &v){
+	EXCEPTION_SETUP("template<typename T> template<typename U> void Scalar<T>::setValue(const U &v)");
+
+	try{
+		TypeInfo<T>::isCompatibleForAssignment(v);
+	}catch(...){
+		EXCEPTION_INIT(TypeError,"Cannot assign value due to incompatible types!");
+		EXCEPTION_THROW();
+	}
+
 	_value = (T)v;
 
 }
 
 template<typename T> template<typename U> void Scalar<T>::setValue(const Scalar<U> &s){
-	U v = s._value();
+	EXCEPTION_SETUP("template<typename T> template<typename U> void Scalar<T>::setValue(const Scalar<U> &s)");
 
-	setValue(v);
+	try{
+		setValue(s.getValue());
+	}catch(...){
+		EXCEPTION_INIT(TypeError,"Cannot assign values!");
+		EXCEPTION_THROW();
+	}
 }
 
 //======================unary arithmetic operators=========================================
 template<typename T> Scalar<T>& Scalar<T>::operator/=(const T &v) {
-	*this = *this / v;
+
+	_value /= v;
+	return *this;
+}
+
+template<typename T>
+template<typename U> Scalar<T>& Scalar<T>::operator/=(const U &v) {
+	EXCEPTION_SETUP("template<typename T> template<typename U> Scalar<T>& Scalar<T>::operator/=(const U &v)");
+
+
+	_value /= (T)v;
 	return *this;
 }
 
 template<typename T> Scalar<T>& Scalar<T>::operator/=(const Scalar<T> &v) {
-	*this = *this / v;
+	_value /= v._value;
+	return *this;
+}
+
+template<typename T>
+template<typename U> Scalar<T>& Scalar<T>::operator/=(const Scalar<U> &v){
+	_value /= (T)v.getValue();
 	return *this;
 }
 
 template<typename T> Scalar<T>& Scalar<T>::operator+=(const T &v) {
-	*this = *this + v;
+	_value += v;
+	return *this;
+}
+
+template<typename T>
+template<typename U> Scalar<T> &Scalar<T>::operator+=(const U &v){
+	_value += v;
 	return *this;
 }
 
 template<typename T> Scalar<T> &Scalar<T>::operator+=(const Scalar<T> &v) {
-	*this = *this + v;
+	_value += v;
+	return *this;
+}
+
+template<typename T>
+template<typename U> Scalar<T> &Scalar<T>::operator+=(const Scalar<U> &v){
+	_value += (T)v.getValue();
 	return *this;
 }
 
 template<typename T> Scalar<T> &Scalar<T>::operator-=(const T &v) {
-	*this = *this - v;
+	_value -= v;
+	return *this;
+}
+
+template<typename T>
+template<typename U> Scalar<T> &Scalar<T>::operator-=(const U &v){
+	_value -= (T)v;
 	return *this;
 }
 
 template<typename T> Scalar<T> &Scalar<T>::operator-=(const Scalar<T> &v) {
-	*this = *this - v;
+	_value -= v;
+	return *this;
+}
+
+template<typename T>
+template<typename U> Scalar<T> &Scalar<T>::operator-=(const Scalar<U> &v){
+	_value = (T)v.getValue();
 	return *this;
 }
 
 template<typename T> Scalar<T> &Scalar<T>::operator*=(const T &v) {
-	*this = *this * v;
+	_value *= v;
+	return *this;
+}
+
+template<typename T>
+template<typename U> Scalar<T> &Scalar<T>::operator*=(const U &v){
+	_value *= (T)v;
 	return *this;
 }
 
 template<typename T> Scalar<T> &Scalar<T>::operator*=(const Scalar<T> &v) {
-	*this = *this * v;
+	_value *= v;
+	return *this;
+}
+
+template<typename T>
+template<typename U> Scalar<T> &Scalar<T>::operator*=(const Scalar<U> &v){
+	_value *= (T)v.getValue();
 	return *this;
 }
 
 //=======================comparison operator=================================
 template<typename T> bool operator==(const Scalar<T> &a, const Scalar<T> &b) {
-	return (a._value == b._value);
+	return (a.getValue() == b.getValue());
 }
 
 template<typename T> bool operator==(const T& a, const Scalar<T> &b) {
-	return (a == b._value);
+	return (a == b.getValue());
 }
 
 template<typename T> bool operator==(const Scalar<T> &a, const T& b) {
-	return (a._value == b);
+	return (a.getValue() == b);
 }
 
 //overloaded output operator
@@ -400,7 +496,24 @@ template<typename T> std::ostream &operator<<(std::ostream &o,
 
 //overloaded assignment operators - these operators must be class members
 template<typename T> Scalar<T> &Scalar<T>::operator=(const T &v) {
+	//std::cout<<"native variable assignment!"<<std::endl;
 	_value = v;
+	return *this;
+}
+
+template<typename T> template<typename U> Scalar<T> &Scalar<T>::operator=(const U &v){
+	EXCEPTION_SETUP("template<typename T> template<typename U> Scalar<T> &Scalar<T>::operator(const U &v)");
+
+	try{
+		TypeInfo<T>::isCompatibleForAssignment(v);
+	}catch(...){
+		EXCEPTION_INIT(TypeError,"Cannot assign value to scalar due to incompatible types!");
+		EXCEPTION_THROW();
+	}
+
+	//std::cout<<"template variable assignment!";
+	_value = (T)v;
+
 	return *this;
 }
 
@@ -409,10 +522,10 @@ template<typename U> Scalar<T> &Scalar<T>::operator=(const Scalar<U> &v){
 	EXCEPTION_SETUP("template<typename T> template<typename U> Scalar<T> &"
 					 "Scalar<T>::operator=(const Scalar<U> &v)");
 	//check if assignment is possible
-
+	std::cout<<"template assignment of scalar objects!"<<std::endl;
 	if((void *)this != (void *)(&v)){
 		try{
-			_type_is_compatible(v.getValue());
+			TypeInfo<T>::isCompatibleForAssignment(v.getValue());
 		}catch(...){
 			EXCEPTION_INIT(TypeError,"Cannot assign types!");
 			EXCEPTION_THROW();
@@ -431,7 +544,7 @@ template<typename U> Scalar<T> &Scalar<T>::operator=(const Scalar<U> &v){
 }
 
 template<typename T> Scalar<T> &Scalar<T>::operator=(const Scalar<T> &s){
-	std::cout<<"native assignment"<<std::endl;
+	std::cout<<"native assignment of scalar objects!"<<std::endl;
 	if(this != &s){
 		(*this).setValue(s.getValue());
 		(*this).setName(s.getName());
@@ -441,7 +554,31 @@ template<typename T> Scalar<T> &Scalar<T>::operator=(const Scalar<T> &s){
 	return *this;
 }
 
+//===================binary arithmetic operators====================================
+template<typename A,typename B,typename R>
+Scalar<R> operator+(const Scalar<A> &a,const Scalar<B> &b){
+	Scalar<R> o;
+
+	o.setValue(a.getValue()+b.getValue());
+
+	return o;
+}
+
+template<typename A,typename B,typename R>
+Scalar<R> operator+(const Scalar<A> &a,const B &b){
+	Scalar<R> o;
+
+	o.setValue(a.getValue()+b);
+	return o;
+}
+
+template<typename A,typename B,typename R>
+Scalar<R> operator+(const A &a,const Scalar<B> &b){
+	return b+a;
+}
+
 //overloaded addition operators
+/*
 template<typename T> Scalar<T> operator+(const Scalar<T> &a, const Scalar<T> &b) {
 	Scalar<T> tmp = b; //we use here the copy constructor to create
 	//a new object of type Scalar<T>
@@ -463,7 +600,7 @@ template<typename T> Scalar<T> operator+(const Scalar<T> &a, const T&b) {
 	Scalar<T> tmp = a;
 	tmp = a._value + b;
 	return tmp;
-}
+}*/
 
 //overloaded subtraction operator
 template<typename T> Scalar<T> operator-(const Scalar<T> &a, const Scalar<T> &b) {

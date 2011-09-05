@@ -11,6 +11,7 @@
 #include <limits>
 
 #include "PNITypes.hpp"
+#include "Exceptions.hpp"
 
 namespace pni{
 namespace utils{
@@ -50,8 +51,65 @@ public:
 		return std::numeric_limits<T>::is_integer;
 	}
 
+	template<typename U> static bool isCompatibleForAssignment(const U &b);
+	template<typename U> static bool isCompatibleForDivision(const T &a,const U &b);
 
 };
+
+//checks if a variable of type U can be assigned to one of type T
+template<typename T>
+template<typename U>
+bool TypeInfo<T>::isCompatibleForAssignment(const U &b){
+	EXCEPTION_SETUP("template<typename T,typename U> bool isCompatibleForAssignment(const T &a,const U &b)");
+
+	//one cannot assign a complex number to a non-complex float number
+	if((!TypeInfo<T>::isComplex())&&(TypeInfo<U>::isComplex())){
+		EXCEPTION_INIT(TypeError,"Cannot convert a complex scalar to a non complex type!");
+		EXCEPTION_THROW();
+	}
+
+	//one cannot assign securely assign a float number to an integer
+	if((TypeInfo<T>::isInteger())&&(!TypeInfo<U>::isInteger())){
+		EXCEPTION_INIT(TypeError,"Cannot convert a float value to an integer!");
+		EXCEPTION_THROW();
+	}
+
+	//in general we can assign values only to numbers
+	if(TypeInfo<T>::getSize() < TypeInfo<U>::getSize()){
+		EXCEPTION_INIT(SizeMissmatchError,"Cannot convert scalar to a smaller type!");
+		EXCEPTION_THROW();
+	}
+
+	//if we made it until here we have to check for sign
+	if((!TypeInfo<T>::isSigned())&&(TypeInfo<U>::isSigned())){
+		//we have to check the size of the
+		if(b<0){
+			EXCEPTION_INIT(RangeError,"Cannot assign a negative number to an unsigned type!");
+			EXCEPTION_THROW();
+		}
+	}
+
+	return true;
+}
+
+template<typename T>
+template<typename U> bool TypeInfo<T>::isCompatibleForDivision(const T &a,const U &b){
+	EXCEPTION_SETUP("template<typename T> template<typename U> bool TypeInfo<T>::isCompatibleForDivision(const T &a,const U &b)");
+
+	//you cannot divide a non-complex number by a complex one
+	if((!isComplex())&&(TypeInfo<U>::isComplex())){
+		EXCEPTION_INIT(TypeError,"Cannot divide a non-complex number by a complex number!");
+		EXCEPTION_THROW();
+	}
+
+	//what if we want to divide an integer by a non-integer
+	if(isInteger()&&(!TypeInfo<U>::isInteger())){
+		EXCEPTION_INIT(TypeError,"Cannot divide an integer by a float!");
+		EXCEPTION_THROW();
+	}
+
+}
+
 
 
 //! \ingroup Data-objects
@@ -86,7 +144,24 @@ public:
 	static bool isInteger(){
 		return false;
 	}
+
+	template<typename U> static bool isCompatibleForAssignment(const U &b);
 };
+
+//some specialization for complex numbers
+template<typename U>
+bool TypeInfo<Complex32>::isCompatibleForAssignment(const U &b){
+	EXCEPTION_SETUP("template<typename U> bool isCompatibleForAssignment<Complex32,U>(const T &a,const U &b)");
+
+	//in general we can assign values only to numbers
+	if(getSize() < TypeInfo<U>::getSize()){
+		EXCEPTION_INIT(SizeMissmatchError,"Cannot convert scalar to a smaller type!");
+		EXCEPTION_THROW();
+	}
+
+	return true;
+}
+
 
 //! \ingroup Data-objects
 //! \brief PNITypes specialization for 64Bit IEEE floating point complex type
@@ -120,7 +195,22 @@ public:
 	static bool isInteger(){
 		return false;
 	}
+
+	template<typename U> bool isCompatibleForAssignment(const U &v);
 };
+
+template<typename U>
+bool TypeInfo<Complex64>::isCompatibleForAssignment(const U &b){
+	EXCEPTION_SETUP("template<typename U> bool isCompatibleForAssignment<Complex32,U>(const T &a,const U &b)");
+
+	//in general we can assign values only to numbers
+	if(getSize() < TypeInfo<U>::getSize()){
+		EXCEPTION_INIT(SizeMissmatchError,"Cannot convert scalar to a smaller type!");
+		EXCEPTION_THROW();
+	}
+
+	return true;
+}
 
 //! \ingroup Data-objects
 //! \brief PNITypes specialization for 128Bit IEEE floating point complex type
@@ -154,7 +244,23 @@ public:
 	static bool isInteger(){
 		return false;
 	}
+
+	template<typename U> static bool isCompatibleForAssignment(const U &b);
 };
+
+template<typename U>
+bool TypeInfo<Complex128>::isCompatibleForAssignment(const U &b){
+	EXCEPTION_SETUP("template<typename U> bool isCompatibleForAssignment<Complex32,U>(const T &a,const U &b)");
+
+	//in general we can assign values only to numbers
+	if(getSize() < TypeInfo<U>::getSize()){
+		EXCEPTION_INIT(SizeMissmatchError,"Cannot convert scalar to a smaller type!");
+		EXCEPTION_THROW();
+	}
+
+	return true;
+}
+
 
 
 //end of namespace
