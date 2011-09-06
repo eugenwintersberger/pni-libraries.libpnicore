@@ -11,49 +11,30 @@
 #include <iostream>
 #include <complex>
 
+#include "PNITypes.hpp"
 #include "ScalarObject.hpp"
 #include "TypeInfo.hpp"
 #include "Exceptions.hpp"
+#include "ResultTypeTrait.hpp"
 
 namespace pni {
 namespace utils {
 
-//this is the first part to make the friend declaration for templates for
-//correctly - this code is just to imform the compiler!
-template<typename T> class Scalar;
-template<typename T> std::ostream &operator<<(std::ostream &o,
-		const Scalar<T> &v);
-
-
-
-
-
-template<typename T> Scalar<T>
-		operator-(const Scalar<T> &a, const Scalar<T> &b);
-template<typename T> Scalar<T> operator-(const T& a, const Scalar<T> &b);
-template<typename T> Scalar<T> operator-(const Scalar<T> &a, const T &b);
-
-template<typename T> Scalar<T>
-		operator*(const Scalar<T> &a, const Scalar<T> &b);
-template<typename T> Scalar<T> operator*(const T& a, const Scalar<T> &b);
-template<typename T> Scalar<T> operator*(const Scalar<T> &a, const T& b);
-
-template<typename T> Scalar<T>
-		operator/(const Scalar<T> &a, const Scalar<T> &b);
-template<typename T> Scalar<T> operator/(const T& a, const Scalar<T> &b);
-template<typename T> Scalar<T> operator/(const Scalar<T> &a, const T &b);
-
+/*
 template<typename T> bool operator==(const Scalar<T> &a, const Scalar<T> &b);
 template<typename T> bool operator==(const T& a, const Scalar<T> &b);
 template<typename T> bool operator==(const Scalar<T> &a, const T& b);
+template<typename T> bool operator!=(const Scalar<T> &a, const Scalar<T> &b);
+template<typename T> bool operator!=(const T &a,const Scalar<T> &b);
+template<typename T> bool operator!=(const Scalar<T> &a,const T &b);
+*/
 
 //! \ingroup Data-objects
 //! \brief Scalar template for scalar values
 
 //! Basically one can consider this as a concrete implementation of
 //! the class ScalarObject. Along with all other attributes of a NumericObject
-//! this template holds data in a single (scalar) value.
-//!
+//! this template holds a single datum of an numeric type.
 //! To make such a template useful it must not only provide support copy and
 //! assignment operations, in addition full support for basic arithmetic operations
 //! must be available.
@@ -62,19 +43,39 @@ template<typename T> bool operator==(const Scalar<T> &a, const T& b);
 //! need some special care.
 //! The assignment operator comes in several flavors. Basically two cases
 //! of assignment involving a Scalar<T> object must be considered
-//! - an object of type Scalar<T> is assigned to an other object of type Scalar<T>
-//! - an object of type T is assigned to an object of type Scalar
+//! - an object of type Scalar<T> is assigned to an other object of type Scalar<U> where
+//!   U is either the same as T or a different numeric type
+//! - an object of type T is assigned to an object of type Scalar<U> where U is the same
+//!   or a different type than T
 //!
 //! Thus, the assignment operator handles all cases where the Scalar object is
-//! the l-value of an expression. Indeed the assignment operator must also
-//! handle situations where the r-value of such an expression has a different
-//! data-type than T. This is done by templates.
+//! the l-value of an expression. Templates are used for cases where the r-value
+//! of such an assignment expression is of different type. If the types do not
+//! match exceptions are raised. In cases where two objects of type Scalar<T> are
+//! assigned to each other not only the value but also the name, description, and
+//! unit of the r-value object are transfered to the l-value object.
 //!
 //! An other situation is that the l-value of an expression is a simple variable
 //! of native type T and the r-value an object of type Scalar<T>. This is
 //! managed by the conversion operator. In cases where the type of the r-value and
-//! the l-value differ there should be no problem aslong as there is an implicit
+//! the l-value differ there should be no problem as long as there is an implicit
 //! conversion between the two types.
+//!
+//! A critical aspect of the Scalar<T> template are the arithmetic operations. All basic
+//! operations (+,*,-,/) are supported. The unary version of these operations with an
+//! object of Scalar<T> as an l-value are implemented as class members where the binary
+//! versions are simple template functions. While for the former ones the type of the
+//! result of the operation can be simply derived from the instance of the Scalar<T> object
+//! The situation is not that easy for the binary function templates. These function
+//! templates use fixed type selections where the result type is derived from the
+//! argument types. This should avoid overflows during computation. The fact that a temporary
+//! object of an appropriate type is created avoids us to implement complex tests to
+//! determine whether or not an operation is allowed. However, in the end the result
+//! is assigned to an object of a particular type. Thus, the temporary type and the
+//! target type must be assignable - otherwise an exception will be thrown.
+//! It is clear that for the binary versions of the arithmetic operators temporary objects
+//! are created and returned by value. However, since the scalar objects are pretty small
+//! this effort should not matter too much.
 template<typename T> class Scalar: public ScalarObject {
 private:
 	T _value; //!< object holding the value of the Scalar object
@@ -215,12 +216,6 @@ public:
 	//! \param &v reference to a variable of type U
 	template<typename U> void setValue(const U &v);
 
-
-
-	//clearly - the ostream operator must be overloaded
-	//! stream operator for console output
-	friend std::ostream &operator<<<> (std::ostream &, const Scalar<T> &);
-
 	//for each of the arithmetic operators three cases must be
 	//taken into account:
 	//1.) Scalar .Op. T
@@ -231,33 +226,6 @@ public:
 	//object of type T (in this case the conversion operator
 	//does the job).
 
-	//! operator - for Scalar<T> - Scalar<T>
-	friend Scalar<T> operator-<> (const Scalar<T> &a, const Scalar<T> &b);
-	//! operator - for T - Scalar<T>
-	friend Scalar<T> operator-<> (const T& a, const Scalar<T> &b);
-	//! operator - for Scalar<T> - T
-	friend Scalar<T> operator-<> (const Scalar<T> &a, const T &b);
-
-	//! operator * for Scalar<T> * Scalar<T>
-	friend Scalar<T> operator*<> (const Scalar<T> &a, const Scalar<T> &b);
-	//! operator * for T * Scalar<T>
-	friend Scalar<T> operator*<> (const T& a, const Scalar<T> &b);
-	//! operator * for Scalar<T>*T
-	friend Scalar<T> operator*<> (const Scalar<T> &a, const T& b);
-
-	//! operator / for Scalar<T> / Scalar<T>
-	friend Scalar<T> operator/<> (const Scalar<T> &a, const Scalar<T> &b);
-	//! operator / for T / Scalar<T>
-	friend Scalar<T> operator/<> (const T& a, const Scalar<T> &b);
-	//! operator / for Scalar<T>/T
-	friend Scalar<T> operator/<> (const Scalar<T> &a, const T &b);
-
-	//! comparison operator == for Scalar<T> == Scalar<T>
-	friend bool operator==<> (const Scalar<T> &a, const Scalar<T> &b);
-	//! comparison operator == for Scalar<T>==T
-	friend bool operator==<> (const Scalar<T> &a, const T &b);
-	//! comparison operator == for T == Scalar<T>
-	friend bool operator==<> (const T &a, const Scalar<T> &b);
 
 	//overload combind arithmetics and assignment operators
 	//! unary and inplace / operator for Scalar<T> /= T
@@ -290,6 +258,7 @@ public:
 		return (void *)(&_value);
 	}
 
+	//return the type numeric ID of the Scalar<T> object
 	virtual PNITypeID getTypeID() const{
 		return PNITypeInfo<T>::TypeID;
 	}
@@ -381,7 +350,7 @@ template<typename T> template<typename U> void Scalar<T>::setValue(const Scalar<
 
 //======================unary arithmetic operators=========================================
 template<typename T> Scalar<T>& Scalar<T>::operator/=(const T &v) {
-
+	//everything the same type - we have to do nothing
 	_value /= v;
 	return *this;
 }
@@ -389,6 +358,7 @@ template<typename T> Scalar<T>& Scalar<T>::operator/=(const T &v) {
 template<typename T>
 template<typename U> Scalar<T>& Scalar<T>::operator/=(const U &v) {
 	EXCEPTION_SETUP("template<typename T> template<typename U> Scalar<T>& Scalar<T>::operator/=(const U &v)");
+
 
 
 	_value /= (T)v;
@@ -402,6 +372,8 @@ template<typename T> Scalar<T>& Scalar<T>::operator/=(const Scalar<T> &v) {
 
 template<typename T>
 template<typename U> Scalar<T>& Scalar<T>::operator/=(const Scalar<U> &v){
+	EXCEPTION_SETUP("template<typename T> template<typename U> Scalar<T>& Scalar<T>::operator/=(const Scalar<U> &v)");
+
 	_value /= (T)v.getValue();
 	return *this;
 }
@@ -413,6 +385,8 @@ template<typename T> Scalar<T>& Scalar<T>::operator+=(const T &v) {
 
 template<typename T>
 template<typename U> Scalar<T> &Scalar<T>::operator+=(const U &v){
+	EXCEPTION_SETUP("template<typename T> template<typename U> Scalar<T> &Scalar<T>::operator+=(const U &v)");
+
 	_value += v;
 	return *this;
 }
@@ -424,6 +398,7 @@ template<typename T> Scalar<T> &Scalar<T>::operator+=(const Scalar<T> &v) {
 
 template<typename T>
 template<typename U> Scalar<T> &Scalar<T>::operator+=(const Scalar<U> &v){
+	EXCEPTION_SETUP("template<typename T> template<typename U> Scalar<T> &Scalar<T>::operator+=(const Scalar<U> &v)");
 	_value += (T)v.getValue();
 	return *this;
 }
@@ -435,6 +410,7 @@ template<typename T> Scalar<T> &Scalar<T>::operator-=(const T &v) {
 
 template<typename T>
 template<typename U> Scalar<T> &Scalar<T>::operator-=(const U &v){
+	EXCEPTION_SETUP("template<typename T> template<typename U> Scalar<T> &Scalar<T>::operator-=(const U &v)");
 	_value -= (T)v;
 	return *this;
 }
@@ -446,6 +422,8 @@ template<typename T> Scalar<T> &Scalar<T>::operator-=(const Scalar<T> &v) {
 
 template<typename T>
 template<typename U> Scalar<T> &Scalar<T>::operator-=(const Scalar<U> &v){
+	EXCEPTION_SETUP("template<typename T> template<typename U> Scalar<T> &Scalar<T>::operator-=(const Scalar<U> &v)");
+
 	_value = (T)v.getValue();
 	return *this;
 }
@@ -457,6 +435,8 @@ template<typename T> Scalar<T> &Scalar<T>::operator*=(const T &v) {
 
 template<typename T>
 template<typename U> Scalar<T> &Scalar<T>::operator*=(const U &v){
+	EXCEPTION_SETUP("template<typename T> template<typename U> Scalar<T> &Scalar<T>::operator*=(const U &v)");
+
 	_value *= (T)v;
 	return *this;
 }
@@ -468,6 +448,8 @@ template<typename T> Scalar<T> &Scalar<T>::operator*=(const Scalar<T> &v) {
 
 template<typename T>
 template<typename U> Scalar<T> &Scalar<T>::operator*=(const Scalar<U> &v){
+	EXCEPTION_SETUP("template<typename T> template<typename U> Scalar<T> &Scalar<T>::operator*=(const Scalar<U> &v)");
+
 	_value *= (T)v.getValue();
 	return *this;
 }
@@ -485,11 +467,36 @@ template<typename T> bool operator==(const Scalar<T> &a, const T& b) {
 	return (a.getValue() == b);
 }
 
+template<typename T> bool operator!=(const Scalar<T> &a,const Scalar<T> &b){
+	if(a == b) return false;
+	return true;
+}
+
+template<typename T> bool operator!=(const T &a,const Scalar<T> &b){
+	if(a == b) return false;
+	return true;
+}
+
+template<typename T> bool operator!=(const Scalar<T> &a,const T &b){
+	if(a == b) return false;
+	return true;
+}
+
 //overloaded output operator
 template<typename T> std::ostream &operator<<(std::ostream &o,
 		const Scalar<T> &v) {
-	o << v._name << " = " << v._value << " " << v._unit << " (" << v._description
-			<< ")";
+
+	if(v.getName()!=""){
+		o<<v.getName()<<" = ";
+	}
+	o << v.getValue();
+	if(v.getUnit() != ""){
+		o<<" "<<v.getUnit();
+	}
+
+	if(v.getDescription()!=""){
+		o<<" ("<<v.getDescription()<<")";
+	}
 
 	return o;
 }
@@ -501,7 +508,8 @@ template<typename T> Scalar<T> &Scalar<T>::operator=(const T &v) {
 	return *this;
 }
 
-template<typename T> template<typename U> Scalar<T> &Scalar<T>::operator=(const U &v){
+template<typename T>
+template<typename U> Scalar<T> &Scalar<T>::operator=(const U &v){
 	EXCEPTION_SETUP("template<typename T> template<typename U> Scalar<T> &Scalar<T>::operator(const U &v)");
 
 	try{
@@ -555,129 +563,128 @@ template<typename T> Scalar<T> &Scalar<T>::operator=(const Scalar<T> &s){
 }
 
 //===================binary arithmetic operators====================================
-template<typename A,typename B,typename R>
-Scalar<R> operator+(const Scalar<A> &a,const Scalar<B> &b){
-	Scalar<R> o;
 
-	o.setValue(a.getValue()+b.getValue());
+//! binary add operation
+template<typename A,typename B>
+Scalar<typeof ResultTypeTrait<A,B>::AddResultType > operator+(const Scalar<A> &a,const Scalar<B> &b){
+	Scalar<typeof ResultTypeTrait<A,B>::AddResultType > o;
+
+	o.setValue((typeof ResultTypeTrait<A,B>::AddResultType)(a.getValue()+b.getValue()));
 
 	return o;
 }
 
-template<typename A,typename B,typename R>
-Scalar<R> operator+(const Scalar<A> &a,const B &b){
-	Scalar<R> o;
+template<typename A,typename B>
+Scalar<typeof ResultTypeTrait<A,B>::AddResultType > operator+(const Scalar<A> &a,const B &b){
+	Scalar<typeof ResultTypeTrait<A,B>::AddResultType > o;
 
-	o.setValue(a.getValue()+b);
+	o.setValue((typeof ResultTypeTrait<A,B>::AddResultType)(a.getValue()+b));
 	return o;
 }
 
-template<typename A,typename B,typename R>
-Scalar<R> operator+(const A &a,const Scalar<B> &b){
-	return b+a;
+template<typename A,typename B>
+Scalar<typeof ResultTypeTrait<A,B>::AddResultType > operator+(const A &a,const Scalar<B> &b){
+	Scalar<typeof ResultTypeTrait<A,B>::AddResultType > o;
+
+	o.setValue((typeof ResultTypeTrait<A,B>::AddResultType)(a+b.getValue()));
+
+	return o;
 }
-
-//overloaded addition operators
-/*
-template<typename T> Scalar<T> operator+(const Scalar<T> &a, const Scalar<T> &b) {
-	Scalar<T> tmp = b; //we use here the copy constructor to create
-	//a new object of type Scalar<T>
-
-	tmp._value = a._value + b._value;
-
-	return tmp;
-}
-
-template<typename T> Scalar<T> operator+(const T& a, const Scalar<T> &b) {
-	Scalar<T> tmp = b;
-
-	tmp._value = a + b._value;
-
-	return tmp;
-}
-
-template<typename T> Scalar<T> operator+(const Scalar<T> &a, const T&b) {
-	Scalar<T> tmp = a;
-	tmp = a._value + b;
-	return tmp;
-}*/
 
 //overloaded subtraction operator
-template<typename T> Scalar<T> operator-(const Scalar<T> &a, const Scalar<T> &b) {
-	Scalar<T> tmp = b;
+template<typename A,typename B>
+Scalar<typeof ResultTypeTrait<A,B>::SubResultType > operator-(const Scalar<A> &a, const Scalar<B> &b) {
+	Scalar<typeof ResultTypeTrait<A,B>::SubResultType > tmp;
 
-	tmp._value = a._value - b._value;
+	tmp.setValue((typeof ResultTypeTrait<A,B>::SubResultType)(a.getValue()-b.getValue()));
 
 	return tmp;
 }
 
-template<typename T> Scalar<T> operator-(const T& a, const Scalar<T> &b) {
-	Scalar<T> tmp = b;
-	tmp._value = a - b._value;
+template<typename A,typename B>
+Scalar<typeof ResultTypeTrait<A,B>::SubResultType > operator-(const A& a, const Scalar<B> &b) {
+	Scalar<typeof ResultTypeTrait<A,B>::SubResultType > tmp;
+
+	tmp.setValue((typeof ResultTypeTrait<A,B>::SubResulType)(a-b.getValue()));
+
 	return tmp;
 }
 
-template<typename T> Scalar<T> operator-(const Scalar<T> &a, const T &b) {
-	Scalar<T> tmp = b;
-	tmp._value = a._value - b;
+template<typename A,typename B>
+Scalar<typeof ResultTypeTrait<A,B>::SubResultType > operator-(const Scalar<A> &a, const B &b) {
+	Scalar<typeof ResultTypeTrait<A,B>::SubResultType > tmp;
+
+	tmp.setValue((typeof ResultTypeTrait<A,B>::SubResultType)(a.getValue()-b));
 	return tmp;
 }
 
 //overloading the multiplication operator
-template<typename T> Scalar<T> operator*(const Scalar<T> &a, const Scalar<T> &b) {
-	Scalar<T> tmp = b;
-	tmp._value = a._value * b._value;
+template<typename A,typename B>
+Scalar<typeof ResultTypeTrait<A,B>::MultResultType > operator*(const Scalar<A> &a, const Scalar<B> &b) {
+	Scalar<typeof ResultTypeTrait<A,B>::MultResultType > tmp;
+
+	tmp.setValue((typeof ResultTypeTrait<A,B>::MultResultType)(a.getValue()*b.getValue()));
 	return tmp;
 }
 
-template<typename T> Scalar<T> operator*(const T& a, const Scalar<T> &b) {
-	Scalar<T> tmp = b;
-	tmp._value = a * b._value;
+template<typename A,typename B>
+Scalar<typeof ResultTypeTrait<A,B>::MultResultType > operator*(const A& a, const Scalar<B> &b) {
+	Scalar<typeof ResultTypeTrait<A,B>::MultResultType > tmp;
+
+	tmp.setValue((typeof ResultTypeTrait<A,B>::MultResultType)(a*b.getValue()));
 	return tmp;
 }
 
-template<typename T> Scalar<T> operator*(const Scalar<T> &a, const T& b) {
-	Scalar<T> tmp = b;
-	tmp._value = a._value * b;
+template<typename A,typename B>
+Scalar<typeof ResultTypeTrait<A,B>::MultResultType > operator*(const Scalar<A> &a, const B& b) {
+	Scalar<typeof ResultTypeTrait<A,B>::MultResultType > tmp;
+
+	tmp.setValue((typeof ResultTypeTrait<A,B>::MultResultType)(a.getValue()*b));
 	return tmp;
 }
 
 //overloading the division operator
-template<typename T> Scalar<T> operator/(const Scalar<T> &a, const Scalar<T> &b) {
-	Scalar<T> tmp = b;
-	tmp._value = a._value / b._value;
+template<typename A,typename B>
+Scalar<typeof ResultTypeTrait<A,B>::DivResultType > operator/(const Scalar<A> &a, const Scalar<B> &b) {
+	Scalar<typeof ResultTypeTrait<A,B>::DivResultType > tmp;
+
+	tmp.setValue((typeof ResultTypeTrait<A,B>::DivResultType)(a.getValue()/b.getValue()));
 	return tmp;
 }
 
-template<typename T> Scalar<T> operator/(const T& a, const Scalar<T> &b) {
-	Scalar<T> tmp = b;
-	tmp._value = a / b._value;
+template<typename A,typename B>
+Scalar<typeof ResultTypeTrait<A,B>::DivResultType > operator/(const A& a, const Scalar<B> &b) {
+	Scalar<typeof ResultTypeTrait<A,B>::DivResultType > tmp;
+
+	tmp.setValue((typeof ResultTypeTrait<A,B>::DivResultType)(a/b.getValue()));
 	return tmp;
 }
 
-template<typename T> Scalar<T> operator/(const Scalar<T> &a, const T &b) {
-	Scalar<T> tmp = a;
-	tmp._value = a._value / b;
+template<typename A,typename B>
+Scalar<typeof ResultTypeTrait<A,B>::DivResultType > operator/(const Scalar<A> &a, const B &b) {
+	Scalar<typeof ResultTypeTrait<A,B>::DivResultType > tmp;
+
+	tmp.setValue((typeof ResultTypeTrait<A,B>::DivResultType)(a.getValue()/b));
 	return tmp;
 }
 
 //declare some useful default types
-typedef Scalar<char> Int8Scalar;
-typedef Scalar<unsigned char> UInt8Scalar;
-typedef Scalar<short> Int16Scalar;
-typedef Scalar<unsigned short> UInt16Scalar;
-typedef Scalar<int> Int32Scalar;
-typedef Scalar<unsigned int> UInt32Scalar;
-typedef Scalar<long> Int64Scalar;
-typedef Scalar<unsigned long> UInt64Scalar;
+typedef Scalar<Int8>   Int8Scalar;
+typedef Scalar<UInt8>  UInt8Scalar;
+typedef Scalar<Int16>  Int16Scalar;
+typedef Scalar<UInt16> UInt16Scalar;
+typedef Scalar<Int32>  Int32Scalar;
+typedef Scalar<UInt32> UInt32Scalar;
+typedef Scalar<Int64>  Int64Scalar;
+typedef Scalar<UInt64> UInt64Scalar;
 
-typedef Scalar<float> Float32Scalar;
-typedef Scalar<double> Float64Scalar;
-typedef Scalar<long double> Float128Scalar;
+typedef Scalar<Float32>  Float32Scalar;
+typedef Scalar<Float64>  Float64Scalar;
+typedef Scalar<Float128> Float128Scalar;
 
-typedef Scalar<std::complex<float> > Complex32Scalar;
-typedef Scalar<std::complex<double> > Complex64Scalar;
-typedef Scalar<std::complex<long double> > Complex128Scalar;
+typedef Scalar<std::complex<Float32> >  Complex32Scalar;
+typedef Scalar<std::complex<Float64> >  Complex64Scalar;
+typedef Scalar<std::complex<Float128> > Complex128Scalar;
 
 //end of namespace
 }

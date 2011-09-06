@@ -1,9 +1,11 @@
 #include<iostream>
+#include<typeinfo>
 
 #include<cppunit/extensions/HelperMacros.h>
 
 #include "Scalar.hpp"
 #include "ScalarTest.hpp"
+#include "ResultTypeTrait.hpp"
 
 CPPUNIT_TEST_SUITE_REGISTRATION(ScalarTest);
 
@@ -38,7 +40,27 @@ void ScalarTest::testConstructors(){
 }
 
 void ScalarTest::testSetGetValue(){
+	Complex128Scalar sca;
+	Complex128 ca;
+	Float64Scalar sfa;
+	Float64 fa;
+	UInt32Scalar sia;
 
+	ca = Complex128(1,2);
+	CPPUNIT_ASSERT_NO_THROW(sca.setValue(ca));
+	CPPUNIT_ASSERT(sca == ca);
+	CPPUNIT_ASSERT(sca.getValue() == ca);
+
+	fa = 1.4521;
+	sfa = fa;
+	CPPUNIT_ASSERT_NO_THROW(sca.setValue(fa));
+	CPPUNIT_ASSERT_NO_THROW(sca.setValue(sfa));
+	CPPUNIT_ASSERT(sca.getValue().real() == fa);
+
+	CPPUNIT_ASSERT_THROW(sia.setValue(sfa),TypeError);
+	sia = 100;
+	CPPUNIT_ASSERT_NO_THROW(sca.setValue(sia));
+	CPPUNIT_ASSERT(sca.getValue().real() == sia);
 }
 
 void ScalarTest::testAssignment(){
@@ -100,20 +122,78 @@ void ScalarTest::testAssignment(){
 	CPPUNIT_ASSERT_THROW(si64 = sf64,TypeError);
 }
 
-void ScalarTest::testBinaryAddOperation(){
-	Float64Scalar a,b,c;
-	Int64Scalar ci,ai,bi;
-	Float64 av = 1.,bv = -45.2390;
+void ScalarTest::testComparison(){
+	Complex64Scalar sca,scb;
+	Complex64 ca,cb;
 
+	ca = Complex64(1,2);
+	cb = Complex64(-4.5,1000.398781);
+	sca = ca;
+	scb = ca;
+	CPPUNIT_ASSERT(sca == scb);
+	CPPUNIT_ASSERT(sca != cb);
+	CPPUNIT_ASSERT(cb != sca);
+	CPPUNIT_ASSERT(ca == sca);
+	scb = cb;
+	CPPUNIT_ASSERT(scb != sca);
+}
+
+void ScalarTest::testBinaryAddOperation(){
+	Float128Scalar a,b,c;
+	Int64Scalar ci,ai,bi;
+	Float128 av = 1.,bv = -45.2390;
+	Complex64Scalar sca,scb,scc;
+	Complex64 ca,cb,cc;
+
+
+	//what we are allowed to do
 	a = av;
-	ai = 1;
 	b = bv;
 	CPPUNIT_ASSERT_NO_THROW(c = a+b);
 	CPPUNIT_ASSERT(c == av+bv);
-	std::cout<<"add two floats to an integer!"<<std::endl;
-	ai = 100;
-	bi = -20;
+	CPPUNIT_ASSERT_NO_THROW(c = a+av);
+	CPPUNIT_ASSERT(c == av+av);
+	CPPUNIT_ASSERT_NO_THROW(c = bv+b);
+	CPPUNIT_ASSERT(c == bv+bv);
+	ai = 1;
+	bi = 2;
+	CPPUNIT_ASSERT_NO_THROW(c = ai+bi);
+	CPPUNIT_ASSERT(c == ai+bi);
 	CPPUNIT_ASSERT_NO_THROW(ci = ai+bi);
+	CPPUNIT_ASSERT(ci == ai+bi);
+
+	//checking complex numbers
+	ca = Complex64(1.,2);
+	cb = Complex64(4,-2.);
+	sca = ca;
+	scb = cb;
+	CPPUNIT_ASSERT(sca == ca);
+	CPPUNIT_ASSERT(scb == cb);
+
+	/*
+	std::cout<<typeid(sca).name()<<" "<<typeid(Complex64Scalar()).name()<<std::endl;
+	std::cout<<typeid(scb).name()<<" "<<typeid(Complex64Scalar()).name()<<std::endl;
+	std::cout<<typeid(scc).name()<<" "<<typeid(Complex64Scalar()).name()<<std::endl;
+	std::cout<<typeid(a).name()<<" "<<typeid(Float64Scalar()).name()<<std::endl;
+*/
+	std::cout<<"------------------ResultTypeTrait<Complex64,Complex64>---------------"<<std::endl;
+	ResultTypeTrait<Complex64,Complex64>::AddResultType o;
+	std::cout<<typeid(ca).name()<<std::endl;
+	std::cout<<typeid(o).name()<<std::endl;
+	std::cout<<"---------------------------------------------------------------------"<<std::endl;
+	scc = sca+scb;
+	cc = ca+cb;
+
+	//CPPUNIT_ASSERT_NO_THROW(scc = sca+scb);
+	//CPPUNIT_ASSERT(scc == ca+cb);
+
+
+	//what will not work
+	//the intermediate type is a float type and thus we
+	//cannot assign a float scalar to an integer one
+	CPPUNIT_ASSERT_THROW(ci = ai+b,TypeError);
+
+	//try something with binary
 
 
 }
@@ -135,7 +215,11 @@ void ScalarTest::testUnaryAddOperation(){
 	CPPUNIT_ASSERT_NO_THROW( sui8 += saf64);
 	std::cout<<sui8<<std::endl;
 
-
+	Complex128Scalar sca(Complex128(0,0));
+	CPPUNIT_ASSERT_NO_THROW(sca += Complex128(1,-34.20));
+	CPPUNIT_ASSERT_NO_THROW(sca -= Complex64(-5,123.34));
+	CPPUNIT_ASSERT_NO_THROW(sca *= Complex128(.04321,1.e-4));
+	CPPUNIT_ASSERT_NO_THROW(sca /= Complex64(5.32,5.24345));
 }
 
 

@@ -2,7 +2,7 @@
  * AdditionResultType.hpp
  *
  *  Created on: Sep 5, 2011
- *      Author: eugen
+ *      Author: Eugen Wintersberger
  */
 
 #ifndef RESULTTYPETRAIT_HPP_
@@ -12,19 +12,23 @@ namespace pni{
 namespace utils{
 
 
-template<typename A,typename B,
-	 	 typename AddResType,typename SubResType,
-	 	 typename MultResType,typename DivResType>
+template<typename A,typename B>
 class ResultTypeTrait{
 public:
-	typedef typeof AddResType AddResultType;
-	typedef typeof SubResType SubResultType;
-	typedef typeof MultResType MultResultType;
-	typedef typeof DivResType DivResultType;
 };
 
+#define ARITHMETICS_RESULT_TYPES_SINGLE(TA,ART,SRT,MRT,DRT)\
+	template<> class ResultTypeTrait<TA,TA>{\
+	public:\
+	typedef ART AddResultType;\
+	typedef SRT SubResultType;\
+	typedef MRT MultResultType;\
+	typedef DRT DivResultType;\
+};
+
+
 #define ARITHMETICS_RESULT_TYPES(TA,TB,ART,SRT,MRT,DRT)\
-	template<> class ResultTypeTrait<TA,TB,ART,SRT,MRT,DRT>{ \
+	template<> class ResultTypeTrait<TA,TB>{ \
 	public: \
 	typedef ART AddResultType; \
 	typedef SRT SubResultType; \
@@ -32,7 +36,7 @@ public:
 	typedef DRT DivResultType;\
 }; \
 	\
-	template<> class ResultTypeTrait<TB,TA,ART,SRT,MRT,DRT>{\
+	template<> class ResultTypeTrait<TB,TA>{\
 	public:\
 	typedef ART AddResultType;\
 	typedef SRT SubResultType;\
@@ -41,7 +45,7 @@ public:
 };
 
 //define results for integer integer operations
-ARITHMETICS_RESULT_TYPES(Int8,Int8,Int16,Int16,Int16,Float32);
+ARITHMETICS_RESULT_TYPES_SINGLE(Int8,Int16,Int16,Int16,Float32);
 ARITHMETICS_RESULT_TYPES(Int8,UInt8,Int16,Int16,Int16,Float32);
 ARITHMETICS_RESULT_TYPES(Int8,Int16,Int32,Int32,Int32,Float32);
 ARITHMETICS_RESULT_TYPES(Int8,UInt16,Int32,Int32,Int32,Float32);
@@ -50,7 +54,7 @@ ARITHMETICS_RESULT_TYPES(Int8,UInt32,Int64,Int64,Int64,Float64);
 ARITHMETICS_RESULT_TYPES(Int8,Int64,Int64,Int64,Int64,Float64);
 ARITHMETICS_RESULT_TYPES(Int8,UInt64,Int64,Int64,Int64,Float64);
 
-ARITHMETICS_RESULT_TYPES(UInt8,UInt8,UInt16,Int16,UInt16,Float32);
+ARITHMETICS_RESULT_TYPES_SINGLE(UInt8,UInt16,Int16,UInt16,Float32);
 ARITHMETICS_RESULT_TYPES(UInt8,Int16,Int32,Int32,Int32,Float32);
 ARITHMETICS_RESULT_TYPES(UInt8,UInt16,UInt32,Int32,UInt32,Float32);
 ARITHMETICS_RESULT_TYPES(UInt8,Int32,Int64,Int64,Int64,Float32);
@@ -58,43 +62,43 @@ ARITHMETICS_RESULT_TYPES(UInt8,UInt32,UInt64,Int64,UInt64,Float32);
 ARITHMETICS_RESULT_TYPES(UInt8,Int64,Int64,Int64,Int64,Float64);
 ARITHMETICS_RESULT_TYPES(UInt8,UInt64,UInt64,Int64,UInt64,Float64);
 
-ARITHMETICS_RESULT_TYPES(Int16,Int16,Int32,Int32,Int32,Float32);
+ARITHMETICS_RESULT_TYPES_SINGLE(Int16,Int32,Int32,Int32,Float32);
 ARITHMETICS_RESULT_TYPES(Int16,UInt16,Int32,Int32,Int32,Float32);
 ARITHMETICS_RESULT_TYPES(Int16,Int32,Int64,Int64,Int64,Float32);
 ARITHMETICS_RESULT_TYPES(Int16,UInt32,Int64,Int64,Int64,Float32);
 ARITHMETICS_RESULT_TYPES(Int16,Int64,Int64,Int64,Int64,Float64);
 ARITHMETICS_RESULT_TYPES(Int16,UInt64,Int64,Int64,Int64,Float64);
 
-ARITHMETICS_RESULT_TYPES(UInt16,UInt16,UInt32,Int32,UInt32,Float32);
+ARITHMETICS_RESULT_TYPES_SINGLE(UInt16,UInt32,Int32,UInt32,Float32);
 ARITHMETICS_RESULT_TYPES(UInt16,Int32,Int64,Int64,Int64,Float32);
 ARITHMETICS_RESULT_TYPES(UInt16,UInt32,UInt64,Int64,UInt64,Float32);
 ARITHMETICS_RESULT_TYPES(UInt16,Int64,Int64,Int64,Int64,Float64);
 ARITHMETICS_RESULT_TYPES(UInt16,UInt64,UInt64,Int64,UInt64,Float64);
 
-ARITHMETICS_RESULT_TYPES(Int32,Int32,Int64,Int64,Int64,Float64);
+ARITHMETICS_RESULT_TYPES_SINGLE(Int32,Int64,Int64,Int64,Float64);
 ARITHMETICS_RESULT_TYPES(Int32,UInt32,Int64,Int64,Int64,Float64);
 ARITHMETICS_RESULT_TYPES(Int32,Int64,Int64,Int64,Int64,Float64);
 ARITHMETICS_RESULT_TYPES(Int32,UInt64,Int64,Int64,Int64,Float64);
 
-ARITHMETICS_RESULT_TYPES(UInt32,UInt32,UInt64,Int64,UInt64,Float64);
+ARITHMETICS_RESULT_TYPES_SINGLE(UInt32,UInt64,Int64,UInt64,Float64);
 ARITHMETICS_RESULT_TYPES(UInt32,Int64,Int64,Int64,Int64,Float64);
 ARITHMETICS_RESULT_TYPES(UInt32,UInt64,UInt64,Int64,UInt64,Float64);
 
-ARITHMETICS_RESULT_TYPES(Int64,Int64,Int64,Int64,Int64,Float64);
+ARITHMETICS_RESULT_TYPES_SINGLE(Int64,Int64,Int64,Int64,Float64);
 ARITHMETICS_RESULT_TYPES(Int64,UInt64,Int64,Int64,Int64,Float64);
 
-ARITHMETICS_RESULT_TYPES(UInt64,UInt64,UInt64,Int64,UInt64,Float64);
+ARITHMETICS_RESULT_TYPES_SINGLE(UInt64,UInt64,Int64,UInt64,Float64);
 
 
 //result types for float-float operations
-ARITHMETICS_RESULT_TYPES(Float32,Float32,Float32,Float32,Float32,Float32);
+ARITHMETICS_RESULT_TYPES_SINGLE(Float32,Float32,Float32,Float32,Float32);
 ARITHMETICS_RESULT_TYPES(Float32,Float64,Float64,Float64,Float64,Float64);
 ARITHMETICS_RESULT_TYPES(Float32,Float128,Float128,Float128,Float128,Float128);
 
-ARITHMETICS_RESULT_TYPES(Float64,Float64,Float64,Float64,Float64,Float64);
+ARITHMETICS_RESULT_TYPES_SINGLE(Float64,Float64,Float64,Float64,Float64);
 ARITHMETICS_RESULT_TYPES(Float64,Float128,Float128,Float128,Float128,Float128);
 
-ARITHMETICS_RESULT_TYPES(Float128,Float128,Float128,Float128,Float128,Float128);
+ARITHMETICS_RESULT_TYPES_SINGLE(Float128,Float128,Float128,Float128,Float128);
 
 //result types for float-integer operations
 ARITHMETICS_RESULT_TYPES(Float32,UInt8,Float32,Float32,Float32,Float32);
@@ -125,14 +129,14 @@ ARITHMETICS_RESULT_TYPES(Float128,UInt64,Float128,Float128,Float128,Float128);
 ARITHMETICS_RESULT_TYPES(Float128,Int64,Float128,Float128,Float128,Float128);
 
 //result types for complex-complex operations
-ARITHMETICS_RESULT_TYPES(Complex32,Complex32,Complex32,Complex32,Complex32,Complex32);
+ARITHMETICS_RESULT_TYPES_SINGLE(Complex32,Complex32,Complex32,Complex32,Complex32);
 ARITHMETICS_RESULT_TYPES(Complex32,Complex64,Complex64,Complex64,Complex64,Complex64);
 ARITHMETICS_RESULT_TYPES(Complex32,Complex128,Complex128,Complex128,Complex128,Complex128);
 
-ARITHMETICS_RESULT_TYPES(Complex64,Complex64,Complex64,Complex64,Complex64,Complex64);
+ARITHMETICS_RESULT_TYPES_SINGLE(Complex64,Complex64,Complex64,Complex64,Complex64);
 ARITHMETICS_RESULT_TYPES(Complex64,Complex128,Complex128,Complex128,Complex128,Complex128);
 
-ARITHMETICS_RESULT_TYPES(Complex128,Complex128,Complex128,Complex128,Complex128,Complex128);
+ARITHMETICS_RESULT_TYPES_SINGLE(Complex128,Complex128,Complex128,Complex128,Complex128);
 
 //result complex-float operations
 ARITHMETICS_RESULT_TYPES(Complex32,Float32,Complex32,Complex32,Complex32,Complex32);
