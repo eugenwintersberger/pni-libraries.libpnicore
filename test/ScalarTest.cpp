@@ -175,13 +175,14 @@ void ScalarTest::testBinaryAddOperation(){
 	std::cout<<typeid(scb).name()<<" "<<typeid(Complex64Scalar()).name()<<std::endl;
 	std::cout<<typeid(scc).name()<<" "<<typeid(Complex64Scalar()).name()<<std::endl;
 	std::cout<<typeid(a).name()<<" "<<typeid(Float64Scalar()).name()<<std::endl;
-*/
+	 */
+
 	std::cout<<"------------------ResultTypeTrait<Complex64,Complex64>---------------"<<std::endl;
 	ResultTypeTrait<Complex64,Complex64>::AddResultType o;
 	std::cout<<typeid(ca).name()<<std::endl;
 	std::cout<<typeid(o).name()<<std::endl;
 	std::cout<<"---------------------------------------------------------------------"<<std::endl;
-	scc = sca+scb;
+	scc = sca + scb;
 	cc = ca+cb;
 
 	//CPPUNIT_ASSERT_NO_THROW(scc = sca+scb);

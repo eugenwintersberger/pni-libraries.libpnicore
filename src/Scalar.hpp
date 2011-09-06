@@ -20,14 +20,6 @@
 namespace pni {
 namespace utils {
 
-/*
-template<typename T> bool operator==(const Scalar<T> &a, const Scalar<T> &b);
-template<typename T> bool operator==(const T& a, const Scalar<T> &b);
-template<typename T> bool operator==(const Scalar<T> &a, const T& b);
-template<typename T> bool operator!=(const Scalar<T> &a, const Scalar<T> &b);
-template<typename T> bool operator!=(const T &a,const Scalar<T> &b);
-template<typename T> bool operator!=(const Scalar<T> &a,const T &b);
-*/
 
 //! \ingroup Data-objects
 //! \brief Scalar template for scalar values
@@ -264,9 +256,6 @@ public:
 	}
 
 };
-
-//==================private check methods==================================================
-
 
 //======================Constructors and destructors=======================================
 //default constructor
