@@ -1,0 +1,257 @@
+%%%documentation for data objects in memory
+
+One of the primary obstacles of this library is to provide the user with a 
+couple of easy to use objects to handle data in its program. 
+Thus, libpniutils provides two fundamental class templates
+\begin{itemize}
+  \item {\tt Scalar<T>} describing a single scalar
+  \item {\tt Array<T>} describing a multidimensional array.
+\end{itemize}
+These templates should be used along with the native data types defined by the 
+library ans shown in \ref{tab:datatypes} and defined in the header file
+{\tt PNITypes.hpp}.
+Along with the data values these objects provide additional information 
+about themself. These information is
+\begin{description}
+\item[name] the name of the object
+\item[description] a string with a short description about the object
+\item[unit] a string with a physical unit which can be usefull if data 
+            should be plotted.
+\end{description} 
+With this meta-data a single datum is sufficiently described. 
+
+\begin{table}[tb]
+\begin{tabular}{l|c|c|l}
+\hline
+Name & C++ type & size in bits & description \\
+\hline
+{\tt UInt8} & {\tt unsigned char}& $8$ & $8$Bit unsigned integer\\
+{\tt Int8}  & {\tt char } & $8$ & $8$Bit signed integer \\
+{\tt UInt16} & {\tt unsigned short} &$16$ & $16$Bit unsigned integer \\
+{\tt Int16} & {\tt short} & $16$ & $16$Bit signed integer \\
+{\tt UInt32} & {\tt unsigned int} & $32$ & $32$Bit unsigned integer\\
+{\tt Int32} & {\tt int} & $32$ & $32$Bit signed integer \\
+{\tt UInt64} & {\tt unsigned long} & $64$ & $64$Bit unsigned integer\\
+{\tt Int64} & {\tt long} & $64$ & $64$Bit singed integer \\ 
+\hline
+{\tt Float32} & {\tt float} & $32$ & $32$Bit IEEE floating point number \\
+{\tt Float64} & {\tt double} & $64$ & $64$Bit IEEE floating point number \\
+{\tt Float128} & {\tt long double} & $128$ & $128$Bit IEEE floating point number
+\\
+\hline
+{\tt Complex32} & {\tt std::complex<float>} & - & $2\times32$Bit IEEE complex number \\
+{\tt Complex64} & {\tt std::complex<double>} & - & $2\times64$Bit IEEE complex
+number \\
+{\tt Complex128} & {\tt std::complex<long double>} & - & $2\times128$Bit IEEE
+complex number \\
+\hline
+\end{tabular}
+\caption{{\small \label{tab:datatypes} Native data types of well defined size.
+These data types are defined in the header file {\tt PNITypes.hpp} and should 
+be used throughout a program instead of the standard data types provided by 
+your C++ compiler. The reason is that the size of the types provided by your 
+compiler differ from those given here depending on your hardware platform.}}
+\end{table}
+
+The two templates mentioned above will be described first in this chapter.
+The last chapter deals with the class hierarchy the two templates belong to.
+
+\section{The {\tt Scalar<T>} template}
+
+This is most probably the simplest template of the high level data objects. 
+Basically it holds a single numerical value along with the additional 
+information mentioned above. 
+On the first glimpse this template might look slightly bloated. Why an 
+entire template just for a single number. The reason is the additional
+meta-information mentioned above. An object instantiated from the template 
+behaves nearly like a common C++ native variable. The fundamental 
+arithmetic operators are overloaded and thus these objects can be used 
+like native variables. 
+However, 
+
+\subsection{Instantiation of a {\tt Scalar<T>} template}
+
+Besides the default and a copy constructor, the {\tt Scalar<T>} template 
+provides a whole bunch of constructors to configure an object right at the 
+moment of its instantitation.
+So using the standard default and copy constructor is fairly simple
+\begin{verbatim}
+//default constructor
+Scalar<UInt16> SCA1;
+//here comes some configuration code for SCA1
+
+//create a second SCA object from SCA1
+Scalar<UInt16> SCA2(SCA1);
+\end{verbatim} 
+The remaining constructors can be divided into two groups: those setting 
+and initial data value to the object and those who are not. 
+The former one can be used as shown here
+\begin{verbatim}
+//motor with initial value
+Scalar<Float32> motor1(14.34);
+
+//setting value, name, and unit
+Scalar<Float32> motor2(45.21,"omega","degree");
+
+//setting value, name, unit, and description
+Scalar<Float32> motor3(90.32,"theta","degree","detector angle");
+\end{verbatim}
+while the later ones are simply
+\begin{verbatim}
+//setting value, name, and unit
+Scalar<Float32> motor2("omega","degree");
+
+//setting value, name, unit, and description
+Scalar<Float32> motor3("theta","degree","detector angle");
+\end{verbatim}
+All information that can be passed to the constructor can be changed 
+and accessed after object instantiation via the apropriate methods as 
+will be shown in the next section.
+
+\subsection{Accessing {\tt Scalar<T>} object information and data}
+After an instance of {\tt Scalar<T>} has been created we can use methods 
+to configure this object. In this next code snipped we will use 
+the default constructor for instantiation and afterwards 
+configure the object using the appropriate methods
+\begin{verbatim}
+Scalar<UInt32> SCA;     //class instantiation
+SCA.setName("SCA1");    //set the name of the object
+SCA.setUnit("cps");     //set the unit to (cps)
+SCA.setDescription("first SCA in the rack");  //set the description
+
+SCA.setValue(30392);   //setting a data value 
+\end{verbatim}
+As shown already in the previous section we could have achieved the same 
+object using an single constructor call. However, in some cases it is 
+not possible to know everything about an object at the time it is 
+created.
+We can obtain all the information and data from an object using the 
+corresponding {\tt get}-methods (as you may have already expected)
+\begin{verbatim}
+String name = SCA.getName();         //obtain the name of the object
+String unit = SCA.getUnit();         //its unit
+String desc = SCA.getDescription();  //its description
+UInt32 data = SCA.getValue();        //and finaly its data value
+\end{verbatim}
+In particular using {\tt getValue()} nad {\tt setValue()} for reading from
+and and writing data to the object feels quite unnatural. In the next section
+a method for accessing a {\tt Scalar<T>}s data using the assignment operator 
+will be introduced which makes such an object fell much more like a native 
+type variable.
+
+\subsection{Assignment of a {\tt Scalar<T>} template and conversion operator}
+
+While object creation is a rather simple task assignment is not that
+easy\footnote{ For those who are not that familiar with C++: If you create an
+object from another you can always assume that you start with a new object. 
+If you assign an object to an other you have to take measures that the
+assignment leads to an valid result.}.
+Assignment means that the values of an already existing {\tt Scalar<T>} object 
+will be assigned to an other object of that type. In addition and particularlly
+useful for this special type of object is the assigment of a native variable 
+to a {\tt Scalar<T>} object.
+From this we get four possible cases which must be handled by the assignment
+operator
+\begin{enumerate}
+  \item assign a {\tt Scalar<T>} to an other {\tt Scalar<T> } - this is the
+  trivial case
+  \item assign a varible of type {\tt T} to an instance {\tt Scalar<T>}
+  \item assign a {\tt Scalar<U>} to an instance of {\tt Scalar<T>} where {\tt U}
+  and {\tt T} are different native types
+  \item and finally assign a variable of native type {\tt U} to a {\tt
+  Scalar<T>} object where {\tt T} and {\tt U} denote differnt native types.
+\end{enumerate}
+The first two cases are trivial and are fully supported as shown in this 
+next code snippet
+\begin{verbatim}
+Scalar<UInt32> SCA1;
+Scalar<UInt32> SCA2;
+Scalar<UInt32> SCA;
+UInt32 data = 101983;
+
+//assign here the SCA1 or SCA2 to SCA
+if(...){ 
+    SCA = SCA1;
+}else{
+    SCA = SCA2;
+}
+
+//set the value of SCA using the assignment operator
+SCA = data;
+\end{verbatim}
+There is a small difference in the usage of the assignment operator in this 
+way. In the first case where for instance {\tt SCA = SCA1;} {\tt SCA} not 
+only takes the value of {\tt SCA1} it also obtains its name, unit, and 
+description. This is what one would expect from an assignment operator 
+in C++. In the latter case {\tt SCA = data} only the value of {\tt SCA} is set
+to that of {\tt data}. 
+
+The other two situations as mentioned above where the rhs of the assignment 
+operator is based on a different native type is a bit more complicated. 
+In both cases the value of the object on the lhs of the assignment operator 
+must take a value of a different native type. It is quite clear that this is 
+not always possible without complications. If you assign variables of 
+incompatible native types (for instance if you try to assigne a singned integer
+to an variable of an unsiged type) in C++ you usually get neither an error
+message or an exception. However, for the {\tt Scalar<T>} object this is the 
+case. Thus not all combinations of assignments are allowed if the fundamental 
+data types on the lhs of the assignment operator differ from those of the 
+rhs.
+And this are the rules 
+\begin{enumerate}
+  \item you cannot assign a float to an integer scalar - this will throw an 
+        {\tt TypeError} exception
+  \item you cannot assign a complex scalar to an integer or float scalar - as 
+        above a {\tt TypeError} exception will be thrown
+  \item assignment of two integer scalars of different size is only possible 
+        if the value on the rhs fits into the range of the integer type on the 
+        lhs - otherwise a {\tt RangeError} exception is thrown (this is also 
+        valid for unsigned integer types).
+  \item assignment of a signed integer scalar to an unsigned integer scalar 
+        of size is only allowed if the integer scalar is not negative - 
+        otherwise a {\tt RangeError} exception is thrown 
+  \item assignment of a singed integer to an unsigned integer scalar of
+        different size is only possible if the the signed integer is not 
+        negative and its value fits into the range of the unsigned integer 
+        type - if one or both of these conditions is not satisfied a
+        {\tt RangeError} exception will be thrown
+\end{enumerate}
+The implementation of these rules ensures that no type overflow can occur 
+during assignment of scalar objects.
+
+The assignment operators solves for cases where its lhs is an instance of 
+{\tt Scalar<T>}. However, there is also another possibility: the lhs is a 
+variable of a native type and the rhs an instance of {\tt Scalar<T>}.
+This is where the conversion operator enteres the stage. 
+
+
+\subsection{Arithemtic operations}
+Both the binary as well as the unary arithmetic operations are overloaded 
+for the {\tt Scalar<T>} template. Like the assignment operator the arithmetic
+operators take care about type problems. Usually you would not recognize
+problems with types during arithmetic operations. However there are some 
+and they should be mentioned here in order to inform you about when and why 
+exceptions are thrown. The situation is a bit different for binary and unary 
+operators thats why they are handled in different sections.
+
+\subsubsection{The binary arithmetic operators}
+These operators handle cases of the form
+
+
+
+While types are not really a problem for $+$, $-$, and $*$ operations, the $/$-division operator must be handled with care in order to avoid information 
+losses. 
+
+\subsection{A full example}
+
+\section{The {\tt Array<T>} template}
+
+\subsection{Instantiation of a {\tt Array<T>} template}
+
+\subsection{Assignment of a {\tt Array<T>} template}
+
+\subsection{Arithmetic operations}
+
+\subsection{Array selections}
+
+\subsection{A full example}

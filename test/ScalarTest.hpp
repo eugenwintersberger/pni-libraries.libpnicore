@@ -14,13 +14,14 @@ class ScalarTest : public CppUnit::TestFixture{
     CPPUNIT_TEST_SUITE(ScalarTest);
     CPPUNIT_TEST(testConstructors);
 
-    //CPPUNIT_TEST(testCharOperations);
-    //CPPUNIT_TEST(testUCharOperations);
     CPPUNIT_TEST(testConversion);
     CPPUNIT_TEST(testAssignment);
     CPPUNIT_TEST(testSetGetValue);
     CPPUNIT_TEST(testBinaryAddOperation);
     CPPUNIT_TEST(testUnaryAddOperation);
+    CPPUNIT_TEST(testUnaryDivOperation);
+    CPPUNIT_TEST(testUnarySubOperation);
+    CPPUNIT_TEST(testUnaryMultOperation);
     CPPUNIT_TEST(testComparison);
     CPPUNIT_TEST_SUITE_END();
     private:
@@ -46,6 +47,9 @@ class ScalarTest : public CppUnit::TestFixture{
 
 
         void testUnaryAddOperation();
+        void testUnaryMultOperation();
+        void testUnaryDivOperation();
+        void testUnarySubOperation();
         void testConversion();
 };
 

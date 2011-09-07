@@ -3,9 +3,7 @@
 
 #include<cppunit/extensions/HelperMacros.h>
 
-#include "Scalar.hpp"
 #include "ScalarTest.hpp"
-#include "ResultTypeTrait.hpp"
 
 CPPUNIT_TEST_SUITE_REGISTRATION(ScalarTest);
 
@@ -26,10 +24,12 @@ void ScalarTest::testConversion(){
 
 	sui8 = (UInt8)10;
 
+	std::cout<<"use native conversion operator!"<<std::endl;
 	CPPUNIT_ASSERT_NO_THROW(ui8  = sui8);
 	CPPUNIT_ASSERT(ui8 == 10);
+	std::cout<<"use template conversion operator!"<<std::endl;
 	CPPUNIT_ASSERT_NO_THROW(f64 = sui8);
-	CPPUNIT_ASSERT(f64 = 10.);
+	CPPUNIT_ASSERT(f64 == 10.);
 
 }
 
@@ -60,7 +60,7 @@ void ScalarTest::testSetGetValue(){
 	CPPUNIT_ASSERT_THROW(sia.setValue(sfa),TypeError);
 	sia = 100;
 	CPPUNIT_ASSERT_NO_THROW(sca.setValue(sia));
-	CPPUNIT_ASSERT(sca.getValue().real() == sia);
+	CPPUNIT_ASSERT(sca.getValue().real() == sia.getValue());
 }
 
 void ScalarTest::testAssignment(){
@@ -141,60 +141,51 @@ void ScalarTest::testComparison(){
 void ScalarTest::testBinaryAddOperation(){
 	Float128Scalar a,b,c;
 	Int64Scalar ci,ai,bi;
+	UInt64Scalar sui64;
 	Float128 av = 1.,bv = -45.2390;
-	Complex64Scalar sca,scb,scc;
-	Complex64 ca,cb,cc;
-
 
 	//what we are allowed to do
 	a = av;
 	b = bv;
-	CPPUNIT_ASSERT_NO_THROW(c = a+b);
+	//everything in float
+	std::cout<<"Should use template operator + Scalar Scalar!"<<std::endl;
+	CPPUNIT_ASSERT_NO_THROW(c = a + b);
 	CPPUNIT_ASSERT(c == av+bv);
-	CPPUNIT_ASSERT_NO_THROW(c = a+av);
+	CPPUNIT_ASSERT_NO_THROW(c = a + av);
 	CPPUNIT_ASSERT(c == av+av);
-	CPPUNIT_ASSERT_NO_THROW(c = bv+b);
+	CPPUNIT_ASSERT_NO_THROW(c = bv + b);
 	CPPUNIT_ASSERT(c == bv+bv);
 	ai = 1;
 	bi = 2;
 	CPPUNIT_ASSERT_NO_THROW(c = ai+bi);
-	CPPUNIT_ASSERT(c == ai+bi);
+	//can assign an integer to a float
+	CPPUNIT_ASSERT(c == (ai+bi));
+	//can assign integer to integer
 	CPPUNIT_ASSERT_NO_THROW(ci = ai+bi);
 	CPPUNIT_ASSERT(ci == ai+bi);
 
-	//checking complex numbers
-	ca = Complex64(1.,2);
-	cb = Complex64(4,-2.);
-	sca = ca;
-	scb = cb;
-	CPPUNIT_ASSERT(sca == ca);
-	CPPUNIT_ASSERT(scb == cb);
+	//if an integer is not negative it can be assigned to an
+	//unsigned int
+	ai = 1;
+	bi = 2;
+	CPPUNIT_ASSERT_NO_THROW(sui64 = ai+bi);
 
-	/*
-	std::cout<<typeid(sca).name()<<" "<<typeid(Complex64Scalar()).name()<<std::endl;
-	std::cout<<typeid(scb).name()<<" "<<typeid(Complex64Scalar()).name()<<std::endl;
-	std::cout<<typeid(scc).name()<<" "<<typeid(Complex64Scalar()).name()<<std::endl;
-	std::cout<<typeid(a).name()<<" "<<typeid(Float64Scalar()).name()<<std::endl;
-	 */
-
-	std::cout<<"------------------ResultTypeTrait<Complex64,Complex64>---------------"<<std::endl;
-	ResultTypeTrait<Complex64,Complex64>::AddResultType o;
-	std::cout<<typeid(ca).name()<<std::endl;
-	std::cout<<typeid(o).name()<<std::endl;
-	std::cout<<"---------------------------------------------------------------------"<<std::endl;
-	scc = sca + scb;
-	cc = ca+cb;
-
-	//CPPUNIT_ASSERT_NO_THROW(scc = sca+scb);
-	//CPPUNIT_ASSERT(scc == ca+cb);
+	//test complex numbers
+	Complex128 sca,scb,scc;
+	sca = Complex128(4.4,1.0);
+	scb = Complex128(3.1,-0.37);
+	CPPUNIT_ASSERT_NO_THROW(scc = sca+scb);
+	CPPUNIT_ASSERT(scc == sca+scb);
 
 
 	//what will not work
 	//the intermediate type is a float type and thus we
 	//cannot assign a float scalar to an integer one
 	CPPUNIT_ASSERT_THROW(ci = ai+b,TypeError);
-
-	//try something with binary
+	//cannot assign an negative integer to unsigned integer
+	ai = 1;
+	bi = -2;
+	CPPUNIT_ASSERT_THROW(sui64 = ai+bi,TypeError);
 
 
 }
@@ -213,7 +204,8 @@ void ScalarTest::testUnaryAddOperation(){
 	CPPUNIT_ASSERT_NO_THROW(saf64 += bf64);
 	CPPUNIT_ASSERT(saf64 == bf64);
 
-	CPPUNIT_ASSERT_NO_THROW( sui8 += saf64);
+	//this should not work
+	CPPUNIT_ASSERT_THROW( sui8 += saf64,RangeError);
 	std::cout<<sui8<<std::endl;
 
 	Complex128Scalar sca(Complex128(0,0));
@@ -221,6 +213,18 @@ void ScalarTest::testUnaryAddOperation(){
 	CPPUNIT_ASSERT_NO_THROW(sca -= Complex64(-5,123.34));
 	CPPUNIT_ASSERT_NO_THROW(sca *= Complex128(.04321,1.e-4));
 	CPPUNIT_ASSERT_NO_THROW(sca /= Complex64(5.32,5.24345));
+}
+
+void ScalarTest::testUnarySubOperation(){
+
+}
+
+void ScalarTest::testUnaryDivOperation(){
+
+}
+
+void ScalarTest::testUnaryMultOperation(){
+
 }
 
 

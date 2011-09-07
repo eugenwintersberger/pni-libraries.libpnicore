@@ -72,6 +72,7 @@ template<typename T> class Scalar: public ScalarObject {
 private:
 	T _value; //!< object holding the value of the Scalar object
 public:
+	typedef T DataType;
 	typedef boost::shared_ptr<Scalar<T> > sptr;
 	//! default constructor
 	Scalar();
@@ -156,8 +157,17 @@ public:
 	//! This implementation of the conversion operator returns the value of
 	//! a scalar object. Thus, it cannot be used to alter the content of  the
 	//! object.
+
 	operator T() const{
+		std::cout<<"native conversion operator!"<<std::endl;
+
 		return _value;
+	}
+
+	template<typename U> operator U() const {
+		std::cout<<"template conversion operator!"<<std::endl;
+
+		return (U)_value;
 	}
 
 	//! return the value of a Scalar object
@@ -376,18 +386,49 @@ template<typename T>
 template<typename U> Scalar<T> &Scalar<T>::operator+=(const U &v){
 	EXCEPTION_SETUP("template<typename T> template<typename U> Scalar<T> &Scalar<T>::operator+=(const U &v)");
 
+	//what happens if we want to add a signed integer to an unsigned integer
+	if((!TypeInfo<T>::isSigned())&&(TypeInfo<U>::isSigned())){
+		if((v<0)&&((-v)>_value)){
+			EXCEPTION_INIT(RangeError,"You cannot add a negative integer to an unsigned "
+									  "one if its absolute value is larger than that of the unsigned one!");
+			EXCEPTION_THROW();
+		}
+	}
+
+	//you cannot add a float to an integer
+	if((TypeInfo<T>::isInteger())&&(!TypeInfo<U>::isInteger())){
+		EXCEPTION_INIT(TypeError,"You cannot add a float to an integer!");
+		EXCEPTION_THROW();
+	}
+
 	_value += v;
 	return *this;
 }
 
 template<typename T> Scalar<T> &Scalar<T>::operator+=(const Scalar<T> &v) {
-	_value += v;
+	_value += v.getValue();
 	return *this;
 }
 
 template<typename T>
 template<typename U> Scalar<T> &Scalar<T>::operator+=(const Scalar<U> &v){
 	EXCEPTION_SETUP("template<typename T> template<typename U> Scalar<T> &Scalar<T>::operator+=(const Scalar<U> &v)");
+
+	//what happens if we want to add a signed integer to an unsigned integer
+	if((!TypeInfo<T>::isSigned())&&(TypeInfo<U>::isSigned())){
+		if((v.getValue()<0)&&((-v.getValue())>_value)){
+			EXCEPTION_INIT(RangeError,"You cannot add a negative integer to an unsigned "
+									  "one if its absolute value is larger than that of the unsigned one!");
+			EXCEPTION_THROW();
+		}
+	}
+
+	//you cannot add a float to an integer
+	if((TypeInfo<T>::isInteger())&&(!TypeInfo<U>::isInteger())){
+		EXCEPTION_INIT(TypeError,"You cannot add a float to an integer!");
+		EXCEPTION_THROW();
+	}
+
 	_value += (T)v.getValue();
 	return *this;
 }
@@ -555,105 +596,106 @@ template<typename T> Scalar<T> &Scalar<T>::operator=(const Scalar<T> &s){
 
 //! binary add operation
 template<typename A,typename B>
-Scalar<typeof ResultTypeTrait<A,B>::AddResultType > operator+(const Scalar<A> &a,const Scalar<B> &b){
-	Scalar<typeof ResultTypeTrait<A,B>::AddResultType > o;
+const Scalar<typename ResultTypeTrait<A,B>::AddResultType > operator+(const Scalar<A> &a,const Scalar<B> &b){
+	std::cout<<"template binary operator + Scalar Scalar"<<std::endl;
+	Scalar<typename ResultTypeTrait<A,B>::AddResultType > o;
 
-	o.setValue((typeof ResultTypeTrait<A,B>::AddResultType)(a.getValue()+b.getValue()));
+	o.setValue((typename ResultTypeTrait<A,B>::AddResultType)(a.getValue()+b.getValue()));
 
 	return o;
 }
 
 template<typename A,typename B>
-Scalar<typeof ResultTypeTrait<A,B>::AddResultType > operator+(const Scalar<A> &a,const B &b){
-	Scalar<typeof ResultTypeTrait<A,B>::AddResultType > o;
+const Scalar<typename ResultTypeTrait<A,B>::AddResultType > operator+(const Scalar<A> &a,const B &b){
+	Scalar<typename ResultTypeTrait<A,B>::AddResultType > o;
 
-	o.setValue((typeof ResultTypeTrait<A,B>::AddResultType)(a.getValue()+b));
+	o.setValue((typename ResultTypeTrait<A,B>::AddResultType)(a.getValue()+b));
 	return o;
 }
 
 template<typename A,typename B>
-Scalar<typeof ResultTypeTrait<A,B>::AddResultType > operator+(const A &a,const Scalar<B> &b){
-	Scalar<typeof ResultTypeTrait<A,B>::AddResultType > o;
+const Scalar<typename ResultTypeTrait<A,B>::AddResultType > operator+(const A &a,const Scalar<B> &b){
+	Scalar<typename ResultTypeTrait<A,B>::AddResultType > o;
 
-	o.setValue((typeof ResultTypeTrait<A,B>::AddResultType)(a+b.getValue()));
+	o.setValue((typename ResultTypeTrait<A,B>::AddResultType)(a+b.getValue()));
 
 	return o;
 }
 
 //overloaded subtraction operator
 template<typename A,typename B>
-Scalar<typeof ResultTypeTrait<A,B>::SubResultType > operator-(const Scalar<A> &a, const Scalar<B> &b) {
-	Scalar<typeof ResultTypeTrait<A,B>::SubResultType > tmp;
+const Scalar<typename ResultTypeTrait<A,B>::SubResultType > operator-(const Scalar<A> &a, const Scalar<B> &b) {
+	Scalar<typename ResultTypeTrait<A,B>::SubResultType > tmp;
 
-	tmp.setValue((typeof ResultTypeTrait<A,B>::SubResultType)(a.getValue()-b.getValue()));
-
-	return tmp;
-}
-
-template<typename A,typename B>
-Scalar<typeof ResultTypeTrait<A,B>::SubResultType > operator-(const A& a, const Scalar<B> &b) {
-	Scalar<typeof ResultTypeTrait<A,B>::SubResultType > tmp;
-
-	tmp.setValue((typeof ResultTypeTrait<A,B>::SubResulType)(a-b.getValue()));
+	tmp.setValue((typename ResultTypeTrait<A,B>::SubResultType)(a.getValue()-b.getValue()));
 
 	return tmp;
 }
 
 template<typename A,typename B>
-Scalar<typeof ResultTypeTrait<A,B>::SubResultType > operator-(const Scalar<A> &a, const B &b) {
-	Scalar<typeof ResultTypeTrait<A,B>::SubResultType > tmp;
+const Scalar<typename ResultTypeTrait<A,B>::SubResultType > operator-(const A& a, const Scalar<B> &b) {
+	Scalar<typename ResultTypeTrait<A,B>::SubResultType > tmp;
 
-	tmp.setValue((typeof ResultTypeTrait<A,B>::SubResultType)(a.getValue()-b));
+	tmp.setValue((typename ResultTypeTrait<A,B>::SubResulType)(a-b.getValue()));
+
+	return tmp;
+}
+
+template<typename A,typename B>
+const Scalar<typename ResultTypeTrait<A,B>::SubResultType > operator-(const Scalar<A> &a, const B &b) {
+	Scalar<typename ResultTypeTrait<A,B>::SubResultType > tmp;
+
+	tmp.setValue((typename ResultTypeTrait<A,B>::SubResultType)(a.getValue()-b));
 	return tmp;
 }
 
 //overloading the multiplication operator
 template<typename A,typename B>
-Scalar<typeof ResultTypeTrait<A,B>::MultResultType > operator*(const Scalar<A> &a, const Scalar<B> &b) {
-	Scalar<typeof ResultTypeTrait<A,B>::MultResultType > tmp;
+const Scalar<typename ResultTypeTrait<A,B>::MultResultType > operator*(const Scalar<A> &a, const Scalar<B> &b) {
+	Scalar<typename ResultTypeTrait<A,B>::MultResultType > tmp;
 
-	tmp.setValue((typeof ResultTypeTrait<A,B>::MultResultType)(a.getValue()*b.getValue()));
+	tmp.setValue((typename ResultTypeTrait<A,B>::MultResultType)(a.getValue()*b.getValue()));
 	return tmp;
 }
 
 template<typename A,typename B>
-Scalar<typeof ResultTypeTrait<A,B>::MultResultType > operator*(const A& a, const Scalar<B> &b) {
-	Scalar<typeof ResultTypeTrait<A,B>::MultResultType > tmp;
+const Scalar<typename ResultTypeTrait<A,B>::MultResultType > operator*(const A& a, const Scalar<B> &b) {
+	Scalar<typename ResultTypeTrait<A,B>::MultResultType > tmp;
 
-	tmp.setValue((typeof ResultTypeTrait<A,B>::MultResultType)(a*b.getValue()));
+	tmp.setValue((typename ResultTypeTrait<A,B>::MultResultType)(a*b.getValue()));
 	return tmp;
 }
 
 template<typename A,typename B>
-Scalar<typeof ResultTypeTrait<A,B>::MultResultType > operator*(const Scalar<A> &a, const B& b) {
-	Scalar<typeof ResultTypeTrait<A,B>::MultResultType > tmp;
+const Scalar<typename ResultTypeTrait<A,B>::MultResultType > operator*(const Scalar<A> &a, const B& b) {
+	Scalar<typename ResultTypeTrait<A,B>::MultResultType > tmp;
 
-	tmp.setValue((typeof ResultTypeTrait<A,B>::MultResultType)(a.getValue()*b));
+	tmp.setValue((typename ResultTypeTrait<A,B>::MultResultType)(a.getValue()*b));
 	return tmp;
 }
 
 //overloading the division operator
 template<typename A,typename B>
-Scalar<typeof ResultTypeTrait<A,B>::DivResultType > operator/(const Scalar<A> &a, const Scalar<B> &b) {
-	Scalar<typeof ResultTypeTrait<A,B>::DivResultType > tmp;
+const Scalar<typename ResultTypeTrait<A,B>::DivResultType > operator/(const Scalar<A> &a, const Scalar<B> &b) {
+	Scalar<typename ResultTypeTrait<A,B>::DivResultType > tmp;
 
 	tmp.setValue((typeof ResultTypeTrait<A,B>::DivResultType)(a.getValue()/b.getValue()));
 	return tmp;
 }
 
 template<typename A,typename B>
-Scalar<typeof ResultTypeTrait<A,B>::DivResultType > operator/(const A& a, const Scalar<B> &b) {
-	Scalar<typeof ResultTypeTrait<A,B>::DivResultType > tmp;
+const Scalar<typename ResultTypeTrait<A,B>::DivResultType > operator/(const A& a, const Scalar<B> &b) {
+	Scalar<typename ResultTypeTrait<A,B>::DivResultType > tmp;
 
-	tmp.setValue((typeof ResultTypeTrait<A,B>::DivResultType)(a/b.getValue()));
+	tmp.setValue((typename ResultTypeTrait<A,B>::DivResultType)(a/b.getValue()));
 	return tmp;
 }
 
 template<typename A,typename B>
-Scalar<typeof ResultTypeTrait<A,B>::DivResultType > operator/(const Scalar<A> &a, const B &b) {
-	Scalar<typeof ResultTypeTrait<A,B>::DivResultType > tmp;
+const Scalar<typename ResultTypeTrait<A,B>::DivResultType > operator/(const Scalar<A> &a, const B &b) {
+	Scalar<typename ResultTypeTrait<A,B>::DivResultType > tmp;
 
-	tmp.setValue((typeof ResultTypeTrait<A,B>::DivResultType)(a.getValue()/b));
+	tmp.setValue((typename ResultTypeTrait<A,B>::DivResultType)(a.getValue()/b));
 	return tmp;
 }
 

@@ -1,9 +1,17 @@
 %%%administrators guide for libpniutils
 
 \documentclass[a4paper,twoside]{book}
-\usepackage{amsmath,graphics}
+\usepackage{a4wide,amsmath,graphics}
+\usepackage{listings}
 \author{Eugen Wintersberger}
 \title{{\Huge libpniutils\\ Users guide}}
+
+%%setup the listings package
+\lstset{language=C++}
+\lstdefinestyle{numbers}{numbers=left,stepnumber=1,numberstyle=\small}
+\lstset{style=numbers}
+\lstset{captionpos=b,frame=lines,float=tb}
+\lstset{floatplacement=tb}
 
 \begin{document}
 \maketitle
@@ -19,6 +27,7 @@
 \input{tex/usage.tex}
 
 \chapter{Data in memory}\label{chapter:data_in_memory}
+\input{tex/data-objects.tex}
 
 \chapter{Data I/O}\label{chapter:io}
 

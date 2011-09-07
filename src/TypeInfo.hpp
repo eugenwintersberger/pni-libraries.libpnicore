@@ -51,33 +51,40 @@ public:
 		return std::numeric_limits<T>::is_integer;
 	}
 
-	template<typename U> static bool isCompatibleForAssignment(const U &b);
-	template<typename U> static bool isCompatibleForDivision(const T &a,const U &b);
+	template<typename U> static void isCompatibleForAssignment(const T &a,const U &b);
 
 };
 
 //checks if a variable of type U can be assigned to one of type T
 template<typename T>
 template<typename U>
-bool TypeInfo<T>::isCompatibleForAssignment(const U &b){
+void TypeInfo<T>::isCompatibleForAssignment(const T& a,const U &b){
 	EXCEPTION_SETUP("template<typename T,typename U> bool isCompatibleForAssignment(const T &a,const U &b)");
 
-	//one cannot assign a complex number to a non-complex float number
-	if((!TypeInfo<T>::isComplex())&&(TypeInfo<U>::isComplex())){
-		EXCEPTION_INIT(TypeError,"Cannot convert a complex scalar to a non complex type!");
-		EXCEPTION_THROW();
-	}
-
+	//ASSIGNMENT RULE 1 IN THE MANUAL
 	//one cannot assign securely assign a float number to an integer
 	if((TypeInfo<T>::isInteger())&&(!TypeInfo<U>::isInteger())){
 		EXCEPTION_INIT(TypeError,"Cannot convert a float value to an integer!");
 		EXCEPTION_THROW();
 	}
 
-	//in general we can assign values only to numbers
-	if(TypeInfo<T>::getSize() < TypeInfo<U>::getSize()){
-		EXCEPTION_INIT(SizeMissmatchError,"Cannot convert scalar to a smaller type!");
+	//ASSIGNMENT RULE 2 IN THE MANUAL
+	//one cannot assign a complex number to a non-complex float number
+	if((!TypeInfo<T>::isComplex())&&(TypeInfo<U>::isComplex())){
+		EXCEPTION_INIT(TypeError,"Cannot convert a complex scalar to a non complex type!");
 		EXCEPTION_THROW();
+	}
+
+
+
+	//if the target size is smaller than the source size we have to check the
+	//limits - this check should implicitly work for integer, unsigned integer
+	//and float values
+	if(TypeInfo<T>::getSize() < TypeInfo<U>::getSize()){
+		if((b<TypeInfo<T>::getMin())||(b>TypeInfo<T>::getMax())){
+			EXCEPTION_INIT(RangeError,"Cannot convert scalar to a smaller type!");
+			EXCEPTION_THROW();
+		}
 	}
 
 	//if we made it until here we have to check for sign
@@ -89,26 +96,9 @@ bool TypeInfo<T>::isCompatibleForAssignment(const U &b){
 		}
 	}
 
-	return true;
 }
 
-template<typename T>
-template<typename U> bool TypeInfo<T>::isCompatibleForDivision(const T &a,const U &b){
-	EXCEPTION_SETUP("template<typename T> template<typename U> bool TypeInfo<T>::isCompatibleForDivision(const T &a,const U &b)");
 
-	//you cannot divide a non-complex number by a complex one
-	if((!isComplex())&&(TypeInfo<U>::isComplex())){
-		EXCEPTION_INIT(TypeError,"Cannot divide a non-complex number by a complex number!");
-		EXCEPTION_THROW();
-	}
-
-	//what if we want to divide an integer by a non-integer
-	if(isInteger()&&(!TypeInfo<U>::isInteger())){
-		EXCEPTION_INIT(TypeError,"Cannot divide an integer by a float!");
-		EXCEPTION_THROW();
-	}
-
-}
 
 
 
