@@ -203,21 +203,13 @@ And this are the rules
         {\tt TypeError} exception
   \item you cannot assign a complex scalar to an integer or float scalar - as 
         above a {\tt TypeError} exception will be thrown
-  \item assignment of two integer scalars of different size is only possible 
-        if the value on the rhs fits into the range of the integer type on the 
-        lhs - otherwise a {\tt RangeError} exception is thrown (this is also 
-        valid for unsigned integer types).
-  \item assignment of a signed integer scalar to an unsigned integer scalar 
-        of size is only allowed if the integer scalar is not negative - 
-        otherwise a {\tt RangeError} exception is thrown 
-  \item assignment of a singed integer to an unsigned integer scalar of
-        different size is only possible if the the signed integer is not 
-        negative and its value fits into the range of the unsigned integer 
-        type - if one or both of these conditions is not satisfied a
-        {\tt RangeError} exception will be thrown
+  \item if the value of the type that should be assigned exceeds the bounds 
+        of the type on the lhs a {\tt RangeError} is thrown.
+  \item complex numbers can only be assigned to complex scalar objects.
 \end{enumerate}
-The implementation of these rules ensures that no type overflow can occur 
-during assignment of scalar objects.
+The last rule makes checks for type sizes redundant. Because the size alone 
+does not give enough information if a value can be assigned - the range 
+is the only important quantity.
 
 The assignment operators solves for cases where its lhs is an instance of 
 {\tt Scalar<T>}. However, there is also another possibility: the lhs is a 

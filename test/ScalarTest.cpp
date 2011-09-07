@@ -75,6 +75,9 @@ void ScalarTest::testAssignment(){
 	UInt8 ui8 = 10;
 	Float64 f64 = -1000.30189;
 	Complex128 c128(1.,-2.);
+	Complex32 c32(34,-290);
+
+	CPPUNIT_ASSERT_NO_THROW(sc128 = c32);
 
 
 	//start here with the assignment of native variables

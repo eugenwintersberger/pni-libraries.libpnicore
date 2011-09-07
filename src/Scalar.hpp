@@ -326,7 +326,7 @@ template<typename T> template<typename U> void Scalar<T>::setValue(const U &v){
 	EXCEPTION_SETUP("template<typename T> template<typename U> void Scalar<T>::setValue(const U &v)");
 
 	try{
-		TypeInfo<T>::isCompatibleForAssignment(v);
+		TypeInfo<T>::isCompatibleForAssignment(_value,v);
 	}catch(...){
 		EXCEPTION_INIT(TypeError,"Cannot assign value due to incompatible types!");
 		EXCEPTION_THROW();
@@ -543,7 +543,7 @@ template<typename U> Scalar<T> &Scalar<T>::operator=(const U &v){
 	EXCEPTION_SETUP("template<typename T> template<typename U> Scalar<T> &Scalar<T>::operator(const U &v)");
 
 	try{
-		TypeInfo<T>::isCompatibleForAssignment(v);
+		TypeInfo<T>::isCompatibleForAssignment(_value,v);
 	}catch(...){
 		EXCEPTION_INIT(TypeError,"Cannot assign value to scalar due to incompatible types!");
 		EXCEPTION_THROW();
@@ -563,7 +563,7 @@ template<typename U> Scalar<T> &Scalar<T>::operator=(const Scalar<U> &v){
 	std::cout<<"template assignment of scalar objects!"<<std::endl;
 	if((void *)this != (void *)(&v)){
 		try{
-			TypeInfo<T>::isCompatibleForAssignment(v.getValue());
+			TypeInfo<T>::isCompatibleForAssignment(_value,v.getValue());
 		}catch(...){
 			EXCEPTION_INIT(TypeError,"Cannot assign types!");
 			EXCEPTION_THROW();

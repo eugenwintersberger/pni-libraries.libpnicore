@@ -60,42 +60,43 @@ template<typename T>
 template<typename U>
 void TypeInfo<T>::isCompatibleForAssignment(const T& a,const U &b){
 	EXCEPTION_SETUP("template<typename T,typename U> bool isCompatibleForAssignment(const T &a,const U &b)");
+	static bool target_is_int = TypeInfo<T>::isInteger();
+	static bool target_is_complx = TypeInfo<T>::isComplex();
+	static bool source_is_int = TypeInfo<U>::isInteger();
+	static bool source_is_complx = TypeInfo<U>::isComplex();
 
-	//ASSIGNMENT RULE 1 IN THE MANUAL
-	//one cannot assign securely assign a float number to an integer
-	if((TypeInfo<T>::isInteger())&&(!TypeInfo<U>::isInteger())){
-		EXCEPTION_INIT(TypeError,"Cannot convert a float value to an integer!");
-		EXCEPTION_THROW();
-	}
+	if(target_is_int){
+		//in the case the target is an integer type
 
-	//ASSIGNMENT RULE 2 IN THE MANUAL
-	//one cannot assign a complex number to a non-complex float number
-	if((!TypeInfo<T>::isComplex())&&(TypeInfo<U>::isComplex())){
-		EXCEPTION_INIT(TypeError,"Cannot convert a complex scalar to a non complex type!");
-		EXCEPTION_THROW();
-	}
-
-
-
-	//if the target size is smaller than the source size we have to check the
-	//limits - this check should implicitly work for integer, unsigned integer
-	//and float values
-	if(TypeInfo<T>::getSize() < TypeInfo<U>::getSize()){
-		if((b<TypeInfo<T>::getMin())||(b>TypeInfo<T>::getMax())){
-			EXCEPTION_INIT(RangeError,"Cannot convert scalar to a smaller type!");
+		//ASSIGNMENT RULE 1 and 2 according to manual
+		if(!source_is_int){
+			//if the source is not an integer we (float or complex we can break here)
+			EXCEPTION_INIT(TypeError,"Cannot assign a float or complex to an integer type!");
 			EXCEPTION_THROW();
+		}else{
+			//the source is an integer value - now things are easy - we only
+			//have to check the bounds. By doing so we implicitely check the size
+			//now we have to check only ranges
+			if((b<TypeInfo<T>::getMin())||(b>TypeInfo<T>::getMax())){
+				EXCEPTION_INIT(RangeError,"Assigned variable exceeds type bounds of the target!");
+				EXCEPTION_THROW();
+			}
+		}
+	}else{
+		//the target is a float or complex
+		if(source_is_complx && (!target_is_complx)){
+			//the source is complex and the target not - this must not work
+			//ASSIGNMENT RULE 2 according to manual
+			EXCEPTION_INIT(TypeError,"Cannot assign a complex to a float type!");
+			EXCEPTION_THROW();
+		}else{
+			//now we have to check only ranges
+			if((b<TypeInfo<T>::getMin())||(b>TypeInfo<T>::getMax())){
+				EXCEPTION_INIT(RangeError,"Assigned variable exceeds type bounds of the target!");
+				EXCEPTION_THROW();
+			}
 		}
 	}
-
-	//if we made it until here we have to check for sign
-	if((!TypeInfo<T>::isSigned())&&(TypeInfo<U>::isSigned())){
-		//we have to check the size of the
-		if(b<0){
-			EXCEPTION_INIT(RangeError,"Cannot assign a negative number to an unsigned type!");
-			EXCEPTION_THROW();
-		}
-	}
-
 }
 
 
@@ -112,15 +113,13 @@ public:
 	}
 
 	//! return the minimum value of the Complex32 type
-	static Complex32 getMin(){
-		return Complex32(std::numeric_limits<Float32>::min(),
-				         std::numeric_limits<Float32>::min());
+	static Float32 getMin(){
+		return std::numeric_limits<Float32>::min();
 	}
 
 	//! return the maximum value of the Complex32 type
-	static Complex32 getMax(){
-		return Complex32(std::numeric_limits<Float32>::max(),
-				         std::numeric_limits<Float32>::max());
+	static Float32 getMax(){
+		return std::numeric_limits<Float32>::max();
 	}
 
 	static bool isSigned(){
@@ -135,21 +134,21 @@ public:
 		return false;
 	}
 
-	template<typename U> static bool isCompatibleForAssignment(const U &b);
+	template<typename U> static void isCompatibleForAssignment(const Complex32 &a,const U &b);
 };
 
 //some specialization for complex numbers
 template<typename U>
-bool TypeInfo<Complex32>::isCompatibleForAssignment(const U &b){
+void TypeInfo<Complex32>::isCompatibleForAssignment(const Complex32 &a,const U &b){
 	EXCEPTION_SETUP("template<typename U> bool isCompatibleForAssignment<Complex32,U>(const T &a,const U &b)");
 
-	//in general we can assign values only to numbers
-	if(getSize() < TypeInfo<U>::getSize()){
-		EXCEPTION_INIT(SizeMissmatchError,"Cannot convert scalar to a smaller type!");
+	//need to check only bounds
+	if((b<TypeInfo<U>::getMin())||(b>TypeInfo<U>::getMax())){
+		EXCEPTION_INIT(RangeError,"Assigned variable exceeds type bounds of the target!");
 		EXCEPTION_THROW();
 	}
 
-	return true;
+
 }
 
 
@@ -163,15 +162,13 @@ public:
 	}
 
 	//! return the minimum value of the Complex64 type
-	static Complex64 getMin(){
-		return Complex64(std::numeric_limits<Float64>::min(),
-				         std::numeric_limits<Float64>::min());
+	static Float64 getMin(){
+		return std::numeric_limits<Float64>::min();
 	}
 
 	//! return the maximum value of the Complex64 type
-	static Complex64 getMax(){
-		return Complex64(std::numeric_limits<Float64>::max(),
-				         std::numeric_limits<Float64>::max());
+	static Float64 getMax(){
+		return std::numeric_limits<Float64>::max();
 	}
 
 	static bool isSigned() {
@@ -186,20 +183,18 @@ public:
 		return false;
 	}
 
-	template<typename U> bool isCompatibleForAssignment(const U &v);
+	template<typename U> void isCompatibleForAssignment(const Complex64 &a,const U &v);
 };
 
 template<typename U>
-bool TypeInfo<Complex64>::isCompatibleForAssignment(const U &b){
-	EXCEPTION_SETUP("template<typename U> bool isCompatibleForAssignment<Complex32,U>(const T &a,const U &b)");
+void TypeInfo<Complex64>::isCompatibleForAssignment(const Complex64 &a,const U &b){
+	EXCEPTION_SETUP("template<typename U> void TypeInfo<Complex64>::isCompatibleForAssignment(const Complex64 &a,const U &b)");
 
-	//in general we can assign values only to numbers
-	if(getSize() < TypeInfo<U>::getSize()){
-		EXCEPTION_INIT(SizeMissmatchError,"Cannot convert scalar to a smaller type!");
+	//need to check only bounds
+	if((b<TypeInfo<U>::getMin())||(b>TypeInfo<U>::getMax())){
+		EXCEPTION_INIT(RangeError,"Assigned variable exceeds type bounds of the target!");
 		EXCEPTION_THROW();
 	}
-
-	return true;
 }
 
 //! \ingroup Data-objects
@@ -212,15 +207,13 @@ public:
 	}
 
 	//! return the minimum value of the Complex128 type
-	static Complex128 getMin(){
-		return Complex128(std::numeric_limits<Float128>::min(),
-				          std::numeric_limits<Float128>::min());
+	static Float128 getMin(){
+		return std::numeric_limits<Float128>::min();
 	}
 
 	//! return the maximum value of the Complex128 type
-	static Complex128 getMax(){
-		return Complex128(std::numeric_limits<Float128>::max(),
-				          std::numeric_limits<Float128>::max());
+	static Float128 getMax(){
+		return std::numeric_limits<Float128>::max();
 	}
 
 	static bool isSigned(){
@@ -235,21 +228,18 @@ public:
 		return false;
 	}
 
-	template<typename U> static bool isCompatibleForAssignment(const U &b);
+	template<typename U> static void isCompatibleForAssignment(const Complex128 &a,const U &b){
+		EXCEPTION_SETUP("template<typename U> void TypeInfo<Complex128>::isCompatibleForAssignment(const Complex128 &a,const U &b)");
+
+		//in general we can assign values only to numbers
+		if((b<TypeInfo<Complex128>::getMin())||(b>TypeInfo<Complex128>::getMax())){
+			EXCEPTION_INIT(RangeError,"Assigned variable exceeds type bounds of the target!");
+			EXCEPTION_THROW();
+		}
+	}
 };
 
-template<typename U>
-bool TypeInfo<Complex128>::isCompatibleForAssignment(const U &b){
-	EXCEPTION_SETUP("template<typename U> bool isCompatibleForAssignment<Complex32,U>(const T &a,const U &b)");
 
-	//in general we can assign values only to numbers
-	if(getSize() < TypeInfo<U>::getSize()){
-		EXCEPTION_INIT(SizeMissmatchError,"Cannot convert scalar to a smaller type!");
-		EXCEPTION_THROW();
-	}
-
-	return true;
-}
 
 
 
