@@ -16,6 +16,8 @@
 #include "TypeInfo.hpp"
 #include "Exceptions.hpp"
 #include "ResultTypeTrait.hpp"
+#include "TypeCompat.hpp"
+#include "TypeRange.hpp"
 
 namespace pni {
 namespace utils {
@@ -325,10 +327,13 @@ template<typename T> void Scalar<T>::setValue(const Scalar<T> &v){
 template<typename T> template<typename U> void Scalar<T>::setValue(const U &v){
 	EXCEPTION_SETUP("template<typename T> template<typename U> void Scalar<T>::setValue(const U &v)");
 
-	try{
-		TypeInfo<T>::isCompatibleForAssignment(_value,v);
-	}catch(...){
+	if(!TypeCompat<T,U>::isAssignable){
 		EXCEPTION_INIT(TypeError,"Cannot assign value due to incompatible types!");
+		EXCEPTION_THROW();
+	}
+
+	if(!TypeRange<T>::checkRange(v)){
+		EXCEPTION_INIT(RangeError,"The value you want to set to this object exceeds its type limits!");
 		EXCEPTION_THROW();
 	}
 
@@ -339,12 +344,17 @@ template<typename T> template<typename U> void Scalar<T>::setValue(const U &v){
 template<typename T> template<typename U> void Scalar<T>::setValue(const Scalar<U> &s){
 	EXCEPTION_SETUP("template<typename T> template<typename U> void Scalar<T>::setValue(const Scalar<U> &s)");
 
-	try{
-		setValue(s.getValue());
-	}catch(...){
-		EXCEPTION_INIT(TypeError,"Cannot assign values!");
+	if(!TypeCompat<T,U>::isAssignable){
+		EXCEPTION_INIT(TypeError,"Cannot set value - types are incompatible!");
 		EXCEPTION_THROW();
 	}
+
+	if(!TypeRange<T>::checkRange(s.getValue())){
+		EXCEPTION_INIT(RangeError,"Cannot set value - value exceeds type bounds!");
+		EXCEPTION_THROW();
+	}
+
+	_value = s.getValue();
 }
 
 //======================unary arithmetic operators=========================================
@@ -542,12 +552,22 @@ template<typename T>
 template<typename U> Scalar<T> &Scalar<T>::operator=(const U &v){
 	EXCEPTION_SETUP("template<typename T> template<typename U> Scalar<T> &Scalar<T>::operator(const U &v)");
 
+	if(!TypeCompat<T,U>::isAssignable){
+		EXCEPTION_INIT(TypeError,"Cannot assign values - types are incompatible!");
+		EXCEPTION_THROW();
+	}
+
+	if(!TypeRange<T>::checkRange(v)){
+		EXCEPTION_INIT(RangeError,"Cannot assign values - rhs value exceeds lhs type bounds!");
+		EXCEPTION_THROW();
+	}
+	/*
 	try{
-		TypeInfo<T>::isCompatibleForAssignment(_value,v);
+		isCompatibleForAssignment(_value,v);
 	}catch(...){
 		EXCEPTION_INIT(TypeError,"Cannot assign value to scalar due to incompatible types!");
 		EXCEPTION_THROW();
-	}
+	}*/
 
 	//std::cout<<"template variable assignment!";
 	_value = (T)v;
@@ -562,10 +582,21 @@ template<typename U> Scalar<T> &Scalar<T>::operator=(const Scalar<U> &v){
 	//check if assignment is possible
 	std::cout<<"template assignment of scalar objects!"<<std::endl;
 	if((void *)this != (void *)(&v)){
+		/*
 		try{
-			TypeInfo<T>::isCompatibleForAssignment(_value,v.getValue());
+			isCompatibleForAssignment(_value,v.getValue());
 		}catch(...){
 			EXCEPTION_INIT(TypeError,"Cannot assign types!");
+			EXCEPTION_THROW();
+		}*/
+
+		if(!TypeCompat<T,U>::isAssignable){
+			EXCEPTION_INIT(TypeError,"Cannot assign value - types are incompatible!");
+			EXCEPTION_THROW();
+		}
+
+		if(!TypeRange<T>::checkRange(v.getValue())){
+			EXCEPTION_INIT(RangeError,"Cannot assign value - rhs value exceeds lhs type bounds!");
 			EXCEPTION_THROW();
 		}
 
@@ -575,7 +606,7 @@ template<typename U> Scalar<T> &Scalar<T>::operator=(const Scalar<U> &v){
 		this_o = that_o;
 
 		//now we have to transfer the value
-		setValue(v.getValue());
+		_value = (T)v.getValue();
 	}
 
 	return *this;

@@ -44,7 +44,14 @@ void ScalarTest::testSetGetValue(){
 	Complex128 ca;
 	Float64Scalar sfa;
 	Float64 fa;
-	UInt32Scalar sia;
+	UInt32Scalar su32;
+	Int32Scalar si32;
+
+	//checking integer values
+	si32 = -14;
+	CPPUNIT_ASSERT_THROW(su32.setValue(si32),RangeError);
+	fa = 1.2434;
+	CPPUNIT_ASSERT_THROW(su32.setValue(fa),TypeError);
 
 	ca = Complex128(1,2);
 	CPPUNIT_ASSERT_NO_THROW(sca.setValue(ca));
@@ -57,72 +64,96 @@ void ScalarTest::testSetGetValue(){
 	CPPUNIT_ASSERT_NO_THROW(sca.setValue(sfa));
 	CPPUNIT_ASSERT(sca.getValue().real() == fa);
 
-	CPPUNIT_ASSERT_THROW(sia.setValue(sfa),TypeError);
-	sia = 100;
-	CPPUNIT_ASSERT_NO_THROW(sca.setValue(sia));
-	CPPUNIT_ASSERT(sca.getValue().real() == sia.getValue());
+	CPPUNIT_ASSERT_THROW(su32.setValue(sfa),TypeError);
+	//CPPUNIT_ASSERT_THROW(sia.setValue(sca),TypeError);
+	su32 = 100;
+	CPPUNIT_ASSERT_NO_THROW(sca.setValue(su32));
+	CPPUNIT_ASSERT(sca.getValue().real() == su32.getValue());
 }
 
 void ScalarTest::testAssignment(){
 	//we test here the assignment operator for
 	//functionality
+
+	//------------start with checking the integer types-------------------------
 	UInt8Scalar sui8;
+	UInt8 ui8;
 	UInt64Scalar sui64;
-	Int64Scalar si64;
-	Float64Scalar sf64;
-	Float64Scalar sf64_2;
+	UInt64 ui64;
+	Int64Scalar si64,si64_2;
+	Int64 i64;
+	Int8Scalar si8;
+	Int8 i8;
+
+	i8 = 100;
+	CPPUNIT_ASSERT_NO_THROW(si8 = i8); CPPUNIT_ASSERT(si8 == i8);
+	ui64 = 10000;
+	CPPUNIT_ASSERT_THROW(si8 = ui64,RangeError);
+	i64 = -10000;
+	CPPUNIT_ASSERT_THROW(si8 = i64,RangeError);
+	ui64 = 20;
+	si8 = ui64;
+	CPPUNIT_ASSERT_NO_THROW(si8 = ui64);
+	CPPUNIT_ASSERT(si8 == ui64);
+	i64 = -10000;
+	CPPUNIT_ASSERT_THROW(sui64 = i64,RangeError);
+	i64 = 100000;
+	CPPUNIT_ASSERT_NO_THROW(sui64 = i64);
+	CPPUNIT_ASSERT(sui64 == i64);
+
+	si64_2 = 1000000;
+	CPPUNIT_ASSERT_NO_THROW(si64 = si64_2);
+	CPPUNIT_ASSERT(si64 == si64_2);
+	sui64 = 13918834;
+	CPPUNIT_ASSERT_NO_THROW(si64 = sui64);
+	CPPUNIT_ASSERT(si64 == sui64);
+
+	si64 = -10000;
+	CPPUNIT_ASSERT_THROW(sui64 = si64,RangeError);
+
+	//-----------start checking floating point numbers-------------------------
+	Float64Scalar sf64, sf64_2;
+	Float32Scalar sf32;
+	Float64 f64;
+
+	//here everything should work fine
+	f64 = -1.32e-9;
+	CPPUNIT_ASSERT_NO_THROW(sf64 = f64);
+	CPPUNIT_ASSERT(sf64 == f64);
+
+	//this should go wrong - we cannot assign float to integer
+	CPPUNIT_ASSERT_THROW(si64 = sf64,TypeError);
+	CPPUNIT_ASSERT_THROW(si64 = f64,TypeError);
+
+	//ok - need to check some ranges now
+	f64 = 1.e+300;
+	CPPUNIT_ASSERT_THROW(sf32 = f64,RangeError);
+	f64 = 1.443;
+	CPPUNIT_ASSERT_NO_THROW(sf32 = f64);
+
+	//---------------start checking complex numbers----------------------------
 	Complex128Scalar sc128;
-	UInt8 ui8 = 10;
-	Float64 f64 = -1000.30189;
+	Complex64Scalar sc64;
 	Complex128 c128(1.,-2.);
 	Complex32 c32(34,-290);
 
-	CPPUNIT_ASSERT_NO_THROW(sc128 = c32);
-
-
-	//start here with the assignment of native variables
-	//to a Scalar<T> object.
-
-	//this should call the native assignment operator
-	//for Float64 scalar objects - this seems to work.
-	CPPUNIT_ASSERT_NO_THROW(sf64 = f64);
-	//this should call the template operator with the
-	//type checking
-	CPPUNIT_ASSERT_NO_THROW(sf64 = ui8);
-
-	//should throw an error since we cannot assign a float
-	//value to an integer
-	CPPUNIT_ASSERT_THROW(sui8 = f64,TypeError);
-	si64 = -10000;
-	//should throw an exception since we try to assign
-	//a negative value to a type that does not support signed values
-	CPPUNIT_ASSERT_THROW(sui64 = si64,TypeError);
-	//should throw an exception since the target type is smaller
-	//than the source type.
-	CPPUNIT_ASSERT_THROW(sui8 = si64,TypeError);
-
-	//need here some tests for complex numbers - they need some special handling
+	//this is trivial
 	CPPUNIT_ASSERT_NO_THROW(sc128 = c128);
-	//for this we would allready get an compile time error.
-	//CPPUNIT_ASSERT_THROW(sf64 = c128,TypeError);
-	//should work
+	CPPUNIT_ASSERT(sc128 == c128);
+
+	//this should not work - does not even compile
+	//CPPUNIT_ASSERT_THROW(si64 = c32,TypeError);
+	//CPPUNIT_ASSERT_THROW(sf64 = c32,TypeError);
+
+	//this should work
 	CPPUNIT_ASSERT_NO_THROW(sc128 = f64);
+	CPPUNIT_ASSERT_NO_THROW(sc128 = sui64);
+
+	//push it to the limits
+	sc128 = Complex128(1.e+400,1e+400);
+	CPPUNIT_ASSERT_THROW(sc64 = sc128,RangeError);
 
 
-	//check now the assignment between objects of type
-	//Scalar<T>
-	CPPUNIT_ASSERT_NO_THROW(sf64 = 14658789.78984);
-	//should call the native assignment operator
-	CPPUNIT_ASSERT_NO_THROW(sf64_2 = sf64);
-	CPPUNIT_ASSERT_NO_THROW(sui8 = (UInt8)100);
-	CPPUNIT_ASSERT_NO_THROW(sf64 = sui8);
-	si64 = -10000;
-	//cannot work because of different size
-	CPPUNIT_ASSERT_THROW(sui8 = si64,TypeError);
-	//cannot work due to sign
-	CPPUNIT_ASSERT_THROW(sui64 = si64,TypeError);
-	//cannot work due to float to integer conversion
-	CPPUNIT_ASSERT_THROW(si64 = sf64,TypeError);
 }
 
 void ScalarTest::testComparison(){
@@ -188,7 +219,7 @@ void ScalarTest::testBinaryAddOperation(){
 	//cannot assign an negative integer to unsigned integer
 	ai = 1;
 	bi = -2;
-	CPPUNIT_ASSERT_THROW(sui64 = ai+bi,TypeError);
+	CPPUNIT_ASSERT_THROW(sui64 = ai+bi,RangeError);
 
 
 }
@@ -198,12 +229,12 @@ void ScalarTest::testUnaryAddOperation(){
 	Float64 af64,bf64;
 	UInt8Scalar sui8;
 
-	saf64 = 0.;
-	sbf64 = 100.;
+	CPPUNIT_ASSERT_NO_THROW(saf64 = 0.);
+	CPPUNIT_ASSERT_NO_THROW(sbf64 = 100.);
 	CPPUNIT_ASSERT_NO_THROW(saf64 += sbf64);
 	CPPUNIT_ASSERT(saf64 == sbf64);
 	saf64 = 0;
-	bf64 = -20;
+	CPPUNIT_ASSERT_NO_THROW(bf64 = -20);
 	CPPUNIT_ASSERT_NO_THROW(saf64 += bf64);
 	CPPUNIT_ASSERT(saf64 == bf64);
 
