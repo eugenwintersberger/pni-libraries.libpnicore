@@ -138,26 +138,26 @@ template<typename U> void Buffer<T>::convert(Buffer<U> &b) const{
 	const Buffer<T> &s = *this;
 
 	//you cannot convert a complex number fo a non-complex number
-	if((TypeInfo<T>::isComplex())&&(!TypeInfo<U>::isComplex())){
+	if((TypeInfo<T>::is_complex)&&(!TypeInfo<U>::is_complex)){
 		EXCEPTION_INIT(TypeError,"You try to convert a complex to a non-complex number!");
 		EXCEPTION_THROW();
 	}
 
 	//you cannot convert a larger type to a smaller type
-	if(TypeInfo<T>::getSize() > TypeInfo<U>::getSize()){
+	if(TypeInfo<T>::size > TypeInfo<U>::size){
 		EXCEPTION_INIT(TypeError,"Sizes of types do not match!");
 		EXCEPTION_THROW();
 	}
 
 	//check if the target is an integer while the source a float
-	if((TypeInfo<U>::isInteger())&&(!TypeInfo<T>::isInteger())){
+	if((TypeInfo<U>::is_integer)&&(!TypeInfo<T>::is_integer)){
 		EXCEPTION_INIT(TypeError,"You try to convert a float buffer to an integer buffer - does not work");
 		EXCEPTION_THROW();
 	}
 
 	//check if sign is ok - you cannot convert a buffer of a signed type to an unsigned
 	//the other direction always works
-	if((!TypeInfo<U>::isSigned())&&(TypeInfo<T>::isSigned())){
+	if((!TypeInfo<U>::is_signed)&&(TypeInfo<T>::is_signed)){
 		//want to convert a signed type to an unsigned - we have to check if
 		//there are negative values in this buffer
 		for(UInt64 i = 0; i<getSize();i++){

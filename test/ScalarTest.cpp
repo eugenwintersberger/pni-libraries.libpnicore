@@ -16,27 +16,32 @@ void ScalarTest::tearDown(){
 
 }
 
-void ScalarTest::testConversion(){
-	//test here the functionality of the conversion operator
-	UInt8Scalar sui8;
-	UInt8 ui8;
-	Float64 f64;
-
-	sui8 = (UInt8)10;
-
-	std::cout<<"use native conversion operator!"<<std::endl;
-	CPPUNIT_ASSERT_NO_THROW(ui8  = sui8);
-	CPPUNIT_ASSERT(ui8 == 10);
-	std::cout<<"use template conversion operator!"<<std::endl;
-	CPPUNIT_ASSERT_NO_THROW(f64 = sui8);
-	CPPUNIT_ASSERT(f64 == 10.);
-
-}
-
         
 void ScalarTest::testConstructors(){
     
     
+}
+
+void ScalarTest::testConversion(){
+	Float64Scalar sf64;
+	Float64 f64;
+	UInt8 ui8;
+	Int32Scalar si32;
+	UInt8Scalar sui8;
+
+	std::cout<<"testing conversion ...............:"<<std::endl;
+	CPPUNIT_ASSERT_NO_THROW(sf64 = 100.23);
+	CPPUNIT_ASSERT_NO_THROW(f64 = sf64);
+
+	CPPUNIT_ASSERT_THROW(ui8 = sf64,TypeError);
+	si32 = -100;
+	CPPUNIT_ASSERT_THROW(ui8 = si32,RangeError);
+	si32 = 100000;
+	CPPUNIT_ASSERT_THROW(ui8 = si32,RangeError);
+	si32 = 1;
+	CPPUNIT_ASSERT_NO_THROW( ui8 = si32);
+
+
 }
 
 void ScalarTest::testSetGetValue(){
@@ -77,7 +82,6 @@ void ScalarTest::testAssignment(){
 
 	//------------start with checking the integer types-------------------------
 	UInt8Scalar sui8;
-	UInt8 ui8;
 	UInt64Scalar sui64;
 	UInt64 ui64;
 	Int64Scalar si64,si64_2;
@@ -159,8 +163,10 @@ void ScalarTest::testAssignment(){
 void ScalarTest::testComparison(){
 	Complex64Scalar sca,scb;
 	Complex64 ca,cb;
+	Complex128Scalar sc128;
 
 	ca = Complex64(1,2);
+	sc128 = Complex128(1,2);
 	cb = Complex64(-4.5,1000.398781);
 	sca = ca;
 	scb = ca;
@@ -170,6 +176,11 @@ void ScalarTest::testComparison(){
 	CPPUNIT_ASSERT(ca == sca);
 	scb = cb;
 	CPPUNIT_ASSERT(scb != sca);
+	sc128 = ca;
+	CPPUNIT_ASSERT(sc128 == ca);
+	ca = cb;
+	//ca = sc128;
+	//CPPUNIT_ASSERT(ca == sc128);
 }
 
 void ScalarTest::testBinaryAddOperation(){
@@ -226,27 +237,52 @@ void ScalarTest::testBinaryAddOperation(){
 
 void ScalarTest::testUnaryAddOperation(){
 	Float64Scalar saf64,sbf64;
+	Complex128Scalar sc128;
+	Complex64 c64;
 	Float64 af64,bf64;
 	UInt8Scalar sui8;
+	Int32Scalar si32;
+	Int32 i32;
 
-	CPPUNIT_ASSERT_NO_THROW(saf64 = 0.);
-	CPPUNIT_ASSERT_NO_THROW(sbf64 = 100.);
+	//check type errors
+	c64 = Complex64(1.0,-1230e-2);
+	saf64 = 1.e-4;
+	CPPUNIT_ASSERT_THROW(sui8 += saf64,TypeError);
+
+	//check for overflows with integers
+	i32 = -100;
+	sui8 = 0;
+	CPPUNIT_ASSERT_THROW(sui8 += i32,RangeError);
+	i32 = 100;
+	CPPUNIT_ASSERT_NO_THROW(sui8 += i32);
+	CPPUNIT_ASSERT(sui8 == i32);
+	i32 = 300;
+	CPPUNIT_ASSERT_THROW(sui8 += i32,RangeError);
+
+
+
+	CPPUNIT_ASSERT_NO_THROW(saf64 = 0);
+	CPPUNIT_ASSERT_NO_THROW(sbf64 = 100);
 	CPPUNIT_ASSERT_NO_THROW(saf64 += sbf64);
 	CPPUNIT_ASSERT(saf64 == sbf64);
+
+	CPPUNIT_ASSERT_NO_THROW(saf64 = 0);
+	i32 = 100324;
+	CPPUNIT_ASSERT_NO_THROW(saf64 = i32);
+	CPPUNIT_ASSERT(saf64 == i32);
+
 	saf64 = 0;
 	CPPUNIT_ASSERT_NO_THROW(bf64 = -20);
 	CPPUNIT_ASSERT_NO_THROW(saf64 += bf64);
 	CPPUNIT_ASSERT(saf64 == bf64);
 
-	//this should not work
-	CPPUNIT_ASSERT_THROW( sui8 += saf64,RangeError);
-	std::cout<<sui8<<std::endl;
-
 	Complex128Scalar sca(Complex128(0,0));
+	Complex64Scalar sc64(Complex64(-1.23,2.3901));
 	CPPUNIT_ASSERT_NO_THROW(sca += Complex128(1,-34.20));
-	CPPUNIT_ASSERT_NO_THROW(sca -= Complex64(-5,123.34));
-	CPPUNIT_ASSERT_NO_THROW(sca *= Complex128(.04321,1.e-4));
-	CPPUNIT_ASSERT_NO_THROW(sca /= Complex64(5.32,5.24345));
+	CPPUNIT_ASSERT_NO_THROW(sca += sc64);
+	CPPUNIT_ASSERT(sca == sca);
+	CPPUNIT_ASSERT_NO_THROW(sc64 += sca);
+
 }
 
 void ScalarTest::testUnarySubOperation(){

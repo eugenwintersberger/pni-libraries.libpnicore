@@ -26,18 +26,18 @@ public:
 
 };
 
+
 template<typename A>
 template<typename B> bool TypeRange<A>::checkRange(const B &v){
-	//static size_t t_size = TypeInfo<A>::getSize();
-	//static size_t s_size = TypeInfo<B>::getSize();
 	static typename TypeInfo<A>::BaseType t_min = TypeInfo<A>::getMin();
 	static typename TypeInfo<A>::BaseType t_max = TypeInfo<A>::getMax();
-	static bool t_issigned = TypeInfo<A>::isSigned();
-	static bool s_issigned = TypeInfo<B>::isSigned();
+	static bool t_issigned = TypeInfo<A>::is_signed;
+	static bool s_issigned = TypeInfo<B>::is_signed;
 
 	//a brute force check: 0 fits for all types
 	if(v == 0) return true;
 
+	//if v is negative and A is an unsigned type - this will fail.
 	if(TypeInfo<B>::isNegative(v) && (!t_issigned)){
 		return false;
 	}
@@ -56,7 +56,8 @@ bool TypeRange<A>::checkRange(const Complex128 &v){
 	static typename TypeInfo<A>::BaseType t_min = TypeInfo<A>::getMin();
 	static typename TypeInfo<A>::BaseType t_max = TypeInfo<A>::getMax();
 
-	if((v.real() < t_min) || (v.real() > t_max)) return false;
+	if((v.real() < t_min) || (v.real() > t_max) ||
+	   (v.imag() < t_min) || (v.imag() > t_max)) return false;
 
 	return true;
 }
@@ -66,7 +67,8 @@ bool TypeRange<A>::checkRange(const Complex32 &v){
 	static typename TypeInfo<A>::BaseType t_min = TypeInfo<A>::getMin();
 	static typename TypeInfo<A>::BaseType t_max = TypeInfo<A>::getMax();
 
-	if((v.real() < t_min) || (v.real() > t_max)) return false;
+	if((v.real() < t_min) || (v.real() > t_max) ||
+	   (v.imag() < t_min) || (v.imag() > t_max)) return false;
 
 	return true;
 }
@@ -76,7 +78,8 @@ bool TypeRange<A>::checkRange(const Complex64 &v){
 	static typename TypeInfo<A>::BaseType t_min = TypeInfo<A>::getMin();
 	static typename TypeInfo<A>::BaseType t_max = TypeInfo<A>::getMax();
 
-	if((v.real() < t_min) || (v.real() > t_max)) return false;
+	if((v.real() < t_min) || (v.real() > t_max) ||
+	   (v.imag() < t_min) || (v.imag() > t_max)) return false;
 
 	return true;
 }

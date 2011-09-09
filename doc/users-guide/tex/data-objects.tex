@@ -197,24 +197,63 @@ message or an exception. However, for the {\tt Scalar<T>} object this is the
 case. Thus not all combinations of assignments are allowed if the fundamental 
 data types on the lhs of the assignment operator differ from those of the 
 rhs.
-And this are the rules 
+There are two basic rules
 \begin{enumerate}
-  \item you cannot assign a float to an integer scalar - this will throw an 
-        {\tt TypeError} exception
-  \item you cannot assign a complex scalar to an integer or float scalar - as 
-        above a {\tt TypeError} exception will be thrown
-  \item if the value of the type that should be assigned exceeds the bounds 
-        of the type on the lhs a {\tt RangeError} is thrown.
-  \item complex numbers can only be assigned to complex scalar objects.
+  \item you cannot assign a float or complex to an integer scalar - this will
+  throw an {\tt TypeError} exception
+  \item you cannot assign a complex type to a float type - this will throw
+  an {\tt TypeError} exception.
 \end{enumerate}
-The last rule makes checks for type sizes redundant. Because the size alone 
-does not give enough information if a value can be assigned - the range 
-is the only important quantity.
+All other assignments are permitted. However, the library checks out of 
+bound situations where the assigned value exceeds the bounds of the 
+type it should be assigned to. In such cases a {\tt RangeError} exception 
+is thrown. 
 
-The assignment operators solves for cases where its lhs is an instance of 
-{\tt Scalar<T>}. However, there is also another possibility: the lhs is a 
-variable of a native type and the rhs an instance of {\tt Scalar<T>}.
-This is where the conversion operator enteres the stage. 
+Until now only the case where the template class {\tt Scalar<T>} resided on 
+the lhs of an assignment. Since the conversion operator is overloaded 
+for {\tt Scalar<T>} you can assign the value of an instance of {\tt Scalar<T>}
+directly to a native variable using the assignment operator. 
+Such an expression would look like this:
+\begin{verbatim}
+Scalar<Float32> s(100.2);
+Float32 t = s;
+\end{verbatim}
+There is one limittation with this approach: it does not work for 
+complex numbers. 
+\begin{center}
+{\HUGE MAKE A REMARK HERE THAT YOU CANNOT DO THIS WITH COMPLEX NUMBERS!}
+\end{center}
+The conversion operator is also responsible that there is 
+no need for overloading order operators like {\tt <} or {\tt >}. If 
+we use them the compiler uses the converion operator to access the value of 
+a {\tt Scalar<T>} object and thus can use the native order operators provided 
+by C++.  
+
+\subsection{Comparison of scalars}
+
+As already mentioned scalar objects should behave nearly like native C++
+variables - this should be valid also for the operators {\tt ==} and {\tt !=}.
+In general we have to discuss two situations
+\begin{enumerate}
+  \item comparsion between two objects of type {\tt Scalar<T>} and {\tt
+  Scalar<U>} where {\tt U} and {\tt T} denote not necessarily the same 
+  native data type
+  \item and comparison between an object of type {\tt Scalar<T> } and a 
+  native variable of type {\tt U} where {\tt U} and {\tt T} can denote
+  different types.
+\end{enumerate}
+ The question is which data of a {\tt Scalar<T>} object should be compared.
+In the latter case the situation is simple: we can only compare the value of the 
+object with the value of the native variable. 
+For the former situation one has to think a bit more. It makes no sense to
+check the name or the description of an object for equality. 
+However, it makes sense to compare units. In this case we avoid that 
+a user    
+
+
+\subsection{Ordering operators}
+
+Ordering operators only can check the value of a scalar object.   
 
 
 \subsection{Arithemtic operations}
@@ -225,6 +264,33 @@ problems with types during arithmetic operations. However there are some
 and they should be mentioned here in order to inform you about when and why 
 exceptions are thrown. The situation is a bit different for binary and unary 
 operators thats why they are handled in different sections.
+
+\subsubsection{The unary arithmetic operators}
+The following unary operators are overloaded: {\tt +=}, {\tt -=}, {\tt *=}, and
+{\tt /=} for the following situations
+\begin{description}
+\item[{\tt Scalar<T> ?= Scalar<T>}] the trivial case 
+\item[{\tt Scalar<T> ?= T}] trivial too because equal type
+\item[{\tt Scalar<T> ?= U}] have to check types
+\item[{\tt Scalar<T> ?= Scalar<U>}] have to check types
+\end{description}
+here {\tt ?=} denotes one of the above unary operators. The first two versions
+of an operator are trivial since lhs and rhs have the same fundamtal data
+type. The last to need some special handling to avoid overflow problems or 
+to avoid operations which would make no sense (this is simply because the 
+type of the lhs object is already determined - this situaetion is different 
+for binary operators).
+We can deduce the following general rules
+\begin{enumerate}
+  \item operations with complex types are only supported if lhs and rhs are
+  complex - otherwise a {\tt TypeError} exception will be thrown
+  \item if the lhs is an integer the rhs must not be of a float type
+  \item integer divisions are only supported if the value of the lhs is a 
+        multiple integer of the rhs - otherwise a {\tt RangeError} will be 
+        thrown
+  \item if the lhs is an unsigned integer the result 
+\end{enumerate}
+
 
 \subsubsection{The binary arithmetic operators}
 These operators handle cases of the form

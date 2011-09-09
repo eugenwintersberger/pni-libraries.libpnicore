@@ -6,7 +6,7 @@
  */
 
 #ifndef __TYPEINFO_HPP__
-#define __TYPEINFO_HPP
+#define __TYPEINFO_HPP__
 
 #include <limits>
 
@@ -27,18 +27,26 @@ public:
 	typedef T Type;
 	typedef T BaseType;
 
-	static size_t getSize(){
-		return sizeof(T);
-	}
-
 	static bool isNegative(T value){
 		if (value < 0) return true;
 		return false;
 	}
 
+	static const size_t size = sizeof(T);
+	static const bool is_integer = std::numeric_limits<T>::is_integer;
+	static const bool is_signed = std::numeric_limits<T>::is_signed;
+	static const bool is_complex = false;
+
 	//! return minimum value of the type
 	static T getMin(){
-		return std::numeric_limits<T>::min();
+		//in the case of integers we can use min
+		if (std::numeric_limits<T>::is_integer){
+			return std::numeric_limits<T>::min();
+		}else{
+			//for floating point numbers this is a bit different
+			//min would yield here the value of the smallest possible number
+			return -std::numeric_limits<T>::max();
+		}
 	}
 
 	//! return maximum value of the type
@@ -46,17 +54,6 @@ public:
 		return std::numeric_limits<T>::max();
 	}
 
-	static bool isSigned(){
-		return std::numeric_limits<T>::is_signed;
-	}
-
-	static bool isComplex(){
-		return false;
-	}
-
-	static bool isInteger(){
-		return std::numeric_limits<T>::is_integer;
-	}
 };
 
 
@@ -68,34 +65,24 @@ public:
 	typedef Complex32 Type;
 	typedef Float32 BaseType;
 
+	static const size_t size = sizeof(Complex32);
+	static const bool is_integer = std::numeric_limits<Float32>::is_integer;
+	static const bool is_signed = std::numeric_limits<Float32>::is_signed;
+	static const bool is_complex = true;
+
 	static bool isNegative(Complex32 value){
 		return false;
 	}
 
-	static size_t getSize(){
-		return sizeof(Complex32);
-	}
 
 	//! return the minimum value of the Complex32 type
 	static Float32 getMin(){
-		return std::numeric_limits<Float32>::min();
+		return -std::numeric_limits<Float32>::max();
 	}
 
 	//! return the maximum value of the Complex32 type
 	static Float32 getMax(){
 		return std::numeric_limits<Float32>::max();
-	}
-
-	static bool isSigned(){
-		return true;
-	}
-
-	static bool isComplex(){
-		return true;
-	}
-
-	static bool isInteger(){
-		return false;
 	}
 
 };
@@ -111,9 +98,12 @@ public:
 	typedef Complex64 Type;
 	typedef Float64 BaseType;
 
-	static size_t getSize() {
-		return sizeof(Complex64);
-	}
+	static const size_t size = sizeof(Complex64);
+	static const bool is_integer = std::numeric_limits<Float64>::is_integer;
+	static const bool is_signed = std::numeric_limits<Float64>::is_signed;
+	static const bool is_complex = true;
+
+
 
 	static bool isNegative(Complex64 value){
 		return false;
@@ -121,24 +111,12 @@ public:
 
 	//! return the minimum value of the Complex64 type
 	static Float64 getMin(){
-		return std::numeric_limits<Float64>::min();
+		return -std::numeric_limits<Float64>::max();
 	}
 
 	//! return the maximum value of the Complex64 type
 	static Float64 getMax(){
 		return std::numeric_limits<Float64>::max();
-	}
-
-	static bool isSigned() {
-		return true;
-	}
-
-	static bool isComplex(){
-		return true;
-	}
-
-	static bool isInteger(){
-		return false;
 	}
 
 };
@@ -150,9 +128,11 @@ public:
 	typedef Complex128 Type;
 	typedef Float128 BaseType;
 
-	static size_t getSize(){
-		return sizeof(Complex128);
-	}
+	static const size_t size = sizeof(Complex128);
+	static const bool is_integer = std::numeric_limits<Float128>::is_integer;
+	static const bool is_signed = std::numeric_limits<Float128>::is_signed;
+	static const bool is_complex = true;
+
 
 	static bool isNegative(){
 		return false;
@@ -160,24 +140,12 @@ public:
 
 	//! return the minimum value of the Complex128 type
 	static Float128 getMin(){
-		return std::numeric_limits<Float128>::min();
+		return -std::numeric_limits<Float128>::max();
 	}
 
 	//! return the maximum value of the Complex128 type
 	static Float128 getMax(){
 		return std::numeric_limits<Float128>::max();
-	}
-
-	static bool isSigned(){
-		return true;
-	}
-
-	static bool isComplex(){
-		return true;
-	}
-
-	static bool isInteger(){
-		return false;
 	}
 };
 
