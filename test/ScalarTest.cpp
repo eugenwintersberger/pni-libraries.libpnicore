@@ -18,62 +18,194 @@ void ScalarTest::tearDown(){
 
         
 void ScalarTest::testConstructors(){
+    Int32Scalar s;
+
+    //test standard operator
+    s = Int32Scalar(100);
+    CPPUNIT_ASSERT(s.getValue() == 100);
+    CPPUNIT_ASSERT(s.getName() == "");
+    CPPUNIT_ASSERT(s.getDescription() == "");
+    CPPUNIT_ASSERT(s.getUnit() == "");
+
+    s = Int32Scalar(101,"test1","unit1");
+    CPPUNIT_ASSERT(s.getValue() == 101);
+    CPPUNIT_ASSERT(s.getName() == "test1");
+    CPPUNIT_ASSERT(s.getDescription() == "");
+    CPPUNIT_ASSERT(s.getUnit() == "unit1");
     
-    
+    s = Int32Scalar(102,"test2","unit2","description2");
+    CPPUNIT_ASSERT(s.getValue() == 102);
+    CPPUNIT_ASSERT(s.getName() == "test2");
+    CPPUNIT_ASSERT(s.getDescription() == "description2");
+    CPPUNIT_ASSERT(s.getUnit() == "unit2");
+
+    s = Int32Scalar("test3","unit3");
+    CPPUNIT_ASSERT(s.getName() == "test3");
+    CPPUNIT_ASSERT(s.getDescription() == "");
+    CPPUNIT_ASSERT(s.getUnit() == "unit3");
+
+    s = Int32Scalar("test3","unit3","description3");
+    CPPUNIT_ASSERT(s.getName() == "test3");
+    CPPUNIT_ASSERT(s.getDescription() == "description3");
+    CPPUNIT_ASSERT(s.getUnit() == "unit3");
 }
 
 void ScalarTest::testConversion(){
 	Float64Scalar sf64;
-	Float64 f64;
+
+	//starting with integer conversions
 	UInt8 ui8;
 	Int32Scalar si32;
 	UInt8Scalar sui8;
 
-	std::cout<<"testing conversion ...............:"<<std::endl;
-	CPPUNIT_ASSERT_NO_THROW(sf64 = 100.23);
-	CPPUNIT_ASSERT_NO_THROW(f64 = sf64);
-
+	//check for type errors
 	CPPUNIT_ASSERT_THROW(ui8 = sf64,TypeError);
-	si32 = -100;
+
+	//checking rang errors
+	CPPUNIT_ASSERT_NO_THROW(si32 = -100);
 	CPPUNIT_ASSERT_THROW(ui8 = si32,RangeError);
-	si32 = 100000;
+	CPPUNIT_ASSERT_NO_THROW(si32 = 100000);
 	CPPUNIT_ASSERT_THROW(ui8 = si32,RangeError);
-	si32 = 1;
+	CPPUNIT_ASSERT_NO_THROW(si32 = 1);
 	CPPUNIT_ASSERT_NO_THROW( ui8 = si32);
 
+	//checking for floating point
+	Float128Scalar sf128;
+	Float64 f64;
 
+	CPPUNIT_ASSERT_NO_THROW(sf64 = 100.23);
+	CPPUNIT_ASSERT_NO_THROW(f64 = sf64);
+	CPPUNIT_ASSERT(f64 == sf64);
+
+	//range errors
+	CPPUNIT_ASSERT_NO_THROW(sf128 = 1.e+400l);
+	CPPUNIT_ASSERT_THROW(f64 = sf128,RangeError);
+	CPPUNIT_ASSERT_NO_THROW(sf128 = -1.e+400l);
+	CPPUNIT_ASSERT_THROW(f64 = sf128,RangeError);
+
+	//finally this should work
+	CPPUNIT_ASSERT_NO_THROW(sf128 = 100.2344);
+	CPPUNIT_ASSERT_NO_THROW(f64 = sf128);
+	CPPUNIT_ASSERT(f64 == sf128);
+
+	//cannot use the conversion operator with complex numbers.
+	//need to fix this somehow
 }
 
 void ScalarTest::testSetGetValue(){
-	Complex128Scalar sca;
-	Complex128 ca;
-	Float64Scalar sfa;
+	Complex128Scalar sc128;
+	Complex128 c128;
+	Complex64Scalar sc64;
+	Complex64 c64;
+	Float64Scalar sfa,sf64;
 	Float64 fa;
+	Float128 f128;
+	Float128Scalar sf128;
 	UInt32Scalar su32;
+	UInt32 u32;
+	Int32 i32;
 	Int32Scalar si32;
 
 	//checking integer values
+	su32 = 0;
+
 	si32 = -14;
 	CPPUNIT_ASSERT_THROW(su32.setValue(si32),RangeError);
+	CPPUNIT_ASSERT(su32.getValue() == 0);
+
+	i32 = -100;
+	CPPUNIT_ASSERT_THROW(su32.setValue(i32),RangeError);
+	CPPUNIT_ASSERT(su32.getValue() == 0);
+
 	fa = 1.2434;
 	CPPUNIT_ASSERT_THROW(su32.setValue(fa),TypeError);
+	CPPUNIT_ASSERT(su32.getValue() == 0);
 
-	ca = Complex128(1,2);
-	CPPUNIT_ASSERT_NO_THROW(sca.setValue(ca));
-	CPPUNIT_ASSERT(sca == ca);
-	CPPUNIT_ASSERT(sca.getValue() == ca);
+	sfa = fa;
+	CPPUNIT_ASSERT_THROW(su32.setValue(sfa),TypeError);
+	CPPUNIT_ASSERT(su32.getValue() == 0);
+
+	si32 = 100;
+	CPPUNIT_ASSERT_NO_THROW(su32.setValue(si32));
+	CPPUNIT_ASSERT(su32.getValue() == si32.getValue());
+	i32 = 1000;
+	CPPUNIT_ASSERT_NO_THROW(su32.setValue(i32));
+	CPPUNIT_ASSERT(su32.getValue() == i32);
+
+
+	//checking floating point numbers
+	sfa = 0.;
+	f128 = 1.e+400l;
+	CPPUNIT_ASSERT_THROW(sfa.setValue(f128),RangeError);
+	CPPUNIT_ASSERT(sfa.getValue() == 0.);
+
+	f128 = -1.e+400l;
+	CPPUNIT_ASSERT_THROW(sfa.setValue(f128),RangeError);
+	CPPUNIT_ASSERT(sfa.getValue() == 0.);
+
+	sf128 = 1.e+400l;
+	CPPUNIT_ASSERT_THROW(sfa.setValue(sf128),RangeError);
+	CPPUNIT_ASSERT(sfa.getValue() == 0.);
+
+	sf128 = -1.e+400l;
+	CPPUNIT_ASSERT_THROW(sfa.setValue(sf128),RangeError);
+	CPPUNIT_ASSERT(sfa.getValue() == 0.);
+
+	f128 = 100.234;
+	CPPUNIT_ASSERT_NO_THROW(sfa.setValue(f128));
+	CPPUNIT_ASSERT(sfa.getValue() == f128);
+
+	sf128 = f128;
+	CPPUNIT_ASSERT_NO_THROW(sfa.setValue(sf128));
+	CPPUNIT_ASSERT(sfa.getValue() == f128);
+
+	fa = -100.23;
+	CPPUNIT_ASSERT_NO_THROW(sfa.setValue(fa));
+	CPPUNIT_ASSERT(sfa.getValue() == fa);
+
+
+
+	//checking complex value
+	c128 = Complex128(1,2);
+	CPPUNIT_ASSERT_NO_THROW(sc128.setValue(c128));
+	CPPUNIT_ASSERT(sc128.getValue() == c128);
+
+	c64 = Complex64(0,0);
+	sc64 = c64;
+	c128 = Complex128(1.e+400l,1.e+400l);
+	CPPUNIT_ASSERT_THROW(sc64.setValue(c128),RangeError);
+	CPPUNIT_ASSERT(sc64.getValue() == c64);
+
+	c128 = Complex128(-1.e+400l,-1.e+400l);
+	CPPUNIT_ASSERT_THROW(sc64.setValue(c128),RangeError);
+	CPPUNIT_ASSERT(sc64.getValue() == c64);
+
+	sc128 = Complex128(1.e+400l,1.e+400l);
+	CPPUNIT_ASSERT_THROW(sc64.setValue(sc128),RangeError);
+	CPPUNIT_ASSERT(sc64.getValue() == c64);
+
+	sc128 = Complex128(-1.e+400l,-1.e+400l);
+	CPPUNIT_ASSERT_THROW(sc64.setValue(sc128),RangeError);
+	CPPUNIT_ASSERT(sc64.getValue() == c64);
+
+	f128 = 1.e+400l;
+	CPPUNIT_ASSERT_THROW(sc64.setValue(f128),RangeError);
+	CPPUNIT_ASSERT(sc64.getValue() == c64);
+
+	f128 = -1.e+400l;
+	CPPUNIT_ASSERT_THROW(sc64.setValue(f128),RangeError);
+	CPPUNIT_ASSERT(sc64.getValue() == c64);
+
+	c128 = Complex128(1.2344,1309.1032);
+
+	CPPUNIT_ASSERT_NO_THROW(sc64.setValue(c128));
+	CPPUNIT_ASSERT_NO_THROW(sc128.setValue(c128));
+	CPPUNIT_ASSERT(sc64.getValue() == c128);
+	CPPUNIT_ASSERT(sc128.getValue() == sc64.getValue());
 
 	fa = 1.4521;
-	sfa = fa;
-	CPPUNIT_ASSERT_NO_THROW(sca.setValue(fa));
-	CPPUNIT_ASSERT_NO_THROW(sca.setValue(sfa));
-	CPPUNIT_ASSERT(sca.getValue().real() == fa);
-
-	CPPUNIT_ASSERT_THROW(su32.setValue(sfa),TypeError);
-	//CPPUNIT_ASSERT_THROW(sia.setValue(sca),TypeError);
-	su32 = 100;
-	CPPUNIT_ASSERT_NO_THROW(sca.setValue(su32));
-	CPPUNIT_ASSERT(sca.getValue().real() == su32.getValue());
+	CPPUNIT_ASSERT_NO_THROW(sc64.setValue(fa));
+	CPPUNIT_ASSERT(sc64.getValue() == Complex64(fa,0));
 }
 
 void ScalarTest::testAssignment(){
@@ -154,7 +286,7 @@ void ScalarTest::testAssignment(){
 	CPPUNIT_ASSERT_NO_THROW(sc128 = sui64);
 
 	//push it to the limits
-	sc128 = Complex128(1.e+400,1e+400);
+	sc128 = Complex128(1.e+400l,1e+400l);
 	CPPUNIT_ASSERT_THROW(sc64 = sc128,RangeError);
 
 
@@ -184,83 +316,183 @@ void ScalarTest::testComparison(){
 }
 
 void ScalarTest::testBinaryAddOperation(){
-	Float128Scalar a,b,c;
-	Int64Scalar ci,ai,bi;
-	UInt64Scalar sui64;
+	Int64Scalar sai64,sbi64,sci64;
+	Int64 ai64,bi64,ci64;
+	UInt32Scalar saui32,sbui32,scui32;
+	UInt32 aui32,bui32,cui32;
 	Float128 av = 1.,bv = -45.2390;
 
-	//what we are allowed to do
-	a = av;
-	b = bv;
-	//everything in float
-	std::cout<<"Should use template operator + Scalar Scalar!"<<std::endl;
-	CPPUNIT_ASSERT_NO_THROW(c = a + b);
-	CPPUNIT_ASSERT(c == av+bv);
-	CPPUNIT_ASSERT_NO_THROW(c = a + av);
-	CPPUNIT_ASSERT(c == av+av);
-	CPPUNIT_ASSERT_NO_THROW(c = bv + b);
-	CPPUNIT_ASSERT(c == bv+bv);
-	ai = 1;
-	bi = 2;
-	CPPUNIT_ASSERT_NO_THROW(c = ai+bi);
-	//can assign an integer to a float
-	CPPUNIT_ASSERT(c == (ai+bi));
-	//can assign integer to integer
-	CPPUNIT_ASSERT_NO_THROW(ci = ai+bi);
-	CPPUNIT_ASSERT(ci == ai+bi);
+	//check integer operations
+	ai64 = 100;
+	bi64 = 2234;
+	sai64 = ai64; sbi64 = bi64;
+	CPPUNIT_ASSERT_NO_THROW(sci64 = sai64 + sbi64);
+	CPPUNIT_ASSERT(sci64.getValue() == ai64 + bi64);
+	CPPUNIT_ASSERT_NO_THROW(sci64 = sai64 + bi64);
+	CPPUNIT_ASSERT(sci64.getValue() == ai64 + bi64);
+	CPPUNIT_ASSERT_NO_THROW(sci64 = ai64 + sbi64);
+	CPPUNIT_ASSERT(sci64.getValue() == ai64 + bi64);
 
-	//if an integer is not negative it can be assigned to an
-	//unsigned int
-	ai = 1;
-	bi = 2;
-	CPPUNIT_ASSERT_NO_THROW(sui64 = ai+bi);
+	//checking range errors
+	bi64 = -22345;
+	sbi64 = bi64;
+	CPPUNIT_ASSERT_THROW(scui32 = sai64 + sbi64,RangeError);
+	CPPUNIT_ASSERT_THROW(scui32 = sai64 + bi64,RangeError);
+
+	//checking mixed type operations
+	aui32 = 100;
+	CPPUNIT_ASSERT_THROW(scui32 = aui32 + sbi64,RangeError);
+	bi64 = 23134; sbi64 = bi64;
+	CPPUNIT_ASSERT_NO_THROW(scui32 = aui32 + sbi64);
+	CPPUNIT_ASSERT(scui32 == aui32 + bi64);
+
+	//check float operations
+	Float128Scalar saf128,sbf128,scf128;
+	Float128 af128,bf128,cf128;
+	Float64Scalar saf64,sbf64,scf64;
+	Float64 af64,bf64,cf64;
+
+	af64 = 123.123; bf64 = 3.e+2;
+	saf64 = af64; sbf64 = bf64;
+	//everything in float
+	CPPUNIT_ASSERT_NO_THROW(scf64 = saf64 + sbf64);
+	CPPUNIT_ASSERT(scf64.getValue() == af64 + bf64);
+	CPPUNIT_ASSERT_NO_THROW(scf64 = af64 + sbf64);
+	CPPUNIT_ASSERT(scf64.getValue() == af64 + bf64);
+	CPPUNIT_ASSERT_NO_THROW(scf64 = saf64 + bf64);
+	CPPUNIT_ASSERT(scf64.getValue() == af64 + bf64);
+
+	//mixed float operations with range error
+	af128 = 34413.3400923l; bf128 = -456789.7844l;
+	saf128 = af128; sbf128 = bf128;
+	CPPUNIT_ASSERT_NO_THROW(scf64 = saf64 + sbf128);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(af64 + bf128,scf64.getValue(),DOUBLE_PREC);
+	CPPUNIT_ASSERT_NO_THROW(scf64 = af64 + sbf128);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(af64 + bf128,scf64.getValue(),DOUBLE_PREC);
+	CPPUNIT_ASSERT_NO_THROW(scf64 = saf64 + bf128);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(af64 + bf128,scf64.getValue(),DOUBLE_PREC);
+	af128 = 1.e+400l; saf128 = af128;
+	CPPUNIT_ASSERT_THROW(scf64 = saf128 + sbf128,RangeError);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(af64 + bf128,scf64.getValue(),DOUBLE_PREC);
+	CPPUNIT_ASSERT_THROW(scf64 = af128 + sbf128,RangeError);
+
+	//mixed float - integer operations
+	ai64 = 391883; sai64 = ai64;
+	CPPUNIT_ASSERT_NO_THROW(scf64 = sai64 + sbf64);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(ai64 + bf64,scf64.getValue(),DOUBLE_PREC);
+	CPPUNIT_ASSERT_NO_THROW(scf64 = ai64 + sbf64);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(ai64 + bf64,scf64.getValue(),DOUBLE_PREC);
+
+	//produce some type errors
+	CPPUNIT_ASSERT_THROW(sci64 = sai64 + sbf64,TypeError);
+	CPPUNIT_ASSERT_THROW(sci64 = ai64 + sbf64,TypeError);
+
+
+	//testing with complex numbers
+	Complex32 ac32,bc32,cc32;
+	Complex32Scalar sac32,sbc32,scc32;
+	Complex128 ac128,bc128,cc128;
+	Complex128Scalar sac128,sbc128,scc128;
+
+	ac32 = Complex32(2.321323,-043.e+2);
+	bc32 = Complex32(-2.4201,4568.78);
+	sac32 = ac32; sbc32 = bc32;
+	CPPUNIT_ASSERT_NO_THROW(scc32 = sac32 + sbc32);
+	CPPUNIT_ASSERT(scc32.getValue() == ac32 + bc32);
+	CPPUNIT_ASSERT_NO_THROW(scc32 = sac32 + bc32);
+	CPPUNIT_ASSERT(scc32.getValue() == ac32 + bc32);
+	CPPUNIT_ASSERT_NO_THROW(scc32 = ac32 + sbc32);
+	CPPUNIT_ASSERT(scc32.getValue() == ac32 + bc32);
+
+	ac128 = Complex128(4578.748,-587.3240);
+	bc128 = Complex128(458.747,7893.1334);
+	sac128 = ac128; sbc128 = bc128;
+	CPPUNIT_ASSERT_NO_THROW(scc128 = sac128 + sbc32);
+	CPPUNIT_ASSERT(scc128.getValue() == ac128 + (Complex128)bc32);
+	CPPUNIT_ASSERT_NO_THROW(scc32 = ac128 + sbc32);
+	CPPUNIT_ASSERT(scc32.getValue() == (Complex32)ac128 + bc32);
+
+
 
 	//test complex numbers
+	/*
 	Complex128 sca,scb,scc;
 	sca = Complex128(4.4,1.0);
 	scb = Complex128(3.1,-0.37);
 	CPPUNIT_ASSERT_NO_THROW(scc = sca+scb);
 	CPPUNIT_ASSERT(scc == sca+scb);
-
+	*/
 
 	//what will not work
 	//the intermediate type is a float type and thus we
 	//cannot assign a float scalar to an integer one
-	CPPUNIT_ASSERT_THROW(ci = ai+b,TypeError);
+	//CPPUNIT_ASSERT_THROW(ci = ai+b,TypeError);
 	//cannot assign an negative integer to unsigned integer
-	ai = 1;
+	/*ai = 1;
 	bi = -2;
 	CPPUNIT_ASSERT_THROW(sui64 = ai+bi,RangeError);
-
+	*/
 
 }
 
 void ScalarTest::testUnaryAddOperation(){
 	Float64Scalar saf64,sbf64;
-	Complex128Scalar sc128;
-	Complex64 c64;
 	Float64 af64,bf64;
-	UInt8Scalar sui8;
-	Int32Scalar si32;
-	Int32 i32;
+	Float128Scalar sf128,saf128,sbf128;
+	Float128 f128,af128,bf128;
+	Complex64 c64;
+
+	//some integer scalars
+	UInt8Scalar sui8,saui8,sbui8;
+	UInt8 ui8,aui8,bui8;
+	Int32Scalar si32,sai32,sbi32;
+	Int32 i32,ai32,bi32;
+
+	//checking unary integer operations
+	sui8 = 0;
+	saui8 = 0;
+	sbui8 = 100;
+	CPPUNIT_ASSERT_NO_THROW(saui8 += sbui8);
+	//CPPUNIT_ASSERT(saui8 ==
+	i32 = 100;
+	CPPUNIT_ASSERT_NO_THROW(sui8 += i32);  //adding singed to unsigned
+	CPPUNIT_ASSERT(sui8 == i32);
+	sui8 = 0;
+	si32 = 100;
+	CPPUNIT_ASSERT_NO_THROW(sui8 += si32); //adding signed to unsigned
+	CPPUNIT_ASSERT(sui8 == si32);
+
+	sai32 = 0;
+	sbi32 = -10000;
+	CPPUNIT_ASSERT_NO_THROW(sai32 += sbi32); //adding signed to signed
+	CPPUNIT_ASSERT(sai32 == sbi32);
 
 	//check type errors
-	c64 = Complex64(1.0,-1230e-2);
 	saf64 = 1.e-4;
 	CPPUNIT_ASSERT_THROW(sui8 += saf64,TypeError);
+	af64 = -1.e-4;
+	CPPUNIT_ASSERT_THROW(sui8 += af64,TypeError);
 
-	//check for overflows with integers
-	i32 = -100;
+	//testing range error exceptions for integers
 	sui8 = 0;
-	CPPUNIT_ASSERT_THROW(sui8 += i32,RangeError);
-	i32 = 100;
-	CPPUNIT_ASSERT_NO_THROW(sui8 += i32);
-	CPPUNIT_ASSERT(sui8 == i32);
 	i32 = 300;
 	CPPUNIT_ASSERT_THROW(sui8 += i32,RangeError);
+	CPPUNIT_ASSERT(sui8 == 0);
+	i32 = -100;
+	CPPUNIT_ASSERT_THROW(sui8 += i32,RangeError);
+	CPPUNIT_ASSERT(sui8 == 0);
+	i32 = -300;
+	CPPUNIT_ASSERT_THROW(sui8 += i32,RangeError);
+	CPPUNIT_ASSERT(sui8 == 0);
+	si32 = -300;
+	CPPUNIT_ASSERT_THROW(sui8 += si32,RangeError);
+	CPPUNIT_ASSERT(sui8 == 0);
+	si32 = 300;
+	CPPUNIT_ASSERT_THROW(sui8 += si32,RangeError);
+	CPPUNIT_ASSERT(sui8 == 0);
 
 
-
+	//check floating point numbers
 	CPPUNIT_ASSERT_NO_THROW(saf64 = 0);
 	CPPUNIT_ASSERT_NO_THROW(sbf64 = 100);
 	CPPUNIT_ASSERT_NO_THROW(saf64 += sbf64);
@@ -276,16 +508,164 @@ void ScalarTest::testUnaryAddOperation(){
 	CPPUNIT_ASSERT_NO_THROW(saf64 += bf64);
 	CPPUNIT_ASSERT(saf64 == bf64);
 
-	Complex128Scalar sca(Complex128(0,0));
+	//check floating point overflow
+	f128 = 1.e+400l;
+	saf64 = 0;
+	CPPUNIT_ASSERT_THROW(saf64 += f128,RangeError);
+	f128 = -1.e+400l;
+	CPPUNIT_ASSERT_THROW(saf64 += f128,RangeError);
+
+	//--------------------check complex numbers----------------------
+	Complex128Scalar sc128(Complex128(0,0));
 	Complex64Scalar sc64(Complex64(-1.23,2.3901));
-	CPPUNIT_ASSERT_NO_THROW(sca += Complex128(1,-34.20));
-	CPPUNIT_ASSERT_NO_THROW(sca += sc64);
-	CPPUNIT_ASSERT(sca == sca);
-	CPPUNIT_ASSERT_NO_THROW(sc64 += sca);
+	CPPUNIT_ASSERT_NO_THROW(sc128 += Complex128(1,-34.20));
+	CPPUNIT_ASSERT_NO_THROW(sc128 += sc64);
+	CPPUNIT_ASSERT(sc128 == sc128);
+	CPPUNIT_ASSERT_NO_THROW(sc64 += sc128);
+
+	c64 = Complex64(1.3,435.3);
+	sc64 = Complex64(0,0);
+	CPPUNIT_ASSERT_NO_THROW(sc64 += c64);
+	CPPUNIT_ASSERT(sc64 == c64);
+
+
+	//testing complex overflow with scalar + native variable
+	Complex128 c128(1.e+400l,1.e+400l);;
+	sc64 = Complex64(0,0);
+	CPPUNIT_ASSERT_THROW(sc64 += c128,RangeError);
+	CPPUNIT_ASSERT(sc64 == Complex64(0,0));
+	c128 = Complex128(-1.e+400l,-1.e+400l);
+	CPPUNIT_ASSERT_THROW(sc64 += c128,RangeError);
+	CPPUNIT_ASSERT(sc64 == Complex64(0,0));
+
+	//testing complex overflow with scalar + scalar
+	sc128 = Complex128(1.e+400l,1.e+400l);
+	CPPUNIT_ASSERT_THROW(sc64 += sc128,RangeError);
+	CPPUNIT_ASSERT(sc64 == Complex64(0,0));
+	sc128 = Complex128(-1.e+400l,-1.e+400l);
+	CPPUNIT_ASSERT_THROW(sc64 += sc128,RangeError);
+	CPPUNIT_ASSERT(sc64 == Complex64(0,0));
+
+	//testing complex overflow with simple float value
+	f128 = 1.e+400l;
+	CPPUNIT_ASSERT_THROW(sc64 += f128,RangeError);
+	CPPUNIT_ASSERT(sc64 == Complex64(0,0));
+	f128 = -1.e+400l;
+	CPPUNIT_ASSERT_THROW(sc64 += f128,RangeError);
+	CPPUNIT_ASSERT(sc64 == Complex64(0,0));
+
 
 }
 
 void ScalarTest::testUnarySubOperation(){
+	Float64Scalar saf64,sbf64;
+	Float64 af64,bf64;
+	Complex64 c64;
+	UInt8Scalar sui8;
+	Int32Scalar si32;
+	Int32Scalar sai32,sbi32;
+	Int32 i32;
+
+	//checking unary integer operations
+	sui8 = 0;
+	i32 = -100;
+	CPPUNIT_ASSERT_NO_THROW(sui8 -= i32);  //adding singed to unsigned
+	CPPUNIT_ASSERT(sui8 == -i32);
+	sui8 = 0;
+	si32 = -100;
+	CPPUNIT_ASSERT_NO_THROW(sui8 -= si32); //adding signed to unsigned
+	CPPUNIT_ASSERT(sui8 == -si32.getValue());
+
+	sai32 = 0;
+	sbi32 = -10000;
+	CPPUNIT_ASSERT_NO_THROW(sai32 += sbi32); //adding signed to signed
+	CPPUNIT_ASSERT(sai32 == sbi32);
+
+	//check type errors
+	saf64 = 1.e-4;
+	CPPUNIT_ASSERT_THROW(sui8 += saf64,TypeError);
+
+	//testing range error exceptions for integers
+	sui8 = 0;
+	i32 = 300;
+	CPPUNIT_ASSERT_THROW(sui8 += i32,RangeError);
+	CPPUNIT_ASSERT(sui8 == 0);
+	i32 = -100;
+	CPPUNIT_ASSERT_THROW(sui8 += i32,RangeError);
+	CPPUNIT_ASSERT(sui8 == 0);
+	i32 = -300;
+	CPPUNIT_ASSERT_THROW(sui8 += i32,RangeError);
+	CPPUNIT_ASSERT(sui8 == 0);
+	si32 = -300;
+	CPPUNIT_ASSERT_THROW(sui8 += si32,RangeError);
+	CPPUNIT_ASSERT(sui8 == 0);
+	si32 = 300;
+	CPPUNIT_ASSERT_THROW(sui8 += si32,RangeError);
+	CPPUNIT_ASSERT(sui8 == 0);
+
+
+	//check floating point numbers
+	CPPUNIT_ASSERT_NO_THROW(saf64 = 0);
+	CPPUNIT_ASSERT_NO_THROW(sbf64 = 100);
+	CPPUNIT_ASSERT_NO_THROW(saf64 += sbf64);
+	CPPUNIT_ASSERT(saf64 == sbf64);
+
+	CPPUNIT_ASSERT_NO_THROW(saf64 = 0);
+	i32 = 100324;
+	CPPUNIT_ASSERT_NO_THROW(saf64 = i32);
+	CPPUNIT_ASSERT(saf64 == i32);
+
+	saf64 = 0;
+	CPPUNIT_ASSERT_NO_THROW(bf64 = -20);
+	CPPUNIT_ASSERT_NO_THROW(saf64 += bf64);
+	CPPUNIT_ASSERT(saf64 == bf64);
+
+	//check floating point overflow
+	Float128 f128 = 1.e+400l;
+	saf64 = 0;
+	CPPUNIT_ASSERT_THROW(saf64 += f128,RangeError);
+	f128 = -1.e+400l;
+	CPPUNIT_ASSERT_THROW(saf64 += f128,RangeError);
+
+	//--------------------check complex numbers----------------------
+	Complex128Scalar sc128(Complex128(0,0));
+	Complex64Scalar sc64(Complex64(-1.23,2.3901));
+	CPPUNIT_ASSERT_NO_THROW(sc128 += Complex128(1,-34.20));
+	CPPUNIT_ASSERT_NO_THROW(sc128 += sc64);
+	CPPUNIT_ASSERT(sc128 == sc128);
+	CPPUNIT_ASSERT_NO_THROW(sc64 += sc128);
+
+	c64 = Complex64(1.3,435.3);
+	sc64 = Complex64(0,0);
+	CPPUNIT_ASSERT_NO_THROW(sc64 += c64);
+	CPPUNIT_ASSERT(sc64 == c64);
+
+
+	//testing complex overflow with scalar + native variable
+	Complex128 c128(1.e+400l,1.e+400l);;
+	sc64 = Complex64(0,0);
+	CPPUNIT_ASSERT_THROW(sc64 += c128,RangeError);
+	CPPUNIT_ASSERT(sc64 == Complex64(0,0));
+	c128 = Complex128(-1.e+400l,-1.e+400l);
+	CPPUNIT_ASSERT_THROW(sc64 += c128,RangeError);
+	CPPUNIT_ASSERT(sc64 == Complex64(0,0));
+
+	//testing complex overflow with scalar + scalar
+	sc128 = Complex128(1.e+400l,1.e+400l);
+	CPPUNIT_ASSERT_THROW(sc64 += sc128,RangeError);
+	CPPUNIT_ASSERT(sc64 == Complex64(0,0));
+	sc128 = Complex128(-1.e+400l,-1.e+400l);
+	CPPUNIT_ASSERT_THROW(sc64 += sc128,RangeError);
+	CPPUNIT_ASSERT(sc64 == Complex64(0,0));
+
+	//testing complex overflow with simple float value
+	f128 = 1.e+400l;
+	CPPUNIT_ASSERT_THROW(sc64 += f128,RangeError);
+	CPPUNIT_ASSERT(sc64 == Complex64(0,0));
+	f128 = -1.e+400l;
+	CPPUNIT_ASSERT_THROW(sc64 += f128,RangeError);
+	CPPUNIT_ASSERT(sc64 == Complex64(0,0));
+
 
 }
 

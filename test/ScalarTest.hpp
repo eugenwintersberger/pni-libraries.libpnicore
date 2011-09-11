@@ -8,6 +8,8 @@
 
 #include "Scalar.hpp"
 
+#define DOUBLE_PREC 1.e-12
+
 using namespace pni::utils;
 
 class ScalarTest : public CppUnit::TestFixture{

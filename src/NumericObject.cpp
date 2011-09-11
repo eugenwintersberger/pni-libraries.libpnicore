@@ -13,7 +13,7 @@ namespace utils{
 
 
 NumericObject::NumericObject():DataObject(){
-	_unit = String("NONE");
+	_unit = String("");
 }
 
 NumericObject::NumericObject(const NumericObject &o)

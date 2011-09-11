@@ -779,7 +779,7 @@ template<typename U> Scalar<T> &Scalar<T>::operator=(const Scalar<U> &v){
 }
 
 template<typename T> Scalar<T> &Scalar<T>::operator=(const Scalar<T> &s){
-	std::cout<<"native assignment of scalar objects!"<<std::endl;
+	//std::cout<<"native assignment of scalar objects!"<<std::endl;
 	if(this != &s){
 		(*this).setValue(s.getValue());
 		(*this).setName(s.getName());
@@ -794,26 +794,38 @@ template<typename T> Scalar<T> &Scalar<T>::operator=(const Scalar<T> &s){
 //! binary add operation
 template<typename A,typename B>
 const Scalar<typename ResultTypeTrait<A,B>::AddResultType > operator+(const Scalar<A> &a,const Scalar<B> &b){
-	Scalar<typename ResultTypeTrait<A,B>::AddResultType > o;
+	typedef typename ResultTypeTrait<A,B>::AddResultType ResultType;
+	Scalar<ResultType> o;
 
-	o.setValue((typename ResultTypeTrait<A,B>::AddResultType)(a.getValue()+b.getValue()));
+	ResultType _a = (ResultType)a.getValue();
+	ResultType _b = (ResultType)b.getValue();
+
+	o.setValue(_a + _b);
 
 	return o;
 }
 
 template<typename A,typename B>
 const Scalar<typename ResultTypeTrait<A,B>::AddResultType > operator+(const Scalar<A> &a,const B &b){
-	Scalar<typename ResultTypeTrait<A,B>::AddResultType > o;
+	typedef typename ResultTypeTrait<A,B>::AddResultType ResultType;
+	Scalar<ResultType> o;
 
-	o.setValue((typename ResultTypeTrait<A,B>::AddResultType)(a.getValue()+b));
+	ResultType _a = (ResultType)a.getValue();
+	ResultType _b = (ResultType)b;
+
+	o.setValue(_a + _b);
 	return o;
 }
 
 template<typename A,typename B>
 const Scalar<typename ResultTypeTrait<A,B>::AddResultType > operator+(const A &a,const Scalar<B> &b){
-	Scalar<typename ResultTypeTrait<A,B>::AddResultType > o;
+	typedef typename ResultTypeTrait<A,B>::AddResultType ResultType;
+	Scalar<ResultType> o;
 
-	o.setValue((typename ResultTypeTrait<A,B>::AddResultType)(a+b.getValue()));
+	ResultType _a = (ResultType)a;
+	ResultType _b = (ResultType)b.getValue();
+
+	o.setValue(_a + _b);
 
 	return o;
 }
@@ -821,77 +833,113 @@ const Scalar<typename ResultTypeTrait<A,B>::AddResultType > operator+(const A &a
 //overloaded subtraction operator
 template<typename A,typename B>
 const Scalar<typename ResultTypeTrait<A,B>::SubResultType > operator-(const Scalar<A> &a, const Scalar<B> &b) {
-	Scalar<typename ResultTypeTrait<A,B>::SubResultType > tmp;
+	typedef typename ResultTypeTrait<A,B>::SubResultType ResultType;
+	Scalar<ResultType> tmp;
 
-	tmp.setValue((typename ResultTypeTrait<A,B>::SubResultType)(a.getValue()-b.getValue()));
+	ResultType _a = (ResultType)a.getValue();
+	ResultType _b = (ResultType)b.getValue();
+
+	tmp.setValue(_a - _b);
 
 	return tmp;
 }
 
 template<typename A,typename B>
 const Scalar<typename ResultTypeTrait<A,B>::SubResultType > operator-(const A& a, const Scalar<B> &b) {
-	Scalar<typename ResultTypeTrait<A,B>::SubResultType > tmp;
+	typedef typename ResultTypeTrait<A,B>::SubResultType ResultType;
+	Scalar<ResultType> tmp;
 
-	tmp.setValue((typename ResultTypeTrait<A,B>::SubResulType)(a-b.getValue()));
+	ResultType _a = (ResultType)a;
+	ResultType _b = (ResultType)b.getValue();
+
+	tmp.setValue(_a - _b);
 
 	return tmp;
 }
 
 template<typename A,typename B>
 const Scalar<typename ResultTypeTrait<A,B>::SubResultType > operator-(const Scalar<A> &a, const B &b) {
-	Scalar<typename ResultTypeTrait<A,B>::SubResultType > tmp;
+	typedef typename ResultTypeTrait<A,B>::SubResultType ResultType;
+	Scalar<ResultType> tmp;
 
-	tmp.setValue((typename ResultTypeTrait<A,B>::SubResultType)(a.getValue()-b));
+	ResultType _a = (ResultType)a.getValue();
+	ResultType _b = (ResultType)b;
+
+	tmp.setValue(_a - _b);
 	return tmp;
 }
 
 //overloading the multiplication operator
 template<typename A,typename B>
 const Scalar<typename ResultTypeTrait<A,B>::MultResultType > operator*(const Scalar<A> &a, const Scalar<B> &b) {
-	Scalar<typename ResultTypeTrait<A,B>::MultResultType > tmp;
+	typedef typename ResultTypeTrait<A,B>::MultResultType ResultType;
+	Scalar<ResultType> tmp;
 
-	tmp.setValue((typename ResultTypeTrait<A,B>::MultResultType)(a.getValue()*b.getValue()));
+	ResultType _a = (ResultType)a.getValue();
+	ResultType _b = (ResultType)b.getValue();
+
+	tmp.setValue(_a * _b);
 	return tmp;
 }
 
 template<typename A,typename B>
 const Scalar<typename ResultTypeTrait<A,B>::MultResultType > operator*(const A& a, const Scalar<B> &b) {
-	Scalar<typename ResultTypeTrait<A,B>::MultResultType > tmp;
+	typedef typename ResultTypeTrait<A,B>::MultResultType ResultType;
+	Scalar<ResultType> tmp;
 
-	tmp.setValue((typename ResultTypeTrait<A,B>::MultResultType)(a*b.getValue()));
+	ResultType _a = (ResultType)a;
+	ResultType _b = (ResultType)b.getValue();
+
+	tmp.setValue(_a * _b);
 	return tmp;
 }
 
 template<typename A,typename B>
 const Scalar<typename ResultTypeTrait<A,B>::MultResultType > operator*(const Scalar<A> &a, const B& b) {
-	Scalar<typename ResultTypeTrait<A,B>::MultResultType > tmp;
+	typedef typename ResultTypeTrait<A,B>::MultResultType ResultType;
+	Scalar<ResultType> tmp;
 
-	tmp.setValue((typename ResultTypeTrait<A,B>::MultResultType)(a.getValue()*b));
+	ResultType _a = (ResultType)a.getValue();
+	ResultType _b = (ResultType)b;
+
+	tmp.setValue(_a * _b);
 	return tmp;
 }
 
 //overloading the division operator
 template<typename A,typename B>
 const Scalar<typename ResultTypeTrait<A,B>::DivResultType > operator/(const Scalar<A> &a, const Scalar<B> &b) {
-	Scalar<typename ResultTypeTrait<A,B>::DivResultType > tmp;
+	typedef typename ResultTypeTrait<A,B>::DivResultType ResultType;
+	Scalar<ResultType> tmp;
 
-	tmp.setValue((typeof ResultTypeTrait<A,B>::DivResultType)(a.getValue()/b.getValue()));
+	ResultType _a = (ResultType)a.getValue();
+	ResultType _b = (ResultType)b.getValue();
+
+	tmp.setValue(_a / _b);
 	return tmp;
 }
 
 template<typename A,typename B>
 const Scalar<typename ResultTypeTrait<A,B>::DivResultType > operator/(const A& a, const Scalar<B> &b) {
-	Scalar<typename ResultTypeTrait<A,B>::DivResultType > tmp;
+	typedef typename ResultTypeTrait<A,B>::DivResultType ResultType;
+	Scalar<ResultType> tmp;
 
-	tmp.setValue((typename ResultTypeTrait<A,B>::DivResultType)(a/b.getValue()));
+	ResultType _a = (ResultType)a;
+	ResultType _b = (ResultType)b.getValue();
+
+	tmp.setValue(_a / _b);
 	return tmp;
 }
 
 template<typename A,typename B>
 const Scalar<typename ResultTypeTrait<A,B>::DivResultType > operator/(const Scalar<A> &a, const B &b) {
-	Scalar<typename ResultTypeTrait<A,B>::DivResultType > tmp;
+	typedef typename ResultTypeTrait<A,B>::DivResultType ResultType;
+	Scalar<ResultType> tmp;
 
-	tmp.setValue((typename ResultTypeTrait<A,B>::DivResultType)(a.getValue()/b));
+	ResultType _a = (ResultType)a.getValue();
+	ResultType _b = (ResultType)b;
+
+	tmp.setValue(_a / _b);
 	return tmp;
 }
 
