@@ -293,12 +293,19 @@ We can deduce the following general rules
 
 
 \subsubsection{The binary arithmetic operators}
-These operators handle cases of the form
 
-
-
-While types are not really a problem for $+$, $-$, and $*$ operations, the $/$-division operator must be handled with care in order to avoid information 
-losses. 
+The following binary operators are overloaded for all data types: $+$, $-$, $*$,
+and $/$. These operators are implemented as templates using a special 
+{\tt ResultTypeTrait} template to determine the result type of an operation. 
+Thus, we do not have to perform any checking of the arguments 
+data types. Both input arguments are first transformed to the result type 
+before the operation is performed. 
+The binary operators create a third intermediate result type of the 
+appropriate result type which holds the result of the operation and which 
+will be returned to the caller of the operator. There the result scalar of the 
+operation is assigned to the proposed scalar type. If the automatically 
+derived result type and the proposed type do not match an exception will be
+thrown. 
 
 \subsection{A full example}
 

@@ -8,7 +8,7 @@
 
 #include "Scalar.hpp"
 
-#define DOUBLE_PREC 1.e-12
+#define DOUBLE_PREC 1.e-3
 
 using namespace pni::utils;
 
@@ -20,6 +20,9 @@ class ScalarTest : public CppUnit::TestFixture{
     CPPUNIT_TEST(testAssignment);
     CPPUNIT_TEST(testSetGetValue);
     CPPUNIT_TEST(testBinaryAddOperation);
+    CPPUNIT_TEST(testBinarySubtractionOperation);
+    CPPUNIT_TEST(testBinaryDivisionOperation);
+    CPPUNIT_TEST(testBinaryMultiplicationOperation);
     CPPUNIT_TEST(testUnaryAddOperation);
     CPPUNIT_TEST(testUnaryDivOperation);
     CPPUNIT_TEST(testUnarySubOperation);
