@@ -111,3 +111,37 @@ void ArrayShapeTest::testOffset(){
 	CPPUNIT_ASSERT(s2.getOffset(index)==8);
 
 }
+
+void ArrayShapeTest::testIndex(){
+	ArrayShape s1(_r1,_s1);
+	ArrayShape s2(_r2,_s2);
+	Index index;
+	UInt32 *i1,*i2;
+
+	i1 = new UInt32 [_r1];
+	i1[0] = 2; i1[1] = 1;
+
+	i2 = new UInt32 [_r2];
+	i2[0] = 0; i2[1] = 1; i2[2] = 3;
+
+	CPPUNIT_ASSERT(s1.getOffset(i1)==9);
+	CPPUNIT_ASSERT(s2.getOffset(i2)==8);
+
+	index.setRank(s1.getRank());
+	index[0] = 2;
+	index[1] = 1;
+	CPPUNIT_ASSERT(s1.getOffset(index)==9);
+	Index ti(s1.getRank());
+	CPPUNIT_ASSERT_NO_THROW(s1.getIndex(9,ti));
+	CPPUNIT_ASSERT(ti == index);
+
+	index.setRank(s2.getRank());
+	ti.setRank(s2.getRank());
+	index[0] = 0;
+	index[1] = 1;
+	index[2] = 3;
+	CPPUNIT_ASSERT(s2.getOffset(index)==8);
+	CPPUNIT_ASSERT_NO_THROW(s2.getIndex(8,ti));
+	CPPUNIT_ASSERT(ti == index);
+
+}

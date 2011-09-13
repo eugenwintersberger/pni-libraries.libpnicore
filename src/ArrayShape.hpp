@@ -123,9 +123,10 @@ class ArrayShape{
         //! the element in a linear buffer.
 
         //! \param *index pointer to an array of element indices
-        virtual UInt64 getOffset(const UInt32 *index);
+        virtual UInt64 getOffset(const UInt32 *index) const;
         
-        virtual UInt64 getOffset(const Index &i);
+        virtual UInt64 getOffset(const Index &i) const;
+        virtual void getIndex(const UInt64 &offset,Index &i) const;
 
         //the assignment operator must be a member function
         //and cannot be declared as a friend function

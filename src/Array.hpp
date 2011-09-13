@@ -17,6 +17,8 @@
 #include "PNITypes.hpp"
 #include "DataObject.hpp"
 #include "ArrayObject.hpp"
+#include "Index.hpp"
+#include "Selection.hpp"
 
 #include "ArrayTrait.hpp"
 #include "PNITypeInfo.hpp"
@@ -386,6 +388,11 @@ public:
 		return (*_data)[i];
 	}
 
+	T& operator()(const Index &i);
+	T operator()(const Index &i) const;
+
+	void operator()(const Selection &s,Array<T> &a) const;
+
 	//operators for comparison
 
 	//! equality between arrays
@@ -573,6 +580,55 @@ template<typename T> T& Array<T>::operator()(unsigned int i, ...) {
 	va_end(vl);
 
 	return (*_data)[_shape->getOffset(_index_buffer)];
+}
+
+template<typename T> T &Array<T>::operator()(const Index &i){
+	EXCEPTION_SETUP("template<typename T> T &Array<T>::operator()(const Index &i)");
+
+	try{
+		T &res = (*_data)[_shape->getOffset(i)];
+		return res;
+	}catch(IndexError &error){
+		EXCEPTION_INIT(IndexError,"Index does not fit into array!");
+		EXCEPTION_THROW();
+	}
+
+	return 0;
+}
+
+template<typename T> T Array<T>::operator()(const Index &i) const{
+	EXCEPTION_SETUP("template<typename T> T Array<T>::operator()(const Index &i) const");
+
+	try{
+		T result = (*_data)[_shape->getOffset(i)];
+		return result;
+	}catch(IndexError &error){
+		EXCEPTION_INIT(IndexError,"Index does not fit into array!");
+		EXCEPTION_THROW();
+	}
+
+	return 0;
+}
+
+template<typename T> void Array<T>::operator()(const Selection &s,Array<T> &a) const {
+	EXCEPTION_SETUP("template<typename T> void Array<T>::operator()(const Selection &i,Array<T> &a) const ");
+
+	//loop over the target array
+	Index sindex(_shape->getRank());
+	Index index (s.getRank());
+
+	//loop over the target array
+	UInt64 offset = 0;
+	for(UInt64 i=0;i<a.getShape()->getSize();i++){
+
+		a[i] = (*_data)[offset];
+
+	}
+
+
+
+
+
 }
 
 

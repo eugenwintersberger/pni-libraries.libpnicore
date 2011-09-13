@@ -2,22 +2,24 @@
 #ifndef __SELECTION_HPP__
 #define __SELECTION_HPP__
 
-#include "Array.hpp"
-#include "Buffer.hpp"
 #include "PNITypes.hpp"
+#include "ArrayShape.hpp"
+#include "Index.hpp"
 
 namespace pni{
 namespace utils{
 
 class Selection{
 private:
-	UInt32 _rank;
+	UInt32 _rank;     //!< rank of the source from which data is selected
+	UInt32 _trank;    //!< rank of the target (determined by non-0 counts)
 	UInt32 *_offset;
 	UInt32 *_stride;
 	UInt32 *_count;
 	UInt32 *_block;
 
 	void _allocate(UInt32 rank);
+	void _compute_trank();
 	void _free();
 
 public:
@@ -30,14 +32,35 @@ public:
 	//! \throws MemoryAllocationError if memory allocation fails
 	//! \param s existing selection object
 	Selection(const Selection &s);
+	//! constructor
+
+	//! Construct Selection object from an existing shape.
+
+	//! Using this constructor creates a selection from an existing
+	//! shape. The resulting selection can be moved within the
+	//! source array using the offset.
+	Selection(const ArrayShape &s);
 	//! destructor
 	virtual ~Selection();
+
+	//! create shape from selection
+
+	//! Returns the shape of the selection. This shape can be used to
+	//! create a new array holding the data described by the selection.
+	//! \return an instance of ArrayShape
+	void getShape(ArrayShape &s) const;
 
 	//! returns rank
 
 	//! Returns the rank of the selection object.
 	//! \return selection rank
 	virtual UInt32 getRank() const;
+	//! return target rank
+
+	//! Returns the rank of the target array. This must not be equal
+	//! to the rank of the selection (see above).
+	//! \return number of dimensions of the target
+	virtual UInt32 getTargetRank() const;
 	//! sets rank
 
 	//! Sets the rank of a Selection object. If the new rank differs from
@@ -156,6 +179,17 @@ public:
 	//! \param i dimension index
 	//! \return block value at dimension i
 	virtual UInt32 getBlock(UInt32 i) const;
+
+
+
+	//! return real Index
+
+	//! Computes the Index object for the source array from that of the
+	//! selection.
+	//! \param index Index in the selection
+	//! \param sindex index in the source array
+	virtual void getSourceIndex(const Index &index,Index &sindex) const;
+
 
 };
 

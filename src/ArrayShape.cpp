@@ -212,7 +212,7 @@ UInt32 ArrayShape::getDimension(const UInt32 &i) const{
 	return _shape[i];
 }
 
-UInt64 ArrayShape::getOffset(const UInt32 *index){
+UInt64 ArrayShape::getOffset(const UInt32 *index) const{
 	EXCEPTION_SETUP("UInt64 ArrayShape::getOffset(const UInt32 *index)");
     UInt32 i;
     UInt64 offset = 0;
@@ -227,7 +227,7 @@ UInt64 ArrayShape::getOffset(const UInt32 *index){
     return offset;
 }
 
-UInt64 ArrayShape::getOffset(const Index &i){
+UInt64 ArrayShape::getOffset(const Index &i) const {
 	EXCEPTION_SETUP("UInt64 ArrayShape::getOffset(const Index &i)");
 	UInt64 offset = 0;
 	UInt64 index = 0;
@@ -241,6 +241,23 @@ UInt64 ArrayShape::getOffset(const Index &i){
 		offset += index*_dimstrides[d];
 	}
 	return offset;
+}
+
+void ArrayShape::getIndex(const UInt64 &offset,Index &i) const {
+	EXCEPTION_SETUP("void ArrayShape::getIndex(const UInt64 &offset,Index &i) const");
+
+	if(i.getRank() != getRank()){
+		EXCEPTION_INIT(ShapeMissmatchError,"ArrayShape and Index have different rank!");
+		EXCEPTION_THROW();
+	}
+
+	UInt64 o,t;
+	o = offset;
+	for(UInt32 d = 0;d<getRank();d++){
+		t = o%_dimstrides[d];
+		i[d] = (o-t)/_dimstrides[d];
+		o = t;
+	}
 }
 
 ArrayShape &ArrayShape::operator=(const ArrayShape &a){

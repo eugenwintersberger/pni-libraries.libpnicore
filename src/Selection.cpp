@@ -47,6 +47,15 @@ void Selection::_allocate(UInt32 rank){
 	}
 }
 
+void Selection::_compute_trank(){
+	_trank = 0;
+	if(_rank != 0){
+		for(UInt32 i=0;i<_rank;i++) if(_count[i] != 1) _trank++;
+	}else{
+		_trank = 0;
+	}
+}
+
 //=======================Constructors and destructors===========================
 Selection::Selection(){
 	_stride = NULL;
@@ -67,16 +76,70 @@ Selection::Selection(const Selection &o){
 
 	try{
 		_allocate(o._rank);
-	}catch(MemoryAllocationError &e){
+	}catch(MemoryAllocationError &error){
 		EXCEPTION_INIT(MemoryAllocationError,"Memory allocation for Selection object failed!");
 		EXCEPTION_THROW();
 	}
 	_rank = o._rank;
+	//copy data
+	for(UInt32 i=0;i<_rank;i++){
+		_stride[i] = o._stride[i];
+		_offset[i] = o._offset[i];
+		_block[i] = o._block[i];
+		_count[i] = o._count[i];
+	}
+	//compute the rank of the target
+	_compute_trank();
+}
+
+Selection::Selection(const ArrayShape &s){
+	EXCEPTION_SETUP("Selection::Selection(const ArrayShape &s)");
+
+	_stride = NULL;
+	_offset = NULL;
+	_block = NULL;
+	_count = NULL;
+	_rank = 0;
+
+	try{
+		_allocate(s.getRank());
+	}catch(MemoryAllocationError &error){
+		EXCEPTION_INIT(MemoryAllocationError,"Memory allocation for Selection object failed!");
+		EXCEPTION_THROW();
+	}
+
+	_rank = s.getRank();
+
+	for(UInt32 i=0;i<s.getRank();i++){
+		_count[i] = s.getDimension(i);
+	}
 }
 
 Selection::~Selection(){
 	_free();
 	_rank = 0;
+	_trank = 0;
+}
+
+//========================selections and shapes=================================
+void Selection::getShape(ArrayShape &s) const {
+	EXCEPTION_SETUP("void Selection::getShape(ArrayShape &s) const");
+	UInt32 rank=0;
+
+	try{
+		s.setRank(_trank);
+	}catch(MemoryAllocationError &error){
+		EXCEPTION_INIT(MemoryAllocationError,"Memory allocation for ArrayShape object failed!");
+		EXCEPTION_THROW();
+	}
+
+
+	for(UInt32 i=0;i<_rank;i++){
+		if(_count[i] != 1){
+			s.setDimension(rank,_count[i]);
+			rank++
+		}
+	}
 }
 
 //================Methods for manipulating the rank of the selection============
@@ -91,7 +154,7 @@ void Selection::setRank(UInt32 r){
 	if(_rank != r){
 		try{
 			_allocate(r);
-		}catch(MemoryAllocationError &e){
+		}catch(MemoryAllocationError &error){
 			EXCEPTION_INIT(MemoryAllocationError,"Memory allocation for Selection object failed!");
 			EXCEPTION_THROW();
 		}
@@ -277,6 +340,19 @@ UInt32 Selection::getBlock(UInt32 i) const{
 		EXCEPTION_THROW();
 	}
 	return _block[i];
+}
+
+void Selection::getSourceIndex(const Index &index,Index &sindex) const{
+	EXCEPTION_SETUP("void Selection::getSourceIndex(const Index &i, Index &si)");
+
+	if(index.getRank()!=sindex.getRank()){
+		EXCEPTION_INIT(ShapeMissmatchError,"Selection index and source index have different rank!");
+		EXCEPTION_THROW();
+	}
+
+	for(UInt32 i=0;i<index.getRank();i++){
+		sindex[i] = index[i]+getOffset(i);
+	}
 }
 
 //end of namespace
