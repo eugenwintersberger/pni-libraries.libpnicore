@@ -20,10 +20,9 @@ namespace utils{
 //! \brief Base class for numeric arrays
 class ArrayObject:public NumericObject {
 protected:
-	BufferObject::sptr _data_object; //!< general buffer object
-	ArrayShape::sptr _shape;     	 //!< shape object describing the shape of the array
-								 	 //!< and managing the access to the data
-	unsigned int *_index_buffer; 	 //!< a buffer used to hold index variables.
+	ArrayShape::sptr _shape; //!< shape object describing the shape of the array
+							 //!< and managing the access to the data
+	UInt32 *_index_buffer; 	 //!< a buffer used to hold index variables.
 public:
 	typedef boost::shared_ptr<ArrayObject> sptr;  //!< shared pointer to an ArrayObject
 	//! default constructor
@@ -92,6 +91,7 @@ public:
 
 	//! set the BufferObject that belongs to an array
 	virtual void setBuffer(BufferObject::sptr b);
+	virtual void setBuffer(const BufferObject &b);
 	//! get a shared pointer to a BufferObject belonging to an array
 	virtual const BufferObject::sptr getBuffer() const;
 
@@ -104,6 +104,10 @@ public:
 	virtual UInt64 size(){
 		return _shape->getSize();
 	}
+
+	virtual bool isAllocated() const;
+	virtual void *getVoidPtr();
+	virtual const void *getVoidPtr() const;
 };
 
 

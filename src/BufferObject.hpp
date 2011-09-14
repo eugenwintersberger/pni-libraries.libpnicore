@@ -20,29 +20,29 @@ namespace utils{
 
 //! \brief data buffer
 
-//! This class acts as a raw data buffer. It performs no type checking but rather
-//! simply allocates memory on the system. The size of memory allocated depends on
-//! two parameters
-//! - size of elements in bytes
+//! This class is the base class for all data holding classes.
+//! It does not allocate data at all but rather holds a couple of basic paramters
+//! required for memory allocation. These parameters are
 //! - number of elements in the buffer
+//! - size of each elements in bytes
+//! - total amount of memory occupied in bytes
 //!
-//! Both values can be configured after the instantiation using the appropriate methods
-//! or directly via the constructor at object creation. The two parameters can be obtained
-//! from a class using getElementSize() and getSize() respectively. In addition, the total
-//! size in bytes occupied by the buffer in system memory can be obtained using getMemSize().
-//!
-//! This object allocates only contiguous memory regions. If no contiguous region of the
-//! requested type can be allocated, memory allocation fails. This object is most probably
-//! not that important for application developers but quite useful for those who want to
-//! contribute to this library. For application developers the Buffer<T> template
-//! is much more applicable.
+//! All of these parameters can be configured by the interface provided by this
+//! class. Again - no memory allocation is done. This must be implemented
+//! child classes implementing this functionality.
 class BufferObject{
 private:
-	void   *_ptr;       //!< pointer to the allocated memory region
 	UInt64 _size;       //!< number of elements in the buffer
 	UInt64 _elem_size;  //!< size of a single element in byte
 	UInt64 _tot_size;   //!< total size of memory occupied in bytes
 
+	//! compute total memory consumption
+
+	//! This method computes the total memory that will be occupied by the
+	//! buffer using the _size and the _elem_size field with
+	//! \f[
+	//!    size = \mbox{number of elements} \times \mbox{element size}
+	//! \f]
 	void _compute_total_size();
 
 public:
@@ -54,31 +54,19 @@ public:
 	BufferObject();
 	//! copy constructor
 
-	//! Initializes a new BufferObject with the content of an already existing one.
-	//! \throws MemoryAllocationError if memory allocation fails
-	//! \param b orignal buffer object
+	//! Copies all buffer parameters from the original buffer to the
+	//! new one.
+	//! \param b original buffer object
 	BufferObject(const BufferObject &b);
 	//! constructor
 
 	//! Constructor for a BufferObject that initializes the number of elements
-	//! in the buffer and the element size (in bytes). Thus using this
-	//! constructor memory is allocated at object creation.
-	//! \throws MemoryAllocationError if memory allocation fails
+	//! in the buffer and the element size (in bytes).
 	//! \param n number of elements in the buffer
 	//! \param es element size
 	BufferObject(UInt64 n,UInt64 es);
 	//! destructor
 	virtual ~BufferObject();
-
-	//! assignment operator
-
-	//! Assigning the content of buffer o to this buffer. If the total size
-	//! of o differs from that of the assigned buffer new memory is allocated.
-	//! \throws MemoryAllocationError if memory allocation fails
-	//! \param o buffer from which to assign
-	//! \return reference to this object
-	BufferObject &operator=(const BufferObject &o);
-
 	//! get number of elements
 
 	//! Returns the number of elements of a particular size (can be obtained using
@@ -111,10 +99,38 @@ public:
 	//! allocate memory
 
 	//! Allocates memory for the requested number of elements of particular size.
-	//! After initializing the class this method finally allocated the
-	//! memory.
+	//! After initializing the class this method finally allocates the
+	//! memory. Each call of this method reallocates memory and discards
+	//! the content of an eventually already allocated portion of memory.
+	//! This method must be implemented by the child classes of
+	//! BufferObject.
+	//! If this method is called and the buffer is already allocated a
+	//! MemoryAllocationError exception is thrown. You must explicitly
+	//! free a buffer object prior to a new call to allocat().
+
 	//! \throws MemoryAllocationError if memory allocation fails
+	//! \throws SizeMissmatchError if element size or number of elements not set
 	virtual void allocate();
+	//! allocate memory
+
+	//! This method acts as a shortcut to allocate(). It calls internally
+	//! setSize() and setElementSize() and allocates the buffer.
+	//! \throws MemoryAllocationError if memory allocation fails or buffer is already allocated
+	//! \param size number of elements
+	//! \param esize element size
+	virtual void allocate(const UInt64 &size,const UInt64 &esize);
+	//! allocate memory
+
+	//! Allocate memory assuming that the element size has already been set.
+	//! \throws MemoryAllocationError if memory allocation fails or buffer is already allocated
+	//! \throws SizeMissmatchError if element size is not set yet
+	virtual void allocate(const UInt64 &size);
+	//! buffer status
+
+	//! Returns true if the buffer is allocated - false otherwise.
+	//! Use this method to check the status of a buffer object.
+	//! \return true/false depending on buffer status
+	virtual bool isAllocated() const;
 	//! free memory
 
 	//! Frees all memory allocated by the BufferObject.
@@ -124,32 +140,15 @@ public:
 
 	//! Returns a void pointer to the allocated memory region. The pointer can
 	//! be used to read and write data to this region.
+	//! This method must be implemented by the child class.
 	//! \return pointer to memory
 	virtual void *getVoidPtr();
 	//! get void pointer
 
 	//! Returns a const. pointer to the allocated memory region.
+	//! This method must be implemented by the child class.
 	//! \return constant pointer to memory.
 	virtual const void *getVoidPtr() const;
-
-	//! equality operator
-
-	//! Compares tow different BufferObjects and considers them equal if the
-	//! following conditions are satisfied
-	//! - number of elements is equal
-	//! - size of elements is equal
-	//! - content in memory is equal
-	//!
-	//! The equality of the content is done by comparing the values on the level
-	//! of single bytes. Thus only integer number comparison is necessary which
-	//! should speed up the procedure.
-	//! \return true/false
-	friend bool operator==(const BufferObject &a,const BufferObject &b);
-	//! Inequality operator
-
-	//! The counterpart of the == operator.
-	//! \see bool operator==(const BufferObject &a,const BufferObject &b)
-	friend bool operator!=(const BufferObject &a,const BufferObject &b);
 };
 
 //! @}

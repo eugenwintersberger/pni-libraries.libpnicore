@@ -17,31 +17,22 @@ using namespace pni::utils;
 
 class BufferObjectTest:public CppUnit::TestFixture{
 	CPPUNIT_TEST_SUITE(BufferObjectTest);
-	CPPUNIT_TEST(testAllocation);
+	CPPUNIT_TEST(testConstruction);
 	CPPUNIT_TEST(testAccess);
-	CPPUNIT_TEST(testComparison);
-	CPPUNIT_TEST(testReallocation);
-	CPPUNIT_TEST(testCopyConstructor);
-	CPPUNIT_TEST(testAssignment);
+	CPPUNIT_TEST(testParameters);
 	CPPUNIT_TEST_SUITE_END();
 private:
 	UInt64 n1;
 	UInt64 n2;
 	UInt64 e1;
 	UInt64 e2;
-	BufferObject buffer1;
-	BufferObject buffer2;
 public:
 	void setUp();
 	void tearDown();
 
-	void testAllocation();
-	void testComparison();
-	void testReallocation();
-	void testCopyConstructor();
-	void testAssignment();
+	void testParameters();
+	void testConstruction();
 	void testAccess();
-
 
 };
 

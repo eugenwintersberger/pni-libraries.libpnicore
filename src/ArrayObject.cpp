@@ -11,31 +11,48 @@
 namespace pni{
 namespace utils{
 
-
+//======================constructors and desctructor============================
 ArrayObject::ArrayObject():NumericObject(){
-	_shape.reset();
-	_data_object.reset();
+	_shape.reset(new ArrayShape());
 	_index_buffer = NULL;
 }
 
 ArrayObject::ArrayObject(const ArrayObject &a):NumericObject(a){
+	EXCEPTION_SETUP("ArrayObject::ArrayObject(const ArrayObject &a):NumericObject(a)");
+
 	//set shape object
 	_shape.reset(new ArrayShape(*(a._shape)));
 	if (!_shape) {
-		//raise an exception here if memory allocation fails
-		MemoryAllocationError e("Array<T>::Array",
-				"Cannot allocate memory for ArrayShape instance!");
-		throw e;
+		EXCEPTION_INIT(MemoryAllocationError,"Cannot allocate memory for ArrayShape object!");
+		EXCEPTION_THROW();
 	}
 
-	_index_buffer = new unsigned int[_shape->getRank()];
-
+	_index_buffer = NULL;
+	_index_buffer = new UInt32[_shape->getRank()];
+	if(_index_buffer == NULL){
+		EXCEPTION_INIT(MemoryAllocationError,"Cannot allocate memory for index buffer!");
+		_shape.reset();
+		EXCEPTION_THROW();
+	}
 }
 
 
 ArrayObject::ArrayObject(const unsigned int &r, const unsigned int s[]):NumericObject(){
+	EXCEPTION_SETUP("ArrayObject::ArrayObject(const unsigned int &r, const unsigned int s[]):NumericObject()");
+
 	_shape.reset(new ArrayShape(r, s));
+	if(!_shape){
+		EXCEPTION_INIT(MemoryAllocationError,"Cannot allocate memory for ArrayShape object!");
+		EXCEPTION_THROW();
+	}
+
+	_index_buffer = NULL;
 	_index_buffer = new UInt32[_shape->getRank()];
+	if(_index_buffer == NULL){
+		EXCEPTION_INIT(MemoryAllocationError,"Cannot allocate memory for index buffer!");
+		_shape.reset();
+		EXCEPTION_THROW();
+	}
 }
 
 ArrayObject::ArrayObject(const ArrayShape &s):NumericObject(){
@@ -46,6 +63,8 @@ ArrayObject::ArrayObject(const ArrayShape &s):NumericObject(){
 		EXCEPTION_INIT(MemoryAllocationError,"Cannot allocate memory for ArrayShape object!");
 		EXCEPTION_THROW();
 	}
+
+	_index_buffer = NULL;
 	_index_buffer = new UInt32[_shape->getRank()];
 	if (_index_buffer == NULL) {
 		EXCEPTION_INIT(MemoryAllocationError,"Cannot allocate memory for index buffer!");
@@ -58,6 +77,7 @@ ArrayObject::ArrayObject(const ArrayShape::sptr &s):NumericObject(){
 	EXCEPTION_SETUP("ArrayObject::ArrayObject(const ArrayShape::sptr &s):NumericObject()");
 	_shape = s; //the shape is now shared with the array creator (will increment reference counter)
 
+	_index_buffer = NULL;
 	_index_buffer = new UInt32[_shape->getRank()];
 	if (_index_buffer == NULL) {
 		EXCEPTION_INIT(MemoryAllocationError,"Cannot allocate memory for index buffer!");
@@ -71,8 +91,12 @@ ArrayObject::~ArrayObject(){
 	_shape.reset();
 }
 
+//=======================assignment operator====================================
 ArrayObject &ArrayObject::operator=(const ArrayObject &o){
 	if(this != &o){
+		if(o._shape->getSize()!=_shape->getSize()){
+
+		}
 		//ATTENTION: _shape is a shared pointer => we cannot simply
 		//copy the pointer because that is not what we want. We have
 		//to assign the CONTENT of the pointer.
@@ -95,10 +119,10 @@ PNITypeID ArrayObject::getTypeID() const {
 void ArrayObject::setShape(const ArrayShape &s){
 	EXCEPTION_SETUP("void ArrayObject::setShape(const ArrayShape &s)");
 
-	if(_data_object){
+	if(isAllocated()){
 		//an exception occurs typically here in cases where
 		//no data buffer object has been set
-		if (s.getSize() != _data_object->getSize()) {
+		if (s.getSize() != getBuffer()->getSize()) {
 			//raise an exception if the size of the new shape object
 			//and the buffer object do not fit.
 			EXCEPTION_INIT(SizeMissmatchError,"shape and array size do not match!");
@@ -121,8 +145,9 @@ void ArrayObject::setShape(const ArrayShape &s){
 void ArrayObject::setShape(const ArrayShape::sptr &s){
 	EXCEPTION_SETUP("void ArrayObject::setShape(const ArrayShape::sptr &s)");
 
-	if (_data_object) {
-		if (s->getSize() != _data_object->getSize()) {
+	//need to take care if the buffer is already allocated
+	if (isAllocated()) {
+		if (s->getSize() != getBuffer()->getSize()) {
 			//raise and exception if the size of the new shape object
 			//and the buffer object do not match
 			EXCEPTION_INIT(SizeMissmatchError,"shape and array size do not match!");
@@ -147,11 +172,27 @@ const ArrayShape::sptr ArrayObject::getShape() const{
 
 
 void ArrayObject::setBuffer(BufferObject::sptr b){
-	_data_object = b;
+
+}
+
+void ArrayObject::setBuffer(const BufferObject &b){
+
 }
 
 const BufferObject::sptr ArrayObject::getBuffer() const{
-	return _data_object;
+	return NULL;
+}
+
+bool ArrayObject::isAllocated() const{
+	return false;
+}
+
+void *ArrayObject::getVoidPtr(){
+	return NULL;
+}
+
+const void *ArrayObject::getVoidPtr() const{
+	return NULL;
 }
 
 //end of namespace

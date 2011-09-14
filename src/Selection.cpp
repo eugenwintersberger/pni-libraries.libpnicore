@@ -137,7 +137,7 @@ void Selection::getShape(ArrayShape &s) const {
 	for(UInt32 i=0;i<_rank;i++){
 		if(_count[i] != 1){
 			s.setDimension(rank,_count[i]);
-			rank++
+			rank++;
 		}
 	}
 }
@@ -160,6 +160,10 @@ void Selection::setRank(UInt32 r){
 		}
 		_rank = r;
 	}
+}
+
+UInt32 Selection::getTargetRank() const {
+	return _trank;
 }
 
 //================Methods for manipulating the offset array=====================

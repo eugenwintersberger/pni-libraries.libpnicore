@@ -171,13 +171,17 @@ public:
 	//! The value is assigned to all elements of the array. Thus, this
 	//! operator can be used for a quick initialization of an array with numbers.
 	Array<T> &operator =(const T&);
+
+	template<typename U> Array<T> &operator=(const U &v);
 	//! assignment between two arrays
 
 	//! This operation is only possible if the shapes of the two arrays are equal.
 	//! If this is not the case an exception will be raised. The content of the
 	//! array on the r.h.s of the operator is copied to the array on the l.h.s.
 	//! of the operator. No memory allocation is done - only copying.
-	Array<T> &operator =(const Array<T>&);
+	Array<T> &operator =(const Array<T> &a);
+
+	template<typename U> Array<T> &operator=(const Array<U> &a);
 
 	//overloaded simple binary arithmetic operators
 	//! binary + operator for arrays
@@ -409,21 +413,23 @@ public:
 
 	virtual void allocate();
 
+	virtual bool isAllocated() const{
+		return _data->isAllocated();
+	}
+
 };
 
 //===============================Constructors and destructors===================================
 //default constructor
 template<typename T> Array<T>::Array():ArrayObject() {
 	//in the default constructor we set all pointers to NULL
-	_data.reset();
-	_shape.reset();
-	_index_buffer = NULL;
+	_data.reset(new Buffer<T>());
 }
 
 //simple constructor using rank and dimensions
 template<typename T> Array<T>::Array(const UInt32 &r,const UInt32 s[])
 		                      :ArrayObject(r,s){
-	_data.reset(new Buffer<T> (_shape->getSize()));
+	_data.reset(new Buffer<T> (getShape()->getSize()));
 
 }
 
@@ -456,14 +462,11 @@ template<typename T> Array<T>::Array(const boost::shared_ptr<ArrayShape> &s) :
 	ArrayObject(s) {
 	EXCEPTION_SETUP("template<typename T> Array<T>::Array(const boost::shared_ptr<ArrayShape> &s)");
 
-	MemoryAllocationError e("Array<T>::Array");
-	_data.reset(new Buffer<T> (_shape->getSize()));
+	_data.reset(new Buffer<T> (getShape()->getSize()));
 	if (!_data) {
 		EXCEPTION_INIT(MemoryAllocationError,"Cannot allocate memory for Buffer object!");
 		EXCEPTION_THROW();
 	}
-
-
 }
 
 template<typename T> Array<T>::Array(const ArrayShape &s, const Buffer<T> &b) :
@@ -533,30 +536,28 @@ template<typename T> std::ostream &operator<<(std::ostream &o,
 template<typename T> void Array<T>::setBuffer(const Buffer<T> &b) {
 	EXCEPTION_SETUP("template<typename T> void Array<T>::setBuffer(const Buffer<T> &b)");
 
-	if (_shape) {
+	if (getShape()->getSize()!=0) {
 		//if there exists already a shape object we have to check the size
-		if (b.getSize() != _shape->getSize()) {
+		if (b.getSize() != getShape()->getSize()) {
 			EXCEPTION_INIT(SizeMissmatchError,"Buffser and array size do not match!");
 			EXCEPTION_THROW();
 		}
 	}
 	_data.reset(new Buffer<T> (b));
-	_data_object = boost::dynamic_pointer_cast<BufferObject>(_data);
 
 }
 
 template<typename T> void Array<T>::setBuffer(const typename Buffer<T>::sptr &b) {
 	EXCEPTION_SETUP("template<typename T> void Array<T>::setBuffer(const typename Buffer<T>::sptr &b)");
 
-	if (_shape) {
+	if (getShape()->getSize()!=0) {
 		//if there exists already a shape object we have to check the size
-		if (b->getSize() != _shape->getSize()) {
+		if (b->getSize() != getShape()->getSize()) {
 			EXCEPTION_INIT(SizeMissmatchError,"Buffer and array size do not match!");
 			EXCEPTION_THROW();
 		}
 	}
 	_data = b;
-	_data_object = boost::dynamic_pointer_cast<BufferObject>(b);
 }
 
 template<typename T> const BufferObject::sptr Array<T>::getBuffer() const {
@@ -586,7 +587,7 @@ template<typename T> T &Array<T>::operator()(const Index &i){
 	EXCEPTION_SETUP("template<typename T> T &Array<T>::operator()(const Index &i)");
 
 	try{
-		T &res = (*_data)[_shape->getOffset(i)];
+		T &res = (*_data)[getShape()->getOffset(i)];
 		return res;
 	}catch(IndexError &error){
 		EXCEPTION_INIT(IndexError,"Index does not fit into array!");
@@ -600,7 +601,7 @@ template<typename T> T Array<T>::operator()(const Index &i) const{
 	EXCEPTION_SETUP("template<typename T> T Array<T>::operator()(const Index &i) const");
 
 	try{
-		T result = (*_data)[_shape->getOffset(i)];
+		T result = (*_data)[getShape()->getOffset(i)];
 		return result;
 	}catch(IndexError &error){
 		EXCEPTION_INIT(IndexError,"Index does not fit into array!");
@@ -614,7 +615,7 @@ template<typename T> void Array<T>::operator()(const Selection &s,Array<T> &a) c
 	EXCEPTION_SETUP("template<typename T> void Array<T>::operator()(const Selection &i,Array<T> &a) const ");
 
 	//loop over the target array
-	Index sindex(_shape->getRank());
+	Index sindex(getShape()->getRank());
 	Index index (s.getRank());
 
 	//loop over the target array
@@ -626,16 +627,12 @@ template<typename T> void Array<T>::operator()(const Selection &s,Array<T> &a) c
 	}
 
 
-
-
-
 }
 
 
 template<typename T> void Array<T>::allocate(){
 	if(_shape){
 		_data.reset(new Buffer<T> (_shape->getSize()));
-		_data_object = boost::dynamic_pointer_cast<BufferObject>(_data);
 	}
 }
 

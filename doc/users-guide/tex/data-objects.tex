@@ -311,7 +311,24 @@ thrown.
 
 \section{The {\tt Array<T>} template}
 
+{\tt libpniutils} provides an array template for multidimensional arrays 
+of arbitrary rank. The rank in this document refers to the number of dimensions 
+an array has. An array can be considered as a composite object consisting 
+of two objects: a data buffer and a shape object. 
+The buffer object describes a linear array of elements in memory while the 
+shape objects provides a mapping between this linear array and a
+multidimensional index vector. 
+In other words, the {\tt Array<T>} object provides a special multidimensional 
+view on a linear chunk of memory.
+An interesing aspect of this template is that the shape as well as the buffer 
+object are stored as shared pointers. This gives you the chance to share 
+a single data buffer with many arrays (maybe of different shape but constant
+size) without taking care about when and how some of this arrays might get
+destroyed. This large degree of flexibilty comes by the cost of 
+
 \subsection{Instantiation of a {\tt Array<T>} template}
+
+
 
 \subsection{Assignment of a {\tt Array<T>} template}
 

@@ -323,6 +323,34 @@ public:
 	friend std::ostream &operator<<(std::ostream &o,const NotImplementedError &e);
 };
 
+//! \ingroup Exceptions
+//! \brief for access to not allocated memory
+
+//! This exception will be thrown in cases where a user wants to access
+//! data and no memory has been allocated.
+class MemoryAccessError:public Exception{
+public:
+	//! default constructor
+	MemoryAccessError():Exception("MemoryAccessError"){
+	}
+
+	//! constructor
+
+	//! Constructor setting the issuer and description of the error.
+	//! \param i issuer fo the exception
+	//! \param d error description
+	MemoryAccessError(const String &i,const String &d):
+		Exception("MemoryAccessError",i,d){
+	}
+
+	//! destructor
+	virtual ~MemoryAccessError(){
+
+	}
+
+	friend std::ostream &operator<<(std::ostream &o,const MemoryAccessError &e);
+};
+
 }
 }
 #endif

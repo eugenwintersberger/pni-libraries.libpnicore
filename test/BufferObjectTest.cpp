@@ -18,118 +18,64 @@ void BufferObjectTest::setUp(){
 	e1 = 1;
 	e2 = 3;
 
-	buffer1.setElementSize(e1);
-	buffer1.setSize(n1);
-	buffer1.allocate();
 
-	buffer2.setElementSize(e2);
-	buffer2.setSize(n2);
-	buffer2.allocate();
 }
 
 void BufferObjectTest::tearDown(){
-	buffer1.free();
-	buffer2.free();
+
+}
+
+void BufferObjectTest::testConstruction(){
+	BufferObject b1;  //default constructor
+
+	CPPUNIT_ASSERT(b1.getSize() == 0);
+	CPPUNIT_ASSERT(b1.getElementSize() == 0);
+	CPPUNIT_ASSERT(b1.getMemSize() == 0);
+
+	BufferObject b2(n1,e1);
+	CPPUNIT_ASSERT(b2.getSize() == n1);
+	CPPUNIT_ASSERT(b2.getElementSize() == e1);
+	CPPUNIT_ASSERT(b2.getMemSize() == n1*e1);
+
+	BufferObject b3(b2);
+	CPPUNIT_ASSERT(b3.getSize() == b2.getSize());
+	CPPUNIT_ASSERT(b3.getElementSize() == b2.getElementSize());
+	CPPUNIT_ASSERT(b3.getMemSize() == b2.getMemSize());
 }
 
 void BufferObjectTest::testAccess(){
 	BufferObject buffer;
-	UInt8 *ptr;
 
-	CPPUNIT_ASSERT_NO_THROW(buffer.setSize(n1));
-	CPPUNIT_ASSERT_NO_THROW(buffer.setElementSize(e1));
-	CPPUNIT_ASSERT_NO_THROW(buffer.allocate());
+	CPPUNIT_ASSERT(buffer.getVoidPtr() == NULL);
 
-	ptr = (UInt8 *)buffer.getVoidPtr();
-	for(UInt64 i=0;i<n1;i++){
-		*(ptr + i*e1) = 100;
-	}
-
-	for(UInt64 i=0;i<n1;i++){
-		CPPUNIT_ASSERT(*(ptr+i*e1)==100);
-		CPPUNIT_ASSERT(*(ptr+i*e1)!= 1);
-	}
-
-	CPPUNIT_ASSERT(buffer.getMemSize()==n1*e1);
+	const BufferObject &bref = buffer;
+	CPPUNIT_ASSERT(buffer.getVoidPtr() == NULL);
 
 }
 
-void BufferObjectTest::testComparison(){
-	BufferObject a,b;
+void BufferObjectTest::testParameters(){
+	BufferObject b1;
 
-	CPPUNIT_ASSERT_NO_THROW(a.setSize(100));
-	CPPUNIT_ASSERT_NO_THROW(a.setElementSize(1));
-	CPPUNIT_ASSERT_NO_THROW(a.allocate());
+	//setup base class
+	b1.setElementSize(e1);
+	CPPUNIT_ASSERT(b1.getElementSize() == e1);
+	CPPUNIT_ASSERT(b1.getMemSize() == 0);
+	b1.setSize(n1);
+	CPPUNIT_ASSERT(b1.getSize() == n1);
+	CPPUNIT_ASSERT(b1.getMemSize() == n1*e1);
 
-	CPPUNIT_ASSERT_NO_THROW(b.setSize(200));
-	CPPUNIT_ASSERT_NO_THROW(b.setElementSize(2));
-	CPPUNIT_ASSERT_NO_THROW(b.allocate());
+	//change order of setup
+	BufferObject b2;
+	b2.setSize(n1);
+	CPPUNIT_ASSERT(b2.getSize() == n1);
+	CPPUNIT_ASSERT(b2.getMemSize() == 0);
+	b2.setElementSize(e1);
+	CPPUNIT_ASSERT(b2.getElementSize() == e1);
+	CPPUNIT_ASSERT(b2.getMemSize() == n1*e1);
 
-	CPPUNIT_ASSERT(a!=b);
 
-	CPPUNIT_ASSERT_NO_THROW(b.setSize(100));
-	CPPUNIT_ASSERT_NO_THROW(b.setElementSize(1));
-	CPPUNIT_ASSERT_NO_THROW(b.allocate());
-
-	CPPUNIT_ASSERT(a==b);
-
-}
-
-void BufferObjectTest::testReallocation(){
-	BufferObject buffer;
-
-	CPPUNIT_ASSERT_NO_THROW(buffer.setSize(n1));
-	CPPUNIT_ASSERT_NO_THROW(buffer.setElementSize(e1));
-	CPPUNIT_ASSERT_NO_THROW(buffer.allocate());
-
-	CPPUNIT_ASSERT(buffer.getMemSize()==n1*e1);
-	CPPUNIT_ASSERT_NO_THROW(buffer.free());
-
-	CPPUNIT_ASSERT_NO_THROW(buffer.setSize(n2));
-	CPPUNIT_ASSERT_NO_THROW(buffer.setElementSize(e2));
-	CPPUNIT_ASSERT_NO_THROW(buffer.allocate());
-
-	CPPUNIT_ASSERT(buffer.getMemSize()==n2*e2);
-	CPPUNIT_ASSERT_NO_THROW(buffer.free());
-}
-
-void BufferObjectTest::testAllocation(){
-	BufferObject buffer;
-
-	CPPUNIT_ASSERT_NO_THROW(buffer.setSize(n1));
-	CPPUNIT_ASSERT_NO_THROW(buffer.setElementSize(e1));
-	CPPUNIT_ASSERT_NO_THROW(buffer.allocate());
-	CPPUNIT_ASSERT_NO_THROW(buffer.free());
-}
-
-void BufferObjectTest::testAssignment(){
-	BufferObject a,b;
-
-	CPPUNIT_ASSERT_NO_THROW(a.setSize(100));
-	CPPUNIT_ASSERT_NO_THROW(a.setElementSize(1));
-	CPPUNIT_ASSERT_NO_THROW(a.allocate());
-
-	CPPUNIT_ASSERT_NO_THROW(b.setSize(200));
-	CPPUNIT_ASSERT_NO_THROW(b.setElementSize(2));
-	CPPUNIT_ASSERT_NO_THROW(b.allocate());
-
-	CPPUNIT_ASSERT(a!=b);
-
-	a = b;
-
-	CPPUNIT_ASSERT(a==b);
-}
-
-void BufferObjectTest::testCopyConstructor(){
-	BufferObject a;
-	CPPUNIT_ASSERT_NO_THROW(a.setSize(100));
-	CPPUNIT_ASSERT_NO_THROW(a.setElementSize(1));
-	CPPUNIT_ASSERT_NO_THROW(a.allocate());
-
-	BufferObject b(a);
-
-	CPPUNIT_ASSERT(a==b);
 
 }
+
 
 

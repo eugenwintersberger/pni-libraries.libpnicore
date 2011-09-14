@@ -68,6 +68,10 @@ std::ostream &operator<<(std::ostream &o,const NotImplementedError &e){
 	return e.print(o);
 }
 
+std::ostream &operator<<(std::ostream &o,const MemoryAccessError &e){
+	return e.print(o);
+}
+
 //end of namespace
 }
 }

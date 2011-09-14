@@ -9,6 +9,8 @@
 CPPUNIT_TEST_SUITE_REGISTRATION(BufferTest);
 
 void BufferTest::setUp(){
+	n1 = 1000;
+	n2 = 2000;
 }
 
 void BufferTest::tearDown(){
@@ -16,27 +18,62 @@ void BufferTest::tearDown(){
 
 }
 
+void BufferTest::testConstructors(){
+	//create first buffer using the default constructor
+	Buffer<Float64> dbuffer; //default constructor
+	CPPUNIT_ASSERT(!dbuffer.isAllocated());
+
+	dbuffer.allocate(n1);
+	CPPUNIT_ASSERT(dbuffer.isAllocated());
+
+	//create the second constructor with the standard constructor
+	//allocating memory
+	Buffer<Float64> dbuffer2(n2);
+	CPPUNIT_ASSERT(dbuffer2.isAllocated());
+
+	//using copy constructor
+	Buffer<Float64> dbuffer3(dbuffer2);
+	CPPUNIT_ASSERT(dbuffer3.isAllocated());
+	CPPUNIT_ASSERT(dbuffer3.getSize() == dbuffer2.getSize());
+
+	//using copy constructor with a not allocated buffer
+	Buffer<Float64> dbuffer4;
+	dbuffer4.setSize(n1);
+	CPPUNIT_ASSERT(!dbuffer4.isAllocated());
+
+	Buffer<Float64> dbuffer5(dbuffer4);
+	CPPUNIT_ASSERT(dbuffer5.getSize() == dbuffer4.getSize());
+	CPPUNIT_ASSERT(!dbuffer5.isAllocated());
+
+	dbuffer4.allocate();
+	dbuffer4 = 1.3091;
+	Buffer<Float64> dbuffer6(dbuffer4);
+	CPPUNIT_ASSERT(dbuffer6 == dbuffer4);
+
+
+}
+
 void BufferTest::testAllocation(){
 	Buffer<Float64> dbuffer;
-	UInt64 n;
 
-	n = 100;
-	CPPUNIT_ASSERT_NO_THROW(dbuffer.setSize(n));
+	CPPUNIT_ASSERT_THROW(dbuffer.allocate(),MemoryAllocationError);
+
+	dbuffer.setSize(n1);
 	CPPUNIT_ASSERT_NO_THROW(dbuffer.allocate());
-	CPPUNIT_ASSERT(dbuffer.getSize()==n);
-	CPPUNIT_ASSERT(dbuffer.getMemSize()==(sizeof(Float64)*n));
+	//subsequent call to allocate causes exception
+	CPPUNIT_ASSERT_THROW(dbuffer.allocate(),MemoryAllocationError);
 
-	for(UInt64 i=0;i<n;i++) dbuffer[i] = (Float64)i;
-
-	CPPUNIT_ASSERT_NO_THROW(dbuffer.free());
-	n = 100000000;
-	CPPUNIT_ASSERT_NO_THROW(dbuffer.setSize(n));
+	dbuffer.free();
 	CPPUNIT_ASSERT_NO_THROW(dbuffer.allocate());
-	CPPUNIT_ASSERT(dbuffer.getSize()==n);
-	CPPUNIT_ASSERT(dbuffer.getMemSize()==(sizeof(Float64)*n));
 
-	for(UInt64 i=0;i<n;i++) dbuffer[i] = (Float64)i;
+	dbuffer.free();
+	CPPUNIT_ASSERT_NO_THROW(dbuffer.allocate(n1));
+	CPPUNIT_ASSERT_THROW(dbuffer.allocate(n1),MemoryAllocationError);
 
+	dbuffer.free();
+	CPPUNIT_ASSERT_NO_THROW(dbuffer.allocate(n2));
+	CPPUNIT_ASSERT(dbuffer.getSize() == n2);
+	CPPUNIT_ASSERT_THROW(dbuffer.allocate(),MemoryAllocationError);
 }
 
 void BufferTest::testAccess(){
@@ -49,36 +86,68 @@ void BufferTest::testAccess(){
 	}
 }
 
-void BufferTest::testCopy(){
-	Buffer<Float64> buffer1(1000);
-
-	buffer1 = 100.234;
-	Buffer<Float64> buffer2(buffer1);
-	CPPUNIT_ASSERT(buffer1 == buffer2);
-}
 
 void BufferTest::testAssignment(){
 	//testing here the assignment of equally typed buffers
-	Buffer<Float64> buffer1(1000);
-	Buffer<Float64> buffer2(2000);
+	Buffer<Float64> buffer1;
+	Buffer<Float64> buffer2;
+	Buffer<UInt32> buffer3;
+	Buffer<Int64> buffer4;
+
+	//check first for some standard problems
+	//nothing happens - both are not allocated
+	CPPUNIT_ASSERT_NO_THROW(buffer1 = buffer2);
+	//now the lhs is not allocated
+	buffer2.allocate(n1);
+	buffer1.setSize(n2);
+	CPPUNIT_ASSERT_THROW(buffer1 = buffer2,MemoryAccessError);
+	buffer1.allocate();
+	CPPUNIT_ASSERT_THROW(buffer1 = buffer2,SizeMissmatchError);
+	buffer1.free();
+	buffer1.allocate(n1);
+	CPPUNIT_ASSERT_NO_THROW(buffer1 = buffer2);
+
+	//allocate now all other bufers
+	buffer3.allocate(n1);
+	buffer4.allocate(n1);
 
 	//assign a single number to the buffer
-	buffer1 = 1.0;
+	CPPUNIT_ASSERT_NO_THROW(buffer1 = 1.0);
 	for(UInt64 i=0;i<buffer1.getSize();i++){
 		CPPUNIT_ASSERT(buffer1[i] == 1.0);
 	}
 
-	CPPUNIT_ASSERT_NO_THROW(buffer2 = buffer1);
-	CPPUNIT_ASSERT(buffer2.getSize() == buffer1.getSize());
-	CPPUNIT_ASSERT(buffer2 == buffer1);
+	//assign a single number of different type
+	CPPUNIT_ASSERT_NO_THROW(buffer1 = 1);
+	for(UInt64 i=0;i<buffer1.getSize();i++) CPPUNIT_ASSERT(buffer1[i] == 1);
+	CPPUNIT_ASSERT_THROW(buffer3 = -5,RangeError);
+
+	//starting with integer buffers
+	CPPUNIT_ASSERT_THROW(buffer3 = buffer1,TypeError); //cannot assign double to integer
+
+	buffer4 = 100;
+	buffer4[100] = -1;
+	CPPUNIT_ASSERT_THROW(buffer3 = buffer4,RangeError);
+
+
+	Buffer<Complex32> buffer5(n1);
+	Buffer<Complex128> buffer6(n1);
+
+	buffer5 = Complex32(1,-2093);
+	//will not work - gives already compile time error
+	//CPPUNIT_ASSERT_THROW(buffer2 = buffer5,TypeError);
+	//CPPUNIT_ASSERT_THROW(buffer3 = buffer5,TypeError);
+	CPPUNIT_ASSERT_NO_THROW(buffer5 = buffer4);
+	CPPUNIT_ASSERT_NO_THROW(buffer6 = buffer1);
+	buffer1 = 1.e+300;
+	CPPUNIT_ASSERT_THROW(buffer5 = buffer1,RangeError);
 
 }
 
 void BufferTest::testComparison(){
 	Buffer<Float64> b1(100);
 	Buffer<Float64> b2(100);
-	Buffer<UInt64> b3(100)
-;
+	Buffer<UInt64> b3(100);
 	b1 = 1.;
 	b2 = 2.;
 
@@ -86,50 +155,9 @@ void BufferTest::testComparison(){
 	b2 = 1.;
 	CPPUNIT_ASSERT(b1 == b2);
 
-	// must fail because the buffers are of different type
+	// should work
 	b3 = 1;
-	CPPUNIT_ASSERT(b3 != b1);
+	CPPUNIT_ASSERT(b3 == b1);
 }
 
-void BufferTest::testConversion(){
-	Buffer<Float64> buffer(100);
-	buffer = -100.23;
 
-	//cannot convert a float buffer to an integer
-	Buffer<UInt64> uibuffer;
-	CPPUNIT_ASSERT_THROW(buffer.convert(uibuffer),TypeError);
-
-	//the other way around should work
-	uibuffer.setSize(100);
-	uibuffer.allocate();
-	uibuffer = 10;
-	CPPUNIT_ASSERT_NO_THROW(uibuffer.convert(buffer));
-	for(UInt64 i=0; i<buffer.getSize();i++) CPPUNIT_ASSERT(buffer[i]==10);
-
-	//we cannot convert a signed buffer to an unsigned buffer
-	Buffer<Int64> ibuffer(200);
-	ibuffer = -1;
-	CPPUNIT_ASSERT_THROW(ibuffer.convert(uibuffer),RangeError);
-	//but this should work again
-	ibuffer = 100;
-	CPPUNIT_ASSERT_NO_THROW(ibuffer.convert(uibuffer));
-
-
-	//cannot convert a float buffer to a complex buffer
-	Buffer<Complex32> cbuffer;
-	CPPUNIT_ASSERT_NO_THROW(buffer.convert(cbuffer));
-
-
-
-	Buffer<Float128> lfbuffer;
-	CPPUNIT_ASSERT_NO_THROW(buffer.convert(lfbuffer));
-
-	//in the end we try this
-	lfbuffer.setSize(500);
-	lfbuffer.allocate();
-	lfbuffer = -100.23501;
-	CPPUNIT_ASSERT_THROW(lfbuffer.convert(buffer),TypeError);
-
-
-
-}
