@@ -12,9 +12,11 @@ using namespace pni::utils;
 class ArrayShapeTest: public CppUnit::TestFixture {
 	CPPUNIT_TEST_SUITE(ArrayShapeTest);
 	CPPUNIT_TEST(testConstruction);
+	CPPUNIT_TEST(testAssignment);
 	CPPUNIT_TEST(testComparison);
 	CPPUNIT_TEST(testOffset);
 	CPPUNIT_TEST(testIndex);
+	CPPUNIT_TEST(testExceptions);
 	CPPUNIT_TEST_SUITE_END();
 private:
 	unsigned int *_s1;
@@ -26,9 +28,11 @@ public:
 	void tearDown();
 
 	void testConstruction();
+	void testAssignment();
 	void testComparison();
 	void testOffset();
 	void testIndex();
+	void testExceptions();
 
 };
 

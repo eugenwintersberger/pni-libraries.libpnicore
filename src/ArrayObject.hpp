@@ -18,9 +18,18 @@ namespace utils{
 
 //! \ingroup Data-objects
 //! \brief Base class for numeric arrays
+
+//! The class ArrayObject acts as a base class for all array-like classes.
+//! It provides the management of the array shape object and an interface
+//! of methods an Array-class must overload in order to work properly.
 class ArrayObject:public NumericObject {
+private:
+
+	//some operators should not be available from outside
+	//! assignment operator
+	ArrayObject &operator=(const ArrayObject &);
 protected:
-	ArrayShape::sptr _shape; //!< shape object describing the shape of the array
+	ArrayShape _shape; //!< shape object describing the shape of the array
 							 //!< and managing the access to the data
 	UInt32 *_index_buffer; 	 //!< a buffer used to hold index variables.
 public:
@@ -28,15 +37,7 @@ public:
 	//! default constructor
 	ArrayObject();
 	//! copy constructor
-	ArrayObject(const ArrayObject &);
-	//! constructor where rank and dimension are set
-	//! In this case a shape object is created and memory allocated.
-	//! The shape object as well as the data buffer will be managed
-	//! by the resulting Array object.
-
-	//! \param r rank of the array
-	//! \param s array with number of elements along each direction
-	ArrayObject(const UInt32 &r, const UInt32 s[]);
+	ArrayObject(const ArrayObject &a);
 	//! constructor with an array shape pointer
 
 	//! The pointer to an existing ArrayShape object is used to construct
@@ -45,55 +46,50 @@ public:
 	//! \param s - reference to a shape object
 	//! \sa Array(const boost::shared_ptr<ArrayShape> &s)
 	ArrayObject(const ArrayShape &s);
-	//! constructor with a smart pointer to an array shape
-
-	//! Since a smart pointer is used the the shape object of the
-	//! created Array object will be shared with the array's creator.
-
-	//! \param &s reference to a smart pointer to a shape object
-	ArrayObject(const ArrayShape::sptr &s);
 	//! destructor
 	virtual ~ArrayObject();
 
-	//! assignment operator
-	ArrayObject &operator=(const ArrayObject &);
-
 	//! get the type id of the elemnt type
+
+	//! This method must be overloaded by child classes implementing a concrete
+	//! array. It should return the type code of the native PNI type of the
+	//! array data.
+	//! \return type id of the native type
 	virtual PNITypeID getTypeID() const;
 
 	//! set the shape of the array
 
-	//! The size of the shape array and that of the existing array must match
-	//! otherwise and exception will be raised. Since a reference to a plain
-	//! ArrayShape object is passed the Array object creates a new ArrayShape
-	//! instance and copies the content from the existing one.
-
+	//! This method behaves different depending on the allocation status of the
+	//! array object. If the array is not allocated yet any kind of
+	//! shape object can be passed to this method. If the array is already
+	//! allocated (which means that it holds already a shape object) the
+	//! size of the shape (the total number of elements) must match that of the
+	//! actual shape object of the array. Otherwise an exception will be thrown.
+	//! The shape object is passed by reference and thus a copy of it will be
+	//! created. Furthermore, the size of the shape object must not be zero.
+	//! \throws SizeMissmatchError shape sizes do not match or size is zero
 	//! \param s reference to the existing shape object
 	//! \sa void setShape(boost::shared_ptr<ArrayShape> &s)
 	virtual void setShape(const ArrayShape &s);
-	//! set the shape of the array
-
-	//! The size of the shape array and that of the existing array must match
-	//! otherwise and exception will be raised. Here a shared smart pointer
-	//! is passed to the method. Thus the calling instance and the array
-	//! will share the shape object -  no copy process takes place.
-
-	//! \param s reference to the existing shape object
-	//! \sa void setShape(const ArrayShape &s)
-	virtual void setShape(const ArrayShape::sptr &s);
-
 	//! obtain the shape of an array
 
 	//! Set the smart pointer ptr to the value of the pointer holding the
 	//! ArrayShape-object in the Array. After this call ptr and the Array
 	//! share the shape object.
-	virtual const ArrayShape::sptr getShape() const;
+	virtual const ArrayShape &getShape() const;
 
 	//! set the BufferObject that belongs to an array
-	virtual void setBuffer(BufferObject::sptr b);
 	virtual void setBuffer(const BufferObject &b);
-	//! get a shared pointer to a BufferObject belonging to an array
-	virtual const BufferObject::sptr getBuffer() const;
+	//! get the BufferObject
+
+	//! Get the buffer object of an array. A constant reference is returned
+	//! making it impossible to alter the buffer from outside the array.
+	//! This should help to avoid segmentation faults that would occur
+	//! if something like this happens.
+	//! THIS METHOD MUST BE IMPLEMENTED BY THE CONCRETE ARRAY IMPLEMENTATION!!!!
+	//! OTHERWISE A NotImplementedError will be raised.
+	//! \return reference to a buffer object
+	virtual const BufferObject &getBuffer() const;
 
 	//allocate memory according to the shape object
 	virtual void allocate(){
@@ -102,12 +98,14 @@ public:
 
 	//return the size of the object
 	virtual UInt64 size(){
-		return _shape->getSize();
+		return _shape.getSize();
 	}
 
 	virtual bool isAllocated() const;
 	virtual void *getVoidPtr();
 	virtual const void *getVoidPtr() const;
+
+	virtual void reset();
 };
 
 

@@ -41,7 +41,7 @@ namespace utils{
 //! This might not be true for array classes using this ArrayShape type.
 
 class ArrayShape{
-    protected:
+    private:
         UInt32 _rank;         //!< the number of dimensions
         UInt32 *_dimstrides;  //!< the strides for the offset calculation
         UInt32 *_shape;       //!< the number of values along each dimension
@@ -58,62 +58,78 @@ class ArrayShape{
         //! used internally to recompute the number of elements in the array
         //! once the shape is changed in a way so that the size is changed.
         void _compute_size();
-    public:
 
+        //! allocate memory
+
+        //! Method allocates buffers
+        //! \throws MemoryAllocationError if allocation fails.
+        void _allocate(UInt32 n);
+
+        //! free memory
+
+        //! Method frees the memory occupied by this class.
+        void _free();
+        //! set initial values
+
+        //! sets the member variables to initial values
+        void _init();
+    public:
         typedef boost::shared_ptr<ArrayShape> sptr;  //!< smart pointer to an ArrayShape object
         //! default constructor
         ArrayShape();
         //! copy constructor
 
-        //! Initialize an object of type ArrayShape with the content of an other ArrayShape object.
+        //! Initialize an object of type ArrayShape with the content of an
+        //! other ArrayShape object.
+        //! \throws MemoryAllocationError if memory allocation fails
         ArrayShape(const ArrayShape &s);
-        //! constructor taking the rank and shape of an array
+        //! constructor
 
-        //! \param r rank (the number of dimensions) of the array
-        //! \param s number of elements in each dimension
-        ArrayShape(const UInt32 r,const UInt32 *s);
+        //! This constructor sets the rank of the shape object allowing it
+        //! to allocate memory during creation.
+        //! \throws MemoryAllocationError if memory allocation fails
+        //! \param r rank of the shape (number of dimensions)
+        ArrayShape(const UInt32 &r);
         //! destructor
         virtual ~ArrayShape();
         
         //! set the rank of the shape object
 
-        //! sets the number of dimensions for the array
+        //! If the new rank is not equal the all dimension information is
+        //! lost and new memory is allocated. If the operation fails typically
+        //! due to a problem in memory allocation the original object state
+        //! remains untouched.
+        //! \throws MemoryAllocationError in cases of memory allocation problems
         //! \param r number of dimensions (rank)
         virtual void setRank(const UInt32 &r);
         //! return the array rank
 
+        //! Returns the number of dimensions in the shape object.
         //! \return array rank
         virtual UInt32 getRank() const;
-        //! set the dimensions of the array
 
-        //! This methods is used to set all dimension of an array in a single
-        //! method call.
-        //! \param *s array with number of elements in each direction
-        virtual void setDimensions(const UInt32 *s);
         //! set a single dimension of the shape object
 
         //! Use this method to set a single dimension in an array to a new value.
         //! If the index i is larger than the rank of the shape an exception
         //! will be raised.
+        //! \throws IndexError if i exceeds the rank of the shape
         //! \param i index of the dimension to set
         //! \param d new number of elements along dimension i
         virtual void setDimension(const UInt32 &i,const UInt32 &d);
-        //! get all dimensions of the shape
-
-        //! Returns a constant pointer to the dimension array of the shape object.
-        //! The returned pointer is const and thus its content cannot be altered.
-        //! \return pointer to dimensions
-        virtual const UInt32 *getDimensions() const;
         //! get a single dimension of the shape
 
         //! return the number of elements along dimension i. Raises an exception
         //! if i is larger than the rank of the shape.
+        //! \throws IndexError if i exceeds the rank of the shape
         //! \param i index of the dimension
         //! \return the number of elements along dimension i
         virtual UInt32 getDimension(const UInt32 &i) const;
-        //! get total number of elements in the array
+        //! total number of elements
 
-        //! \return number of elements available in an array of this shape
+        //! Returns the total number of elements that can be described by the
+        //! shape.
+        //! \return total number of elements
         virtual UInt64 getSize() const {return _size;}
         
         //! compute element offset
@@ -121,11 +137,20 @@ class ArrayShape{
         //! This method computes the offset for the element in an array
         //! characterized by the indices in index. The offset is the address of
         //! the element in a linear buffer.
-
-        //! \param *index pointer to an array of element indices
-        virtual UInt64 getOffset(const UInt32 *index) const;
-        
+        //! \throws IndexError if one of the indices in the Index objects exceeds its dimension
+        //! \param Index index object
+        //! \return offset for an index
         virtual UInt64 getOffset(const Index &i) const;
+        //! creates index from offset
+
+        //! Creates an index object that belongs to a particular linear offset.
+        //! The Index object that is passed to the method must be allocated (rank != 0)
+        //! and have the same rank as the shape object - otherwise an
+        //! exception will be thrown.
+        //! \throws ShapeMissmatchError if Index and ArrayShape object have different rank
+        //! \throws MemoryAccessError if Index of ArrayShape object have rank 0
+        //! \param offset offset for which to compute the index
+        //! \param i index object where to store the result
         virtual void getIndex(const UInt64 &offset,Index &i) const;
 
         //the assignment operator must be a member function
@@ -153,8 +178,8 @@ class ArrayShape{
         //! once a single dimension has been changed we would have to recalculate
         //! strides and recompute the size. However, this cannot be done easily
         //! by operator overloading.
-        //! \sa void setDimensions(const unsigned int *s), void setDimension(const unsigned int &i,const unsigned int &d)
-        const UInt32 operator[](UInt64 i) const { return _shape[i];}
+        //! \sa void setDimension(const unsigned int &i,const unsigned int &d)
+        const UInt32 operator[](UInt64 i) const;
 
         //! operator for console output
         friend std::ostream &operator<<(std::ostream &o,const ArrayShape &s);

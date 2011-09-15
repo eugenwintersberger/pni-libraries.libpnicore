@@ -9,79 +9,11 @@
 namespace pni{
 namespace utils{
 
-ArrayShape::ArrayShape(){
-    _rank = 0;
-    _dimstrides = NULL;
-    _shape = NULL;
-    _size = 0;
-}
-
-ArrayShape::ArrayShape(const UInt32 r,const UInt32 *s){
-	EXCEPTION_SETUP("ArrayShape::ArrayShape(const UInt32 r,const UInt32 *s)");
-    UInt32 i;
-    _rank = r;
-    _shape = NULL;
-    _dimstrides = NULL;
-    
-    //allocate memory for the shape pointer
-    _shape = new UInt32[r];
-    if (_shape == NULL){
-    	EXCEPTION_INIT(MemoryAllocationError,"Cannot allocate memory for the dimensions buffer!");
-    	EXCEPTION_THROW();
-    }
-
-    _dimstrides = new UInt32[r];
-    if (_dimstrides == NULL){
-    	if(_shape!= NULL) delete [] _shape;
-    	EXCEPTION_INIT(MemoryAllocationError,"Cannot allocate memory for the dimension strides buffer!");
-    	EXCEPTION_THROW();
-    }
-    for(i=0;i<r;i++) _shape[i] = s[i];
-    
-    //compute the dimension  strides
-    _compute_dimstrides();
-    
-    //compute the total size of the array
-    _compute_size();
-    
-}
-
-ArrayShape::ArrayShape(const ArrayShape &s){
-	EXCEPTION_SETUP("ArrayShape::ArrayShape(const ArrayShape &s)");
-    unsigned int i;
-    
-    _rank = s._rank;
-    _shape = new UInt32[_rank];
-    if(_shape==NULL){
-    	EXCEPTION_INIT(MemoryAllocationError,"Cannot allocate memory for the dimensions buffer!");
-    	EXCEPTION_THROW();
-    }
-    _dimstrides = new UInt32 [_rank];
-    if(_dimstrides == NULL){
-    	if(_shape != NULL) delete [] _shape;
-    	EXCEPTION_INIT(MemoryAllocationError,"Cannot allocate memory for the dimension strides buffer!");
-    	EXCEPTION_THROW();
-    }
-    _size = s._size;
-    
-    for(i=0;i<_rank;i++){
-        _shape[i] = s._shape[i];
-        _dimstrides[i] = s._dimstrides[i];
-    }
-}
-
-ArrayShape::~ArrayShape(){
-    //free all occupied memory
-    if(_dimstrides != NULL) delete [] _dimstrides;
-    if(_shape != NULL) delete [] _shape;
-    
-    _rank = 0;
-}
-
+//===========================private methods====================================
 void ArrayShape::_compute_dimstrides()
 {
     Int32 i;
-    
+
     //compute the dimension  strides
     for(i=_rank-1;i>=0;i--){
         if(((UInt32)i)==_rank-1){
@@ -94,100 +26,174 @@ void ArrayShape::_compute_dimstrides()
 
 void ArrayShape::_compute_size(){
     UInt32 i;
-    
+
     _size = 1;
     for(i=0;i<_rank;i++) _size *= _shape[i];
 }
 
+void ArrayShape::_allocate(UInt32 n){
+	EXCEPTION_SETUP("void ArrayShape::_allocate(UInt32 n)");
+
+	//free memory if allocated
+	_free();
+
+	_shape = new UInt32[n];
+	if(_shape == NULL){
+		EXCEPTION_INIT(MemoryAllocationError,"Shape buffer allocation failed!");
+		EXCEPTION_THROW();
+	}
+
+	_dimstrides = new UInt32[n];
+	if(_dimstrides == NULL){
+		_free();
+		EXCEPTION_INIT(MemoryAllocationError,"Stride buffer allocation failed!");
+		EXCEPTION_THROW();
+	}
+}
+
+void ArrayShape::_free(){
+	if(_shape != NULL){
+		delete [] _shape;
+		_shape = NULL;
+	}
+
+	if(_dimstrides != NULL){
+		delete [] _dimstrides;
+		_dimstrides = NULL;
+	}
+}
+
+void ArrayShape::_init(){
+	_rank = 0;
+	_size = 0;
+	_shape = NULL;
+	_dimstrides = NULL;
+}
+
+//===================constructors and destructors===============================
+ArrayShape::ArrayShape(){
+    _init();
+}
+
+ArrayShape::ArrayShape(const UInt32 &r){
+	EXCEPTION_SETUP("ArrayShape::ArrayShape(const UInt32 &r)");
+
+	//initialize member variables
+	_init();
+
+	//set the rank
+	_rank = r;
+
+	//allocate memory if neccessary
+	if(_rank != 0){
+
+		try{
+			_allocate(_rank);
+		}catch(MemoryAllocationError &error){
+			EXCEPTION_INIT(MemoryAllocationError,"Memory allocation for ArrayObject failed!");
+			EXCEPTION_THROW();
+		}
+
+		//initialize buffers
+		for(UInt32 i=0;i<_rank;i++){
+			_shape[i] = 0;
+			_dimstrides[i] = 0;
+		}
+
+		//do not need to compute dimstrides and size because they are all
+		//zero at this stage
+	}
+
+}
+
+ArrayShape::ArrayShape(const ArrayShape &s){
+	EXCEPTION_SETUP("ArrayShape::ArrayShape(const ArrayShape &s)");
+
+	//initialize variables
+	_init();
+
+	//set the rank to its new value
+	_rank = s._rank;
+
+    if(_rank != 0){
+    	//need to allocate memory only if rank != 0
+		try{
+			_allocate(_rank);
+		}catch(MemoryAllocationError &error){
+			EXCEPTION_INIT(MemoryAllocationError,"Memory allocation for ArrayObject failed!");
+			EXCEPTION_THROW();
+		}
+		//if memory allocation was successful data must be copied
+		_size = s._size; //copy size
+
+		//copy shape and stride information
+		for(UInt32 i=0;i<_rank;i++){
+			_shape[i] = s._shape[i];
+			_dimstrides[i] = s._dimstrides[i];
+		}
+    }
+}
+
+ArrayShape::~ArrayShape(){
+    //free all occupied memory
+    _free();
+    _init();
+}
+
+//==============methods to access and manipulate the rank of a shape============
+
 void ArrayShape::setRank(const UInt32 &r){
 	EXCEPTION_SETUP("void ArrayShape::setRank(const UInt32 &r)");
-    UInt32 i;
 
-    
-    if(_shape==NULL){
-        //the shape points has not been allocated yet
-    	//this is usually the case when the shape object was
-    	//created using the default constructor
-        _shape = new UInt32[r];
-        //throw an exception if memory allocation fails
-        if(_shape == NULL){
-        	EXCEPTION_INIT(MemoryAllocationError,"Cannot allocate memory for the dimensions buffer!");
-        	EXCEPTION_THROW();
-        }
-        _dimstrides = new UInt32[r];
-        //throw an exception if memory allocation fails
-        if(_dimstrides == NULL){
-        	if(_shape != NULL) delete [] _shape;
-        	EXCEPTION_INIT(MemoryAllocationError,"Cannot allocate memory for the dimension strides buffer!");
-        	EXCEPTION_THROW();
-        }
-        //set the number of elements along each dimension to 1
-        //default value
-        for(i=0;i<r;i++) _shape[i] = 1;
-    }else{
-        //the shape pointer is already allocated - the rank is
-    	//changed after initialization
-        UInt32 *new_shape;
-        UInt32 *new_dimstrides;
-        new_shape = new UInt32[r];
-        if(new_shape == NULL){
-        	EXCEPTION_INIT(MemoryAllocationError,"Cannot allocate memory for the dimensions buffer!");
-        	EXCEPTION_THROW();
-        }
-        new_dimstrides = new UInt32[r];
-        if(new_dimstrides == NULL){
-        	if(new_shape != NULL) delete [] new_shape;
-        	EXCEPTION_INIT(MemoryAllocationError,"Cannot allocate memory for the dimension strides buffer!");
-        	EXCEPTION_THROW();
-        }
-        
-        //initialize the new shape array
-        for(i=0;i<r;i++) new_shape[i] = 1;
-        
-        //load already existing data to the shape array
-        //the second break condition here is for the case that the 
-        //new rank is smaller then the old one
-        for(i=0;i<_rank && i<r;i++){
-            new_shape[i] = _shape[i];
-        }
-        
-        //free the originally allocated memory
-        delete [] _shape;
-        //set the shape pointer to the new location
-        _shape = new_shape;
-        delete [] _dimstrides;
-        _dimstrides = new_dimstrides;
-        
-    }
-    //finally we have to set the new rank variable
-    _rank = r;
-    
-    //in the end we have to compute new strides and a new array size
-    _compute_dimstrides();
-    _compute_size();
+	//need to do here only something if the new rank differs from the old one
+	if((_rank != r)&&(r !=0 )){
+		//if the new rank is not zero but different from the original one
+		//we have to allocate memory
+		_free();      //free all memory
+		_init();      //reset everything to default
+		_rank = r;    //set then rank;
+
+		//allocate memory
+		try{
+			_allocate(_rank);
+		}catch(MemoryAllocationError &error){
+			EXCEPTION_INIT(MemoryAllocationError,"Memory allocation for ArrayObject failed!");
+			EXCEPTION_THROW();
+		}
+
+		//initialize buffers
+		for(UInt32 i=0;i<_rank;i++){
+			_dimstrides[i] = 0;
+			_shape[i] = 0;
+		}
+		_size = 0;
+
+	}else if(r == 0){
+		//if the new rank is zero we simply have to deallocate everything
+		_free();
+		_init();
+	}else{
+		//if the new rank is equal to the original one we simply need to
+		//initialize the buffers
+		for(UInt32 i=0;i<_rank;i++){
+			_dimstrides[i] = 0;
+			_shape[i] = 0;
+		}
+		_size = 0;
+	}
 }
 
 unsigned int ArrayShape::getRank() const{
     return _rank;
 }
 
-void ArrayShape::setDimensions(const UInt32 *s){
-    //here the only thing we have to take care is, that the new 
-    //shape is not smaller then the old one - that is up to the 
-    //programmer
-    UInt32 i;
-    
-    for(i=0;i<_rank;i++) _shape[i] = s[i];
-    
-    //new size and new stride values must be computed
-    _compute_dimstrides();
-    _compute_size();
-}
+//============methods to access and manipulate dimensions=======================
 
 void ArrayShape::setDimension(const UInt32 &i,const UInt32 &d){
 	EXCEPTION_SETUP("void ArrayShape::setDimension(const UInt32 &i,const UInt32 &d)");
+
 	if(i>=_rank){
-		EXCEPTION_INIT(IndexError,"The dimension index must not be equal or exceed the rank of the shape object!");
+		EXCEPTION_INIT(IndexError,"Dimension index exceeded the rank of the shape object!");
 		EXCEPTION_THROW();
 	}
 
@@ -198,39 +204,37 @@ void ArrayShape::setDimension(const UInt32 &i,const UInt32 &d){
 	_compute_size();
 }
 
-const UInt32 *ArrayShape::getDimensions() const{
-    return _shape;
-}
-
 UInt32 ArrayShape::getDimension(const UInt32 &i) const{
 	EXCEPTION_SETUP("UInt32 ArrayShape::getDimension(const UInt32 &i) const");
 	if(i>=_rank){
-		EXCEPTION_INIT(IndexError,"The dimension index must not be equal or exceed the rank of the shape object!");
+		EXCEPTION_INIT(IndexError,"Dimension index exceeded the rank of the shape object!");
 		EXCEPTION_THROW();
 	}
 
 	return _shape[i];
 }
 
-UInt64 ArrayShape::getOffset(const UInt32 *index) const{
-	EXCEPTION_SETUP("UInt64 ArrayShape::getOffset(const UInt32 *index)");
-    UInt32 i;
-    UInt64 offset = 0;
-    
-    for(i=0;i<_rank;i++){
-    	if(index[i]>=_shape[i]){
-    		EXCEPTION_INIT(IndexError,"Index out of bounds!");
-    		EXCEPTION_THROW();
-    	}
-        offset += index[i]*_dimstrides[i];
-    }
-    return offset;
-}
+//===========Methods concerning offset and index handling=======================
 
 UInt64 ArrayShape::getOffset(const Index &i) const {
 	EXCEPTION_SETUP("UInt64 ArrayShape::getOffset(const Index &i)");
 	UInt64 offset = 0;
 	UInt64 index = 0;
+
+	if(getSize()==0){
+		EXCEPTION_INIT(MemoryAccessError,"ArrayShape object is not allocated (rank == 0)!");
+		EXCEPTION_THROW();
+	}
+
+	if(i.getRank() == 0){
+		EXCEPTION_INIT(MemoryAccessError,"Index object is not allocated (rank = 0)!");
+		EXCEPTION_THROW();
+	}
+
+	if(i.getRank() != getRank()){
+		EXCEPTION_INIT(ShapeMissmatchError,"ArrayShape and Index rank do not match!");
+		EXCEPTION_THROW();
+	}
 
 	for(UInt32 d=0;d<getRank();d++){
 		index = i[d];
@@ -246,8 +250,22 @@ UInt64 ArrayShape::getOffset(const Index &i) const {
 void ArrayShape::getIndex(const UInt64 &offset,Index &i) const {
 	EXCEPTION_SETUP("void ArrayShape::getIndex(const UInt64 &offset,Index &i) const");
 
+	if(getSize()==0){
+		EXCEPTION_INIT(MemoryAccessError,"ArrayShape object is not allocated (rank == 0)!");
+		EXCEPTION_THROW();
+	}
+
+	if(i.getRank() == 0){
+		EXCEPTION_INIT(MemoryAccessError,"Index object is not allocated (rank == 0)!")
+	}
+
 	if(i.getRank() != getRank()){
 		EXCEPTION_INIT(ShapeMissmatchError,"ArrayShape and Index have different rank!");
+		EXCEPTION_THROW();
+	}
+
+	if(offset>=getSize()){
+		EXCEPTION_INIT(MemoryAccessError,"Offset is larger than size!");
 		EXCEPTION_THROW();
 	}
 
@@ -260,36 +278,44 @@ void ArrayShape::getIndex(const UInt64 &offset,Index &i) const {
 	}
 }
 
+//========================operators============================================
+
 ArrayShape &ArrayShape::operator=(const ArrayShape &a){
 	EXCEPTION_SETUP("ArrayShape &ArrayShape::operator=(const ArrayShape &a)");
-    UInt32 i;
     
     //avoid assigning the object to itself
     if(this != &a){
-    	//if the total number of elements described
-    	//by the tow shapes is equal they can be assigned.
-        _rank = a._rank;
-        if(_shape != NULL) delete [] _shape;
-        if(_dimstrides != NULL) delete [] _dimstrides;
-        
-        _shape = new UInt32[_rank];
-        if(_shape==NULL){
-        	EXCEPTION_INIT(MemoryAllocationError,"Cannot allocate memory for dimensions buffer!");
-        	EXCEPTION_THROW();
-        }
-        _dimstrides = new UInt32[_rank];
-        if(_dimstrides==NULL){
-        	if(_shape!= NULL) delete [] _shape;
-        	EXCEPTION_INIT(MemoryAllocationError,"Cannot allocate memory for the dimension strides buffer!");
-        	EXCEPTION_THROW();
-        }
-        
-        for(i=0;i<_rank;i++){
-            _shape[i] = a._shape[i];
-            _dimstrides[i] = a._dimstrides[i];
-        }
-        
-        _size = a._size;
+
+    	if((_rank != a._rank) && (a.getRank() != 0)){
+    		//if the rank of the rhs differs from that on the lhs and is not zero
+    		_free();
+    		_init();
+
+    		_rank = a._rank;  //set the new rank
+    		try{
+    			_allocate(_rank);
+    		}catch(MemoryAllocationError &error){
+    			EXCEPTION_INIT(MemoryAllocationError,"Memory allocation for ArrayObject failed!");
+    			EXCEPTION_THROW();
+    		}
+
+    		//now we have to copy data
+    		for(UInt32 i=0;i<_rank;i++){
+    			_shape[i] = a._shape[i];
+    			_dimstrides[i] = a._dimstrides[i];
+    		}
+    		_size = a._size;
+    	}else if(a._rank == 0){
+    		_free();
+    		_init();
+    	}else{
+    		//rank of the shape on the lhs is equal to that on the rhs
+    		for(UInt32 i=0;i<_rank;i++){
+    			_shape[i] = a._shape[i];
+    			_dimstrides[i] = a._dimstrides[i];
+    		}
+    		_size = a._size;
+    	}
     }
  
     return *this;
@@ -326,6 +352,20 @@ std::ostream &operator<<(std::ostream &o,const ArrayShape &s){
 	for(unsigned long i=0;i<s.getRank();i++) o<<s[i]<<" ";
 	o<<")";
 	return o;
+}
+
+const UInt32 ArrayShape::operator[](UInt64 i) const{
+	EXCEPTION_SETUP("const UInt32 ArrayShape::operator[](UInt64 i) const");
+	UInt32 v = 0;
+
+	try{
+		v = getDimension(i);
+	}catch(IndexError &error){
+		EXCEPTION_INIT(IndexError,"Dimension index out of bounds!");
+		EXCEPTION_THROW();
+	}
+
+	return v;
 }
 
 //end of namespace

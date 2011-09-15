@@ -76,7 +76,7 @@ public:
 	//! set number of elements
 
 	//! Sets the number of elements of a particular size that should be stored in the
-	//! buffer.
+	//! buffer. If the buffer is already allocated an exception is thrown.
 	//! \param s number of elements
 	virtual void setSize(UInt64 s);
 	//! set element size

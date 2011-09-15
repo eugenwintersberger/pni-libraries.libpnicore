@@ -7,7 +7,7 @@
 
 class ArrayTest : public CppUnit::TestFixture{
 	CPPUNIT_TEST_SUITE(ArrayTest);
-	CPPUNIT_TEST(testConstructors);
+	CPPUNIT_TEST(testConstruction);
 	CPPUNIT_TEST(testSetAndGet);
 	CPPUNIT_TEST(testBinaryOperations);
 	CPPUNIT_TEST(testUnaryOperations);
@@ -24,7 +24,7 @@ private:
 public:
 	void setUp();
 	void tearDown();
-	void testConstructors();
+	void testConstruction();
 	void testConstructorsShared();
 	void testSetAndGet();
 	void testBinaryOperations();

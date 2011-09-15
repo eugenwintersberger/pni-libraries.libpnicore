@@ -56,6 +56,13 @@ UInt64 BufferObject::getElementSize() const{
 }
 
 void BufferObject::setSize(UInt64 s){
+	EXCEPTION_SETUP("void BufferObject::setSize(UInt64 s)");
+	//raise an exception if you try to alter the size of an already
+	//allocated buffer
+	if(isAllocated()){
+		EXCEPTION_INIT(MemoryAllocationError,"Buffer is already allocated - free buffer before changing its size!");
+		EXCEPTION_THROW();
+	}
 	_size = s;
 	_compute_total_size();
 }

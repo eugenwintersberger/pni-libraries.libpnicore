@@ -8,7 +8,7 @@
 #include "Array.hpp"
 #include "Buffer.hpp"
 #include "ArrayShape.hpp"
-#include "libpniutils_array.hpp"
+#include "ArrayTest.hpp"
 
 CPPUNIT_TEST_SUITE_REGISTRATION(ArrayTest);
 
@@ -33,7 +33,7 @@ void ArrayTest::tearDown(){
 	if(_s2!=NULL) delete [] _s2;
 }
 
-void ArrayTest::testConstructors(){
+void ArrayTest::testConstruction(){
 	//check for simple array-construction
 	Array<double> a1(_sh1);
 	Array<double> a2(_r2,_s2);

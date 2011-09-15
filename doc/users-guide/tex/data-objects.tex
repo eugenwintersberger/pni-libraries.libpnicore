@@ -328,6 +328,27 @@ destroyed. This large degree of flexibilty comes by the cost of
 
 \subsection{Instantiation of a {\tt Array<T>} template}
 
+The instantiation of an array template can be done from easy to pretty complex.
+In the simplest case an {\tt ArrayShape} object is created and used 
+to initialize the array.
+
+\begin{verbatim}
+ArrayShape s;
+s.setRank(3);
+s.setDimension(0,100);
+s.setDimension(1,1024);
+s.setDimension(2,512);
+
+Array<Int16> a(s);
+a.allocate();
+
+//array construction from its components
+\end{verbatim}
+
+As a rule of thumb: all constructors, except the default constructor used in the 
+previous code snippet, allocate memory! 
+Thus, if you want to create an array without intermmediate memory allocation 
+use the default constructor.
 
 
 \subsection{Assignment of a {\tt Array<T>} template}

@@ -13,7 +13,10 @@ namespace utils{
 
 //======================constructors and desctructor============================
 ArrayObject::ArrayObject():NumericObject(){
-	_shape.reset(new ArrayShape());
+	EXCEPTION_SETUP("ArrayObject::ArrayObject():NumericObject()");
+
+	//there is nothing to do with _shape
+
 	_index_buffer = NULL;
 }
 
@@ -21,96 +24,46 @@ ArrayObject::ArrayObject(const ArrayObject &a):NumericObject(a){
 	EXCEPTION_SETUP("ArrayObject::ArrayObject(const ArrayObject &a):NumericObject(a)");
 
 	//set shape object
-	_shape.reset(new ArrayShape(*(a._shape)));
-	if (!_shape) {
-		EXCEPTION_INIT(MemoryAllocationError,"Cannot allocate memory for ArrayShape object!");
+	try{
+		_shape = a.getShape();
+	}catch(MemoryAllocationError &error){
+		EXCEPTION_INIT(MemoryAllocationError,"Memory allocation of ArrayShape object faile!");
 		EXCEPTION_THROW();
 	}
 
 	_index_buffer = NULL;
-	_index_buffer = new UInt32[_shape->getRank()];
+	_index_buffer = new UInt32[_shape.getRank()];
 	if(_index_buffer == NULL){
 		EXCEPTION_INIT(MemoryAllocationError,"Cannot allocate memory for index buffer!");
-		_shape.reset();
 		EXCEPTION_THROW();
 	}
 }
 
-
-ArrayObject::ArrayObject(const unsigned int &r, const unsigned int s[]):NumericObject(){
-	EXCEPTION_SETUP("ArrayObject::ArrayObject(const unsigned int &r, const unsigned int s[]):NumericObject()");
-
-	_shape.reset(new ArrayShape(r, s));
-	if(!_shape){
-		EXCEPTION_INIT(MemoryAllocationError,"Cannot allocate memory for ArrayShape object!");
-		EXCEPTION_THROW();
-	}
-
-	_index_buffer = NULL;
-	_index_buffer = new UInt32[_shape->getRank()];
-	if(_index_buffer == NULL){
-		EXCEPTION_INIT(MemoryAllocationError,"Cannot allocate memory for index buffer!");
-		_shape.reset();
-		EXCEPTION_THROW();
-	}
-}
 
 ArrayObject::ArrayObject(const ArrayShape &s):NumericObject(){
 	EXCEPTION_SETUP("ArrayObject::ArrayObject(const ArrayShape &s):NumericObject()");
 
-	_shape.reset(new ArrayShape(s));
-	if (!_shape) {
-		EXCEPTION_INIT(MemoryAllocationError,"Cannot allocate memory for ArrayShape object!");
+	try{
+		_shape = s;
+	}catch(MemoryAllocationError &error){
+		EXCEPTION_INIT(MemoryAllocationError,"Memory allocation of ArrayShape object failed!");
 		EXCEPTION_THROW();
 	}
 
 	_index_buffer = NULL;
-	_index_buffer = new UInt32[_shape->getRank()];
-	if (_index_buffer == NULL) {
-		EXCEPTION_INIT(MemoryAllocationError,"Cannot allocate memory for index buffer!");
-		_shape.reset();
-		EXCEPTION_THROW();
-	}
-}
-
-ArrayObject::ArrayObject(const ArrayShape::sptr &s):NumericObject(){
-	EXCEPTION_SETUP("ArrayObject::ArrayObject(const ArrayShape::sptr &s):NumericObject()");
-	_shape = s; //the shape is now shared with the array creator (will increment reference counter)
-
-	_index_buffer = NULL;
-	_index_buffer = new UInt32[_shape->getRank()];
+	_index_buffer = new UInt32[_shape.getRank()];
 	if (_index_buffer == NULL) {
 		EXCEPTION_INIT(MemoryAllocationError,"Cannot allocate memory for index buffer!");
 		EXCEPTION_THROW();
 	}
 }
+
 
 ArrayObject::~ArrayObject(){
-	if (_index_buffer != NULL)
-		delete[] _index_buffer;
-	_shape.reset();
+	if (_index_buffer != NULL) delete[] _index_buffer;
 }
 
-//=======================assignment operator====================================
-ArrayObject &ArrayObject::operator=(const ArrayObject &o){
-	if(this != &o){
-		if(o._shape->getSize()!=_shape->getSize()){
 
-		}
-		//ATTENTION: _shape is a shared pointer => we cannot simply
-		//copy the pointer because that is not what we want. We have
-		//to assign the CONTENT of the pointer.
-		*_shape = *o._shape;
-
-		//allocate memory for the new index buffer
-		if(_index_buffer != NULL) delete [] _index_buffer;
-		_index_buffer = new UInt32[_shape->getRank()];
-		//initialize the index buffer
-		for(UInt32 i = 0; i < _shape->getRank(); i++) _index_buffer[i] = 0;
-	}
-
-	return *this;
-}
 
 PNITypeID ArrayObject::getTypeID() const {
 	return NONE;
@@ -119,10 +72,17 @@ PNITypeID ArrayObject::getTypeID() const {
 void ArrayObject::setShape(const ArrayShape &s){
 	EXCEPTION_SETUP("void ArrayObject::setShape(const ArrayShape &s)");
 
+	if(s.getSize() == 0){
+		EXCEPTION_INIT(SizeMissmatchError,"Size of shape object must not be zero if set by reference!");
+		EXCEPTION_THROW();
+	}
+
+	UInt32 orank = _shape.getRank();
+
 	if(isAllocated()){
 		//an exception occurs typically here in cases where
 		//no data buffer object has been set
-		if (s.getSize() != getBuffer()->getSize()) {
+		if (s.getSize() != getBuffer().getSize()) {
 			//raise an exception if the size of the new shape object
 			//and the buffer object do not fit.
 			EXCEPTION_INIT(SizeMissmatchError,"shape and array size do not match!");
@@ -130,68 +90,69 @@ void ArrayObject::setShape(const ArrayShape &s){
 		}
 	}
 	//create a new shape object
-	_shape.reset(new ArrayShape(s));
+	_shape = s;
 
-	if (_index_buffer != NULL)
-		delete[] _index_buffer;
+	//if the rank of the shape has changed we need to reallocate the
+	//index buffer
+	if(orank != _shape.getRank()){
 
-	_index_buffer = new UInt32[_shape->getRank()];
-	if (_index_buffer == NULL) {
-		EXCEPTION_INIT(MemoryAllocationError,"Cannot allocate memory for index buffer!");
-		EXCEPTION_THROW();
-	}
-}
+		if (_index_buffer != NULL) delete[] _index_buffer;
 
-void ArrayObject::setShape(const ArrayShape::sptr &s){
-	EXCEPTION_SETUP("void ArrayObject::setShape(const ArrayShape::sptr &s)");
-
-	//need to take care if the buffer is already allocated
-	if (isAllocated()) {
-		if (s->getSize() != getBuffer()->getSize()) {
-			//raise and exception if the size of the new shape object
-			//and the buffer object do not match
-			EXCEPTION_INIT(SizeMissmatchError,"shape and array size do not match!");
+		_index_buffer = new UInt32[_shape.getRank()];
+		if (_index_buffer == NULL) {
+			EXCEPTION_INIT(MemoryAllocationError,"Cannot allocate memory for index buffer!");
 			EXCEPTION_THROW();
 		}
 	}
-
-	_shape = s;
-
-	if (_index_buffer != NULL)
-		delete[] _index_buffer;
-	_index_buffer = new UInt32[_shape->getRank()];
-	if (_index_buffer == NULL) {
-		EXCEPTION_INIT(MemoryAllocationError,"Cannot allocate memory for index buffer!");
-		EXCEPTION_THROW();
-	}
 }
 
-const ArrayShape::sptr ArrayObject::getShape() const{
+
+
+const ArrayShape &ArrayObject::getShape() const{
 	return _shape;
 }
 
-
-void ArrayObject::setBuffer(BufferObject::sptr b){
-
+void ArrayObject::reset(){
+	_shape = ArrayShape();
 }
+
+
+
+//===methods which must be overloaded by the concrete array implementation======
 
 void ArrayObject::setBuffer(const BufferObject &b){
-
+	EXCEPTION_SETUP("void ArrayObject::setBuffer(const BufferObject &b)");
+	EXCEPTION_INIT(NotImplementedError,"This method must be overridden by an concrete implementation!");
+	EXCEPTION_THROW();
 }
 
-const BufferObject::sptr ArrayObject::getBuffer() const{
-	return NULL;
+const BufferObject &ArrayObject::getBuffer() const{
+	EXCEPTION_SETUP("const BufferObject &ArrayObject::getBuffer() const");
+	EXCEPTION_INIT(NotImplementedError,"This method must be overridden by a concrete implementation!");
+	EXCEPTION_THROW();
+
+	//this does not matter because this code will never be reached!
+	BufferObject *o = new BufferObject();
+	return *o;
 }
 
 bool ArrayObject::isAllocated() const{
+	EXCEPTION_SETUP("bool ArrayObject::isAllocated() const");
+	EXCEPTION_INIT(NotImplementedError,"This method must be overridden by a concrete implementation!");
+	EXCEPTION_THROW();
 	return false;
 }
 
 void *ArrayObject::getVoidPtr(){
+	EXCEPTION_SETUP("void *ArrayObject::getVoidPtr()");
+	EXCEPTION_INIT(NotImplementedError,"This method must be overridden by a concrete implementation!");
+	EXCEPTION_THROW();
 	return NULL;
 }
 
 const void *ArrayObject::getVoidPtr() const{
+	EXCEPTION_SETUP("const void *ArrayObject::getVoidPtr() const");
+	EXCEPTION_INIT(NotImplementedError,"This method must be overridden by a concrete implementation!");
 	return NULL;
 }
 

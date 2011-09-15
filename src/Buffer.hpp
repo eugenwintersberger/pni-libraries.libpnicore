@@ -26,12 +26,22 @@ namespace utils{
 
 //! \brief buffer template
 
-//! This template acts as a type-safe wrapper for the BufferObject class. It allows
-//! typed access to data stored in the BufferObject. The template itself
-//! holds no data at all. It simply wraps the access to BufferObject.
+//! This template is a concrete implementation of the BufferObject base class.
+//! It uses the new allocator to request memory from the system.
+//! Along with the methods provided by the BufferObject base class this
+//! template implements a couple of operators that are quite useful.
+//! You can assign Buffers of different type T with each other.
+//! In general the assignment from the buffer on the rhs to the buffer on the
+//! lhs of the operator is straight forward. The full state of the buffer is
+//! assigned to the lhs. So if the buffer on the rhs is not allocated
+//! memory eventually hold by the buffer of the lhs will be freed to
+//! bring the lhs to the same state as the rhs.
 template<typename T>class Buffer:public BufferObject{
 private:
 	T *_data; //!< pointer to the data block
+
+	//some private methods
+	void _allocate();
 public:
 	typedef boost::shared_ptr<Buffer<T> > sptr; //!< smart pointer to a typed buffer
 	//! default constructor
@@ -55,13 +65,9 @@ public:
 
 	//! assignment operator
 
-	//! The content of the buffer on the rhs is copied to that on the lhs.
-	//! Assignment of buffers works only with buffers of equal size.
-	//! Otherwise an exception will be thrown.
-	//! In addition, if the buffer on the lhs of the operator is not
-	//! allocated a MemoryAccessError will be thrown.
-	//! \throws MemoryAccessError if the buffer on the lhs is not allocated
-	//! \throws SizeMissmatchError if sizes do not match
+	//! The content of the buffer on the lhs is set to that of the lhs.
+	//! If necessary memory is reallocated.
+	//! \throws MemoryAccessError if something goes wring with memory allocation
 	//! \param b Buffer whose content will be assigned to this buffer
 	//! \return reference to a Buffer<T> object
 	Buffer<T> &operator=(const Buffer<T> &b);
@@ -89,9 +95,6 @@ public:
 
 	//!
 	template<typename U> Buffer<T> &operator=(const U &v);
-
-
-
 	//! return data pointer
 
 	//! Returns a typed const pointer to the allocated memory. The pointer must
@@ -189,6 +192,7 @@ template<typename T> Buffer<T>::Buffer(const Buffer<T> &b):BufferObject(b){
 	EXCEPTION_SETUP("template<typename T> Buffer<T>::Buffer(const Buffer<T> &b):BufferObject(b)");
 
 	_data = NULL;
+
 	if(b.isAllocated()){
 		try{
 			allocate();
@@ -196,8 +200,11 @@ template<typename T> Buffer<T>::Buffer(const Buffer<T> &b):BufferObject(b){
 			EXCEPTION_INIT(MemoryAllocationError,"Memory allocation for Buffer failed!");
 			EXCEPTION_THROW();
 		}
-		for(UInt64 i=0;i<getSize();i++) (*this)[i] = b[i];
+
+		//if there is some data  - copy it
+		if(getSize()!=0) for(UInt64 i=0;i<getSize();i++) (*this)[i] = b[i];
 	}
+
 }
 
 template<typename T> Buffer<T>::~Buffer(){
@@ -219,19 +226,21 @@ template<typename T> void Buffer<T>::free(){
 template<typename T> void Buffer<T>::allocate(){
 	EXCEPTION_SETUP("template<typename T> void Buffer<T>::allocate()");
 
-	if(getSize()==0){
-		EXCEPTION_INIT(MemoryAllocationError,"Number of elements not set for the buffer - cannot allocate!");
-		EXCEPTION_THROW();
-	}
+	//if the size of the buffer is zero we do not need to allocate the something
+	if(getSize()!=0){
 
-	if(isAllocated()){
-		EXCEPTION_INIT(MemoryAllocationError,"Buffer is already allocated - free buffer prior to new allocation!");
-		EXCEPTION_THROW();
-	}
+		if(isAllocated()){
+			EXCEPTION_INIT(MemoryAllocationError,"Buffer is already allocated - free buffer prior to new allocation!");
+			EXCEPTION_THROW();
+		}
 
-	_data = new T[getSize()];
-	if(_data == NULL){
-		EXCEPTION_INIT(MemoryAllocationError,"Cannot allocate buffer memory!");
+		_data = new T[getSize()];
+		if(_data == NULL){
+			EXCEPTION_INIT(MemoryAllocationError,"Cannot allocate buffer memory!");
+			EXCEPTION_THROW();
+		}
+	}else{
+		EXCEPTION_INIT(MemoryAllocationError,"Buffer size not set!");
 		EXCEPTION_THROW();
 	}
 }
@@ -240,6 +249,8 @@ template<typename T> void Buffer<T>::allocate(){
 template<typename T> void Buffer<T>::allocate(const UInt64 &size){
 	EXCEPTION_SETUP("void BufferObject::allocate(const UInt64 size)");
 	if(!isAllocated()){
+		//the allocate method checks if the size is zero and does allocation
+		//if appropriate
 		setSize(size);
 		try{
 			allocate();
@@ -278,23 +289,24 @@ template<typename T> Buffer<T> &Buffer<T>::operator=(const Buffer<T> &b){
 	EXCEPTION_SETUP("template<typename T> Buffer<T> &Buffer<T>::operator=(const Buffer<T> &b)");
 
 	if(&b != this){
-		//if the original buffer is not allocated do nothing
-		if(!b.isAllocated()) return *this;
-
-		//if the lhs object is not allocated throw an MemoryAccessError
-		if(!isAllocated()){
-			EXCEPTION_INIT(MemoryAccessError,"Cannot assign data to an unallocated buffer!");
-			EXCEPTION_THROW();
-		}
-
-		//check buffer size - only buffers of equal size can be assigned
 		if(getSize() != b.getSize()){
-			EXCEPTION_INIT(SizeMissmatchError,"Cannot assign buffers of different size!");
-			EXCEPTION_THROW();
+			//in this case we need to reallocate data
+			if(isAllocated()) free();
+
+			//if b is not allocated there is nothing more to do
+			if(!b.isAllocated()) return *this;
+
+			//allocate new memory if necessary
+			try{
+				allocate(b.getSize());
+			}catch(MemoryAllocationError &error){
+				EXCEPTION_INIT(MemoryAllocationError,"Memory allocation for buffer failed!");
+				EXCEPTION_THROW();
+			}
 		}
 
-		//copy data
-		for(UInt64 i=0;i<getSize();i++) (*this)[i] = b[i];
+		//copy data if there is something to coppy
+		if((getSize() != 0)&&(b.isAllocated())) for(UInt64 i=0;i<getSize();i++) (*this)[i] = b[i];
 	}
 
 	return *this;
@@ -304,37 +316,35 @@ template<typename T>
 template<typename U> Buffer<T> &Buffer<T>::operator=(const Buffer<U> &b){
 	EXCEPTION_SETUP("template<typename T> template<typename U> Buffer<T> &Buffer<T>::operator=(const Buffer<U> &b)");
 
-	//if the original buffer is not allocated do nothing
-	if(!b.isAllocated()) return *this;
-
-	//if the lhs object is not allocated throw an MemoryAccessError
-	if(!isAllocated()){
-		EXCEPTION_INIT(MemoryAccessError,"Cannot assign data to an unallocated buffer!");
-		EXCEPTION_THROW();
-	}
-
-	//check buffer size - only buffers of equal size can be assigned
-	if(getSize() != b.getSize()){
-		EXCEPTION_INIT(SizeMissmatchError,"Cannot assign buffers of different size!");
-		EXCEPTION_THROW();
-	}
-
 	//check for type compatability
 	if(!TypeCompat<T,U>::isAssignable){
 		EXCEPTION_INIT(TypeError,"Cannot assign buffers - incompatible types!");
 		EXCEPTION_THROW();
 	}
 
-	//copy data - we have to do a range check during copy
-	for(UInt64 i=0; i<getSize();i++){
-		U value = b[i];
-		if(!TypeRange<T>::checkRange(value)){
-			EXCEPTION_INIT(RangeError,"Cannot assign buffers - value exceeds lhs type bounds!");
+	if(getSize() != b.getSize()){
+		//in this case we need to reallocate data
+		if(isAllocated()) free();
+		//allocate new memory if necessary
+		try{
+			allocate(b.getSize());
+		}catch(MemoryAllocationError &error){
+			EXCEPTION_INIT(MemoryAllocationError,"Memory allocation for buffer failed!");
 			EXCEPTION_THROW();
 		}
-		(*this)[i] = (T)value;
 	}
 
+	//copy data - we have to do a range check during copy
+	if(getSize()!=0){
+		for(UInt64 i=0; i<getSize();i++){
+			U value = b[i];
+			if(!TypeRange<T>::checkRange(value)){
+				EXCEPTION_INIT(RangeError,"Cannot assign buffers - value exceeds lhs type bounds!");
+				EXCEPTION_THROW();
+			}
+			(*this)[i] = (T)value;
+		}
+	}
 
 	return *this;
 }
@@ -348,6 +358,8 @@ template<typename T> Buffer<T> &Buffer<T>::operator=(const T &d){
 		EXCEPTION_THROW();
 	}
 
+	//we do not need to check the size here because if the buffer is allocated
+	//the size is necessarily not zero
 	for(UInt64 i=0;i<b.getSize();i++) b[i] = d;
 
 
@@ -375,7 +387,8 @@ template<typename U> Buffer<T> &Buffer<T>::operator=(const U &v){
 		EXCEPTION_THROW();
 	}
 
-	//now everything is fine can do assignment
+	//now everything is fine can do assignment - like above we do not
+	//need to check the size of the buffer, it must be different from zero
 	for(UInt64 i=0; i<getSize();i++) (*this)[i] = (T)v;
 
 
@@ -385,6 +398,11 @@ template<typename U> Buffer<T> &Buffer<T>::operator=(const U &v){
 //======================operators for data access===============================
 template<typename T> T& Buffer<T>::operator[](UInt64 n){
 	EXCEPTION_SETUP("template<typename T> T& Buffer<T>::operator[](unsigned long n)");
+
+	if(!isAllocated()){
+		EXCEPTION_INIT(MemoryAccessError,"Buffer not allocated!");
+		EXCEPTION_THROW();
+	}
 
 	if(n>=getSize()){
 		EXCEPTION_INIT(IndexError,"Index must not be larger or equal the size of the buffer!");
@@ -396,6 +414,11 @@ template<typename T> T& Buffer<T>::operator[](UInt64 n){
 
 template<typename T> T Buffer<T>::operator[](UInt64 n) const {
 	EXCEPTION_SETUP("template<typename T> T Buffer<T>::operator[](unsigned long n) const");
+
+	if(!isAllocated()){
+		EXCEPTION_INIT(MemoryAccessError,"Buffer not allocated!");
+		EXCEPTION_THROW();
+	}
 
 	if(n>=getSize()){
 		EXCEPTION_INIT(IndexError,"Index must not be larger or equal the size of the buffer!");

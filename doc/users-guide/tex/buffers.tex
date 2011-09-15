@@ -1,0 +1,48 @@
+%%%some text about buffers
+\section{Buffer objects}
+Buffers play an important role within the library. Usually you do not need 
+to care about them. However, for library developers it is important 
+to know how they work.
+
+A buffer represents a number of elements of a particular size linearly 
+stored in memory. Thus is behaves somehow like an array or one of the 
+container templates provided by the STL. However, it follows its own 
+allocation and reallocation policy which will be described here in more detail.  
+
+The aim of a buffer is to allocate memory for a number of objects of equal 
+size. Therefore, the amount of memory allocated depends on two parameters
+\begin{enumerate}
+  \item the {\em element size } which is the size of each element in bytes
+  \item the {\em size } of the buffer which is the number of elements in the
+  buffer.
+\end{enumerate}
+The total amount of memory which must be allocated to hold this data is 
+than given with
+\begin{align}
+n_{\mathrm{tot}} = \mathrm{element size}\times\mathrm{size}.
+\end{align}
+
+All buffers should be derived from the {\tt BufferObject} base class which 
+holds the minimal interface each buffer object should implement. 
+The base class itself only provides simple managment functions for the
+size of the allocated memory. However, it already implies some of the 
+policies that each buffer object should follow. 
+There are three situations a buffer object must face
+\begin{enumerate}
+  \item instantiation
+  \item allocation
+  \item assignment
+  \item reallocation
+\end{enumerate} 
+
+\subsection{Instantiation of buffer objects}
+
+Buffers allow the allocation of memory to be posponed to a later point in 
+time after their creation. This of coarse has some implications. 
+It is necessary to keep track of a buffers state in every method that 
+can effect the allocated memory. 
+
+
+
+
+The template {\tt Buffer<T>} is a concrete implementation 

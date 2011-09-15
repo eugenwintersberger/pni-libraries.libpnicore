@@ -23,7 +23,7 @@ void BufferTest::testConstructors(){
 	Buffer<Float64> dbuffer; //default constructor
 	CPPUNIT_ASSERT(!dbuffer.isAllocated());
 
-	dbuffer.allocate(n1);
+	CPPUNIT_ASSERT_NO_THROW(dbuffer.allocate(n1));
 	CPPUNIT_ASSERT(dbuffer.isAllocated());
 
 	//create the second constructor with the standard constructor
@@ -58,7 +58,7 @@ void BufferTest::testAllocation(){
 
 	CPPUNIT_ASSERT_THROW(dbuffer.allocate(),MemoryAllocationError);
 
-	dbuffer.setSize(n1);
+	CPPUNIT_ASSERT_NO_THROW(dbuffer.setSize(n1));
 	CPPUNIT_ASSERT_NO_THROW(dbuffer.allocate());
 	//subsequent call to allocate causes exception
 	CPPUNIT_ASSERT_THROW(dbuffer.allocate(),MemoryAllocationError);
@@ -69,6 +69,7 @@ void BufferTest::testAllocation(){
 	dbuffer.free();
 	CPPUNIT_ASSERT_NO_THROW(dbuffer.allocate(n1));
 	CPPUNIT_ASSERT_THROW(dbuffer.allocate(n1),MemoryAllocationError);
+	//CPPUNIT_ASSERT_THROW(dbuffer.setSize(1000),MemoryAllocationError);
 
 	dbuffer.free();
 	CPPUNIT_ASSERT_NO_THROW(dbuffer.allocate(n2));
@@ -100,7 +101,7 @@ void BufferTest::testAssignment(){
 	//now the lhs is not allocated
 	buffer2.allocate(n1);
 	buffer1.setSize(n2);
-	CPPUNIT_ASSERT_THROW(buffer1 = buffer2,MemoryAccessError);
+	CPPUNIT_ASSERT_NO_THROW(buffer1 = buffer2);
 	buffer1.allocate();
 	CPPUNIT_ASSERT_THROW(buffer1 = buffer2,SizeMissmatchError);
 	buffer1.free();

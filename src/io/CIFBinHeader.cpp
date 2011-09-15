@@ -48,20 +48,19 @@ std::ostream &operator<<(std::ostream &o,const CIFBinaryHeader &h){
 }
 
 ArrayObject *CIFBinaryHeader::createArray(){
-	unsigned int *dims;
-	dims = new unsigned int[_ndims];
-	for(unsigned int i=0;i<_ndims;i++){
+	ArrayShape s;
+	s.setRank(_ndims);
+	for(UInt32 i=0;i<_ndims;i++){
 		//std::cout<<_dims[2-i]<<std::endl;
-		dims[_ndims-1-i]=_dims[2-i];
+		s.setDimension(_ndims-1-i,_dims[2-i]);
 	}
 
 	switch(_data_type){
-	case(SIGNED_INT_32): return (ArrayObject*)(new Array<int>(_ndims,dims)); break;
-	case(SIGNED_INT_16): return (ArrayObject*)(new Array<short>(_ndims,dims)); break;
+	case(SIGNED_INT_32): return (ArrayObject*)(new Array<Int32>(s)); break;
+	case(SIGNED_INT_16): return (ArrayObject*)(new Array<Int16>(s)); break;
 	default: return NULL;
 	}
 
-	delete [] dims;
 }
 
 //end of namespace
