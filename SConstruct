@@ -85,7 +85,7 @@ print env["CPPPATH"]
 
 #create optimized environment
 opt_env = env.Clone()
-opt_env.Append(CXXFLAGS = ["-O2","-g"])
+opt_env.Append(CXXFLAGS = ["-O2"])
 
 
 #create debugging environment
