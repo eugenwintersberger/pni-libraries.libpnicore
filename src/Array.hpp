@@ -347,10 +347,8 @@ public:
 
 	//! Using the []-operator allows to access the data stored in the array
 	//! in a linear manner as it is stored by the buffer object.
-	T& operator[](unsigned int i) {
-		return (*_data)[i];
-	}
-
+	T& operator[](const UInt64 &i);
+	T operator[](const UInt64 &i) const;
 	T& operator()(const Index &i);
 	T operator()(const Index &i) const;
 
@@ -388,13 +386,7 @@ public:
 template<typename T> Array<T>::Array():ArrayObject() {
 	EXCEPTION_SETUP("template<typename T> Array<T>::Array():ArrayObject()");
 
-	//in the default constructor we set all pointers to NULL
-	_data.reset(new Buffer<T>());
-	if(!_data){
-		EXCEPTION_INIT(MemoryAllocationError,"Shared pointer not set!");
-		EXCEPTION_THROW();
-	}
-
+	//there is nothing to do in the default constructor
 }
 
 //copy constructor - allocate new memory and really copy the data
@@ -403,15 +395,10 @@ template<typename T> Array<T>::Array(const Array<T> &a):ArrayObject(a){
 
 	//set buffer object
 	try{
-		_data.reset(new Buffer<T> (*(a._data)));
+		_data = a._data;
 	}catch(MemoryAllocationError &error){
 		//raise an exception here if memory allocation failes
 		EXCEPTION_INIT(MemoryAllocationError,"Cannot allocate memory for Buffer instance!");
-		EXCEPTION_THROW();
-	}
-
-	if(!_data){
-		EXCEPTION_INIT(MemoryAllocationError,"Shared pointer not set!");
 		EXCEPTION_THROW();
 	}
 }
@@ -441,11 +428,13 @@ template<typename T> Array<T>::Array(const ArrayShape &s, const Buffer<T> &b) :
 	}
 
 	//creates a new buffer object
-	_data.reset(new Buffer<T> (b));
-	if (!_data) {
-		EXCEPTION_INIT(MemoryAllocationError,"Cannot allocate memory for Buffer object!");
+	try{
+		_data = b;
+	}catch(MemoryAllocationError &error){
+		EXCEPTION_INIT(MemoryAllocationError,"Memory allocation for array failed!");
 		EXCEPTION_THROW();
 	}
+
 }
 
 
@@ -468,9 +457,9 @@ template<typename T> PNITypeID Array<T>::getTypeID() const {
 template<typename T> std::ostream &operator<<(std::ostream &o,
 		                                      const Array<T> &a){
 	o << "Array of shape (";
-	for (unsigned int i = 0; i < a._shape->getRank(); i++) {
-		o << (*a._shape)[i];
-		if (i < a._shape->getRank() - 1)
+	for (unsigned int i = 0; i < a.getShape().getRank(); i++) {
+		o << a.getShape()[i];
+		if (i < a.getShape().getRank() - 1)
 			o << ", ";
 	}
 	o << ") " << typeid(a).name();
@@ -482,6 +471,8 @@ template<typename T> std::ostream &operator<<(std::ostream &o,
 template<typename T> void Array<T>::setBuffer(const BufferObject &b) {
 	EXCEPTION_SETUP("template<typename T> void Array<T>::setBuffer(const Buffer<T> &b)");
 
+	//if the shape is not set yet (means that its rank is 0) we do not have
+	//to care.
 	if (getShape().getSize()!=0) {
 		//if there exists already a shape object we have to check the size
 		if (b.getSize() != getShape().getSize()) {
@@ -489,7 +480,14 @@ template<typename T> void Array<T>::setBuffer(const BufferObject &b) {
 			EXCEPTION_THROW();
 		}
 	}
-	_data = b;
+
+	try{
+		_data = (Buffer<T> &)b;
+	}catch(MemoryAllocationError &error){
+		EXCEPTION_INIT(MemoryAllocationError,"Error allocating memory for the array!");
+		EXCEPTION_THROW();
+	}
+
 
 }
 
@@ -497,7 +495,31 @@ template<typename T> const BufferObject &Array<T>::getBuffer() const {
 	return _data;
 }
 
+template<typename T> T &Array<T>::operator[](const UInt64 &i){
+	EXCEPTION_SETUP("template<typename T> T &Array<T>::operator[](const UInt64 &i)");
 
+	try{
+		T &res = _data[i];
+		return res;
+	}catch(...){
+		EXCEPTION_INIT(MemoryAccessError,"Memory access failed!");
+		EXCEPTION_THROW();
+	}
+}
+
+template<typename T> T Array<T>::operator[](const UInt64 &i) const{
+	EXCEPTION_SETUP("template<typename T> T Array<T>::operator[](const UInt64 &i)");
+	T res = 0;
+
+	try{
+		res = _data[i];
+	}catch(...){
+		EXCEPTION_INIT(MemoryAccessError,"Memory access failed!");
+		EXCEPTION_THROW();
+	}
+
+	return res;
+}
 
 
 template<typename T> T &Array<T>::operator()(const Index &i){
@@ -506,12 +528,11 @@ template<typename T> T &Array<T>::operator()(const Index &i){
 	try{
 		T &res = _data[getShape().getOffset(i)];
 		return res;
-	}catch(IndexError &error){
-		EXCEPTION_INIT(IndexError,"Index does not fit into array!");
+	}catch(...){
+		EXCEPTION_INIT(MemoryAccessError,"Error accessing array data!");
 		EXCEPTION_THROW();
 	}
 
-	return 0;
 }
 
 template<typename T> T Array<T>::operator()(const Index &i) const{
@@ -520,8 +541,8 @@ template<typename T> T Array<T>::operator()(const Index &i) const{
 	try{
 		T result = _data[getShape().getOffset(i)];
 		return result;
-	}catch(IndexError &error){
-		EXCEPTION_INIT(IndexError,"Index does not fit into array!");
+	}catch(...){
+		EXCEPTION_INIT(MemoryAccessError,"Error accessing array data!");
 		EXCEPTION_THROW();
 	}
 
@@ -547,14 +568,18 @@ template<typename T> void Array<T>::operator()(const Selection &s,Array<T> &a) c
 
 template<typename T> void Array<T>::allocate(){
 	if(_data.isAllocated()) _data.free();
-	_data.allocate(_shape.getSize());
+	_data.allocate(getShape().getSize());
 }
 
 //===============================Comparison operators==========================
 template<typename T> bool operator==(const Array<T> &b1, const Array<T> &b2) {
-	if ((*(b1._shape) == *(b2._shape)) && (*(b1._data) == *(b2._data))) {
-		return true;
-	}
+	const ArrayShape &as = b1.getShape();
+	const ArrayShape &bs = b2.getShape();
+	Buffer<T> &ad = (Buffer<T> &)b1.getBuffer();
+	Buffer<T> &bd = (Buffer<T> &)b2.getBuffer();
+
+	if ((as == bs) && (ad == bd)) return true;
+
 	return false;
 }
 
@@ -567,124 +592,203 @@ template<typename T> bool operator!=(const Array<T> &b1, const Array<T> &b2) {
 
 //==============Methods for in-place array manipulation========================
 template<typename T> typename ArrayType<T>::Type Array<T>::Sum() const {
-	unsigned long i;
+	EXCEPTION_SETUP("template<typename T> typename ArrayType<T>::Type Array<T>::Sum() const");
+
+	UInt64 i;
 	typename ArrayType<T>::Type result = 0;
 
-	for (i = 0; i < _shape.getSize(); i++)
-		result += _data[i];
+	try{
+		for (i = 0; i < getShape().getSize(); i++) result += (*this)[i];
+	}catch(...){
+		EXCEPTION_INIT(ProcessingError,"Error during array sum operation!");
+		EXCEPTION_THROW();
+	}
 
 	return result;
 
 }
 
 template<typename T> T Array<T>::Min() const {
-	unsigned long i;
-	T result = 0;
+	EXCEPTION_SETUP("template<typename T> T Array<T>::Min() const");
 
-	for (i = 0; i < _shape.getSize(); i++) {
-		if (_data[i] < result)
-			result = _data[i];
+	UInt64 i;
+	T result = 0,value = 0;
+
+	try{
+		for (i = 0; i < getShape().getSize(); i++) {
+			value = (*this)[i];
+
+			if (value < result) result = value;
+		}
+	}catch(...){
+		EXCEPTION_INIT(ProcessingError,"Error during array min operation!");
+		EXCEPTION_THROW();
 	}
 
 	return result;
 }
 
 template<typename T> T Array<T>::Max() const {
-	unsigned long i;
-	T result = 0;
+	EXCEPTION_SETUP("template<typename T> T Array<T>::Max() const");
 
-	for (i = 0; i < _shape.getSize(); i++) {
-		if (_data[i] > result)
-			result = _data[i];
+	UInt64 i;
+	T result = 0,value=0;
+
+	try{
+		for (i = 0; i < getShape().getSize(); i++) {
+			value = (*this)[i];
+
+			if (value > result) result = value;
+		}
+	}catch(...){
+		EXCEPTION_INIT(ProcessingError,"Error during array max operation!");
+		EXCEPTION_THROW();
 	}
+
 	return result;
 }
 
 template<typename T> void Array<T>::MinMax(T &min, T &max) const {
-	unsigned long i;
+	EXCEPTION_SETUP("template<typename T> void Array<T>::MinMax(T &min, T &max) const");
+	UInt64 i;
 	min = 0;
 	max = 0;
-	Buffer<T> &d = *_data;
+	T value = 0;
 
-	for (i = 0; i < d.getSize(); i++) {
-		if (d[i] > max)
-			max = d[i];
-		if (d[i] < min)
-			min = d[i];
+	try{
+		for (i = 0; i < getShape().getSize(); i++) {
+			value = (*this)[i];
+
+			if (value > max) max = value;
+			if (value < min) min = value;
+		}
+	}catch(...){
+		EXCEPTION_INIT(ProcessingError,"Error during array minmax operation!");
+		EXCEPTION_THROW();
 	}
 }
 
 template<typename T> void Array<T>::Clip(T minth, T maxth) {
-	unsigned long i;
-	Buffer<T> &d = *_data;
+	EXCEPTION_SETUP("template<typename T> void Array<T>::Clip(T minth, T maxth)");
+	UInt64 i;
+	T value = 0;
 
-	for (i = 0; i < d.getSize(); i++) {
-		if (d[i] < minth)
-			d[i] = minth;
-		if (d[i] > maxth)
-			d[i] = maxth;
+	try{
+		for (i = 0; i < getShape().getSize(); i++) {
+			value = (*this)[i];
+
+			if (value < minth) (*this)[i] = minth;
+			if (value > maxth) (*this)[i] = maxth;
+		}
+	}catch(...){
+		EXCEPTION_INIT(ProcessingError,"Error during array operation!");
+		EXCEPTION_THROW();
 	}
 }
 
 template<typename T> void Array<T>::Clip(T minth, T minval, T maxth, T maxval) {
-	unsigned long i;
-	Buffer<T> &d = *_data;
+	EXCEPTION_SETUP("template<typename T> void Array<T>::Clip(T minth, T minval, T maxth, T maxval)");
+	UInt64 i;
+	T value = 0;
 
-	for (i = 0; i < d.getSize(); i++) {
-		if (d[i] <= minth)
-			d[i] = minval;
-		if (d[i] >= maxth)
-			d[i] = maxval;
+	try{
+		for (i = 0; i < getShape().getSize(); i++) {
+			value = (*this)[i];
+
+			if (value <= minth) (*this)[i] = minval;
+			if (value >= maxth) (*this)[i] = maxval;
+		}
+	}catch(...){
+		EXCEPTION_INIT(ProcessingError,"Error during array operation!");
+		EXCEPTION_THROW();
 	}
 }
 
 template<typename T> void Array<T>::MinClip(T threshold) {
-	unsigned long i;
-	Buffer<T> &d = *_data;
+	EXCEPTION_SETUP("template<typename T> void Array<T>::MinClip(T threshold)");
+	UInt64 i;
 
-	for (i = 0; i < d.getSize(); i++) {
-		if (d[i] < threshold)
-			d[i] = threshold;
+	try{
+		for (i = 0; i < getShape().getSize(); i++) {
+			if ((*this)[i] < threshold) (*this)[i] = threshold;
+		}
+	}catch(...){
+		EXCEPTION_INIT(ProcessingError,"Error during array operation!");
+		EXCEPTION_THROW();
 	}
 }
 
 template<typename T> void Array<T>::MinClip(T threshold, T value) {
-	unsigned long i;
-	Buffer<T> &d = *_data;
+	EXCEPTION_SETUP("template<typename T> void Array<T>::MinClip(T threshold, T value)");
+	UInt64 i;
 
-	for (i = 0; i < d.getSize(); i++) {
-		if (d[i] < threshold)
-			d[i] = value;
+	try{
+		for (i = 0; i < getShape().getSize(); i++) {
+			if ((*this)[i] < threshold) (*this)[i] = value;
+		}
+	}catch(...){
+		EXCEPTION_INIT(ProcessingError,"Error during array operation!");
+		EXCEPTION_THROW();
 	}
 }
 
 template<typename T> void Array<T>::MaxClip(T threshold) {
-	unsigned long i;
-	Buffer<T> &d = *_data;
+	EXCEPTION_SETUP("template<typename T> void Array<T>::MaxClip(T threshold)");
+	UInt64 i;
 
-	for (i = 0; i < d.getSize(); i++) {
-		if (d[i] > threshold)
-			d[i] = threshold;
+	try{
+		for (i = 0; i < getShape().getSize(); i++) {
+			if ((*this)[i] > threshold)
+				(*this)[i] = threshold;
+		}
+	}catch(...){
+		EXCEPTION_INIT(ProcessingError,"Error during array operation!");
+		EXCEPTION_THROW();
 	}
 }
 
 template<typename T> void Array<T>::MaxClip(T threshold, T value) {
-	unsigned long i;
-	Buffer<T> &d = *_data;
+	EXCEPTION_SETUP("template<typename T> void Array<T>::MaxClip(T threshold, T value)");
+	UInt64 i;
 
-	for (i = 0; i < d.getSize(); i++) {
-		if (d[i] > threshold)
-			d[i] = value;
+	try{
+		for (i = 0; i < getShape().getSize(); i++) {
+			if ((*this)[i] > threshold)
+				(*this)[i] = value;
+		}
+	}catch(...){
+		EXCEPTION_INIT(ProcessingError,"Error during array operation!");
+		EXCEPTION_THROW();
 	}
 }
 
 //==============================Assignment operators===========================
 
 template<typename T> Array<T> &Array<T>::operator =(const T &v) {
+	EXCEPTION_SETUP("template<typename T> Array<T> &Array<T>::operator =(const T &v)");
 	UInt32 i;
 
-	for (i = 0; i < _shape.getSize(); i++) {
-		_data[i] = v;
+	try{
+		for (i = 0; i < getShape().getSize(); i++) {
+			(*this)[i] = v;
+		}
+	}catch(...){
+		EXCEPTION_INIT(AssignmentError,"Object assignment failed!");
+		EXCEPTION_THROW();
+	}
+
+	return *this;
+}
+
+template<typename T>
+template<typename U> Array<T> &Array<T>::operator=(const U &v){
+	EXCEPTION_SETUP("template<typename T> template<typename U> Array<T> &Array<T>::operator=(const U &v)");
+
+	try{
+		_data = v;
+	}catch(...){
+		EXCEPTION_INIT(AssignmentError,"Object assignment failed!");
+		EXCEPTION_THROW();
 	}
 
 	return *this;
@@ -695,32 +799,61 @@ template<typename T> Array<T> &Array<T>::operator =(const Array<T> &v) {
 
 	if(this != &v){
 		//check the array shapes
-		reset();
-		setShape(v.getShape());
-		setBuffer(v.getBuffer());
+		try{
+			reset();
+			setShape(v.getShape());
+			setBuffer(v.getBuffer());
+		}catch(...){
+			EXCEPTION_INIT(AssignmentError,"Object assignment failed!");
+			EXCEPTION_THROW();
+		}
 	}
 
 
 	return *this;
 }
 
+template<typename T>
+template<typename U> Array<T> &Array<T>::operator=(const Array<U> &v) {
+	EXCEPTION_SETUP("template<typename T> template<typename U> Array<T> &Array<T>::operator=(const Array<U> &v)");
+
+	try{
+		reset();
+		setShape(v.getShape());
+		_data = (Buffer<U> &)v.getBuffer();
+	}catch(...){
+		EXCEPTION_INIT(AssignmentError,"Object assignment failed!");
+		EXCEPTION_THROW();
+	}
+}
+
 //==============================binary arithmetic operators====================
 template<typename T> Array<T> operator+(const Array<T> &a, const T &b) {
-	Array<T> tmp = a;
+	EXCEPTION_SETUP("template<typename T> Array<T> operator+(const Array<T> &a, const T &b)");
+	Array<T> tmp(a.getShape());
 	UInt64 i;
+	T *tmpbuf = tmp.getBuffer().getPtr();
+	T *abuf = tmp.getBuffer().getPtr();
 
-	for (i = 0; i < a._shape->getSize(); i++) {
-		(*tmp._data)[i] = (*a._data)[i] + b;
+	try{
+		for (i = 0; i < a.getShape().getSize(); i++)  tmpbuf[i] = abuf[i] + b;
+	}catch(...){
+		EXCEPTION_INIT(ProcessingError,"Error during array processing!");
+		EXCEPTION_THROW();
 	}
+
 	return tmp;
 }
 
 template<typename T> Array<T> operator+(const T &a, const Array<T> &b) {
-	Array<T> tmp = b;
-	unsigned long i;
+	EXCEPTION_SETUP("template<typename T> Array<T> operator+(const T &a, const Array<T> &b)");
+	Array<T> tmp;
 
-	for (i = 0; i < b._shape->getSize(); i++) {
-		(*tmp._data)[i] = (*b._data)[i] + a;
+	try{
+		tmp = b + a;
+	}catch(...){
+		EXCEPTION_INIT(ProcessingError,"Error during array processing!");
+		EXCEPTION_THROW();
 	}
 
 	return tmp;
@@ -729,38 +862,44 @@ template<typename T> Array<T> operator+(const T &a, const Array<T> &b) {
 
 template<typename T> Array<T> operator+(const Array<T> &a, const Array<T> &b) {
 	EXCEPTION_SETUP("template<typename T> Array<T> operator+(const Array<T> &a, const Array<T> &b)");
-	unsigned long i;
+	UInt64 i;
 
-	if (*(a._shape) != *(b._shape)) {
+	if (a.getShape() != b.getShape()) {
 		EXCEPTION_INIT(ShapeMissmatchError,"shapes of arrays a and b do not match!");
 		EXCEPTION_THROW();
 	}
-	Array<T> tmp = a;
 
-	for (i = 0; i < a._shape->getSize(); i++) {
-		(*tmp._data)[i] = (*a._data)[i] + (*b._data)[i];
-	}
+	Array<T> tmp(a.getShape());
+	T *tmpbuf = tmp.getBuffer().getPtr();
+	T *abuf = a.getBuffer().getPtr();
+	T *bbuf = b.getBuffer().getPtr();
+
+
+	for (i = 0; i < a.getShape().getSize(); i++) tmpbuf[i] = abuf[i] + bbuf[i];
 
 	return tmp;
 }
 
 template<typename T> Array<T> operator-(const Array<T> &a, const T &b) {
-	Array<T> tmp = a;
-	unsigned long i;
+	Array<T> tmp(a.getShape());
+	UInt64 i;
 
-	for (i = 0; i < a._shape->getSize(); i++) {
-		(*tmp._data)[i] = (*a._data)[i] - b;
-	}
+	T *tmpbuf = tmp.getBuffer().getPtr();
+	T *abuf = a.getBuffer().getPtr();
+
+	for (i = 0; i < a.getShape().getSize(); i++)  tmpbuf[i] = abuf[i] - b;
+
 	return tmp;
 }
 
 template<typename T> Array<T> operator-(const T &a, const Array<T> &b) {
-	Array<T> tmp = b;
-	unsigned long i;
+	Array<T> tmp(b.getShape());
+	UInt64 i;
 
-	for (i = 0; i < b._shape->getSize(); i++) {
-		(*tmp._data)[i] = a - (*b._data)[i];
-	}
+	T *tmpbuf = b.getBuffer().getPtr();
+	T *bbuf = b.getBuffer().getPtr();
+
+	for (i = 0; i < b.getShape().getSize(); i++) tmpbuf[i] = a - bbuf[i];
 
 	return tmp;
 
@@ -770,36 +909,35 @@ template<typename T> Array<T> operator-(const Array<T> &a, const Array<T> &b) {
 	EXCEPTION_SETUP("template<typename T> Array<T> operator-(const Array<T> &a, const Array<T> &b)");
 	unsigned long i;
 
-	if (*(a._shape) != *(b._shape)) {
+	if (a.getShape() != b.getShape()) {
 		EXCEPTION_INIT(ShapeMissmatchError,"shapes of arrays a and b do not match!");
 		EXCEPTION_THROW();
 	}
-	Array<T> tmp = a;
+	Array<T> tmp(a.getShape());
 
-	for (i = 0; i < a._shape->getSize(); i++) {
-		(*tmp._data)[i] = (*a._data)[i] - (*b._data)[i];
-	}
+	T *tmpbuf = tmp.getBuffer().getPtr();
+	T *abuf = a.getBuffer().getPtr();
+	T *bbuf = b.getBuffer().getPtr();
+
+	for (i = 0; i < a.getShape().getSize(); i++) tmpbuf[i] = abuf[i] - bbuf[i];
 
 	return tmp;
 }
 
 template<typename T> Array<T> operator*(const Array<T> &a, const T &b) {
-	Array<T> tmp = a;
-	unsigned long i;
+	Array<T> tmp(a.getShape());
+	UInt64 i;
 
-	for (i = 0; i < a._shape->getSize(); i++) {
-		(*tmp._data)[i] = (*a._data)[i] * b;
-	}
+	for (i = 0; i < a.getShape().getSize(); i++) tmp[i] = a[i] * b;
+
 	return tmp;
 }
 
 template<typename T> Array<T> operator*(const T &a, const Array<T> &b) {
-	Array<T> tmp = b;
-	unsigned long i;
+	Array<T> tmp(b.getShape());
+	UInt64 i;
 
-	for (i = 0; i < b._shape->getSize(); i++) {
-		(*tmp._data)[i] = (*b._data)[i] * a;
-	}
+	for (i = 0; i < b.getShape().getSize(); i++) tmp[i] = b[i] * a;
 
 	return tmp;
 
@@ -807,38 +945,34 @@ template<typename T> Array<T> operator*(const T &a, const Array<T> &b) {
 
 template<typename T> Array<T> operator*(const Array<T> &a, const Array<T> &b) {
 	EXCEPTION_SETUP("template<typename T> Array<T> operator*(const Array<T> &a, const Array<T> &b)");
-	unsigned long i;
+	UInt64 i;
 
-	if (*(a._shape) != *(b._shape)) {
+	if (a.getShape() != b.getShape()) {
 		EXCEPTION_INIT(ShapeMissmatchError,"shapes of arrays a and b do not match!");
 		EXCEPTION_THROW();
 	}
-	Array<T> tmp = a;
+	Array<T> tmp(a.getShape());
 
-	for (i = 0; i < a._shape->getSize(); i++) {
-		(*tmp._data)[i] = (*a._data)[i] * (*b._data)[i];
-	}
+	for (i = 0; i < a.getShape().getSize(); i++) tmp[i] = a[i] * b[i];
+
 
 	return tmp;
 }
 
 template<typename T> Array<T> operator/(const Array<T> &a, const T &b) {
-	Array<T> tmp = a;
-	unsigned long i;
+	Array<T> tmp(a.getShape());
+	UInt64 i;
 
-	for (i = 0; i < a._shape->getSize(); i++) {
-		(*tmp._data)[i] = (*a._data)[i] / b;
-	}
+	for (i = 0; i < a.getShape().getSize(); i++) tmp[i] = a[i] / b;
+
 	return tmp;
 }
 
 template<typename T> Array<T> operator/(const T &a, const Array<T> &b) {
-	Array<T> tmp = b;
-	unsigned long i;
+	Array<T> tmp(b.getShape());
+	UInt64 i;
 
-	for (i = 0; i < b._shape->getSize(); i++) {
-		(*tmp._data)[i] = a / (*b._data)[i];
-	}
+	for (i = 0; i < b.getShape().getSize(); i++) tmp[i] = a / b[i];
 
 	return tmp;
 
@@ -846,126 +980,105 @@ template<typename T> Array<T> operator/(const T &a, const Array<T> &b) {
 
 template<typename T> Array<T> operator/(const Array<T> &a, const Array<T> &b) {
 	EXCEPTION_SETUP("template<typename T> Array<T> operator/(const Array<T> &a, const Array<T> &b)");
-	unsigned long i;
+	UInt64 i;
 
-	if (*(a._shape) != *(b._shape)) {
+	if (a.getShape() != b.getShape()) {
 		EXCEPTION_INIT(ShapeMissmatchError,"shapes of arrays a and b do not match!");
 		EXCEPTION_THROW();
 	}
-	Array<T> tmp = a;
+	Array<T> tmp(a.getShape());
 
-	for (i = 0; i < a._shape->getSize(); i++) {
-		(*(tmp._data))[i] = (*(a._data))[i] / (*(b._data))[i];
-	}
+	for (i = 0; i < a.getShape().getSize(); i++) tmp[i] = a[i] / b[i];
 
 	return tmp;
 }
 
 //=======================Unary arithmetic operations===========================
 template<typename T> Array<T> &Array<T>::operator +=(const T &v) {
-	unsigned long i;
-	Buffer<T> &d = *(this->_data);
+	UInt64 i;
 
-	for (i = 0; i < this->_shape->getSize(); i++)
-		d[i] += v;
+	for (i = 0; i < getShape().getSize(); i++) (*this)[i] += v;
 
 	return *this;
 }
 
 template<typename T> Array<T> &Array<T>::operator +=(const Array<T> &v) {
 	EXCEPTION_SETUP("template<typename T> Array<T> &Array<T>::operator +=(const Array<T> &v)");
-	unsigned long i;
-	Buffer<T> &dlhs = *(this->_data);
-	Buffer<T> &drhs = *(v._data);
+	UInt64 i;
 
-	if (*(this->_shape) != *(v._shape)) {
+	if (getShape() != v.getShape()) {
 		EXCEPTION_INIT(ShapeMissmatchError,"shapes of arrays on left and right side of += do not match!");
 		EXCEPTION_THROW();
 	}
 
-	for (i = 0; i < this->_shape->getSize(); i++)
-		dlhs[i] += drhs[i];
+	for (i = 0; i < getShape().getSize(); i++) (*this)[i] += v[i];
 
 	return *this;
 }
 
 template<typename T> Array<T> &Array<T>::operator -=(const T &v) {
-	unsigned long i;
-	Buffer<T> &dlhs = *(this->_data);
+	UInt64 i;
 
-	for (i = 0; i < this->_shape->getSize(); i++)
-		dlhs[i] -= v;
+	for (i = 0; i < getShape().getSize(); i++) (*this)[i] -= v;
 
 	return *this;
 }
 
 template<typename T> Array<T> &Array<T>::operator -=(const Array<T> &v) {
 	EXCEPTION_SETUP("template<typename T> Array<T> &Array<T>::operator -=(const Array<T> &v)");
-	unsigned long i;
-	Buffer<T> &dlhs = *(this->_data);
-	Buffer<T> &drhs = *(v._data);
+	UInt64 i;
 
-	if (*(this->_shape) != *(v._shape)) {
+
+	if (getShape() != v.getShape()) {
 		EXCEPTION_INIT(ShapeMissmatchError,"shapes of arrays on left and right side of -= do not match!");
 		EXCEPTION_THROW();
 	}
 
-	for (i = 0; i < this->_shape->getSize(); i++)
-		dlhs[i] -= drhs[i];
+	for (i = 0; i < getShape().getSize(); i++) (*this)[i] -= v[i];
 
 	return *this;
 }
 
 template<typename T> Array<T> &Array<T>::operator *=(const T &v) {
-	unsigned long i;
-	Buffer<T> &dlhs = *(this->_data);
+	UInt64 i;
 
-	for (i = 0; i < this->_shape->getSize(); i++)
-		dlhs[i] *= v;
+	for (i = 0; i < getShape().getSize(); i++) (*this)[i] *= v;
 
 	return *this;
 }
 
 template<typename T> Array<T> &Array<T>::operator *=(const Array<T> &v) {
 	EXCEPTION_SETUP("template<typename T> Array<T> &Array<T>::operator *=(const Array<T> &v)");
-	unsigned long i;
-	Buffer<T> &dlhs = *(this->_data);
-	Buffer<T> &drhs = *(v._data);
+	UInt64 i;
 
-	if (*(this->_shape) != *(v._shape)) {
+	if (getShape() != v.getShape()) {
 		EXCEPTION_INIT(ShapeMissmatchError,"shapes of arrays on left and right side of *= do not match!");
 		EXCEPTION_THROW();
 	}
 
-	for (i = 0; i < this->_shape->getSize(); i++)
-		dlhs[i] *= drhs[i];
+	for (i = 0; i < getShape().getSize(); i++) (*this)[i] *= v[i];
 
 	return *this;
 }
 
 template<typename T> Array<T> &Array<T>::operator /=(const T &v) {
-	unsigned long i;
-	Buffer<T> &dlhs = *(this->_data);
+	UInt64 i;
 
-	for (i = 0; i < this->_shape->getSize(); i++)
-		dlhs[i] /= v;
+	for (i = 0; i < getShape().getSize(); i++) (*this)[i] /= v;
 
 	return *this;
 }
 
 template<typename T> Array<T> &Array<T>::operator /=(const Array<T> &v) {
 	EXCEPTION_SETUP("template<typename T> Array<T> &Array<T>::operator /=(const Array<T> &v)");
-	unsigned long i;
-	Buffer<T> &dlhs = *(this->_data);
-	Buffer<T> &drhs = *(v._data);
+	UInt64 i;
 
-	if (*(this->_shape) != *(v._shape)) {
+	if (getShape() != v.getShape()) {
 		EXCEPTION_INIT(ShapeMissmatchError,"shapes of arrays on left and right side of /= do not match!");
 		EXCEPTION_THROW();
 	}
 
-	for (i = 0; i < this->_shape->getSize(); i++)
-		dlhs[i] /= drhs[i];
+	for (i = 0; i < getShape().getSize(); i++) (*this)[i] /= v[i];
 
 	return *this;
 }

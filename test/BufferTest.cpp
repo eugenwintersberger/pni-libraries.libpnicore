@@ -98,19 +98,34 @@ void BufferTest::testAssignment(){
 	//check first for some standard problems
 	//nothing happens - both are not allocated
 	CPPUNIT_ASSERT_NO_THROW(buffer1 = buffer2);
-	//now the lhs is not allocated
-	buffer2.allocate(n1);
-	buffer1.setSize(n2);
-	CPPUNIT_ASSERT_NO_THROW(buffer1 = buffer2);
-	buffer1.allocate();
-	CPPUNIT_ASSERT_THROW(buffer1 = buffer2,SizeMissmatchError);
-	buffer1.free();
-	buffer1.allocate(n1);
+	//now the lhs is not allocated and the rhs is
+	CPPUNIT_ASSERT_NO_THROW(buffer2.allocate(n1));
+	CPPUNIT_ASSERT_NO_THROW(buffer1.setSize(n2));
 	CPPUNIT_ASSERT_NO_THROW(buffer1 = buffer2);
 
-	//allocate now all other bufers
-	buffer3.allocate(n1);
-	buffer4.allocate(n1);
+	//the lhs is allocated and the rhs is not
+	CPPUNIT_ASSERT_NO_THROW(buffer1.free());
+	CPPUNIT_ASSERT_NO_THROW(buffer1.setSize(n1));
+	CPPUNIT_ASSERT_NO_THROW(buffer1.allocate());
+	CPPUNIT_ASSERT_NO_THROW(buffer1 = 1.23);
+	CPPUNIT_ASSERT_NO_THROW(buffer2.free());
+	CPPUNIT_ASSERT_NO_THROW(buffer1 = buffer2);
+	CPPUNIT_ASSERT(buffer1 == buffer2);
+
+	//both are allocated with different size
+	CPPUNIT_ASSERT_NO_THROW(buffer1.free());
+	CPPUNIT_ASSERT_NO_THROW(buffer1.allocate(n1));
+	CPPUNIT_ASSERT_NO_THROW(buffer1 = 1.23);
+	CPPUNIT_ASSERT_NO_THROW(buffer2.free());
+	CPPUNIT_ASSERT_NO_THROW(buffer2.allocate(n2));
+	CPPUNIT_ASSERT_NO_THROW(buffer2 = -23.3445);
+	CPPUNIT_ASSERT_NO_THROW(buffer1 = buffer2);
+	CPPUNIT_ASSERT(buffer1 == buffer2);
+
+	//allocate now all other buffers
+	CPPUNIT_ASSERT_NO_THROW(buffer3.free());
+	CPPUNIT_ASSERT_NO_THROW(buffer3.allocate(n1));
+	CPPUNIT_ASSERT_NO_THROW(buffer4.allocate(n1));
 
 	//assign a single number to the buffer
 	CPPUNIT_ASSERT_NO_THROW(buffer1 = 1.0);
@@ -126,21 +141,21 @@ void BufferTest::testAssignment(){
 	//starting with integer buffers
 	CPPUNIT_ASSERT_THROW(buffer3 = buffer1,TypeError); //cannot assign double to integer
 
-	buffer4 = 100;
-	buffer4[100] = -1;
+	CPPUNIT_ASSERT_NO_THROW(buffer4 = 100);
+	CPPUNIT_ASSERT_NO_THROW(buffer4[100] = -1);
 	CPPUNIT_ASSERT_THROW(buffer3 = buffer4,RangeError);
 
 
 	Buffer<Complex32> buffer5(n1);
 	Buffer<Complex128> buffer6(n1);
 
-	buffer5 = Complex32(1,-2093);
+	CPPUNIT_ASSERT_NO_THROW(buffer5 = Complex32(1,-2093));
 	//will not work - gives already compile time error
 	//CPPUNIT_ASSERT_THROW(buffer2 = buffer5,TypeError);
 	//CPPUNIT_ASSERT_THROW(buffer3 = buffer5,TypeError);
 	CPPUNIT_ASSERT_NO_THROW(buffer5 = buffer4);
 	CPPUNIT_ASSERT_NO_THROW(buffer6 = buffer1);
-	buffer1 = 1.e+300;
+	CPPUNIT_ASSERT_NO_THROW(buffer1 = 1.e+300);
 	CPPUNIT_ASSERT_THROW(buffer5 = buffer1,RangeError);
 
 }
@@ -159,6 +174,32 @@ void BufferTest::testComparison(){
 	// should work
 	b3 = 1;
 	CPPUNIT_ASSERT(b3 == b1);
+
+	//check with unallocated buffers
+	Buffer<Float64> b4,b5;
+	Buffer<UInt64> b6;
+
+	b4.setSize(100); b5.setSize(100);
+	CPPUNIT_ASSERT(b4 == b5);
+	b5.setSize(50);
+	CPPUNIT_ASSERT(b4 != b5);
+	b4.allocate();
+	CPPUNIT_ASSERT(b4 != b5);
+	b5.allocate();
+	CPPUNIT_ASSERT(b5 != b4);
+	b5.free(); b5.allocate(b4.getSize());
+	b4 = 1; b5 = 1;
+	CPPUNIT_ASSERT(b5 == b4);
+
+	b5.free(); b5.setSize(100); b6.setSize(100);
+	CPPUNIT_ASSERT(b5 == b6);
+	b5.allocate();
+	CPPUNIT_ASSERT(b5 != b6);
+	b6.allocate();
+	b5 = -1; b6 = 1;
+	CPPUNIT_ASSERT(b5 != b6);
+
+
 }
 
 

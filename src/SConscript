@@ -10,9 +10,9 @@ source_list = ["ScalarObject.cpp","Scalar.cpp","BufferObject.cpp",
 #build static and shared objects               
 shared_objects = build_env.SharedObject(source_list)
 static_objects = build_env.StaticObject(source_list)
-#(shared_io_objects,static_io_objects) = SConscript("io/SConscript")
-#shared_objects.append(shared_io_objects)
-#static_objects.append(static_io_objects)
+(shared_io_objects,static_io_objects) = SConscript("io/SConscript")
+shared_objects.append(shared_io_objects)
+static_objects.append(static_io_objects)
 
 #----------------------Linking libraries----------------------------------------
 #link temporary shared library

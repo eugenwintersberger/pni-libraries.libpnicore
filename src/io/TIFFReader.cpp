@@ -38,7 +38,7 @@ void TIFFReader::setFileName(const char *n){
 	_file.setFileName(n);
 }
 
-DataObject::sptr TIFFReader::read(){
+DataObject *TIFFReader::read(){
 	TIFFImageData::sptr idata;
 
 	//read the first image from the stack
@@ -47,7 +47,7 @@ DataObject::sptr TIFFReader::read(){
 	//obtain the first channel from the first image
 	ArrayObject::sptr aptr = idata->getChannel(0);
 
-	return boost::dynamic_pointer_cast<DataObject>(aptr);
+	return (DataObject *)(aptr.get());
 }
 
 

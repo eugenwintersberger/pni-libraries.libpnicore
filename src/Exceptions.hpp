@@ -351,6 +351,62 @@ public:
 	friend std::ostream &operator<<(std::ostream &o,const MemoryAccessError &e);
 };
 
+//! \ingroup Exceptions
+//! \brief error during processing
+
+//! This exception will be thrown in basically all cases where an error
+//! occurs during some numerical calculations or other processing jobs.
+class ProcessingError:public Exception{
+public:
+	//! default constructor
+	ProcessingError():Exception("ProcessingError"){
+	}
+
+	//! constructor
+
+	//! Constructor setting the issuer and description of the error.
+	//! \param i issuer fo the exception
+	//! \param d error description
+	ProcessingError(const String &i,const String &d):
+		Exception("ProcessingError",i,d){
+	}
+
+	//! destructor
+	virtual ~ProcessingError(){
+
+	}
+
+	friend std::ostream &operator<<(std::ostream &o,const ProcessingError &e);
+};
+
+//! \ingroup Exceptions
+//! \brief error during assignment
+
+//! A very general exception thrown in case of any error during an assignment
+//! operation.
+class AssignmentError:public Exception{
+public:
+	//! default constructor
+	AssignmentError():Exception("AssignmentError"){
+	}
+
+	//! constructor
+
+	//! Constructor setting the issuer and description of the error.
+	//! \param i issuer fo the exception
+	//! \param d error description
+	AssignmentError(const String &i,const String &d):
+		Exception("AssignmentError",i,d){
+	}
+
+	//! destructor
+	virtual ~AssignmentError(){
+
+	}
+
+	friend std::ostream &operator<<(std::ostream &o,const AssignmentError &e);
+};
+
 }
 }
 #endif

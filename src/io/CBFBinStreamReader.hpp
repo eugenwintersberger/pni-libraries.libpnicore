@@ -38,7 +38,7 @@ protected:
 	UInt64 nelements_;          //!< total number of elements to read
 	UInt32 elemsize_;           //!< size of each element in bytes (depends on the type)
 	std::ifstream *_stream;     //!< stream from which to read the data
-	BufferObject* _buffer; //!< buffer object which holds the data read from the stream
+	BufferObject* _buffer;      //!< buffer object which holds the data read from the stream
 public:
 	//! default constructor
 	CBFBinStreamReader();

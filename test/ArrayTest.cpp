@@ -15,47 +15,52 @@ CPPUNIT_TEST_SUITE_REGISTRATION(ArrayTest);
 using namespace pni::utils;
 
 void ArrayTest::setUp(){
-	_r1 = 2;
-	_r2 = 3;
+	r1 = 2;
+	r2 = 3;
 
-	_s1 = new unsigned int[_r1];
-	_s2 = new unsigned int[_r2];
+	s1.setRank(r1);
+	s2.setRank(r2);
 
-	_s1[0] = 3; _s1[1] = 4;
-	_s2[0] = 2; _s2[1] = 3; _s2[2] = 5;
+	s1.setDimension(0,3); s1.setDimension(1,4);
+	s2.setDimension(0,2);
+	s2.setDimension(1,3);
+	s2.setDimension(2,5);
 
-	_sh1 = ArrayShape(_r1,_s1);
-	_sh2 = ArrayShape(_r2,_s2);
 }
 
 void ArrayTest::tearDown(){
-	if(_s1!=NULL) delete [] _s1;
-	if(_s2!=NULL) delete [] _s2;
+
 }
 
 void ArrayTest::testConstruction(){
 	//check for simple array-construction
-	Array<double> a1(_sh1);
-	Array<double> a2(_r2,_s2);
+	Array<double> a1(s1);
+	Array<double> a2(s2);
 
 	//this should check if third
 	Array<double> a3;
-	a3 = Array<double>(_r2,_s2);
+	CPPUNIT_ASSERT_NO_THROW(a3 = Array<double>(s2));
 
 	Int16Array a4;
-	a4 = Int16Array();
-	a4 = Int16Array();
+	CPPUNIT_ASSERT_NO_THROW(a4 = Int16Array());
+	CPPUNIT_ASSERT_NO_THROW(a4 = Int16Array());
 
-	a3 = Array<double>();
+	CPPUNIT_ASSERT_NO_THROW(a3 = Array<double>());
+
+}
+
+void ArrayTest::testAssignment(){
 
 }
 
 void ArrayTest::testSlowArrayConstruction(){
 	ArrayShape s;
 	Int32Array a;
+	Index in;
 
 	//construct the shape object
 	s.setRank(2);
+	in.setRank(s.getRank());
 	s.setDimension(0,1024);
 	s.setDimension(1,2048);
 
@@ -65,90 +70,71 @@ void ArrayTest::testSlowArrayConstruction(){
 	buffer.allocate();
 	a.setBuffer(buffer);
 
-	a(100,100) = 1000;
-	a(50,23) = -10;
-	a(1023,2047) = 50;
+	in[0] = 100; in[1] = 100;
+	a(in) = 1000;
+	in[0] = 50; in[1] = 23;
+	a(in) = -10;
+	in[0] = 1023; in[1] = 2047;
+ 	a(in) = 50;
 
 	CPPUNIT_ASSERT(a.Min() == -10);
 	CPPUNIT_ASSERT(a.Max() == 1000);
 }
 
-void ArrayTest::testConstructorsShared(){
-	pni::utils::ArrayShape::sptr shape(new pni::utils::ArrayShape(_r1,_s1));
-	pni::utils::Buffer<double>::sptr buffer(new pni::utils::Buffer<double>(shape->getSize()));
-
-	pni::utils::Array<double> *a = new pni::utils::Array<double>(shape,buffer);
-
-	for(unsigned long i=0;i<shape->getSize();i++) CPPUNIT_ASSERT((*a)[i]==(*buffer)[i]);
-
-	CPPUNIT_ASSERT(shape.use_count()==2);
-	CPPUNIT_ASSERT(buffer.use_count()==2);
-
-	delete a;
-
-	CPPUNIT_ASSERT(shape.use_count()==1);
-	CPPUNIT_ASSERT(buffer.use_count()==1);
-
-	a = new pni::utils::Array<double>(_r2,_s2);
-	shape = a->getShape();
-    buffer = boost::dynamic_pointer_cast<pni::utils::Buffer<double> >(a->getBuffer());
-
-	CPPUNIT_ASSERT(shape.use_count()==2);
-	CPPUNIT_ASSERT(buffer.use_count()==2);
-
-	CPPUNIT_ASSERT(*shape==_sh2);
-
-}
 
 void ArrayTest::testSetAndGet(){
-	pni::utils::Array<double> a1(_r1,_s1);
-	unsigned int i,j;
+	Array<double> a1(s1);
+	UInt32 i;
+	Index in;
 
 	//access via [] operator
-	pni::utils::ArrayShape s = *(a1.getShape());
+	ArrayShape s = a1.getShape();
 	for(i=0;i<s.getSize();i++) a1[i] = (double)i;
 
 	//check if data values have been transfered correctly
 	for(i=0;i<s.getSize();i++) CPPUNIT_ASSERT(((double)i)==a1[i]);
 
 	//check access via () operator
-	for(i=0;i<s[0];i++){
-		for(j=0;j<s[1];j++){
-			a1(i,j) = (double)i;
+	in.setRank(s.getRank());
+	for(in[0]=0; in[0]<s[0]; in.increment(0)){
+		for(in[1]=0; in[1]<s[1]; in.increment(1)){
+			a1(in) = (double)i;
 		}
 	}
-	for(i=0;i<s[0];i++){
-		for(j=0;j<s[1];j++){
-			CPPUNIT_ASSERT(a1(i,j) == ((double)i));
+	for(in[0]=0;in[0]<s[0];in.increment(0)){
+		for(in[1]=0;in[1]<s[1];in.increment(1)){
+			CPPUNIT_ASSERT(a1(in) == ((double)i));
 		}
 	}
 
 }
 
 void ArrayTest::testComparison(){
-	Float64Array a1(_sh1);
-	Float64Array b1(_sh1);
-	Float64Array a2(_sh2);
-	Float64Array b2(_sh2);
-	UInt32 i,j,k;
+	Float64Array a1(s1);
+	Float64Array b1(s1);
+	Float64Array a2(s2);
+	Float64Array b2(s2);
+	Index in1,in2;
 
-	ArrayShape s = *(a1.getShape());
-	for(i=0;i<s[0];i++){
-		for(j=0;j<s[1];j++){
-			a1(i,j) = (Float64)i;
-			b1(i,j) = (Float64)i*10;
+	in1.setRank(s1.getRank());
+	in2.setRank(s2.getRank());
+
+	for(in1[0]=0; in1[0]<s1[0]; in1.increment(0)){
+		for(in1[1]=0; in1[1]<s1[1]; in1.increment(1)){
+			a1(in1) = (Float64)in1[0];
+			b1(in1) = (Float64)in1[1]*10;
 		}
 	}
 	CPPUNIT_ASSERT(a1==a1);
 	CPPUNIT_ASSERT(a1!=b1);
 	CPPUNIT_ASSERT(b1==b1);
 
-	s = *(a2.getShape());
-	for(i=0;i<s[0];i++){
-		for(j=0;j<s[1];j++){
-			for(k=0;k<s[2];k++){
-				a2(i,j,k) = (Float64)i;
-				b2(i,j,k) = (Float64)i*10;
+
+	for(in2[0]=0; in2[0]<s2[0]; in2.increment(0)){
+		for(in2[1]=0; in2[1]<s2[1]; in2.increment(1)){
+			for(in2[2]=0; in2[2]<s2[2]; in2.increment(2)){
+				a2(in2) = (Float64)in2[0];
+				b2(in2) = (Float64)in2[0]*10;
 			}
 		}
 	}
@@ -158,107 +144,7 @@ void ArrayTest::testComparison(){
 
 }
 
-void ArrayTest::testBinaryOperations(){
-	pni::utils::Array<double> a1(_sh1);
-	pni::utils::Array<double> b1(_sh1);
-	pni::utils::Array<double> c1(_sh1);
-	double b,a;
-	unsigned long i;
 
-	b = 5.;
-	a = 10;
-
-	//check setting all array values to the same value
-	a1 = b;
-	pni::utils::ArrayShape s = *(a1.getShape());
-	for(i=0;i<s.getSize();i++) CPPUNIT_ASSERT(a1[i]==b);
-
-	//checking addition
-	a1 = a;
-	b1 = b;
-	c1 = a1+b1;
-	for(i=0;i<s.getSize();i++) CPPUNIT_ASSERT(c1[i]==(a+b));
-	c1 = a1+b;
-	for(i=0;i<s.getSize();i++) CPPUNIT_ASSERT(c1[i]==(a+b));
-	c1 = b+a1;
-	for(i=0;i<s.getSize();i++) CPPUNIT_ASSERT(c1[i]==(a+b));
-
-	//checking subtraction
-	c1 = a1-b1;
-	for(i=0;i<s.getSize();i++) CPPUNIT_ASSERT(c1[i]==(a-b));
-	c1 = a1-b;
-	for(i=0;i<s.getSize();i++) CPPUNIT_ASSERT(c1[i]==(a-b));
-	c1 = b-a1;
-	for(i=0;i<s.getSize();i++) CPPUNIT_ASSERT(c1[i]==(b-a));
-
-	//checking multiplication
-	c1 = a1*b1;
-	for(i=0;i<s.getSize();i++) CPPUNIT_ASSERT(c1[i]==(a*b));
-	c1 = a1*b;
-	for(i=0;i<s.getSize();i++) CPPUNIT_ASSERT(c1[i]==(a*b));
-	c1 = b*a1;
-	for(i=0;i<s.getSize();i++) CPPUNIT_ASSERT(c1[i]==(b*a));
-
-	//checking division
-	c1 = a1/b1;
-	for(i=0;i<s.getSize();i++) CPPUNIT_ASSERT(c1[i]==(a/b));
-	c1 = a1/b;
-	for(i=0;i<s.getSize();i++) CPPUNIT_ASSERT(c1[i]==(a/b));
-	c1 = b/a1;
-	for(i=0;i<s.getSize();i++) CPPUNIT_ASSERT(c1[i]==(b/a));
-
-
-
-}
-
-void ArrayTest::testUnaryOperations(){
-	pni::utils::Array<double> a1(_sh1);
-	pni::utils::Array<double> b1(_sh1);
-	double b,a;
-	unsigned long i;
-
-	b = 5.;
-	a = 10;
-
-	//check setting all array values to the same value
-	a1 = b;
-	pni::utils::ArrayShape s = *(a1.getShape());
-	for(i=0;i<s.getSize();i++) CPPUNIT_ASSERT(a1[i]==b);
-
-	//checking addition
-	a1 = a;
-	b1 = b;
-	a1 += b1;
-	for(i=0;i<s.getSize();i++) CPPUNIT_ASSERT(a1[i]==(a+b));
-	a1 = a;
-	a1 += b;
-	for(i=0;i<s.getSize();i++) CPPUNIT_ASSERT(a1[i]==(a+b));
-
-	//checking subtraction
-	a1 = a;
-	a1 -= b1;
-	for(i=0;i<s.getSize();i++) CPPUNIT_ASSERT(a1[i]==(a-b));
-	a1 = a;
-	a1 -= b;
-	for(i=0;i<s.getSize();i++) CPPUNIT_ASSERT(a1[i]==(a-b));
-
-	//checking multiplication
-	a1 = a;
-	a1 *= b1;
-	for(i=0;i<s.getSize();i++) CPPUNIT_ASSERT(a1[i]==(a*b));
-	a1 = a;
-	a1 *= b;
-	for(i=0;i<s.getSize();i++) CPPUNIT_ASSERT(a1[i]==(a*b));
-
-	//checking division
-	a1 = a;
-	a1 /= b1;
-	for(i=0;i<s.getSize();i++) CPPUNIT_ASSERT(a1[i]==(a/b));
-	a1 = a;
-	a1 /= b;
-	for(i=0;i<s.getSize();i++) CPPUNIT_ASSERT(a1[i]==(a/b));
-
-}
 
 void ArrayTest::testTypeInfo(){
 	pni::utils::ArrayObject *ptr;

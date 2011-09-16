@@ -22,13 +22,15 @@
 #include "../src/io/TIFFIFD.hpp"
 #include "../src/io/TIFFImageData.hpp"
 
+using namespace pni::utils;
+
 template<typename T> class PlPlotArrayDecorator:public Contourable_Data{
 private:
-	typename pni::utils::Array<T>::sptr _array;
+	typename Array<T>::sptr _array;
 public:
 	PlPlotArrayDecorator(){}
-	PlPlotArrayDecorator(pni::utils::Array<T> *a);
-	PlPlotArrayDecorator(const typename pni::utils::Array<T>::sptr &a);
+	PlPlotArrayDecorator(Array<T> *a);
+	PlPlotArrayDecorator(const typename Array<T>::sptr &a);
 	virtual ~PlPlotArrayDecorator(){
 		_array.reset();
 	}
@@ -38,14 +40,14 @@ public:
 	}
 };
 
-template<typename T> PlPlotArrayDecorator<T>::PlPlotArrayDecorator(pni::utils::Array<T> *a)
-	:Contourable_Data(a->getShape()->getDimension(0),
-			          a->getShape()->getDimension(1)){
+template<typename T> PlPlotArrayDecorator<T>::PlPlotArrayDecorator(Array<T> *a)
+	:Contourable_Data(a->getShape().getDimension(0),
+			          a->getShape().getDimension(1)){
 	_array.reset(a);
 }
-template<typename T> PlPlotArrayDecorator<T>::PlPlotArrayDecorator(const typename pni::utils::Array<T>::sptr &a)
-	:Contourable_Data(a->getShape()->getDimension(0),
-			          a->getShape()->getDimension(1)){
+template<typename T> PlPlotArrayDecorator<T>::PlPlotArrayDecorator(const typename Array<T>::sptr &a)
+	:Contourable_Data(a->getShape().getDimension(0),
+			          a->getShape().getDimension(1)){
 	_array = a;
 }
 
@@ -62,12 +64,11 @@ private:
 public:
 	PlotArray();
 	PlotArray(int nx,int ny);
-	PlotArray(const pni::utils::ArrayShape *s);
-	PlotArray(const pni::utils::ArrayShape::sptr &s);
+	PlotArray(const ArrayShape &s);
 	virtual ~PlotArray();
 
-	template<typename T> void image_plot(const pni::utils::ArrayObject::sptr data);
-	template<typename T> void contour_plot(const pni::utils::ArrayObject *data){}
+	template<typename T> void image_plot(const ArrayObject::sptr data);
+	template<typename T> void contour_plot(const ArrayObject *data){}
 };
 
 void PlotArray::_alloc_image_buffer(){
@@ -101,21 +102,13 @@ PlotArray::PlotArray(int nx,int ny){
 	_alloc_image_buffer();
 }
 
-PlotArray::PlotArray(const pni::utils::ArrayShape *s){
-	_nx = s->getDimension(0);
-	_ny = s->getDimension(1);
+PlotArray::PlotArray(const ArrayShape &s){
+	_nx = s.getDimension(0);
+	_ny = s.getDimension(1);
 	_ntot = _nx*_ny;
 
 	_alloc_image_buffer();
 
-}
-
-PlotArray::PlotArray(const pni::utils::ArrayShape::sptr &s){
-	_nx = s->getDimension(0);
-	_ny = s->getDimension(1);
-	_ntot = _nx*_ny;
-
-	_alloc_image_buffer();
 }
 
 PlotArray::~PlotArray(){
@@ -131,8 +124,8 @@ template<typename T> void PlotArray::image_plot(const pni::utils::ArrayObject::s
 	//PlPlotArrayDecorator<T> adec((pni::utils::Array<T> *)data);
 	int i,j;
 
-	int nx = a.getShape()->getDimension(0);
-	int ny = a.getShape()->getDimension(1);
+	int nx = a.getShape().getDimension(0);
+	int ny = a.getShape().getDimension(1);
 
 	plstream p(1,1,"xwin",NULL);
 	p.init();
@@ -144,9 +137,11 @@ template<typename T> void PlotArray::image_plot(const pni::utils::ArrayObject::s
 	PLFLT zmax = a.Max();
 
 	//copy data to image buffer
-	for(i=0;i<_nx;i++){
-		for(j=0;j<_ny;j++){
-			_image_buffer[i][j] = (PLFLT)a(i,j);
+	Index index(2);
+
+	for(index[0]=0;index[0]<_nx;index.increment(0)){
+		for(index[1]=0;index[1]<_ny;index.increment(1)){
+			_image_buffer[index[0]][index[1]] = (PLFLT)a(index);
 		}
 	}
 

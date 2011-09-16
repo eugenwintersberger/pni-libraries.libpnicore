@@ -72,10 +72,11 @@ PNITypeID ArrayObject::getTypeID() const {
 void ArrayObject::setShape(const ArrayShape &s){
 	EXCEPTION_SETUP("void ArrayObject::setShape(const ArrayShape &s)");
 
+	/*
 	if(s.getSize() == 0){
 		EXCEPTION_INIT(SizeMissmatchError,"Size of shape object must not be zero if set by reference!");
 		EXCEPTION_THROW();
-	}
+	}*/
 
 	UInt32 orank = _shape.getRank();
 

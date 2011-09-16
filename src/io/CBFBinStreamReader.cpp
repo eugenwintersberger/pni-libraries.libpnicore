@@ -17,21 +17,21 @@ CBFBinStreamReader::CBFBinStreamReader(){
 	nelements_ = 0;
 	elemsize_ = 0;
 	_stream = NULL;
-	_buffer.reset();
+	_buffer = NULL;
 }
 
 CBFBinStreamReader::CBFBinStreamReader(unsigned long n){
 	nelements_ = n;
 	elemsize_ = 0;
 	_stream = NULL;
-	_buffer.reset();
+	_buffer = NULL;
 }
 
 CBFBinStreamReader::~CBFBinStreamReader(){
 	nelements_ = 0;
 	elemsize_ = 0;
 	_stream = NULL;
-	_buffer.reset();
+	_buffer = NULL;
 }
 
 //end of namespaces

@@ -37,7 +37,7 @@ public:
 
 	virtual void open();
 	virtual void close();
-	virtual DataObject::sptr read();
+	virtual DataObject *read();
 };
 
 //end of namespace

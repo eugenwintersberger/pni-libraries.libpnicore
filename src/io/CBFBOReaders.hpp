@@ -62,7 +62,7 @@ template<typename T> void CBFBinReaderByteOffset<T>::read() {
 	//unsigned long i;
 	unsigned long ecnt; // element counter
 	T buffer;
-	Buffer<T> &dbuffer = *boost::dynamic_pointer_cast<Buffer<T> >(_buffer);
+	Buffer<T> &dbuffer = (Buffer<T> &)(*_buffer);
 
 	buffer = 0;
 	ecnt = 0;

@@ -154,6 +154,7 @@ public:
 
 	//! This function frees the memory allocated by the buffer. It must be
 	//! invoked before calling allocate() on an already allocated buffer.
+	//! If the buffer is not allocated this method does nothing.
 	virtual void free();
 	//! read/write void pointer
 
@@ -289,24 +290,39 @@ template<typename T> Buffer<T> &Buffer<T>::operator=(const Buffer<T> &b){
 	EXCEPTION_SETUP("template<typename T> Buffer<T> &Buffer<T>::operator=(const Buffer<T> &b)");
 
 	if(&b != this){
-		if(getSize() != b.getSize()){
-			//in this case we need to reallocate data
+		if(!b.isAllocated()){
+			//if the rhs is not allocated we simply need to free memory
+			//and copy the size
 			if(isAllocated()) free();
-
-			//if b is not allocated there is nothing more to do
-			if(!b.isAllocated()) return *this;
-
-			//allocate new memory if necessary
-			try{
-				allocate(b.getSize());
-			}catch(MemoryAllocationError &error){
-				EXCEPTION_INIT(MemoryAllocationError,"Memory allocation for buffer failed!");
-				EXCEPTION_THROW();
+			setSize(b.getSize());
+		}else{
+			//if the rhs is allocated we need to copy data
+			if(getSize() != b.getSize()){
+				//if the two buffers differ in size we need to allocate new memory
+				if(isAllocated()) free();
+				setSize(b.getSize());
+				try{
+					allocate();
+				}catch(MemoryAllocationError &error){
+					EXCEPTION_INIT(MemoryAllocationError,"Memory allocation for buffer failed!");
+					EXCEPTION_THROW();
+				}
+			}else{
+				//what can happen now is that the buffers had the same size
+				//but this buffer was not allocated yet
+				if(!isAllocated()){
+					try{
+						allocate();
+					}catch(MemoryAllocationError &error){
+						EXCEPTION_INIT(MemoryAllocationError,"Memory allocation for buffer failed!");
+						EXCEPTION_THROW();
+					}
+				}
 			}
-		}
 
-		//copy data if there is something to coppy
-		if((getSize() != 0)&&(b.isAllocated())) for(UInt64 i=0;i<getSize();i++) (*this)[i] = b[i];
+			//copy data
+			for(UInt64 i=0;i<getSize();i++) (*this)[i] = b[i];
+		}
 	}
 
 	return *this;
@@ -322,20 +338,36 @@ template<typename U> Buffer<T> &Buffer<T>::operator=(const Buffer<U> &b){
 		EXCEPTION_THROW();
 	}
 
-	if(getSize() != b.getSize()){
-		//in this case we need to reallocate data
+	if(!b.isAllocated()){
+		//if the rhs is not allocated we simply need to free memory
+		//and copy the size
 		if(isAllocated()) free();
-		//allocate new memory if necessary
-		try{
-			allocate(b.getSize());
-		}catch(MemoryAllocationError &error){
-			EXCEPTION_INIT(MemoryAllocationError,"Memory allocation for buffer failed!");
-			EXCEPTION_THROW();
+		setSize(b.getSize());
+	}else{
+		//if the rhs is allocated we need to copy data
+		if(getSize() != b.getSize()){
+			//if the two buffers differ in size we need to allocate new memory
+			if(isAllocated()) free();
+			setSize(b.getSize());
+			try{
+				allocate();
+			}catch(MemoryAllocationError &error){
+				EXCEPTION_INIT(MemoryAllocationError,"Memory allocation for buffer failed!");
+				EXCEPTION_THROW();
+			}
+		}else{
+			//what can happen now is that the buffers had the same size
+			//but this buffer was not allocated yet
+			if(!isAllocated()){
+				try{
+					allocate();
+				}catch(MemoryAllocationError &error){
+					EXCEPTION_INIT(MemoryAllocationError,"Memory allocation for buffer failed!");
+					EXCEPTION_THROW();
+				}
+			}
 		}
-	}
-
-	//copy data - we have to do a range check during copy
-	if(getSize()!=0){
+		//copy data - we have to do a range check during copy
 		for(UInt64 i=0; i<getSize();i++){
 			U value = b[i];
 			if(!TypeRange<T>::checkRange(value)){
@@ -345,6 +377,8 @@ template<typename U> Buffer<T> &Buffer<T>::operator=(const Buffer<U> &b){
 			(*this)[i] = (T)value;
 		}
 	}
+
+
 
 	return *this;
 }
@@ -389,7 +423,7 @@ template<typename U> Buffer<T> &Buffer<T>::operator=(const U &v){
 
 	//now everything is fine can do assignment - like above we do not
 	//need to check the size of the buffer, it must be different from zero
-	for(UInt64 i=0; i<getSize();i++) (*this)[i] = (T)v;
+	for(UInt64 i=0; i<getSize();i++) _data[i] = (T)v;
 
 
 	return *this;
@@ -432,8 +466,12 @@ template<typename T,typename U>
 bool operator==(const Buffer<T> &a,const Buffer<U> &b){
 	if(a.getSize() != b.getSize()) return false;
 
-	for(UInt64 i=0;i<a.getSize();i++){
-		if(a[i] != b[i]) return false;
+	if(a.isAllocated()!=b.isAllocated()) return false;
+
+	if(a.isAllocated() && b.isAllocated()){
+		for(UInt64 i=0;i<a.getSize();i++){
+			if(a[i] != b[i]) return false;
+		}
 	}
 
 	return true;
@@ -442,8 +480,12 @@ bool operator==(const Buffer<T> &a,const Buffer<U> &b){
 template<typename T> bool operator==(const Buffer<T> &a,const Buffer<T> &b){
 	if(a.getSize() != b.getSize()) return false;
 
-	for(UInt64 i=0;i<a.getSize();i++){
-		if(a[i] != b[i]) return false;
+	if(a.isAllocated()!=b.isAllocated()) return false;
+
+	if(a.isAllocated() && b.isAllocated()){
+		for(UInt64 i=0;i<a.getSize();i++){
+			if(a[i] != b[i]) return false;
+		}
 	}
 
 	return true;

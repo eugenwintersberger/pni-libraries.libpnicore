@@ -37,10 +37,49 @@ There are three situations a buffer object must face
 
 \subsection{Instantiation of buffer objects}
 
-Buffers allow the allocation of memory to be posponed to a later point in 
+Buffers allow the allocation of memory to be postponed to a later point in 
 time after their creation. This of coarse has some implications. 
 It is necessary to keep track of a buffers state in every method that 
 can effect the allocated memory. 
+
+The easy way to allocate a buffer is the following
+\begin{verbatim}
+Buffer<UInt16> b(1024);
+\end{verbatim}
+using this constructor memory is allocated right at the time the object is 
+created. 
+If memory allocation should be done latter you can do the following
+\begin{verbatim}
+Buffer<UInt16> b1,b2;
+
+b1.setSize(1024);
+b1.allocate();
+
+//alternatively
+b2.allocate(1024);
+\end{verbatim}
+It is important to note that once a buffer is allocated a call to {\tt
+allocate()} will throw an exception. The same is valid for a call to 
+{\tt setSize()} after the allocation of a buffer. 
+It is necessary to explicitly free a buffer before reallocating it 
+or reseting its size:
+\begin{verbatim}
+Buffer<UInt16> b(1024);
+
+b.allocate(100);  //exception  is thrown
+b.setSize(100);   //exception is thrown
+
+//this will work
+b.free()
+b.setSize(100);
+b.allocate();
+\end{verbatim}
+This sounds maybe a bit unsusual but should force people to really think 
+about memory allocation. 
+The problem with such an approach is that the implementation of the 
+copy constructor and the assignment operator (see below) is a bit tricky. 
+For the copy constructor one can at least assume that one of the objects
+is designed from scratch. 
 
 
 

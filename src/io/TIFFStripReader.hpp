@@ -140,8 +140,10 @@ public:
 		dims[1] = _width;
 
 		//create arrays
+		ArrayShape s(ndims);
+		for (UInt32 d=0;d<s.getRank();d++) s.setDimension(d,dims[d]);
 		for (UInt64 i = 0; i < _nchannels; i++)
-			idata->appendChannel(typename Array<T>::sptr(new Array<T>(ndims, dims)));
+			idata->appendChannel(typename Array<T>::sptr(new Array<T>(s)));
 
 		//loop over all strips
 		for (UInt64 i = 0; i < _nstrips; i++) {

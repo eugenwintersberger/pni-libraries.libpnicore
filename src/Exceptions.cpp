@@ -72,6 +72,14 @@ std::ostream &operator<<(std::ostream &o,const MemoryAccessError &e){
 	return e.print(o);
 }
 
+std::ostream &operator<<(std::ostream &o,const ProcessingError &e){
+	return e.print(o);
+}
+
+std::ostream &operator<<(std::ostream &o,const AssignmentError &e){
+	return e.print(o);
+}
+
 //end of namespace
 }
 }
