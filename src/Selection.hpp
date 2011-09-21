@@ -9,6 +9,11 @@
 namespace pni{
 namespace utils{
 
+//! \brief Selection object
+
+//! This can be used to select a subset of data stored in an array object.
+//!
+
 class Selection{
 private:
 	UInt32 _rank;     //!< rank of the source from which data is selected
