@@ -379,6 +379,14 @@ public:
 		ArrayObject::reset();
 	}
 
+	virtual inline void *getVoidPtr(){
+		return _data.getVoidPtr();
+	}
+
+	virtual inline const void *getVoidPtr() const{
+		return _data.getVoidPtr();
+	}
+
 };
 
 //===============================Constructors and destructors===================================
