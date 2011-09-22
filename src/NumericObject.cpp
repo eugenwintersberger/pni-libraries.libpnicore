@@ -6,6 +6,7 @@
  */
 
 #include "NumericObject.hpp"
+#include "Exceptions.hpp"
 
 
 namespace pni{
@@ -64,6 +65,24 @@ NumericObject &NumericObject::operator=(const NumericObject &o){
 	}
 
 	return *this;
+}
+
+void *NumericObject::getVoidPtr(){
+	EXCEPTION_SETUP("void *NumericObject::getVoidPtr()");
+
+	EXCEPTION_INIT(NotImplementedError,"This method must be implemented by a child class!");
+	EXCEPTION_THROW();
+
+	return NULL;
+}
+
+const void *NumericObject::getVoidPtr() const{
+	EXCEPTION_SETUP("const void *NumericObject::getVoidPtr() const");
+
+	EXCEPTION_INIT(NotImplementedError,"This method must be implemented by a child class!");
+	EXCEPTION_THROW();
+
+	return NULL;
 }
 
 //end of namespace

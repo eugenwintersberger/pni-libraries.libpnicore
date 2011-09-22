@@ -76,6 +76,21 @@ public:
 	//! \return PNITypeID ID value of the type
 	virtual PNITypeID getTypeID() const;
 
+	//! get a pointer to numeric data
+
+	//! This method returns a void pointer to the data stored by the object.
+	//! The pointer can be used to alter the data.
+	//! This method must be implemented by derived classes.
+	//! \return void pointer to data
+	virtual void *getVoidPtr();
+	//! get a pointer to numeric data
+
+	//! This method returns a void pointer to the data stored by the object.
+	//! The pointer can be used only for read only access.
+	//! This method must be implemented by derived classes.
+	//! \return void pointer to data
+	virtual const void *getVoidPtr() const;
+
 	//! assignment operator
 	NumericObject &operator=(const NumericObject &o);
 };
