@@ -155,8 +155,13 @@ int main(int argc,char **argv){
     PlotArray *plotter;
     pni::utils::TIFFImageData::sptr idata;
 
+    if(argc<2){
+    	return 1;
+    }
+
     pni::utils::TIFFFile f;
-    f.setFileName("water_00259.tif");
+    //f.setFileName("water_00259.tif");
+    f.setFileName(String(argv[1]));
     //f.setFileName("mscp03_au_sputter2_00057.tif");
     f.open();
     std::cout<<f<<std::endl;
@@ -166,15 +171,21 @@ int main(int argc,char **argv){
     pni::utils::ArrayObject::sptr a = idata->getChannel(0);
     f.close();
 
+
     std::cout<<*idata<<std::endl;
     std::cout<<*a<<std::endl;
-    pni::utils::UInt16Array &b = *boost::dynamic_pointer_cast<pni::utils::UInt16Array>(a);
-    std::cout<<b<<std::endl;
-    //start with plotting
-	plotter = new PlotArray(a->getShape());
-	plotter->image_plot<pni::utils::UInt16>(a);
-	std::cout<<"finished with plotting!"<<std::endl;
+    plotter = new PlotArray(a->getShape());
 
+    switch(a->getTypeID()){
+    case INT32:
+    	plotter->image_plot<Int32>(a); break;
+    case UINT16:
+    	plotter->image_plot<UInt16>(a); break;
+    default:
+    	std::cerr<<"Unsupported image format!"<<std::endl; break;
+    }
+
+    std::cout<<"finished with plotting!"<<std::endl;
 	delete plotter;
 
     return 0;

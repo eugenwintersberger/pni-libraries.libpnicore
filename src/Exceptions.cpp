@@ -80,6 +80,9 @@ std::ostream &operator<<(std::ostream &o,const AssignmentError &e){
 	return e.print(o);
 }
 
+std::ostream &operator<<(std::ostream &o,const KeyError &e){
+	return e.print(o);
+}
 //end of namespace
 }
 }

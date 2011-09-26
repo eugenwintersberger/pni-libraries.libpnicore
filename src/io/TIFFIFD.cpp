@@ -14,7 +14,7 @@
 namespace pni{
 namespace utils{
 
-
+//------------------------------------------------------------------------------
 TIFFIFD::TIFFIFD() {
 	_idf_offset = 0;
 	_idf_next_offset = 0;
@@ -22,6 +22,7 @@ TIFFIFD::TIFFIFD() {
 	_entry_list.clear();
 }
 
+//------------------------------------------------------------------------------
 TIFFIFD::TIFFIFD(const TIFFIFD &idf){
 	_idf_offset = idf._idf_offset;
 	_idf_next_offset = idf._idf_next_offset;
@@ -29,12 +30,12 @@ TIFFIFD::TIFFIFD(const TIFFIFD &idf){
 	_entry_list = idf._entry_list;
 }
 
+//------------------------------------------------------------------------------
 TIFFIFD::~TIFFIFD() {
-	//std::cerr<<"IFD destructor called!"<<std::endl;
-	//free all memory that has been allocated by the entry list
 	_entry_list.clear();
 }
 
+//------------------------------------------------------------------------------
 TIFFIFD &TIFFIFD::operator=(const TIFFIFD &o){
 	if(this != &o){
 		_idf_offset = o._idf_offset;
@@ -47,43 +48,60 @@ TIFFIFD &TIFFIFD::operator=(const TIFFIFD &o){
 	return *this;
 }
 
+//------------------------------------------------------------------------------
+UInt16 TIFFIFD::getNumberOfEntries() const{
+	return _number_of_idf_entries;
+}
+//------------------------------------------------------------------------------
 bool TIFFIFD::isLastIDF() const {
 	if(_idf_next_offset==0) return true;
 
 	return false;
 }
 
+//------------------------------------------------------------------------------
 Int32 TIFFIFD::getNextOffset() const{
 	return _idf_next_offset;
 }
 
+//------------------------------------------------------------------------------
 Int32 TIFFIFD::getOffset() const {
 	return _idf_offset;
 }
 
+//------------------------------------------------------------------------------
 void TIFFIFD::setOffset(const Int32 &o){
 	_idf_offset = o;
 }
 
+//------------------------------------------------------------------------------
 IFDAbstractEntry::sptr TIFFIFD::operator[](const UInt16 i){
+	EXCEPTION_SETUP("IFDAbstractEntry::sptr TIFFIFD::operator[](const UInt16 i)");
+	if(i>=getNumberOfEntries()){
+		EXCEPTION_INIT(IndexError,"Index exceeds number of IFD entries!");
+		EXCEPTION_THROW();
+	}
 	return _entry_list[i];
 }
 
+//------------------------------------------------------------------------------
 IFDAbstractEntry::sptr TIFFIFD::operator[](const String &n){
+	EXCEPTION_SETUP("IFDAbstractEntry::sptr TIFFIFD::operator[](const String &n)");
 	IFDAbstractEntry::const_iterator iter;
-	IFDAbstractEntry::sptr e;
+	IFDAbstractEntry::sptr entry;
 
 	for(iter = _entry_list.begin(); iter != _entry_list.end();iter++ ){
-		e = *iter;
-		if(e->getName()==n){
-			return e;
+		entry = *iter;
+		if(entry->getName()==n){
+			return entry;
 		}
 	}
 	//std::cerr<<"cannot find entry with name: "<<n<<std::endl;
-	e.reset();
-	return e;
+	EXCEPTION_INIT(KeyError,"IFD entry key ["+n+"] not found in IFD!");
+	EXCEPTION_THROW();
 }
 
+//------------------------------------------------------------------------------
 std::ostream &operator<<(std::ostream &o,const TIFFIFD &idf){
 	o<<"IDF at offset "<<idf._idf_offset<<" with "<<idf._number_of_idf_entries<<" entries"<<std::endl;
 	o<<idf._entry_list.size()<<std::endl;
@@ -127,6 +145,7 @@ std::ostream &operator<<(std::ostream &o,const TIFFIFD &idf){
 	return o;
 }
 
+//------------------------------------------------------------------------------
 std::ifstream &operator>>(std::ifstream &in,TIFFIFD &idf){
 	UInt64 i;
 	UInt16 tag,ttype;

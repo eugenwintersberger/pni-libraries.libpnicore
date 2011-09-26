@@ -73,6 +73,9 @@ public:
 	//! overloaded assignment operator
 	TIFFIFD &operator = (const TIFFIFD &o);
 
+	//! get number of IFD entries
+	virtual UInt16 getNumberOfEntries() const;
+
 	//! return true if this is the last IFD
 	virtual bool isLastIDF() const;
 	//! return the offset of the next IFD in the file
@@ -95,7 +98,7 @@ public:
 	//! operator to obtain an entry by its name
 
 	//! This operator works only for entries which are defined in the
-	//! TIFF specification. If the requrested entry is not available
+	//! TIFF specification. If the requested entry is not available
 	//! an exception will be raised.
 
 	//! \param n a string with the name of the entry

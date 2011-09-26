@@ -5,7 +5,8 @@ Import("build_env")
 
 tiffsources = ["TIFFReader.cpp","TIFFFile.cpp",
            "TIFFIFD.cpp","TIFFIFDAbstractEntry.cpp","TIFFStandard.cpp",
-           "TIFFIFDEntry.cpp","TIFFImageData.cpp","TIFFStripReader.cpp"]
+           "TIFFIFDEntry.cpp","TIFFImageData.cpp","TIFFStripReader.cpp",
+           "TIFFExceptions.cpp"]
            
 cbfsources = ["Reader.cpp","CBFReader.cpp","strutils.cpp","CIFBinHeader.cpp",
            "PCIFBinHeader.cpp","CBFBinStreamReader.cpp"]

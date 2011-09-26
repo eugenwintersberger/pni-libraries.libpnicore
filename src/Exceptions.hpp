@@ -216,6 +216,15 @@ public:
 	friend std::ostream &operator<<(std::ostream &o,const IndexError &e);
 };
 
+class KeyError: public Exception{
+public:
+	KeyError():Exception("KeyError"){}
+	KeyError(const String &i,const String &d):Exception("KeyError",i,d){}
+	virtual ~KeyError(){}
+
+	friend std::ostream &operator<<(std::ostream &o,const KeyError &e);
+};
+
 //! \ingroup Exceptions
 //! \brief indicates file IO problems
 //! Raised typically in case of File IO problems

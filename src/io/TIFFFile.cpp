@@ -12,6 +12,7 @@
 
 #include "TIFFFile.hpp"
 #include "TIFFStripReader.hpp"
+#include "TIFFExceptions.hpp"
 
 namespace pni{
 namespace utils{
@@ -141,70 +142,100 @@ std::ostream &operator<<(std::ostream &o,const TIFFFile &f){
 }
 
 TIFFImageData::sptr TIFFFile::getData(UInt64 i) const {
+	EXCEPTION_SETUP("TIFFImageData::sptr TIFFFile::getData(UInt64 i) const");
 	UInt64 uibuffer;
 	IFDAbstractEntry::sptr e;
 	TIFFIFD &idf = *(_ifd_list[i]);
 	TIFFStripReader reader;
 
 	//need to determine the dimension of the image
-	e = idf["ImageWidth"];
+	try{
+		e = idf["ImageWidth"];
+	}catch(KeyError &error){
+		//raise an exceptions if the ImageWidth entry could not be found
+		EXCEPTION_INIT(TIFFReadError,"Error reading TIFF file - ImageWidth entry not found!");
+		EXCEPTION_THROW();
+	}
 	switch(e->getEntryTypeCode()){
 	case IDFE_SHORT:
 		uibuffer = (*boost::dynamic_pointer_cast<ShortEntry>(e))[0]; break;
 	case IDFE_LONG:
 		uibuffer = (*boost::dynamic_pointer_cast<LongEntry>(e))[0]; break;
 	default:
-		std::cerr<<"Unknown image width!"<<std::endl;
-		uibuffer = 0;
+		//raise an exception if the type of the IFD etnry is not known
+		EXCEPTION_INIT(TypeError,"Unknown IDF entry type!");
+		EXCEPTION_THROW();
 	}
 	reader.setWidth(uibuffer);
 
-	e = idf["ImageLength"];
+
+	try{
+		e = idf["ImageLength"];
+	}catch(KeyError &error){
+		EXCEPTION_INIT(TIFFReadError,"Error reading TIFF file - ImageLength entry not found!");
+		EXCEPTION_THROW();
+	}
 	switch(e->getEntryTypeCode()){
 	case IDFE_SHORT:
 		uibuffer = (*boost::dynamic_pointer_cast<ShortEntry>(e))[0]; break;
 	case IDFE_LONG:
 		uibuffer = (*boost::dynamic_pointer_cast<LongEntry>(e))[0];break;
 	default:
-		std::cerr<<"Unkown image length!"<<std::endl;
-		uibuffer = 0;
+		EXCEPTION_INIT(TypeError,"Unknown IDF entry type!");
+		EXCEPTION_THROW();
+		break;
 	}
 	reader.setHeight(uibuffer);
 
 	//next task is to determine the data type
 	//determine the Bits per Sample
-	e = idf["BitsPerSample"];
+	try{
+		e = idf["BitsPerSample"];
+	}catch(KeyError &error){
+		EXCEPTION_INIT(TIFFReadError,"Error reading TIFF file - BitsPerSample entry not found!");
+		EXCEPTION_THROW();
+	}
 	UInt16 pbs = (*boost::dynamic_pointer_cast<ShortEntry>(e))[0];
 
 	//determine the data type used to store the data
-	e = idf["SampleFormat"];
-	UInt16 dtype;
-	if(e != NULL){
+	UInt16 dtype = 1;
+	try{
+		e = idf["SampleFormat"];
 		dtype = (*boost::dynamic_pointer_cast<ShortEntry>(e))[0];
-	}else{
+	}catch(KeyError &error){
+		//do nothing here
 		dtype = 1;
 	}
 
 	//determine the number of samples per image - in other words
 	//determines the number of channels
-	UInt16 ns;
-	e = idf["SamplesPerPixel"];
-	ns = 1;
-	if(e!=NULL) ns = (*boost::dynamic_pointer_cast<ShortEntry>(e))[0];
+	UInt16 ns = 1;
+	try{
+		e = idf["SamplesPerPixel"];
+		ns = (*boost::dynamic_pointer_cast<ShortEntry>(e))[0];
+	}catch(KeyError &error){
+		ns = 1;
+	}
 	reader.setNumberOfChannels(ns);
 
 	//determine the number of rows per strip
 	UInt16 rps = 1;
-	e = idf["RowsPerStrip"];
-	if(e!=NULL){
+	try{
+		e = idf["RowsPerStrip"];
 		switch(e->getEntryTypeCode()){
 		case IDFE_SHORT:
 			rps = (*boost::dynamic_pointer_cast<ShortEntry>(e))[0]; break;
 		case IDFE_LONG:
 			rps = (*boost::dynamic_pointer_cast<LongEntry>(e))[0]; break;
 		default:
-			std::cerr<<"Number of rows per strip is of unknown type!"<<std::endl;
+			EXCEPTION_INIT(TypeError,"Unknown IFD entry type!");
+			EXCEPTION_THROW();
+			break;
 		}
+	}catch(KeyError &error){
+		//EXCEPTION_INIT(TIFFReadError,"Error reading TIFF file - RowsPerStrip entry not found!");
+		//EXCEPTION_THROW();
+		rps = reader.getHeight();
 	}
 
 	//from rows per strip and the number image height dim[0] one can determine
@@ -214,9 +245,11 @@ TIFFImageData::sptr TIFFFile::getData(UInt64 i) const {
 	reader.setNumberOfStrips((UInt64)nstrips);
 
 	//in the next step we need to determine the strip offsets
-	e = idf["StripOffsets"];
-	if(e==NULL){
-		//raise an exception if there are no strip offsets
+	try{
+		e = idf["StripOffsets"];
+	}catch(KeyError &error){
+		EXCEPTION_INIT(TIFFReadError,"Error reading TIFF file - StripOffsets entry not found!");
+		EXCEPTION_THROW();
 	}
 	for(UInt64 i=0;i<(UInt64)nstrips;i++){
 		switch(e->getEntryTypeCode()){
@@ -225,16 +258,21 @@ TIFFImageData::sptr TIFFFile::getData(UInt64 i) const {
 		case IDFE_LONG:
 			uibuffer = (*boost::dynamic_pointer_cast<LongEntry>(e))[i]; break;
 		default:
-			std::cerr<<"Strip offset uses unknown type!"<<std::endl;
+			EXCEPTION_INIT(TypeError,"Unknown IFD entry type!");
+			EXCEPTION_THROW();
+			break;
 		}
 		reader.setStripOffset(i,uibuffer);
 	}
 
 	//finally we need the byte count for each strip
-	e = idf["StripByteCounts"];
-	if(e==NULL){
-		//raise an exception here
+	try{
+		e = idf["StripByteCounts"];
+	}catch(KeyError &error){
+		EXCEPTION_INIT(TIFFReadError,"Error reading TIFF file - StripByteCounts entry not found!");
+		EXCEPTION_THROW();
 	}
+
 	for (UInt64 i = 0; i < (UInt64)nstrips; i++) {
 		switch (e->getEntryTypeCode()) {
 		case IDFE_SHORT:
@@ -244,8 +282,9 @@ TIFFImageData::sptr TIFFFile::getData(UInt64 i) const {
 			uibuffer = (*boost::dynamic_pointer_cast<LongEntry>(e))[i];
 			break;
 		default:
-			std::cerr << "Strip offset uses unknown type!" << std::endl;
-			//raise an exception here
+			EXCEPTION_INIT(TypeError,"Unknown IFD entry type!");
+			EXCEPTION_THROW();
+			break;
 		}
 		reader.setStripByteCount(i, uibuffer);
 	}
@@ -264,8 +303,9 @@ TIFFImageData::sptr TIFFFile::getData(UInt64 i) const {
 		case 2: //signed data
 			reader.read<Int8>((std::ifstream &)_ifstream,idata); break;
 		default:
-			std::cerr<<"unsupported sample format for 8Bit samples!"<<std::endl;
-			//raise an exception here
+			EXCEPTION_INIT(TypeError,"Unsupported sample format for 8Bit samples!");
+			EXCEPTION_THROW();
+			break;
 		}
 		break;
 	case 16:
@@ -275,8 +315,9 @@ TIFFImageData::sptr TIFFFile::getData(UInt64 i) const {
 		case 2: //signed data
 			reader.read<Int16>((std::ifstream &)_ifstream,idata); break;
 		default:
-			std::cerr<<"unsupported sample format for 16 bit samples!"<<std::endl;
-			//raise an exception here
+			EXCEPTION_INIT(TypeError,"Unsupported sample format for 16Bit samples!");
+			EXCEPTION_THROW();
+			break;
 		}
 		break;
 	case 32:
@@ -288,8 +329,9 @@ TIFFImageData::sptr TIFFFile::getData(UInt64 i) const {
 		case 3: //float data
 			reader.read<Float32>((std::ifstream &)_ifstream,idata); break;
 		default:
-			std::cerr<<"unsupported sample format for 32Bit samples!"<<std::endl;
-			//raise an exception here
+			EXCEPTION_INIT(TypeError,"Unsupported sample format for 32Bit samples!");
+			EXCEPTION_THROW();
+			break;
 		}
 		break;
 	case 64:
@@ -301,12 +343,14 @@ TIFFImageData::sptr TIFFFile::getData(UInt64 i) const {
 		case 3:
 			reader.read<Float64>((std::ifstream &)_ifstream,idata); break;
 		default:
-			std::cerr<<"unsupported sample format for 64Bit samples!"<<std::endl;
-			//raise an exception here
+			EXCEPTION_INIT(TypeError,"Unsupported sample format for 64Bit samples!");
+			EXCEPTION_THROW();
+			break;
 		}
 		break;
 	default:
 		std::cerr<<"unsupported number of bits per sample!"<<std::endl;
+		break;
 		//raise an exception here
 	}
 
