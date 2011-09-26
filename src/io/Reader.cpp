@@ -61,12 +61,21 @@ void Reader::setFileName(const char *s){
 	setFileName(std::string(s));
 }
 
-DataObject *Reader::read(){
+DataObject::sptr Reader::read(){
 	EXCEPTION_SETUP("void Reader::read(DataObject &o)");
 	EXCEPTION_INIT(NotImplementedError,"This method must be overridden by child classes!");
 	EXCEPTION_THROW();
+
+	return DataObject::sptr(new DataObject());
 }
 
+DataObject::sptr Reader::read(const UInt64 &i){
+	EXCEPTION_SETUP("void Reader::read(DataObject &o)");
+	EXCEPTION_INIT(NotImplementedError,"This method must be overridden by child classes!");
+	EXCEPTION_THROW();
+
+	return DataObject::sptr(new DataObject());
+}
 
 
 }}

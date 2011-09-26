@@ -32,11 +32,11 @@ CBFReader::~CBFReader(){
     if(_binheader!=NULL) delete _binheader;
 }
 
-DataObject *CBFReader::read(){
+DataObject::sptr CBFReader::read(){
     UInt8 byte;
     String linebuffer;
     String key,value;
-    ArrayObject *v;
+    ArrayObject::sptr v;
 
     while(!_istream.eof()){
         byte = _istream.get();
@@ -87,7 +87,7 @@ DataObject *CBFReader::read(){
             //factory for the reader
         	//std::cout<<"create the binary stream reader!"<<std::endl;
         	CBFBinStreamReader *reader = _binheader->createBinaryReader();
-        	v = (ArrayObject *)_binheader->createArray();
+        	v.reset((ArrayObject *)_binheader->createArray());
         	v->setName(_fname);
         	v->setDescription("Dectris CBF detector data");
 
@@ -110,7 +110,11 @@ DataObject *CBFReader::read(){
         }
 
     }
-    return (DataObject *)v;
+    return boost::dynamic_pointer_cast<DataObject>(v);
+}
+
+DataObject::sptr CBFReader::read(const UInt64 &i){
+	return read();
 }
 
 

@@ -38,16 +38,20 @@ void TIFFReader::setFileName(const char *n){
 	_file.setFileName(n);
 }
 
-DataObject *TIFFReader::read(){
+DataObject::sptr TIFFReader::read(){
 	TIFFImageData::sptr idata;
 
 	//read the first image from the stack
 	idata = _file.getData(0);
 
-	//obtain the first channel from the first image
-	ArrayObject::sptr aptr = idata->getChannel(0);
+	return boost::dynamic_pointer_cast<DataObject>(idata->getChannel(0));
+}
 
-	return (DataObject *)(aptr.get());
+DataObject::sptr TIFFReader::read(const UInt64 &i){
+	TIFFImageData::sptr idata;
+
+	idata = _file.getData(i);
+	return boost::dynamic_pointer_cast<DataObject>(idata->getChannel(0));
 }
 
 

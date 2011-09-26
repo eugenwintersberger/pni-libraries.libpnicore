@@ -151,14 +151,14 @@ template<typename T> void PlotArray::image_plot(const ArrayObject *data){
 
 int main(int argc,char **argv){
     CBFReader reader;     //the reader object
-    ArrayObject *v ;  //shared pointer to a data object (most general object to represent data)
+    ArrayObject::sptr v ;  //shared pointer to a data object (most general object to represent data)
     PlotArray *plotter;
     ArrayShape shape; //shared pointer to an ArrayShape object
 
     //reader.setFileName("LAOS3_05461.cbf"); //set the name of the file to read
     reader.setFileName("org_00009.cbf");
     reader.open();                         //open the file
-    v = (ArrayObject *)reader.read();                     //read data
+    v = boost::dynamic_pointer_cast<ArrayObject>(reader.read());                     //read data
     reader.close();                        //close the file
 
     std::cout<<"finished with reading data"<<std::endl;
@@ -192,7 +192,7 @@ int main(int argc,char **argv){
 
     if(dtid == INT32){
     	//For Int32 data convert the ArrayObject ot an Int32 Array type
-    	Int32Array *a = (Int32Array *)v;
+    	Int32Array::sptr a = boost::dynamic_pointer_cast<Int32Array>(v);
 
     	//call some array methods just to see if they work
     	std::cout<<a->Min()<<" "<<a->Max()<<std::endl;
@@ -203,13 +203,13 @@ int main(int argc,char **argv){
 
     	std::cout<<(a->getShape())<<std::endl;
     	plotter = new PlotArray(a->getShape());
-    	plotter->image_plot<int>(a);
+    	plotter->image_plot<int>(a.get());
     	std::cout<<"finished with plotting!"<<std::endl;
 
 
     }else if(dtid == INT16){
     	std::cout<<"data is an Int16Array()"<<std::endl;
-    	Int16Array *a = (Int16Array *)v;
+    	Int16Array::sptr a = boost::dynamic_pointer_cast<Int16Array>(v);
 
     	std::cout<<a->Min()<<" "<<a->Max()<<std::endl;
     	std::cout<<a->Sum()<<std::endl;

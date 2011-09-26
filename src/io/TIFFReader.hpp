@@ -37,7 +37,8 @@ public:
 
 	virtual void open();
 	virtual void close();
-	virtual DataObject *read();
+	virtual DataObject::sptr read();
+	virtual DataObject::sptr read(const UInt64 &i);
 };
 
 //end of namespace
