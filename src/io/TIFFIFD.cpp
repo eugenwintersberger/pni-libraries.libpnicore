@@ -96,9 +96,8 @@ IFDAbstractEntry::sptr TIFFIFD::operator[](const String &n){
 			return entry;
 		}
 	}
-	//std::cerr<<"cannot find entry with name: "<<n<<std::endl;
-	EXCEPTION_INIT(KeyError,"IFD entry key ["+n+"] not found in IFD!");
-	EXCEPTION_THROW();
+	KeyError error(ExIssuer,"IFD entry key ["+n+"] not found in IFD!");
+	throw error;
 }
 
 //------------------------------------------------------------------------------
