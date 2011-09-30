@@ -1,9 +1,32 @@
 /*
- * Scalar.hpp
+ * Declaration of class template Scalar<T>
  *
- *  Created on: Jun 9, 2011
- *      Author: eugen
+ * (c) Copyright 2011 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
+ *
+ * This file is part of libpniutils.
+ *
+ * libpniutils is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * libpniutils is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with libpniutils.  If not, see <http://www.gnu.org/licenses/>.
+ *************************************************************************
+ *
+ * Scalar<T> represents a scalar numeric value of a particular type along
+ * with basic arithmetic operations.
+ *
+ * Created on: Jun 9, 2011
+ *     Author: Eugen Wintersberger
+ *
  */
+
 
 #ifndef SCALAR_HPP_
 #define SCALAR_HPP_

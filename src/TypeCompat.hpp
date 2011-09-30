@@ -1,4 +1,33 @@
 /*
+ * Declaration of class template TypeCompat
+ *
+ * (c) Copyright 2011 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
+ *
+ * This file is part of libpniutils.
+ *
+ * libpniutils is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * libpniutils is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with libpniutils.  If not, see <http://www.gnu.org/licenses/>.
+ *************************************************************************
+ *
+ * Template provides information if tow types are assignable and if they can
+ * be used in unary arithmetic operations.
+ *
+ * Created on: Sep 9, 2011
+ *     Author: Eugen Wintersberger
+ *
+ */
+
+/*
  * TypeCompat.hpp
  *
  *  Created on: Sep 8, 2011
@@ -16,8 +45,8 @@ namespace utils{
 
 template<typename A,typename B> class TypeCompat{
 public:
-	static const bool isAssignable = true;
-	static const bool isUnaryACompat = true;
+	static const bool isAssignable = true;   //can be assigned
+	static const bool isUnaryACompat = true; //can be used for unary arithmetic operations
 };
 
 #define SET_TYPE_COMPATABILITY(A,B,ASS,UAC)\
