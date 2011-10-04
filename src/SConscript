@@ -3,8 +3,8 @@ Import("build_env")
 
 
 #----------------------Building object files------------------------------------
-source_list = ["ScalarObject.cpp","Scalar.cpp","BufferObject.cpp",
-               "ArrayObject.cpp","Array.cpp","ArrayShape.cpp","Exceptions.cpp",
+source_list = ["ScalarObject.cpp","BufferObject.cpp",
+               "ArrayObject.cpp","ArrayShape.cpp","Exceptions.cpp",
                "DataObject.cpp","NumericObject.cpp","Index.cpp","Selection.cpp","ComplexUtils.cpp"]
                
 #build static and shared objects               

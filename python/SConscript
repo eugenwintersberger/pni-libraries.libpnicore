@@ -1,0 +1,12 @@
+from distutils import sysconfig
+Import("python_build_env")
+
+
+python_build_env.Append(LIBS=["pniutils"])
+python_build_env.Append(LIBPATH=["../src"])
+
+python_build_env.Append(LIBS=["boost_python","boost_python-py27"])
+python_build_env.Append(CPPPATH=[sysconfig.get_python_inc()])
+
+module = python_build_env.SharedLibrary("pniutils",["DataObject.cpp"],SHLIBPREFIX="")
+python_build_env.Alias("all",[module])

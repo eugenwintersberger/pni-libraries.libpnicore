@@ -77,7 +77,7 @@ env.Replace(CXX = env["CXX"])
 
 
 #set default compiler flags
-env.Append(CXXFLAGS = ["-Wall","-g"])
+env.Append(CXXFLAGS = ["-Wall"])
 env.Append(LIBPATH=path.join(env["BOOSTPREFIX"],"lib"))
 env.Append(CPPPATH=path.join(env["BOOSTPREFIX"],"include"))
 print env["CPPPATH"]
@@ -99,6 +99,7 @@ else:
 
 
 test_build_env = build_env.Clone()
+python_build_env = build_env.Clone()
 #the next line is necessary for the linker on Debian system - this needs 
 #a bit more information
 if os.name == "posix":
@@ -106,10 +107,12 @@ if os.name == "posix":
 
 Export("build_env")
 Export("test_build_env")
+Export("python_build_env")
 
 
 #build
 SConscript(["src/SConscript"])
 SConscript(["test/SConscript","debian/SConscript"])
 SConscript(["doc/SConscript"])
+SConscript(["python/SConscript"])
 

@@ -1,15 +1,38 @@
 /*
- * TIFFStandard.cpp
+ * Implementation of class TIFFStandard
  *
- *  Created on: Jun 17, 2011
- *      Author: Eugen Wintersberger
+ * (c) Copyright 2011 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
+ *
+ * This file is part of libpniutils.
+ *
+ * libpniutils is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * libpniutils is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with libpniutils.  If not, see <http://www.gnu.org/licenses/>.
+ *************************************************************************
+ *
+ * Implementation of class TIFFStandard.
+ *
+ * Created on: Jun 17, 2011
+ *     Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
+ *
  */
+
 
 #include "TIFFStandard.hpp"
 
 namespace pni{
 namespace utils{
 
+//------------------------------------------------------------------------------
 TIFFStandard::TIFFStandard(){
 	_tifftags[254] = String("NewSubfileType");
 	_tifftags[255] = String("SubfileType");
@@ -104,10 +127,13 @@ TIFFStandard::TIFFStandard(){
 	_phinttags[8] = String("CIELab");
 }
 
+//------------------------------------------------------------------------------
 TIFFStandard::~TIFFStandard(){
 
 }
 
+
+//------------------------------------------------------------------------------
 String TIFFStandard::getTagName(const UInt16 tid){
 	if(_tifftags.count(tid)){
 		return _tifftags[tid];
@@ -116,6 +142,7 @@ String TIFFStandard::getTagName(const UInt16 tid){
 	}
 }
 
+//------------------------------------------------------------------------------
 String TIFFStandard::getCompression(const UInt16 cid){
 	if(_comptags.count(cid)){
 		return String(_comptags[cid]);
@@ -124,6 +151,7 @@ String TIFFStandard::getCompression(const UInt16 cid){
 	}
 }
 
+//------------------------------------------------------------------------------
 String TIFFStandard::getPhotometricInterpretation(const UInt16 pid){
 	if(_phinttags.count(pid)){
 		return String(_phinttags[pid]);
@@ -132,6 +160,7 @@ String TIFFStandard::getPhotometricInterpretation(const UInt16 pid){
 	}
 }
 
+//------------------------------------------------------------------------------
 static TIFFStandard gTIFFStandard;
 
 //end of namespace

@@ -83,7 +83,7 @@ public:
 
 	//! Returns the name of the object.
 	//! \return object name
-	virtual const String &getName() const;
+	virtual String getName() const;
 
 	//! set description
 
@@ -95,7 +95,7 @@ public:
 
 	//! Gets the description of the object.
 	//! \return object description
-	virtual const String &getDescription() const;
+	virtual String getDescription() const;
 
 	//! assignment operator
 

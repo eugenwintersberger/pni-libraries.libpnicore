@@ -63,7 +63,7 @@ void DataObject::setName(const std::string &n){
 	_name = n;
 }
 
-const String &DataObject::getName() const{
+String DataObject::getName() const{
 	return _name;
 }
 
@@ -71,7 +71,7 @@ void DataObject::setDescription(const String &d){
 	_description = d;
 }
 
-const String &DataObject::getDescription() const{
+String DataObject::getDescription() const{
 	return _description;
 }
 
