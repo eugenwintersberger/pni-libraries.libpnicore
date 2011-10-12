@@ -291,6 +291,10 @@ public:
 		return (void *)(&_value);
 	}
 
+	virtual const void *getVoidPtr() const {
+		return (const void *)(&_value);
+	}
+
 	//return the type numeric ID of the Scalar<T> object
 	virtual PNITypeID getTypeID() const{
 		return PNITypeInfo<T>::TypeID;

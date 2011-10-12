@@ -94,6 +94,7 @@ public:
 
 	//! get void pointer to the data value
 	virtual void *getVoidPtr(){ return NULL; }
+	virtual const void *getVoidPtr() const {return NULL;}
 };
 
 
