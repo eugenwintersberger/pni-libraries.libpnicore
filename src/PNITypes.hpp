@@ -61,6 +61,9 @@ typedef std::complex<long double> Complex128; //!< 128Bit complex floating point
 
 typedef std::string String; //!< String type
 
+typedef UInt8 Binary; //!< data type for binary data
+typedef bool Bool;    //!< data type for boolean expressions
+
 
 //! type codes for PNI data types
 enum PNITypeID {NONE,   //!< no data type
@@ -78,8 +81,21 @@ enum PNITypeID {NONE,   //!< no data type
 	            COMPLEX32,  //!< 32Bit IEEE floating point complex
 	            COMPLEX64,  //!< 64Bit IEEE floating point complex
 	            COMPLEX128, //!< 128Bit IEEE floating point complex
-	            STRING      //!< String type
+	            STRING,      //!< String type
+	            BINARY,      //!< binary data
+	            BOOLEAN      //!< boolean data
 				};
+
+//! classes of data types provided by the PNI utility library
+enum PNITypeClass { NONETYPE,       //!< unspecified type
+	                INTEGERTYPE,    //!< integer type
+ 	                FLOATTYPE,      //!< floating point type
+	                BINARYTYPE,     //!< binary data type
+	                BOOLTYPE,       //!< boolean data type
+	                COMPLEXTYPE     //!< complex data type
+				    };
+
+
 
 //! @}
 //end of namespace

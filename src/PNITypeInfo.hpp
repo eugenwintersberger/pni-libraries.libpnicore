@@ -35,6 +35,7 @@
 #include <limits>
 
 #include "PNITypes.hpp"
+#include "PNITypeIDMap.hpp"
 
 namespace pni{
 namespace utils{
@@ -52,11 +53,12 @@ public:
 	//! a type used to define objects
 	typedef T Type;
 	//! ID of the type
-	static const PNITypeID TypeID = NONE;
+	static const PNITypeID    TypeID    = NONE;
+	static const PNITypeClass TypeClass = NONETYPE;
 	//! size of the type in bytes
-	static const size_t ByteSize = sizeof(T);
+	static const size_t       ByteSize  = sizeof(T);
 	//! sign flag - tells if the type is signed
-	static const bool isSigned = false;
+	static const bool         isSigned  = false;
 
 	//! returns true if a value is negative
 
@@ -87,9 +89,10 @@ public:
 template<> class PNITypeInfo<Int8>{
 public:
 	typedef Int8 Type; //!< type
-	static const PNITypeID TypeID = INT8;  //!< typecode
-	static const size_t ByteSize = sizeof(Int8); //!< size in memory
-	static const bool isSigned = true;    //!< type supports signed values
+	static const PNITypeID    TypeID    = INT8;  //!< typecode
+	static const PNITypeClass TypeClass = INTEGERTYPE;
+	static const size_t       ByteSize  = sizeof(Int8); //!< size in memory
+	static const bool         isSigned  = true;    //!< type supports signed values
 
 	//! return minimum value of the Int8 type
 	static Int8 min(){
@@ -108,9 +111,10 @@ public:
 template<> class PNITypeInfo<UInt8>{
 public:
 	typedef UInt8 Type; //!< type
-	static const PNITypeID TypeID = UINT8; //!< typecode
-	static const size_t ByteSize = sizeof(UInt8); //!< size in bytes
-	static const bool isSigned = false; //!< types does not support signed values
+	static const PNITypeID    TypeID    = UINT8; //!< typecode
+	static const PNITypeClass TypeClass = INTEGERTYPE;
+	static const size_t       ByteSize  = sizeof(UInt8); //!< size in bytes
+	static const bool         isSigned  = false; //!< types does not support signed values
 
 	//! return the minimum value of the UInt8 type
 	static UInt8 min(){
@@ -129,9 +133,10 @@ public:
 template<> class PNITypeInfo<Int16>{
 public:
 	typedef Int16 Type; //!< type
-	static const PNITypeID TypeID = INT16; //!< typecode
-	static const size_t ByteSize = sizeof(Int16); //!< size in bytes
-	static const bool isSigned = true; //!< type supports signed values
+	static const PNITypeID    TypeID    = INT16; //!< typecode
+	static const PNITypeClass TypeClass = INTEGERTYPE;
+	static const size_t       ByteSize  = sizeof(Int16); //!< size in bytes
+	static const bool         isSigned  = true; //!< type supports signed values
 
 	//! return the minimum value of the Int16 type
 	static Int16 min(){
@@ -149,9 +154,10 @@ public:
 template<> class PNITypeInfo<UInt16>{
 public:
 	typedef UInt16 Type; //!< type
-	static const PNITypeID TypeID = UINT16; //!< typecode
-	static const size_t ByteSize = sizeof(UInt16); //!< size in bytes
-	static const bool isSigned = false; //!< type does not support signed values
+	static const PNITypeID    TypeID    = UINT16; //!< typecode
+	static const PNITypeClass TypeClass = INTEGERTYPE;
+	static const size_t       ByteSize  = sizeof(UInt16); //!< size in bytes
+	static const bool         isSigned  = false; //!< type does not support signed values
 
 	//! return the minimum value of the UInt16 type
 	static UInt16 min(){
@@ -169,9 +175,10 @@ public:
 template<> class PNITypeInfo<Int32>{
 public:
 	typedef Int32 Type; //!< type
-	static const PNITypeID TypeID = INT32; //!< typecode
-	static const size_t ByteSize = sizeof(Int32); //!< size in bytes
-	static const bool isSigned = true; //!< type supports signed values
+	static const PNITypeID    TypeID    = INT32; //!< typecode
+	static const PNITypeClass TypeClass = INTEGERTYPE; //!< type class
+	static const size_t       ByteSize  = sizeof(Int32); //!< size in bytes
+	static const bool         isSigned  = true; //!< type supports signed values
 
 	//! return the minimum value of the Int32 type
 	static Int32 min(){
@@ -189,9 +196,10 @@ public:
 template<> class PNITypeInfo<UInt32>{
 public:
 	typedef UInt32 Type; //!< type
-	static const PNITypeID TypeID = UINT32; //!< typecode
-	static const size_t ByteSize = sizeof(UInt32); //!< size in bytes
-	static const bool isSigned = false; //!< type does not support signed values
+	static const PNITypeID    TypeID    = UINT32; //!< typecode
+	static const PNITypeClass TypeClass = INTEGERTYPE;
+	static const size_t       ByteSize  = sizeof(UInt32); //!< size in bytes
+	static const bool         isSigned  = false; //!< type does not support signed values
 
 	//! return the minimum value of the UInt32 type
 	static UInt32 min(){
@@ -209,9 +217,10 @@ public:
 template<> class PNITypeInfo<Int64>{
 public:
 	typedef Int64 Type; //!< type
-	static const PNITypeID TypeID = INT64; //!< typecode
-	static const size_t ByteSize = sizeof(Int64); //!< size in bytes
-	static const bool isSigned = true; //!< type supports signed values
+	static const PNITypeID    TypeID    = INT64; //!< typecode
+	static const PNITypeClass TypeClass = INTEGERTYPE;
+	static const size_t       ByteSize  = sizeof(Int64); //!< size in bytes
+	static const bool         isSigned  = true; //!< type supports signed values
 
 	//! return the minimum value of the Int64 type
 	static Int64 min(){
@@ -229,9 +238,10 @@ public:
 template<> class PNITypeInfo<UInt64>{
 public:
 	typedef UInt64 Type; //!< type
-	static const PNITypeID TypeID = UINT64; //!< typecode
-	static const size_t ByteSize = sizeof(UInt64); //!< size in bytes
-	static const bool isSigned = false; //!< type does not support signed values
+	static const PNITypeID    TypeID    = UINT64; //!< typecode
+	static const PNITypeClass TypeClass = INTEGERTYPE;
+	static const size_t       ByteSize  = sizeof(UInt64); //!< size in bytes
+	static const bool         isSigned  = false; //!< type does not support signed values
 
 	//! return the minimum value of the UInt64 type
 	static UInt64 min(){
@@ -249,9 +259,10 @@ public:
 template<> class PNITypeInfo<Float32>{
 public:
 	typedef Float32 Type; //!< type
-	static const PNITypeID TypeID = FLOAT32; //!< typecode
-	static const size_t ByteSize = sizeof(Float32); //!< size in bytes
-	static const bool isSigned = true; //!< type supports signed values
+	static const PNITypeID    TypeID    = FLOAT32; //!< typecode
+	static const PNITypeClass TypeClass = FLOATTYPE;
+	static const size_t       ByteSize  = sizeof(Float32); //!< size in bytes
+	static const bool         isSigned  = true; //!< type supports signed values
 
 	//! return the minimum value of the Float32 type
 	static Float32 min(){
@@ -269,9 +280,10 @@ public:
 template<> class PNITypeInfo<Float64>{
 public:
 	typedef Float64 Type; //!< type
-	static const PNITypeID TypeID = FLOAT64; //!< typecode
-	static const size_t ByteSize = sizeof(Float64); //!< size in bytes
-	static const bool isSigned = true; //!< type supports signed values
+	static const PNITypeID    TypeID    = FLOAT64; //!< typecode
+	static const PNITypeClass TypeClass = FLOATTYPE;
+	static const size_t       ByteSize  = sizeof(Float64); //!< size in bytes
+	static const bool         isSigned  = true; //!< type supports signed values
 
 	//! return the minimum value of the Float64 type
 	static Float64 min(){
@@ -289,9 +301,10 @@ public:
 template<> class PNITypeInfo<Float128>{
 public:
 	typedef Float128 Type; //!< type
-	static const PNITypeID TypeID = FLOAT128; //!< typecode
-	static const size_t ByteSize = sizeof(Float128); //!< size in bytes
-	static const bool isSigned = true; //!< type supports signed values
+	static const PNITypeID    TypeID    = FLOAT128; //!< typecode
+	static const PNITypeClass TypeClass = FLOATTYPE;
+	static const size_t       ByteSize  = sizeof(Float128); //!< size in bytes
+	static const bool         isSigned  = true; //!< type supports signed values
 
 	//! return the minimum value of the Float128 type
 	static Float128 min(){
@@ -309,9 +322,10 @@ public:
 template<> class PNITypeInfo<Complex32>{
 public:
 	typedef Complex32 Type; //!< type
-	static const PNITypeID TypeID = COMPLEX32; //!< typecode
-	static const size_t ByteSize = sizeof(Complex32); //!< size in bytes
-	static const bool isSigned = true; //!< type supports signed values
+	static const PNITypeID    TypeID    = COMPLEX32; //!< typecode
+	static const PNITypeClass TypeClass = COMPLEXTYPE;
+	static const size_t       ByteSize  = sizeof(Complex32); //!< size in bytes
+	static const bool         isSigned  = true; //!< type supports signed values
 
 	//! return the minimum value of the Complex32 type
 	static Complex32 min(){
@@ -331,9 +345,10 @@ public:
 template<> class PNITypeInfo<Complex64>{
 public:
 	typedef Complex64 Type; //!< type
-	static const PNITypeID TypeID = COMPLEX64; //!< typecode
-	static const size_t ByteSize = sizeof(Complex64); //!< size in bytes
-	static const bool isSigned = true; //!< type supports signed values
+	static const PNITypeID    TypeID    = COMPLEX64; //!< typecode
+	static const PNITypeClass TypeClass = COMPLEXTYPE;
+	static const size_t       ByteSize  = sizeof(Complex64); //!< size in bytes
+	static const bool         isSigned  = true; //!< type supports signed values
 
 	//! return the minimum value of the Complex64 type
 	static Complex64 min(){
@@ -353,9 +368,10 @@ public:
 template<> class PNITypeInfo<Complex128>{
 public:
 	typedef Complex128 Type; //!< type
-	static const PNITypeID TypeID = COMPLEX128; //!< typecode
-	static const size_t ByteSize = sizeof(Complex128); //!< size in bytes
-	static const bool isSigned = true; //!< type supports signed values
+	static const PNITypeID    TypeID    = COMPLEX128; //!< typecode
+	static const PNITypeClass TypeClass = COMPLEXTYPE;
+	static const size_t       ByteSize  = sizeof(Complex128); //!< size in bytes
+	static const bool         isSigned  = true; //!< type supports signed values
 
 	//! return the minimum value of the Complex128 type
 	static Complex128 min(){
@@ -369,6 +385,26 @@ public:
 				          std::numeric_limits<Float128>::max());
 	}
 };
+
+
+
+//! obtain type information not by the data type but rather by the ID of the type
+template<PNITypeID id> class PNITypeInfoByID{
+	static const PNITypeID    TypeID    = PNITypeInfo<typename PNITypeIDMap<id>::Type >::TypeID;
+	static const PNITypeClass TypeClass = PNITypeInfo<typename PNITypeIDMap<id>::Type >::TypeClass;
+	static const size_t       ByteSize  = PNITypeInfo<typename PNITypeIDMap<id>::Type >::ByteSize;
+	static const bool         isSigned  = PNITypeInfo<typename PNITypeIDMap<id>::Type >::isSigned;
+
+	static typename PNITypeIDMap<id>::Type min(){
+		return PNITypeInfo<typename PNITypeIDMap<id>::Type >::min();
+	}
+
+	static typename PNITypeIDMap<id>::Type max(){
+		return PNITypeInfo<typename PNITypeIDMap<id>::Type >::max();
+	}
+};
+
+
 
 
 //end of namespace
