@@ -74,7 +74,7 @@ void NumericObject::setUnit(const String &u){
 }
 
 PNITypeID NumericObject::getTypeID() const{
-	return NONE;
+	return PNITypeID::NONE;
 }
 
 NumericObject &NumericObject::operator=(const NumericObject &o){

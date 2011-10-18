@@ -42,77 +42,77 @@ public:
 	typedef UInt8 Type;
 };
 
-template<> class PNITypeIDMap<UINT8>{
+template<> class PNITypeIDMap<PNITypeID::UINT8>{
 public:
 	typedef UInt8 Type;
 };
 
-template<> class PNITypeIDMap<INT8>{
+template<> class PNITypeIDMap<PNITypeID::INT8>{
 public:
 	typedef Int8 Type;
 };
 
-template<> class PNITypeIDMap<UINT16>{
+template<> class PNITypeIDMap<PNITypeID::UINT16>{
 public:
 	typedef UInt16 Type;
 };
 
-template<> class PNITypeIDMap<INT16>{
+template<> class PNITypeIDMap<PNITypeID::INT16>{
 public:
 	typedef Int16 Type;
 };
 
-template<> class PNITypeIDMap<INT32>{
+template<> class PNITypeIDMap<PNITypeID::INT32>{
 public:
 	typedef Int32 Type;
 };
 
-template<> class PNITypeIDMap<UINT32>{
+template<> class PNITypeIDMap<PNITypeID::UINT32>{
 public:
 	typedef UInt32 Type;
 };
 
-template<> class PNITypeIDMap<INT64>{
+template<> class PNITypeIDMap<PNITypeID::INT64>{
 public:
 	typedef Int64 Type;
 };
 
-template<> class PNITypeIDMap<UINT64>{
+template<> class PNITypeIDMap<PNITypeID::UINT64>{
 public:
 	typedef UInt64 Type;
 };
 
-template<> class PNITypeIDMap<FLOAT32>{
+template<> class PNITypeIDMap<PNITypeID::FLOAT32>{
 public:
 	typedef Float32 Type;
 };
 
-template<> class PNITypeIDMap<FLOAT64>{
+template<> class PNITypeIDMap<PNITypeID::FLOAT64>{
 public:
 	typedef Float64 Type;
 };
 
-template<> class PNITypeIDMap<FLOAT128>{
+template<> class PNITypeIDMap<PNITypeID::FLOAT128>{
 public:
 	typedef Float128 Type;
 };
 
-template<> class PNITypeIDMap<COMPLEX32>{
+template<> class PNITypeIDMap<PNITypeID::COMPLEX32>{
 public:
 	typedef Complex32 Type;
 };
 
-template<> class PNITypeIDMap<COMPLEX64>{
+template<> class PNITypeIDMap<PNITypeID::COMPLEX64>{
 public:
 	typedef Complex64 Type;
 };
 
-template<> class PNITypeIDMap<COMPLEX128>{
+template<> class PNITypeIDMap<PNITypeID::COMPLEX128>{
 public:
 	typedef Complex128 Type;
 };
 
-template<> class PNITypeIDMap<BINARY>{
+template<> class PNITypeIDMap<PNITypeID::BINARY>{
 public:
 	typedef Binary Type;
 };

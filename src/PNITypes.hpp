@@ -66,7 +66,7 @@ typedef bool Bool;    //!< data type for boolean expressions
 
 
 //! type codes for PNI data types
-enum PNITypeID {NONE,   //!< no data type
+enum class PNITypeID {NONE,   //!< no data type
 				INT8,   //!< signed 8Bit integer
 				UINT8,  //!< unsigned 8Bit integer
 				INT16,  //!< signed 16Bit integer
@@ -87,12 +87,12 @@ enum PNITypeID {NONE,   //!< no data type
 				};
 
 //! classes of data types provided by the PNI utility library
-enum PNITypeClass { NONETYPE,       //!< unspecified type
-	                INTEGERTYPE,    //!< integer type
- 	                FLOATTYPE,      //!< floating point type
-	                BINARYTYPE,     //!< binary data type
-	                BOOLTYPE,       //!< boolean data type
-	                COMPLEXTYPE     //!< complex data type
+enum class PNITypeClass { NONE,       //!< unspecified type
+	                INTEGER,    //!< integer type
+ 	                FLOAT,      //!< floating point type
+	                BINARY,     //!< binary data type
+	                BOOL,       //!< boolean data type
+	                COMPLEX     //!< complex data type
 				    };
 
 

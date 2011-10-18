@@ -190,7 +190,7 @@ int main(int argc,char **argv){
 
     //finally we need to access the data
 
-    if(dtid == INT32){
+    if(dtid == PNITypeID::INT32){
     	//For Int32 data convert the ArrayObject ot an Int32 Array type
     	Int32Array::sptr a = boost::dynamic_pointer_cast<Int32Array>(v);
 
@@ -207,7 +207,7 @@ int main(int argc,char **argv){
     	std::cout<<"finished with plotting!"<<std::endl;
 
 
-    }else if(dtid == INT16){
+    }else if(dtid == PNITypeID::INT16){
     	std::cout<<"data is an Int16Array()"<<std::endl;
     	Int16Array::sptr a = boost::dynamic_pointer_cast<Int16Array>(v);
 

@@ -106,21 +106,21 @@ std::ostream &operator<<(std::ostream &o,const TIFFImageData &d){
 	for(iter = d.begin();iter!=d.end();iter++){
 		ArrayObject &a = *boost::dynamic_pointer_cast<ArrayObject>(*iter);
 		switch(a.getTypeID()){
-		case UINT8:
+		case PNITypeID::UINT8:
 			o<<*boost::dynamic_pointer_cast<UInt8Array>(*iter)<<std::endl; break;
-		case INT8:
+		case PNITypeID::INT8:
 			o<<*boost::dynamic_pointer_cast<Int8Array>(*iter)<<std::endl; break;
-		case UINT16:
+		case PNITypeID::UINT16:
 			o<<*boost::dynamic_pointer_cast<UInt16Array>(*iter)<<std::endl; break;
-		case INT16:
+		case PNITypeID::INT16:
 			o<<*boost::dynamic_pointer_cast<Int16Array>(*iter)<<std::endl; break;
-		case UINT32:
+		case PNITypeID::UINT32:
 			o<<*boost::dynamic_pointer_cast<UInt32Array>(*iter)<<std::endl; break;
-		case INT32:
+		case PNITypeID::INT32:
 			o<<*boost::dynamic_pointer_cast<Int32Array>(*iter)<<std::endl; break;
-		case FLOAT32:
+		case PNITypeID::FLOAT32:
 			o<<*boost::dynamic_pointer_cast<Float32Array>(*iter)<<std::endl; break;
-		case FLOAT64:
+		case PNITypeID::FLOAT64:
 			o<<*boost::dynamic_pointer_cast<Float64Array>(*iter)<<std::endl; break;
 		default:
 			std::cerr<<"Array of unknown Type"<<std::endl;

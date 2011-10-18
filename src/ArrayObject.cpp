@@ -88,7 +88,7 @@ ArrayObject::~ArrayObject(){
 
 
 PNITypeID ArrayObject::getTypeID() const {
-	return NONE;
+	return PNITypeID::NONE;
 }
 
 void ArrayObject::setShape(const ArrayShape &s){
