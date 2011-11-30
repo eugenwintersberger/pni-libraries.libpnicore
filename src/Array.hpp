@@ -141,8 +141,15 @@ public:
 
 	//! \param s pointer to a shape object
 	//! \param b pointer to a buffer object
-	//! \sa Array(const boost::shared_ptr<ArrayShape> &s,const boost::shared_ptr<Buffer<T> > &b)
 	Array(const ArrayShape &s, const Buffer<T> &b);
+
+	//! constructor
+
+	//! This constructors sets also name, unit, and description
+	//! of the NumericObject base class.
+	Array(const ArrayShape &s,const String &n,const String &u,const String &d);
+	Array(const ArrayShape &s,const Buffer<T> &b,
+		  const String &n,const String &u,const String &d);
 
 	//! destructor
 	virtual ~Array();
@@ -449,6 +456,25 @@ template<typename T> Array<T>::Array(const ArrayShape &s) :
 	}
 }
 
+template<typename T> Array<T>::Array(const ArrayShape &s,const String &n,
+		             const String &u,const String &d):
+		             ArrayObject(s){
+	EXCEPTION_SETUP("template<typename T> Array<T>::Array(const ArrayShape &s,"
+					"const String &n,const String &u,const String &d)");
+
+	try{
+		_data.allocate(s.getSize());
+	}catch(MemoryAllocationError &error){
+		EXCEPTION_INIT(MemoryAllocationError,"Cannot allocate memory for Buffer object!");
+		EXCEPTION_THROW();
+	}
+
+	//set additional attributes
+	setName(n);
+	setUnit(u);
+	setDescription(d);
+}
+
 
 template<typename T> Array<T>::Array(const ArrayShape &s, const Buffer<T> &b) :
 	ArrayObject(s) {
@@ -467,6 +493,32 @@ template<typename T> Array<T>::Array(const ArrayShape &s, const Buffer<T> &b) :
 		EXCEPTION_INIT(MemoryAllocationError,"Memory allocation for array failed!");
 		EXCEPTION_THROW();
 	}
+
+}
+
+template<typename T> Array<T>::Array(const ArrayShape &s, const Buffer<T> &b,
+		const String &n,const String &u,const String &d) :
+	ArrayObject(s) {
+	EXCEPTION_SETUP("template<typename T> Array<T>::Array(const ArrayShape &s, const Buffer<T> &b):ArrayObject(s)");
+
+	//first we need to check if buffer and shape have matching sizes
+	if (s.getSize() != b.getSize()) {
+		EXCEPTION_INIT(SizeMissmatchError,"Size of shape and buffer objects do not match!");
+		EXCEPTION_THROW();
+	}
+
+	//creates a new buffer object
+	try{
+		_data = b;
+	}catch(MemoryAllocationError &error){
+		EXCEPTION_INIT(MemoryAllocationError,"Memory allocation for array failed!");
+		EXCEPTION_THROW();
+	}
+
+	//set additional parameters
+	setName(n);
+	setUnit(u);
+	setDescription(d);
 
 }
 
