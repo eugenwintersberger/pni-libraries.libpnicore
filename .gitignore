@@ -8,3 +8,4 @@ pniutilstest
 showPNITypes
 tif_reader_test
 utbmark
+*.dblite
