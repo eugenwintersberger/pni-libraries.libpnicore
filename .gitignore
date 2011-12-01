@@ -1,0 +1,10 @@
+*.so
+*.o
+*.os
+*.swp
+*.log
+cbf_reader_test
+pniutilstest
+showPNITypes
+tif_reader_test
+utbmark
