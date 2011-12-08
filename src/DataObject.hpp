@@ -50,7 +50,7 @@ namespace utils{
 //! namespace. It holds the basic information each data object must provide:
 //! a name and a description.
 class DataObject {
-protected:
+private:
 	String _name;         //!< name of the data object
 	String _description;  //!< description of the object
 public:
@@ -59,6 +59,8 @@ public:
 	DataObject();
 	//! copy constructor
 	DataObject(const DataObject &);
+	//! move constructor
+	DataObject(DataObject &&o);
 	//! constructor
 
 	//! This constructor sets only the name of the DataObject class.
@@ -73,35 +75,42 @@ public:
 	//! destructor
 	virtual ~DataObject();
 
+	//! copy assignment operator
+
+	//! Assignment operator setting the values of an existing object
+	//! to the value of an already existing one.
+	DataObject &operator=(const DataObject &o);
+	//! move assignment operator
+	DataObject &operator=(DataObject &&o);
 	//! set name
 
 	//! Set the name of the object.
 	//! \param n name of the object
 	virtual void setName(const String &n);
+	virtual void name(const String &n);
 
 	//! get name
 
 	//! Returns the name of the object.
 	//! \return object name
 	virtual String getName() const;
+	virtual String name() const;
 
 	//! set description
 
 	//! Set the description for the.
 	//! \param d object's description
 	virtual void setDescription(const String &d);
+	virtual void description(const String &d);
 
 	//! get description
 
 	//! Gets the description of the object.
 	//! \return object description
 	virtual String getDescription() const;
+	virtual String description() const;
 
-	//! assignment operator
 
-	//! Assignment operator setting the values of an existing object
-	//! to the value of an already existing one.
-	DataObject &operator=(const DataObject &o);
 
 	//! print object
 

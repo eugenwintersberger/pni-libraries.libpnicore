@@ -40,8 +40,6 @@ void NumericObjectTest::testCreation(){
 	CPPUNIT_ASSERT(o2.getDescription() == "the last object");
 	CPPUNIT_ASSERT(o2.getUnit() == "um");
 
-	NumericObject o3("object4");
-	CPPUNIT_ASSERT(o3.getUnit() == "object4");
 
 }
 

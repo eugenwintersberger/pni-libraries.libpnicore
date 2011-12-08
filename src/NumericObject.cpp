@@ -29,82 +29,132 @@
 
 #include "NumericObject.hpp"
 #include "Exceptions.hpp"
+#include "service.hpp"
 
 
 namespace pni{
 namespace utils{
 
-
+//==================Implementation of constructors and destructor==============
+//implementation of the default constructor
 NumericObject::NumericObject():DataObject(){
 	_unit = String("");
 }
 
+//-----------------------------------------------------------------------------
+//implementation of the copy constructor
 NumericObject::NumericObject(const NumericObject &o)
 			  :DataObject(o){
 	_unit = o._unit;
 }
 
-NumericObject::NumericObject(const String &u):DataObject(){
-	_unit = u;
+//-----------------------------------------------------------------------------
+//implementation of the move constructor
+NumericObject::NumericObject(NumericObject &&o):DataObject(std::move(o)){
+	_unit = std::move(o._unit);
 }
 
-
-
+//------------------------------------------------------------------------------
+//constructor
 NumericObject::NumericObject(const String &n,const String &u):DataObject(n){
 	_unit = u;
 }
 
-
-NumericObject::NumericObject(const String &n,const String &u,const String &d):DataObject(n,d){
+//------------------------------------------------------------------------------
+//constructor
+NumericObject::NumericObject(const String &n,const String &u,const String &d)
+:DataObject(n,d){
 	_unit = u;
 }
 
-
+//------------------------------------------------------------------------------
+//implementation of the destructor
 NumericObject::~NumericObject(){
 
 }
 
-String NumericObject::getUnit() const {
-	return _unit;
-}
-
-
-void NumericObject::setUnit(const String &u){
-	_unit = u;
-}
-
-PNITypeID NumericObject::getTypeID() const{
-	return PNITypeID::NONE;
-}
-
+//==============Implementation of assignment operators=========================
 NumericObject &NumericObject::operator=(const NumericObject &o){
 	if (this != &o) {
-		DataObject &this_object = (DataObject &)(*this);
-		DataObject &that_object = (DataObject &)o;
-		this_object = that_object;
+		(DataObject &)(*this) = (DataObject &)o;
 
-		setUnit(o.getUnit());
+		unit(o.unit());
 	}
 
 	return *this;
 }
 
+NumericObject &NumericObject::operator=(NumericObject &&o){
+	if(this != &o){
+		(DataObject &)(*this) = std::move((DataObject &)o);
+		_unit = std::move(o._unit);
+	}
+
+	return *this;
+}
+//================Implementation of inquiry methods============================
+String NumericObject::getUnit() const {
+	DEPRECATION_WARNING("String NumericObject::getUnit() const",
+					    "String NumericObject::unit() const");
+	return unit();
+}
+
+String NumericObject::unit() const {
+	return _unit;
+}
+
+void NumericObject::setUnit(const String &u){
+	DEPRECATION_WARNING("void NumericObject::setUnit(const String &u)",
+						"void NumericObject::unit(const String &u)");
+	unit(u);
+}
+
+void NumericObject::unit(const String &u){
+	_unit = u;
+}
+
+PNITypeID NumericObject::getTypeID() const{
+	DEPRECATION_WARNING("PNITypeID NumericObject::getTypeID() const",
+						"PNITypeID NumericObject::type_id() const");
+	return type_id();
+}
+
+PNITypeID NumericObject::type_id() const {
+	return PNITypeID::NONE;
+}
+
+
+
 void *NumericObject::getVoidPtr(){
-	EXCEPTION_SETUP("void *NumericObject::getVoidPtr()");
+	DEPRECATION_WARNING("void *NumericObject::getVoidPtr()",
+						"void *NumericObject::void_ptr()");
+	return void_ptr();
+}
+
+void *NumericObject::void_ptr(){
+	EXCEPTION_SETUP("void *NumericObject::void_ptr()");
 
 	EXCEPTION_INIT(NotImplementedError,"This method must be implemented by a child class!");
 	EXCEPTION_THROW();
 
-	return NULL;
+	return nullptr;
+
 }
 
 const void *NumericObject::getVoidPtr() const{
-	EXCEPTION_SETUP("const void *NumericObject::getVoidPtr() const");
+	DEPRECATION_WARNING("const void *NumericObject::getVoidPtr() const",
+						"const void *NumericObject::void_ptr() const");
+	return nullptr;
+}
+
+const void *NumericObject::void_ptr() const {
+	EXCEPTION_SETUP("const void *NumericObject::void_ptr() const");
 
 	EXCEPTION_INIT(NotImplementedError,"This method must be implemented by a child class!");
 	EXCEPTION_THROW();
 
-	return NULL;
+	return nullptr;
+
 }
 
 //end of namespace

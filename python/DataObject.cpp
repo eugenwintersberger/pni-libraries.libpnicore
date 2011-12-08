@@ -45,7 +45,6 @@ BOOST_PYTHON_MODULE(pniutils)
 			;
 
 	class_<NumericObject,bases<DataObject> >("NumericObject")
-			.def(init<String>())
 			.def(init<String,String>())
 			.def(init<String,String,String>())
 			.def(init<NumericObject>())

@@ -52,7 +52,7 @@ namespace utils{
 //! about numeric objects.
 
 class NumericObject:public DataObject {
-protected:
+private:
 	String _unit; //!< string holding the physical unit of the object
 public:
 	typedef boost::shared_ptr<NumericObject> sptr; //!< shared pointer to a numeric object
@@ -60,11 +60,8 @@ public:
 	NumericObject();
 	//! copy constructor
 	NumericObject(const NumericObject &);
-	//! constructor
-
-	//! Constructor setting only the physical unit of the object.
-	//! \param u unit as string
-	NumericObject(const String &u);
+	//! move constructor
+	NumericObject(NumericObject &&o);
 	//! constructor
 
 	//! Constructor setting name and unit of the object.
@@ -81,16 +78,23 @@ public:
 	//! destructor
 	virtual ~NumericObject();
 
+	//! copy assignment operator
+	NumericObject &operator=(const NumericObject &o);
+	//! move assignment operator
+	NumericObject &operator=(NumericObject &&o);
+
 	//! get the physical Unit
 
 	//! Returns a copy of the unit string of the object.
 	//! \return - the unit as String object
 	virtual String getUnit() const;
+	virtual String unit() const;
 	//! set the physical unit
 
 	//! Set the physical unit of the object.
 	//! \param u unit as String
 	virtual void setUnit(const String &u);
+	virtual void unit(const String &u);
 	//! get the ID of the data type
 
 	//! This virtual function is overloaded by the concrete implementations
@@ -98,6 +102,7 @@ public:
 	//! the data.
 	//! \return PNITypeID ID value of the type
 	virtual PNITypeID getTypeID() const;
+	virtual PNITypeID type_id() const;
 
 	//! get a pointer to numeric data
 
@@ -106,6 +111,7 @@ public:
 	//! This method must be implemented by derived classes.
 	//! \return void pointer to data
 	virtual void *getVoidPtr();
+	virtual void *void_ptr();
 	//! get a pointer to numeric data
 
 	//! This method returns a void pointer to the data stored by the object.
@@ -113,9 +119,9 @@ public:
 	//! This method must be implemented by derived classes.
 	//! \return void pointer to data
 	virtual const void *getVoidPtr() const;
+	virtual const void *void_ptr() const;
 
-	//! assignment operator
-	NumericObject &operator=(const NumericObject &o);
+
 };
 
 

@@ -30,60 +30,119 @@
 
 
 #include "DataObject.hpp"
+#include "service.hpp"
 
 namespace pni{
 namespace utils{
 
+//==============Implementation of constructors and destructor==================
+//implementation of the default constructor
 DataObject::DataObject() {
 	//nothing to be done
 
 }
 
+//-----------------------------------------------------------------------------
+//implementation of the copy constructor
 DataObject::DataObject(const DataObject &o){
 	_name = o._name;
 	_description = o._description;
 }
 
-DataObject::DataObject(const std::string &n){
+//-----------------------------------------------------------------------------
+//implementation of the move constructor
+DataObject::DataObject(DataObject &&o){
+	_name = std::move(o._name);
+	_description = std::move(o._description);
+}
+
+//-----------------------------------------------------------------------------
+//implementation of a constructor
+DataObject::DataObject(const String &n){
 	_name = n;
 }
 
-DataObject::DataObject(const std::string &n,const std::string &d){
+//------------------------------------------------------------------------------
+//implementation of a constructor
+DataObject::DataObject(const String &n,const String &d){
 	_name = n;
 	_description = d;
 }
 
+//------------------------------------------------------------------------------
+//implementation of the destructor
 DataObject::~DataObject() {
 	//empty the string variables
 	_name.clear();
 	_description.clear();
 }
 
-void DataObject::setName(const std::string &n){
-	_name = n;
-}
-
-String DataObject::getName() const{
-	return _name;
-}
-
-void DataObject::setDescription(const String &d){
-	_description = d;
-}
-
-String DataObject::getDescription() const{
-	return _description;
-}
-
+//================Implementation of assignment operators=======================
+//implementation of copy assignment
 DataObject &DataObject::operator=(const DataObject &o){
 	if(this != &o){
-		_name = o._name;
-		_description = o._description;
+		_name = o.name();
+		_description = o.description();
 	}
 
 	return *this;
 }
 
+//------------------------------------------------------------------------------
+//implementation of move assignment
+DataObject &DataObject::operator=(DataObject &&o){
+	if(this != &o){
+		_name = std::move(o._name);
+		_description = std::move(o._description);
+	}
+
+	return *this;
+}
+
+//==============Implementation of object inquiry methods========================
+
+void DataObject::setName(const String &n){
+	DEPRECATION_WARNING("void DataObject::setName(const String &n)",
+						"void DataObject::name(const String &n)");
+	name(n);
+}
+
+void DataObject::name(const String &n){
+	_name = n;
+}
+
+String DataObject::getName() const{
+	DEPRECATION_WARNING("String DataObject::getName() const",
+						"String DataObject::name() const");
+
+	return name();
+}
+
+String DataObject::name() const{
+	return _name;
+}
+
+void DataObject::setDescription(const String &d){
+	DEPRECATION_WARNING("void DataObject::setDescription(const String &d)",
+						"void DataObject::description(const String &d)");
+	description(d);
+}
+
+void DataObject::description(const String &d){
+	_description = d;
+}
+
+String DataObject::getDescription() const{
+	DEPRECATION_WARNING("String DataObject::getDescription() const",
+						"String DataObject::description() const");
+	return description();
+}
+
+String DataObject::description() const{
+	return _description;
+}
+
+//====================Implementation of output operators========================
 std::ostream &operator<<(std::ostream &os,const DataObject &o){
 	os<<"DataObject: "<<o._name<<" "<<o._description;
 	return os;
