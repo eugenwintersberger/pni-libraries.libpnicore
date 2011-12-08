@@ -93,43 +93,22 @@ NumericObject &NumericObject::operator=(NumericObject &&o){
 	return *this;
 }
 //================Implementation of inquiry methods============================
-String NumericObject::getUnit() const {
-	DEPRECATION_WARNING("String NumericObject::getUnit() const",
-					    "String NumericObject::unit() const");
-	return unit();
-}
+
 
 String NumericObject::unit() const {
 	return _unit;
 }
 
-void NumericObject::setUnit(const String &u){
-	DEPRECATION_WARNING("void NumericObject::setUnit(const String &u)",
-						"void NumericObject::unit(const String &u)");
-	unit(u);
-}
 
 void NumericObject::unit(const String &u){
 	_unit = u;
 }
 
-PNITypeID NumericObject::getTypeID() const{
-	DEPRECATION_WARNING("PNITypeID NumericObject::getTypeID() const",
-						"PNITypeID NumericObject::type_id() const");
-	return type_id();
-}
 
 PNITypeID NumericObject::type_id() const {
 	return PNITypeID::NONE;
 }
 
-
-
-void *NumericObject::getVoidPtr(){
-	DEPRECATION_WARNING("void *NumericObject::getVoidPtr()",
-						"void *NumericObject::void_ptr()");
-	return void_ptr();
-}
 
 void *NumericObject::void_ptr(){
 	EXCEPTION_SETUP("void *NumericObject::void_ptr()");
@@ -139,12 +118,6 @@ void *NumericObject::void_ptr(){
 
 	return nullptr;
 
-}
-
-const void *NumericObject::getVoidPtr() const{
-	DEPRECATION_WARNING("const void *NumericObject::getVoidPtr() const",
-						"const void *NumericObject::void_ptr() const");
-	return nullptr;
 }
 
 const void *NumericObject::void_ptr() const {

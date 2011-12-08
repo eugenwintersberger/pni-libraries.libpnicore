@@ -86,28 +86,24 @@ public:
 
 	//! Set the name of the object.
 	//! \param n name of the object
-	virtual void setName(const String &n);
 	virtual void name(const String &n);
 
 	//! get name
 
 	//! Returns the name of the object.
 	//! \return object name
-	virtual String getName() const;
 	virtual String name() const;
 
 	//! set description
 
 	//! Set the description for the.
 	//! \param d object's description
-	virtual void setDescription(const String &d);
 	virtual void description(const String &d);
 
 	//! get description
 
 	//! Gets the description of the object.
 	//! \return object description
-	virtual String getDescription() const;
 	virtual String description() const;
 
 

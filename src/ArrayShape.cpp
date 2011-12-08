@@ -40,15 +40,15 @@ namespace utils{
 //===========================private methods====================================
 void ArrayShape::_compute_dimstrides()
 {
-    size_t i;
+    ssize_t i; //we need here a signed value
 
     //compute the dimension  strides
     for(i=rank()-1;i>=0;i--){
         if(i==rank()-1){
-            _dimstrides[i] = 1;
+            _dimstrides[(size_t)i] = 1;
             continue;
         }
-        _dimstrides[i] = _dimstrides[i+1]*_shape[i+1];
+        _dimstrides[(size_t)i] = _dimstrides[(size_t)i+1]*_shape[(size_t)i+1];
     }
 }
 
@@ -118,12 +118,17 @@ ArrayShape::~ArrayShape(){
 void ArrayShape::rank(const size_t &r){
 	EXCEPTION_SETUP("void ArrayShape::setRank(const UInt32 &r)");
 
-	_dimstrides.allocate(r);
-	_shape.allocate(r);
+	if(r!=0){
+		_dimstrides.allocate(r);
+		_shape.allocate(r);
 
-	for(size_t i=0;i<r;i++){
-		_shape[i] = 0;
-		_dimstrides[i] = 0;
+		for(size_t i=0;i<r;i++){
+			_shape[i] = 0;
+			_dimstrides[i] = 0;
+		}
+	}else{
+		_dimstrides.free();
+		_shape.free();
 	}
 	_size = 0;
 }
@@ -134,7 +139,7 @@ size_t ArrayShape::rank() const{
 
 //============methods to access and manipulate dimensions=======================
 //implementation of set dimension
-void ArrayShape::dimension(const size_t &i,const size_t &d){
+void ArrayShape::dim(const size_t &i,const size_t &d){
 	EXCEPTION_SETUP("void ArrayShape::setDimension(const UInt32 &i,const UInt32 &d)");
 
 	_shape[i] = d;
@@ -146,7 +151,7 @@ void ArrayShape::dimension(const size_t &i,const size_t &d){
 
 //-----------------------------------------------------------------------------
 //implementation of get dimension
-size_t ArrayShape::dimension(const size_t &i) const{
+size_t ArrayShape::dim(const size_t &i) const{
 	EXCEPTION_SETUP("UInt32 ArrayShape::getDimension(const UInt32 &i) const");
 
 	return _shape[i];
@@ -176,7 +181,7 @@ UInt64 ArrayShape::offset(const Index &i) const {
 
 	for(size_t d=0;d<rank();d++){
 		index = i[d];
-		if(index >= dimension(d)){
+		if(index >= dim(d)){
 			EXCEPTION_INIT(IndexError,"Index out of bounds!");
 			EXCEPTION_THROW();
 		}

@@ -125,6 +125,8 @@ public:
 	//! This constructor is a full copy constructor. A new array is created
 	//! and the content of the original array is copied.
 	Array(const Array<T> &);
+	//! move constructor
+	Array(Array<T> &&);
 	//! constructor with an array shape pointer
 
 	//! The pointer to an existing ArrayShape object is used to construct
@@ -402,8 +404,8 @@ public:
 
 	virtual void allocate();
 
-	virtual bool isAllocated() const{
-		return _data.isAllocated();
+	virtual bool is_allocated() const{
+		return _data.is_allocated();
 	}
 
 	virtual void reset(){
@@ -411,17 +413,25 @@ public:
 		ArrayObject::reset();
 	}
 
-	virtual inline void *getVoidPtr(){
-		return _data.getVoidPtr();
+	virtual inline T *ptr(){
+		return _data.ptr();
 	}
 
-	virtual inline const void *getVoidPtr() const{
-		return _data.getVoidPtr();
+	virtual inline const T* ptr() const {
+		return _data.ptr();
+	}
+
+	virtual inline void *void_ptr(){
+		return _data.void_ptr();
+	}
+
+	virtual inline const void *void_ptr() const{
+		return _data.void_ptr();
 	}
 
 };
 
-//===============================Constructors and destructors===================================
+//=====================Constructors and destructors=============================
 //default constructor
 template<typename T> Array<T>::Array():ArrayObject() {
 	EXCEPTION_SETUP("template<typename T> Array<T>::Array():ArrayObject()");
@@ -429,6 +439,7 @@ template<typename T> Array<T>::Array():ArrayObject() {
 	//there is nothing to do in the default constructor
 }
 
+//------------------------------------------------------------------------------
 //copy constructor - allocate new memory and really copy the data
 template<typename T> Array<T>::Array(const Array<T> &a):ArrayObject(a){
 	EXCEPTION_SETUP("template<typename T> Array<T>::Array(const Array<T> &a):ArrayObject(a)");
@@ -443,6 +454,12 @@ template<typename T> Array<T>::Array(const Array<T> &a):ArrayObject(a){
 	}
 }
 
+//------------------------------------------------------------------------------
+template<typename T> Array<T>::Array(Array<T> &&a):ArrayObject(std::move(a)){
+	_data = std::move(a._data);
+}
+
+//------------------------------------------------------------------------------
 //construct a new array from a shape object - the recommended way
 template<typename T> Array<T>::Array(const ArrayShape &s) :
 	ArrayObject(s) {
@@ -456,6 +473,8 @@ template<typename T> Array<T>::Array(const ArrayShape &s) :
 	}
 }
 
+//------------------------------------------------------------------------------
+//implementation of an array constructor
 template<typename T> Array<T>::Array(const ArrayShape &s,const String &n,
 		             const String &u,const String &d):
 		             ArrayObject(s){
@@ -470,12 +489,13 @@ template<typename T> Array<T>::Array(const ArrayShape &s,const String &n,
 	}
 
 	//set additional attributes
-	setName(n);
-	setUnit(u);
-	setDescription(d);
+	this->name(n);
+	this->unit(u);
+	this->description(d);
 }
 
-
+//-----------------------------------------------------------------------------
+//Array construction from a shape and a buffer
 template<typename T> Array<T>::Array(const ArrayShape &s, const Buffer<T> &b) :
 	ArrayObject(s) {
 	EXCEPTION_SETUP("template<typename T> Array<T>::Array(const ArrayShape &s, const Buffer<T> &b):ArrayObject(s)");
@@ -496,6 +516,8 @@ template<typename T> Array<T>::Array(const ArrayShape &s, const Buffer<T> &b) :
 
 }
 
+//------------------------------------------------------------------------------
+//implementation of an array constructor
 template<typename T> Array<T>::Array(const ArrayShape &s, const Buffer<T> &b,
 		const String &n,const String &u,const String &d) :
 	ArrayObject(s) {
@@ -516,13 +538,13 @@ template<typename T> Array<T>::Array(const ArrayShape &s, const Buffer<T> &b,
 	}
 
 	//set additional parameters
-	setName(n);
-	setUnit(u);
-	setDescription(d);
+	this->name(n);
+	this->unit(u);
+	this->description(d);
 
 }
 
-
+//------------------------------------------------------------------------------
 //destructor for the array object
 template<typename T> Array<T>::~Array() {
 	_data.free();
@@ -541,13 +563,7 @@ template<typename T> PNITypeID Array<T>::type_id() const {
 //===============================output operators==============================
 template<typename T> std::ostream &operator<<(std::ostream &o,
 		                                      const Array<T> &a){
-	o << "Array of shape (";
-	for (unsigned int i = 0; i < a.getShape().getRank(); i++) {
-		o << a.getShape()[i];
-		if (i < a.getShape().getRank() - 1)
-			o << ", ";
-	}
-	o << ") " << typeid(a).name();
+	o << "Array of shape ("<<a.shape()<<")"<<std::endl;
 	return o;
 }
 
@@ -555,6 +571,11 @@ template<typename T> std::ostream &operator<<(std::ostream &o,
 
 template<typename T> void Array<T>::buffer(const BufferObject &b) {
 	EXCEPTION_SETUP("template<typename T> void Array<T>::setBuffer(const Buffer<T> &b)");
+
+	if(b.type_id() != this->type_id()){
+		EXCEPTION_INIT(TypeError,"Buffer and Array type do not match!");
+		EXCEPTION_THROW();
+	}
 
 	//if the shape is not set yet (means that its rank is 0) we do not have
 	//to care.
@@ -658,10 +679,10 @@ template<typename T> void Array<T>::allocate(){
 
 //===============================Comparison operators==========================
 template<typename T> bool operator==(const Array<T> &b1, const Array<T> &b2) {
-	const ArrayShape &as = b1.getShape();
-	const ArrayShape &bs = b2.getShape();
-	Buffer<T> &ad = (Buffer<T> &)b1.getBuffer();
-	Buffer<T> &bd = (Buffer<T> &)b2.getBuffer();
+	const ArrayShape &as = b1.shape();
+	const ArrayShape &bs = b2.shape();
+	Buffer<T> &ad = (Buffer<T> &)b1.buffer();
+	Buffer<T> &bd = (Buffer<T> &)b2.buffer();
 
 	if ((as == bs) && (ad == bd)) return true;
 

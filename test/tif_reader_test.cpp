@@ -55,8 +55,8 @@ template<typename T> PlPlotArrayDecorator<T>::PlPlotArrayDecorator(const typenam
 class PlotArray{
 private:
 	PLFLT **_image_buffer;
-	int _nx;
-	int _ny;
+	size_t _nx;
+	size_t _ny;
 	int _ntot;
 	PlotArray(const PlotArray &){}
 	void _alloc_image_buffer();
@@ -72,18 +72,14 @@ public:
 };
 
 void PlotArray::_alloc_image_buffer(){
-	int i;
-
 	_image_buffer = new PLFLT*[_nx];
-	for(i=0;i<_nx;i++){
+	for(size_t i=0;i<_nx;i++){
 		_image_buffer[i] = new PLFLT[_ny];
 	}
 }
 
 void PlotArray::_free_image_buffer(){
-	int i;
-
-	for(i=0;i<_nx;i++) delete [] _image_buffer[i];
+	for(size_t i=0;i<_nx;i++) delete [] _image_buffer[i];
 	delete [] _image_buffer;
 }
 
@@ -103,8 +99,8 @@ PlotArray::PlotArray(int nx,int ny){
 }
 
 PlotArray::PlotArray(const ArrayShape &s){
-	_nx = s.getDimension(0);
-	_ny = s.getDimension(1);
+	_nx = s.dim(0);
+	_ny = s.dim(1);
 	_ntot = _nx*_ny;
 
 	_alloc_image_buffer();
@@ -124,8 +120,8 @@ template<typename T> void PlotArray::image_plot(const pni::utils::ArrayObject::s
 	//PlPlotArrayDecorator<T> adec((pni::utils::Array<T> *)data);
 	int i,j;
 
-	int nx = a.getShape().getDimension(0);
-	int ny = a.getShape().getDimension(1);
+	int nx = a.shape().dim(0);
+	int ny = a.shape().dim(1);
 
 	plstream p(1,1,"xwin",NULL);
 	p.init();
@@ -139,8 +135,8 @@ template<typename T> void PlotArray::image_plot(const pni::utils::ArrayObject::s
 	//copy data to image buffer
 	Index index(2);
 
-	for(index[0]=0;index[0]<_nx;index.increment(0)){
-		for(index[1]=0;index[1]<_ny;index.increment(1)){
+	for(index[0]=0;index[0]<_nx;index.inc(0)){
+		for(index[1]=0;index[1]<_ny;index.inc(1)){
 			_image_buffer[index[0]][index[1]] = (PLFLT)a(index);
 		}
 	}
@@ -174,9 +170,9 @@ int main(int argc,char **argv){
 
     std::cout<<*idata<<std::endl;
     std::cout<<*a<<std::endl;
-    plotter = new PlotArray(a->getShape());
+    plotter = new PlotArray(a->shape());
 
-    switch(a->getTypeID()){
+    switch(a->type_id()){
     case PNITypeID::INT32:
     	plotter->image_plot<Int32>(a); break;
     case PNITypeID::UINT16:

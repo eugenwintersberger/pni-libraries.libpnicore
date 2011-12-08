@@ -18,7 +18,7 @@ class ArrayTest : public CppUnit::TestFixture{
 	CPPUNIT_TEST_SUITE_END();
 private:
 	ArrayShape s1,s2;
-	UInt32 r1,r2;
+	size_t r1,r2;
 public:
 	void setUp();
 	void tearDown();

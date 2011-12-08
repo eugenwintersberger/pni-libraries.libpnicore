@@ -736,16 +736,16 @@ template<typename T> bool operator!=(const Scalar<T> &a,const T &b){
 template<typename T> std::ostream &operator<<(std::ostream &o,
 		const Scalar<T> &v) {
 
-	if(v.getName()!=""){
-		o<<v.getName()<<" = ";
+	if(v.name()!=""){
+		o<<v.name()<<" = ";
 	}
 	o << v.getValue();
-	if(v.getUnit() != ""){
-		o<<" "<<v.getUnit();
+	if(v.unit() != ""){
+		o<<" "<<v.unit();
 	}
 
-	if(v.getDescription()!=""){
-		o<<" ("<<v.getDescription()<<")";
+	if(v.description()!=""){
+		o<<" ("<<v.description()<<")";
 	}
 
 	return o;
@@ -809,9 +809,9 @@ template<typename T> Scalar<T> &Scalar<T>::operator=(const Scalar<T> &s){
 	//std::cout<<"native assignment of scalar objects!"<<std::endl;
 	if(this != &s){
 		(*this).setValue(s.getValue());
-		(*this).setName(s.getName());
-		(*this).setUnit(s.getUnit());
-		(*this).setDescription(s.getDescription());
+		(*this).name(s.name());
+		(*this).unit(s.unit());
+		(*this).description(s.description());
 	}
 	return *this;
 }

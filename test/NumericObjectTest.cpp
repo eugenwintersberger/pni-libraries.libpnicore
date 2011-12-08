@@ -22,23 +22,23 @@ void NumericObjectTest::testCreation(){
 	NumericObject o;
 
 	//checking the setting routine
-	o.setName("object");
-	o.setDescription("new object");
-	o.setUnit("nm");
+	o.name("object");
+	o.description("new object");
+	o.unit("nm");
 
-	CPPUNIT_ASSERT(o.getName() == "object");
-	CPPUNIT_ASSERT(o.getDescription() == "new object");
-	CPPUNIT_ASSERT(o.getUnit() == "nm");
+	CPPUNIT_ASSERT(o.name() == "object");
+	CPPUNIT_ASSERT(o.description() == "new object");
+	CPPUNIT_ASSERT(o.unit() == "nm");
 
 	//check constructors
 	NumericObject o1("object2","m");
-	CPPUNIT_ASSERT(o1.getName() == "object2");
-	CPPUNIT_ASSERT(o1.getUnit() == "m");
+	CPPUNIT_ASSERT(o1.name() == "object2");
+	CPPUNIT_ASSERT(o1.unit() == "m");
 
 	NumericObject o2("object3","um","the last object");
-	CPPUNIT_ASSERT(o2.getName() == "object3");
-	CPPUNIT_ASSERT(o2.getDescription() == "the last object");
-	CPPUNIT_ASSERT(o2.getUnit() == "um");
+	CPPUNIT_ASSERT(o2.name() == "object3");
+	CPPUNIT_ASSERT(o2.description() == "the last object");
+	CPPUNIT_ASSERT(o2.unit() == "um");
 
 
 }
@@ -48,9 +48,9 @@ void NumericObjectTest::testAssignment(){
 
 	NumericObject o1;
 	o1 = o;
-	CPPUNIT_ASSERT(o1.getName() == o.getName());
-	CPPUNIT_ASSERT(o1.getDescription() == o.getDescription());
-	CPPUNIT_ASSERT(o1.getUnit() == o.getUnit());
+	CPPUNIT_ASSERT(o1.name() == o.name());
+	CPPUNIT_ASSERT(o1.description() == o.description());
+	CPPUNIT_ASSERT(o1.unit() == o.unit());
 }
 
 

@@ -105,7 +105,7 @@ std::ostream &operator<<(std::ostream &o,const TIFFImageData &d){
 	TIFFImageData::const_iterator iter;
 	for(iter = d.begin();iter!=d.end();iter++){
 		ArrayObject &a = *boost::dynamic_pointer_cast<ArrayObject>(*iter);
-		switch(a.getTypeID()){
+		switch(a.type_id()){
 		case PNITypeID::UINT8:
 			o<<*boost::dynamic_pointer_cast<UInt8Array>(*iter)<<std::endl; break;
 		case PNITypeID::INT8:

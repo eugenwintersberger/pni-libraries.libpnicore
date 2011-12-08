@@ -14,24 +14,27 @@ CPPUNIT_TEST_SUITE_REGISTRATION(ArrayTest);
 
 using namespace pni::utils;
 
+//------------------------------------------------------------------------------
 void ArrayTest::setUp(){
 	r1 = 2;
 	r2 = 3;
 
-	s1.setRank(r1);
-	s2.setRank(r2);
+	s1.rank(r1);
+	s2.rank(r2);
 
-	s1.setDimension(0,3); s1.setDimension(1,4);
-	s2.setDimension(0,2);
-	s2.setDimension(1,3);
-	s2.setDimension(2,5);
+	s1.dim(0,3); s1.dim(1,4);
+	s2.dim(0,2);
+	s2.dim(1,3);
+	s2.dim(2,5);
 
 }
 
+//------------------------------------------------------------------------------
 void ArrayTest::tearDown(){
 
 }
 
+//------------------------------------------------------------------------------
 void ArrayTest::testConstruction(){
 	//check for simple array-construction
 	Array<double> a1(s1);
@@ -49,26 +52,27 @@ void ArrayTest::testConstruction(){
 
 }
 
+//------------------------------------------------------------------------------
 void ArrayTest::testAssignment(){
 
 }
 
+//------------------------------------------------------------------------------
 void ArrayTest::testSlowArrayConstruction(){
 	ArrayShape s;
 	Int32Array a;
 	Index in;
 
 	//construct the shape object
-	s.setRank(2);
-	in.setRank(s.getRank());
-	s.setDimension(0,1024);
-	s.setDimension(1,2048);
+	s.rank(2);
+	in.rank(s.rank());
+	s.dim(0,1024);
+	s.dim(1,2048);
 
-	a.setShape(s);
+	a.shape(s);
 	Buffer<Int32> buffer;
-	buffer.setSize(s.getSize());
-	buffer.allocate();
-	a.setBuffer(buffer);
+	buffer.allocate(s.size());
+	a.buffer(buffer);
 
 	in[0] = 100; in[1] = 100;
 	a(in) = 1000;
@@ -81,34 +85,34 @@ void ArrayTest::testSlowArrayConstruction(){
 	CPPUNIT_ASSERT(a.Max() == 1000);
 }
 
-
+//------------------------------------------------------------------------------
 void ArrayTest::testSetAndGet(){
 	Array<double> a1(s1);
-	UInt32 i;
 	Index in;
 
 	//access via [] operator
-	ArrayShape s = a1.getShape();
-	for(i=0;i<s.getSize();i++) a1[i] = (double)i;
+	ArrayShape s = a1.shape();
+	for(size_t i=0;i<s.size();i++) a1[i] = (double)i;
 
 	//check if data values have been transfered correctly
-	for(i=0;i<s.getSize();i++) CPPUNIT_ASSERT(((double)i)==a1[i]);
+	for(size_t i=0;i<s.size();i++) CPPUNIT_ASSERT(((double)i)==a1[i]);
 
 	//check access via () operator
-	in.setRank(s.getRank());
-	for(in[0]=0; in[0]<s[0]; in.increment(0)){
-		for(in[1]=0; in[1]<s[1]; in.increment(1)){
-			a1(in) = (double)i;
+	in.rank(s.rank());
+	for(in[0]=0; in[0]<s[0]; in.inc(0)){
+		for(in[1]=0; in[1]<s[1]; in.inc(1)){
+			a1(in) = (double)in[0]*in[1];
 		}
 	}
-	for(in[0]=0;in[0]<s[0];in.increment(0)){
-		for(in[1]=0;in[1]<s[1];in.increment(1)){
-			CPPUNIT_ASSERT(a1(in) == ((double)i));
+	for(in[0]=0;in[0]<s[0];in.inc(0)){
+		for(in[1]=0;in[1]<s[1];in.inc(1)){
+			CPPUNIT_ASSERT(a1(in) == ((double)in[0]*in[1]));
 		}
 	}
 
 }
 
+//------------------------------------------------------------------------------
 void ArrayTest::testComparison(){
 	Float64Array a1(s1);
 	Float64Array b1(s1);
@@ -116,11 +120,11 @@ void ArrayTest::testComparison(){
 	Float64Array b2(s2);
 	Index in1,in2;
 
-	in1.setRank(s1.getRank());
-	in2.setRank(s2.getRank());
+	in1.rank(s1.rank());
+	in2.rank(s2.rank());
 
-	for(in1[0]=0; in1[0]<s1[0]; in1.increment(0)){
-		for(in1[1]=0; in1[1]<s1[1]; in1.increment(1)){
+	for(in1[0]=0; in1[0]<s1[0]; in1.inc(0)){
+		for(in1[1]=0; in1[1]<s1[1]; in1.inc(1)){
 			a1(in1) = (Float64)in1[0];
 			b1(in1) = (Float64)in1[1]*10;
 		}
@@ -130,9 +134,9 @@ void ArrayTest::testComparison(){
 	CPPUNIT_ASSERT(b1==b1);
 
 
-	for(in2[0]=0; in2[0]<s2[0]; in2.increment(0)){
-		for(in2[1]=0; in2[1]<s2[1]; in2.increment(1)){
-			for(in2[2]=0; in2[2]<s2[2]; in2.increment(2)){
+	for(in2[0]=0; in2[0]<s2[0]; in2.inc(0)){
+		for(in2[1]=0; in2[1]<s2[1]; in2.inc(1)){
+			for(in2[2]=0; in2[2]<s2[2]; in2.inc(2)){
 				a2(in2) = (Float64)in2[0];
 				b2(in2) = (Float64)in2[0]*10;
 			}
@@ -144,68 +148,63 @@ void ArrayTest::testComparison(){
 
 }
 
-
-
+//------------------------------------------------------------------------------
 void ArrayTest::testTypeInfo(){
-	pni::utils::ArrayObject *ptr;
+	ArrayObject *ptr;
 
-	ptr = new pni::utils::ArrayObject();
-	CPPUNIT_ASSERT(ptr->getTypeID()==PNITypeID::NONE);
+	ptr = new Int8Array();
+	CPPUNIT_ASSERT(ptr->type_id()==PNITypeID::INT8);
 	delete ptr;
 
-	ptr = new pni::utils::Int8Array();
-	CPPUNIT_ASSERT(ptr->getTypeID()==PNITypeID::INT8);
+	ptr = new UInt8Array();
+	CPPUNIT_ASSERT(ptr->type_id()==PNITypeID::UINT8);
 	delete ptr;
 
-	ptr = new pni::utils::UInt8Array();
-	CPPUNIT_ASSERT(ptr->getTypeID()==PNITypeID::UINT8);
+	ptr = new Int16Array();
+	CPPUNIT_ASSERT(ptr->type_id()==PNITypeID::INT16);
 	delete ptr;
 
-	ptr = new pni::utils::Int16Array();
-	CPPUNIT_ASSERT(ptr->getTypeID()==PNITypeID::INT16);
+	ptr = new UInt16Array();
+	CPPUNIT_ASSERT(ptr->type_id()==PNITypeID::UINT16);
 	delete ptr;
 
-	ptr = new pni::utils::UInt16Array();
-	CPPUNIT_ASSERT(ptr->getTypeID()==PNITypeID::UINT16);
+	ptr = new Int32Array();
+	CPPUNIT_ASSERT(ptr->type_id()==PNITypeID::INT32);
 	delete ptr;
 
-	ptr = new pni::utils::Int32Array();
-	CPPUNIT_ASSERT(ptr->getTypeID()==PNITypeID::INT32);
+	ptr = new UInt32Array();
+	CPPUNIT_ASSERT(ptr->type_id()==PNITypeID::UINT32);
 	delete ptr;
 
-	ptr = new pni::utils::UInt32Array();
-	CPPUNIT_ASSERT(ptr->getTypeID()==PNITypeID::UINT32);
-	delete ptr;
-
-	ptr = new pni::utils::Int64Array();
-	CPPUNIT_ASSERT(ptr->getTypeID()==PNITypeID::INT64);
+	ptr = new Int64Array();
+	CPPUNIT_ASSERT(ptr->type_id()==PNITypeID::INT64);
 	delete ptr;
 
 	ptr = new pni::utils::UInt64Array();
-	CPPUNIT_ASSERT(ptr->getTypeID()==PNITypeID::UINT64);
+	CPPUNIT_ASSERT(ptr->type_id()==PNITypeID::UINT64);
 	delete ptr;
 
-	ptr = new pni::utils::Float32Array();
-	CPPUNIT_ASSERT(ptr->getTypeID()==PNITypeID::FLOAT32);
+	ptr = new Float32Array();
+	CPPUNIT_ASSERT(ptr->type_id()==PNITypeID::FLOAT32);
 	delete ptr;
 
-	ptr = new pni::utils::Float64Array();
-	CPPUNIT_ASSERT(ptr->getTypeID()==PNITypeID::FLOAT64);
+	ptr = new Float64Array();
+	CPPUNIT_ASSERT(ptr->type_id()==PNITypeID::FLOAT64);
 	delete ptr;
 
-	ptr = new pni::utils::Float128Array();
-	CPPUNIT_ASSERT(ptr->getTypeID()==PNITypeID::FLOAT128);
+	ptr = new Float128Array();
+	CPPUNIT_ASSERT(ptr->type_id()==PNITypeID::FLOAT128);
 	delete ptr;
 
-	ptr = new pni::utils::Complex32Array();
-	CPPUNIT_ASSERT(ptr->getTypeID()==PNITypeID::COMPLEX32);
+	ptr = new Complex32Array();
+	CPPUNIT_ASSERT(ptr->type_id()==PNITypeID::COMPLEX32);
 	delete ptr;
 
-	ptr = new pni::utils::Complex64Array();
-	CPPUNIT_ASSERT(ptr->getTypeID()==PNITypeID::COMPLEX64);
+	ptr = new Complex64Array();
+	CPPUNIT_ASSERT(ptr->type_id()==PNITypeID::COMPLEX64);
 	delete ptr;
 
-	ptr = new pni::utils::Complex128Array();
-	CPPUNIT_ASSERT(ptr->getTypeID()==PNITypeID::COMPLEX128);
+	ptr = new Complex128Array();
+	CPPUNIT_ASSERT(ptr->type_id()==PNITypeID::COMPLEX128);
 	delete ptr;
 }

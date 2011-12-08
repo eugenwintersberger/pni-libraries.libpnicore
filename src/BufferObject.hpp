@@ -143,6 +143,9 @@ public:
 	//! This method must be implemented by the child class.
 	//! \return constant pointer to memory.
 	virtual const void *void_ptr() const = 0;
+
+	//! get type id
+	virtual PNITypeID type_id() const = 0;
 };
 
 //! @}

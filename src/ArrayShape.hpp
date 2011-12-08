@@ -131,7 +131,7 @@ class ArrayShape{
         //! \throws IndexError if i exceeds the rank of the shape
         //! \param i index of the dimension to set
         //! \param d new number of elements along dimension i
-        virtual void dimension(const size_t &i,const size_t &d);
+        virtual void dim(const size_t &i,const size_t &d);
         //! get a single dimension of the shape
 
         //! return the number of elements along dimension i. Raises an exception
@@ -139,7 +139,7 @@ class ArrayShape{
         //! \throws IndexError if i exceeds the rank of the shape
         //! \param i index of the dimension
         //! \return the number of elements along dimension i
-        virtual size_t dimension(const size_t &i) const;
+        virtual size_t dim(const size_t &i) const;
         //! total number of elements
 
         //! Returns the total number of elements that can be described by the

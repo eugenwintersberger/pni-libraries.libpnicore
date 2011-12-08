@@ -21,21 +21,21 @@ void DataObjectTest::tearDown(){
 void DataObjectTest::testCreation(){
 	DataObject o("test","a testing object");
 
-	CPPUNIT_ASSERT(o.getName()=="test");
-	CPPUNIT_ASSERT(o.getDescription()=="a testing object");
+	CPPUNIT_ASSERT(o.name()=="test");
+	CPPUNIT_ASSERT(o.description()=="a testing object");
 
 	DataObject o2;
 
-	o2.setName("test2");
-	o2.setDescription("another description");
+	o2.name("test2");
+	o2.description("another description");
 
-	CPPUNIT_ASSERT(o2.getName()=="test2");
-	CPPUNIT_ASSERT(o2.getDescription()=="another description");
+	CPPUNIT_ASSERT(o2.name()=="test2");
+	CPPUNIT_ASSERT(o2.description()=="another description");
 
 	DataObject o3("test3");
-	CPPUNIT_ASSERT(o3.getName() == "test3");
-	o3.setDescription("test description");
-	CPPUNIT_ASSERT(o3.getDescription() == "test description");
+	CPPUNIT_ASSERT(o3.name() == "test3");
+	o3.description("test description");
+	CPPUNIT_ASSERT(o3.description() == "test description");
 }
 
 void DataObjectTest::testAssignment(){
@@ -45,8 +45,8 @@ void DataObjectTest::testAssignment(){
 
 	b = o;
 
-	CPPUNIT_ASSERT(b.getName() == o.getName());
-	CPPUNIT_ASSERT(b.getDescription() == o.getDescription());
+	CPPUNIT_ASSERT(b.name() == o.name());
+	CPPUNIT_ASSERT(b.description() == o.description());
 
 
 }

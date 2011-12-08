@@ -139,7 +139,7 @@ Selection::Selection(const ArrayShape &s){
 	_rank = s.rank();
 
 	for(UInt32 i=0;i<s.rank();i++){
-		_count[i] = s.dimension(i);
+		_count[i] = s.dim(i);
 	}
 }
 
@@ -164,7 +164,7 @@ void Selection::getShape(ArrayShape &s) const {
 
 	for(UInt32 i=0;i<_rank;i++){
 		if(_count[i] != 1){
-			s.dimension(rank,_count[i]);
+			s.dim(rank,_count[i]);
 			rank++;
 		}
 	}

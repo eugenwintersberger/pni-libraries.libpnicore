@@ -87,13 +87,11 @@ public:
 
 	//! Returns a copy of the unit string of the object.
 	//! \return - the unit as String object
-	virtual String getUnit() const;
 	virtual String unit() const;
 	//! set the physical unit
 
 	//! Set the physical unit of the object.
 	//! \param u unit as String
-	virtual void setUnit(const String &u);
 	virtual void unit(const String &u);
 	//! get the ID of the data type
 
@@ -101,7 +99,6 @@ public:
 	//! of numerical types. It returns the ID of the type used to store
 	//! the data.
 	//! \return PNITypeID ID value of the type
-	virtual PNITypeID getTypeID() const;
 	virtual PNITypeID type_id() const;
 
 	//! get a pointer to numeric data
@@ -110,7 +107,6 @@ public:
 	//! The pointer can be used to alter the data.
 	//! This method must be implemented by derived classes.
 	//! \return void pointer to data
-	virtual void *getVoidPtr();
 	virtual void *void_ptr();
 	//! get a pointer to numeric data
 
@@ -118,7 +114,6 @@ public:
 	//! The pointer can be used only for read only access.
 	//! This method must be implemented by derived classes.
 	//! \return void pointer to data
-	virtual const void *getVoidPtr() const;
 	virtual const void *void_ptr() const;
 
 

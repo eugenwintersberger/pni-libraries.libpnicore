@@ -108,11 +108,11 @@ DataObject::sptr CBFReader::read(){
         	//std::cout<<"create the binary stream reader!"<<std::endl;
         	CBFBinStreamReader *reader = _binheader->createBinaryReader();
         	v.reset((ArrayObject *)_binheader->createArray());
-        	v->setName(_fname);
-        	v->setDescription("Dectris CBF detector data");
+        	v->name(_fname);
+        	v->description("Dectris CBF detector data");
 
         	reader->setStream(&_istream);
-        	reader->setBuffer(v->getBuffer());
+        	reader->setBuffer(v->buffer());
         	//call the reader method
         	reader->read();
 

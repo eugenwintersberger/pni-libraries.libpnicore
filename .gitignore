@@ -9,3 +9,7 @@ showPNITypes
 tif_reader_test
 utbmark
 *.dblite
+/libpniutils0-dev_0.0.1_amd64.deb
+/libpniutils_0.0.1_amd64.changes
+/libpniutils0-doc_0.0.1_amd64.deb
+/libpniutils0_0.0.1_amd64.deb

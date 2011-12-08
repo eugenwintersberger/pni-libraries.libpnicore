@@ -53,10 +53,7 @@ private:
 protected:
 	ArrayShape _shape; //!< shape object describing the shape of the array
 					   //!< and managing the access to the data
-public:
-	typedef boost::shared_ptr<ArrayObject> sptr;  //!< shared pointer to an ArrayObject
-	//! default constructor
-	ArrayObject();
+
 	//! copy constructor
 	ArrayObject(const ArrayObject &a);
 	//! move constructor
@@ -69,6 +66,10 @@ public:
 	//! \param s - reference to a shape object
 	//! \sa Array(const boost::shared_ptr<ArrayShape> &s)
 	ArrayObject(const ArrayShape &s);
+public:
+	typedef boost::shared_ptr<ArrayObject> sptr;  //!< shared pointer to an ArrayObject
+	//! default constructor
+	ArrayObject();
 	//! destructor
 	virtual ~ArrayObject();
 
@@ -117,7 +118,9 @@ public:
 	virtual bool is_allocated() const = 0;
 	virtual void *void_ptr() = 0;
 	virtual const void *void_ptr() const = 0;
-	virtual void reset() = 0;
+	virtual void reset(){
+		_shape.rank(0);
+	}
 
 };
 

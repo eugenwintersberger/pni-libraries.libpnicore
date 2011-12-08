@@ -12,18 +12,21 @@
 
 CPPUNIT_TEST_SUITE_REGISTRATION(IndexTest);
 
+//------------------------------------------------------------------------------
 void IndexTest::setUp(){
 
 }
 
+//------------------------------------------------------------------------------
 void IndexTest::tearDown(){
 
 }
 
+//------------------------------------------------------------------------------
 void IndexTest::testInstantiation(){
 	Index i1;
 
-	CPPUNIT_ASSERT_NO_THROW(i1.setRank(3));
+	CPPUNIT_ASSERT_NO_THROW(i1.rank(3));
 	i1[0] = 5; i1[1] = 6; i1[2] = 7;
 
 	//using copy constructor
@@ -31,6 +34,7 @@ void IndexTest::testInstantiation(){
 	CPPUNIT_ASSERT(i1 == i2);
 }
 
+//------------------------------------------------------------------------------
 void IndexTest::testComparison(){
 	Index i1(3);
 	Index i2(3);
@@ -45,6 +49,7 @@ void IndexTest::testComparison(){
 	CPPUNIT_ASSERT(i1 == i2);
 }
 
+//------------------------------------------------------------------------------
 void IndexTest::testAccess(){
 	//test here basically exceptions and [] operator
 	Index i1(4);
@@ -53,34 +58,38 @@ void IndexTest::testAccess(){
 	CPPUNIT_ASSERT_NO_THROW(i1[3]=5);
 	CPPUNIT_ASSERT_THROW(i1[10]=45,IndexError);
 
-	CPPUNIT_ASSERT_NO_THROW(i1.setIndex(2,23));
-	CPPUNIT_ASSERT_THROW(i1.setIndex(100,23),IndexError);
+	CPPUNIT_ASSERT_NO_THROW(i1.set(2,23));
+	CPPUNIT_ASSERT_THROW(i1.set(100,23),IndexError);
 
-	CPPUNIT_ASSERT_NO_THROW(i1.getIndex(1));
-	CPPUNIT_ASSERT_THROW(i1.getIndex(200),IndexError);
+	CPPUNIT_ASSERT_NO_THROW(i1.get(1));
+	CPPUNIT_ASSERT_THROW(i1.get(200),IndexError);
 
-	CPPUNIT_ASSERT(i1.getIndex(2) == 23);
+	CPPUNIT_ASSERT(i1.get(2) == 23);
 	CPPUNIT_ASSERT(i1[3] == 5);
 
 }
 
+//------------------------------------------------------------------------------
 void IndexTest::testIndexManipulation(){
+	std::cout<<"void IndexTest::testIndexManipulation()-----------------------";
+	std::cout<<std::endl;
 	Index i1(3);
 
 	CPPUNIT_ASSERT_NO_THROW(i1[0] = 1);
+	CPPUNIT_ASSERT(i1[0] == 1);
 	CPPUNIT_ASSERT_NO_THROW(i1[1] = 2);
 	CPPUNIT_ASSERT_NO_THROW(i1[2] = 5);
 
-	CPPUNIT_ASSERT_NO_THROW(i1.decrement(0));
-	CPPUNIT_ASSERT(i1[0] == 0);
-	CPPUNIT_ASSERT_THROW(i1.decrement(0),RangeError);
-	CPPUNIT_ASSERT_THROW(i1.decrement(100),IndexError);
-	CPPUNIT_ASSERT_THROW(i1.decrement(-1),IndexError);
+	CPPUNIT_ASSERT_NO_THROW(i1.dec(0));
+	CPPUNIT_ASSERT(i1[0] == 0u);
+	CPPUNIT_ASSERT_THROW(i1.dec(0),RangeError);
+	CPPUNIT_ASSERT_THROW(i1.dec(100),IndexError);
+	CPPUNIT_ASSERT_THROW(i1.dec(-1),IndexError);
 
-	CPPUNIT_ASSERT_NO_THROW(i1.increment(2));
+	CPPUNIT_ASSERT_NO_THROW(i1.inc(2));
 	CPPUNIT_ASSERT(i1[2] == 6);
-	CPPUNIT_ASSERT_THROW(i1.increment(100),IndexError);
-	CPPUNIT_ASSERT_THROW(i1.increment(-5),IndexError);
+	CPPUNIT_ASSERT_THROW(i1.inc(100),IndexError);
+	CPPUNIT_ASSERT_THROW(i1.inc(-5),IndexError);
 
 }
 

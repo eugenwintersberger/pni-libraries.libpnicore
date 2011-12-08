@@ -23,31 +23,31 @@ void ScalarTest::testConstructors(){
     //test standard operator
     s = Int32Scalar(100);
     CPPUNIT_ASSERT(s.getValue() == 100);
-    CPPUNIT_ASSERT(s.getName() == "");
-    CPPUNIT_ASSERT(s.getDescription() == "");
-    CPPUNIT_ASSERT(s.getUnit() == "");
+    CPPUNIT_ASSERT(s.name() == "");
+    CPPUNIT_ASSERT(s.description() == "");
+    CPPUNIT_ASSERT(s.unit() == "");
 
     s = Int32Scalar(101,"test1","unit1");
     CPPUNIT_ASSERT(s.getValue() == 101);
-    CPPUNIT_ASSERT(s.getName() == "test1");
-    CPPUNIT_ASSERT(s.getDescription() == "");
-    CPPUNIT_ASSERT(s.getUnit() == "unit1");
+    CPPUNIT_ASSERT(s.name() == "test1");
+    CPPUNIT_ASSERT(s.description() == "");
+    CPPUNIT_ASSERT(s.unit() == "unit1");
     
     s = Int32Scalar(102,"test2","unit2","description2");
     CPPUNIT_ASSERT(s.getValue() == 102);
-    CPPUNIT_ASSERT(s.getName() == "test2");
-    CPPUNIT_ASSERT(s.getDescription() == "description2");
-    CPPUNIT_ASSERT(s.getUnit() == "unit2");
+    CPPUNIT_ASSERT(s.name() == "test2");
+    CPPUNIT_ASSERT(s.description() == "description2");
+    CPPUNIT_ASSERT(s.unit() == "unit2");
 
     s = Int32Scalar("test3","unit3");
-    CPPUNIT_ASSERT(s.getName() == "test3");
-    CPPUNIT_ASSERT(s.getDescription() == "");
-    CPPUNIT_ASSERT(s.getUnit() == "unit3");
+    CPPUNIT_ASSERT(s.name() == "test3");
+    CPPUNIT_ASSERT(s.description() == "");
+    CPPUNIT_ASSERT(s.unit() == "unit3");
 
     s = Int32Scalar("test3","unit3","description3");
-    CPPUNIT_ASSERT(s.getName() == "test3");
-    CPPUNIT_ASSERT(s.getDescription() == "description3");
-    CPPUNIT_ASSERT(s.getUnit() == "unit3");
+    CPPUNIT_ASSERT(s.name() == "test3");
+    CPPUNIT_ASSERT(s.description() == "description3");
+    CPPUNIT_ASSERT(s.unit() == "unit3");
 }
 
 void ScalarTest::testConversion(){

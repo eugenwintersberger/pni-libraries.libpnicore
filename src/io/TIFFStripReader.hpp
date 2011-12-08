@@ -162,7 +162,7 @@ public:
 
 		//create arrays
 		ArrayShape s(ndims);
-		for (UInt32 d=0;d<s.getRank();d++) s.setDimension(d,dims[d]);
+		for (UInt32 d=0;d<s.rank();d++) s.dim(d,dims[d]);
 		for (UInt64 i = 0; i < _nchannels; i++)
 			idata->appendChannel(typename Array<T>::sptr(new Array<T>(s)));
 

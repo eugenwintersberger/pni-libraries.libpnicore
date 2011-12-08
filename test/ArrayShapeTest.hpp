@@ -20,7 +20,7 @@ class ArrayShapeTest: public CppUnit::TestFixture {
 	CPPUNIT_TEST_SUITE_END();
 private:
 	unsigned int *_s1;
-	unsigned int _r1, _r2;
+	size_t _r1, _r2;
 	unsigned int *_s2;
 	ArrayShape _sh1, _sh2;
 public:

@@ -7,7 +7,6 @@ test_env.Append(LIBS=["pniutils","cppunit","plplotcxxd"])
 test_env.Append(CPPPATH=["../src/"])
 
 sources_list = ["pniutilstest.cpp"]
-sources_list.extend(["BufferObjectTest.cpp"])
 sources_list.extend(["BufferTest.cpp"])
 sources_list.extend(["IndexTest.cpp"])
 sources_list.extend(["DataObjectTest.cpp"])

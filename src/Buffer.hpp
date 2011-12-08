@@ -35,9 +35,11 @@
 
 #include <iostream>
 #include <string>
+#include <sstream>
 #include <boost/shared_array.hpp>
 #include "Exceptions.hpp"
 #include "PNITypes.hpp"
+#include "PNITypeInfo.hpp"
 #include "BufferObject.hpp"
 #include "TypeInfo.hpp"
 #include "TypeCompat.hpp"
@@ -149,18 +151,6 @@ public:
 	//! \param n index of the element to fetch
 	//! \return value of the buffer at position n
 	T operator[](size_t n) const;
-
-	//! allocate memory
-
-	//! Allocate memory on the heap. This method throws a MemoryAllocationError
-	//! it it will be called on an already allocated buffer. An allocated buffer
-	//! must be explicitly freed before this method can be reinvoked.
-	//! Furthermore, this exception will be thrown if the number of
-	//! elements is not set by calling the setSize() method.
-	//! \throws MemoryAllocationError in cases of errors.
-	//! \see allocate(const UInt64 &size)
-	//! \see free()
-	virtual void allocate();
 	//! allocate memory
 
 	//! Unlike allocate() this method takes the number of elements as an
@@ -187,6 +177,10 @@ public:
 
 	virtual size_t mem_size() const {
 		return sizeof(T)*this->size();
+	}
+
+	virtual PNITypeID type_id() const {
+		return PNITypeInfo<T>::TypeID;
 	}
 
 
@@ -364,14 +358,15 @@ template<typename T> Buffer<T> &Buffer<T>::operator=(const T &d){
 template<typename T> T& Buffer<T>::operator[](size_t n){
 	EXCEPTION_SETUP("template<typename T> T& Buffer<T>::operator[](size_t n)");
 
-	if(!is_allocated()){
+	if(!this->is_allocated()){
 		EXCEPTION_INIT(MemoryAccessError,"Buffer not allocated!");
 		EXCEPTION_THROW();
 	}
 
-	if(n>=size()){
-		EXCEPTION_INIT(IndexError,"Index must not be larger or equal the "
-					  "size of the buffer!");
+	if(n>=this->size()){
+		std::ostringstream sstr;
+		sstr<<"Index ("<<n<<") must not be larger or equal the size ("<<this->size()<<")of the buffer!";
+		EXCEPTION_INIT(IndexError,sstr.str());
 		EXCEPTION_THROW();
 	}
 
@@ -383,14 +378,15 @@ template<typename T> T& Buffer<T>::operator[](size_t n){
 template<typename T> T Buffer<T>::operator[](size_t n) const {
 	EXCEPTION_SETUP("template<typename T> T Buffer<T>::operator[](size_t n) const");
 
-	if(!is_allocated()){
+	if(!this->is_allocated()){
 		EXCEPTION_INIT(MemoryAccessError,"Buffer not allocated!");
 		EXCEPTION_THROW();
 	}
 
-	if(n>=size()){
-		EXCEPTION_INIT(IndexError,"Index must not be larger or equal the "
-					   "size of the buffer!");
+	if(n>=this->size()){
+		std::ostringstream sstr;
+		sstr<<"Index ("<<n<<") must not be larger or equal the size ("<<this->size()<<")of the buffer!";
+		EXCEPTION_INIT(IndexError,sstr.str());
 		EXCEPTION_THROW();
 	}
 	return _data[n];

@@ -68,10 +68,10 @@ std::ostream &operator<<(std::ostream &o,const CIFBinaryHeader &h){
 
 ArrayObject *CIFBinaryHeader::createArray(){
 	ArrayShape s;
-	s.setRank(_ndims);
+	s.rank(_ndims);
 	for(UInt32 i=0;i<_ndims;i++){
 		//std::cout<<_dims[2-i]<<std::endl;
-		s.setDimension(_ndims-1-i,_dims[2-i]);
+		s.dim(_ndims-1-i,_dims[2-i]);
 	}
 
 	switch(_data_type){

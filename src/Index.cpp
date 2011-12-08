@@ -27,7 +27,7 @@
  *
  */
 
-
+#include <limits>
 #include "Index.hpp"
 #include "Exceptions.hpp"
 
@@ -136,13 +136,27 @@ void Index::set(size_t index,size_t value){
 //------------------------------------------------------------------------------
 //implementation of index increment
 void Index::inc(size_t index){
+	EXCEPTION_SETUP("void Index::inc(size_t index)");
+
+	if((*this)[index] == std::numeric_limits<size_t>::max()){
+		EXCEPTION_INIT(RangeError,"Index exceeds numeric limits!");
+		EXCEPTION_THROW();
+	}
+
 	(*this)[index]++;
 }
 
 //------------------------------------------------------------------------------
 //implementation of index decrement
 void Index::dec(size_t index){
-	(*this)[index]++;
+	EXCEPTION_SETUP("void Index::dec(size_t index)");
+
+	if((*this)[index]==0){
+		EXCEPTION_INIT(RangeError,"Index becomes < 0!");
+		EXCEPTION_THROW();
+	}
+
+	(*this)[index]--;
 }
 
 //=================Implementation of output operators===========================

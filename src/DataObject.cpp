@@ -101,41 +101,17 @@ DataObject &DataObject::operator=(DataObject &&o){
 
 //==============Implementation of object inquiry methods========================
 
-void DataObject::setName(const String &n){
-	DEPRECATION_WARNING("void DataObject::setName(const String &n)",
-						"void DataObject::name(const String &n)");
-	name(n);
-}
 
 void DataObject::name(const String &n){
 	_name = n;
-}
-
-String DataObject::getName() const{
-	DEPRECATION_WARNING("String DataObject::getName() const",
-						"String DataObject::name() const");
-
-	return name();
 }
 
 String DataObject::name() const{
 	return _name;
 }
 
-void DataObject::setDescription(const String &d){
-	DEPRECATION_WARNING("void DataObject::setDescription(const String &d)",
-						"void DataObject::description(const String &d)");
-	description(d);
-}
-
 void DataObject::description(const String &d){
 	_description = d;
-}
-
-String DataObject::getDescription() const{
-	DEPRECATION_WARNING("String DataObject::getDescription() const",
-						"String DataObject::description() const");
-	return description();
 }
 
 String DataObject::description() const{
