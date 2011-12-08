@@ -79,16 +79,18 @@ public:
 	//! The buffer is initialized by an already existing buffer. All data will be
 	//! copied to the storage of the new created buffer object.
 	Buffer(const Buffer<T> &b);
+	//! move constructor
+	Buffer(Buffer<T> &&b);
 	//! constructor with buffer size
 
 	//! Using this constructor the buffer will automatically allocate memory.
 	//! \throws MemoryAllocationError if allocation on the heap fails
 	//! \param n number of elements of type T in the buffer
-	Buffer(UInt64 n);
+	Buffer(size_t n);
 	//! destructor
 	virtual ~Buffer();
 
-	//! assignment operator
+	//! copy assignment operator
 
 	//! The content of the buffer on the lhs is set to that of the lhs.
 	//! If necessary memory is reallocated.
@@ -96,6 +98,8 @@ public:
 	//! \param b Buffer whose content will be assigned to this buffer
 	//! \return reference to a Buffer<T> object
 	Buffer<T> &operator=(const Buffer<T> &b);
+	//! move assignment operator
+	Buffer<T> &operator=(Buffer<T> &&b);
 	//! assignment operator
 
 	//! Assignment operator for buffers with different types. Like the
@@ -125,13 +129,43 @@ public:
 	//! Returns a typed const pointer to the allocated memory. The pointer must
 	//! not be used to modify data values.
 	//! \return pointer to allocated memory
-	const T* getPtr() const;
+	const T* getPtr() const{
+		DEPRECATION_WARNING("const T* Buffer<T>::getPtr() const",
+							"const T* Buffer<T>::ptr() const");
+		return ptr();
+	}
+	const T* ptr() const;
 	//! return data pointer
 
 	//! Returns a typed pointer to the allocated memory. The pointer can be
 	//! used for altering the buffer content.
 	//! \return pointer to allocated memory
-	T* getPtr();
+	T* getPtr(){
+		DEPRECATION_WARNING("T* Buffer<T>::getPtr()","T *Buffer<T>::ptr()");
+		return ptr();
+	}
+	T *ptr();
+
+	//! read/write void pointer
+
+	//! Returns a pointer of type void * on the allocated memory.
+	//! \return pointer to allocated memory
+	virtual void *getVoidPtr(){
+		DEPRECATION_WARNING("void *Buffer<T>::getVoidPtr()",
+							"void *Buffer<T>::void_ptr()");
+		return void_ptr();
+	}
+	virtual void *void_ptr();
+	//! read only void pointer
+
+	//! Returns a read only void pointer to the allocated memory.
+	//! \return pointer to allocated memory
+	virtual const void *getVoidPtr() const{
+		DEPRECATION_WARNING("const void *Buffer<T>::getVoidPtr()",
+							"const void *Buffer<T>::void_ptr() const");
+		return void_ptr();
+	}
+	virtual const void *void_ptr() const;
 
 	//! [] operator for read and write access
 
@@ -141,7 +175,7 @@ public:
 	//! \throws IndexError if n is larger than the number of elements in the buffer
 	//! \param n index of element to fetch
 	//! \return reference to the n-th element in the buffer
-	T& operator[](UInt64 n);
+	T& operator[](size_t n);
 	//! [] operator for read only access
 
 	//! This operator will be used in expressions where read only access to the
@@ -149,7 +183,7 @@ public:
 	//! \throws IndexError if n is larger than the number of elements in the buffer
 	//! \param n index of the element to fetch
 	//! \return value of the buffer at position n
-	T operator[](UInt64 n) const;
+	T operator[](size_t n) const;
 
 	//! allocate memory
 
@@ -181,30 +215,25 @@ public:
 	//! invoked before calling allocate() on an already allocated buffer.
 	//! If the buffer is not allocated this method does nothing.
 	virtual void free();
-	//! read/write void pointer
 
-	//! Returns a pointer of type void * on the allocated memory.
-	//! \return pointer to allocated memory
-	virtual void *getVoidPtr();
-	//! read only void pointer
-
-	//! Returns a read only void pointer to the allocated memory.
-	//! \return pointer to allocated memory
-	virtual const void *getVoidPtr() const;
 
 };
 
 //! @}
 
+//=================Implementation of constructors and destructors===============
+//implementation of the default constructor
 template<typename T> Buffer<T>::Buffer():BufferObject(){
-	setElementSize((UInt64)sizeof(T));
-	_data = NULL;
+	element_size(sizeof(T));
+	_data = nullptr;
 }
 
-template<typename T> Buffer<T>::Buffer(UInt64 n):BufferObject(n,sizeof(T)){
-	EXCEPTION_SETUP("template<typename T> Buffer<T>::Buffer(UInt64 n):BufferObject(n,sizeof(T))");
+//------------------------------------------------------------------------------
+//implementation of the standard constructor
+template<typename T> Buffer<T>::Buffer(size_t n):BufferObject(n,sizeof(T)){
+	EXCEPTION_SETUP("template<typename T> Buffer<T>::Buffer(size_t n)");
 
-	_data = NULL;
+	_data = nullptr;
 
 	try{
 		allocate();
@@ -214,23 +243,17 @@ template<typename T> Buffer<T>::Buffer(UInt64 n):BufferObject(n,sizeof(T)){
 	}
 }
 
+//------------------------------------------------------------------------------
+//implementation of the copy constructor
 template<typename T> Buffer<T>::Buffer(const Buffer<T> &b):BufferObject(b){
-	EXCEPTION_SETUP("template<typename T> Buffer<T>::Buffer(const Buffer<T> &b):BufferObject(b)");
+	EXCEPTION_SETUP("template<typename T> Buffer<T>::Buffer(const Buffer<T> &b)");
 
-	_data = NULL;
+	_data = nullptr;
 
-	if(b.isAllocated()){
-		try{
-			allocate();
-		}catch(...){
-			EXCEPTION_INIT(MemoryAllocationError,"Memory allocation for Buffer failed!");
-			EXCEPTION_THROW();
-		}
-
-		//if there is some data  - copy it
-		if(getSize()!=0) for(UInt64 i=0;i<getSize();i++) (*this)[i] = b[i];
+	this->allocate();
+	if(this->is_allocated()){
+		for(size_t i=0;i<this->size();i++) (*this)[i] = b[i];
 	}
-
 }
 
 template<typename T> Buffer<T>::~Buffer(){
@@ -238,15 +261,15 @@ template<typename T> Buffer<T>::~Buffer(){
 }
 
 //==============methods for data allocation ===================================
-template<typename T> bool Buffer<T>::isAllocated() const {
-	if(_data != NULL) return true;
+template<typename T> bool Buffer<T>::is_allocated() const {
+	if(_data) return true;
 	return false;
 }
 
 template<typename T> void Buffer<T>::free(){
 	EXCEPTION_SETUP("template<typename T> void Buffer<T>::free()");
-	if(isAllocated()) delete [] _data;
-	_data = NULL;
+	if(is_allocated()) delete [] _data;
+	_data = nullptr;
 }
 
 template<typename T> void Buffer<T>::allocate(){
@@ -265,15 +288,19 @@ template<typename T> void Buffer<T>::allocate(){
 			EXCEPTION_INIT(MemoryAllocationError,"Cannot allocate buffer memory!");
 			EXCEPTION_THROW();
 		}
-	}else{
-		EXCEPTION_INIT(MemoryAllocationError,"Buffer size not set!");
-		EXCEPTION_THROW();
 	}
 }
 
 
-template<typename T> void Buffer<T>::allocate(const UInt64 &size){
-	EXCEPTION_SETUP("void BufferObject::allocate(const UInt64 size)");
+template<typename T> void Buffer<T>::allocate(const size_t &s){
+	EXCEPTION_SETUP("void BufferObject::allocate(const size_t s)");
+
+	//free memory if necessary
+	if(is_allocated() && (s != size())) this->free();
+
+	//set the new size of the buffer
+	this->allocate();
+
 	if(!isAllocated()){
 		//the allocate method checks if the size is zero and does allocation
 		//if appropriate
@@ -292,19 +319,19 @@ template<typename T> void Buffer<T>::allocate(const UInt64 &size){
 }
 
 //====================methods to access the data pointer========================
-template<typename T> void *Buffer<T>::getVoidPtr(){
+template<typename T> void *Buffer<T>::void_ptr(){
 	return (void *)_data;
 }
 
-template<typename T> const void *Buffer<T>::getVoidPtr() const {
+template<typename T> const void *Buffer<T>::void_ptr() const {
 	return (void *)_data;
 }
 
-template<typename T> T *Buffer<T>::getPtr(){
+template<typename T> T *Buffer<T>::ptr(){
 	return _data;
 }
 
-template<typename T> const T *Buffer<T>::getPtr() const {
+template<typename T> const T *Buffer<T>::ptr() const {
 	return _data;
 }
 
@@ -315,38 +342,16 @@ template<typename T> Buffer<T> &Buffer<T>::operator=(const Buffer<T> &b){
 	EXCEPTION_SETUP("template<typename T> Buffer<T> &Buffer<T>::operator=(const Buffer<T> &b)");
 
 	if(&b != this){
-		if(!b.isAllocated()){
-			//if the rhs is not allocated we simply need to free memory
-			//and copy the size
-			if(isAllocated()) free();
-			setSize(b.getSize());
-		}else{
-			//if the rhs is allocated we need to copy data
-			if(getSize() != b.getSize()){
-				//if the two buffers differ in size we need to allocate new memory
-				if(isAllocated()) free();
-				setSize(b.getSize());
-				try{
-					allocate();
-				}catch(MemoryAllocationError &error){
-					EXCEPTION_INIT(MemoryAllocationError,"Memory allocation for buffer failed!");
-					EXCEPTION_THROW();
-				}
-			}else{
-				//what can happen now is that the buffers had the same size
-				//but this buffer was not allocated yet
-				if(!isAllocated()){
-					try{
-						allocate();
-					}catch(MemoryAllocationError &error){
-						EXCEPTION_INIT(MemoryAllocationError,"Memory allocation for buffer failed!");
-						EXCEPTION_THROW();
-					}
-				}
-			}
+		//free this buffer if it is allocated
+		this->free();
+		//now assign all parameters from the original buffer to the new one
+		(BufferObject &)(*this) = (BufferObject &)o;
+		//call allocate (which will do nothing if there is nothing to allocate)
+		this->allocate();
 
-			//copy data
-			for(UInt64 i=0;i<getSize();i++) (*this)[i] = b[i];
+		//if the buffer is allocated afterwards copy the data
+		if(this->is_allocated()){
+			for(size_t i=0;i<this->size();i++) (*this)[i] = b[i];
 		}
 	}
 
@@ -412,14 +417,14 @@ template<typename T> Buffer<T> &Buffer<T>::operator=(const T &d){
 	EXCEPTION_SETUP("template<typename T> Buffer<T> &Buffer<T>::operator=(const T &d)");
 	Buffer<T> &b = *this;
 
-	if(!isAllocated()){
+	if(!is_allocated()){
 		EXCEPTION_INIT(MemoryAccessError,"Cannot assign data to an unallocated buffer!");
 		EXCEPTION_THROW();
 	}
 
 	//we do not need to check the size here because if the buffer is allocated
 	//the size is necessarily not zero
-	for(UInt64 i=0;i<b.getSize();i++) b[i] = d;
+	for(UInt64 i=0;i<b.size();i++) b[i] = d;
 
 
 	return *this;
@@ -429,7 +434,7 @@ template<typename T>
 template<typename U> Buffer<T> &Buffer<T>::operator=(const U &v){
 	EXCEPTION_SETUP("template<typename T> template<typename U> Buffer<T> &Buffer<T>::operator=(const U &v)");
 
-	if(!isAllocated()){
+	if(!is_allocated()){
 		EXCEPTION_INIT(MemoryAccessError,"Cannot assign data to an unallocated buffer!");
 		EXCEPTION_THROW();
 	}
@@ -448,39 +453,41 @@ template<typename U> Buffer<T> &Buffer<T>::operator=(const U &v){
 
 	//now everything is fine can do assignment - like above we do not
 	//need to check the size of the buffer, it must be different from zero
-	for(UInt64 i=0; i<getSize();i++) _data[i] = (T)v;
+	for(UInt64 i=0; i<size();i++) _data[i] = (T)v;
 
 
 	return *this;
 }
 
 //======================operators for data access===============================
-template<typename T> T& Buffer<T>::operator[](UInt64 n){
-	EXCEPTION_SETUP("template<typename T> T& Buffer<T>::operator[](unsigned long n)");
+template<typename T> T& Buffer<T>::operator[](size_t n){
+	EXCEPTION_SETUP("template<typename T> T& Buffer<T>::operator[](size_t n)");
 
-	if(!isAllocated()){
+	if(!is_allocated()){
 		EXCEPTION_INIT(MemoryAccessError,"Buffer not allocated!");
 		EXCEPTION_THROW();
 	}
 
-	if(n>=getSize()){
-		EXCEPTION_INIT(IndexError,"Index must not be larger or equal the size of the buffer!");
+	if(n>=size()){
+		EXCEPTION_INIT(IndexError,"Index must not be larger or equal the "
+					  "size of the buffer!");
 		EXCEPTION_THROW();
 	}
 
 	return _data[n];
 }
 
-template<typename T> T Buffer<T>::operator[](UInt64 n) const {
-	EXCEPTION_SETUP("template<typename T> T Buffer<T>::operator[](unsigned long n) const");
+template<typename T> T Buffer<T>::operator[](size_t n) const {
+	EXCEPTION_SETUP("template<typename T> T Buffer<T>::operator[](size_t n) const");
 
-	if(!isAllocated()){
+	if(!is_allocated()){
 		EXCEPTION_INIT(MemoryAccessError,"Buffer not allocated!");
 		EXCEPTION_THROW();
 	}
 
-	if(n>=getSize()){
-		EXCEPTION_INIT(IndexError,"Index must not be larger or equal the size of the buffer!");
+	if(n>=size()){
+		EXCEPTION_INIT(IndexError,"Index must not be larger or equal the "
+					   "size of the buffer!");
 		EXCEPTION_THROW();
 	}
 	return _data[n];

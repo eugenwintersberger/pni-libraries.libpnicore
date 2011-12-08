@@ -32,6 +32,7 @@
 
 #include "PNITypes.hpp"
 #include "boost/shared_ptr.hpp"
+#include "service.hpp"
 
 namespace pni{
 namespace utils{
@@ -54,9 +55,9 @@ namespace utils{
 //! child classes implementing this functionality.
 class BufferObject{
 private:
-	UInt64 _size;       //!< number of elements in the buffer
-	UInt64 _elem_size;  //!< size of a single element in byte
-	UInt64 _tot_size;   //!< total size of memory occupied in bytes
+	size_t _size;       //!< number of elements in the buffer
+	size_t _elem_size;  //!< size of a single element in byte
+	size_t _tot_size;   //!< total size of memory occupied in bytes
 
 	//! compute total memory consumption
 
@@ -80,6 +81,8 @@ public:
 	//! new one.
 	//! \param b original buffer object
 	BufferObject(const BufferObject &b);
+	//! move constructor
+	BufferObject(BufferObject &&o);
 	//! constructor
 
 	//! Constructor for a BufferObject that initializes the number of elements
@@ -89,35 +92,50 @@ public:
 	BufferObject(UInt64 n,UInt64 es);
 	//! destructor
 	virtual ~BufferObject();
+
+	//! copy assignment operator
+	BufferObject &operator=(const BufferObject &o);
+	//! move assignment operator
+	BufferObject &operator=(BufferObject &&o);
+
 	//! get number of elements
 
 	//! Returns the number of elements of a particular size (can be obtained using
 	//! getElementSize()).
 	//! \returns number of elements
-	virtual UInt64 getSize() const;
+	virtual size_t getSize() const;
+	virtual size_t size() const;
 	//! set number of elements
 
 	//! Sets the number of elements of a particular size that should be stored in the
 	//! buffer. If the buffer is already allocated an exception is thrown.
 	//! \param s number of elements
-	virtual void setSize(UInt64 s);
+	virtual void setSize(size_t s);
+	virtual void size(size_t s);
 	//! set element size
 
 	//! Sets the size of the elements in the buffer in bytes.
 	//! \param es element size
 	virtual void setElementSize(UInt64 es);
+	virtual void element_size(size_t es);
 	//! get element size
 
 	//! Returns the size of each element in the buffer in bytes.
 	//! \return element size
-	virtual UInt64 getElementSize() const;
+	virtual size_t getElementSize() const;
+	virtual size_t element_size() const;
 	//! return total size
 
 	//! This method returns the total amount of memory allocated by the buffer
 	//! in bytes. Basically this number can be computed with
 	//! number of elements times element size.
 	//! \return total memory consumption
-	virtual UInt64 getMemSize() const{return _tot_size;}
+	virtual size_t getMemSize() const{
+		DEPRECATION_WARNING("size_t BufferObject::getMemSize() const",
+							"size_t BufferObject::mem_size() const");
+		return mem_size();
+	}
+	virtual size_t mem_size() const { return _tot_size;}
 	//! allocate memory
 
 	//! Allocates memory for the requested number of elements of particular size.
@@ -140,19 +158,20 @@ public:
 	//! \throws MemoryAllocationError if memory allocation fails or buffer is already allocated
 	//! \param size number of elements
 	//! \param esize element size
-	virtual void allocate(const UInt64 &size,const UInt64 &esize);
+	virtual void allocate(const size_t &size,const size_t &esize);
 	//! allocate memory
 
 	//! Allocate memory assuming that the element size has already been set.
 	//! \throws MemoryAllocationError if memory allocation fails or buffer is already allocated
 	//! \throws SizeMissmatchError if element size is not set yet
-	virtual void allocate(const UInt64 &size);
+	virtual void allocate(const size_t &size);
 	//! buffer status
 
 	//! Returns true if the buffer is allocated - false otherwise.
 	//! Use this method to check the status of a buffer object.
 	//! \return true/false depending on buffer status
 	virtual bool isAllocated() const;
+	virtual bool is_allocated() const;
 	//! free memory
 
 	//! Frees all memory allocated by the BufferObject.
@@ -165,12 +184,14 @@ public:
 	//! This method must be implemented by the child class.
 	//! \return pointer to memory
 	virtual void *getVoidPtr();
+	virtual void *void_ptr();
 	//! get void pointer
 
 	//! Returns a const. pointer to the allocated memory region.
 	//! This method must be implemented by the child class.
 	//! \return constant pointer to memory.
 	virtual const void *getVoidPtr() const;
+	virtual const void *void_ptr() const;
 };
 
 //! @}
