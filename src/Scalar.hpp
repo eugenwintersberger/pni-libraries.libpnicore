@@ -34,6 +34,8 @@
 #include <iostream>
 #include <complex>
 
+#include <boost/numeric/conversion/converter.hpp>
+
 #include "PNITypes.hpp"
 #include "ScalarObject.hpp"
 #include "TypeInfo.hpp"
@@ -46,6 +48,7 @@
 namespace pni {
 namespace utils {
 
+using namespace boost::numeric;
 
 //! \ingroup Data-objects
 //! \brief Scalar template for scalar values
@@ -197,6 +200,15 @@ public:
 		}
 
 		return (U)_value;
+		/*
+		U target;
+		try{
+			target = converter<U,T>::convert(_value);
+		}catch(...){
+			EXCEPTION_INIT(TypeError,"Type conversion error!");
+		}
+
+		return target;*/
 	}
 
 
