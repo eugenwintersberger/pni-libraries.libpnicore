@@ -636,18 +636,24 @@ void ScalarTest::testBinaryDivisionOperation(){
 	bc32 = Complex32(-2.4201,4568.78);
 	sac32 = ac32; sbc32 = bc32;
 	CPPUNIT_ASSERT_NO_THROW(scc32 = sac32 / sbc32);
-	CPPUNIT_ASSERT(scc32.getValue() == ac32 / bc32);
+	std::cout<<scc32<<std::endl;
+	std::cout<<ac32/bc32<<std::endl;
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(scc32.getValue().real(),(ac32 / bc32).real(),DOUBLE_PREC);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(scc32.getValue().imag(),(ac32 / bc32).imag(),DOUBLE_PREC);
 	CPPUNIT_ASSERT_NO_THROW(scc32 = sac32 / bc32);
-	CPPUNIT_ASSERT(scc32.getValue() == ac32 / bc32);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(scc32.getValue().real(),(ac32 / bc32).real(),DOUBLE_PREC);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(scc32.getValue().imag(),(ac32 / bc32).imag(),DOUBLE_PREC);
 	CPPUNIT_ASSERT_NO_THROW(scc32 = ac32 / sbc32);
-	CPPUNIT_ASSERT(scc32.getValue() == ac32 / bc32);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(scc32.getValue().real(),(ac32 / bc32).real(),DOUBLE_PREC);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(scc32.getValue().imag(),(ac32 / bc32).imag(),DOUBLE_PREC);
 
 	//mixed complex operations
 	ac128 = Complex128(4578.748,-587.3240);
 	bc128 = Complex128(458.747,7893.1334);
 	sac128 = ac128; sbc128 = bc128;
 	CPPUNIT_ASSERT_NO_THROW(scc128 = sac128 / sbc32);
-	CPPUNIT_ASSERT(scc128.getValue() == ac128 / (Complex128)bc32);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(scc128.getValue().real(),(ac128 / (Complex128)bc32).real(),DOUBLE_PREC);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(scc128.getValue().imag(),(ac128 / (Complex128)bc32).imag(),DOUBLE_PREC);
 	CPPUNIT_ASSERT_NO_THROW(scc32 = ac128 / sbc32);
 	CPPUNIT_ASSERT_DOUBLES_EQUAL((((Complex32)ac128) / bc32).real(),scc32.getValue().real(),DOUBLE_PREC);
 	CPPUNIT_ASSERT_DOUBLES_EQUAL((((Complex32)ac128) / bc32).imag(),scc32.getValue().imag(),DOUBLE_PREC);
@@ -655,16 +661,20 @@ void ScalarTest::testBinaryDivisionOperation(){
 	//mixed complex double operations
 	af64 = 12.31344; saf64 = af64;
 	CPPUNIT_ASSERT_NO_THROW(scc32 = saf64 / sbc32);
-	CPPUNIT_ASSERT(scc32.getValue() == Complex32(af64) / bc32);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(scc32.getValue().real(),(Complex32(af64)/bc32).real(),DOUBLE_PREC);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(scc32.getValue().imag(),(Complex32(af64)/bc32).imag(),DOUBLE_PREC);
 	CPPUNIT_ASSERT_NO_THROW(scc32 = af64 / sbc32);
-	CPPUNIT_ASSERT(scc32.getValue() == Complex32(af64) / bc32);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(scc32.getValue().real(),(Complex32(af64) / bc32).real(),DOUBLE_PREC);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(scc32.getValue().imag(),(Complex32(af64) / bc32).imag(),DOUBLE_PREC);
 
 	//mixed complex integer operations
 	bui32 = 100; sbui32 = bui32;
 	CPPUNIT_ASSERT_NO_THROW(scc32 = sac32 / sbui32);
-	CPPUNIT_ASSERT(scc32.getValue() == ac32 / Complex32(bui32));
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(scc32.getValue().real(),(ac32/Complex32(bui32)).real(),DOUBLE_PREC);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(scc32.getValue().imag(),(ac32/Complex32(bui32)).imag(),DOUBLE_PREC);
 	CPPUNIT_ASSERT_NO_THROW(scc32 = sac32 / bui32);
-	CPPUNIT_ASSERT(scc32.getValue() == ac32 / Complex32(bui32));
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(scc32.getValue().real(),(ac32/Complex32(bui32)).real(),DOUBLE_PREC);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(scc32.getValue().imag(),(ac32/Complex32(bui32)).imag(),DOUBLE_PREC);
 
 }
 
@@ -761,7 +771,8 @@ void ScalarTest::testBinaryMultiplicationOperation(){
 	bc128 = Complex128(458.747,7893.1334);
 	sac128 = ac128; sbc128 = bc128;
 	CPPUNIT_ASSERT_NO_THROW(scc128 = sac128 * sbc32);
-	CPPUNIT_ASSERT(scc128.getValue() == ac128 * (Complex128)bc32);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(scc128.getValue().real(),(ac128*Complex128(bc32)).real(),DOUBLE_PREC);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(scc128.getValue().imag(),(ac128*Complex128(bc32)).imag(),DOUBLE_PREC);
 	CPPUNIT_ASSERT_NO_THROW(scc32 = ac128 * sbc32);
 	//need to define here some rules for comparison
 	CPPUNIT_ASSERT_DOUBLES_EQUAL((Float32)(ac128 * (Complex128)bc32).real(),scc32.getValue().real(),DOUBLE_PREC);
