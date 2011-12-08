@@ -31,34 +31,52 @@
 namespace pni{
 namespace utils{
 
-
+//=================Implementation of constructors and destructor===============
+//implementation of the default constructor
 ScalarObject::ScalarObject():NumericObject() {
-	// TODO Auto-generated constructor stub
 
 }
 
-ScalarObject::ScalarObject(const ScalarObject &o){
-	_name = o._name;
-	_description = o._description;
-	_unit = o._unit;
+//-----------------------------------------------------------------------------
+//implementation of the copy constructor
+ScalarObject::ScalarObject(const ScalarObject &o):NumericObject(o){
+
 }
 
+//-----------------------------------------------------------------------------
+//implementation of the move constructor
+ScalarObject::ScalarObject(ScalarObject &&o):NumericObject(std::move(o)){
+
+}
+
+//------------------------------------------------------------------------------
+//implementation of the destructor
 ScalarObject::~ScalarObject() {
 	// TODO Auto-generated destructor stub
 }
 
+//================Implementation of assignment operators========================
+//implementation of the copy assignment operator
 ScalarObject &ScalarObject::operator=(const ScalarObject &o){
 	if(this != &o){
-		_name = o._name;
-		_unit = o._unit;
-		_description = o._description;
+		(NumericObject &)(*this) = (NumericObject &)o;
 	}
 
 	return *this;
 }
 
+//------------------------------------------------------------------------------
+//implementation of the move assignment operator
+ScalarObject &ScalarObject::operator=(ScalarObject &&o){
+	if(this != &o){
+		(NumericObject &)(*this) = std::move((NumericObject &)o);
+	}
+	return *this;
+}
+
+//====================Implementation of output operators========================
 std::ostream &operator<<(std::ostream &o,const ScalarObject &s){
-	o<<s._name<<"["<<s._description<<"]"<<" in units of ("<<s._unit<<")";
+	o<<s.name()<<"["<<s.description()<<"]"<<" in units of ("<<s.unit()<<")";
 	return o;
 }
 

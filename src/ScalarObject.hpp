@@ -57,6 +57,9 @@ public:
 	ScalarObject();
 	//! copy constructor
 	ScalarObject(const ScalarObject &o);
+	//! move constructor
+	ScalarObject(ScalarObject &&o);
+	//! move constructor
 	//! constructor
 
 	//! Constructor setting name and unit of a scalar
@@ -65,36 +68,22 @@ public:
 	ScalarObject(const String &n,const String &u):NumericObject(n,u){}
 	//! constructor
 
-	//! Constructor setting name and unit of a scalar
-	//! \param n name of the scalar as character array
-	//! \param u unit of the scalar as character array
-	ScalarObject(const char *n,const char *u):NumericObject(n,u){}
-	//! constructor
-
 	//! Constructor setting name, unit, and description of a scalar
 	//! \param n name of the scalar as String object
 	//! \param u unit of the scalar as String object
 	//! \param d description of the scalar as String object
 	ScalarObject(const String &n,const String &u,const String &d):NumericObject(n,u,d){}
-	//! constructor
-
-	//! Constructor setting name, unit, and description of a scalar
-	//! \param n name of the scalar as character array
-	//! \param u unit of the scalar as character array
-	//! \param d description of the scalar as character array
-	ScalarObject(const char *n,const char *u,const char *d):NumericObject(n,u,d){}
 	//! destructor
 	virtual ~ScalarObject();
 
 	//! assignment operator
 	ScalarObject &operator=(const ScalarObject &o);
+	//! move assignment
+	ScalarObject &operator=(ScalarObject &&o);
 
 	//! output operator for console output
 	friend std::ostream &operator<<(std::ostream &o,const ScalarObject &s);
 
-	//! get void pointer to the data value
-	virtual void *getVoidPtr(){ return NULL; }
-	virtual const void *getVoidPtr() const {return NULL;}
 };
 
 
