@@ -209,7 +209,7 @@ public:
 	//! method was implemented just for convenience and might be useful if a
 	//! pointer to a scalar object is used.
 	//! \return value of the Scalar object
-	T getValue() const {
+	T value() const {
 		return _value;
 	}
 
@@ -221,7 +221,7 @@ public:
 	//! are equal afer a call to this method. All other attributes of the class
 	//! remain the same.
 	//! \param v reference to the object from which the value should be taken
-	void setValue(const Scalar<T> &v);
+	void value(const Scalar<T> &v);
 	//! set value from variable
 
 	//! Sets the value of the object from a variable of type T. Since the variable
@@ -230,7 +230,7 @@ public:
 	//! assignment operator.
 	//! \see Scalar<T> &operator=(const T &v)
 	//! \param v reference to a variable of type T
-	void setValue(const T &v);
+	void value(const T &v);
 
 	//! template to set the value of a Scalar
 
@@ -239,7 +239,7 @@ public:
 	//! useful if only a pointer exists to a Scalar<T> object
 	//! and therefore the = operator cannot be called in an easy manner.
 	//! \param &v reference to a Scalar object of type U
-	template<typename U> void setValue(const Scalar<U> &v);
+	template<typename U> void value(const Scalar<U> &v);
 	//! template to set the value of a Scalar
 
 	//! Template method to set the value of a Scalar object
@@ -247,7 +247,7 @@ public:
 	//! useful if only a pointer to a Scalar<T> object exists
 	//! and the = operator cannot be called in a simple manner.
 	//! \param &v reference to a variable of type U
-	template<typename U> void setValue(const U &v);
+	template<typename U> void value(const U &v);
 
 	//for each of the arithmetic operators three cases must be
 	//taken into account:
@@ -287,16 +287,24 @@ public:
 	template<typename U> Scalar<T> &operator*=(const Scalar<U> &v);
 
 	//! get a void pointer to the data
-	virtual void *getVoidPtr(){
+	virtual void *void_ptr(){
 		return (void *)(&_value);
 	}
 
-	virtual const void *getVoidPtr() const {
+	virtual const void *void_ptr() const {
 		return (const void *)(&_value);
 	}
 
+	virtual T *ptr(){
+		return &_value;
+	}
+
+	virtual const T *ptr() const {
+		return (const T*)(&_value);
+	}
+
 	//return the type numeric ID of the Scalar<T> object
-	virtual PNITypeID getTypeID() const{
+	virtual PNITypeID type_id() const{
 		return PNITypeInfo<T>::TypeID;
 	}
 
@@ -349,17 +357,17 @@ template<typename T> Scalar<T>::~Scalar() {
 }
 
 //==========methods for accessing the data of a scalar in a typesafe way===================
-template<typename T> void Scalar<T>::setValue(const T &v){
+template<typename T> void Scalar<T>::value(const T &v){
 	_value = v;
 }
-template<typename T> void Scalar<T>::setValue(const Scalar<T> &v){
-	EXCEPTION_SETUP("template<typename T> void Scalar<T>::setValue(const Scalar<T> &v)");
+template<typename T> void Scalar<T>::value(const Scalar<T> &v){
+	EXCEPTION_SETUP("template<typename T> void Scalar<T>::value(const Scalar<T> &v)");
 
-	setValue(v.getValue());
+	value(v.value());
 }
 
-template<typename T> template<typename U> void Scalar<T>::setValue(const U &v){
-	EXCEPTION_SETUP("template<typename T> template<typename U> void Scalar<T>::setValue(const U &v)");
+template<typename T> template<typename U> void Scalar<T>::value(const U &v){
+	EXCEPTION_SETUP("template<typename T> template<typename U> void Scalar<T>::value(const U &v)");
 
 	if(!TypeCompat<T,U>::isAssignable){
 		EXCEPTION_INIT(TypeError,"Cannot assign value due to incompatible types!");
@@ -375,20 +383,20 @@ template<typename T> template<typename U> void Scalar<T>::setValue(const U &v){
 
 }
 
-template<typename T> template<typename U> void Scalar<T>::setValue(const Scalar<U> &s){
-	EXCEPTION_SETUP("template<typename T> template<typename U> void Scalar<T>::setValue(const Scalar<U> &s)");
+template<typename T> template<typename U> void Scalar<T>::value(const Scalar<U> &s){
+	EXCEPTION_SETUP("template<typename T> template<typename U> void Scalar<T>::value(const Scalar<U> &s)");
 
 	if(!TypeCompat<T,U>::isAssignable){
 		EXCEPTION_INIT(TypeError,"Cannot set value - types are incompatible!");
 		EXCEPTION_THROW();
 	}
 
-	if(!TypeRange<T>::checkRange(s.getValue())){
+	if(!TypeRange<T>::checkRange(s.value())){
 		EXCEPTION_INIT(RangeError,"Cannot set value - value exceeds type bounds!");
 		EXCEPTION_THROW();
 	}
 
-	_value = s.getValue();
+	_value = s.value();
 }
 
 //======================unary arithmetic operators=========================================
@@ -454,7 +462,7 @@ template<typename U> Scalar<T>& Scalar<T>::operator/=(const Scalar<U> &v){
 	//if everything went fine so far we have to compute the result now
 	ResultType result,a,b;
 	a = (ResultType)_value;
-	b = (ResultType)v.getValue();
+	b = (ResultType)v.value();
 	result = a / b;
 
 	//before assigning the new result we have to check the range
@@ -504,7 +512,7 @@ template<typename U> Scalar<T> &Scalar<T>::operator+=(const U &v){
 }
 
 template<typename T> Scalar<T> &Scalar<T>::operator+=(const Scalar<T> &v) {
-	_value += v.getValue();
+	_value += v.value();
 	return *this;
 }
 
@@ -526,7 +534,7 @@ template<typename U> Scalar<T> &Scalar<T>::operator+=(const Scalar<U> &v){
 
 	ResultType result,a,b;
 	a = (ResultType)_value;
-	b = (ResultType)v.getValue();
+	b = (ResultType)v.value();
 	result = a + b;
 
 	//before assigning the new result we have to check the range
@@ -598,7 +606,7 @@ template<typename U> Scalar<T> &Scalar<T>::operator-=(const Scalar<U> &v){
 
 	ResultType result,a,b;
 	a = (ResultType)_value;
-	b = (ResultType)v.getValue();
+	b = (ResultType)v.value();
 	result = a - b;
 
 	//before assigning the new result we have to check the range
@@ -668,7 +676,7 @@ template<typename U> Scalar<T> &Scalar<T>::operator*=(const Scalar<U> &v){
 
 	ResultType result,a,b;
 	a = (ResultType)_value;
-	b = (ResultType)v.getValue();
+	b = (ResultType)v.value();
 	result = a*b;
 
 	//before assigning the new result we have to check the range
@@ -684,11 +692,11 @@ template<typename U> Scalar<T> &Scalar<T>::operator*=(const Scalar<U> &v){
 //=======================comparison operator=================================
 
 template<typename T> bool operator==(const Scalar<T> &a, const Scalar<T> &b) {
-	return (a.getValue() == b.getValue());
+	return (a.value() == b.value());
 }
 
 template<typename T> bool operator==(const T& a, const Scalar<T> &b) {
-	return (a == b.getValue());
+	return (a == b.value());
 }
 
 template<typename T> bool operator==(const Scalar<T> &a, const T& b) {
@@ -697,12 +705,12 @@ template<typename T> bool operator==(const Scalar<T> &a, const T& b) {
 
 template<typename A,typename B> bool operator==(const Scalar<A> &a,const Scalar<B> &b){
 	EXCEPTION_SETUP("template<typename A,typename B> bool operator==(const Scalar<A> &a,const Scalar<B> &b)");
-	return(a.getValue() == b.getValue());
+	return(a.value() == b.value());
 }
 
 template<typename A,typename B> bool operator==(const Scalar<A> &a,const B &b){
 	EXCEPTION_SETUP("template<typename A,typename B> bool operator==(const Scalar<A> &a,const Scalar<B> &b)");
-	A _a = a.getValue();
+	A _a = a.value();
 	B _b = b;
 
 	return (_a == _b);
@@ -711,7 +719,7 @@ template<typename A,typename B> bool operator==(const Scalar<A> &a,const B &b){
 template<typename A,typename B> bool operator==(const A &a,const Scalar<B> &b){
 	EXCEPTION_SETUP("template<typename A,typename B> bool operator==(const A &a,const Scalar<B> &b)");
 
-	return(a==b.getValue());
+	return(a==b.value());
 }
 
 template<typename T> bool operator!=(const Scalar<T> &a,const Scalar<T> &b){
@@ -739,7 +747,7 @@ template<typename T> std::ostream &operator<<(std::ostream &o,
 	if(v.name()!=""){
 		o<<v.name()<<" = ";
 	}
-	o << v.getValue();
+	o << v.value();
 	if(v.unit() != ""){
 		o<<" "<<v.unit();
 	}
@@ -788,7 +796,7 @@ template<typename U> Scalar<T> &Scalar<T>::operator=(const Scalar<U> &v){
 			EXCEPTION_THROW();
 		}
 
-		if(!TypeRange<T>::checkRange(v.getValue())){
+		if(!TypeRange<T>::checkRange(v.value())){
 			EXCEPTION_INIT(RangeError,"Cannot assign value - rhs value exceeds lhs type bounds!");
 			EXCEPTION_THROW();
 		}
@@ -799,7 +807,7 @@ template<typename U> Scalar<T> &Scalar<T>::operator=(const Scalar<U> &v){
 		this_o = that_o;
 
 		//now we have to transfer the value
-		_value = (T)v.getValue();
+		_value = (T)v.value();
 	}
 
 	return *this;
@@ -808,7 +816,7 @@ template<typename U> Scalar<T> &Scalar<T>::operator=(const Scalar<U> &v){
 template<typename T> Scalar<T> &Scalar<T>::operator=(const Scalar<T> &s){
 	//std::cout<<"native assignment of scalar objects!"<<std::endl;
 	if(this != &s){
-		(*this).setValue(s.getValue());
+		(*this).value(s.value());
 		(*this).name(s.name());
 		(*this).unit(s.unit());
 		(*this).description(s.description());
@@ -824,10 +832,10 @@ const Scalar<typename ResultTypeTrait<A,B>::AddResultType > operator+(const Scal
 	typedef typename ResultTypeTrait<A,B>::AddResultType ResultType;
 	Scalar<ResultType> o;
 
-	ResultType _a = (ResultType)a.getValue();
-	ResultType _b = (ResultType)b.getValue();
+	ResultType _a = (ResultType)a.value();
+	ResultType _b = (ResultType)b.value();
 
-	o.setValue(_a + _b);
+	o.value(_a + _b);
 
 	return o;
 }
@@ -837,10 +845,10 @@ const Scalar<typename ResultTypeTrait<A,B>::AddResultType > operator+(const Scal
 	typedef typename ResultTypeTrait<A,B>::AddResultType ResultType;
 	Scalar<ResultType> o;
 
-	ResultType _a = (ResultType)a.getValue();
+	ResultType _a = (ResultType)a.value();
 	ResultType _b = (ResultType)b;
 
-	o.setValue(_a + _b);
+	o.value(_a + _b);
 	return o;
 }
 
@@ -850,9 +858,9 @@ const Scalar<typename ResultTypeTrait<A,B>::AddResultType > operator+(const A &a
 	Scalar<ResultType> o;
 
 	ResultType _a = (ResultType)a;
-	ResultType _b = (ResultType)b.getValue();
+	ResultType _b = (ResultType)b.value();
 
-	o.setValue(_a + _b);
+	o.value(_a + _b);
 
 	return o;
 }
@@ -863,10 +871,10 @@ const Scalar<typename ResultTypeTrait<A,B>::SubResultType > operator-(const Scal
 	typedef typename ResultTypeTrait<A,B>::SubResultType ResultType;
 	Scalar<ResultType> tmp;
 
-	ResultType _a = (ResultType)a.getValue();
-	ResultType _b = (ResultType)b.getValue();
+	ResultType _a = (ResultType)a.value();
+	ResultType _b = (ResultType)b.value();
 
-	tmp.setValue(_a - _b);
+	tmp.value(_a - _b);
 
 	return tmp;
 }
@@ -877,9 +885,9 @@ const Scalar<typename ResultTypeTrait<A,B>::SubResultType > operator-(const A& a
 	Scalar<ResultType> tmp;
 
 	ResultType _a = (ResultType)a;
-	ResultType _b = (ResultType)b.getValue();
+	ResultType _b = (ResultType)b.value();
 
-	tmp.setValue(_a - _b);
+	tmp.value(_a - _b);
 
 	return tmp;
 }
@@ -889,10 +897,10 @@ const Scalar<typename ResultTypeTrait<A,B>::SubResultType > operator-(const Scal
 	typedef typename ResultTypeTrait<A,B>::SubResultType ResultType;
 	Scalar<ResultType> tmp;
 
-	ResultType _a = (ResultType)a.getValue();
+	ResultType _a = (ResultType)a.value();
 	ResultType _b = (ResultType)b;
 
-	tmp.setValue(_a - _b);
+	tmp.value(_a - _b);
 	return tmp;
 }
 
@@ -902,10 +910,10 @@ const Scalar<typename ResultTypeTrait<A,B>::MultResultType > operator*(const Sca
 	typedef typename ResultTypeTrait<A,B>::MultResultType ResultType;
 	Scalar<ResultType> tmp;
 
-	ResultType _a = (ResultType)a.getValue();
-	ResultType _b = (ResultType)b.getValue();
+	ResultType _a = (ResultType)a.value();
+	ResultType _b = (ResultType)b.value();
 
-	tmp.setValue(_a * _b);
+	tmp.value(_a * _b);
 	return tmp;
 }
 
@@ -915,9 +923,9 @@ const Scalar<typename ResultTypeTrait<A,B>::MultResultType > operator*(const A& 
 	Scalar<ResultType> tmp;
 
 	ResultType _a = (ResultType)a;
-	ResultType _b = (ResultType)b.getValue();
+	ResultType _b = (ResultType)b.value();
 
-	tmp.setValue(_a * _b);
+	tmp.value(_a * _b);
 	return tmp;
 }
 
@@ -926,10 +934,10 @@ const Scalar<typename ResultTypeTrait<A,B>::MultResultType > operator*(const Sca
 	typedef typename ResultTypeTrait<A,B>::MultResultType ResultType;
 	Scalar<ResultType> tmp;
 
-	ResultType _a = (ResultType)a.getValue();
+	ResultType _a = (ResultType)a.value();
 	ResultType _b = (ResultType)b;
 
-	tmp.setValue(_a * _b);
+	tmp.value(_a * _b);
 	return tmp;
 }
 
@@ -939,10 +947,10 @@ const Scalar<typename ResultTypeTrait<A,B>::DivResultType > operator/(const Scal
 	typedef typename ResultTypeTrait<A,B>::DivResultType ResultType;
 	Scalar<ResultType> tmp;
 
-	ResultType _a = (ResultType)a.getValue();
-	ResultType _b = (ResultType)b.getValue();
+	ResultType _a = (ResultType)a.value();
+	ResultType _b = (ResultType)b.value();
 
-	tmp.setValue(_a / _b);
+	tmp.value(_a / _b);
 	return tmp;
 }
 
@@ -952,9 +960,9 @@ const Scalar<typename ResultTypeTrait<A,B>::DivResultType > operator/(const A& a
 	Scalar<ResultType> tmp;
 
 	ResultType _a = (ResultType)a;
-	ResultType _b = (ResultType)b.getValue();
+	ResultType _b = (ResultType)b.value();
 
-	tmp.setValue(_a / _b);
+	tmp.value(_a / _b);
 	return tmp;
 }
 
@@ -963,10 +971,10 @@ const Scalar<typename ResultTypeTrait<A,B>::DivResultType > operator/(const Scal
 	typedef typename ResultTypeTrait<A,B>::DivResultType ResultType;
 	Scalar<ResultType> tmp;
 
-	ResultType _a = (ResultType)a.getValue();
+	ResultType _a = (ResultType)a.value();
 	ResultType _b = (ResultType)b;
 
-	tmp.setValue(_a / _b);
+	tmp.value(_a / _b);
 	return tmp;
 }
 
