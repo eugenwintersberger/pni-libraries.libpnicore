@@ -37,6 +37,7 @@
 #include "Exceptions.hpp"
 #include "Index.hpp"
 #include "PNITypes.hpp"
+#include "Buffer.hpp"
 
 
 namespace pni{
@@ -70,10 +71,9 @@ namespace utils{
 
 class ArrayShape{
     private:
-        UInt32 _rank;         //!< the number of dimensions
-        UInt32 *_dimstrides;  //!< the strides for the offset calculation
-        UInt32 *_shape;       //!< the number of values along each dimension
-        UInt64 _size;         //!< the total number of elements in the array
+        Buffer<size_t> _dimstrides;  //!< the strides for the offset calculation
+        Buffer<size_t> _shape;       //!< the number of values along each dimension
+        size_t _size;         //!< the total number of elements in the array
         
         //! compute dimension strides
 
@@ -86,21 +86,6 @@ class ArrayShape{
         //! used internally to recompute the number of elements in the array
         //! once the shape is changed in a way so that the size is changed.
         void _compute_size();
-
-        //! allocate memory
-
-        //! Method allocates buffers
-        //! \throws MemoryAllocationError if allocation fails.
-        void _allocate(UInt32 n);
-
-        //! free memory
-
-        //! Method frees the memory occupied by this class.
-        void _free();
-        //! set initial values
-
-        //! sets the member variables to initial values
-        void _init();
     public:
         typedef boost::shared_ptr<ArrayShape> sptr;  //!< smart pointer to an ArrayShape object
         //! default constructor
@@ -111,13 +96,15 @@ class ArrayShape{
         //! other ArrayShape object.
         //! \throws MemoryAllocationError if memory allocation fails
         ArrayShape(const ArrayShape &s);
+        //! move constructor
+        ArrayShape(ArrayShape &&s);
         //! constructor
 
         //! This constructor sets the rank of the shape object allowing it
         //! to allocate memory during creation.
         //! \throws MemoryAllocationError if memory allocation fails
         //! \param r rank of the shape (number of dimensions)
-        ArrayShape(const UInt32 &r);
+        ArrayShape(const size_t &r);
         //! destructor
         virtual ~ArrayShape();
         
@@ -129,12 +116,12 @@ class ArrayShape{
         //! remains untouched.
         //! \throws MemoryAllocationError in cases of memory allocation problems
         //! \param r number of dimensions (rank)
-        virtual void setRank(const UInt32 &r);
+        virtual void rank(const size_t &r);
         //! return the array rank
 
         //! Returns the number of dimensions in the shape object.
         //! \return array rank
-        virtual UInt32 getRank() const;
+        virtual size_t rank() const;
 
         //! set a single dimension of the shape object
 
@@ -144,7 +131,7 @@ class ArrayShape{
         //! \throws IndexError if i exceeds the rank of the shape
         //! \param i index of the dimension to set
         //! \param d new number of elements along dimension i
-        virtual void setDimension(const UInt32 &i,const UInt32 &d);
+        virtual void dimension(const size_t &i,const size_t &d);
         //! get a single dimension of the shape
 
         //! return the number of elements along dimension i. Raises an exception
@@ -152,13 +139,13 @@ class ArrayShape{
         //! \throws IndexError if i exceeds the rank of the shape
         //! \param i index of the dimension
         //! \return the number of elements along dimension i
-        virtual UInt32 getDimension(const UInt32 &i) const;
+        virtual size_t dimension(const size_t &i) const;
         //! total number of elements
 
         //! Returns the total number of elements that can be described by the
         //! shape.
         //! \return total number of elements
-        virtual UInt64 getSize() const {return _size;}
+        virtual size_t size() const {return _size;}
         
         //! compute element offset
 
@@ -168,7 +155,7 @@ class ArrayShape{
         //! \throws IndexError if one of the indices in the Index objects exceeds its dimension
         //! \param Index index object
         //! \return offset for an index
-        virtual UInt64 getOffset(const Index &i) const;
+        virtual size_t offset(const Index &i) const;
         //! creates index from offset
 
         //! Creates an index object that belongs to a particular linear offset.
@@ -179,14 +166,16 @@ class ArrayShape{
         //! \throws MemoryAccessError if Index of ArrayShape object have rank 0
         //! \param offset offset for which to compute the index
         //! \param i index object where to store the result
-        virtual void getIndex(const UInt64 &offset,Index &i) const;
+        virtual void index(const size_t &offset,Index &i) const;
 
         //the assignment operator must be a member function
         //and cannot be declared as a friend function
         //! assignment operator
 
-        //! assignment operator
+        //! copy assignment operator
         ArrayShape &operator=(const ArrayShape &);
+        //! move assignment operator
+        ArrayShape &operator=(ArrayShape &&o);
         
         //! equality operator for array shapes
 
@@ -207,7 +196,7 @@ class ArrayShape{
         //! strides and recompute the size. However, this cannot be done easily
         //! by operator overloading.
         //! \sa void setDimension(const unsigned int &i,const unsigned int &d)
-        const UInt32 operator[](UInt64 i) const;
+        const size_t operator[](size_t i) const;
 
         //! operator for console output
         friend std::ostream &operator<<(std::ostream &o,const ArrayShape &s);

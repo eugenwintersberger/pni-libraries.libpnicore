@@ -52,14 +52,15 @@ private:
 	ArrayObject &operator=(const ArrayObject &);
 protected:
 	ArrayShape _shape; //!< shape object describing the shape of the array
-							 //!< and managing the access to the data
-	UInt32 *_index_buffer; 	 //!< a buffer used to hold index variables.
+					   //!< and managing the access to the data
 public:
 	typedef boost::shared_ptr<ArrayObject> sptr;  //!< shared pointer to an ArrayObject
 	//! default constructor
 	ArrayObject();
 	//! copy constructor
 	ArrayObject(const ArrayObject &a);
+	//! move constructor
+	ArrayObject(ArrayObject &&a);
 	//! constructor with an array shape pointer
 
 	//! The pointer to an existing ArrayShape object is used to construct
@@ -70,14 +71,6 @@ public:
 	ArrayObject(const ArrayShape &s);
 	//! destructor
 	virtual ~ArrayObject();
-
-	//! get the type id of the elemnt type
-
-	//! This method must be overloaded by child classes implementing a concrete
-	//! array. It should return the type code of the native PNI type of the
-	//! array data.
-	//! \return type id of the native type
-	virtual PNITypeID getTypeID() const;
 
 	//! set the shape of the array
 
@@ -92,16 +85,16 @@ public:
 	//! \throws SizeMissmatchError shape sizes do not match or size is zero
 	//! \param s reference to the existing shape object
 	//! \sa void setShape(boost::shared_ptr<ArrayShape> &s)
-	virtual void setShape(const ArrayShape &s);
+	virtual void shape(const ArrayShape &s);
 	//! obtain the shape of an array
 
 	//! Set the smart pointer ptr to the value of the pointer holding the
 	//! ArrayShape-object in the Array. After this call ptr and the Array
 	//! share the shape object.
-	virtual const ArrayShape &getShape() const;
+	virtual const ArrayShape &shape() const;
 
 	//! set the BufferObject that belongs to an array
-	virtual void setBuffer(const BufferObject &b);
+	virtual void buffer(const BufferObject &b) = 0;
 	//! get the BufferObject
 
 	//! Get the buffer object of an array. A constant reference is returned
@@ -111,27 +104,22 @@ public:
 	//! THIS METHOD MUST BE IMPLEMENTED BY THE CONCRETE ARRAY IMPLEMENTATION!!!!
 	//! OTHERWISE A NotImplementedError will be raised.
 	//! \return reference to a buffer object
-	virtual const BufferObject &getBuffer() const;
+	virtual const BufferObject &buffer() const = 0;
 
 	//allocate memory according to the shape object
-	virtual void allocate(){
+	virtual void allocate() = 0;
 
-	}
-
-	//return the size of the object
+	//! total number of elements in the array
 	virtual UInt64 size(){
-		return _shape.getSize();
+		return _shape.size();
 	}
 
-	virtual bool isAllocated() const;
-	virtual void *getVoidPtr();
-	virtual const void *getVoidPtr() const;
+	virtual bool is_allocated() const = 0;
+	virtual void *void_ptr() = 0;
+	virtual const void *void_ptr() const = 0;
+	virtual void reset() = 0;
 
-	virtual void reset();
 };
-
-
-
 
 
 //end of namespace

@@ -36,196 +36,138 @@ namespace utils {
 
 
 //=======================Constructors and destructors==========================
+//implementation of the default constructor
 Index::Index(){
-	_rank = 0;
-	_index = NULL;
 }
 
-Index::Index(UInt32 rank){
+//------------------------------------------------------------------------------
+//implementation of the standard constructor
+Index::Index(size_t rank){
 	EXCEPTION_SETUP("Index::Index(UInt32 rank)");
-	_index = NULL;
+	_index.allocate(rank);
 
-	_index = new UInt32[rank];
-	if(_index == NULL){
-		EXCEPTION_INIT(MemoryAllocationError,"Cannot allocate memory for index buffer!");
-		EXCEPTION_THROW();
-	}
-
-	_rank = rank;
+	for(size_t i=0;i<rank;i++) _index[i] = 0;
 }
 
+//------------------------------------------------------------------------------
+//implementation of the copy constructor
 Index::Index(const Index &o){
 	EXCEPTION_SETUP("Index::Index(const Index &o)");
 
-	//default initialization of the member variables
-	_rank = 0;
-	_index = NULL;
-
-	//if the rank of o is not zero
-	if(o._rank != 0){
-		_index = NULL;
-		_index = new UInt32[o.getRank()];
-		if(_index == NULL){
-			EXCEPTION_INIT(MemoryAllocationError,"Cannot allocate memory for index buffer!");
-			EXCEPTION_THROW();
-		}
-		_rank = o.getRank();
-		//need to copy the content of the index
-		for(UInt64 i=0;i<getRank();i++) _index[i] = o[i];
-	}
+	_index = o._index;
 }
 
+//------------------------------------------------------------------------------
+//implementation of the move constructor
+Index::Index(Index &&o){
+	_index = std::move(o._index);
+}
+
+//------------------------------------------------------------------------------
+//implementation of the destructor
 Index::~Index(){
-	if(_index != NULL) delete [] _index;
+	_index.free();
 }
 
 
-//============================ Operators =======================================
+//============Implementation of the assignment operators========================
+//implementation of copy assignment
 Index &Index::operator=(const Index &o){
 	EXCEPTION_SETUP("Index &Index::operator=(const Index &o)");
 
 	if( this != &o ){
-		if(o._rank != _rank){
-			//if indices have different rank we need reallocation
-			if( _index != NULL) delete [] _index;
-
-			if(o._rank != 0){
-				_index = new UInt32[o._rank];
-				if(_index == NULL){
-					EXCEPTION_INIT(MemoryAllocationError,"Cannot allocate memory for index buffer!");
-					EXCEPTION_THROW();
-				}
-				_rank = o._rank;
-
-			}else{
-				_index = NULL;
-				_rank = 0;
-				return *this;
-			}
-
-		}
-
-		for(UInt32 i=0; i < _rank; i++) _index[i] = o._index[i];
+		_index = o._index;
 	}
 
 	return *this;
 }
 
-UInt32 Index::operator[](UInt32 index) const{
-	EXCEPTION_SETUP("UInt32 Index::operator[](UInt32 index) const");
-
-	if(index >= _rank){
-		EXCEPTION_INIT(IndexError,"Index index exceeds index rank!");
-		EXCEPTION_THROW();
+//-----------------------------------------------------------------------------
+//implementation of move assignment
+Index &Index::operator=(Index &&o){
+	if(this != &o){
+		_index = std::move(o._index);
 	}
 
+	return *this;
+}
+
+//======================Implementation of the access operators==================
+//implementation of read only access
+size_t Index::operator[](size_t index) const{
 	return _index[index];
 }
 
-UInt32 &Index::operator[](UInt32 index){
-	EXCEPTION_SETUP("UInt32 &Index::operator[](UInt32 index)");
-
-	if(index >= _rank){
-		EXCEPTION_INIT(IndexError,"Index index exceeds index rank!");
-		EXCEPTION_THROW();
-	}
-
+//------------------------------------------------------------------------------
+//implementation of read/write access
+size_t &Index::operator[](size_t index){
 	return _index[index];
 }
 
 
 //================Methods modifying the rank of the Index object===============
-void Index::setRank(UInt32 rank){
+//implementation of set rank
+void Index::rank(size_t rank){
 	EXCEPTION_SETUP("void Index::setRank(UInt32 rank)");
 
-	if(_rank != rank){
-		if(_index != NULL) delete [] _index;
-
-		_index = new UInt32[rank];
-		if(_index == NULL){
-			EXCEPTION_INIT(MemoryAllocationError,"Cannot allocate memory for index buffer!");
-			EXCEPTION_THROW();
-		}
-		_rank = rank;
-	}
+	_index.allocate(rank);
 	//initialize the index buffer
-	for(UInt32 i=0;i<_rank;i++) _index[i] = 0;
+	for(size_t i=0;i<rank;i++) _index[i] = 0;
 }
 
-UInt32 Index::getRank() const{
-	return _rank;
+//------------------------------------------------------------------------------
+//implementation of get rank
+size_t Index::rank() const{
+	return _index.size();
 }
 
 //============Methods for modifying and accessing index values==================
-UInt32 Index::getIndex(UInt32 index) const{
-	EXCEPTION_SETUP("UInt32 Index::getIndex(UInt32 index) const");
-
-	if(index >= _rank){
-		EXCEPTION_INIT(IndexError,"Index index exceeds index rank!");
-		EXCEPTION_THROW();
-	}
-
+//implementation of get an index
+size_t Index::get(size_t index) const{
 	return _index[index];
 }
 
-void Index::setIndex(UInt32 index,UInt32 value){
-	EXCEPTION_SETUP("void Index::setIndex(UInt32 index,UInt32 value)");
-
-	if(index >= _rank){
-		EXCEPTION_INIT(IndexError,"Index index exceeds index rank!");
-		EXCEPTION_THROW();
-	}
-
+//------------------------------------------------------------------------------
+//implementation of set an index
+void Index::set(size_t index,size_t value){
 	_index[index] = value;
 }
 
-void Index::increment(UInt32 index){
-	EXCEPTION_SETUP("void Index::increment(UInt32 index)");
-
-	try{
-		(*this)[index]++;
-	}catch(IndexError &error){
-		EXCEPTION_INIT(IndexError,error.getDescription());
-		EXCEPTION_THROW();
-	}
+//------------------------------------------------------------------------------
+//implementation of index increment
+void Index::inc(size_t index){
+	(*this)[index]++;
 }
 
-void Index::decrement(UInt32 index){
-	EXCEPTION_SETUP("void Index::decrement(UInt32 index)");
-
-	try{
-		if((*this)[index] == 0){
-			EXCEPTION_INIT(RangeError,"Index value would become negative!");
-			EXCEPTION_THROW();
-		}
-
-		(*this)[index]--;
-	}catch(IndexError &error){
-		EXCEPTION_INIT(IndexError,error.getDescription());
-		EXCEPTION_THROW();
-	}
-
+//------------------------------------------------------------------------------
+//implementation of index decrement
+void Index::dec(size_t index){
+	(*this)[index]++;
 }
 
+//=================Implementation of output operators===========================
 std::ostream &operator<<(std::ostream &o,const Index &index){
-	o<<"Index ("<<index.getRank()<<"): ";
-	for(UInt32 i=0;i<index.getRank();i++){
-		o<<index[i]<<" ";
-	}
+	o<<"Index ("<<index.rank()<<"): ";
+
+	for(size_t i=0;i<index.rank();i++) o<<index[i]<<" ";
 
 	return o;
 }
 
+//=================Implementation of comparison operators=======================
+//implementation of equality check
 bool operator==(const Index &i1,const Index &i2){
-	if(i1.getRank() != i2.getRank()) return false;
+	if(i1.rank() != i2.rank()) return false;
 
-	for(UInt32 i=0;i<i1.getRank();i++){
+	for(size_t i=0;i<i1.rank();i++){
 		if(i1[i] != i2[i]) return false;
 	}
 
 	return true;
 }
 
+//------------------------------------------------------------------------------
+//implementation of in-equality
 bool operator!=(const Index &i1,const Index &i2){
 	if(i1 == i2) return false;
 	return true;

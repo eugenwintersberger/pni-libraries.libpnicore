@@ -32,6 +32,7 @@
 #define INDEX_H_
 
 #include "PNITypes.hpp"
+#include "Buffer.hpp"
 
 namespace pni {
 namespace utils {
@@ -43,8 +44,7 @@ namespace utils {
 //! of the array object whose data should be accessed.
 class Index {
 private:
-	UInt32 *_index; //! buffer holding the actual index value
-	UInt32 _rank;   //! rank of the index
+	Buffer<size_t> _index; //! buffer holding the actual index value
 public:
 	//! default constructor
 	Index();
@@ -54,17 +54,23 @@ public:
 	//! This constructor initializes the index object with its rank at
 	//! creation time.
 	//! \throws MemoryAllocationError in cases that allocation of the index buffer fails
-	Index(UInt32 rank);
+	Index(size_t rank);
 
 	//! copy constructor
 	//! \throws MemoryAllocationError in cases that allocation of the index buffer fails
 	Index(const Index &o);
+
+	//! move constructor
+	Index(Index &&o);
 	//! destructor
 	virtual ~Index();
 
-	//! assignment operator
+	//! copy assignment operator
 	//! \throws MemoryAllocationError in cases that allocation of the index buffer fails
 	Index &operator=(const Index &o);
+
+	//! move assignment operator
+	Index &operator=(Index &&o);
 
 	//! set index rank
 
@@ -73,12 +79,12 @@ public:
 	//! All existing content is lost.
 	//! \param rank number of dimensions
 	//! \throws MemoryAllocationError in cases that allocation of the index buffer fails
-	void setRank(UInt32 rank);
+	void rank(size_t rank);
 	//! get index rank
 
 	//! Returns the number of dimensions the index object describes.
 	//! \return number of dimensions
-	UInt32 getRank() const;
+	size_t rank() const;
 
 	//! get index value
 
@@ -86,27 +92,27 @@ public:
 	//! \throws IndexError if index is larger than the rank of the Index object
 	//! \param index index of the index
 	//! \return index value
-	UInt32 getIndex(UInt32 index) const;
+	size_t get(size_t index) const;
 	//! set index value
 
 	//! Sets the value of index determined by index.
 	//! \throws IndexError if index exceeds the rank of the Index object
 	//! \param index index of the index
 	//! \param value value of the index
-	void setIndex(UInt32 index,UInt32 value);
+	void set(size_t index,size_t value);
 	//! increment index
 
 	//! Increments the index determined by index by one.
 	//! \throws IndexError if index exceeds the rank of the Index object
 	//! \param index index of the index to increment
-	void increment(UInt32 index);
+	void inc(size_t index);
 	//! decrement index
 
 	//! Decrements the index determined by index by one.
 	//! \throws IndexError if index exceeds the rank of the Index object
 	//! \throws RangeError if the decrement would yield an index value < 0
 	//! \param index index of the index to decrement
-	void decrement(UInt32 index);
+	void dec(size_t index);
 
 	//! [] operator read only
 
@@ -114,13 +120,13 @@ public:
 	//! index buffer. It returns the index at dimension index.
 	//! \throws IndexError if index exceeds the rank of the Index object
 	//! \return index value
-	UInt32 operator[](UInt32 index) const;
+	size_t operator[](size_t index) const;
 	//! [] operator read/write
 
 	//! The read/write version of the [] operator.
 	//! \throws IndexError if index exceeds the rank of the Index object
 	//! \return index value
-	UInt32 &operator[](UInt32 index);
+	size_t &operator[](size_t index);
 
 	//! output operator
 

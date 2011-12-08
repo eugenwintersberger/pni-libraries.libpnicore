@@ -130,16 +130,16 @@ Selection::Selection(const ArrayShape &s){
 	_rank = 0;
 
 	try{
-		_allocate(s.getRank());
+		_allocate(s.rank());
 	}catch(MemoryAllocationError &error){
 		EXCEPTION_INIT(MemoryAllocationError,"Memory allocation for Selection object failed!");
 		EXCEPTION_THROW();
 	}
 
-	_rank = s.getRank();
+	_rank = s.rank();
 
-	for(UInt32 i=0;i<s.getRank();i++){
-		_count[i] = s.getDimension(i);
+	for(UInt32 i=0;i<s.rank();i++){
+		_count[i] = s.dimension(i);
 	}
 }
 
@@ -155,7 +155,7 @@ void Selection::getShape(ArrayShape &s) const {
 	UInt32 rank=0;
 
 	try{
-		s.setRank(_trank);
+		s.rank(_trank);
 	}catch(MemoryAllocationError &error){
 		EXCEPTION_INIT(MemoryAllocationError,"Memory allocation for ArrayShape object failed!");
 		EXCEPTION_THROW();
@@ -164,7 +164,7 @@ void Selection::getShape(ArrayShape &s) const {
 
 	for(UInt32 i=0;i<_rank;i++){
 		if(_count[i] != 1){
-			s.setDimension(rank,_count[i]);
+			s.dimension(rank,_count[i]);
 			rank++;
 		}
 	}
@@ -377,12 +377,12 @@ UInt32 Selection::getBlock(UInt32 i) const{
 void Selection::getSourceIndex(const Index &index,Index &sindex) const{
 	EXCEPTION_SETUP("void Selection::getSourceIndex(const Index &i, Index &si)");
 
-	if(index.getRank()!=sindex.getRank()){
+	if(index.rank()!=sindex.rank()){
 		EXCEPTION_INIT(ShapeMissmatchError,"Selection index and source index have different rank!");
 		EXCEPTION_THROW();
 	}
 
-	for(UInt32 i=0;i<index.getRank();i++){
+	for(UInt32 i=0;i<index.rank();i++){
 		sindex[i] = index[i]+getOffset(i);
 	}
 }
