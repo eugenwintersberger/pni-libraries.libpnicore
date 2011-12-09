@@ -54,15 +54,9 @@ namespace utils{
 //! \brief buffer template
 
 //! This template is a concrete implementation of the BufferObject base class.
-//! It uses the new allocator to request memory from the system.
-//! Along with the methods provided by the BufferObject base class this
-//! template implements a couple of operators that are quite useful.
-//! You can assign Buffers of different type T with each other.
-//! In general the assignment from the buffer on the rhs to the buffer on the
-//! lhs of the operator is straight forward. The full state of the buffer is
-//! assigned to the lhs. So if the buffer on the rhs is not allocated
-//! memory eventually hold by the buffer of the lhs will be freed to
-//! bring the lhs to the same state as the rhs.
+//! It uses the new allocator to request memory from the systems' heap.
+//! The template supports move semantics which allows the compiler to use
+//! return value optimization using right-value references.
 template<typename T>class Buffer:public BufferObject{
 private:
 	T *_data; //!< pointer to the data block
@@ -72,14 +66,12 @@ private:
 public:
 	typedef boost::shared_ptr<Buffer<T> > sptr; //!< smart pointer to a typed buffer
 	//! default constructor
-
-	//! If this constructor is used no memory will be allocated. For that purpose
-	//! use the allocate method.
 	Buffer();
 	//! copy constructor
 
-	//! The buffer is initialized by an already existing buffer. All data will be
-	//! copied to the storage of the new created buffer object.
+	//! The buffer is initialized by an already existing buffer. All data will
+	//! be copied to the storage of the new created buffer object.
+	//! \throws MemoryAllocationError if allocation for the new buffer fails
 	Buffer(const Buffer<T> &b);
 	//! move constructor
 	Buffer(Buffer<T> &&b);
@@ -94,15 +86,15 @@ public:
 
 	//! copy assignment operator
 
-	//! The content of the buffer on the lhs is set to that of the lhs.
-	//! If necessary memory is reallocated.
+	//! If the buffer on the rhs of the assignment operator is not allocated
+	//! the rhs buffer object will be freed.
 	//! \throws MemoryAccessError if something goes wring with memory allocation
 	//! \param b Buffer whose content will be assigned to this buffer
 	//! \return reference to a Buffer<T> object
 	Buffer<T> &operator=(const Buffer<T> &b);
 	//! move assignment operator
 	Buffer<T> &operator=(Buffer<T> &&b);
-	//! assignment operator
+	//! single value assignment operator
 
 	//! This special form of the assignment operator can be used to assign
 	//! a single value to all elements of the buffer. Thus, it is quite useful
@@ -123,15 +115,8 @@ public:
 	//! \return pointer to allocated memory
 	T *ptr();
 
-	//! read/write void pointer
-
-	//! Returns a pointer of type void * on the allocated memory.
-	//! \return pointer to allocated memory
 	virtual void *void_ptr();
-	//! read only void pointer
 
-	//! Returns a read only void pointer to the allocated memory.
-	//! \return pointer to allocated memory
 	virtual const void *void_ptr() const;
 
 	//! [] operator for read and write access
@@ -151,24 +136,11 @@ public:
 	//! \param n index of the element to fetch
 	//! \return value of the buffer at position n
 	T operator[](size_t n) const;
-	//! allocate memory
 
-	//! Unlike allocate() this method takes the number of elements as an
-	//! argument. Thus the number of elements to allocate must not be set
-	//! prior to the invocation of this method. However, like allocate()
-	//! an exception will be thrown if the buffer is already allocated.
-	//! \param size number of elements to allocate
-	virtual void allocate(const UInt64 &size);
-	//! buffer status
+	virtual void allocate(const size_t &size);
 
-	//! Returns true if the buffer is allocated. False otherwise.
-	//! \return true if allocated, false otherwise
 	virtual bool is_allocated() const;
-	//! frees memory
 
-	//! This function frees the memory allocated by the buffer. It must be
-	//! invoked before calling allocate() on an already allocated buffer.
-	//! If the buffer is not allocated this method does nothing.
 	virtual void free();
 
 	virtual size_t element_size() const {

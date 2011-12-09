@@ -80,6 +80,9 @@ BufferObject &BufferObject::operator=(const BufferObject &o){
 //------------------------------------------------------------------------------
 //implementation of the move assignment operator
 BufferObject &BufferObject::operator=(BufferObject &&o){
+
+	//for BufferObject the only thing we have to case about is the size
+	//of the buffer in number of elements.
 	if(this != &o){
 		_size = o._size;
 		o._size = 0;
@@ -89,11 +92,13 @@ BufferObject &BufferObject::operator=(BufferObject &&o){
 }
 
 //==================Methods to influence Buffer size============================
-
+//protected set size method
 void BufferObject::size(size_t s){
 	_size = s;
 }
 
+//------------------------------------------------------------------------------
+//implementation of public get size
 size_t BufferObject::size() const {
 	return _size;
 }

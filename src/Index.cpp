@@ -43,7 +43,8 @@ Index::Index(){
 //------------------------------------------------------------------------------
 //implementation of the standard constructor
 Index::Index(size_t rank){
-	EXCEPTION_SETUP("Index::Index(UInt32 rank)");
+	EXCEPTION_SETUP("Index::Index(size_t rank)");
+
 	_index.allocate(rank);
 
 	for(size_t i=0;i<rank;i++) _index[i] = 0;
@@ -138,6 +139,8 @@ void Index::set(size_t index,size_t value){
 void Index::inc(size_t index){
 	EXCEPTION_SETUP("void Index::inc(size_t index)");
 
+	//throw an exception in cases where the increment would exceed
+	//the numeric range of size_t
 	if((*this)[index] == std::numeric_limits<size_t>::max()){
 		EXCEPTION_INIT(RangeError,"Index exceeds numeric limits!");
 		EXCEPTION_THROW();
@@ -151,6 +154,9 @@ void Index::inc(size_t index){
 void Index::dec(size_t index){
 	EXCEPTION_SETUP("void Index::dec(size_t index)");
 
+	//throw an exception if the decrement would lead to a number smaller
+	//than zero (which is not possible for an unsigned type as size_t)
+	//and thus causing an overflow
 	if((*this)[index]==0){
 		EXCEPTION_INIT(RangeError,"Index becomes < 0!");
 		EXCEPTION_THROW();
