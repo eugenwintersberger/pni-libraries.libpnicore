@@ -73,15 +73,20 @@ if env["PKGNAMEROOT"] == "":
     env.Append(PKGNAMEROOT = env["LIBPREFIX"]+env["LIBNAME"]+env["SOVERSION"])
 
 
-
+#Acquire some information about the compiler used
+cxx_version = subprocess.Popen([env['CXX'], "-dumpversion"], 
+                               stdout=subprocess.PIPE).communicate()[0]
+(major,minor,release) = cxx_version.split(".")
+cxx_version = int(major+minor+release)
     
 
 #set the proper compiler - this should be changed to something 
 #more general - independent of the underlying operating system
 env.Replace(CXX = env["CXX"])
 
-#set default libraries
-
+#set some flags depending on the compiler versions
+if cxx_version==440:
+    env.Append(CXXFLAGS=["-DCXX_ENUMCLASS_FIX"])
 
 #set default compiler flags
 env.Append(CXXFLAGS = ["-Wall","-std=c++0x"])
@@ -121,5 +126,5 @@ Export("python_build_env")
 SConscript(["src/SConscript"])
 SConscript(["test/SConscript","debian/SConscript"])
 SConscript(["doc/SConscript"])
-SConscript(["python/SConscript"])
+#SConscript(["python/SConscript"])
 
