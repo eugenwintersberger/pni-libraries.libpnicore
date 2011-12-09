@@ -45,17 +45,18 @@ namespace utils{
 //! \ingroup IO
 //! \brief type trait for TIFF IFD entries
 
-//! This trait is used to set the type code in the
-//! getEntryTypeCode method of the IDFEntry template.
-//! The trait is specialized for all available data types for
-//! TIFF IFD entries.
+//! This trait is used to set the type code in the getEntryTypeCode method of
+//! the IDFEntry template. The trait is specialized for all available data
+//! types for TIFF IFD entries.
 template<typename T> class IFDEntryTypeTrait{
 public:
 	static const IFDEntryTypeCode TypeCode;  //!< typecode of the IDF entry
 };
 
+//! \cond NO_API_DOC
+
 //! \ingroup IO
-//! \brief trait specialization for 8Bit unsigned integer entries
+//! \brief trait specialication for 8Bit unsigned integer entries
 template<> class IFDEntryTypeTrait<UInt8>{
 public:
 	static const IFDEntryTypeCode TypeCode = IDFE_BYTE; //!< IDFEntryTypeCode value
@@ -130,6 +131,7 @@ template<> class IFDEntryTypeTrait<String>{
 public:
 	static const IFDEntryTypeCode TypeCode = IDFE_ASCII; //!< IDFEntryTypeCode value
 };
+//! \endcond
 
 template<typename T> class IFDEntry;
 template<typename T> std::ifstream &operator>>(std::ifstream &,IFDEntry<T> &);

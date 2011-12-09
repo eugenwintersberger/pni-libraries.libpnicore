@@ -42,6 +42,7 @@ public:
 	typedef UInt8 Type;
 };
 
+//! \cond NO_API_DOC
 template<> class PNITypeIDMap<PNITypeID::UINT8>{
 public:
 	typedef UInt8 Type;
@@ -116,6 +117,8 @@ template<> class PNITypeIDMap<PNITypeID::BINARY>{
 public:
 	typedef Binary Type;
 };
+
+//! \endcond
 
 }
 }
