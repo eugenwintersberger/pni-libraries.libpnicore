@@ -2,6 +2,8 @@
 import os.path as path
 import platform
 import os
+import subprocess
+import platform
 
 
 debug = ARGUMENTS.get("DEBUG",0)
@@ -9,14 +11,20 @@ debug = ARGUMENTS.get("DEBUG",0)
 
 var = Variables('BuildConfig.py')
 if os.name == "nt":
-	var.Add(PathVariable("PREFIX","set installation prefix","C:\\Program Files\\libpniutils",PathVariable.PathAccept))
+	var.Add(PathVariable("PREFIX","set installation prefix",
+                         "C:\\Program Files\\libpniutils",
+                         PathVariable.PathAccept))
 elif os.name=="posix":
-	var.Add(PathVariable("PREFIX","set installation prefix","/usr/local"))
+	var.Add(PathVariable("PREFIX","set installation prefix",
+                         "/usr/local"))
 
 if os.name == "nt":
-	var.Add(PathVariable("BOOSTPREFIX","set the installation prefix for boost","C:\\Program Files\\boost",PathVariable.PathAccept))
+	var.Add(PathVariable("BOOSTPREFIX",
+            "set the installation prefix for boost",
+            "C:\\Program Files\\boost",PathVariable.PathAccept))
 elif os.name == "posix":	
-	var.Add(PathVariable("BOOSTPREFIX","set the installation prefix for boost","/usr"))
+	var.Add(PathVariable("BOOSTPREFIX","set the installation prefix for boost",
+                         "/usr"))
 	
 var.Add("VERSION","library version","0.0.0")
 var.Add("LIBNAME","library name","pniutils")
@@ -66,7 +74,6 @@ if env["PKGNAMEROOT"] == "":
 
 
 
-#print env["LINKFLAGS"]
     
 
 #set the proper compiler - this should be changed to something 
