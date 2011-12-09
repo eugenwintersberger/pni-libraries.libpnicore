@@ -53,9 +53,7 @@ public:
 
 };
 
-
-//! \ingroup Data-objects
-//! \brief PNITypes specialization for 32Bit IEEE floating point complex type
+//! \cond NO_API_DOC
 template<> class TypeInfo<Complex32>{
 public:
 
@@ -87,9 +85,9 @@ public:
 		return true;
 	}
 };
+//! \endcond
 
-//! \ingroup Data-objects
-//! \brief PNITypes specialization for 64Bit IEEE floating point complex type
+//! \cond NO_API_DOC
 template<> class TypeInfo<Complex64>{
 public:
 
@@ -123,8 +121,9 @@ public:
 
 };
 
-//! \ingroup Data-objects
-//! \brief PNITypes specialization for 128Bit IEEE floating point complex type
+//! \endcond
+
+//! \cond NO_API_DOC
 template<> class TypeInfo<Complex128>{
 public:
 
@@ -157,7 +156,7 @@ public:
 	}
 
 };
-
+//! \endcond
 
 //end of namespace
 }

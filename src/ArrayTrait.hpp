@@ -53,90 +53,103 @@ public:
 	typedef T Type; //!< data type for accumulative operations
 };
 
-//! template specialization for 8 Bit signed integer
+//! \cond NO_API_DOC
 template<> class ArrayType<Int8>{
 public:
 	typedef Int64 Type; //!< result type for Int8 array operations
 };
+//! \endcond
 
-//! template specialization for 16 Bit signed integer
+//! \cond NO_API_DOC
 template<> class ArrayType<Int16>{
 public:
 	typedef Int64 Type; //!< result type for Int16 array operations
 };
+//! \endcond
 
-//! template specialization for 32 Bit signed integer
+//! \cond NO_API_DOC
 template<> class ArrayType<Int32>{
 public:
 	typedef Int64 Type; //!< result type for Int32 array operations
 };
+//! \endcond
 
-//! template specialization for 64 Bit signed integer
+//! \cond NO_API_DOC
 template<> class ArrayType<Int64>{
 public:
 	typedef Int64 Type; //!< result type for Int64 array operations
 };
+//! \endcond
 
-//! template specialization for 8Bit unsigned integer
+//! \cond NO_API_DOC
 template<> class ArrayType<UInt8>{
 public:
 	typedef UInt64 Type; //!< result type for UInt8 array operations
 };
+//! \endcond
 
-//! template specialization for 16Bit unsigned integer
+//! \cond NO_API_DOC
 template<> class ArrayType<UInt16>{
 public:
 	typedef UInt64 Type; //!< result type for UInt16 array operations
 };
+//! \endcond
 
-//! template specialization for 32Bit unsigned integer
+//! \cond NO_API_DOC
 template<> class ArrayType<UInt32>{
 public:
 	typedef UInt64 Type; //!< result type for UInt32 array operations
 };
+//! \endcond
 
-//! template specialization for 64Bit unsigned integer
+//! \cond NO_API_DOC
 template<> class ArrayType<UInt64>{
 public:
 	typedef UInt64 Type; //!< result type for UInt64 array operations
 };
+//! \endcond
 
-//! template specialization for 32Bit IEEE floating point numbers
+//! \cond NO_API_DOC
 template<> class ArrayType<Float32>{
 public:
 	typedef Float128 Type; //!< result type for Float32 array operations
 };
+//! \endcond
 
-//! template specialization for 64Bit IEEE floating point numbers
+//! \cond NO_API_DOC
 template<> class ArrayType<Float64>{
 public:
 	typedef Float128 Type; //!< result type for Float64 array operations
 };
+//! \endcond
 
-//! template specialization for 128Bit IEEE floating point numbers
+//! \cond NO_API_DOC
 template<> class ArrayType<Float128>{
 public:
 	typedef Float128 Type; //!< result type for Float128 point numbers
 };
+//! \endcond
 
-//! template specialization for 32Bit IEEE complex floating point numbers
+//! \cond NO_API_DOC
 template<> class ArrayType<Complex32>{
 public:
 	typedef Complex128 Type; //!< result type for Complex32 array operations
 };
+//! \endcond
 
-//! template specialization for 64Bit IEEE complex floating point numbers
+//! \cond NO_API_DOC
 template<> class ArrayType<Complex64>{
 public:
 	typedef Complex128 Type; //!< result type for Complex64 array operations
 };
+//! \endcond
 
-//! template specialization for 128Bit IEEE complex floating point numbers
+//! \cond NO_API_DOC
 template<> class ArrayType<Complex128>{
 public:
 	typedef Complex128 Type; //!< result type for Complex128 array operations
 };
-
+//! \endcond
 //! @}
 }
 }

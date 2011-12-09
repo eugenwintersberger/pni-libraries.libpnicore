@@ -87,8 +87,7 @@ public:
 };
 
 
-//! \ingroup Data-objects
-//! \brief PNITypes specialization for 32Bit IEEE floating point complex type
+//! \cond NO_API_DOC
 template<> class TypeInfo<Complex32>{
 public:
 
@@ -116,7 +115,7 @@ public:
 	}
 
 };
-
+//! \endcond
 
 
 

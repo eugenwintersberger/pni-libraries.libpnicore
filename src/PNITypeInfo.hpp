@@ -84,8 +84,7 @@ public:
 	}
 };
 
-//! \ingroup Data-objects
-//! \brief PNITypes specialization for 8Bit signed integer
+//! \cond NO_API_DOC
 template<> class PNITypeInfo<Int8>{
 public:
 	typedef Int8 Type; //!< type
@@ -105,9 +104,9 @@ public:
 	}
 
 };
+//! \endcond
 
-//! \ingroup Data-objects
-//! \brief PNITypes specialization for 8Bit unsigned integer
+//! \cond NO_API_DOC
 template<> class PNITypeInfo<UInt8>{
 public:
 	typedef UInt8 Type; //!< type
@@ -127,9 +126,9 @@ public:
 	}
 
 };
+//! \endcond
 
-//! \ingroup Data-objects
-//! \brief PNITypes specialization for 16Bit signed integer
+//! \cond NO_API_DOC
 template<> class PNITypeInfo<Int16>{
 public:
 	typedef Int16 Type; //!< type
@@ -148,9 +147,9 @@ public:
 		return std::numeric_limits<Int16>::max();
 	}
 };
+//! \endcond
 
-//! \ingroup Data-objects
-//! \brief PNITypes specialization for 16Bit unsigned integer
+//! \cond NO_API_DOC
 template<> class PNITypeInfo<UInt16>{
 public:
 	typedef UInt16 Type; //!< type
@@ -169,9 +168,9 @@ public:
 		return std::numeric_limits<UInt16>::max();
 	}
 };
+//! \endcond
 
-//! \ingroup Data-objects
-//! \brief PNITypes specialization for 32Bit signed integer
+//! \cond NO_API_DOC
 template<> class PNITypeInfo<Int32>{
 public:
 	typedef Int32 Type; //!< type
@@ -190,9 +189,9 @@ public:
 		return std::numeric_limits<Int32>::max();
 	}
 };
+//! \endcond
 
-//! \ingroup Data-objects
-//! \brief PNITypes specialization for 32Bit unsigned integer
+//! \cond NO_API_DOC
 template<> class PNITypeInfo<UInt32>{
 public:
 	typedef UInt32 Type; //!< type
@@ -211,9 +210,9 @@ public:
 		return std::numeric_limits<UInt32>::max();
 	}
 };
+//! \endcond
 
-//! \ingroup Data-objects
-//! \brief PNITypes specialization for 64Bit signed integer
+//! \cond NO_API_DOC
 template<> class PNITypeInfo<Int64>{
 public:
 	typedef Int64 Type; //!< type
@@ -232,9 +231,9 @@ public:
 		return std::numeric_limits<Int64>::max();
 	}
 };
+//! \endcond
 
-//! \ingroup Data-objects
-//! \brief PNITypes specialization for 64Bit unsigned integer
+//! \cond NO_API_DOC
 template<> class PNITypeInfo<UInt64>{
 public:
 	typedef UInt64 Type; //!< type
@@ -253,9 +252,9 @@ public:
 		return std::numeric_limits<UInt64>::max();
 	}
 };
+//! \endcond
 
-//! \ingroup Data-objects
-//! \brief PNITypes specialization for 32Bit IEEE floating point type
+//! \cond NO_API_DOC
 template<> class PNITypeInfo<Float32>{
 public:
 	typedef Float32 Type; //!< type
@@ -274,9 +273,9 @@ public:
 		return std::numeric_limits<Float32>::max();
 	}
 };
+//! \endcond
 
-//! \ingroup Data-objects
-//! \brief PNITypes specialization for 64Bit IEEE floating point type
+//! \cond NO_API_DOC
 template<> class PNITypeInfo<Float64>{
 public:
 	typedef Float64 Type; //!< type
@@ -295,9 +294,9 @@ public:
 		return std::numeric_limits<Float64>::max();
 	}
 };
+//! \endcond
 
-//! \ingroup Data-objects
-//! \brief PNITypes specialization for 128Bit IEEE floating point type
+//! \cond NO_API_DOC
 template<> class PNITypeInfo<Float128>{
 public:
 	typedef Float128 Type; //!< type
@@ -316,9 +315,9 @@ public:
 		return std::numeric_limits<Float128>::max();
 	}
 };
+//! \endcond
 
-//! \ingroup Data-objects
-//! \brief PNITypes specialization for 32Bit IEEE floating point complex type
+//! \cond NO_API_DOC
 template<> class PNITypeInfo<Complex32>{
 public:
 	typedef Complex32 Type; //!< type
@@ -339,9 +338,9 @@ public:
 				         std::numeric_limits<Float32>::max());
 	}
 };
+//! \endcond
 
-//! \ingroup Data-objects
-//! \brief PNITypes specialization for 64Bit IEEE floating point complex type
+//! \cond NO_API_DOC
 template<> class PNITypeInfo<Complex64>{
 public:
 	typedef Complex64 Type; //!< type
@@ -362,9 +361,9 @@ public:
 				         std::numeric_limits<Float64>::max());
 	}
 };
+//! \endcond
 
-//! \ingroup Data-objects
-//! \brief PNITypes specialization for 128Bit IEEE floating point complex type
+//! \cond NO_API_DOC
 template<> class PNITypeInfo<Complex128>{
 public:
 	typedef Complex128 Type; //!< type
@@ -385,7 +384,7 @@ public:
 				          std::numeric_limits<Float128>::max());
 	}
 };
-
+//! \endcond
 
 
 //! obtain type information not by the data type but rather by the ID of the type

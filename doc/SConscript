@@ -28,7 +28,7 @@ doxyfile_extension = ["DOXYFILE_ENCODING      = UTF-8",
                       "SHOW_FILES             = YES",
                       "SHOW_NAMESPACES        = YES",
                       "INPUT_ENCODING         = UTF-8",
-                      "EXCLUDE_SYMBOLS        = pni::utils::ArrayType<T>",
+                      "EXCLUDE_SYMBOLS        = pni::utils::ArrayType<T>,pni::utils::PNITypeInfo<Int8>",
                       "HTML_COLORSTYLE_HUE    = 220",
                       "HTML_COLORSTYLE_SAT    = 100",
                       "HTML_COLORSTYLE_GAMMA  = 80",
@@ -59,6 +59,7 @@ doxyfile_extension = ["DOXYFILE_ENCODING      = UTF-8",
                      ] 
 
 doxyfile_source = [
+           "NO_API_DOC           = YES",
            "PROJECT_NAME           = ${LIBPREFIX}${LIBNAME}",
            "PROJECT_NUMBER         =",
            "OUTPUT_DIRECTORY       = %s" %api_doc_dir,
