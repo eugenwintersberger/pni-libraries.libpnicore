@@ -109,7 +109,6 @@ size_t &Index::operator[](size_t index){
 //================Methods modifying the rank of the Index object===============
 //implementation of set rank
 void Index::rank(size_t rank){
-	EXCEPTION_SETUP("void Index::setRank(UInt32 rank)");
 
 	_index.allocate(rank);
 	//initialize the index buffer

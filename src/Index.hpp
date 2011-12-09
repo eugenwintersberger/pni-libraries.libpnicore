@@ -48,18 +48,15 @@ private:
 public:
 	//! default constructor
 	Index();
-
 	//! standard constructor
 
 	//! This constructor initializes the index object with its rank at
 	//! creation time.
-	//! \throws MemoryAllocationError in cases that allocation of the index buffer fails
+	//! \throws MemoryAllocationError if memory allocation fails or rank=0
 	Index(size_t rank);
-
 	//! copy constructor
 	//! \throws MemoryAllocationError in cases that allocation of the index buffer fails
 	Index(const Index &o);
-
 	//! move constructor
 	Index(Index &&o);
 	//! destructor
@@ -68,42 +65,40 @@ public:
 	//! copy assignment operator
 	//! \throws MemoryAllocationError in cases that allocation of the index buffer fails
 	Index &operator=(const Index &o);
-
 	//! move assignment operator
 	Index &operator=(Index &&o);
-
 	//! set index rank
 
 	//! This method is used to set the rank of an index object. If invoked
 	//! on an already existing object the index object will be reinitialized.
 	//! All existing content is lost.
+	//! \throws MemoryAllocationError if memory allocation fails or rank=0
 	//! \param rank number of dimensions
-	//! \throws MemoryAllocationError in cases that allocation of the index buffer fails
 	void rank(size_t rank);
 	//! get index rank
 
 	//! Returns the number of dimensions the index object describes.
 	//! \return number of dimensions
 	size_t rank() const;
-
 	//! get index value
 
 	//! Returns the value of index determined by index.
 	//! \throws IndexError if index is larger than the rank of the Index object
-	//! \param index index of the index
+	//! \param index dimension for which to get the index
 	//! \return index value
 	size_t get(size_t index) const;
 	//! set index value
 
 	//! Sets the value of index determined by index.
 	//! \throws IndexError if index exceeds the rank of the Index object
-	//! \param index index of the index
+	//! \param index dimension for which the index should be set
 	//! \param value value of the index
 	void set(size_t index,size_t value);
 	//! increment index
 
 	//! Increments the index determined by index by one.
 	//! \throws IndexError if index exceeds the rank of the Index object
+	//! \throws RangeError if the increment would lead to an index value > size_t maximum
 	//! \param index index of the index to increment
 	void inc(size_t index);
 	//! decrement index
@@ -113,7 +108,6 @@ public:
 	//! \throws RangeError if the decrement would yield an index value < 0
 	//! \param index index of the index to decrement
 	void dec(size_t index);
-
 	//! [] operator read only
 
 	//! This version of the [] operator allows read only access to the
@@ -135,7 +129,6 @@ public:
 	//! \param index reference to the Index object to print
 	//! \return reference to an outstream object
 	friend std::ostream &operator<<(std::ostream &o,const Index &index);
-
 	//! equality operator
 
 	//! Returns true if the rank and the indices of two Index object are identical.
