@@ -39,27 +39,36 @@
 namespace pni{
 namespace utils{
 
+//================Macros related to exceptions==================================
+
+//Macro for setting up exceptions at the very begin of a function or method
 #define EXCEPTION_SETUP(issuer) \
-	static String ExIssuer = (issuer);\
-	String ExDescription
+	static String __ExIssuer = (issuer);\
+	String __ExDescription
 
+//Macro called directly before an exception is called it sets up the
+//exception which will be thrown
 #define EXCEPTION_INIT(extype,exdesc)\
-	extype e;\
-	ExDescription = (exdesc);\
-	e.setName(ExIssuer);\
-	e.setDescription(ExDescription);
+	extype __error;\
+	__ExDescription = (exdesc);\
+	__error.name(__ExIssuer);\
+	__error.description(__ExDescription);
 
 
+//Throw an exception
 #define EXCEPTION_THROW()\
-	std::cerr<<e<<std::endl;\
+	std::cerr<<__error<<std::endl;\
 	std::cerr<<"in line: "<<__LINE__<<" of file "<<__FILE__<<std::endl<<std::endl;\
-	throw e;
+	throw __error;
+
+
+//========================Exception classes=====================================
 
 //! \defgroup Exceptions
 //! Exception object used throughout the library for Error handling.
 
 //! \ingroup Exceptions
-//! Exceptions base class
+//! \brief Exceptions base class
 
 //! The base class for all exceptions in the library. Constructors are design
 //! to take either const char * values or const std::string references as
@@ -98,39 +107,39 @@ public:
 	//! set the exception name
 
 	//! \param name exception name
-	void setName(const std::string &name) {
+	void name(const std::string &name) {
 		_name = name;
 	}
 	//! get the exceptions name
 
 	//! \return reference to the string object holding the name
-	const String &getName() const {
+	const String &name() const {
 		return _name;
 	}
 
 	//! set the exception issuer
 
 	//! \param i name or some ID of the issuer
-	void setIssuer(const String &i) {
+	void issuer(const String &i) {
 		_issuer = i;
 	}
 	//! get the exceptions issuer
 
 	//! \return reference to the string object with the exceptions ID or name
-	const String &getIssuer() const {
+	const String &issuer() const {
 		return _issuer;
 	}
 
 	//! set exception desccription
 
 	//! \param desc description of the exception
-	void setDescription(const std::string &desc) {
+	void description(const std::string &desc) {
 		_description = desc;
 	}
 	//! get the exceptions description
 
 	//! \return reference to the string object with the exceptions description
-	const String &getDescription() const {
+	const String &description() const {
 		return _description;
 	}
 
@@ -139,11 +148,13 @@ public:
         
 };
 
-//! \ingroup Exceptions
-//! memory allocation error
 
-//! This exception is typically raised if memory allocation fails. In other words if
-//! a call of the new operator returns NULL.
+//------------------------------------------------------------------------------
+//! \ingroup Exceptions
+//! \brief memory allocation error
+
+//! This exception is typically raised if memory allocation fails. In other
+//! words if a call of the new operator returns NULL.
 class MemoryAllocationError: public Exception {
 public:
 	//! default constructor
@@ -164,11 +175,12 @@ public:
 	friend std::ostream &operator<<(std::ostream &o,const MemoryAllocationError &e);
 };
 
+//------------------------------------------------------------------------------
 //! \ingroup Exceptions
-//! Shape mismatch error
+//! \brief Shape mismatch error
 
-//! This exception is usually raised in cases where array operations require shape matching
-//! of the involved arrays but their shapes are different.
+//! This exception is usually raised in cases where array operations require
+//! shape matching of the involved arrays but their shapes are different.
 class ShapeMissmatchError: public Exception {
 public:
 	//! default constructor
@@ -190,13 +202,14 @@ public:
 	friend std::ostream &operator<<(std::ostream &o,const ShapeMissmatchError &e);
 };
 
+//------------------------------------------------------------------------------
 //! \ingroup Exceptions
-//! Size missmatch error
+//! \brief Size missmatch error
 
 //! This exception will be raised in cases where buffer sizes do not meet the
-//! requirements. A typical situation would be that a buffer is passed to an Array
-//! object whos size does not match the size given by the ArrayShape object of the
-//! Array.
+//! requirements. A typical situation would be that a buffer is passed to an
+//! Array object whose size does not match the size given by the ArrayShape
+//! object of the Array.
 class SizeMissmatchError: public Exception {
 public:
 	//! default constructor
@@ -218,11 +231,13 @@ public:
 	friend std::ostream &operator<<(std::ostream &o,const SizeMissmatchError &e);
 };
 
+//------------------------------------------------------------------------------
 //! \ingroup Exceptions
-//! index error
+//! \brief index error
 
-//! Raised typically in cases where the [] operator is used to access a data element but the
-//! provided index goes beyond the address space of the buffer or array.
+//! Raised typically in cases where the [] operator is used to access a data
+//! element but the provided index goes beyond the address space of the buffer
+//! or array.
 class IndexError: public Exception {
 public:
 	//! default constructor
@@ -243,17 +258,31 @@ public:
 	friend std::ostream &operator<<(std::ostream &o,const IndexError &e);
 };
 
+//------------------------------------------------------------------------------
+//! \ingroup Exceptions
+//! \brief key exception
+
+//! Raised in cases where a problem with the key of a hash map.
 class KeyError: public Exception{
 public:
+	//! default constructor
 	KeyError():Exception("KeyError"){}
+	//! constructor
+
+	//! \param i signature of the expcetion issuer
+	//! \param d description of the error
 	KeyError(const String &i,const String &d):Exception("KeyError",i,d){}
+	//! destructor
 	virtual ~KeyError(){}
 
+	//! output operator
 	friend std::ostream &operator<<(std::ostream &o,const KeyError &e);
 };
 
+//------------------------------------------------------------------------------
 //! \ingroup Exceptions
 //! \brief indicates file IO problems
+
 //! Raised typically in case of File IO problems
 class FileError: public Exception {
 public:
@@ -273,10 +302,12 @@ public:
 	virtual ~FileError() {
 	}
 
+	//! output operator
 	friend std::ostream &operator<<(std::ostream &o,const FileError &e);
 
 };
 
+//------------------------------------------------------------------------------
 //! \ingroup Exceptions
 //! \brief data type errors
 
@@ -299,9 +330,11 @@ public:
 	virtual ~TypeError() {
 	}
 
+	//! output operator
 	friend std::ostream &operator<<(std::ostream &o,const TypeError &e);
 };
 
+//------------------------------------------------------------------------------
 //! \ingroup Exceptions
 //! \brief data range error
 
@@ -327,9 +360,11 @@ public:
 	virtual ~RangeError(){
 	}
 
+	//! output operator
 	friend std::ostream &operator<<(std::ostream &o,const RangeError &e);
 };
 
+//------------------------------------------------------------------------------
 //! \ingroup Exceptions
 //! \brief not implemented exception
 
@@ -356,9 +391,11 @@ public:
 	virtual ~NotImplementedError(){
 	}
 
+	//! output operator
 	friend std::ostream &operator<<(std::ostream &o,const NotImplementedError &e);
 };
 
+//------------------------------------------------------------------------------
 //! \ingroup Exceptions
 //! \brief for access to not allocated memory
 
@@ -381,12 +418,13 @@ public:
 
 	//! destructor
 	virtual ~MemoryAccessError(){
-
 	}
 
+	//! output operator
 	friend std::ostream &operator<<(std::ostream &o,const MemoryAccessError &e);
 };
 
+//------------------------------------------------------------------------------
 //! \ingroup Exceptions
 //! \brief error during processing
 
@@ -409,12 +447,13 @@ public:
 
 	//! destructor
 	virtual ~ProcessingError(){
-
 	}
 
+	//! output operator
 	friend std::ostream &operator<<(std::ostream &o,const ProcessingError &e);
 };
 
+//------------------------------------------------------------------------------
 //! \ingroup Exceptions
 //! \brief error during assignment
 
@@ -440,6 +479,7 @@ public:
 
 	}
 
+	//! output operator
 	friend std::ostream &operator<<(std::ostream &o,const AssignmentError &e);
 };
 

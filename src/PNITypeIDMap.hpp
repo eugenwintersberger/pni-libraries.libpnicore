@@ -43,76 +43,91 @@ public:
 };
 
 //! \cond NO_API_DOC
+//------------------------------------------------------------------------------
 template<> class PNITypeIDMap<PNITypeID::UINT8>{
 public:
 	typedef UInt8 Type;
 };
 
+//------------------------------------------------------------------------------
 template<> class PNITypeIDMap<PNITypeID::INT8>{
 public:
 	typedef Int8 Type;
 };
 
+//------------------------------------------------------------------------------
 template<> class PNITypeIDMap<PNITypeID::UINT16>{
 public:
 	typedef UInt16 Type;
 };
 
+//------------------------------------------------------------------------------
 template<> class PNITypeIDMap<PNITypeID::INT16>{
 public:
 	typedef Int16 Type;
 };
 
+//------------------------------------------------------------------------------
 template<> class PNITypeIDMap<PNITypeID::INT32>{
 public:
 	typedef Int32 Type;
 };
 
+//------------------------------------------------------------------------------
 template<> class PNITypeIDMap<PNITypeID::UINT32>{
 public:
 	typedef UInt32 Type;
 };
 
+//------------------------------------------------------------------------------
 template<> class PNITypeIDMap<PNITypeID::INT64>{
 public:
 	typedef Int64 Type;
 };
 
+//------------------------------------------------------------------------------
 template<> class PNITypeIDMap<PNITypeID::UINT64>{
 public:
 	typedef UInt64 Type;
 };
 
+//------------------------------------------------------------------------------
 template<> class PNITypeIDMap<PNITypeID::FLOAT32>{
 public:
 	typedef Float32 Type;
 };
 
+//------------------------------------------------------------------------------
 template<> class PNITypeIDMap<PNITypeID::FLOAT64>{
 public:
 	typedef Float64 Type;
 };
 
+//------------------------------------------------------------------------------
 template<> class PNITypeIDMap<PNITypeID::FLOAT128>{
 public:
 	typedef Float128 Type;
 };
 
+//------------------------------------------------------------------------------
 template<> class PNITypeIDMap<PNITypeID::COMPLEX32>{
 public:
 	typedef Complex32 Type;
 };
 
+//------------------------------------------------------------------------------
 template<> class PNITypeIDMap<PNITypeID::COMPLEX64>{
 public:
 	typedef Complex64 Type;
 };
 
+//------------------------------------------------------------------------------
 template<> class PNITypeIDMap<PNITypeID::COMPLEX128>{
 public:
 	typedef Complex128 Type;
 };
 
+//------------------------------------------------------------------------------
 template<> class PNITypeIDMap<PNITypeID::BINARY>{
 public:
 	typedef Binary Type;

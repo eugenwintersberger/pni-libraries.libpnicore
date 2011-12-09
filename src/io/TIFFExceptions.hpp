@@ -34,12 +34,24 @@
 namespace pni{
 namespace utils{
 
+//! \ingroup Exceptions
+//! \brief error during TIFF reading
+
+//! This exception is thrown in cases where errors occur during reading
+//! TIFF files.
 class TIFFReadError:public Exception{
 public:
+	//! default constructor
 	TIFFReadError():Exception("TIFFReadError"){}
+	//! constructor
+
+	//! \param i signature of the exception issuer
+	//! \param d description of the error
 	TIFFReadError(const String &i,const String &d):Exception("TIFFReadError",i,d){}
+	//! destructor
 	virtual ~TIFFReadError(){}
 
+	//! output operator
 	friend std::ostream &operator<<(std::ostream &o,const TIFFReadError &e);
 };
 

@@ -111,7 +111,7 @@ public:
 
 	//! Allocate memory for size number of elements. Subsequent calls to this
 	//! cause reallocation and all data originally stored is lost.
-	//! \throws MemoryAllocationError if allocation fails
+	//! \throws MemoryAllocationError if allocation fails or size=0
 	//! \param size number of elements
 	virtual void allocate(const size_t &size) = 0;
 	//! buffer status

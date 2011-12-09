@@ -32,6 +32,7 @@
 namespace pni{
 namespace utils{
 
+//implementation of the output operator
 std::ostream &operator<<(std::ostream &o,const TIFFReadError &e){
 	return e.print(o);
 }

@@ -116,7 +116,7 @@ IFDAbstractEntry::sptr TIFFIFD::operator[](const String &n){
 			return entry;
 		}
 	}
-	KeyError error(ExIssuer,"IFD entry key ["+n+"] not found in IFD!");
+	KeyError error(__ExIssuer,"IFD entry key ["+n+"] not found in IFD!");
 	throw error;
 }
 
