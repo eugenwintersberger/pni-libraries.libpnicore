@@ -2,6 +2,8 @@
 import os.path as path
 import platform
 import os
+import subprocess
+import platform
 
 
 debug = ARGUMENTS.get("DEBUG",0)
@@ -9,14 +11,20 @@ debug = ARGUMENTS.get("DEBUG",0)
 
 var = Variables('BuildConfig.py')
 if os.name == "nt":
-	var.Add(PathVariable("PREFIX","set installation prefix","C:\\Program Files\\libpniutils",PathVariable.PathAccept))
+	var.Add(PathVariable("PREFIX","set installation prefix",
+                         "C:\\Program Files\\libpniutils",
+                         PathVariable.PathAccept))
 elif os.name=="posix":
-	var.Add(PathVariable("PREFIX","set installation prefix","/usr/local"))
+	var.Add(PathVariable("PREFIX","set installation prefix",
+                         "/usr/local"))
 
 if os.name == "nt":
-	var.Add(PathVariable("BOOSTPREFIX","set the installation prefix for boost","C:\\Program Files\\boost",PathVariable.PathAccept))
+	var.Add(PathVariable("BOOSTPREFIX",
+            "set the installation prefix for boost",
+            "C:\\Program Files\\boost",PathVariable.PathAccept))
 elif os.name == "posix":	
-	var.Add(PathVariable("BOOSTPREFIX","set the installation prefix for boost","/usr"))
+	var.Add(PathVariable("BOOSTPREFIX","set the installation prefix for boost",
+                         "/usr"))
 	
 var.Add("VERSION","library version","0.0.0")
 var.Add("LIBNAME","library name","pniutils")
@@ -65,16 +73,20 @@ if env["PKGNAMEROOT"] == "":
     env.Append(PKGNAMEROOT = env["LIBPREFIX"]+env["LIBNAME"]+env["SOVERSION"])
 
 
-
-#print env["LINKFLAGS"]
+#Acquire some information about the compiler used
+cxx_version = subprocess.Popen([env['CXX'], "-dumpversion"], 
+                               stdout=subprocess.PIPE).communicate()[0]
+(major,minor,release) = cxx_version.split(".")
+cxx_version = int(major+minor+release)
     
 
 #set the proper compiler - this should be changed to something 
 #more general - independent of the underlying operating system
 env.Replace(CXX = env["CXX"])
 
-#set default libraries
-
+#set some flags depending on the compiler versions
+if cxx_version==440:
+    env.Append(CXXFLAGS=["-DCXX_ENUMCLASS_FIX"])
 
 #set default compiler flags
 env.Append(CXXFLAGS = ["-Wall","-std=c++0x"])

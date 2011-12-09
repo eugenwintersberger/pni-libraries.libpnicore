@@ -1,15 +1,64 @@
 import os.path as path
+import subprocess
 
 Import("build_env")
 
 
 api_doc_dir = "api-doc"
-api_doc_man_dir = "man"
 api_doc_html_dir = "html"
-api_doc_latex_dir = "latex" 
 
-doxyfile = build_env.Textfile("Doxyfile",[
-           "DOXYFILE_ENCODING      = UTF-8",
+#need to figure out which version of doxygen is installed
+
+doxygen_output = subprocess.Popen(["doxygen",""], 
+                               stdout=subprocess.PIPE).communicate()[0]
+#split output string
+version_line = doxygen_output.split("\n")[0]
+version_string = version_line.split(" ")[-1]
+doxygen_version = int(version_string.replace(".",""))
+
+print doxygen_version
+
+doxyfile_extension = ["DOXYFILE_ENCODING      = UTF-8",
+                      "TYPEDEF_HIDES_STRUCT   = NO",
+                      "SYMBOL_CACHE_SIZE      = 0",
+                      "EXTRACT_ANON_NSPACES   = NO",
+                      "FORCE_LOCAL_INCLUDES   = NO",
+                      "SORT_MEMBERS_CTORS_1ST = NO",
+                      "SORT_GROUP_NAMES       = NO",
+                      "SHOW_FILES             = YES",
+                      "SHOW_NAMESPACES        = YES",
+                      "INPUT_ENCODING         = UTF-8",
+                      "EXCLUDE_SYMBOLS        = pni::utils::ArrayType<T>",
+                      "HTML_COLORSTYLE_HUE    = 220",
+                      "HTML_COLORSTYLE_SAT    = 100",
+                      "HTML_COLORSTYLE_GAMMA  = 80",
+                      "HTML_TIMESTAMP         = YES",
+                      "HTML_DYNAMIC_SECTIONS  = NO",
+                      "GENERATE_DOCSET        = NO",
+                      "DOCSET_FEEDNAME        = 'Documentation for ${'$LIBPREFIX'+'$LIBNAME'+'-'+'$VERSION'}'",
+                      "DOCSET_BUNDLE_ID       = org.doxygen.${'$LIBPREFIX'+'$LIBNAME'+'-'+'$VERSION'}",
+                      "DOCSET_PUBLISHER_ID    = org.doxygen.DESY",
+                      "DOCSET_PUBLISHER_NAME  = DESY",
+                      "CHM_INDEX_ENCODING     =",
+                      "GENERATE_QHP           = NO",
+                      "GENERATE_ECLIPSEHELP   = YES",
+                      "USE_INLINE_TREES       = YES",
+                      "EXT_LINKS_IN_WINDOW    = NO",
+                      "FORMULA_FONTSIZE       = 10",
+                      "FORMULA_TRANSPARENT    = YES",
+                      "SERVER_BASED_SEARCH    = NO",
+                      "LATEX_SOURCE_CODE      = NO",
+                      "MSCGEN_PATH            =",
+                      "DOT_NUM_THREADS        = 0",
+                      "DOT_FONTNAME           = FreeSans.ttf",
+                      "DOT_FONTSIZE           = 10",
+                      "DOT_FONTPATH           =",
+                      "DOT_GRAPH_MAX_NODES    = 50",
+                      "USE_MATHJAX = YES",
+                      "WARN_FORMAT            = '$file:$line: $text'"
+                     ] 
+
+doxyfile_source = [
            "PROJECT_NAME           = ${LIBPREFIX}${LIBNAME}",
            "PROJECT_NUMBER         =",
            "OUTPUT_DIRECTORY       = %s" %api_doc_dir,
@@ -31,17 +80,9 @@ doxyfile = build_env.Textfile("Doxyfile",[
            "ALIASES                =",
            "OPTIMIZE_OUTPUT_FOR_C  = YES",
            "OPTIMIZE_OUTPUT_JAVA   = NO",
-           "OPTIMIZE_FOR_FORTRAN   = NO",
-           "OPTIMIZE_OUTPUT_VHDL   = NO",
-           "EXTENSION_MAPPING      =",
            "BUILTIN_STL_SUPPORT    = YES",
-           "CPP_CLI_SUPPORT        = NO",
-           "SIP_SUPPORT            = NO",
-           "IDL_PROPERTY_SUPPORT   = YES",
            "DISTRIBUTE_GROUP_DOC   = NO",
            "SUBGROUPING            = YES",
-           "TYPEDEF_HIDES_STRUCT   = NO",
-           "SYMBOL_CACHE_SIZE      = 0",
             #---------------------------------------------------------------------------
             # Build related configuration options
             #---------------------------------------------------------------------------
@@ -50,7 +91,6 @@ doxyfile = build_env.Textfile("Doxyfile",[
             "EXTRACT_STATIC         = NO",
             "EXTRACT_LOCAL_CLASSES  = YES",
             "EXTRACT_LOCAL_METHODS  = NO",
-            "EXTRACT_ANON_NSPACES   = NO",
             "HIDE_UNDOC_MEMBERS     = NO",
             "HIDE_UNDOC_CLASSES     = NO",
             "HIDE_FRIEND_COMPOUNDS  = NO",
@@ -59,12 +99,9 @@ doxyfile = build_env.Textfile("Doxyfile",[
             "CASE_SENSE_NAMES       = YES",
             "HIDE_SCOPE_NAMES       = NO",
             "SHOW_INCLUDE_FILES     = YES",
-            "FORCE_LOCAL_INCLUDES   = NO",
             "INLINE_INFO            = YES",
             "SORT_MEMBER_DOCS       = YES",
             "SORT_BRIEF_DOCS        = NO",
-            "SORT_MEMBERS_CTORS_1ST = NO",
-            "SORT_GROUP_NAMES       = NO",
             "SORT_BY_SCOPE_NAME     = NO",
             "GENERATE_TODOLIST      = YES",
             "GENERATE_TESTLIST      = YES",
@@ -74,8 +111,6 @@ doxyfile = build_env.Textfile("Doxyfile",[
             "MAX_INITIALIZER_LINES  = 30",
             "SHOW_USED_FILES        = YES",
             "SHOW_DIRECTORIES       = NO",
-            "SHOW_FILES             = YES",
-            "SHOW_NAMESPACES        = YES",
             #---------------------------------------------------------------------------
             # configuration options related to warning and progress messages
             #---------------------------------------------------------------------------
@@ -84,19 +119,16 @@ doxyfile = build_env.Textfile("Doxyfile",[
             "WARN_IF_UNDOCUMENTED   = YES",
             "WARN_IF_DOC_ERROR      = YES",
             "WARN_NO_PARAMDOC       = NO",
-            "WARN_FORMAT            = '$file:$line: $text'",
             "WARN_LOGFILE           =",
             #---------------------------------------------------------------------------
             # configuration options related to the input files
             #---------------------------------------------------------------------------
             "INPUT                  = ../src/",
-            "INPUT_ENCODING         = UTF-8",
             "FILE_PATTERNS          =",
             "RECURSIVE              = YES",
             "EXCLUDE                =",
             "EXCLUDE_SYMLINKS       = NO",
             "EXCLUDE_PATTERNS       =",
-            "EXCLUDE_SYMBOLS        = pni::utils::ArrayType<T>",
             "EXAMPLE_PATH           =",
             "EXAMPLE_PATTERNS       =",
             "EXAMPLE_RECURSIVE      = NO",
@@ -130,77 +162,19 @@ doxyfile = build_env.Textfile("Doxyfile",[
             "HTML_HEADER            =",
             "HTML_FOOTER            =",
             "HTML_STYLESHEET        =",
-            "HTML_COLORSTYLE_HUE    = 220",
-            "HTML_COLORSTYLE_SAT    = 100",
-            "HTML_COLORSTYLE_GAMMA  = 80",
-            "HTML_TIMESTAMP         = YES",
             "HTML_ALIGN_MEMBERS     = YES",
-            "HTML_DYNAMIC_SECTIONS  = NO",
             "GENERATE_TREEVIEW = YES",
-            "GENERATE_DOCSET        = NO",
-            "DOCSET_FEEDNAME        = 'Documentation for ${'$LIBPREFIX'+'$LIBNAME'+'-'+'$VERSION'}'",
-            "DOCSET_BUNDLE_ID       = org.doxygen.${'$LIBPREFIX'+'$LIBNAME'+'-'+'$VERSION'}",
-            "DOCSET_PUBLISHER_ID    = org.doxygen.DESY",
-            "DOCSET_PUBLISHER_NAME  = DESY",
             "GENERATE_HTMLHELP      = YES",
             "CHM_FILE               = ${'$LIBPREFIX'+'$LIBNAME'+'-'+'$VERSION'}.chm", 
             "HHC_LOCATION           =",
             "GENERATE_CHI           = NO",
-            "CHM_INDEX_ENCODING     =",
             "BINARY_TOC             = NO",
             "TOC_EXPAND             = NO",
-            "GENERATE_QHP           = NO",
-            "GENERATE_ECLIPSEHELP   = YES",
-            "ECLIPSE_DOC_ID         = org.doxygen.${'$LIBPREFIX'+'$LIBNAME'+'-'+'$VERSION'}",
             "DISABLE_INDEX          = NO",
             "ENUM_VALUES_PER_LINE   = 4",
             "GENERATE_TREEVIEW      = YES",
-            "USE_INLINE_TREES       = YES",
             "TREEVIEW_WIDTH         = 250",
-            "EXT_LINKS_IN_WINDOW    = NO",
-            "FORMULA_FONTSIZE       = 10",
-            "FORMULA_TRANSPARENT    = YES",
             "SEARCHENGINE           = YES",
-            "SERVER_BASED_SEARCH    = NO",
-            #---------------------------------------------------------------------------
-            # configuration options related to the LaTeX output
-            #---------------------------------------------------------------------------
-            "GENERATE_LATEX         = YES",
-            "LATEX_OUTPUT           = %s" %api_doc_latex_dir,
-            "LATEX_CMD_NAME         = pdflatex",
-            "MAKEINDEX_CMD_NAME     = makeindex",
-            "COMPACT_LATEX          = NO",
-            "PAPER_TYPE             = a4wide",
-            "EXTRA_PACKAGES         =",
-            "LATEX_HEADER           =",
-            "PDF_HYPERLINKS         = YES",
-            "USE_PDFLATEX           = YES",
-            "LATEX_BATCHMODE        = NO",
-            "LATEX_HIDE_INDICES     = NO",
-            "LATEX_SOURCE_CODE      = NO",
-            #---------------------------------------------------------------------------
-            # configuration options related to the RTF output
-            #---------------------------------------------------------------------------
-            "GENERATE_RTF           = NO",
-            #---------------------------------------------------------------------------
-            # configuration options related to the man page output
-            #---------------------------------------------------------------------------
-            "GENERATE_MAN           = YES",
-            "MAN_OUTPUT             = %s" %api_doc_man_dir,
-            "MAN_EXTENSION          = .3",
-            "MAN_LINKS              = YES",
-            #---------------------------------------------------------------------------
-            # configuration options related to the XML output
-            #---------------------------------------------------------------------------
-            "GENERATE_XML           = NO",
-            #---------------------------------------------------------------------------
-            # configuration options for the AutoGen Definitions output
-            #---------------------------------------------------------------------------
-            "GENERATE_AUTOGEN_DEF   = NO",
-            #---------------------------------------------------------------------------
-            # configuration options related to the Perl module output
-            #---------------------------------------------------------------------------
-            "GENERATE_PERLMOD       = NO",
             #---------------------------------------------------------------------------
             # Configuration options related to the preprocessor
             #---------------------------------------------------------------------------
@@ -225,13 +199,8 @@ doxyfile = build_env.Textfile("Doxyfile",[
             # Configuration options related to the dot tool
             #---------------------------------------------------------------------------
             "CLASS_DIAGRAMS         = YES",
-            "MSCGEN_PATH            =",
             "HIDE_UNDOC_RELATIONS   = YES",
             "HAVE_DOT               = NO",
-            "DOT_NUM_THREADS        = 0",
-            "DOT_FONTNAME           = FreeSans.ttf",
-            "DOT_FONTSIZE           = 10",
-            "DOT_FONTPATH           =",
             "CLASS_GRAPH            = YES",
             "COLLABORATION_GRAPH    = YES",
             "GROUP_GRAPHS           = YES",
@@ -246,18 +215,21 @@ doxyfile = build_env.Textfile("Doxyfile",[
             "DOT_IMAGE_FORMAT       = png",
             "DOT_PATH               =",
             "DOTFILE_DIRS           =",
-            "DOT_GRAPH_MAX_NODES    = 50",
             "MAX_DOT_GRAPH_DEPTH    = 0",
             "DOT_TRANSPARENT        = NO",
             "DOT_MULTI_TARGETS      = YES",
             "GENERATE_LEGEND        = YES",
-            "DOT_CLEANUP            = YES",
-            "USE_MATHJAX = YES"],TEXTFILESUFFIX="")
+            "DOT_CLEANUP            = YES"
+            ]
+
+if doxygen_version > 160:
+    doxyfile_source.extend(doxyfile_extension)
+
+doxyfile = build_env.Textfile("Doxyfile",doxyfile_source,TEXTFILESUFFIX="")
             
-doxygen_api_doc = build_env.Command(["api-doc/html","api-doc/man/man3","api-doc/latex/refman.pdf"],
+doxygen_api_doc = build_env.Command(["api-doc/html"],
                                     doxyfile,
-                                    "cd doc; doxygen $SOURCE.file;cd api-doc/latex; make;")
-                                     #cd ../man/man3; gzip -f *.3
+                                    "cd doc; doxygen $SOURCE.file")
 
 Clean(doxygen_api_doc,"api-doc")
 admin_guide = SConscript("admin-guide/SConscript")
