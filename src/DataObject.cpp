@@ -101,19 +101,21 @@ DataObject &DataObject::operator=(DataObject &&o){
 
 //==============Implementation of object inquiry methods========================
 
-
 void DataObject::name(const String &n){
 	_name = n;
 }
 
+//------------------------------------------------------------------------------
 String DataObject::name() const{
 	return _name;
 }
 
+//------------------------------------------------------------------------------
 void DataObject::description(const String &d){
 	_description = d;
 }
 
+//------------------------------------------------------------------------------
 String DataObject::description() const{
 	return _description;
 }

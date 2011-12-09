@@ -74,7 +74,6 @@ public:
 	DataObject(const String &n,const String &d);
 	//! destructor
 	virtual ~DataObject();
-
 	//! copy assignment operator
 
 	//! Assignment operator setting the values of an existing object
@@ -87,27 +86,21 @@ public:
 	//! Set the name of the object.
 	//! \param n name of the object
 	virtual void name(const String &n);
-
 	//! get name
 
 	//! Returns the name of the object.
 	//! \return object name
 	virtual String name() const;
-
 	//! set description
 
 	//! Set the description for the.
 	//! \param d object's description
 	virtual void description(const String &d);
-
 	//! get description
 
 	//! Gets the description of the object.
 	//! \return object description
 	virtual String description() const;
-
-
-
 	//! print object
 
 	//! Prints object data to an output stream.
@@ -115,7 +108,6 @@ public:
 	//! \param o object to print
 	//! \return output stream
 	friend std::ostream &operator<<(std::ostream &os,const DataObject &o);
-
 };
 
 

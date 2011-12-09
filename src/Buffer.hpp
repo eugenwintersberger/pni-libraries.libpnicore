@@ -258,14 +258,17 @@ template<typename T> void *Buffer<T>::void_ptr(){
 	return (void *)_data;
 }
 
+//------------------------------------------------------------------------------
 template<typename T> const void *Buffer<T>::void_ptr() const {
 	return (void *)_data;
 }
 
+//------------------------------------------------------------------------------
 template<typename T> T *Buffer<T>::ptr(){
 	return _data;
 }
 
+//------------------------------------------------------------------------------
 template<typename T> const T *Buffer<T>::ptr() const {
 	return _data;
 }

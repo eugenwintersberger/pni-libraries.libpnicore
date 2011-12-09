@@ -41,7 +41,7 @@ ArrayObject::ArrayObject():NumericObject(){
 //------------------------------------------------------------------------------
 //implementation of the copy constructor
 ArrayObject::ArrayObject(const ArrayObject &a):NumericObject(a){
-	EXCEPTION_SETUP("ArrayObject::ArrayObject(const ArrayObject &a):NumericObject(a)");
+	EXCEPTION_SETUP("ArrayObject::ArrayObject(const ArrayObject &a)");
 
 	_shape = a._shape;
 }
@@ -67,9 +67,8 @@ ArrayObject::~ArrayObject(){
 	_shape.rank(0);
 }
 
-
-
-
+//=====================class methods============================================
+//implementation of shape
 void ArrayObject::shape(const ArrayShape &s){
 	EXCEPTION_SETUP("void ArrayObject::setShape(const ArrayShape &s)");
 
@@ -89,8 +88,7 @@ void ArrayObject::shape(const ArrayShape &s){
 	_shape = s;
 }
 
-
-
+//------------------------------------------------------------------------------
 const ArrayShape &ArrayObject::shape() const{
 	return _shape;
 }

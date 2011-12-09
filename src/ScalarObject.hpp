@@ -42,10 +42,11 @@ namespace utils{
 //! \ingroup Data-objects
 //! \brief base class for numeric scalar templates
 
-//! This class represents a single numeric value. In many cases it would be sufficient
-//! to store such a value in a simple variable using a native type rather than an entire
-//! object. However, in this case on would loose all the advantages of a NumericObject
-//! type like name, description, and most important, the physical unit.
+//! This class represents a single numeric value. In many cases it would be
+//! sufficient to store such a value in a simple variable using a native type
+//! rather than an entire object. However, in this case on would loose all the
+//! advantages of a NumericObject type like name, description, and most
+//! important, the physical unit.
 class ScalarObject:public NumericObject {
 public:
 	//public types
