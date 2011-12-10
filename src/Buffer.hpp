@@ -300,6 +300,7 @@ template<typename T> Buffer<T> &Buffer<T>::operator=(const Buffer<T> &b){
 //implementation of the move assignment
 template<typename T> Buffer<T> &Buffer<T>::operator=(Buffer<T> &&b){
 	if(this != &b){
+		this->free();
 		(BufferObject &)(*this) = std::move((BufferObject &)b);
 
 		_data = b._data;
