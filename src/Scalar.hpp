@@ -33,8 +33,7 @@
 
 #include <iostream>
 #include <complex>
-
-#include <boost/numeric/conversion/converter.hpp>
+#include <limits>
 
 #include "PNITypes.hpp"
 #include "ScalarObject.hpp"
@@ -44,6 +43,7 @@
 #include "TypeCompat.hpp"
 #include "TypeRange.hpp"
 #include "ComplexUtils.hpp"
+#include "type_conversion.hpp"
 
 namespace pni {
 namespace utils {
@@ -381,6 +381,7 @@ template<typename T> void Scalar<T>::value(const Scalar<T> &v){
 template<typename T> template<typename U> void Scalar<T>::value(const U &v){
 	EXCEPTION_SETUP("template<typename T> template<typename U> void Scalar<T>::value(const U &v)");
 
+	/*
 	if(!TypeCompat<T,U>::isAssignable){
 		EXCEPTION_INIT(TypeError,"Cannot assign value due to incompatible types!");
 		EXCEPTION_THROW();
@@ -392,6 +393,10 @@ template<typename T> template<typename U> void Scalar<T>::value(const U &v){
 	}
 
 	_value = (T)v;
+
+	*/
+
+	_value = convert_type<T>(v);
 
 }
 

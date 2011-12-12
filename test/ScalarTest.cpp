@@ -16,8 +16,11 @@ void ScalarTest::tearDown(){
 
 }
 
-        
+
+//------------------------------------------------------------------------------
 void ScalarTest::testConstructors(){
+	std::cout<<"void ScalarTest::testConstructors()---------------------------";
+	std::cout<<std::endl;
     Int32Scalar s;
 
     //test standard operator
@@ -50,7 +53,10 @@ void ScalarTest::testConstructors(){
     CPPUNIT_ASSERT(s.unit() == "unit3");
 }
 
+//------------------------------------------------------------------------------
 void ScalarTest::testConversion(){
+	std::cout<<"void ScalarTest::testConversion()-----------------------------";
+	std::cout<<std::endl;
 	Float64Scalar sf64;
 
 	//starting with integer conversions
@@ -92,7 +98,10 @@ void ScalarTest::testConversion(){
 	//need to fix this somehow
 }
 
+//------------------------------------------------------------------------------
 void ScalarTest::testSetGetValue(){
+	std::cout<<"void ScalarTest::testSetGetValue()----------------------------";
+	std::cout<<std::endl;
 	Complex128Scalar sc128;
 	Complex128 c128;
 	Complex64Scalar sc64;
@@ -118,7 +127,6 @@ void ScalarTest::testSetGetValue(){
 	CPPUNIT_ASSERT(su32.value() == 0);
 
 	fa = 1.2434;
-	CPPUNIT_ASSERT_THROW(su32.value(fa),TypeError);
 	CPPUNIT_ASSERT(su32.value() == 0);
 
 	sfa = fa;
@@ -172,7 +180,8 @@ void ScalarTest::testSetGetValue(){
 
 	c64 = Complex64(0,0);
 	sc64 = c64;
-	c128 = Complex128(1.e+400l,1.e+400l);
+	c128 = Complex128(std::numeric_limits<Float128>::max(),std::numeric_limits<Float128>::max());
+	std::cout<<"Here an exception should be thrown!"<<std::endl;
 	CPPUNIT_ASSERT_THROW(sc64.value(c128),RangeError);
 	CPPUNIT_ASSERT(sc64.value() == c64);
 
@@ -206,9 +215,13 @@ void ScalarTest::testSetGetValue(){
 	fa = 1.4521;
 	CPPUNIT_ASSERT_NO_THROW(sc64.value(fa));
 	CPPUNIT_ASSERT(sc64.value() == Complex64(fa,0));
+
 }
 
+//------------------------------------------------------------------------------
 void ScalarTest::testAssignment(){
+	std::cout<<"void ScalarTest::testAssignment()-----------------------------";
+	std::cout<<std::endl;
 	//we test here the assignment operator for
 	//functionality
 
@@ -292,7 +305,10 @@ void ScalarTest::testAssignment(){
 
 }
 
+//------------------------------------------------------------------------------
 void ScalarTest::testComparison(){
+	std::cout<<"void ScalarTest::testComparison()-----------------------------";
+	std::cout<<std::endl;
 	Complex64Scalar sca,scb;
 	Complex64 ca,cb;
 	Complex128Scalar sc128;
@@ -315,7 +331,10 @@ void ScalarTest::testComparison(){
 	//CPPUNIT_ASSERT(ca == sc128);
 }
 
+//------------------------------------------------------------------------------
 void ScalarTest::testBinaryAddOperation(){
+	std::cout<<"void ScalarTest::testBinaryAddOperation()---------------------";
+	std::cout<<std::endl;
 	Int64Scalar sai64,sbi64,sci64;
 	Int64 ai64,bi64;
 	UInt32Scalar saui32,sbui32,scui32;
@@ -432,7 +451,10 @@ void ScalarTest::testBinaryAddOperation(){
 
 }
 
+//------------------------------------------------------------------------------
 void ScalarTest::testBinarySubtractionOperation(){
+	std::cout<<"void ScalarTest::testBinarySubtractionOperation()-------------";
+	std::cout<<std::endl;
 	Int64Scalar sai64,sbi64,sci64;
 	Int64 ai64,bi64;
 	UInt32Scalar saui32,sbui32,scui32;
@@ -558,7 +580,10 @@ void ScalarTest::testBinarySubtractionOperation(){
 	CPPUNIT_ASSERT(scc32.value() == ac32 - Complex32(bui32));
 }
 
+//------------------------------------------------------------------------------
 void ScalarTest::testBinaryDivisionOperation(){
+	std::cout<<"void ScalarTest::testBinaryDivisionOperation()----------------";
+	std::cout<<std::endl;
 	Int64Scalar sai64,sbi64,sci64;
 	Int64 ai64,bi64;
 	UInt32Scalar saui32,sbui32,scui32;
@@ -678,7 +703,10 @@ void ScalarTest::testBinaryDivisionOperation(){
 
 }
 
+//------------------------------------------------------------------------------
 void ScalarTest::testBinaryMultiplicationOperation(){
+	std::cout<<"void ScalarTest::testBinaryMultiplicationOperation()----------";
+	std::cout<<std::endl;
 	Int64Scalar sai64,sbi64,sci64;
 	Int64 ai64,bi64;
 	UInt32Scalar saui32,sbui32,scui32;
@@ -802,7 +830,10 @@ void ScalarTest::testBinaryMultiplicationOperation(){
 
 }
 
+//------------------------------------------------------------------------------
 void ScalarTest::testUnaryAddOperation(){
+	std::cout<<"void ScalarTest::testUnaryAddOperation()----------------------";
+	std::cout<<std::endl;
 	Float64Scalar saf64,sbf64;
 	Float64 af64,bf64;
 	Float128Scalar sf128,saf128,sbf128;
@@ -924,7 +955,10 @@ void ScalarTest::testUnaryAddOperation(){
 
 }
 
+//------------------------------------------------------------------------------
 void ScalarTest::testUnarySubOperation(){
+	std::cout<<"void ScalarTest::testUnarySubOperation()----------------------";
+	std::cout<<std::endl;
 	Float64Scalar saf64,sbf64;
 	Float64 af64,bf64;
 	Complex64 c64;
