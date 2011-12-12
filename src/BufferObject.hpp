@@ -144,7 +144,7 @@ public:
 	//! Return the PNI type ID of the objects stored in the buffer.
 	//! If a non-PNI type is stored PNITypeID::NONE is returned.
 	//! \return type id of the buffer elements
-	virtual PNITypeID type_id() const = 0;
+	virtual TypeID type_id() const = 0;
 };
 
 //! @}

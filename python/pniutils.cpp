@@ -2,7 +2,7 @@
  * DataObject.cpp
  *
  *  Created on: Oct 4, 2011
- *      Author: eugen
+ *      Author: Eugen Wintersberger
  */
 
 #include <boost/python.hpp>
@@ -18,6 +18,7 @@
 #include "../src/Index.hpp"
 #include "../src/Scalar.hpp"
 #include "../src/ArrayObject.hpp"
+#include "../src/Array.hpp"
 
 using namespace pni::utils;
 using namespace boost::python;
@@ -29,136 +30,139 @@ using namespace boost::python;
 			.def(init<type>())\
 			.add_property("size",(name ## size))\
 			.add_property("element_size",&Buffer<type>::element_size)\
-			.add_property("memory_size",&Buffer<type>::mem_size)\
+			.add_property("mem_size",&Buffer<type>::mem_size)\
 			.def("allocate",&Buffer<type>::allocate)\
 			.def("free",&Buffer<type>::free)\
+			.add_property("type_id",&Buffer<type>::type_id)\
+			.def("__getitem__",&Buffer<type>::get)\
+			.def("__setitem__",&Buffer<type>::set)\
 			;
 
 //===================Macros for various operators===============================
-#define EQUALITY_OPERATOR(other_type)\
-		.def(self == other<other_type>())\
-		.def(other<other_type>() == self)\
+#define EQUALITY_OPERATOR(other_type,other_template)\
+		.def(self == other<other_template<other_type> >())\
+		.def(other<other_template<other_type> >() == self)\
 		.def(other_type() == self)\
 		.def(self == other_type())
 
 //------------------------------------------------------------------------------
-#define INEQUALITY_OPERATOR(other_type)\
-		.def(self != other<other_type>())\
-		.def(other<other_type>() != self)\
+#define INEQUALITY_OPERATOR(other_type,other_template)\
+		.def(self != other<other_template<other_type> >())\
+		.def(other<other_template<other_type> >() != self)\
 		.def(other_type() != self)\
 		.def(self != other_type())
 
 //------------------------------------------------------------------------------
-#define BINARY_ADD_OPERATOR(other_type)\
-		.def(self + other<other_type>())\
-		.def(other<other_type>() + self)\
+#define BINARY_ADD_OPERATOR(other_type,other_template)\
+		.def(self + other<other_template<other_type> >())\
+		.def(other<other_template<other_type> >() + self)\
 		.def(other_type() + self)\
 		.def(self + other_type())
 
 //------------------------------------------------------------------------------
-#define BINARY_SUB_OPERATOR(other_type)\
-		.def(self - other<other_type>())\
-		.def(other<other_type>() - self)\
+#define BINARY_SUB_OPERATOR(other_type,other_template)\
+		.def(self - other<other_template<other_type> >())\
+		.def(other<other_template<other_type> >() - self)\
 		.def(other_type() - self)\
 		.def(self - other_type())
 
 //------------------------------------------------------------------------------
-#define BINARY_DIV_OPERATOR(other_type)\
-		.def(self / other<other_type>())\
-		.def(other<other_type>() / self)\
+#define BINARY_DIV_OPERATOR(other_type,other_template)\
+		.def(self / other<other_template<other_type> >())\
+		.def(other<other_template<other_type> >() / self)\
 		.def(other_type() / self)\
 		.def(self / other_type())
 
 //------------------------------------------------------------------------------
-#define BINARY_MULT_OPERATOR(other_type)\
-		.def(self * other<other_type>())\
-		.def(other<other_type>() * self)\
+#define BINARY_MULT_OPERATOR(other_type,other_template)\
+		.def(self * other<other_template<other_type> >())\
+		.def(other<other_template<other_type> >() * self)\
 		.def(other_type() * self)\
 		.def(self * other_type())
 
 //------------------------------------------------------------------------------
-#define EQUALITY_TOTAL()\
-		EQUALITY_OPERATOR(UInt8)\
-		EQUALITY_OPERATOR(Int8)\
-		EQUALITY_OPERATOR(UInt16)\
-		EQUALITY_OPERATOR(Int16)\
-		EQUALITY_OPERATOR(UInt32)\
-		EQUALITY_OPERATOR(Int32)\
-		EQUALITY_OPERATOR(UInt64)\
-		EQUALITY_OPERATOR(Int64)\
-		EQUALITY_OPERATOR(Float32)\
-		EQUALITY_OPERATOR(Float64)\
-		EQUALITY_OPERATOR(Float128)
+#define EQUALITY_TOTAL(other_template)\
+		EQUALITY_OPERATOR(UInt8,other_template)\
+		EQUALITY_OPERATOR(Int8,other_template)\
+		EQUALITY_OPERATOR(UInt16,other_template)\
+		EQUALITY_OPERATOR(Int16,other_template)\
+		EQUALITY_OPERATOR(UInt32,other_template)\
+		EQUALITY_OPERATOR(Int32,other_template)\
+		EQUALITY_OPERATOR(UInt64,other_template)\
+		EQUALITY_OPERATOR(Int64,other_template)\
+		EQUALITY_OPERATOR(Float32,other_template)\
+		EQUALITY_OPERATOR(Float64,other_template)\
+		EQUALITY_OPERATOR(Float128,other_template)
 
 //------------------------------------------------------------------------------
-#define INEQUALITY_TOTAL()\
-		INEQUALITY_OPERATOR(UInt8)\
-		INEQUALITY_OPERATOR(Int8)\
-		INEQUALITY_OPERATOR(UInt16)\
-		INEQUALITY_OPERATOR(Int16)\
-		INEQUALITY_OPERATOR(UInt32)\
-		INEQUALITY_OPERATOR(Int32)\
-		INEQUALITY_OPERATOR(UInt64)\
-		INEQUALITY_OPERATOR(Int64)\
-		INEQUALITY_OPERATOR(Float32)\
-		INEQUALITY_OPERATOR(Float64)\
-		INEQUALITY_OPERATOR(Float128)
+#define INEQUALITY_TOTAL(other_template)\
+		INEQUALITY_OPERATOR(UInt8,other_template)\
+		INEQUALITY_OPERATOR(Int8,other_template)\
+		INEQUALITY_OPERATOR(UInt16,other_template)\
+		INEQUALITY_OPERATOR(Int16,other_template)\
+		INEQUALITY_OPERATOR(UInt32,other_template)\
+		INEQUALITY_OPERATOR(Int32,other_template)\
+		INEQUALITY_OPERATOR(UInt64,other_template)\
+		INEQUALITY_OPERATOR(Int64,other_template)\
+		INEQUALITY_OPERATOR(Float32,other_template)\
+		INEQUALITY_OPERATOR(Float64,other_template)\
+		INEQUALITY_OPERATOR(Float128,other_template)
 
 //------------------------------------------------------------------------------
-#define BINARY_ADD_TOTAL()\
-		BINARY_ADD_OPERATOR(UInt8)\
-		BINARY_ADD_OPERATOR(Int8)\
-		BINARY_ADD_OPERATOR(UInt16)\
-		BINARY_ADD_OPERATOR(Int16)\
-		BINARY_ADD_OPERATOR(UInt32)\
-		BINARY_ADD_OPERATOR(Int32)\
-		BINARY_ADD_OPERATOR(UInt64)\
-		BINARY_ADD_OPERATOR(Int64)\
-		BINARY_ADD_OPERATOR(Float32)\
-		BINARY_ADD_OPERATOR(Float64)\
-		BINARY_ADD_OPERATOR(Float128)
+#define BINARY_ADD_TOTAL(other_template)\
+		BINARY_ADD_OPERATOR(UInt8,other_template)\
+		BINARY_ADD_OPERATOR(Int8,other_template)\
+		BINARY_ADD_OPERATOR(UInt16,other_template)\
+		BINARY_ADD_OPERATOR(Int16,other_template)\
+		BINARY_ADD_OPERATOR(UInt32,other_template)\
+		BINARY_ADD_OPERATOR(Int32,other_template)\
+		BINARY_ADD_OPERATOR(UInt64,other_template)\
+		BINARY_ADD_OPERATOR(Int64,other_template)\
+		BINARY_ADD_OPERATOR(Float32,other_template)\
+		BINARY_ADD_OPERATOR(Float64,other_template)\
+		BINARY_ADD_OPERATOR(Float128,other_template)
 
 //------------------------------------------------------------------------------
-#define BINARY_SUB_TOTAL()\
-		BINARY_SUB_OPERATOR(UInt8)\
-		BINARY_SUB_OPERATOR(Int8)\
-		BINARY_SUB_OPERATOR(UInt16)\
-		BINARY_SUB_OPERATOR(Int16)\
-		BINARY_SUB_OPERATOR(UInt32)\
-		BINARY_SUB_OPERATOR(Int32)\
-		BINARY_SUB_OPERATOR(UInt64)\
-		BINARY_SUB_OPERATOR(Int64)\
-		BINARY_SUB_OPERATOR(Float32)\
-		BINARY_SUB_OPERATOR(Float64)\
-		BINARY_SUB_OPERATOR(Float128)
+#define BINARY_SUB_TOTAL(other_template)\
+		BINARY_SUB_OPERATOR(UInt8,other_template)\
+		BINARY_SUB_OPERATOR(Int8,other_template)\
+		BINARY_SUB_OPERATOR(UInt16,other_template)\
+		BINARY_SUB_OPERATOR(Int16,other_template)\
+		BINARY_SUB_OPERATOR(UInt32,other_template)\
+		BINARY_SUB_OPERATOR(Int32,other_template)\
+		BINARY_SUB_OPERATOR(UInt64,other_template)\
+		BINARY_SUB_OPERATOR(Int64,other_template)\
+		BINARY_SUB_OPERATOR(Float32,other_template)\
+		BINARY_SUB_OPERATOR(Float64,other_template)\
+		BINARY_SUB_OPERATOR(Float128,other_template)
 
 //------------------------------------------------------------------------------
-#define BINARY_MULT_TOTAL()\
-		BINARY_MULT_OPERATOR(UInt8)\
-		BINARY_MULT_OPERATOR(Int8)\
-		BINARY_MULT_OPERATOR(UInt16)\
-		BINARY_MULT_OPERATOR(Int16)\
-		BINARY_MULT_OPERATOR(UInt32)\
-		BINARY_MULT_OPERATOR(Int32)\
-		BINARY_MULT_OPERATOR(UInt64)\
-		BINARY_MULT_OPERATOR(Int64)\
-		BINARY_MULT_OPERATOR(Float32)\
-		BINARY_MULT_OPERATOR(Float64)\
-		BINARY_MULT_OPERATOR(Float128)
+#define BINARY_MULT_TOTAL(other_template)\
+		BINARY_MULT_OPERATOR(UInt8,other_template)\
+		BINARY_MULT_OPERATOR(Int8,other_template)\
+		BINARY_MULT_OPERATOR(UInt16,other_template)\
+		BINARY_MULT_OPERATOR(Int16,other_template)\
+		BINARY_MULT_OPERATOR(UInt32,other_template)\
+		BINARY_MULT_OPERATOR(Int32,other_template)\
+		BINARY_MULT_OPERATOR(UInt64,other_template)\
+		BINARY_MULT_OPERATOR(Int64,other_template)\
+		BINARY_MULT_OPERATOR(Float32,other_template)\
+		BINARY_MULT_OPERATOR(Float64,other_template)\
+		BINARY_MULT_OPERATOR(Float128,other_template)
 
 //------------------------------------------------------------------------------
-#define BINARY_DIV_TOTAL()\
-		BINARY_DIV_OPERATOR(UInt8)\
-		BINARY_DIV_OPERATOR(Int8)\
-		BINARY_DIV_OPERATOR(UInt16)\
-		BINARY_DIV_OPERATOR(Int16)\
-		BINARY_DIV_OPERATOR(UInt32)\
-		BINARY_DIV_OPERATOR(Int32)\
-		BINARY_DIV_OPERATOR(UInt64)\
-		BINARY_DIV_OPERATOR(Int64)\
-		BINARY_DIV_OPERATOR(Float32)\
-		BINARY_DIV_OPERATOR(Float64)\
-		BINARY_DIV_OPERATOR(Float128)
+#define BINARY_DIV_TOTAL(other_template)\
+		BINARY_DIV_OPERATOR(UInt8,other_template)\
+		BINARY_DIV_OPERATOR(Int8,other_template)\
+		BINARY_DIV_OPERATOR(UInt16,other_template)\
+		BINARY_DIV_OPERATOR(Int16,other_template)\
+		BINARY_DIV_OPERATOR(UInt32,other_template)\
+		BINARY_DIV_OPERATOR(Int32,other_template)\
+		BINARY_DIV_OPERATOR(UInt64,other_template)\
+		BINARY_DIV_OPERATOR(Int64,other_template)\
+		BINARY_DIV_OPERATOR(Float32,other_template)\
+		BINARY_DIV_OPERATOR(Float64,other_template)\
+		BINARY_DIV_OPERATOR(Float128,other_template)
 
 //=================Macro for instantiating a scalar object----------------------
 #define SCALAR_TEMPLATE(type,name) \
@@ -172,23 +176,56 @@ using namespace boost::python;
 				.def("value",(name ## _set_value))\
 				.def("value",(name ## _get_value))\
 				.def("value",(name ## _set_value_pod))\
+				.add_property("type_id",&Scalar<type>::type_id)\
 				.def(self == self)\
-				EQUALITY_TOTAL()\
+				EQUALITY_TOTAL(Scalar)\
 				.def(self != self)\
-				INEQUALITY_TOTAL()\
+				INEQUALITY_TOTAL(Scalar)\
 				.def(self + self)\
-				BINARY_ADD_TOTAL()\
+				BINARY_ADD_TOTAL(Scalar)\
 				.def(self - self)\
-				BINARY_SUB_TOTAL()\
+				BINARY_SUB_TOTAL(Scalar)\
 				.def(self / self)\
-				BINARY_DIV_TOTAL()\
+				BINARY_DIV_TOTAL(Scalar)\
 				.def(self * self)\
-				BINARY_MULT_TOTAL()\
+				BINARY_MULT_TOTAL(Scalar)\
 				;
 
 
 BOOST_PYTHON_MODULE(pniutils)
 {
+	//===============Wrap TypeID enum class=====================================
+	enum_<TypeID>("TypeID")
+			.value("NONE",TypeID::NONE)
+			.value("UINT8",TypeID::UINT8)
+			.value("INT8",TypeID::INT8)
+			.value("UINT16",TypeID::UINT16)
+			.value("INT16",TypeID::INT16)
+			.value("UINT32",TypeID::UINT32)
+			.value("INT32",TypeID::INT32)
+			.value("UINT64",TypeID::UINT64)
+			.value("INT64",TypeID::INT64)
+			.value("FLOAT32",TypeID::FLOAT32)
+			.value("FLOAT64",TypeID::FLOAT64)
+			.value("FLOAT128",TypeID::FLOAT128)
+			.value("COMPLEX32",TypeID::COMPLEX32)
+			.value("COMPLEX64",TypeID::COMPLEX64)
+			.value("COMPLEX128",TypeID::COMPLEX128)
+			.value("STRING",TypeID::STRING)
+			.value("BINARY",TypeID::BINARY)
+			.value("BOOLEAN",TypeID::BOOLEAN)
+			;
+
+	//==================Wrap TypeClass enum class===============================
+	enum_<TypeClass>("TypeClass")
+			.value("NONE",TypeClass::NONE)
+			.value("INTEGER",TypeClass::INTEGER)
+			.value("FLOAT",TypeClass::FLOAT)
+			.value("BINARY",TypeClass::BINARY)
+			.value("BOOL",TypeClass::BOOL)
+			.value("COMPLEX",TypeClass::COMPLEX)
+			;
+
 
 	//===================Wrapping DataObject====================================
 	String (DataObject::*get_name)() const = &DataObject::name;
@@ -210,6 +247,7 @@ BOOST_PYTHON_MODULE(pniutils)
 			.def(init<String,String>())
 			.def(init<String,String,String>())
 			.def(init<NumericObject>())
+			.def("type_id",&NumericObject::type_id)
 			.add_property("unit",get_unit,set_unit)
 			;
 
@@ -237,8 +275,8 @@ BOOST_PYTHON_MODULE(pniutils)
 			.def(init<Shape>())
 			.def(init<UInt64>())
 			.add_property("rank",shape_get_rank,shape_set_rank)
-			.def("setDimension",shape_set_dimension)
-			.def("getDimension",shape_get_dimension)
+			.def("dim",shape_set_dimension)
+			.def("dim",shape_get_dimension)
 			.def("size",&Shape::size)
 			.def("offset",&Shape::offset)
 			.def("index",&Shape::index)
@@ -281,7 +319,24 @@ BOOST_PYTHON_MODULE(pniutils)
 	SCALAR_TEMPLATE(Float64,Float64Scalar);
 	SCALAR_TEMPLATE(Float128,Float128Scalar);
 
-	//================Wrapping ArrayObject =====================================
+	//================Wrapping the Array template===============================
+	void (Array<Float64>::*set_buffer)(const BufferObject &) = &Array<Float64>::buffer;
+	const BufferObject &(Array<Float64>::*get_buffer)() const = &Array<Float64>::buffer;
+	void (Array<Float64>::*set_shape)(const Shape &) = &Array<Float64>::shape;
+	const Shape &(Array<Float64>::*get_shape)() const = &Array<Float64>::shape;
+	class_<Array<Float64> >("Float64Array")
+			.def(init<>())
+			.def(init<Array<Float64> >())
+			.def(init<Shape>())
+			.def(init<Shape,Buffer<Float64> >())
+			.def(init<Shape,Buffer<Float64>,String,String,String>())
+			.def(init<Shape,String,String,String>())
+
+			.add_property("buffer",make_function(get_buffer,return_internal_reference<1>()),
+					set_buffer)
+			.add_property("shape",make_function(get_shape,return_internal_reference<1>()),set_shape)
+
+			;
 
 }
 

@@ -153,58 +153,58 @@ void ArrayTest::testTypeInfo(){
 	ArrayObject *ptr;
 
 	ptr = new Int8Array();
-	CPPUNIT_ASSERT(ptr->type_id()==PNITypeID::INT8);
+	CPPUNIT_ASSERT(ptr->type_id()==TypeID::INT8);
 	delete ptr;
 
 	ptr = new UInt8Array();
-	CPPUNIT_ASSERT(ptr->type_id()==PNITypeID::UINT8);
+	CPPUNIT_ASSERT(ptr->type_id()==TypeID::UINT8);
 	delete ptr;
 
 	ptr = new Int16Array();
-	CPPUNIT_ASSERT(ptr->type_id()==PNITypeID::INT16);
+	CPPUNIT_ASSERT(ptr->type_id()==TypeID::INT16);
 	delete ptr;
 
 	ptr = new UInt16Array();
-	CPPUNIT_ASSERT(ptr->type_id()==PNITypeID::UINT16);
+	CPPUNIT_ASSERT(ptr->type_id()==TypeID::UINT16);
 	delete ptr;
 
 	ptr = new Int32Array();
-	CPPUNIT_ASSERT(ptr->type_id()==PNITypeID::INT32);
+	CPPUNIT_ASSERT(ptr->type_id()==TypeID::INT32);
 	delete ptr;
 
 	ptr = new UInt32Array();
-	CPPUNIT_ASSERT(ptr->type_id()==PNITypeID::UINT32);
+	CPPUNIT_ASSERT(ptr->type_id()==TypeID::UINT32);
 	delete ptr;
 
 	ptr = new Int64Array();
-	CPPUNIT_ASSERT(ptr->type_id()==PNITypeID::INT64);
+	CPPUNIT_ASSERT(ptr->type_id()==TypeID::INT64);
 	delete ptr;
 
 	ptr = new pni::utils::UInt64Array();
-	CPPUNIT_ASSERT(ptr->type_id()==PNITypeID::UINT64);
+	CPPUNIT_ASSERT(ptr->type_id()==TypeID::UINT64);
 	delete ptr;
 
 	ptr = new Float32Array();
-	CPPUNIT_ASSERT(ptr->type_id()==PNITypeID::FLOAT32);
+	CPPUNIT_ASSERT(ptr->type_id()==TypeID::FLOAT32);
 	delete ptr;
 
 	ptr = new Float64Array();
-	CPPUNIT_ASSERT(ptr->type_id()==PNITypeID::FLOAT64);
+	CPPUNIT_ASSERT(ptr->type_id()==TypeID::FLOAT64);
 	delete ptr;
 
 	ptr = new Float128Array();
-	CPPUNIT_ASSERT(ptr->type_id()==PNITypeID::FLOAT128);
+	CPPUNIT_ASSERT(ptr->type_id()==TypeID::FLOAT128);
 	delete ptr;
 
 	ptr = new Complex32Array();
-	CPPUNIT_ASSERT(ptr->type_id()==PNITypeID::COMPLEX32);
+	CPPUNIT_ASSERT(ptr->type_id()==TypeID::COMPLEX32);
 	delete ptr;
 
 	ptr = new Complex64Array();
-	CPPUNIT_ASSERT(ptr->type_id()==PNITypeID::COMPLEX64);
+	CPPUNIT_ASSERT(ptr->type_id()==TypeID::COMPLEX64);
 	delete ptr;
 
 	ptr = new Complex128Array();
-	CPPUNIT_ASSERT(ptr->type_id()==PNITypeID::COMPLEX128);
+	CPPUNIT_ASSERT(ptr->type_id()==TypeID::COMPLEX128);
 	delete ptr;
 }

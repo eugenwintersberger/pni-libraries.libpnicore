@@ -105,8 +105,8 @@ void NumericObject::unit(const String &u){
 }
 
 
-PNITypeID NumericObject::type_id() const {
-	return PNITypeID::NONE;
+TypeID NumericObject::type_id() const {
+	return TypeID::NONE;
 }
 
 

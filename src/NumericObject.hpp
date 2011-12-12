@@ -99,7 +99,7 @@ public:
 	//! of numerical types. It returns the ID of the type used to store
 	//! the data.
 	//! \return PNITypeID ID value of the type
-	virtual PNITypeID type_id() const;
+	virtual TypeID type_id() const;
 
 	//! get a pointer to numeric data
 

@@ -53,8 +53,8 @@ public:
 	//! a type used to define objects
 	typedef T Type;
 	//! ID of the type
-	static const PNITypeID    TypeID    = PNITypeID::NONE;
-	static const PNITypeClass TypeClass = PNITypeClass::NONE;
+	static const TypeID    ID    = TypeID::NONE;
+	static const TypeClass Class = TypeClass::NONE;
 	//! size of the type in bytes
 	static const size_t       ByteSize  = sizeof(T);
 	//! sign flag - tells if the type is signed
@@ -88,8 +88,8 @@ public:
 template<> class PNITypeInfo<Int8>{
 public:
 	typedef Int8 Type; //!< type
-	static const PNITypeID    TypeID    = PNITypeID::INT8;  //!< typecode
-	static const PNITypeClass TypeClass = PNITypeClass::INTEGER;
+	static const TypeID    ID    = TypeID::INT8;  //!< typecode
+	static const TypeClass Class = TypeClass::INTEGER;
 	static const size_t       ByteSize  = sizeof(Int8); //!< size in memory
 	static const bool         isSigned  = true;    //!< type supports signed values
 
@@ -110,8 +110,8 @@ public:
 template<> class PNITypeInfo<UInt8>{
 public:
 	typedef UInt8 Type; //!< type
-	static const PNITypeID    TypeID    = PNITypeID::UINT8; //!< typecode
-	static const PNITypeClass TypeClass = PNITypeClass::INTEGER;
+	static const TypeID    ID    = TypeID::UINT8; //!< typecode
+	static const TypeClass Class = TypeClass::INTEGER;
 	static const size_t       ByteSize  = sizeof(UInt8); //!< size in bytes
 	static const bool         isSigned  = false; //!< types does not support signed values
 
@@ -132,8 +132,8 @@ public:
 template<> class PNITypeInfo<Int16>{
 public:
 	typedef Int16 Type; //!< type
-	static const PNITypeID    TypeID    = PNITypeID::INT16; //!< typecode
-	static const PNITypeClass TypeClass = PNITypeClass::INTEGER;
+	static const TypeID    ID    = TypeID::INT16; //!< typecode
+	static const TypeClass Class = TypeClass::INTEGER;
 	static const size_t       ByteSize  = sizeof(Int16); //!< size in bytes
 	static const bool         isSigned  = true; //!< type supports signed values
 
@@ -153,8 +153,8 @@ public:
 template<> class PNITypeInfo<UInt16>{
 public:
 	typedef UInt16 Type; //!< type
-	static const PNITypeID    TypeID    = PNITypeID::UINT16; //!< typecode
-	static const PNITypeClass TypeClass = PNITypeClass::INTEGER;
+	static const TypeID    ID    = TypeID::UINT16; //!< typecode
+	static const TypeClass Class = TypeClass::INTEGER;
 	static const size_t       ByteSize  = sizeof(UInt16); //!< size in bytes
 	static const bool         isSigned  = false; //!< type does not support signed values
 
@@ -174,8 +174,8 @@ public:
 template<> class PNITypeInfo<Int32>{
 public:
 	typedef Int32 Type; //!< type
-	static const PNITypeID    TypeID    = PNITypeID::INT32; //!< typecode
-	static const PNITypeClass TypeClass = PNITypeClass::INTEGER; //!< type class
+	static const TypeID    ID    = TypeID::INT32; //!< typecode
+	static const TypeClass Class = TypeClass::INTEGER; //!< type class
 	static const size_t       ByteSize  = sizeof(Int32); //!< size in bytes
 	static const bool         isSigned  = true; //!< type supports signed values
 
@@ -195,8 +195,8 @@ public:
 template<> class PNITypeInfo<UInt32>{
 public:
 	typedef UInt32 Type; //!< type
-	static const PNITypeID    TypeID    = PNITypeID::UINT32; //!< typecode
-	static const PNITypeClass TypeClass = PNITypeClass::INTEGER;
+	static const TypeID    ID    = TypeID::UINT32; //!< typecode
+	static const TypeClass Class = TypeClass::INTEGER;
 	static const size_t       ByteSize  = sizeof(UInt32); //!< size in bytes
 	static const bool         isSigned  = false; //!< type does not support signed values
 
@@ -216,8 +216,8 @@ public:
 template<> class PNITypeInfo<Int64>{
 public:
 	typedef Int64 Type; //!< type
-	static const PNITypeID    TypeID    = PNITypeID::INT64; //!< typecode
-	static const PNITypeClass TypeClass = PNITypeClass::INTEGER;
+	static const TypeID    ID    = TypeID::INT64; //!< typecode
+	static const TypeClass Class = TypeClass::INTEGER;
 	static const size_t       ByteSize  = sizeof(Int64); //!< size in bytes
 	static const bool         isSigned  = true; //!< type supports signed values
 
@@ -237,8 +237,8 @@ public:
 template<> class PNITypeInfo<UInt64>{
 public:
 	typedef UInt64 Type; //!< type
-	static const PNITypeID    TypeID    = PNITypeID::UINT64; //!< typecode
-	static const PNITypeClass TypeClass = PNITypeClass::INTEGER;
+	static const TypeID    ID    = TypeID::UINT64; //!< typecode
+	static const TypeClass Class = TypeClass::INTEGER;
 	static const size_t       ByteSize  = sizeof(UInt64); //!< size in bytes
 	static const bool         isSigned  = false; //!< type does not support signed values
 
@@ -258,8 +258,8 @@ public:
 template<> class PNITypeInfo<Float32>{
 public:
 	typedef Float32 Type; //!< type
-	static const PNITypeID    TypeID    = PNITypeID::FLOAT32; //!< typecode
-	static const PNITypeClass TypeClass = PNITypeClass::FLOAT;
+	static const TypeID    ID    = TypeID::FLOAT32; //!< typecode
+	static const TypeClass Class = TypeClass::FLOAT;
 	static const size_t       ByteSize  = sizeof(Float32); //!< size in bytes
 	static const bool         isSigned  = true; //!< type supports signed values
 
@@ -279,8 +279,8 @@ public:
 template<> class PNITypeInfo<Float64>{
 public:
 	typedef Float64 Type; //!< type
-	static const PNITypeID    TypeID    = PNITypeID::FLOAT64; //!< typecode
-	static const PNITypeClass TypeClass = PNITypeClass::FLOAT;
+	static const TypeID    ID    = TypeID::FLOAT64; //!< typecode
+	static const TypeClass Class = TypeClass::FLOAT;
 	static const size_t       ByteSize  = sizeof(Float64); //!< size in bytes
 	static const bool         isSigned  = true; //!< type supports signed values
 
@@ -300,8 +300,8 @@ public:
 template<> class PNITypeInfo<Float128>{
 public:
 	typedef Float128 Type; //!< type
-	static const PNITypeID    TypeID    = PNITypeID::FLOAT128; //!< typecode
-	static const PNITypeClass TypeClass = PNITypeClass::FLOAT;
+	static const TypeID    ID    = TypeID::FLOAT128; //!< typecode
+	static const TypeClass Class = TypeClass::FLOAT;
 	static const size_t       ByteSize  = sizeof(Float128); //!< size in bytes
 	static const bool         isSigned  = true; //!< type supports signed values
 
@@ -321,8 +321,8 @@ public:
 template<> class PNITypeInfo<Complex32>{
 public:
 	typedef Complex32 Type; //!< type
-	static const PNITypeID    TypeID    = PNITypeID::COMPLEX32; //!< typecode
-	static const PNITypeClass TypeClass = PNITypeClass::COMPLEX;
+	static const TypeID    ID    = TypeID::COMPLEX32; //!< typecode
+	static const TypeClass Class = TypeClass::COMPLEX;
 	static const size_t       ByteSize  = sizeof(Complex32); //!< size in bytes
 	static const bool         isSigned  = true; //!< type supports signed values
 
@@ -344,8 +344,8 @@ public:
 template<> class PNITypeInfo<Complex64>{
 public:
 	typedef Complex64 Type; //!< type
-	static const PNITypeID    TypeID    = PNITypeID::COMPLEX64; //!< typecode
-	static const PNITypeClass TypeClass = PNITypeClass::COMPLEX;
+	static const TypeID    ID    = TypeID::COMPLEX64; //!< typecode
+	static const TypeClass Class = TypeClass::COMPLEX;
 	static const size_t       ByteSize  = sizeof(Complex64); //!< size in bytes
 	static const bool         isSigned  = true; //!< type supports signed values
 
@@ -367,8 +367,8 @@ public:
 template<> class PNITypeInfo<Complex128>{
 public:
 	typedef Complex128 Type; //!< type
-	static const PNITypeID    TypeID    = PNITypeID::COMPLEX128; //!< typecode
-	static const PNITypeClass TypeClass = PNITypeClass::COMPLEX;
+	static const TypeID    ID    = TypeID::COMPLEX128; //!< typecode
+	static const TypeClass Class = TypeClass::COMPLEX;
 	static const size_t       ByteSize  = sizeof(Complex128); //!< size in bytes
 	static const bool         isSigned  = true; //!< type supports signed values
 
@@ -388,9 +388,9 @@ public:
 
 
 //! obtain type information not by the data type but rather by the ID of the type
-template<PNITypeID id> class PNITypeInfoByID{
-	static const PNITypeID    TypeID    = PNITypeInfo<typename PNITypeIDMap<id>::Type >::TypeID;
-	static const PNITypeClass TypeClass = PNITypeInfo<typename PNITypeIDMap<id>::Type >::TypeClass;
+template<TypeID id> class PNITypeInfoByID{
+	static const TypeID    ID    = PNITypeInfo<typename PNITypeIDMap<id>::Type >::TypeID;
+	static const TypeClass Class = PNITypeInfo<typename PNITypeIDMap<id>::Type >::TypeClass;
 	static const size_t       ByteSize  = PNITypeInfo<typename PNITypeIDMap<id>::Type >::ByteSize;
 	static const bool         isSigned  = PNITypeInfo<typename PNITypeIDMap<id>::Type >::isSigned;
 

@@ -119,6 +119,9 @@ public:
 
 	virtual const void *void_ptr() const;
 
+	virtual T get(size_t i) const;
+	virtual void set(size_t i,const T &o);
+
 	//! [] operator for read and write access
 
 	//! This operator will be used in expressions where the buffer access stands
@@ -151,8 +154,8 @@ public:
 		return sizeof(T)*this->size();
 	}
 
-	virtual PNITypeID type_id() const {
-		return PNITypeInfo<T>::TypeID;
+	virtual TypeID type_id() const {
+		return PNITypeInfo<T>::ID;
 	}
 
 
@@ -327,6 +330,44 @@ template<typename T> Buffer<T> &Buffer<T>::operator=(const T &d){
 
 
 	return *this;
+}
+
+//===============Methods for data access========================================
+template<typename T> T Buffer<T>::get(size_t i) const {
+	EXCEPTION_SETUP("template<typename T> T get(size_t i) const");
+
+	if(!this->is_allocated()){
+		EXCEPTION_INIT(MemoryAccessError,"Buffer not allocated");
+		EXCEPTION_THROW();
+	}
+
+	if(i>=this->size()){
+		std::ostringstream sstr;
+		sstr<<"Index ("<<i<<") must not be larger or equal the size ("<<this->size()<<")of the buffer!";
+		EXCEPTION_INIT(IndexError,sstr.str());
+		EXCEPTION_THROW();
+	}
+
+	return _data[i];
+}
+
+//------------------------------------------------------------------------------
+template<typename T> void Buffer<T>::set(size_t i,const T &o){
+	EXCEPTION_SETUP("template<typename T> void Buffer<T>::set(size_t i,const T &o)");
+
+	if(!this->is_allocated()){
+		EXCEPTION_INIT(MemoryAccessError,"Buffer not allocated!");
+		EXCEPTION_THROW();
+	}
+
+	if(i>=this->size()){
+		std::ostringstream sstr;
+		sstr<<"Index ("<<i<<") must not be larger or equal the size ("<<this->size()<<")of the buffer!";
+		EXCEPTION_INIT(IndexError,sstr.str());
+		EXCEPTION_THROW();
+	}
+
+	_data[i] = o;
 }
 
 //======================operators for data access===============================

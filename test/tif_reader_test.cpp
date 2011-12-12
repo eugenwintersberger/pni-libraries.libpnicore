@@ -173,9 +173,9 @@ int main(int argc,char **argv){
     plotter = new PlotArray(a->shape());
 
     switch(a->type_id()){
-    case PNITypeID::INT32:
+    case TypeID::INT32:
     	plotter->image_plot<Int32>(a); break;
-    case PNITypeID::UINT16:
+    case TypeID::UINT16:
     	plotter->image_plot<UInt16>(a); break;
     default:
     	std::cerr<<"Unsupported image format!"<<std::endl; break;

@@ -156,7 +156,7 @@ public:
 	//! destructor
 	virtual ~Array();
 
-	virtual PNITypeID type_id() const;
+	virtual TypeID type_id() const;
 
 	//! set the buffer of the array
 
@@ -553,8 +553,8 @@ template<typename T> Array<T>::~Array() {
 //==============================================================================================
 //Introspection of element type ID
 
-template<typename T> PNITypeID Array<T>::type_id() const {
-	return PNITypeInfo<T>::TypeID;
+template<typename T> TypeID Array<T>::type_id() const {
+	return PNITypeInfo<T>::ID;
 }
 
 
@@ -582,7 +582,7 @@ template<typename T> void Array<T>::buffer(const BufferObject &b) {
 	if (this->shape().size()!=0) {
 		//if there exists already a shape object we have to check the size
 		if (b.size() != this->shape().size()) {
-			EXCEPTION_INIT(SizeMissmatchError,"Buffser and array size do not match!");
+			EXCEPTION_INIT(SizeMissmatchError,"Buffer and array size do not match!");
 			EXCEPTION_THROW();
 		}
 	}

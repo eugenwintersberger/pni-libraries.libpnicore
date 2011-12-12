@@ -316,8 +316,8 @@ public:
 	}
 
 	//return the type numeric ID of the Scalar<T> object
-	virtual PNITypeID type_id() const{
-		return PNITypeInfo<T>::TypeID;
+	virtual TypeID type_id() const{
+		return PNITypeInfo<T>::ID;
 	}
 
 };
