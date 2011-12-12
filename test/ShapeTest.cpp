@@ -3,14 +3,14 @@
 #include<cppunit/extensions/HelperMacros.h>
 
 #include "Types.hpp"
-#include "ArrayShape.hpp"
-#include "ArrayShapeTest.hpp"
+#include "Shape.hpp"
+#include "ShapeTest.hpp"
 #include "Index.hpp"
 
-CPPUNIT_TEST_SUITE_REGISTRATION(ArrayShapeTest);
+CPPUNIT_TEST_SUITE_REGISTRATION(ShapeTest);
 
 //------------------------------------------------------------------------------
-void ArrayShapeTest::setUp(){
+void ShapeTest::setUp(){
 	_r1 = 2;
 	_r2 = 3;
 
@@ -22,16 +22,16 @@ void ArrayShapeTest::setUp(){
 }
 
 //------------------------------------------------------------------------------
-void ArrayShapeTest::tearDown(){
+void ShapeTest::tearDown(){
 	if (_s1!=NULL) delete [] _s1;
 	if (_s2!=NULL) delete [] _s2;
 }
 
 //------------------------------------------------------------------------------
-void ArrayShapeTest::testConstruction(){
-	std::cout<<"void ArrayShapeTest::testConstruction()-----------------------";
+void ShapeTest::testConstruction(){
+	std::cout<<"void ShapeTest::testConstruction()-----------------------";
 	std::cout<<std::endl;
-	ArrayShape s;
+	Shape s;
 
 	//manual construction
 	CPPUNIT_ASSERT_NO_THROW(s.rank(_r1));
@@ -55,52 +55,58 @@ void ArrayShapeTest::testConstruction(){
 		CPPUNIT_ASSERT(s[i] == _s2[i]);
 	}
 
-	ArrayShape s1(_r2);
+	Shape s1(_r2);
 	for(size_t i=0;i<s1.rank();i++) s1.dim(i,_s2[i]);
 	CPPUNIT_ASSERT(s1 == s);
 
 	//copy constructor
-	ArrayShape s2(s);
+	Shape s2(s);
 	CPPUNIT_ASSERT(s==s2);
 }
 
 //------------------------------------------------------------------------------
-void ArrayShapeTest::testAssignment(){
+void ShapeTest::testAssignment(){
+	std::cout<<"void ShapeTest::testAssignment()------------------------------";
+	std::cout<<std::endl;
 	//testing the assignment operator
-	ArrayShape s1,s2;
+	Shape s1,s2;
 
 	CPPUNIT_ASSERT_NO_THROW(s1 = s2);
 	s1.rank(3);
 	CPPUNIT_ASSERT_NO_THROW(s2 = s1);
 	CPPUNIT_ASSERT(s1.rank() == s2.rank());
 
-	ArrayShape snon;
+	Shape snon;
 	CPPUNIT_ASSERT_NO_THROW(s1 = snon);
 	CPPUNIT_ASSERT(s1 == snon);
 }
 
 //------------------------------------------------------------------------------
-void ArrayShapeTest::testComparison(){
-	ArrayShape s1(_r1);
-	ArrayShape s2(_r2);
+void ShapeTest::testComparison(){
+	std::cout<<"void ShapeTest::testComparison()------------------------------";
+	std::cout<<std::endl;
+	Shape s1(_r1);
+	Shape s2(_r2);
 	for(size_t i=0;i<s1.rank();i++) s1.dim(i,_s1[i]);
 	for(size_t i=0;i<s2.rank();i++) s2.dim(i,_s2[i]);
 
-	ArrayShape s3(s2);
+	Shape s3(s2);
 
 	CPPUNIT_ASSERT(s1 == s1);
 	CPPUNIT_ASSERT(s2 == s3);
 	CPPUNIT_ASSERT(s1 != s2);
 
 	//what happens with unallocated shapes
-	ArrayShape s4,s5;
+	Shape s4,s5;
 	CPPUNIT_ASSERT(s4 == s5);
 }
 
 //------------------------------------------------------------------------------
-void ArrayShapeTest::testOffset(){
-	ArrayShape s1;
-	ArrayShape s2;
+void ShapeTest::testOffset(){
+	std::cout<<"void ShapeTest::testOffset()----------------------------------";
+	std::cout<<std::endl;
+	Shape s1;
+	Shape s2;
 	Index index;
 
 	s1.rank(_r1);
@@ -122,10 +128,12 @@ void ArrayShapeTest::testOffset(){
 }
 
 //------------------------------------------------------------------------------
-void ArrayShapeTest::testIndex(){
-	ArrayShape s1(_r1);
+void ShapeTest::testIndex(){
+	std::cout<<"void ShapeTest::testIndex()-----------------------------------";
+	std::cout<<std::endl;
+	Shape s1(_r1);
 	for(size_t i=0;i<s1.rank();i++) s1.dim(i,_s1[i]);
-	ArrayShape s2(_r2);
+	Shape s2(_r2);
 	for(size_t i=0;i<s2.rank();i++) s2.dim(i,_s2[i]);
 	Index index;
 
@@ -149,8 +157,10 @@ void ArrayShapeTest::testIndex(){
 }
 
 //------------------------------------------------------------------------------
-void ArrayShapeTest::testExceptions(){
-	ArrayShape s(_r2);
+void ShapeTest::testExceptions(){
+	std::cout<<"void ShapeTest::testExceptions()------------------------------";
+	std::cout<<std::endl;
+	Shape s(_r2);
 
 	CPPUNIT_ASSERT_THROW(s.dim(10,0),IndexError);
 	CPPUNIT_ASSERT_THROW(s.dim(-10,0),IndexError);
@@ -172,7 +182,7 @@ void ArrayShapeTest::testExceptions(){
 	Index i3;
 	CPPUNIT_ASSERT_THROW(s.offset(i3),MemoryAccessError);
 
-	ArrayShape s2;
+	Shape s2;
 	CPPUNIT_ASSERT_THROW(s2.offset(i),MemoryAccessError);
 
 	//now we can do the same game with the getIndex method

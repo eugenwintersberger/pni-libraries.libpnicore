@@ -31,14 +31,14 @@
 #include<iostream>
 #include<string>
 
-#include "ArrayShape.hpp"
+#include "Shape.hpp"
 #include "Exceptions.hpp"
 
 namespace pni{
 namespace utils{
 
 //===========================private methods====================================
-void ArrayShape::_compute_dimstrides()
+void Shape::_compute_dimstrides()
 {
     ssize_t i; //we need here a signed value
 
@@ -52,20 +52,20 @@ void ArrayShape::_compute_dimstrides()
     }
 }
 
-void ArrayShape::_compute_size(){
+void Shape::_compute_size(){
     _size = 1;
     for(size_t i=0;i<rank();i++) _size *= _shape[i];
 }
 
 //===================constructors and destructors===============================
 //implementation of the default constructor
-ArrayShape::ArrayShape(){
+Shape::Shape(){
     _size = 0;
 }
 
 //------------------------------------------------------------------------------
 //implementation of the standard constructor
-ArrayShape::ArrayShape(const size_t &r){
+Shape::Shape(const size_t &r){
 	EXCEPTION_SETUP("ArrayShape::ArrayShape(const UInt32 &r)");
 
 	//initialize member variables
@@ -82,7 +82,7 @@ ArrayShape::ArrayShape(const size_t &r){
 
 //------------------------------------------------------------------------------
 //implementation of the copy constructor
-ArrayShape::ArrayShape(const ArrayShape &s){
+Shape::Shape(const Shape &s){
 	EXCEPTION_SETUP("ArrayShape::ArrayShape(const ArrayShape &s)");
 
 	//initialize variables
@@ -97,7 +97,7 @@ ArrayShape::ArrayShape(const ArrayShape &s){
 
 //------------------------------------------------------------------------------
 //implementation of the move constructor
-ArrayShape::ArrayShape(ArrayShape &&o){
+Shape::Shape(Shape &&o){
 	_size = o._size;
 	o._size = 0;
 
@@ -107,7 +107,7 @@ ArrayShape::ArrayShape(ArrayShape &&o){
 
 //------------------------------------------------------------------------------
 //implementation of the destructor
-ArrayShape::~ArrayShape(){
+Shape::~Shape(){
 	_size = 0;
 	_dimstrides.free();
 	_shape.free();
@@ -115,7 +115,7 @@ ArrayShape::~ArrayShape(){
 
 //==============methods to access and manipulate the rank of a shape============
 
-void ArrayShape::rank(const size_t &r){
+void Shape::rank(const size_t &r){
 	EXCEPTION_SETUP("void ArrayShape::setRank(const UInt32 &r)");
 
 	if(r!=0){
@@ -133,13 +133,13 @@ void ArrayShape::rank(const size_t &r){
 	_size = 0;
 }
 
-size_t ArrayShape::rank() const{
+size_t Shape::rank() const{
     return _shape.size();
 }
 
 //============methods to access and manipulate dimensions=======================
 //implementation of set dimension
-void ArrayShape::dim(const size_t &i,const size_t &d){
+void Shape::dim(const size_t &i,const size_t &d){
 	EXCEPTION_SETUP("void ArrayShape::setDimension(const UInt32 &i,const UInt32 &d)");
 
 	_shape[i] = d;
@@ -151,7 +151,7 @@ void ArrayShape::dim(const size_t &i,const size_t &d){
 
 //-----------------------------------------------------------------------------
 //implementation of get dimension
-size_t ArrayShape::dim(const size_t &i) const{
+size_t Shape::dim(const size_t &i) const{
 	EXCEPTION_SETUP("UInt32 ArrayShape::getDimension(const UInt32 &i) const");
 
 	return _shape[i];
@@ -159,7 +159,7 @@ size_t ArrayShape::dim(const size_t &i) const{
 
 //===========Methods concerning offset and index handling=======================
 //implementation of offset calculation
-UInt64 ArrayShape::offset(const Index &i) const {
+UInt64 Shape::offset(const Index &i) const {
 	EXCEPTION_SETUP("UInt64 ArrayShape::getOffset(const Index &i)");
 	UInt64 offset = 0;
 	UInt64 index = 0;
@@ -192,7 +192,7 @@ UInt64 ArrayShape::offset(const Index &i) const {
 
 //------------------------------------------------------------------------------
 //implementation of index calculation
-void ArrayShape::index(const size_t &offset,Index &i) const {
+void Shape::index(const size_t &offset,Index &i) const {
 	EXCEPTION_SETUP("void ArrayShape::getIndex(const UInt64 &offset,Index &i) const");
 
 	if(!_shape.is_allocated()){
@@ -225,7 +225,7 @@ void ArrayShape::index(const size_t &offset,Index &i) const {
 
 //=============Implementation of the assignment operators=======================
 //implementation of the copy assignment
-ArrayShape &ArrayShape::operator=(const ArrayShape &a){
+Shape &Shape::operator=(const Shape &a){
 	EXCEPTION_SETUP("ArrayShape &ArrayShape::operator=(const ArrayShape &a)");
 
 	if(this != &a){
@@ -239,7 +239,7 @@ ArrayShape &ArrayShape::operator=(const ArrayShape &a){
 
 //------------------------------------------------------------------------------
 //implementation of move assignment
-ArrayShape &ArrayShape::operator=(ArrayShape &&o){
+Shape &Shape::operator=(Shape &&o){
 	if(this != &o){
 		_size = o._size;
 		o._size = 0;
@@ -253,7 +253,7 @@ ArrayShape &ArrayShape::operator=(ArrayShape &&o){
 
 //================Implementation of comparison operators========================
 //implementation of equality check
-bool operator==(const ArrayShape &a,const ArrayShape &b){
+bool operator==(const Shape &a,const Shape &b){
     //check the rank of the two shapes
     if(a.rank() != b.rank()) return false;
     
@@ -270,7 +270,7 @@ bool operator==(const ArrayShape &a,const ArrayShape &b){
 
 //------------------------------------------------------------------------------
 //implementation if inequality checkc
-bool operator!=(const ArrayShape &a,const ArrayShape &b){
+bool operator!=(const Shape &a,const Shape &b){
     if(a==b){
     	return false;
     }
@@ -279,7 +279,7 @@ bool operator!=(const ArrayShape &a,const ArrayShape &b){
 }
 
 //=====================Implementation of output operator========================
-std::ostream &operator<<(std::ostream &o,const ArrayShape &s){
+std::ostream &operator<<(std::ostream &o,const Shape &s){
 	o<<"Rank = "<<s.rank()<<":";
 	o<<"( ";
 	for(size_t i=0;i<s.rank();i++) o<<s[i]<<" ";
@@ -289,7 +289,7 @@ std::ostream &operator<<(std::ostream &o,const ArrayShape &s){
 
 //================Implementation of access operators============================
 //implementation of read only access
-const size_t ArrayShape::operator[](size_t i) const{
+const size_t Shape::operator[](size_t i) const{
 	return _shape[i];
 }
 

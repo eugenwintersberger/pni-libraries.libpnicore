@@ -37,7 +37,7 @@
 #include<boost/shared_ptr.hpp>
 
 #include "Buffer.hpp"
-#include "ArrayShape.hpp"
+#include "Shape.hpp"
 #include "Exceptions.hpp"
 #include "Types.hpp"
 #include "DataObject.hpp"
@@ -134,7 +134,7 @@ public:
 	//!
 	//! \param s - reference to a shape object
 	//! \sa Array(const boost::shared_ptr<ArrayShape> &s)
-	Array(const ArrayShape &s);
+	Array(const Shape &s);
 	//! constructor where array shape and buffer object are set
 
 	//! The constructor takes pointers to a shape object and a buffer
@@ -143,14 +143,14 @@ public:
 
 	//! \param s pointer to a shape object
 	//! \param b pointer to a buffer object
-	Array(const ArrayShape &s, const Buffer<T> &b);
+	Array(const Shape &s, const Buffer<T> &b);
 
 	//! constructor
 
 	//! This constructors sets also name, unit, and description
 	//! of the NumericObject base class.
-	Array(const ArrayShape &s,const String &n,const String &u,const String &d);
-	Array(const ArrayShape &s,const Buffer<T> &b,
+	Array(const Shape &s,const String &n,const String &u,const String &d);
+	Array(const Shape &s,const Buffer<T> &b,
 		  const String &n,const String &u,const String &d);
 
 	//! destructor
@@ -461,7 +461,7 @@ template<typename T> Array<T>::Array(Array<T> &&a):ArrayObject(std::move(a)){
 
 //------------------------------------------------------------------------------
 //construct a new array from a shape object - the recommended way
-template<typename T> Array<T>::Array(const ArrayShape &s) :
+template<typename T> Array<T>::Array(const Shape &s) :
 	ArrayObject(s) {
 	EXCEPTION_SETUP("template<typename T> Array<T>::Array(const ArrayShape &s)");
 
@@ -475,7 +475,7 @@ template<typename T> Array<T>::Array(const ArrayShape &s) :
 
 //------------------------------------------------------------------------------
 //implementation of an array constructor
-template<typename T> Array<T>::Array(const ArrayShape &s,const String &n,
+template<typename T> Array<T>::Array(const Shape &s,const String &n,
 		             const String &u,const String &d):
 		             ArrayObject(s){
 	EXCEPTION_SETUP("template<typename T> Array<T>::Array(const ArrayShape &s,"
@@ -496,7 +496,7 @@ template<typename T> Array<T>::Array(const ArrayShape &s,const String &n,
 
 //-----------------------------------------------------------------------------
 //Array construction from a shape and a buffer
-template<typename T> Array<T>::Array(const ArrayShape &s, const Buffer<T> &b) :
+template<typename T> Array<T>::Array(const Shape &s, const Buffer<T> &b) :
 	ArrayObject(s) {
 	EXCEPTION_SETUP("template<typename T> Array<T>::Array(const ArrayShape &s, const Buffer<T> &b):ArrayObject(s)");
 
@@ -518,7 +518,7 @@ template<typename T> Array<T>::Array(const ArrayShape &s, const Buffer<T> &b) :
 
 //------------------------------------------------------------------------------
 //implementation of an array constructor
-template<typename T> Array<T>::Array(const ArrayShape &s, const Buffer<T> &b,
+template<typename T> Array<T>::Array(const Shape &s, const Buffer<T> &b,
 		const String &n,const String &u,const String &d) :
 	ArrayObject(s) {
 	EXCEPTION_SETUP("template<typename T> Array<T>::Array(const ArrayShape &s, const Buffer<T> &b):ArrayObject(s)");
@@ -679,8 +679,8 @@ template<typename T> void Array<T>::allocate(){
 
 //===============================Comparison operators==========================
 template<typename T> bool operator==(const Array<T> &b1, const Array<T> &b2) {
-	const ArrayShape &as = b1.shape();
-	const ArrayShape &bs = b2.shape();
+	const Shape &as = b1.shape();
+	const Shape &bs = b2.shape();
 	Buffer<T> &ad = (Buffer<T> &)b1.buffer();
 	Buffer<T> &bd = (Buffer<T> &)b2.buffer();
 

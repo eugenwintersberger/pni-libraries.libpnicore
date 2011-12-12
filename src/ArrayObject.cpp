@@ -27,7 +27,7 @@
  *
  */
 
-#include "ArrayShape.hpp"
+#include "Shape.hpp"
 #include "ArrayObject.hpp"
 
 namespace pni{
@@ -48,7 +48,7 @@ ArrayObject::ArrayObject(const ArrayObject &a):NumericObject(a){
 
 //------------------------------------------------------------------------------
 //implementation of the standard constructor
-ArrayObject::ArrayObject(const ArrayShape &s):NumericObject(){
+ArrayObject::ArrayObject(const Shape &s):NumericObject(){
 	_shape = s;
 }
 
@@ -69,7 +69,7 @@ ArrayObject::~ArrayObject(){
 
 //=====================class methods============================================
 //implementation of shape
-void ArrayObject::shape(const ArrayShape &s){
+void ArrayObject::shape(const Shape &s){
 	EXCEPTION_SETUP("void ArrayObject::setShape(const ArrayShape &s)");
 
 	//UInt32 orank = _shape.rank();
@@ -89,7 +89,7 @@ void ArrayObject::shape(const ArrayShape &s){
 }
 
 //------------------------------------------------------------------------------
-const ArrayShape &ArrayObject::shape() const{
+const Shape &ArrayObject::shape() const{
 	return _shape;
 }
 

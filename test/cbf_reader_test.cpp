@@ -17,7 +17,7 @@
 #include "../src/io/CBFReader.hpp"
 #include "../src/DataObject.hpp"
 #include "../src/Array.hpp"
-#include "../src/ArrayShape.hpp"
+#include "../src/Shape.hpp"
 #include "../src/Index.hpp"
 
 using namespace pni::utils;
@@ -62,7 +62,7 @@ private:
 public:
 	PlotArray();
 	PlotArray(int nx,int ny);
-	PlotArray(const ArrayShape &s);
+	PlotArray(const Shape &s);
 	virtual ~PlotArray();
 
 	template<typename T> void image_plot(const ArrayObject *data);
@@ -98,7 +98,7 @@ PlotArray::PlotArray(int nx,int ny){
 	_alloc_image_buffer();
 }
 
-PlotArray::PlotArray(const ArrayShape &s){
+PlotArray::PlotArray(const Shape &s){
 	_nx = s.dim(0);
 	_ny = s.dim(1);
 	_ntot = _nx*_ny;
@@ -151,7 +151,7 @@ int main(int argc,char **argv){
     CBFReader reader;     //the reader object
     ArrayObject::sptr v ;  //shared pointer to a data object (most general object to represent data)
     PlotArray *plotter;
-    ArrayShape shape; //shared pointer to an ArrayShape object
+    Shape shape; //shared pointer to an ArrayShape object
 
     //reader.setFileName("LAOS3_05461.cbf"); //set the name of the file to read
     reader.setFileName("org_00009.cbf");

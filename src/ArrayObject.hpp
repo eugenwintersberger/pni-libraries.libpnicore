@@ -31,7 +31,7 @@
 #define ARRAYOBJECT_HPP_
 
 #include "Buffer.hpp"
-#include "ArrayShape.hpp"
+#include "Shape.hpp"
 #include "NumericObject.hpp"
 #include "boost/shared_ptr.hpp"
 
@@ -51,7 +51,7 @@ private:
 	//! assignment operator
 	ArrayObject &operator=(const ArrayObject &);
 protected:
-	ArrayShape _shape; //!< shape object describing the shape of the array
+	Shape _shape; //!< shape object describing the shape of the array
 					   //!< and managing the access to the data
 
 	//! copy constructor
@@ -65,7 +65,7 @@ protected:
 	//!
 	//! \param s - reference to a shape object
 	//! \sa Array(const boost::shared_ptr<ArrayShape> &s)
-	ArrayObject(const ArrayShape &s);
+	ArrayObject(const Shape &s);
 public:
 	typedef boost::shared_ptr<ArrayObject> sptr;  //!< shared pointer to an ArrayObject
 	//! default constructor
@@ -86,13 +86,13 @@ public:
 	//! \throws SizeMissmatchError shape sizes do not match or size is zero
 	//! \param s reference to the existing shape object
 	//! \sa void setShape(boost::shared_ptr<ArrayShape> &s)
-	virtual void shape(const ArrayShape &s);
+	virtual void shape(const Shape &s);
 	//! obtain the shape of an array
 
 	//! Set the smart pointer ptr to the value of the pointer holding the
 	//! ArrayShape-object in the Array. After this call ptr and the Array
 	//! share the shape object.
-	virtual const ArrayShape &shape() const;
+	virtual const Shape &shape() const;
 
 	//! set the BufferObject that belongs to an array
 	virtual void buffer(const BufferObject &b) = 0;

@@ -28,8 +28,8 @@
  *
  */
 
-#ifndef __ARRAYSHAPE_HPP__
-#define __ARRAYSHAPE_HPP__
+#ifndef __SHAPE_HPP__
+#define __SHAPE_HPP__
 
 #include <string>
 #include <boost/shared_ptr.hpp>
@@ -69,7 +69,7 @@ namespace utils{
 //! The class takes care about all kinds of adoptions.
 //! This might not be true for array classes using this ArrayShape type.
 
-class ArrayShape{
+class Shape{
     private:
         Buffer<size_t> _dimstrides;  //!< the strides for the offset calculation
         Buffer<size_t> _shape;       //!< the number of values along each dimension
@@ -87,26 +87,26 @@ class ArrayShape{
         //! once the shape is changed in a way so that the size is changed.
         void _compute_size();
     public:
-        typedef boost::shared_ptr<ArrayShape> sptr;  //!< smart pointer to an ArrayShape object
+        typedef boost::shared_ptr<Shape> sptr;  //!< smart pointer to an ArrayShape object
         //! default constructor
-        ArrayShape();
+        Shape();
         //! copy constructor
 
         //! Initialize an object of type ArrayShape with the content of an
         //! other ArrayShape object.
         //! \throws MemoryAllocationError if memory allocation fails
-        ArrayShape(const ArrayShape &s);
+        Shape(const Shape &s);
         //! move constructor
-        ArrayShape(ArrayShape &&s);
+        Shape(Shape &&s);
         //! constructor
 
         //! This constructor sets the rank of the shape object allowing it
         //! to allocate memory during creation.
         //! \throws MemoryAllocationError if memory allocation fails
         //! \param r rank of the shape (number of dimensions)
-        ArrayShape(const size_t &r);
+        Shape(const size_t &r);
         //! destructor
-        virtual ~ArrayShape();
+        virtual ~Shape();
         
         //! set the rank of the shape object
 
@@ -173,21 +173,21 @@ class ArrayShape{
         //! assignment operator
 
         //! copy assignment operator
-        ArrayShape &operator=(const ArrayShape &);
+        Shape &operator=(const Shape &);
         //! move assignment operator
-        ArrayShape &operator=(ArrayShape &&o);
+        Shape &operator=(Shape &&o);
         
         //! equality operator for array shapes
 
         //! It returns true if the rank and dimension of two arrays are equal, false otherwise
         //! \return boolean value representing shape equality
-        friend bool operator==(const ArrayShape &,const ArrayShape &);
+        friend bool operator==(const Shape &,const Shape &);
         //! inequality operator for array shapes
 
         //! Returns true if either the rank or one of the dimensions in two shape objects
         //! differ.
         //! \return boolean value
-        friend bool operator!=(const ArrayShape &,const ArrayShape &);
+        friend bool operator!=(const Shape &,const Shape &);
         //! [] operator for read access
 
         //! This operator allows reading access to the array dimensions. You cannot
@@ -199,7 +199,7 @@ class ArrayShape{
         const size_t operator[](size_t i) const;
 
         //! operator for console output
-        friend std::ostream &operator<<(std::ostream &o,const ArrayShape &s);
+        friend std::ostream &operator<<(std::ostream &o,const Shape &s);
 };
 
 

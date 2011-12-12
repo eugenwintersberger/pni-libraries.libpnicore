@@ -67,7 +67,7 @@ std::ostream &operator<<(std::ostream &o,const CIFBinaryHeader &h){
 }
 
 ArrayObject *CIFBinaryHeader::createArray(){
-	ArrayShape s;
+	Shape s;
 	s.rank(_ndims);
 	for(UInt32 i=0;i<_ndims;i++){
 		//std::cout<<_dims[2-i]<<std::endl;

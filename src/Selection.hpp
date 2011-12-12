@@ -31,7 +31,7 @@
 #define __SELECTION_HPP__
 
 #include "Types.hpp"
-#include "ArrayShape.hpp"
+#include "Shape.hpp"
 #include "Index.hpp"
 
 namespace pni{
@@ -72,7 +72,7 @@ public:
 	//! Using this constructor creates a selection from an existing
 	//! shape. The resulting selection can be moved within the
 	//! source array using the offset.
-	Selection(const ArrayShape &s);
+	Selection(const Shape &s);
 	//! destructor
 	virtual ~Selection();
 
@@ -81,7 +81,7 @@ public:
 	//! Returns the shape of the selection. This shape can be used to
 	//! create a new array holding the data described by the selection.
 	//! \return an instance of ArrayShape
-	void getShape(ArrayShape &s) const;
+	void getShape(Shape &s) const;
 
 	//! returns rank
 

@@ -754,6 +754,23 @@ template<typename T> bool operator!=(const Scalar<T> &a,const T &b){
 	return true;
 }
 
+template<typename A,typename B> bool operator!=(const Scalar<A> &a,const Scalar<B> &b){
+	EXCEPTION_SETUP("template<typename A,typename B> bool operator==(const Scalar<A> &a,const Scalar<B> &b)");
+	return(a.value() != b.value());
+}
+
+template<typename A,typename B> bool operator!=(const Scalar<A> &a,const B &b){
+	EXCEPTION_SETUP("template<typename A,typename B> bool operator==(const Scalar<A> &a,const Scalar<B> &b)");
+	A _a = a.value();
+	B _b = b;
+
+	return (_a != _b);
+}
+
+template<typename A,typename B> bool operator!=(const A &a,const Scalar<B> &b){
+	return (a!=b.value());
+}
+
 //============================order operations=================================
 
 

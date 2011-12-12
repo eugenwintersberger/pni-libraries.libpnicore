@@ -3,7 +3,7 @@
 #include<cppunit/TestFixture.h>
 #include<cppunit/extensions/HelperMacros.h>
 
-#include "ArrayShape.hpp"
+#include "Shape.hpp"
 
 using namespace pni::utils;
 
@@ -17,7 +17,7 @@ class ArrayTest : public CppUnit::TestFixture{
 	CPPUNIT_TEST(testAssignment);
 	CPPUNIT_TEST_SUITE_END();
 private:
-	ArrayShape s1,s2;
+	Shape s1,s2;
 	size_t r1,r2;
 public:
 	void setUp();

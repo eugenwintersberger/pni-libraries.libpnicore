@@ -1,16 +1,16 @@
 //testing class for ArrayShape objects
 
-#ifndef __LIBPNIUTILS_ARRAYSHAPE_HPP__
-#define __LIBPNIUTILS_ARRAYSHAPE_HPP__
+#ifndef __LIBPNIUTILS_SHAPE_HPP__
+#define __LIBPNIUTILS_SHAPE_HPP__
 
 #include<cppunit/TestFixture.h>
 #include<cppunit/extensions/HelperMacros.h>
-#include "ArrayShape.hpp"
+#include "Shape.hpp"
 
 using namespace pni::utils;
 
-class ArrayShapeTest: public CppUnit::TestFixture {
-	CPPUNIT_TEST_SUITE(ArrayShapeTest);
+class ShapeTest: public CppUnit::TestFixture {
+	CPPUNIT_TEST_SUITE(ShapeTest);
 	CPPUNIT_TEST(testConstruction);
 	CPPUNIT_TEST(testAssignment);
 	CPPUNIT_TEST(testComparison);
@@ -22,7 +22,7 @@ private:
 	unsigned int *_s1;
 	size_t _r1, _r2;
 	unsigned int *_s2;
-	ArrayShape _sh1, _sh2;
+	Shape _sh1, _sh2;
 public:
 	void setUp();
 	void tearDown();

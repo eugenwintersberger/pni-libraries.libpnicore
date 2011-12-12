@@ -26,7 +26,7 @@ private:
 	UInt8Array u8a;
 	Int64Array i64a;
 	Complex64Array c64a;
-	ArrayShape s;
+	Shape s;
 	InplaceArithmetics ar;
 public:
 	void setUp();

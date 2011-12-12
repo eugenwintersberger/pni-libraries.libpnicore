@@ -7,7 +7,7 @@
 
 #include "Array.hpp"
 #include "Buffer.hpp"
-#include "ArrayShape.hpp"
+#include "Shape.hpp"
 #include "ArrayTest.hpp"
 
 CPPUNIT_TEST_SUITE_REGISTRATION(ArrayTest);
@@ -59,7 +59,7 @@ void ArrayTest::testAssignment(){
 
 //------------------------------------------------------------------------------
 void ArrayTest::testSlowArrayConstruction(){
-	ArrayShape s;
+	Shape s;
 	Int32Array a;
 	Index in;
 
@@ -91,7 +91,7 @@ void ArrayTest::testSetAndGet(){
 	Index in;
 
 	//access via [] operator
-	ArrayShape s = a1.shape();
+	Shape s = a1.shape();
 	for(size_t i=0;i<s.size();i++) a1[i] = (double)i;
 
 	//check if data values have been transfered correctly

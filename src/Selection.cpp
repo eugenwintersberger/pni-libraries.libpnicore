@@ -120,7 +120,7 @@ Selection::Selection(const Selection &o){
 	_compute_trank();
 }
 
-Selection::Selection(const ArrayShape &s){
+Selection::Selection(const Shape &s){
 	EXCEPTION_SETUP("Selection::Selection(const ArrayShape &s)");
 
 	_stride = NULL;
@@ -150,7 +150,7 @@ Selection::~Selection(){
 }
 
 //========================selections and shapes=================================
-void Selection::getShape(ArrayShape &s) const {
+void Selection::getShape(Shape &s) const {
 	EXCEPTION_SETUP("void Selection::getShape(ArrayShape &s) const");
 	UInt32 rank=0;
 

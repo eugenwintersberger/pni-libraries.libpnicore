@@ -17,7 +17,7 @@
 //#include "../src/io/TIFFReader.hpp"
 #include "../src/DataObject.hpp"
 #include "../src/Array.hpp"
-#include "../src/ArrayShape.hpp"
+#include "../src/Shape.hpp"
 #include "../src/io/TIFFFile.hpp"
 #include "../src/io/TIFFIFD.hpp"
 #include "../src/io/TIFFImageData.hpp"
@@ -64,7 +64,7 @@ private:
 public:
 	PlotArray();
 	PlotArray(int nx,int ny);
-	PlotArray(const ArrayShape &s);
+	PlotArray(const Shape &s);
 	virtual ~PlotArray();
 
 	template<typename T> void image_plot(const ArrayObject::sptr data);
@@ -98,7 +98,7 @@ PlotArray::PlotArray(int nx,int ny){
 	_alloc_image_buffer();
 }
 
-PlotArray::PlotArray(const ArrayShape &s){
+PlotArray::PlotArray(const Shape &s){
 	_nx = s.dim(0);
 	_ny = s.dim(1);
 	_ntot = _nx*_ny;
