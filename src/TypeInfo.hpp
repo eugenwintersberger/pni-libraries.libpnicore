@@ -40,7 +40,7 @@
 
 #include <limits>
 
-#include "PNITypes.hpp"
+#include "Types.hpp"
 #include "Exceptions.hpp"
 
 namespace pni{

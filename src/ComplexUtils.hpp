@@ -29,7 +29,7 @@
 #ifndef COMPLEXUTILS_HPP_
 #define COMPLEXUTILS_HPP_
 
-#include "PNITypes.hpp"
+#include "Types.hpp"
 #include "TypeInfo.hpp"
 
 using namespace pni::utils;

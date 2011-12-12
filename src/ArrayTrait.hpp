@@ -30,7 +30,7 @@
 #ifndef ARRAYTRAIT_HPP_
 #define ARRAYTRAIT_HPP_
 
-#include "PNITypes.hpp"
+#include "Types.hpp"
 
 namespace pni{
 namespace utils{

@@ -34,7 +34,7 @@
 
 #include <limits>
 
-#include "PNITypes.hpp"
+#include "Types.hpp"
 #include "PNITypeIDMap.hpp"
 
 namespace pni{

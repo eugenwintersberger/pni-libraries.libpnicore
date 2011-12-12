@@ -28,7 +28,7 @@
 
 #include "../Exceptions.hpp"
 #include "../Array.hpp"
-#include "../PNITypes.hpp"
+#include "../Types.hpp"
 #include "../Buffer.hpp"
 #include "TIFFReader.hpp"
 

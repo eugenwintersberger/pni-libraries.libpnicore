@@ -33,7 +33,7 @@
 #include "CBFBinStreamReader.hpp"
 #include "../DataObject.hpp"
 #include "../Array.hpp"
-#include "../PNITypes.hpp"
+#include "../Types.hpp"
 
 namespace pni{
 namespace utils{

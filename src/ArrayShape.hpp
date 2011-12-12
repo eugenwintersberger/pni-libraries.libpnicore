@@ -36,7 +36,7 @@
 
 #include "Exceptions.hpp"
 #include "Index.hpp"
-#include "PNITypes.hpp"
+#include "Types.hpp"
 #include "Buffer.hpp"
 
 

@@ -33,7 +33,7 @@
 #include<boost/shared_ptr.hpp>
 
 #include "../Buffer.hpp"
-#include "../PNITypes.hpp"
+#include "../Types.hpp"
 
 namespace pni{
 namespace utils{

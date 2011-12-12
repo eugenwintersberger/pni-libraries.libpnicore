@@ -8,7 +8,7 @@ python_build_env.Append(LIBPATH=["../src"])
 python_build_env.Append(LIBS=["boost_python","boost_python-py27"])
 python_build_env.Append(CPPPATH=[sysconfig.get_python_inc()])
 
-python_sources = ["DataObject.cpp"]
+python_sources = ["pniutils.cpp"]
 
 module = python_build_env.SharedLibrary("pniutils",python_sources,SHLIBPREFIX="")
 python_build_env.Alias("all",[module])

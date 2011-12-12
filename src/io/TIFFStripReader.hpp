@@ -37,7 +37,7 @@
 #include "TIFFFile.hpp"
 #include "TIFFImageData.hpp"
 
-#include "../PNITypes.hpp"
+#include "../Types.hpp"
 
 namespace pni {
 

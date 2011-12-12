@@ -32,7 +32,7 @@
 #include "../Exceptions.hpp"
 #include "../Array.hpp"
 #include "../DataObject.hpp"
-#include "../PNITypes.hpp"
+#include "../Types.hpp"
 
 namespace pni{
 namespace utils{

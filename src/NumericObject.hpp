@@ -34,7 +34,7 @@
 #include <boost/shared_ptr.hpp>
 
 #include "DataObject.hpp"
-#include "PNITypes.hpp"
+#include "Types.hpp"
 #include "PNITypeInfo.hpp"
 
 namespace pni{

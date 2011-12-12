@@ -37,7 +37,7 @@
 #ifndef TYPERANGE_HPP_
 #define TYPERANGE_HPP_
 
-#include "PNITypes.hpp"
+#include "Types.hpp"
 #include "TypeCompat.hpp"
 
 namespace pni{

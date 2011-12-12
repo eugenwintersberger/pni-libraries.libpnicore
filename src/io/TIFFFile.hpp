@@ -32,7 +32,7 @@
 #include <iostream>
 #include <fstream>
 
-#include "../PNITypes.hpp"
+#include "../Types.hpp"
 #include "../ArrayObject.hpp"
 #include "../Array.hpp"
 

@@ -35,7 +35,7 @@
 #include <complex>
 #include <limits>
 
-#include "PNITypes.hpp"
+#include "Types.hpp"
 #include "ScalarObject.hpp"
 #include "TypeInfo.hpp"
 #include "Exceptions.hpp"

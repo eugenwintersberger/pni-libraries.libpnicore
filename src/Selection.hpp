@@ -30,7 +30,7 @@
 #ifndef __SELECTION_HPP__
 #define __SELECTION_HPP__
 
-#include "PNITypes.hpp"
+#include "Types.hpp"
 #include "ArrayShape.hpp"
 #include "Index.hpp"
 

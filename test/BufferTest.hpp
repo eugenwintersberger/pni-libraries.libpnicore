@@ -8,7 +8,7 @@
 #include<cppunit/TestFixture.h>
 #include<cppunit/extensions/HelperMacros.h>
 #include "Buffer.hpp"
-#include "PNITypes.hpp"
+#include "Types.hpp"
 
 using namespace pni::utils;
 

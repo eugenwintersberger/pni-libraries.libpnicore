@@ -33,7 +33,7 @@
 #include <vector>
 #include <fstream>
 
-#include "../PNITypes.hpp"
+#include "../Types.hpp"
 #include "../Exceptions.hpp"
 
 #include "TIFFIFDAbstractEntry.hpp"

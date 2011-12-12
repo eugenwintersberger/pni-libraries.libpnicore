@@ -34,7 +34,7 @@
 #include<string>
 
 #include "Exceptions.hpp"
-#include "PNITypes.hpp"
+#include "Types.hpp"
 
 namespace pni{
 namespace utils{

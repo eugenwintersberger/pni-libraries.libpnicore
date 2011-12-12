@@ -37,7 +37,7 @@
 #ifndef TYPECOMPAT_HPP_
 #define TYPECOMPAT_HPP_
 
-#include "PNITypes.hpp"
+#include "Types.hpp"
 
 namespace pni{
 namespace utils{

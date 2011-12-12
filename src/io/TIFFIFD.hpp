@@ -34,7 +34,7 @@
 #include <iostream>
 #include <boost/shared_ptr.hpp>
 
-#include "../PNITypes.hpp"
+#include "../Types.hpp"
 #include "../Array.hpp"
 
 #include "TIFFIFDAbstractEntry.hpp"

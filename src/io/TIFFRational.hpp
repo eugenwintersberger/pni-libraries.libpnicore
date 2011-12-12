@@ -31,7 +31,7 @@
 
 #include <iostream>
 
-#include "../PNITypes.hpp"
+#include "../Types.hpp"
 
 namespace pni{
 namespace utils{

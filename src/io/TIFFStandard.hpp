@@ -30,7 +30,7 @@
 #define __TIFFSTANDARD_HPP__
 
 #include <map>
-#include "../PNITypes.hpp"
+#include "../Types.hpp"
 
 namespace pni{
 namespace utils{

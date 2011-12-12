@@ -38,7 +38,7 @@
 #include <sstream>
 #include <boost/shared_array.hpp>
 #include "Exceptions.hpp"
-#include "PNITypes.hpp"
+#include "Types.hpp"
 #include "PNITypeInfo.hpp"
 #include "BufferObject.hpp"
 #include "TypeInfo.hpp"

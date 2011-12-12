@@ -27,7 +27,7 @@
  */
 
 
-#include "PNITypes.hpp"
+#include "Types.hpp"
 
 #ifndef PNITYPEIDMAP_HPP_
 #define PNITYPEIDMAP_HPP_

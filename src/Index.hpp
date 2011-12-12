@@ -31,7 +31,7 @@
 #ifndef INDEX_H_
 #define INDEX_H_
 
-#include "PNITypes.hpp"
+#include "Types.hpp"
 #include "Buffer.hpp"
 
 namespace pni {

@@ -25,7 +25,7 @@
  */
 
 #include "type_conversion.hpp"
-#include "PNITypes.hpp"
+#include "Types.hpp"
 
 namespace pni{
 namespace utils{

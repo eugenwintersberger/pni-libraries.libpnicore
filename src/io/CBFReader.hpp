@@ -36,7 +36,7 @@
 #include<cstdio>
 #include<cstdlib>
 
-#include "../PNITypes.hpp"
+#include "../Types.hpp"
 #include "../DataObject.hpp"
 
 #include "Reader.hpp"

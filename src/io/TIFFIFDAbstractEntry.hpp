@@ -32,7 +32,7 @@
 #include <boost/shared_ptr.hpp>
 #include <vector>
 
-#include "../PNITypes.hpp"
+#include "../Types.hpp"
 
 namespace pni{
 namespace utils{

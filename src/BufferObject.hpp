@@ -30,7 +30,7 @@
 #ifndef BUFFEROBJECT_HPP_
 #define BUFFEROBJECT_HPP_
 
-#include "PNITypes.hpp"
+#include "Types.hpp"
 #include "boost/shared_ptr.hpp"
 #include "service.hpp"
 

@@ -39,7 +39,7 @@
 #include "Buffer.hpp"
 #include "ArrayShape.hpp"
 #include "Exceptions.hpp"
-#include "PNITypes.hpp"
+#include "Types.hpp"
 #include "DataObject.hpp"
 #include "ArrayObject.hpp"
 #include "Index.hpp"
