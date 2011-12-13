@@ -46,7 +46,8 @@
 #include "Selection.hpp"
 
 #include "ArrayTrait.hpp"
-#include "PNITypeInfo.hpp"
+#include "TypeInfo.hpp"
+#include "TypeIDMap.hpp"
 
 namespace pni {
 namespace utils {
@@ -554,7 +555,7 @@ template<typename T> Array<T>::~Array() {
 //Introspection of element type ID
 
 template<typename T> TypeID Array<T>::type_id() const {
-	return PNITypeInfo<T>::ID;
+	return TypeIDMap<T>::type_id;
 }
 
 

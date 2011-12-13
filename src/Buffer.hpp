@@ -40,9 +40,6 @@
 #include "Exceptions.hpp"
 #include "Types.hpp"
 #include "BufferObject.hpp"
-#include "TypeInfo.hpp"
-#include "TypeCompat.hpp"
-#include "TypeRange.hpp"
 #include "TypeIDMap.hpp"
 
 namespace pni{
@@ -155,7 +152,7 @@ public:
 	}
 
 	virtual TypeID type_id() const {
-		return TypeInfo<T>::type_id;
+		return TypeIDMap<T>::type_id;
 	}
 
 

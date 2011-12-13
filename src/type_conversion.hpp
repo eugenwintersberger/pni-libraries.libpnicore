@@ -40,22 +40,13 @@ using namespace boost::numeric;
 namespace pni{
 namespace utils{
 
-template<typename T,typename U> T convert_type(const U &u){
-	EXCEPTION_SETUP("template<typename T,typename U> T convert_type(const U &u)");
-	//static assert of the source type is float and T is an integer type
-	//this avoids conversion from float to integer as supported by the
-	//C++ standard.
-	std::cout<<"original template function"<<std::endl;
-	BOOST_STATIC_ASSERT(!((!std::numeric_limits<U>::is_integer)&&(std::numeric_limits<T>::is_integer)));
+template<typename T, typename U,bool t_complex,bool u_complex>
+class ConversionStrategy{
+public:
+	static T convert(const U &u){
+		EXCEPTION_SETUP("T ConversionStrategy<u_complex,t_complex,T,U>::convert(const U &u)");
+		T value;
 
-	//need to check for complex types - you cannot convert a complex type
-	//to a non-complex type
-	BOOST_STATIC_ASSERT(!((!TypeInfo<T>::is_complex)&&(TypeInfo<U>::is_complex)));
-
-	T value;
-
-	if(!TypeInfo<T>::is_complex){
-		//if T is not a complex type we can do this here
 		try{
 			value = boost::numeric_cast<T>(u);
 		}catch(negative_overflow &error){
@@ -68,44 +59,73 @@ template<typename T,typename U> T convert_type(const U &u){
 			EXCEPTION_INIT(TypeError,"Something went wrong!");
 			EXCEPTION_THROW();
 		}
-	}else{
-		//ok - T is a complex type with a certain base type
-		typedef typename TypeInfo<T>::BaseType TBaseType;
-
-		//if U is a non-complex type
-		if(!TypeInfo<U>::is_complex){
-			try{
-				value = std::complex<TBaseType>(boost::numeric_cast<TBaseType>(u),0);
-			}catch(negative_overflow &error){
-				EXCEPTION_INIT(RangeError,"Cannot convert type due to negative overflow!");
-				EXCEPTION_THROW();
-			}catch(positive_overflow &error){
-				EXCEPTION_INIT(RangeError,"Cannot convert type due to positive overflow!");
-				EXCEPTION_THROW();
-			}catch(...){
-				EXCEPTION_INIT(TypeError,"Type conversion failed!");
-				EXCEPTION_THROW();
-			}
-		}else{
-			//U is a complex type
-			TBaseType real;
-			TBaseType imag;
-			try{
-				real = boost::numeric_cast<TBaseType>(u.real());
-				imag = boost::numeric_cast<TBaseType>(u.imag());
-			}catch(negative_overflow &error){
-				EXCEPTION_INIT(RangeError,"Cannot convert type due to negative overflow!");
-				EXCEPTION_THROW();
-			}catch(positive_overflow &error){
-				EXCEPTION_INIT(RangeError,"Cannot convert type due to positive overflow!");
-				EXCEPTION_THROW();
-			}catch(...){
-				EXCEPTION_INIT(TypeError,"Type conversion failed!");
-				EXCEPTION_THROW();
-			}
-			value = std::complex<TBaseType>(real,imag);
-		}
+		return value;
 	}
+};
+
+template<typename T,typename U> class ConversionStrategy<T,U,true,false>{
+public:
+	static T convert(const U &u){
+		EXCEPTION_SETUP("template<typename T,typename U> T ConversionStrategy<false,true,T,U>::convert(const U &u)");
+		typedef typename TypeInfo<T>::BaseType TBaseType;
+		T value;
+		try{
+			value = std::complex<TBaseType>(boost::numeric_cast<TBaseType>(u),0);
+		}catch(negative_overflow &error){
+			EXCEPTION_INIT(RangeError,"Cannot convert type due to negative overflow!");
+			EXCEPTION_THROW();
+		}catch(positive_overflow &error){
+			EXCEPTION_INIT(RangeError,"Cannot convert type due to positive overflow!");
+			EXCEPTION_THROW();
+		}catch(...){
+			EXCEPTION_INIT(TypeError,"Type conversion failed!");
+			EXCEPTION_THROW();
+		}
+
+		return value;
+	}
+};
+
+
+template<typename T,typename U> class ConversionStrategy<T,U,true,true>{
+public:
+	static T convert(const U &u){
+		EXCEPTION_SETUP("template<typename T,typename U> T ConversionStrategy<true,true,T,U>::convert(const U &u)");
+		typedef typename TypeInfo<T>::BaseType TBaseType;
+		TBaseType real;
+		TBaseType imag;
+		try{
+			real = boost::numeric_cast<TBaseType>(u.real());
+			imag = boost::numeric_cast<TBaseType>(u.imag());
+		}catch(negative_overflow &error){
+			EXCEPTION_INIT(RangeError,"Cannot convert type due to negative overflow!");
+			EXCEPTION_THROW();
+		}catch(positive_overflow &error){
+			EXCEPTION_INIT(RangeError,"Cannot convert type due to positive overflow!");
+			EXCEPTION_THROW();
+		}catch(...){
+			EXCEPTION_INIT(TypeError,"Type conversion failed!");
+			EXCEPTION_THROW();
+		}
+
+		return std::complex<TBaseType>(real,imag);
+	}
+};
+
+
+template<typename T,typename U> T convert_type(const U &u){
+	EXCEPTION_SETUP("template<typename T,typename U> T convert_type(const U &u)");
+	//static assert of the source type is float and T is an integer type
+	//this avoids conversion from float to integer as supported by the
+	//C++ standard.
+	std::cout<<"original template function"<<std::endl;
+	BOOST_STATIC_ASSERT(!((!std::numeric_limits<U>::is_integer)&&(std::numeric_limits<T>::is_integer)));
+
+	//need to check for complex types - you cannot convert a complex type
+	//to a non-complex type
+	BOOST_STATIC_ASSERT(!((!TypeInfo<T>::is_complex)&&(TypeInfo<U>::is_complex)));
+
+	T value = ConversionStrategy<T,U,TypeInfo<T>::is_complex,TypeInfo<U>::is_complex >::convert(u);
 
 	return value;
 

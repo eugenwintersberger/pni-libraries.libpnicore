@@ -42,6 +42,7 @@
 #include "ResultTypeTrait.hpp"
 #include "TypeCompat.hpp"
 #include "TypeRange.hpp"
+#include "TypeIDMap.hpp"
 #include "ComplexUtils.hpp"
 #include "type_conversion.hpp"
 
@@ -317,7 +318,7 @@ public:
 
 	//return the type numeric ID of the Scalar<T> object
 	virtual TypeID type_id() const{
-		return PNITypeInfo<T>::ID;
+		return TypeIDMap<T>::type_id;
 	}
 
 };

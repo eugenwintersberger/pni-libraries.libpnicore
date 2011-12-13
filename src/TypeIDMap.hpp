@@ -127,13 +127,12 @@ public:
 template<> class TypeIDMap<String> {
 public:
 	static const TypeID type_id = TypeID::STRING;
-}
-
-//------------------------------------------------------------------------------
-template<> class TypeIDMap<Binary>{
-public:
-	static const TypeID type_id = TypeID::BINARY;
 };
+
+
+//end of namespace
+}
+}
 
 
 #endif /* TYPEIDMAP_HPP_ */
