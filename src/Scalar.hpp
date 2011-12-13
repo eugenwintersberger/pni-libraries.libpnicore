@@ -369,341 +369,242 @@ template<typename T> Scalar<T>::~Scalar() {
 	_value = 0;
 }
 
-//==========methods for accessing the data of a scalar in a typesafe way===================
+//=====methods for accessing the data of a scalar in a typesafe way=============
 template<typename T> void Scalar<T>::value(const T &v){
 	_value = v;
 }
-template<typename T> void Scalar<T>::value(const Scalar<T> &v){
-	EXCEPTION_SETUP("template<typename T> void Scalar<T>::value(const Scalar<T> &v)");
 
+//------------------------------------------------------------------------------
+template<typename T> void Scalar<T>::value(const Scalar<T> &v){
 	value(v.value());
 }
 
+//------------------------------------------------------------------------------
 template<typename T> template<typename U> void Scalar<T>::value(const U &v){
-	EXCEPTION_SETUP("template<typename T> template<typename U> void Scalar<T>::value(const U &v)");
-
-	/*
-	if(!TypeCompat<T,U>::isAssignable){
-		EXCEPTION_INIT(TypeError,"Cannot assign value due to incompatible types!");
-		EXCEPTION_THROW();
-	}
-
-	if(!TypeRange<T>::checkRange(v)){
-		EXCEPTION_INIT(RangeError,"The value you want to set to this object exceeds its type limits!");
-		EXCEPTION_THROW();
-	}
-
-	_value = (T)v;
-
-	*/
-
 	_value = convert_type<T>(v);
-
 }
 
+//------------------------------------------------------------------------------
 template<typename T> template<typename U> void Scalar<T>::value(const Scalar<U> &s){
-	EXCEPTION_SETUP("template<typename T> template<typename U> void Scalar<T>::value(const Scalar<U> &s)");
-
-	if(!TypeCompat<T,U>::isAssignable){
-		EXCEPTION_INIT(TypeError,"Cannot set value - types are incompatible!");
-		EXCEPTION_THROW();
-	}
-
-	if(!TypeRange<T>::checkRange(s.value())){
-		EXCEPTION_INIT(RangeError,"Cannot set value - value exceeds type bounds!");
-		EXCEPTION_THROW();
-	}
-
-	_value = s.value();
+	_value = convert_type<T>(s.value());
 }
 
-//======================unary arithmetic operators=========================================
+//======================unary division operators================================
 template<typename T> Scalar<T>& Scalar<T>::operator/=(const T &v) {
-	//everything the same type - we have to do nothing
-	_value /= v;
+	typedef typename ResultTypeTrait<T,T>::DivResultType ResultType;
+
+	ResultType a,b,res;
+	a = convert_type<ResultType>(_value);
+	b = convert_type<ResultType>(v);
+	res = a/b;
+
+	_value = convert_type<T>(res);
+
 	return *this;
 }
 
+//------------------------------------------------------------------------------
 template<typename T>
 template<typename U> Scalar<T>& Scalar<T>::operator/=(const U &v) {
-	EXCEPTION_SETUP("template<typename T> template<typename U> Scalar<T>& Scalar<T>::operator/=(const U &v)");
 	typedef typename ResultTypeTrait<T,U>::DivResultType ResultType;
 
-	if(!TypeCompat<T,U>::isUnaryACompat){
-		EXCEPTION_INIT(TypeError,"Types are incompatible for unary arithmetic operations!");
-		EXCEPTION_THROW();
-	}
+	ResultType a,b,res;
+	a = convert_type<ResultType>(_value);
+	b = convert_type<ResultType>(v);
+	res = a/b;
 
-	//now we can do the same check as for the assignment operator
-	if(!TypeCompat<T,ResultType >::isAssignable){
-		EXCEPTION_INIT(TypeError,"The result type of the add operation is incompatible with the lhs data type!");
-		EXCEPTION_THROW();
-	}
+	_value = convert_type<T>(res);
 
-	//if everything went fine so far we have to compute the result now
-	ResultType result,a,b;
-	a = (ResultType)_value;
-	b = (ResultType)v;
-	result = a / b;
-
-	//before assigning the new result we have to check the range
-	if(!TypeRange<T>::checkRange(result)){
-		EXCEPTION_INIT(RangeError,"Operation result exceeds the lhs type bounds!");
-	}
-
-	_value = (T)result;
 	return *this;
 }
 
+//------------------------------------------------------------------------------
 template<typename T> Scalar<T>& Scalar<T>::operator/=(const Scalar<T> &v) {
-	_value /= v._value;
+	typedef typename ResultTypeTrait<T,T>::DivResultType ResultType;
+
+	ResultType a,b,res;
+	a = convert_type<ResultType>(_value);
+	b = convert_type<ResultType>(v.value());
+	res = a/b;
+
+	_value = convert_type<T>(res);
+
 	return *this;
 }
 
+//------------------------------------------------------------------------------
 template<typename T>
 template<typename U> Scalar<T>& Scalar<T>::operator/=(const Scalar<U> &v){
-	EXCEPTION_SETUP("template<typename T> template<typename U> Scalar<T>& Scalar<T>::operator/=(const Scalar<U> &v)");
-
 	typedef typename ResultTypeTrait<T,U>::DivResultType ResultType;
 
-	if(!TypeCompat<T,U>::isUnaryACompat){
-		EXCEPTION_INIT(TypeError,"Types are incompatible for unary arithmetic operations!");
-		EXCEPTION_THROW();
-	}
+	ResultType a,b,res;
+	a = convert_type<ResultType>(_value);
+	b = convert_type<ResultType>(v.value());
+	res = a/b;
 
-	//now we can do the same check as for the assignment operator
-	if(!TypeCompat<T,ResultType >::isAssignable){
-		EXCEPTION_INIT(TypeError,"The result type of the add operation is incompatible with the lhs data type!");
-		EXCEPTION_THROW();
-	}
-
-	//if everything went fine so far we have to compute the result now
-	ResultType result,a,b;
-	a = (ResultType)_value;
-	b = (ResultType)v.value();
-	result = a / b;
-
-	//before assigning the new result we have to check the range
-	if(!TypeRange<T>::checkRange(result)){
-		EXCEPTION_INIT(RangeError,"Operation result exceeds the lhs type bounds!");
-	}
-
-	_value = (T)result;
+	_value = convert_type<T>(res);
 	return *this;
 }
 
+//===================unary addition operator====================================
 template<typename T> Scalar<T>& Scalar<T>::operator+=(const T &v) {
-	_value += v;
+	typedef typename ResultTypeTrait<T,T>::AddResultType ResultType;
+	ResultType res,a,b;
+	a = convert_type<ResultType>(_value);
+	b = convert_type<ResultType>(v);
+	res = a+b;
+
+	_value = convert_type<T>(res);
+
 	return *this;
 }
 
+//------------------------------------------------------------------------------
 template<typename T>
 template<typename U> Scalar<T> &Scalar<T>::operator+=(const U &v){
-	EXCEPTION_SETUP("template<typename T> template<typename U> Scalar<T> &Scalar<T>::operator+=(const U &v)");
 	typedef typename ResultTypeTrait<T,U>::AddResultType ResultType;
+	ResultType res,a,b;
+	a = convert_type<ResultType>(_value);
+	b = convert_type<ResultType>(v);
+	res = a+b;
 
-	if(!TypeCompat<T,U>::isUnaryACompat){
-		EXCEPTION_INIT(TypeError,"Types are incompatible for unary arithmetic operations!");
-		EXCEPTION_THROW();
-	}
+	_value = convert_type<T>(res);
 
-	//now we can do the same check as for the assignment operator
-	if(!TypeCompat<T,ResultType >::isAssignable){
-		EXCEPTION_INIT(TypeError,"The result type of the add operation is incompatible with the lhs data type!");
-		EXCEPTION_THROW();
-	}
-
-	//if everything went fine so far we have to compute the result now
-	ResultType result,a,b;
-	a = (ResultType)_value;
-	b = (ResultType)v;
-	result = a + b;
-
-	//before assigning the new result we have to check the range
-	if(!TypeRange<T>::checkRange(result)){
-		EXCEPTION_INIT(RangeError,"Operation result exceeds the lhs type bounds!");
-		EXCEPTION_THROW();
-	}
-
-	_value = (T)result;
 	return *this;
 }
 
+//------------------------------------------------------------------------------
 template<typename T> Scalar<T> &Scalar<T>::operator+=(const Scalar<T> &v) {
-	_value += v.value();
+	typedef typename ResultTypeTrait<T,T>::AddResultType ResultType;
+	ResultType res,a,b;
+	a = convert_type<ResultType>(_value);
+	b = convert_type<ResultType>(v.value());
+	res = a+b;
+
+	_value = convert_type<T>(res);
+
 	return *this;
 }
 
+//------------------------------------------------------------------------------
 template<typename T>
 template<typename U> Scalar<T> &Scalar<T>::operator+=(const Scalar<U> &v){
-	EXCEPTION_SETUP("template<typename T> template<typename U> Scalar<T> &Scalar<T>::operator+=(const Scalar<U> &v)");
 	typedef typename ResultTypeTrait<T,U>::AddResultType ResultType;
 
-	if(!TypeCompat<T,U>::isUnaryACompat){
-		EXCEPTION_INIT(TypeError,"Types are incompatible for unary arithmetic operations!");
-		EXCEPTION_THROW();
-	}
+	ResultType res,a,b;
+	a = convert_type<ResultType>(_value);
+	b = convert_type<ResultType>(v.value());
+	res = a+b;
 
-	//now we can do the same check as for the assignment operator
-	if(!TypeCompat<T,ResultType >::isAssignable){
-		EXCEPTION_INIT(TypeError,"The result type of the add operation is incompatible with the lhs data type!");
-		EXCEPTION_THROW();
-	}
-
-	ResultType result,a,b;
-	a = (ResultType)_value;
-	b = (ResultType)v.value();
-	result = a + b;
-
-	//before assigning the new result we have to check the range
-	if(!TypeRange<T>::checkRange(result)){
-		EXCEPTION_INIT(RangeError,"Operation result exceeds the lhs type bounds!");
-		EXCEPTION_THROW();
-	}
-
-	_value = (T)result;
+	_value = convert_type<T>(res);
 	return *this;
 }
 
+//========================unary subtraction operator============================
 template<typename T> Scalar<T> &Scalar<T>::operator-=(const T &v) {
-	_value -= v;
+	typedef typename ResultTypeTrait<T,T>::SubResulType ResultType;
+
+	ResultType res,a,b;
+	a = convert_type<ResultType>(_value);
+	b = convert_type<ResultType>(v);
+	res = a-b;
+	_value = convert_type<T>(res);
 	return *this;
 }
 
+//------------------------------------------------------------------------------
 template<typename T>
 template<typename U> Scalar<T> &Scalar<T>::operator-=(const U &v){
-	EXCEPTION_SETUP("template<typename T> template<typename U> Scalar<T> &Scalar<T>::operator-=(const U &v)");
 	typedef typename ResultTypeTrait<T,U>::SubResultType ResultType;
 
-	if(!TypeCompat<T,U>::isUnaryACompat){
-		EXCEPTION_INIT(TypeError,"Types are incompatible for unary arithmetic operations!");
-		EXCEPTION_THROW();
-	}
+	ResultType res,a,b;
+	a = convert_type<ResultType>(_value);
+	b = convert_type<ResultType>(v);
+	res = a-b;
 
-	//now we can do the same check as for the assignment operator
-	if(!TypeCompat<T,ResultType >::isAssignable){
-		EXCEPTION_INIT(TypeError,"The result type of the add operation is incompatible with the lhs data type!");
-		EXCEPTION_THROW();
-	}
-
-	ResultType result,a,b;
-	a = (ResultType)_value;
-	b = (ResultType)v;
-	result = a-b;
-
-	//before assigning the new result we have to check the range
-	if(!TypeRange<T>::checkRange(result)){
-		EXCEPTION_INIT(RangeError,"Operation result exceeds the lhs type bounds!");
-	}
-
-
-	_value = result;
+	_value = convert_type<T>(res);
 	return *this;
 }
 
+//------------------------------------------------------------------------------
 template<typename T> Scalar<T> &Scalar<T>::operator-=(const Scalar<T> &v) {
-	_value -= v;
+	typedef typename ResultTypeTrait<T,T>::SubResultType ResultType;
+
+	ResultType res,a,b;
+	a = convert_type<ResultType>(_value);
+	b = convert_type<ResultType>(v.value());
+	res = a-b;
+
+	_value = convert_type<T>(res);
+
 	return *this;
 }
 
+//------------------------------------------------------------------------------
 template<typename T>
 template<typename U> Scalar<T> &Scalar<T>::operator-=(const Scalar<U> &v){
-	EXCEPTION_SETUP("template<typename T> template<typename U> Scalar<T> &Scalar<T>::operator-=(const Scalar<U> &v)");
 	typedef typename ResultTypeTrait<T,U>::SubResultType ResultType;
 
-	if(!TypeCompat<T,U>::isUnaryACompat){
-		EXCEPTION_INIT(TypeError,"Types are incompatible for unary arithmetic operations!");
-		EXCEPTION_THROW();
-	}
-
-	//now we can do the same check as for the assignment operator
-	if(!TypeCompat<T,ResultType >::isAssignable){
-		EXCEPTION_INIT(TypeError,"The result type of the add operation is incompatible with the lhs data type!");
-		EXCEPTION_THROW();
-	}
-
 	ResultType result,a,b;
-	a = (ResultType)_value;
-	b = (ResultType)v.value();
+	a = convert_type<ResultType>(_value);
+	b = convert_type<ResultType>(v.value());
 	result = a - b;
 
-	//before assigning the new result we have to check the range
-	if(!TypeRange<T>::checkRange(result)){
-		EXCEPTION_INIT(RangeError,"Operation result exceeds the lhs type bounds!");
-	}
-
-	_value = (T)result;
+	_value = convert_type<T>(result);
 	return *this;
 }
 
+//====================Unary multiplication operator=============================
 template<typename T> Scalar<T> &Scalar<T>::operator*=(const T &v) {
-	_value *= v;
+	typedef typename ResultTypeTrait<T,T>::MultResultType ResultType;
+
+	ResultType result,a,b;
+	a = convert_type<ResultType>(_value);
+	b = convert_type<ResultType>(v);
+	result = a*b;
+	_value = convert_type<T>(result);
+
 	return *this;
 }
 
+//------------------------------------------------------------------------------
 template<typename T>
 template<typename U> Scalar<T> &Scalar<T>::operator*=(const U &v){
-	EXCEPTION_SETUP("template<typename T> template<typename U> Scalar<T> &Scalar<T>::operator*=(const U &v)");
 	typedef typename ResultTypeTrait<T,U>::MultResultType ResultType;
 
-	if(!TypeCompat<T,U>::isUnaryACompat){
-		EXCEPTION_INIT(TypeError,"Types are incompatible for unary arithmetic operations!");
-		EXCEPTION_THROW();
-	}
+	ResultType result,a,b;
+	a = convert_type<ResultType>(_value);
+	b = convert_type<ResultType>(v);
+	result = a * b;
+	_value = convert_type<T>(result);
 
-	//now we can do the same check as for the assignment operator
-	if(!TypeCompat<T,ResultType >::isAssignable){
-		EXCEPTION_INIT(TypeError,"The result type of the add operation is incompatible with the lhs data type!");
-		EXCEPTION_THROW();
-	}
+	return *this;
+}
+
+//------------------------------------------------------------------------------
+template<typename T> Scalar<T> &Scalar<T>::operator*=(const Scalar<T> &v) {
+	typedef typename ResultTypeTrait<T,T>::MultResultType ResultType;
 
 	ResultType result,a,b;
-	a = (ResultType)_value;
-	b = (ResultType)v;
-	result = a * b;
+	a = convert_type<ResultType>(_value);
+	b = convert_type<ResultType>(v.value());
+	result = a*b;
+	_value = convert_type<T>(result);
 
-	//before assigning the new result we have to check the range
-	if(!TypeRange<T>::checkRange(result)){
-		EXCEPTION_INIT(RangeError,"Operation result exceeds the lhs type bounds!");
-	}
-
-	_value = (T)result;
 	return *this;
 }
 
-template<typename T> Scalar<T> &Scalar<T>::operator*=(const Scalar<T> &v) {
-	_value *= v;
-	return *this;
-}
-
+//------------------------------------------------------------------------------
 template<typename T>
 template<typename U> Scalar<T> &Scalar<T>::operator*=(const Scalar<U> &v){
-	EXCEPTION_SETUP("template<typename T> template<typename U> Scalar<T> &Scalar<T>::operator*=(const Scalar<U> &v)");
 	typedef typename ResultTypeTrait<T,U>::MultResultType ResultType;
 
-	if(!TypeCompat<T,U>::isUnaryACompat){
-		EXCEPTION_INIT(TypeError,"Types are incompatible for unary arithmetic operations!");
-		EXCEPTION_THROW();
-	}
-
-	//now we can do the same check as for the assignment operator
-	if(!TypeCompat<T,ResultType >::isAssignable){
-		EXCEPTION_INIT(TypeError,"The result type of the add operation is incompatible with the lhs data type!");
-		EXCEPTION_THROW();
-	}
-
 	ResultType result,a,b;
-	a = (ResultType)_value;
-	b = (ResultType)v.value();
+	a = convert_type<ResultType>(_value);
+	b = convert_type<ResultType>(v.value());
 	result = a*b;
 
-	//before assigning the new result we have to check the range
-	if(!TypeRange<T>::checkRange(result)){
-		EXCEPTION_INIT(RangeError,"Operation result exceeds the lhs type bounds!");
-	}
-
-
-	_value = (T)result;
+	_value = convert_type<T>(result);
 	return *this;
 }
 
@@ -794,220 +695,212 @@ template<typename T> std::ostream &operator<<(std::ostream &o,
 	return o;
 }
 
+//=================Assignment operators=========================================
 //overloaded assignment operators - these operators must be class members
 template<typename T> Scalar<T> &Scalar<T>::operator=(const T &v) {
 	_value = v;
 	return *this;
 }
 
+//------------------------------------------------------------------------------
 template<typename T>
 template<typename U> Scalar<T> &Scalar<T>::operator=(const U &v){
-	EXCEPTION_SETUP("template<typename T> template<typename U> Scalar<T> &Scalar<T>::operator(const U &v)");
 
-	if(!TypeCompat<T,U>::isAssignable){
-		EXCEPTION_INIT(TypeError,"Cannot assign values - types are incompatible!");
-		EXCEPTION_THROW();
-	}
-
-	if(!TypeRange<T>::checkRange(v)){
-		EXCEPTION_INIT(RangeError,"Cannot assign values - rhs value exceeds lhs type bounds!");
-		EXCEPTION_THROW();
-	}
-
-	_value = (T)v;
+	_value = convert_type<T>(v);
 
 	return *this;
 }
 
+//------------------------------------------------------------------------------
 template<typename T>
 template<typename U> Scalar<T> &Scalar<T>::operator=(const Scalar<U> &v){
 	EXCEPTION_SETUP("template<typename T> template<typename U> Scalar<T> &"
 					 "Scalar<T>::operator=(const Scalar<U> &v)");
 
 	if((void *)this != (void *)(&v)){
+		//the only point where something can go wrong is type conversion
+		//so lets try this first
+		T data = convert_type<T>(v.value());
 
-		if(!TypeCompat<T,U>::isAssignable){
-			EXCEPTION_INIT(TypeError,"Cannot assign value - types are incompatible!");
-			EXCEPTION_THROW();
-		}
-
-		if(!TypeRange<T>::checkRange(v.value())){
-			EXCEPTION_INIT(RangeError,"Cannot assign value - rhs value exceeds lhs type bounds!");
-			EXCEPTION_THROW();
-		}
-
-		//set all parameters
-		NumericObject &this_o = (NumericObject &)(*this);
-		NumericObject &that_o = (NumericObject &)v;
-		this_o = that_o;
+		(NumericObject &)(*this) = (NumericObject &)v;
 
 		//now we have to transfer the value
-		_value = (T)v.value();
+		_value = data;
 	}
 
 	return *this;
 }
 
+//------------------------------------------------------------------------------
 template<typename T> Scalar<T> &Scalar<T>::operator=(const Scalar<T> &s){
 	//std::cout<<"native assignment of scalar objects!"<<std::endl;
 	if(this != &s){
-		(*this).value(s.value());
-		(*this).name(s.name());
-		(*this).unit(s.unit());
-		(*this).description(s.description());
+		(NumericObject &)(*this) = (NumericObject &)s;
+		_value = s.value();
 	}
 	return *this;
 }
 
-//===================binary arithmetic operators====================================
+//===================binary addition operators====================================
 
 //! binary add operation
 template<typename A,typename B>
-const Scalar<typename ResultTypeTrait<A,B>::AddResultType > operator+(const Scalar<A> &a,const Scalar<B> &b){
+Scalar<typename ResultTypeTrait<A,B>::AddResultType > operator+(const Scalar<A> &a,const Scalar<B> &b){
 	typedef typename ResultTypeTrait<A,B>::AddResultType ResultType;
 	Scalar<ResultType> o;
 
-	ResultType _a = (ResultType)a.value();
-	ResultType _b = (ResultType)b.value();
+	ResultType _a = convert_type<ResultType>(a.value());
+	ResultType _b = convert_type<ResultType>(b.value());
 
 	o.value(_a + _b);
 
 	return o;
 }
 
+//------------------------------------------------------------------------------
 template<typename A,typename B>
-const Scalar<typename ResultTypeTrait<A,B>::AddResultType > operator+(const Scalar<A> &a,const B &b){
+Scalar<typename ResultTypeTrait<A,B>::AddResultType > operator+(const Scalar<A> &a,const B &b){
 	typedef typename ResultTypeTrait<A,B>::AddResultType ResultType;
 	Scalar<ResultType> o;
 
-	ResultType _a = (ResultType)a.value();
-	ResultType _b = (ResultType)b;
+	ResultType _a = convert_type<ResultType>(a.value());
+	ResultType _b = convert_type<ResultType>(b);
 
 	o.value(_a + _b);
 	return o;
 }
 
+//------------------------------------------------------------------------------
 template<typename A,typename B>
-const Scalar<typename ResultTypeTrait<A,B>::AddResultType > operator+(const A &a,const Scalar<B> &b){
+Scalar<typename ResultTypeTrait<A,B>::AddResultType > operator+(const A &a,const Scalar<B> &b){
 	typedef typename ResultTypeTrait<A,B>::AddResultType ResultType;
 	Scalar<ResultType> o;
 
-	ResultType _a = (ResultType)a;
-	ResultType _b = (ResultType)b.value();
+	ResultType _a = convert_type<ResultType>(a);
+	ResultType _b = convert_type<ResultType>(b.value());
 
 	o.value(_a + _b);
 
 	return o;
 }
 
+//======================Binary subtraction operator=============================
 //overloaded subtraction operator
 template<typename A,typename B>
-const Scalar<typename ResultTypeTrait<A,B>::SubResultType > operator-(const Scalar<A> &a, const Scalar<B> &b) {
+Scalar<typename ResultTypeTrait<A,B>::SubResultType > operator-(const Scalar<A> &a, const Scalar<B> &b) {
 	typedef typename ResultTypeTrait<A,B>::SubResultType ResultType;
 	Scalar<ResultType> tmp;
 
-	ResultType _a = (ResultType)a.value();
-	ResultType _b = (ResultType)b.value();
+	ResultType _a = convert_type<ResultType>(a.value());
+	ResultType _b = convert_type<ResultType>(b.value());
 
 	tmp.value(_a - _b);
 
 	return tmp;
 }
 
+//------------------------------------------------------------------------------
 template<typename A,typename B>
-const Scalar<typename ResultTypeTrait<A,B>::SubResultType > operator-(const A& a, const Scalar<B> &b) {
+Scalar<typename ResultTypeTrait<A,B>::SubResultType > operator-(const A& a, const Scalar<B> &b) {
 	typedef typename ResultTypeTrait<A,B>::SubResultType ResultType;
 	Scalar<ResultType> tmp;
 
-	ResultType _a = (ResultType)a;
-	ResultType _b = (ResultType)b.value();
+	ResultType _a = convert_type<ResultType>(a);
+	ResultType _b = convert_type<ResultType>(b.value());
 
 	tmp.value(_a - _b);
 
 	return tmp;
 }
 
+//------------------------------------------------------------------------------
 template<typename A,typename B>
-const Scalar<typename ResultTypeTrait<A,B>::SubResultType > operator-(const Scalar<A> &a, const B &b) {
+Scalar<typename ResultTypeTrait<A,B>::SubResultType > operator-(const Scalar<A> &a, const B &b) {
 	typedef typename ResultTypeTrait<A,B>::SubResultType ResultType;
 	Scalar<ResultType> tmp;
 
-	ResultType _a = (ResultType)a.value();
-	ResultType _b = (ResultType)b;
+	ResultType _a = convert_type<ResultType>(a.value());
+	ResultType _b = convert_type<ResultType>(b);
 
 	tmp.value(_a - _b);
 	return tmp;
 }
 
+//======================Binary multiplication operator==========================
 //overloading the multiplication operator
 template<typename A,typename B>
-const Scalar<typename ResultTypeTrait<A,B>::MultResultType > operator*(const Scalar<A> &a, const Scalar<B> &b) {
+Scalar<typename ResultTypeTrait<A,B>::MultResultType > operator*(const Scalar<A> &a, const Scalar<B> &b) {
 	typedef typename ResultTypeTrait<A,B>::MultResultType ResultType;
 	Scalar<ResultType> tmp;
 
-	ResultType _a = (ResultType)a.value();
-	ResultType _b = (ResultType)b.value();
+	ResultType _a = convert_type<ResultType>(a.value());
+	ResultType _b = convert_type<ResultType>(b.value());
 
 	tmp.value(_a * _b);
 	return tmp;
 }
 
+//------------------------------------------------------------------------------
 template<typename A,typename B>
-const Scalar<typename ResultTypeTrait<A,B>::MultResultType > operator*(const A& a, const Scalar<B> &b) {
+Scalar<typename ResultTypeTrait<A,B>::MultResultType > operator*(const A& a, const Scalar<B> &b) {
 	typedef typename ResultTypeTrait<A,B>::MultResultType ResultType;
 	Scalar<ResultType> tmp;
 
-	ResultType _a = (ResultType)a;
-	ResultType _b = (ResultType)b.value();
+	ResultType _a = convert_type<ResultType>(a);
+	ResultType _b = convert_type<ResultType>(b.value());
 
 	tmp.value(_a * _b);
 	return tmp;
 }
 
+//------------------------------------------------------------------------------
 template<typename A,typename B>
-const Scalar<typename ResultTypeTrait<A,B>::MultResultType > operator*(const Scalar<A> &a, const B& b) {
+Scalar<typename ResultTypeTrait<A,B>::MultResultType > operator*(const Scalar<A> &a, const B& b) {
 	typedef typename ResultTypeTrait<A,B>::MultResultType ResultType;
 	Scalar<ResultType> tmp;
 
-	ResultType _a = (ResultType)a.value();
-	ResultType _b = (ResultType)b;
+	ResultType _a = convert_type<ResultType>(a.value());
+	ResultType _b = convert_type<ResultType>(b);
 
 	tmp.value(_a * _b);
 	return tmp;
 }
 
+//===================Binary division operator===================================
 //overloading the division operator
 template<typename A,typename B>
-const Scalar<typename ResultTypeTrait<A,B>::DivResultType > operator/(const Scalar<A> &a, const Scalar<B> &b) {
+Scalar<typename ResultTypeTrait<A,B>::DivResultType > operator/(const Scalar<A> &a, const Scalar<B> &b) {
 	typedef typename ResultTypeTrait<A,B>::DivResultType ResultType;
 	Scalar<ResultType> tmp;
 
-	ResultType _a = (ResultType)a.value();
-	ResultType _b = (ResultType)b.value();
+	ResultType _a = convert_type<ResultType>(a.value());
+	ResultType _b = convert_type<ResultType>(b.value());
 
 	tmp.value(_a / _b);
 	return tmp;
 }
 
+//------------------------------------------------------------------------------
 template<typename A,typename B>
-const Scalar<typename ResultTypeTrait<A,B>::DivResultType > operator/(const A& a, const Scalar<B> &b) {
+Scalar<typename ResultTypeTrait<A,B>::DivResultType > operator/(const A& a, const Scalar<B> &b) {
 	typedef typename ResultTypeTrait<A,B>::DivResultType ResultType;
 	Scalar<ResultType> tmp;
 
-	ResultType _a = (ResultType)a;
-	ResultType _b = (ResultType)b.value();
+	ResultType _a = convert_type<ResultType>(a);
+	ResultType _b = convert_type<ResultType>(b.value());
 
 	tmp.value(_a / _b);
 	return tmp;
 }
 
+//------------------------------------------------------------------------------
 template<typename A,typename B>
-const Scalar<typename ResultTypeTrait<A,B>::DivResultType > operator/(const Scalar<A> &a, const B &b) {
+Scalar<typename ResultTypeTrait<A,B>::DivResultType > operator/(const Scalar<A> &a, const B &b) {
 	typedef typename ResultTypeTrait<A,B>::DivResultType ResultType;
 	Scalar<ResultType> tmp;
 
-	ResultType _a = (ResultType)a.value();
-	ResultType _b = (ResultType)b;
+	ResultType _a = convert_type<ResultType>(a.value());
+	ResultType _b = convert_type<ResultType>(b);
 
 	tmp.value(_a / _b);
 	return tmp;

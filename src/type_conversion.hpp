@@ -118,7 +118,6 @@ template<typename T,typename U> T convert_type(const U &u){
 	//static assert of the source type is float and T is an integer type
 	//this avoids conversion from float to integer as supported by the
 	//C++ standard.
-	std::cout<<"original template function"<<std::endl;
 	BOOST_STATIC_ASSERT(!((!std::numeric_limits<U>::is_integer)&&(std::numeric_limits<T>::is_integer)));
 
 	//need to check for complex types - you cannot convert a complex type
