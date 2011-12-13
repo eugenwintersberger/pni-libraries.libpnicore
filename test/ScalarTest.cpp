@@ -64,8 +64,6 @@ void ScalarTest::testConversion(){
 	Int32Scalar si32;
 	UInt8Scalar sui8;
 
-	//check for type errors
-	CPPUNIT_ASSERT_THROW(ui8 = sf64,TypeError);
 
 	//checking rang errors
 	CPPUNIT_ASSERT_NO_THROW(si32 = -100);

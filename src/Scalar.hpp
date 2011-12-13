@@ -108,6 +108,11 @@ public:
 	Scalar();
 	//! copy constructor
 	Scalar(const Scalar<T> &);
+	//! move constructor
+	Scalar(Scalar<T> &&);
+	//! copy conversion constructor
+	template<typename U> Scalar(const Scalar<U> &o);
+	//! move conversion constructor
 	//! constructor
 
 	//! Constructor setting the value of the Scalar object.
@@ -188,28 +193,8 @@ public:
 	//! a scalar object. Thus, it cannot be used to alter the content of  the
 	//! object.
 	template<typename U> operator U() const {
-		EXCEPTION_SETUP("template<typename U> operator U() const ");
 
-		if(!TypeCompat<U,T>::isAssignable){
-			EXCEPTION_INIT(TypeError,"Cannot convert scalar to native type - types are not compatible!");
-			EXCEPTION_THROW();
-		}
-
-		if(!TypeRange<U>::checkRange(_value)){
-			EXCEPTION_INIT(RangeError,"Cannot convert scalar to native type - scalar value exceeds native type's bounds!");
-			EXCEPTION_THROW();
-		}
-
-		return (U)_value;
-		/*
-		U target;
-		try{
-			target = converter<U,T>::convert(_value);
-		}catch(...){
-			EXCEPTION_INIT(TypeError,"Type conversion error!");
-		}
-
-		return target;*/
+		return convert_type<U>(_value);
 	}
 
 
@@ -324,47 +309,66 @@ public:
 };
 
 
-//======================Constructors and destructors=======================================
+//======================Constructors and destructors============================
 //default constructor
 template<typename T> Scalar<T>::Scalar() :
 	ScalarObject() {
 	_value = 0;
 }
 
+//------------------------------------------------------------------------------
 template<typename T> Scalar<T>::Scalar(const Scalar<T> &s) :
 	ScalarObject(s) {
 	_value = s._value;
 }
 
+//------------------------------------------------------------------------------
+template<typename T> Scalar<T>::Scalar(Scalar<T> &&s):
+		ScalarObject(std::move(s)){
+	_value = s._value;
+}
+
+//------------------------------------------------------------------------------
+template<typename T>
+template<typename U>
+Scalar<T>::Scalar(const Scalar<U> &s):ScalarObject(s){
+	_value = convert_type<T>(s.value());
+}
+
+//------------------------------------------------------------------------------
 template<typename T> Scalar<T>::Scalar(const T &v) :
 	ScalarObject() {
 	_value = v;
 }
 
+//------------------------------------------------------------------------------
 template<typename T> Scalar<T>::Scalar(const T &v, const String &n,
 		const String &u) :
 	ScalarObject(n, u) {
 	_value = v;
 }
 
+//------------------------------------------------------------------------------
 template<typename T> Scalar<T>::Scalar(const T &v, const String &n,
 		const String &u, const String &d) :
 	ScalarObject(n, u, d) {
 	_value = v;
 }
 
-
+//------------------------------------------------------------------------------
 template<typename T> Scalar<T>::Scalar(const String &n, const String &u) :
 	ScalarObject(n, u) {
 	_value = 0;
 }
 
+//------------------------------------------------------------------------------
 template<typename T> Scalar<T>::Scalar(const String &n, const String &u,
 		const String &d) :
 	ScalarObject(n, u, d) {
 	_value = 0;
 }
 
+//------------------------------------------------------------------------------
 template<typename T> Scalar<T>::~Scalar() {
 	_value = 0;
 }

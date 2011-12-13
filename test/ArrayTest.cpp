@@ -81,8 +81,8 @@ void ArrayTest::testSlowArrayConstruction(){
 	in[0] = 1023; in[1] = 2047;
  	a(in) = 50;
 
-	CPPUNIT_ASSERT(a.Min() == -10);
-	CPPUNIT_ASSERT(a.Max() == 1000);
+	CPPUNIT_ASSERT(a.min() == -10);
+	CPPUNIT_ASSERT(a.max() == 1000);
 }
 
 //------------------------------------------------------------------------------

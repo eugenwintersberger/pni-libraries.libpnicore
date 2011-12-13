@@ -129,8 +129,8 @@ template<typename T> void PlotArray::image_plot(const ArrayObject *data){
 	p.lab("channels","channels","test plot");
 	p.scmap1n(100);
 
-	PLFLT zmin = a.Min();
-	PLFLT zmax = a.Max();
+	PLFLT zmin = a.min();
+	PLFLT zmax = a.max();
 
 	//copy data to image buffer
 	for(index[0]=0;index[0]<_nx;index.inc(0)){
@@ -193,8 +193,8 @@ int main(int argc,char **argv){
     	Int32Array::sptr a = boost::dynamic_pointer_cast<Int32Array>(v);
 
     	//call some array methods just to see if they work
-    	std::cout<<a->Min()<<" "<<a->Max()<<std::endl;
-    	std::cout<<a->Sum()<<std::endl;
+    	std::cout<<a->min()<<" "<<a->max()<<std::endl;
+    	std::cout<<a->sum()<<std::endl;
 
     	//to access the raw pointer from an array use
     	//void *ptr = a->getBuffer()->getVoidPtr();
@@ -209,8 +209,8 @@ int main(int argc,char **argv){
     	std::cout<<"data is an Int16Array()"<<std::endl;
     	Int16Array::sptr a = boost::dynamic_pointer_cast<Int16Array>(v);
 
-    	std::cout<<a->Min()<<" "<<a->Max()<<std::endl;
-    	std::cout<<a->Sum()<<std::endl;
+    	std::cout<<a->min()<<" "<<a->max()<<std::endl;
+    	std::cout<<a->sum()<<std::endl;
     }
 
 

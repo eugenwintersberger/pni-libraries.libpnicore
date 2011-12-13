@@ -47,14 +47,9 @@ namespace utils{
 class ArrayObject:public NumericObject {
 private:
 
-	//some operators should not be available from outside
-	//! assignment operator
-	ArrayObject &operator=(const ArrayObject &);
 protected:
 	Shape _shape; //!< shape object describing the shape of the array
 					   //!< and managing the access to the data
-
-
 public:
 	typedef boost::shared_ptr<ArrayObject> sptr;  //!< shared pointer to an ArrayObject
 	//! default constructor
@@ -73,6 +68,11 @@ public:
 	ArrayObject(const Shape &s);
 	//! destructor
 	virtual ~ArrayObject();
+
+	//! copy assignment operator
+	ArrayObject &operator=(const ArrayObject &);
+	//! move assignment operator
+	ArrayObject &operator=(ArrayObject &&);
 
 	//! set the shape of the array
 

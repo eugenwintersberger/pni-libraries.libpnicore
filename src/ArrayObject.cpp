@@ -67,6 +67,28 @@ ArrayObject::~ArrayObject(){
 	_shape.rank(0);
 }
 
+//======================Implementation of assignment operators==================
+//implementation of the copy assignment
+ArrayObject &ArrayObject::operator=(const ArrayObject &o){
+	if(this != &o){
+		(NumericObject &)(*this) = (NumericObject &)o;
+		_shape = o._shape;
+	}
+
+	return *this;
+}
+
+//------------------------------------------------------------------------------
+//implementation of the move assignment
+ArrayObject &ArrayObject::operator=(ArrayObject &&o){
+	if(this != &o){
+		(NumericObject &)(*this) = std::move((NumericObject &)o);
+		_shape = std::move(o._shape);
+	}
+
+	return *this;
+}
+
 //=====================class methods============================================
 //implementation of shape
 void ArrayObject::shape(const Shape &s){

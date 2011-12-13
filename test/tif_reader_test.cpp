@@ -129,8 +129,8 @@ template<typename T> void PlotArray::image_plot(const pni::utils::ArrayObject::s
 	p.lab("channels","channels","test plot");
 	p.scmap1n(100);
 
-	PLFLT zmin = a.Min();
-	PLFLT zmax = a.Max();
+	PLFLT zmin = a.min();
+	PLFLT zmax = a.max();
 
 	//copy data to image buffer
 	Index index(2);

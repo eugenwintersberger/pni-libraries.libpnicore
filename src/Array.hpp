@@ -48,6 +48,7 @@
 #include "ArrayTrait.hpp"
 #include "TypeInfo.hpp"
 #include "TypeIDMap.hpp"
+#include "type_conversion.hpp"
 
 namespace pni {
 namespace utils {
@@ -189,6 +190,8 @@ public:
 	//! array on the r.h.s of the operator is copied to the array on the l.h.s.
 	//! of the operator. No memory allocation is done - only copying.
 	Array<T> &operator =(const Array<T> &a);
+	//! move assignemnt operator
+	Array<T> &operator =(Array<T> &&a);
 
 	template<typename U> Array<T> &operator=(const Array<U> &a);
 
@@ -319,23 +322,23 @@ public:
 
 	//! Computes the sum of all elements stored in the array.
 	//! \return number of type T
-	typename ArrayType<T>::Type Sum() const;
+	typename ArrayType<T>::Type sum() const;
 	//! minimum value
 
 	//! returns the minimum element in the array.
 	//! \return value of type T
-	T Min() const;
+	T min() const;
 	//! maximum value
 
 	//! returns the maximum element in the array
 	//! \return value of type T
-	T Max() const;
+	T max() const;
 	//! minimum and maximum in the array
 
 	//! returns the minimum and maximum values in the array.
 	//! \param min minimum value
 	//! \param max maximum value
-	void MinMax(T &min, T &max) const;
+	void min_max(T &min, T &max) const;
 	//! clip the array data
 
 	//! Set values greater or equal maxth to maxth and those smaller or equal minth
@@ -343,7 +346,7 @@ public:
 
 	//! \param minth minimum threshold
 	//! \param maxth maximum threshold
-	void Clip(T minth, T maxth);
+	void clip(T minth, T maxth);
 	//! clip the array data
 
 	//! Set values smaller or equal to minth to minval and those larger or equal than
@@ -353,31 +356,31 @@ public:
 	//! \param minval value for numbers smaller or equal to minth
 	//! \param maxth maximum threshold
 	//! \param maxval value for numbers larger or equal to maxth
-	void Clip(T minth, T minval, T maxth, T maxval);
+	void clip(T minth, T minval, T maxth, T maxval);
 	//! clip minimum values
 
 	//! Set value smaller or equal to a threshold value to threshold.
 
 	//! \param threshold threshold value
-	void MinClip(T threshold);
+	void min_clip(T threshold);
 	//! clip minimum values
 
 	//! Set values smaller or equal than a threshold value to value
 	//! \param threshold threshold value
 	//! \param value value to set the numbers to
-	void MinClip(T threshold, T value);
+	void min_clip(T threshold, T value);
 	//! clip maximum values
 
 	//! Set values larger or equal than threshold to threshold.
 	//! \param threshold threshold value
-	void MaxClip(T threshold);
+	void max_clip(T threshold);
 	//! clip maximum values
 
 	//! Set values larger or equal than threshold to value.
 
 	//! \param threshold the threshold value for the clip operation
 	//! \param value the value to set the numbers to
-	void MaxClip(T threshold, T value);
+	void max_clip(T threshold, T value);
 	//! bracket operator - accessing linear data
 
 	//! Using the []-operator allows to access the data stored in the array
@@ -598,10 +601,12 @@ template<typename T> void Array<T>::buffer(const BufferObject &b) {
 
 }
 
+//------------------------------------------------------------------------------
 template<typename T> const BufferObject &Array<T>::buffer() const {
 	return _data;
 }
 
+//------------------------------------------------------------------------------
 template<typename T> T &Array<T>::operator[](const UInt64 &i){
 	EXCEPTION_SETUP("template<typename T> T &Array<T>::operator[](const UInt64 &i)");
 
@@ -614,6 +619,7 @@ template<typename T> T &Array<T>::operator[](const UInt64 &i){
 	}
 }
 
+//------------------------------------------------------------------------------
 template<typename T> T Array<T>::operator[](const UInt64 &i) const{
 	EXCEPTION_SETUP("template<typename T> T Array<T>::operator[](const UInt64 &i)");
 	T res = 0;
@@ -628,7 +634,7 @@ template<typename T> T Array<T>::operator[](const UInt64 &i) const{
 	return res;
 }
 
-
+//------------------------------------------------------------------------------
 template<typename T> T &Array<T>::operator()(const Index &i){
 	EXCEPTION_SETUP("template<typename T> T &Array<T>::operator()(const Index &i)");
 
@@ -642,6 +648,7 @@ template<typename T> T &Array<T>::operator()(const Index &i){
 
 }
 
+//------------------------------------------------------------------------------
 template<typename T> T Array<T>::operator()(const Index &i) const{
 	EXCEPTION_SETUP("template<typename T> T Array<T>::operator()(const Index &i) const");
 
@@ -656,6 +663,7 @@ template<typename T> T Array<T>::operator()(const Index &i) const{
 	return 0;
 }
 
+//------------------------------------------------------------------------------
 template<typename T> void Array<T>::operator()(const Selection &s,Array<T> &a) const {
 	EXCEPTION_SETUP("template<typename T> void Array<T>::operator()(const Selection &i,Array<T> &a) const ");
 
@@ -672,7 +680,7 @@ template<typename T> void Array<T>::operator()(const Selection &s,Array<T> &a) c
 
 }
 
-
+//------------------------------------------------------------------------------
 template<typename T> void Array<T>::allocate(){
 	if(_data.is_allocated()) _data.free();
 	_data.allocate(this->shape().size());
@@ -698,7 +706,7 @@ template<typename T> bool operator!=(const Array<T> &b1, const Array<T> &b2) {
 }
 
 //==============Methods for in-place array manipulation========================
-template<typename T> typename ArrayType<T>::Type Array<T>::Sum() const {
+template<typename T> typename ArrayType<T>::Type Array<T>::sum() const {
 	EXCEPTION_SETUP("template<typename T> typename ArrayType<T>::Type Array<T>::Sum() const");
 
 	UInt64 i;
@@ -715,7 +723,8 @@ template<typename T> typename ArrayType<T>::Type Array<T>::Sum() const {
 
 }
 
-template<typename T> T Array<T>::Min() const {
+//------------------------------------------------------------------------------
+template<typename T> T Array<T>::min() const {
 	EXCEPTION_SETUP("template<typename T> T Array<T>::Min() const");
 
 	UInt64 i;
@@ -735,7 +744,8 @@ template<typename T> T Array<T>::Min() const {
 	return result;
 }
 
-template<typename T> T Array<T>::Max() const {
+//------------------------------------------------------------------------------
+template<typename T> T Array<T>::max() const {
 	EXCEPTION_SETUP("template<typename T> T Array<T>::Max() const");
 
 	UInt64 i;
@@ -755,7 +765,8 @@ template<typename T> T Array<T>::Max() const {
 	return result;
 }
 
-template<typename T> void Array<T>::MinMax(T &min, T &max) const {
+//------------------------------------------------------------------------------
+template<typename T> void Array<T>::min_max(T &min, T &max) const {
 	EXCEPTION_SETUP("template<typename T> void Array<T>::MinMax(T &min, T &max) const");
 	UInt64 i;
 	min = 0;
@@ -775,7 +786,8 @@ template<typename T> void Array<T>::MinMax(T &min, T &max) const {
 	}
 }
 
-template<typename T> void Array<T>::Clip(T minth, T maxth) {
+//------------------------------------------------------------------------------
+template<typename T> void Array<T>::clip(T minth, T maxth) {
 	EXCEPTION_SETUP("template<typename T> void Array<T>::Clip(T minth, T maxth)");
 	UInt64 i;
 	T value = 0;
@@ -793,7 +805,8 @@ template<typename T> void Array<T>::Clip(T minth, T maxth) {
 	}
 }
 
-template<typename T> void Array<T>::Clip(T minth, T minval, T maxth, T maxval) {
+//------------------------------------------------------------------------------
+template<typename T> void Array<T>::clip(T minth, T minval, T maxth, T maxval) {
 	EXCEPTION_SETUP("template<typename T> void Array<T>::Clip(T minth, T minval, T maxth, T maxval)");
 	UInt64 i;
 	T value = 0;
@@ -811,7 +824,8 @@ template<typename T> void Array<T>::Clip(T minth, T minval, T maxth, T maxval) {
 	}
 }
 
-template<typename T> void Array<T>::MinClip(T threshold) {
+//------------------------------------------------------------------------------
+template<typename T> void Array<T>::min_clip(T threshold) {
 	EXCEPTION_SETUP("template<typename T> void Array<T>::MinClip(T threshold)");
 	UInt64 i;
 
@@ -825,7 +839,8 @@ template<typename T> void Array<T>::MinClip(T threshold) {
 	}
 }
 
-template<typename T> void Array<T>::MinClip(T threshold, T value) {
+//------------------------------------------------------------------------------
+template<typename T> void Array<T>::min_clip(T threshold, T value) {
 	EXCEPTION_SETUP("template<typename T> void Array<T>::MinClip(T threshold, T value)");
 	UInt64 i;
 
@@ -839,7 +854,8 @@ template<typename T> void Array<T>::MinClip(T threshold, T value) {
 	}
 }
 
-template<typename T> void Array<T>::MaxClip(T threshold) {
+//------------------------------------------------------------------------------
+template<typename T> void Array<T>::max_clip(T threshold) {
 	EXCEPTION_SETUP("template<typename T> void Array<T>::MaxClip(T threshold)");
 	UInt64 i;
 
@@ -854,7 +870,8 @@ template<typename T> void Array<T>::MaxClip(T threshold) {
 	}
 }
 
-template<typename T> void Array<T>::MaxClip(T threshold, T value) {
+//------------------------------------------------------------------------------
+template<typename T> void Array<T>::max_clip(T threshold, T value) {
 	EXCEPTION_SETUP("template<typename T> void Array<T>::MaxClip(T threshold, T value)");
 	UInt64 i;
 
@@ -887,12 +904,13 @@ template<typename T> Array<T> &Array<T>::operator =(const T &v) {
 	return *this;
 }
 
+//------------------------------------------------------------------------------
 template<typename T>
 template<typename U> Array<T> &Array<T>::operator=(const U &v){
 	EXCEPTION_SETUP("template<typename T> template<typename U> Array<T> &Array<T>::operator=(const U &v)");
 
 	try{
-		_data = v;
+		_data = convert_type<T>(v);
 	}catch(...){
 		EXCEPTION_INIT(AssignmentError,"Object assignment failed!");
 		EXCEPTION_THROW();
@@ -901,6 +919,7 @@ template<typename U> Array<T> &Array<T>::operator=(const U &v){
 	return *this;
 }
 
+//------------------------------------------------------------------------------
 template<typename T> Array<T> &Array<T>::operator =(const Array<T> &v) {
 	EXCEPTION_SETUP("template<typename T> Array<T> &Array<T>::operator =(const Array<T> &v)");
 
@@ -919,7 +938,17 @@ template<typename T> Array<T> &Array<T>::operator =(const Array<T> &v) {
 
 	return *this;
 }
+//------------------------------------------------------------------------------
+template<typename T> Array<T> &Array<T>::operator=(Array<T> &&a){
+	if(this != &a){
+		(ArrayObject &)(*this) = std::move((ArrayObject &)a);
+		_data = std::move(a._data);
+	}
 
+	return *this;
+}
+
+//------------------------------------------------------------------------------
 template<typename T>
 template<typename U> Array<T> &Array<T>::operator=(const Array<U> &v) {
 	EXCEPTION_SETUP("template<typename T> template<typename U> Array<T> &Array<T>::operator=(const Array<U> &v)");
@@ -927,23 +956,25 @@ template<typename U> Array<T> &Array<T>::operator=(const Array<U> &v) {
 	try{
 		this->reset();
 		this->shape(v.shape());
-		_data = (Buffer<U> &)v.getBuffer();
+		this->allocate();
+		for(size_t i=0;i<this->size();i++) (*this)[i] = convert_type<T>(v.buffer()[i]);
 	}catch(...){
 		EXCEPTION_INIT(AssignmentError,"Object assignment failed!");
 		EXCEPTION_THROW();
 	}
 }
 
-//==============================binary arithmetic operators====================
+
+
+//====================binary addition operators=================================
 template<typename T> Array<T> operator+(const Array<T> &a, const T &b) {
 	EXCEPTION_SETUP("template<typename T> Array<T> operator+(const Array<T> &a, const T &b)");
-	Array<T> tmp(a.getShape());
-	UInt64 i;
-	T *tmpbuf = tmp.getBuffer().getPtr();
-	T *abuf = tmp.getBuffer().getPtr();
+	Array<T> tmp(a.shape());
+	T *tmpbuf = tmp.buffer().ptr();
+	T *abuf = tmp.buffer().ptr();
 
 	try{
-		for (i = 0; i < a.getShape().getSize(); i++)  tmpbuf[i] = abuf[i] + b;
+		for (size_t i = 0; i < a.shape().size(); i++)  tmpbuf[i] = abuf[i] + b;
 	}catch(...){
 		EXCEPTION_INIT(ProcessingError,"Error during array processing!");
 		EXCEPTION_THROW();
@@ -952,6 +983,7 @@ template<typename T> Array<T> operator+(const Array<T> &a, const T &b) {
 	return tmp;
 }
 
+//------------------------------------------------------------------------------
 template<typename T> Array<T> operator+(const T &a, const Array<T> &b) {
 	EXCEPTION_SETUP("template<typename T> Array<T> operator+(const T &a, const Array<T> &b)");
 	Array<T> tmp;
@@ -967,140 +999,140 @@ template<typename T> Array<T> operator+(const T &a, const Array<T> &b) {
 
 }
 
+//------------------------------------------------------------------------------
 template<typename T> Array<T> operator+(const Array<T> &a, const Array<T> &b) {
 	EXCEPTION_SETUP("template<typename T> Array<T> operator+(const Array<T> &a, const Array<T> &b)");
-	UInt64 i;
 
-	if (a.getShape() != b.getShape()) {
+	if (a.shape() != b.shape()) {
 		EXCEPTION_INIT(ShapeMissmatchError,"shapes of arrays a and b do not match!");
 		EXCEPTION_THROW();
 	}
 
-	Array<T> tmp(a.getShape());
-	T *tmpbuf = tmp.getBuffer().getPtr();
-	T *abuf = a.getBuffer().getPtr();
-	T *bbuf = b.getBuffer().getPtr();
+	Array<T> tmp(a.shape());
+	T *tmpbuf = tmp.buffer().ptr();
+	T *abuf = a.buffer().ptr();
+	T *bbuf = b.buffer().ptr();
 
 
-	for (i = 0; i < a.getShape().getSize(); i++) tmpbuf[i] = abuf[i] + bbuf[i];
+	for (size_t i = 0; i < a.shape().size(); i++) tmpbuf[i] = abuf[i] + bbuf[i];
 
 	return tmp;
 }
 
+//=================Binary subtraction operators=================================
 template<typename T> Array<T> operator-(const Array<T> &a, const T &b) {
-	Array<T> tmp(a.getShape());
-	UInt64 i;
+	Array<T> tmp(a.shape());
 
-	T *tmpbuf = tmp.getBuffer().getPtr();
-	T *abuf = a.getBuffer().getPtr();
+	T *tmpbuf = tmp.buffer().ptr();
+	T *abuf = a.getBuffer().ptr();
 
-	for (i = 0; i < a.getShape().getSize(); i++)  tmpbuf[i] = abuf[i] - b;
+	for (size_t i = 0; i < a.shape().size(); i++)  tmpbuf[i] = abuf[i] - b;
 
 	return tmp;
 }
 
+//------------------------------------------------------------------------------
 template<typename T> Array<T> operator-(const T &a, const Array<T> &b) {
-	Array<T> tmp(b.getShape());
-	UInt64 i;
+	Array<T> tmp(b.shape());
 
-	T *tmpbuf = b.getBuffer().getPtr();
-	T *bbuf = b.getBuffer().getPtr();
+	T *tmpbuf = b.buffer().ptr();
+	T *bbuf = b.buffer().ptr();
 
-	for (i = 0; i < b.getShape().getSize(); i++) tmpbuf[i] = a - bbuf[i];
+	for (size_t i = 0; i < b.shape().size(); i++) tmpbuf[i] = a - bbuf[i];
 
 	return tmp;
 
 }
 
+//------------------------------------------------------------------------------
 template<typename T> Array<T> operator-(const Array<T> &a, const Array<T> &b) {
 	EXCEPTION_SETUP("template<typename T> Array<T> operator-(const Array<T> &a, const Array<T> &b)");
-	unsigned long i;
 
-	if (a.getShape() != b.getShape()) {
+	if (a.shape() != b.shape()) {
 		EXCEPTION_INIT(ShapeMissmatchError,"shapes of arrays a and b do not match!");
 		EXCEPTION_THROW();
 	}
-	Array<T> tmp(a.getShape());
+	Array<T> tmp(a.shape());
 
-	T *tmpbuf = tmp.getBuffer().getPtr();
-	T *abuf = a.getBuffer().getPtr();
-	T *bbuf = b.getBuffer().getPtr();
+	T *tmpbuf = tmp.buffer().ptr();
+	T *abuf = a.buffer().ptr();
+	T *bbuf = b.buffer().ptr();
 
-	for (i = 0; i < a.getShape().getSize(); i++) tmpbuf[i] = abuf[i] - bbuf[i];
+	for (size_t i = 0; i < a.shape().size(); i++) tmpbuf[i] = abuf[i] - bbuf[i];
 
 	return tmp;
 }
 
+//==================Binary multiplication operators=============================
 template<typename T> Array<T> operator*(const Array<T> &a, const T &b) {
-	Array<T> tmp(a.getShape());
-	UInt64 i;
+	Array<T> tmp(a.shape());
 
-	for (i = 0; i < a.getShape().getSize(); i++) tmp[i] = a[i] * b;
+	for (size_t i = 0; i < a.shape().size(); i++) tmp[i] = a[i] * b;
 
 	return tmp;
 }
 
+//------------------------------------------------------------------------------
 template<typename T> Array<T> operator*(const T &a, const Array<T> &b) {
-	Array<T> tmp(b.getShape());
-	UInt64 i;
+	Array<T> tmp(b.shape());
 
-	for (i = 0; i < b.getShape().getSize(); i++) tmp[i] = b[i] * a;
+	for (size_t i = 0; i < b.shape().size(); i++) tmp[i] = b[i] * a;
 
 	return tmp;
 
 }
 
+//------------------------------------------------------------------------------
 template<typename T> Array<T> operator*(const Array<T> &a, const Array<T> &b) {
 	EXCEPTION_SETUP("template<typename T> Array<T> operator*(const Array<T> &a, const Array<T> &b)");
-	UInt64 i;
 
-	if (a.getShape() != b.getShape()) {
+	if (a.shape() != b.shape()) {
 		EXCEPTION_INIT(ShapeMissmatchError,"shapes of arrays a and b do not match!");
 		EXCEPTION_THROW();
 	}
-	Array<T> tmp(a.getShape());
+	Array<T> tmp(a.shape());
 
-	for (i = 0; i < a.getShape().getSize(); i++) tmp[i] = a[i] * b[i];
+	for (size_t i = 0; i < a.shape().size(); i++) tmp[i] = a[i] * b[i];
 
 
 	return tmp;
 }
 
+//===================Binary division operators==================================
 template<typename T> Array<T> operator/(const Array<T> &a, const T &b) {
-	Array<T> tmp(a.getShape());
-	UInt64 i;
+	Array<T> tmp(a.shape());
 
-	for (i = 0; i < a.getShape().getSize(); i++) tmp[i] = a[i] / b;
+	for (size_t i = 0; i < a.shape().size(); i++) tmp[i] = a[i] / b;
 
 	return tmp;
 }
 
+//------------------------------------------------------------------------------
 template<typename T> Array<T> operator/(const T &a, const Array<T> &b) {
-	Array<T> tmp(b.getShape());
-	UInt64 i;
+	Array<T> tmp(b.shape());
 
-	for (i = 0; i < b.getShape().getSize(); i++) tmp[i] = a / b[i];
+	for (size_t i = 0; i < b.shape().size(); i++) tmp[i] = a / b[i];
 
 	return tmp;
 
 }
 
+//------------------------------------------------------------------------------
 template<typename T> Array<T> operator/(const Array<T> &a, const Array<T> &b) {
 	EXCEPTION_SETUP("template<typename T> Array<T> operator/(const Array<T> &a, const Array<T> &b)");
-	UInt64 i;
 
-	if (a.getShape() != b.getShape()) {
+	if (a.shape() != b.shape()) {
 		EXCEPTION_INIT(ShapeMissmatchError,"shapes of arrays a and b do not match!");
 		EXCEPTION_THROW();
 	}
-	Array<T> tmp(a.getShape());
+	Array<T> tmp(a.shape());
 
-	for (i = 0; i < a.getShape().getSize(); i++) tmp[i] = a[i] / b[i];
+	for (size_t i = 0; i < a.shape().size(); i++) tmp[i] = a[i] / b[i];
 
 	return tmp;
 }
 
-//=======================Unary arithmetic operations===========================
+//=======================Unary addition operations==============================
 template<typename T> Array<T> &Array<T>::operator +=(const T &v) {
 
 	for (size_t i = 0; i < this->shape().size(); i++) (*this)[i] += v;
@@ -1108,6 +1140,7 @@ template<typename T> Array<T> &Array<T>::operator +=(const T &v) {
 	return *this;
 }
 
+//------------------------------------------------------------------------------
 template<typename T> Array<T> &Array<T>::operator +=(const Array<T> &v) {
 	EXCEPTION_SETUP("template<typename T> Array<T> &Array<T>::operator +=(const Array<T> &v)");
 
@@ -1121,6 +1154,7 @@ template<typename T> Array<T> &Array<T>::operator +=(const Array<T> &v) {
 	return *this;
 }
 
+//==========================Unary subtraction operator==========================
 template<typename T> Array<T> &Array<T>::operator -=(const T &v) {
 
 	for (size_t i = 0; i < this->shape().size(); i++) (*this)[i] -= v;
@@ -1128,6 +1162,7 @@ template<typename T> Array<T> &Array<T>::operator -=(const T &v) {
 	return *this;
 }
 
+//------------------------------------------------------------------------------
 template<typename T> Array<T> &Array<T>::operator -=(const Array<T> &v) {
 	EXCEPTION_SETUP("template<typename T> Array<T> &Array<T>::operator -=(const Array<T> &v)");
 
@@ -1141,6 +1176,7 @@ template<typename T> Array<T> &Array<T>::operator -=(const Array<T> &v) {
 	return *this;
 }
 
+//=======================Unary multiplication operator==========================
 template<typename T> Array<T> &Array<T>::operator *=(const T &v) {
 
 	for (size_t i = 0; i < this->shape().size(); i++) (*this)[i] *= v;
@@ -1148,6 +1184,7 @@ template<typename T> Array<T> &Array<T>::operator *=(const T &v) {
 	return *this;
 }
 
+//------------------------------------------------------------------------------
 template<typename T> Array<T> &Array<T>::operator *=(const Array<T> &v) {
 	EXCEPTION_SETUP("template<typename T> Array<T> &Array<T>::operator *=(const Array<T> &v)");
 
@@ -1161,6 +1198,7 @@ template<typename T> Array<T> &Array<T>::operator *=(const Array<T> &v) {
 	return *this;
 }
 
+//======================Unary division operator=================================
 template<typename T> Array<T> &Array<T>::operator /=(const T &v) {
 
 	for (size_t i = 0; i < this->shape().size(); i++) (*this)[i] /= v;
@@ -1168,6 +1206,7 @@ template<typename T> Array<T> &Array<T>::operator /=(const T &v) {
 	return *this;
 }
 
+//------------------------------------------------------------------------------
 template<typename T> Array<T> &Array<T>::operator /=(const Array<T> &v) {
 	EXCEPTION_SETUP("template<typename T> Array<T> &Array<T>::operator /=(const Array<T> &v)");
 
