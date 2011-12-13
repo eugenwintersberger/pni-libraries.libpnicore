@@ -1,5 +1,5 @@
 /*
- * Map from PNI types to IDs
+ * Type map from IDs to PNI types
  *
  * (c) Copyright 2011 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
  *
@@ -18,122 +18,131 @@
  * You should have received a copy of the GNU General Public License
  * along with libpniutils.  If not, see <http://www.gnu.org/licenses/>.
  *************************************************************************
- * TypeIDMap.hpp
  *
- *  Created on: Dec 13, 2011
- *      Author: Eugen Wintersberger
+ * Type map which maps type IDs to real PNI data types.
+ *
+ * Created on: Oct 13, 2011
+ *     Author: Eugen Wintersberger
+ *
  */
+
 
 #include "Types.hpp"
 
-#ifndef TYPEIDMAP_HPP_
-#define TYPEIDMAP_HPP_
+#ifndef IDTYPEMAP_HPP_
+#define IDTYPEMAP_HPP_
+
 
 namespace pni{
 namespace utils{
 
 //! template defining a mapping between type IDs and types.
-template<typename T> class TypeIDMap{
+template<TypeID id> class IDTypeMap{
 public:
-	static const TypeID type_id = TypeID::NONE;
+	typedef UInt8 Type;
 };
 
 //! \cond NO_API_DOC
 //------------------------------------------------------------------------------
-template<> class TypeIDMap<UInt8>{
+template<> class IDTypeMap<TypeID::UINT8>{
 public:
-	static const TypeID type_id = TypeID::UINT8;
+	typedef UInt8 Type;
 };
 
 //------------------------------------------------------------------------------
-template<> class TypeIDMap<Int8>{
+template<> class IDTypeMap<TypeID::INT8>{
 public:
-	static const TypeID type_id = TypeID::INT8;
+	typedef Int8 Type;
 };
 
 //------------------------------------------------------------------------------
-template<> class TypeIDMap<UInt16>{
+template<> class IDTypeMap<TypeID::UINT16>{
 public:
-	static const TypeID type_id = TypeID::UINT16;
+	typedef UInt16 Type;
 };
 
 //------------------------------------------------------------------------------
-template<> class TypeIDMap<Int16>{
+template<> class IDTypeMap<TypeID::INT16>{
 public:
-	static const TypeID type_id = TypeID::INT16;
+	typedef Int16 Type;
 };
 
 //------------------------------------------------------------------------------
-template<> class TypeIDMap<Int32>{
+template<> class IDTypeMap<TypeID::INT32>{
 public:
-	static const TypeID type_id = TypeID::INT32;
+	typedef Int32 Type;
 };
 
 //------------------------------------------------------------------------------
-template<> class TypeIDMap<UInt32>{
+template<> class IDTypeMap<TypeID::UINT32>{
 public:
-	static const TypeID type_id = TypeID::UINT32;
+	typedef UInt32 Type;
 };
 
 //------------------------------------------------------------------------------
-template<> class TypeIDMap<Int64>{
+template<> class IDTypeMap<TypeID::INT64>{
 public:
-	static const TypeID type_id = TypeID::INT64;
+	typedef Int64 Type;
 };
 
 //------------------------------------------------------------------------------
-template<> class TypeIDMap<UInt64>{
+template<> class IDTypeMap<TypeID::UINT64>{
 public:
-	static const TypeID type_id = TypeID::UINT64;
+	typedef UInt64 Type;
 };
 
 //------------------------------------------------------------------------------
-template<> class TypeIDMap<Float32>{
+template<> class IDTypeMap<TypeID::FLOAT32>{
 public:
-	static const TypeID type_id = TypeID::FLOAT32;
+	typedef Float32 Type;
 };
 
 //------------------------------------------------------------------------------
-template<> class TypeIDMap<Float64>{
+template<> class IDTypeMap<TypeID::FLOAT64>{
 public:
-	static const TypeID type_id = TypeID::FLOAT64;
+	typedef Float64 Type;
 };
 
 //------------------------------------------------------------------------------
-template<> class TypeIDMap<Float128>{
+template<> class IDTypeMap<TypeID::FLOAT128>{
 public:
-	static const TypeID type_id = TypeID::FLOAT128;
+	typedef Float128 Type;
 };
 
 //------------------------------------------------------------------------------
-template<> class TypeIDMap<Complex32>{
+template<> class IDTypeMap<TypeID::COMPLEX32>{
 public:
-	static const TypeID type_id = TypeID::COMPLEX32;
+	typedef Complex32 Type;
 };
 
 //------------------------------------------------------------------------------
-template<> class TypeIDMap<Complex64>{
+template<> class IDTypeMap<TypeID::COMPLEX64>{
 public:
-	static const TypeID type_id = TypeID::COMPLEX64;
+	typedef Complex64 Type;
 };
 
 //------------------------------------------------------------------------------
-template<> class TypeIDMap<Complex128>{
+template<> class IDTypeMap<TypeID::COMPLEX128>{
 public:
-	static const TypeID type_id = TypeID::COMPLEX128;
+	typedef Complex128 Type;
 };
 
 //------------------------------------------------------------------------------
-template<> class TypeIDMap<String> {
+template<> class IDTypeMap<TypeID::STRING>{
 public:
-	static const TypeID type_id = TypeID::STRING;
+	typedef String Type;
 }
 
 //------------------------------------------------------------------------------
-template<> class TypeIDMap<Binary>{
+template<> class IDTypeMap<TypeID::BINARY>{
 public:
-	static const TypeID type_id = TypeID::BINARY;
+	typedef Binary Type;
 };
 
+//! \endcond
 
-#endif /* TYPEIDMAP_HPP_ */
+}
+}
+
+
+#endif /* IDTYPEMAP_HPP_ */

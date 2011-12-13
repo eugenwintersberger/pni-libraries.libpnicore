@@ -39,11 +39,11 @@
 #include <boost/shared_array.hpp>
 #include "Exceptions.hpp"
 #include "Types.hpp"
-#include "PNITypeInfo.hpp"
 #include "BufferObject.hpp"
 #include "TypeInfo.hpp"
 #include "TypeCompat.hpp"
 #include "TypeRange.hpp"
+#include "TypeIDMap.hpp"
 
 namespace pni{
 namespace utils{
@@ -155,7 +155,7 @@ public:
 	}
 
 	virtual TypeID type_id() const {
-		return PNITypeInfo<T>::ID;
+		return TypeInfo<T>::type_id;
 	}
 
 

@@ -35,7 +35,7 @@
 
 #include "DataObject.hpp"
 #include "Types.hpp"
-#include "PNITypeInfo.hpp"
+#include "TypeInfo.hpp"
 
 namespace pni{
 namespace utils{
