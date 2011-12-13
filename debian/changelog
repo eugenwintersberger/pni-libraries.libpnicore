@@ -1,3 +1,11 @@
+libpniutils (0.1.0) unstable; urgency=low
+
+  * Second alpha release
+    - merged devel tree back to master
+    - minor version number is changed due to changes in the ABI
+    
+ -- Eugen Wintersberger <eugen.wintersberger@desy.de>  Tue, 13 Dec 2011 14:50 +0200
+ 
 libpniutils (0.0.1) unstable; urgency=low
 
   * Initial Release.
