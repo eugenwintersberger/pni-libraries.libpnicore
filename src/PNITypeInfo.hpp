@@ -35,7 +35,7 @@
 #include <limits>
 
 #include "Types.hpp"
-#include "PNITypeIDMap.hpp"
+#include "TypeIDMap.hpp"
 
 namespace pni{
 namespace utils{
@@ -389,17 +389,17 @@ public:
 
 //! obtain type information not by the data type but rather by the ID of the type
 template<TypeID id> class PNITypeInfoByID{
-	static const TypeID    ID    = PNITypeInfo<typename PNITypeIDMap<id>::Type >::TypeID;
-	static const TypeClass Class = PNITypeInfo<typename PNITypeIDMap<id>::Type >::TypeClass;
-	static const size_t       ByteSize  = PNITypeInfo<typename PNITypeIDMap<id>::Type >::ByteSize;
-	static const bool         isSigned  = PNITypeInfo<typename PNITypeIDMap<id>::Type >::isSigned;
+	static const TypeID    ID    = PNITypeInfo<typename TypeIDMap<id>::Type >::TypeID;
+	static const TypeClass Class = PNITypeInfo<typename TypeIDMap<id>::Type >::TypeClass;
+	static const size_t       ByteSize  = PNITypeInfo<typename TypeIDMap<id>::Type >::ByteSize;
+	static const bool         isSigned  = PNITypeInfo<typename TypeIDMap<id>::Type >::isSigned;
 
-	static typename PNITypeIDMap<id>::Type min(){
-		return PNITypeInfo<typename PNITypeIDMap<id>::Type >::min();
+	static typename TypeIDMap<id>::Type min(){
+		return PNITypeInfo<typename TypeIDMap<id>::Type >::min();
 	}
 
-	static typename PNITypeIDMap<id>::Type max(){
-		return PNITypeInfo<typename PNITypeIDMap<id>::Type >::max();
+	static typename TypeIDMap<id>::Type max(){
+		return PNITypeInfo<typename TypeIDMap<id>::Type >::max();
 	}
 };
 

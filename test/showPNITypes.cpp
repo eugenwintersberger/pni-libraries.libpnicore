@@ -8,7 +8,7 @@ using namespace pni::utils;
 
 template<typename A> void print_type(){
 	std::cout<<"Size:  "<<TypeInfo<A>::size<<" Bytes ";
-	std::cout<<"Range: ("<<TypeInfo<A>::getMin()<<" , "<<TypeInfo<A>::getMax()<<")"<<std::endl;
+	std::cout<<"Range: ("<<TypeInfo<A>::min()<<" , "<<TypeInfo<A>::max()<<")"<<std::endl;
 }
 
 int main(int argc,char **argv){

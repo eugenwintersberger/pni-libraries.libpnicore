@@ -57,7 +57,7 @@ public:
 	typedef T Type;
 	typedef T BaseType;
 
-	static bool isNegative(T value){
+	static bool is_negative(T value){
 		if (value < 0) return true;
 		return false;
 	}
@@ -68,7 +68,7 @@ public:
 	static const bool is_complex = false;
 
 	//! return minimum value of the type
-	static T getMin(){
+	static T min(){
 		//in the case of integers we can use min
 		if (std::numeric_limits<T>::is_integer){
 			return std::numeric_limits<T>::min();
@@ -80,7 +80,7 @@ public:
 	}
 
 	//! return maximum value of the type
-	static T getMax(){
+	static T max(){
 		return std::numeric_limits<T>::max();
 	}
 
@@ -99,18 +99,18 @@ public:
 	static const bool is_signed = std::numeric_limits<Float32>::is_signed;
 	static const bool is_complex = true;
 
-	static bool isNegative(Complex32 value){
+	static bool is_negative(Complex32 value){
 		return false;
 	}
 
 
 	//! return the minimum value of the Complex32 type
-	static Float32 getMin(){
+	static Float32 min(){
 		return -std::numeric_limits<Float32>::max();
 	}
 
 	//! return the maximum value of the Complex32 type
-	static Float32 getMax(){
+	static Float32 max(){
 		return std::numeric_limits<Float32>::max();
 	}
 
@@ -134,17 +134,17 @@ public:
 
 
 
-	static bool isNegative(Complex64 value){
+	static bool is_negative(Complex64 value){
 		return false;
 	}
 
 	//! return the minimum value of the Complex64 type
-	static Float64 getMin(){
+	static Float64 min(){
 		return -std::numeric_limits<Float64>::max();
 	}
 
 	//! return the maximum value of the Complex64 type
-	static Float64 getMax(){
+	static Float64 max(){
 		return std::numeric_limits<Float64>::max();
 	}
 
@@ -163,17 +163,17 @@ public:
 	static const bool is_complex = true;
 
 
-	static bool isNegative(){
+	static bool is_negative(){
 		return false;
 	}
 
 	//! return the minimum value of the Complex128 type
-	static Float128 getMin(){
+	static Float128 min(){
 		return -std::numeric_limits<Float128>::max();
 	}
 
 	//! return the maximum value of the Complex128 type
-	static Float128 getMax(){
+	static Float128 max(){
 		return std::numeric_limits<Float128>::max();
 	}
 };

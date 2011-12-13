@@ -58,8 +58,8 @@ public:
 
 template<typename A>
 template<typename B> bool TypeRange<A>::checkRange(const B &v){
-	static typename TypeInfo<A>::BaseType t_min = TypeInfo<A>::getMin();
-	static typename TypeInfo<A>::BaseType t_max = TypeInfo<A>::getMax();
+	static typename TypeInfo<A>::BaseType t_min = TypeInfo<A>::min();
+	static typename TypeInfo<A>::BaseType t_max = TypeInfo<A>::max();
 	static bool t_issigned = TypeInfo<A>::is_signed;
 	static bool s_issigned = TypeInfo<B>::is_signed;
 
@@ -67,7 +67,7 @@ template<typename B> bool TypeRange<A>::checkRange(const B &v){
 	if(v == 0) return true;
 
 	//if v is negative and A is an unsigned type - this will fail.
-	if(TypeInfo<B>::isNegative(v) && (!t_issigned)){
+	if(TypeInfo<B>::is_negative(v) && (!t_issigned)){
 		return false;
 	}
 
@@ -82,8 +82,8 @@ template<typename B> bool TypeRange<A>::checkRange(const B &v){
 
 template<typename A>
 bool TypeRange<A>::checkRange(const Complex128 &v){
-	static typename TypeInfo<A>::BaseType t_min = TypeInfo<A>::getMin();
-	static typename TypeInfo<A>::BaseType t_max = TypeInfo<A>::getMax();
+	static typename TypeInfo<A>::BaseType t_min = TypeInfo<A>::min();
+	static typename TypeInfo<A>::BaseType t_max = TypeInfo<A>::max();
 
 	if((v.real() < t_min) || (v.real() > t_max) ||
 	   (v.imag() < t_min) || (v.imag() > t_max)) return false;
@@ -93,8 +93,8 @@ bool TypeRange<A>::checkRange(const Complex128 &v){
 
 template<typename A>
 bool TypeRange<A>::checkRange(const Complex32 &v){
-	static typename TypeInfo<A>::BaseType t_min = TypeInfo<A>::getMin();
-	static typename TypeInfo<A>::BaseType t_max = TypeInfo<A>::getMax();
+	static typename TypeInfo<A>::BaseType t_min = TypeInfo<A>::min();
+	static typename TypeInfo<A>::BaseType t_max = TypeInfo<A>::max();
 
 	if((v.real() < t_min) || (v.real() > t_max) ||
 	   (v.imag() < t_min) || (v.imag() > t_max)) return false;
@@ -104,8 +104,8 @@ bool TypeRange<A>::checkRange(const Complex32 &v){
 
 template<typename A>
 bool TypeRange<A>::checkRange(const Complex64 &v){
-	static typename TypeInfo<A>::BaseType t_min = TypeInfo<A>::getMin();
-	static typename TypeInfo<A>::BaseType t_max = TypeInfo<A>::getMax();
+	static typename TypeInfo<A>::BaseType t_min = TypeInfo<A>::min();
+	static typename TypeInfo<A>::BaseType t_max = TypeInfo<A>::max();
 
 	if((v.real() < t_min) || (v.real() > t_max) ||
 	   (v.imag() < t_min) || (v.imag() > t_max)) return false;

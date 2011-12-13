@@ -48,33 +48,67 @@ template<typename T,typename U> T convert_type(const U &u){
 	std::cout<<"original template function"<<std::endl;
 	BOOST_STATIC_ASSERT(!((!std::numeric_limits<U>::is_integer)&&(std::numeric_limits<T>::is_integer)));
 
+	//need to check for complex types - you cannot convert a complex type
+	//to a non-complex type
+	BOOST_STATIC_ASSERT(!((!TypeInfo<T>::is_complex)&&(TypeInfo<U>::is_complex)));
+
 	T value;
-	try{
-		value = boost::numeric_cast<T>(u);
-	}catch(negative_overflow &error){
-		EXCEPTION_INIT(RangeError,"Cannot assign value doe to negative overflow!");
-		EXCEPTION_THROW();
-	}catch(positive_overflow &error){
-		EXCEPTION_INIT(RangeError,"Cannot assign value due to positive overflow!");
-		EXCEPTION_THROW();
-	}catch(...){
-		EXCEPTION_INIT(RangeError,"Something went wrong!");
-		EXCEPTION_THROW();
+
+	if(!TypeInfo<T>::is_complex){
+		//if T is not a complex type we can do this here
+		try{
+			value = boost::numeric_cast<T>(u);
+		}catch(negative_overflow &error){
+			EXCEPTION_INIT(RangeError,"Cannot assign value doe to negative overflow!");
+			EXCEPTION_THROW();
+		}catch(positive_overflow &error){
+			EXCEPTION_INIT(RangeError,"Cannot assign value due to positive overflow!");
+			EXCEPTION_THROW();
+		}catch(...){
+			EXCEPTION_INIT(TypeError,"Something went wrong!");
+			EXCEPTION_THROW();
+		}
+	}else{
+		//ok - T is a complex type with a certain base type
+		typedef typename TypeInfo<T>::BaseType TBaseType;
+
+		//if U is a non-complex type
+		if(!TypeInfo<U>::is_complex){
+			try{
+				value = std::complex<TBaseType>(boost::numeric_cast<TBaseType>(u),0);
+			}catch(negative_overflow &error){
+				EXCEPTION_INIT(RangeError,"Cannot convert type due to negative overflow!");
+				EXCEPTION_THROW();
+			}catch(positive_overflow &error){
+				EXCEPTION_INIT(RangeError,"Cannot convert type due to positive overflow!");
+				EXCEPTION_THROW();
+			}catch(...){
+				EXCEPTION_INIT(TypeError,"Type conversion failed!");
+				EXCEPTION_THROW();
+			}
+		}else{
+			//U is a complex type
+			TBaseType real;
+			TBaseType imag;
+			try{
+				real = boost::numeric_cast<TBaseType>(u.real());
+				imag = boost::numeric_cast<TBaseType>(u.imag());
+			}catch(negative_overflow &error){
+				EXCEPTION_INIT(RangeError,"Cannot convert type due to negative overflow!");
+				EXCEPTION_THROW();
+			}catch(positive_overflow &error){
+				EXCEPTION_INIT(RangeError,"Cannot convert type due to positive overflow!");
+				EXCEPTION_THROW();
+			}catch(...){
+				EXCEPTION_INIT(TypeError,"Type conversion failed!");
+				EXCEPTION_THROW();
+			}
+			value = std::complex<TBaseType>(real,imag);
+		}
 	}
 
 	return value;
 
-}
-
-//need to handle the special case of complex numbers
-#define COMPLEX_CONVERT_TYPE(target_base,source_base)\
-template<> std::complex<target_base> convert_type(const std::complex<source_base> &u){\
-	std::cout<<"overloaded function for complex number!"<<std::endl;\
-	target_base real;\
-	target_base imag;\
-	real = convert_type<target_base>(u.real());\
-	imag = convert_type<target_base>(u.imag());\
-	return std::complex<target_base>(real,imag);\
 }
 
 

@@ -37,98 +37,98 @@ namespace pni{
 namespace utils{
 
 //! template defining a map between a type ID and a data type
-template<TypeID id> class PNITypeIDMap{
+template<TypeID id> class TypeIDMap{
 public:
 	typedef UInt8 Type;
 };
 
 //! \cond NO_API_DOC
 //------------------------------------------------------------------------------
-template<> class PNITypeIDMap<TypeID::UINT8>{
+template<> class TypeIDMap<TypeID::UINT8>{
 public:
 	typedef UInt8 Type;
 };
 
 //------------------------------------------------------------------------------
-template<> class PNITypeIDMap<TypeID::INT8>{
+template<> class TypeIDMap<TypeID::INT8>{
 public:
 	typedef Int8 Type;
 };
 
 //------------------------------------------------------------------------------
-template<> class PNITypeIDMap<TypeID::UINT16>{
+template<> class TypeIDMap<TypeID::UINT16>{
 public:
 	typedef UInt16 Type;
 };
 
 //------------------------------------------------------------------------------
-template<> class PNITypeIDMap<TypeID::INT16>{
+template<> class TypeIDMap<TypeID::INT16>{
 public:
 	typedef Int16 Type;
 };
 
 //------------------------------------------------------------------------------
-template<> class PNITypeIDMap<TypeID::INT32>{
+template<> class TypeIDMap<TypeID::INT32>{
 public:
 	typedef Int32 Type;
 };
 
 //------------------------------------------------------------------------------
-template<> class PNITypeIDMap<TypeID::UINT32>{
+template<> class TypeIDMap<TypeID::UINT32>{
 public:
 	typedef UInt32 Type;
 };
 
 //------------------------------------------------------------------------------
-template<> class PNITypeIDMap<TypeID::INT64>{
+template<> class TypeIDMap<TypeID::INT64>{
 public:
 	typedef Int64 Type;
 };
 
 //------------------------------------------------------------------------------
-template<> class PNITypeIDMap<TypeID::UINT64>{
+template<> class TypeIDMap<TypeID::UINT64>{
 public:
 	typedef UInt64 Type;
 };
 
 //------------------------------------------------------------------------------
-template<> class PNITypeIDMap<TypeID::FLOAT32>{
+template<> class TypeIDMap<TypeID::FLOAT32>{
 public:
 	typedef Float32 Type;
 };
 
 //------------------------------------------------------------------------------
-template<> class PNITypeIDMap<TypeID::FLOAT64>{
+template<> class TypeIDMap<TypeID::FLOAT64>{
 public:
 	typedef Float64 Type;
 };
 
 //------------------------------------------------------------------------------
-template<> class PNITypeIDMap<TypeID::FLOAT128>{
+template<> class TypeIDMap<TypeID::FLOAT128>{
 public:
 	typedef Float128 Type;
 };
 
 //------------------------------------------------------------------------------
-template<> class PNITypeIDMap<TypeID::COMPLEX32>{
+template<> class TypeIDMap<TypeID::COMPLEX32>{
 public:
 	typedef Complex32 Type;
 };
 
 //------------------------------------------------------------------------------
-template<> class PNITypeIDMap<TypeID::COMPLEX64>{
+template<> class TypeIDMap<TypeID::COMPLEX64>{
 public:
 	typedef Complex64 Type;
 };
 
 //------------------------------------------------------------------------------
-template<> class PNITypeIDMap<TypeID::COMPLEX128>{
+template<> class TypeIDMap<TypeID::COMPLEX128>{
 public:
 	typedef Complex128 Type;
 };
 
 //------------------------------------------------------------------------------
-template<> class PNITypeIDMap<TypeID::BINARY>{
+template<> class TypeIDMap<TypeID::BINARY>{
 public:
 	typedef Binary Type;
 };
