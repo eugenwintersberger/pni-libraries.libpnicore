@@ -26,9 +26,9 @@ elif os.name == "posix":
 	var.Add(PathVariable("BOOSTPREFIX","set the installation prefix for boost",
                          "/usr"))
 	
-var.Add("VERSION","library version","0.1.0")
+var.Add("VERSION","library version","0.0.0")
 var.Add("LIBNAME","library name","pniutils")
-var.Add("SOVERSION","SOVersion of the library (binary interface version)","1")
+var.Add("SOVERSION","SOVersion of the library (binary interface version)","0")
 var.Add("CXX","set the compiler to use","g++")
 var.Add("MAINTAINER","package maintainer for the project","Eugen Wintersberger")
 var.Add("MAINTAINER_MAIL","e-mail of the package maintainer","eugen.wintersberger@desy.de")
