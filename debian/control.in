@@ -1,0 +1,31 @@
+Source: @SOURCE@
+Priority: extra
+Maintainer: @MAINTAINER@ <@MAINTAINER_MAIL@>
+Build-Depends: debhelper (>= 7.0.50~)
+Standards-Version: 3.9.1
+Section: libs
+Homepage: http://www.eugen-wintersberger.desy.de/pniutils
+
+Package: @PKGNAME@-dev
+Section: libdevel
+Architecture: any
+Depends: @PKGNAME@ (= ${binary:Version})
+Description: PNI utilities library - developer package
+ Provides header files and static libraries necessary to write code
+ using the PNI utilities library.
+
+Package: @PKGNAME@
+Section: libs
+Architecture: any
+Depends: @PKGNAME@ (=${binary:Version}),${shlibs:Depends}, ${misc:Depends}
+Description: PNI utilities library
+ Utility library of the PNI software pool. This library provides useful
+ objects for programmers which should write code for PNI facilities.
+ It is the basement of a couple of tools and libraries provided by DESY.
+
+Package: @PKGNAME@-doc
+Section: doc
+Architecture: any
+Depends:
+Description: PNI utilities library - documentation
+ Documentation for the PNI utilities library.

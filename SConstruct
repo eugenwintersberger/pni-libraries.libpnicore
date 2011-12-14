@@ -16,7 +16,7 @@ if os.name == "nt":
                          PathVariable.PathAccept))
 elif os.name=="posix":
 	var.Add(PathVariable("PREFIX","set installation prefix",
-                         "/usr/local"))
+                         "/usr"))
 
 if os.name == "nt":
 	var.Add(PathVariable("BOOSTPREFIX",
@@ -40,6 +40,7 @@ var.Add("LIBFULLNAME","full name of the library binary","")
 var.Add("INCINSTPATH","installation path for header files","")
 var.Add("LIBINSTPATH","library installation path","")
 var.Add("PKGNAMEROOT","root package name (actually only used for Debian packages)","")
+var.Add("PKGNAME","name of the package for installation","")
 
 #need now to create the proper library suffix
 
@@ -71,6 +72,7 @@ if env["DOCDIR"] == "":
 
 if env["PKGNAMEROOT"] == "":
     env.Append(PKGNAMEROOT = env["LIBPREFIX"]+env["LIBNAME"]+env["SOVERSION"])
+    env.Append(PKGNAME = env["LIBPREFIX"]+env["LIBNAME"]+env["SOVERSION"])
 
 
 #Acquire some information about the compiler used
