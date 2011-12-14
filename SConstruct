@@ -87,8 +87,53 @@ cxx_version = int(major+minor+release)
 env.Replace(CXX = env["CXX"])
 
 #set some flags depending on the compiler versions
-if cxx_version==440:
-    env.Append(CXXFLAGS=["-DCXX_ENUMCLASS_FIX"])
+if cxx_version <= 460:    
+    env.Append(CXXFLAGS=["-Dnullptr=NULL"])
+    
+#-------------------------------------------------------------------------------
+#start with configuration
+conf = Configure(env)
+if not conf.CheckCXXHeader("boost/numeric/conversion/cast.hpp"):
+	print "BOOST header file cast.hpp does not exist!"
+	Exit(1)
+	
+if not conf.CheckCXXHeader("boost/shared_ptr.hpp"):
+	print "BOOST header shared_ptr.hpp does not exist!"
+	Exit(1)
+	
+if not conf.CheckCXXHeader("boost/static_assert.hpp"):
+	print "BOOST header static_assert.hpp does not exist!"
+	Exit(1)
+	
+if not conf.CheckCXXHeader("cppunit/TestFixture.h"):
+	print "CPPUNIT header TestFixture.h does not exist!"
+	Exit(1)
+	
+if not conf.CheckCXXHeader("cppunit/TestRunner.h"):
+	print "CPPUNIT header TestRunner.h does not exist!"
+	Exit(1)
+	
+if not conf.CheckCXXHeader("cppunit/extensions/HelperMacros.h"):
+	print "CPPUNIT header HelperMacros.h does not exist!"
+	Exit(1)
+	
+if not conf.CheckCXXHeader("cppunit/TestCaller.h"):
+	print "CPPUNIT header TestCaller.h does not exist!"
+	Exit(1)
+	
+if not conf.CheckCXXHeader("cppunit/TestResult.h"):
+	print "CPPUNIT header TestResult.h does not exist!"
+	Exit(1)
+	
+if not conf.CheckCXXHeader("cppunit/TextTestProgressListener.h"):
+	print "CPPUNIT header TextTestProgressListener.h does not exist!"
+	Exit(1)
+	
+if not conf.CheckCXXHeader("cppunit/ui/text/TextTestRunner.h"):
+	print "CPPUNIT header TextTestRunner.h does not exist!"
+	Exit(1)
+	
+env = conf.Finish()
 
 #set default compiler flags
 env.Append(CXXFLAGS = ["-Wall","-std=c++0x"])
