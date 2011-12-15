@@ -2,8 +2,9 @@
 import os.path as path
 import platform
 import os
-import subprocess
-import platform
+
+from smod import ProgramVersion
+from smod import GCCVersionParser
 
 
 debug = ARGUMENTS.get("DEBUG",0)
@@ -45,7 +46,8 @@ var.Add("PKGNAME","name of the package for installation","")
 #need now to create the proper library suffix
 
 #create the build environment
-env = Environment(variables=var,ENV={'PATH':os.environ['PATH']},tools=['default','packaging','textfile'])
+env = Environment(variables=var,ENV={'PATH':os.environ['PATH']},
+				  tools=['default','packaging','textfile'])
 
 #create library names
 if os.name == "posix":
@@ -75,24 +77,28 @@ if env["PKGNAMEROOT"] == "":
     env.Append(PKGNAME = env["LIBPREFIX"]+env["LIBNAME"]+env["SOVERSION"])
 
 
-#Acquire some information about the compiler used
-cxx_version = subprocess.Popen([env['CXX'], "-dumpversion"], 
-                               stdout=subprocess.PIPE).communicate()[0]
-(major,minor,release) = cxx_version.split(".")
-cxx_version = int(major+minor+release)
-    
+
+
+#set default compiler flags
+env.Append(CXXFLAGS = ["-Wall","-std=c++0x"])
+env.Append(LIBPATH=path.join(env["BOOSTPREFIX"],"lib"))
+env.Append(CPPPATH=path.join(env["BOOSTPREFIX"],"include"))
 
 #set the proper compiler - this should be changed to something 
 #more general - independent of the underlying operating system
 env.Replace(CXX = env["CXX"])
 
+
+gcc_version = GCCVersionParser().parse(prog=env["CXX"])
 #set some flags depending on the compiler versions
-if cxx_version <= 460:    
+if gcc_version < ProgramVersion(4,6,0):    
     env.Append(CXXFLAGS=["-Dnullptr=NULL"])
     
 #-------------------------------------------------------------------------------
 #start with configuration
 conf = Configure(env)
+
+#check for header files
 if not conf.CheckCXXHeader("boost/numeric/conversion/cast.hpp"):
 	print "BOOST header file cast.hpp does not exist!"
 	Exit(1)
@@ -133,13 +139,25 @@ if not conf.CheckCXXHeader("cppunit/ui/text/TextTestRunner.h"):
 	print "CPPUNIT header TextTestRunner.h does not exist!"
 	Exit(1)
 	
+if not conf.CheckCHeader("plplot/plplot.h"):
+	print "PLPLOT header plplot.h does not exist!";
+	Exit(1)
+	
+if not conf.CheckCXXHeader("plplot/plstream.h"):
+	print "PLPLOT header plstream.h does not exist!";
+	Exit(1)
+	
+#check for libraries
+if not conf.CheckLib("plplotcxxd"):
+	print "PLPLOT C++ bindings are not installed!"
+	Exit(1)
+	
+if not conf.CheckLib("cppunit"):
+	print "CPPUNIT unit test libraray is not installed!"
+	Exit(1)
+	
+	
 env = conf.Finish()
-
-#set default compiler flags
-env.Append(CXXFLAGS = ["-Wall","-std=c++0x"])
-env.Append(LIBPATH=path.join(env["BOOSTPREFIX"],"lib"))
-env.Append(CPPPATH=path.join(env["BOOSTPREFIX"],"include"))
-print env["CPPPATH"]
 
 
 #create optimized environment
