@@ -5,6 +5,7 @@ import os
 
 from smod import ProgramVersion
 from smod import GCCVersionParser
+from smod import CheckProgram
 
 
 debug = ARGUMENTS.get("DEBUG",0)
@@ -94,9 +95,22 @@ gcc_version = GCCVersionParser().parse(prog=env["CXX"])
 if gcc_version < ProgramVersion(4,6,0):    
     env.Append(CXXFLAGS=["-Dnullptr=NULL"])
     
-#-------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------   
 #start with configuration
-conf = Configure(env)
+conf = Configure(env,custom_tests = {"CheckProgram":CheckProgram})
+
+#check available programs
+if not conf.CheckProgram("pdflatex -v"):
+	print "pdflatex not installed!"
+	Exit(1)
+	
+if not conf.CheckProgram("dot -V"):
+	print "graphviz not installed!"
+	Exit(1)
+	
+if not conf.CheckProgram("perl -v"):
+	print "perl not installed!"
+	Exit(1)
 
 #check for header files
 if not conf.CheckCXXHeader("boost/numeric/conversion/cast.hpp"):
