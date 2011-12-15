@@ -2,7 +2,8 @@ Import("test_build_env")
 
 test_env = test_build_env.Clone()
 
-test_env.Append(LIBPATH=["../src/"])
+#need to use here prepend in order to avoid triggering the istallation process
+test_env.Prepend(LIBPATH=["../src/"])
 test_env.Append(LIBS=["pniutils","cppunit","plplotcxxd"])
 test_env.Append(CPPPATH=["../src/"])
 

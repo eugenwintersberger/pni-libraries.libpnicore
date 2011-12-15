@@ -18,11 +18,9 @@ if doxygen_version > ProgramVersion(1,6,0):
     doxyfile_source.extend(["Doxyfile.extension.in"])
 
 doxyfile = build_env.Substfile(target="Doxyfile",source=doxyfile_source,
-            SUBST_DICT=doxygen_dict,
-            SUBSTFILESUFFIX="")
+                               SUBST_DICT=doxygen_dict,SUBSTFILESUFFIX="")
             
-doxygen_api_doc = build_env.Command(["api-doc/html"],
-                                    doxyfile,
+doxygen_api_doc = build_env.Command(["api-doc/html"],doxyfile,
                                     "cd doc; doxygen $SOURCE.file")
 
 Clean(doxygen_api_doc,"api-doc")
