@@ -17,8 +17,7 @@ if os.name == "nt":
                          "C:\\Program Files\\libpniutils",
                          PathVariable.PathAccept))
 elif os.name=="posix":
-	var.Add(PathVariable("PREFIX","set installation prefix",
-                         "/usr"))
+	var.Add(PathVariable("PREFIX","set installation prefix","/usr"))
 
 if os.name == "nt":
 	var.Add(PathVariable("BOOSTPREFIX",
@@ -194,7 +193,7 @@ python_build_env = build_env.Clone()
 #the next line is necessary for the linker on Debian system - this needs 
 #a bit more information
 if os.name == "posix":
-	build_env.Append(LINKFLAGS=["-Wl,-h$LIBSONAME"]) #+env["LIBPREFIX"]+env["LIBNAME"]+env["SHLIBSUFFIX"]+"."+env["SOVERSION"]])
+	build_env.Append(LINKFLAGS=["-Wl,-h$LIBSONAME"]) 
 
 Export("build_env")
 Export("test_build_env")
