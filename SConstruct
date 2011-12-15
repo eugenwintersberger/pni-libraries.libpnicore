@@ -193,3 +193,5 @@ SConscript(["test/SConscript","debian/SConscript"])
 SConscript(["doc/SConscript"])
 #SConscript(["python/SConscript"])
 
+#set the default target
+

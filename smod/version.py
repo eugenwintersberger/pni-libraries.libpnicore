@@ -52,7 +52,7 @@ class ProgramVersion:
     
     def __gt__(self,other):
         if self.major > other.major: return True
-        if self.mainor > other.minor: return True
+        if self.minor > other.minor: return True
         if self.release > other.release: return True
         
         return False
@@ -131,10 +131,24 @@ class GCCVersionParser(VersionParser):
     
 class DoxyVersionParser(VersionParser):
     def __init__(self): 
-        pass
+        VersionParser.__init__(self,"doxygen","")
     
     def parse(self,prog=None,opts=None):
         vstr = VersionParser.parse(self,prog,opts)
+        version_line = vstr.split("\n")[0]
+        version_str = version_line.split(" ")[-1]
+        version_list = version_str.split(".")
+        
+        major = 0
+        minor = 0
+        release = 0
+        
+        for i in range(len(version_list)):
+            if i==0: major = int(version_list[i])
+            if i==1: minor = int(version_list[i])
+            if i==2: release = int(version_list[i])
+            
+        return ProgramVersion(major,minor,release)
         
     
     

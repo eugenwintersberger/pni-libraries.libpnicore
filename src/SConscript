@@ -58,9 +58,7 @@ shared_library_link_install = build_env.Command(inst_path+"/${LIBLINKNAME}",shar
                   "cd ${SOURCE.dir}; ln -sf ${SOURCE.file} ${TARGET.file}")
                   
 shared_library_so_install = build_env.Command(inst_path+"/${LIBSONAME}",shared_library_install,
-                  "cd ${SOURCE.dir}; ln -sf ${SOURCE.file} ${TARGET.file}")
-print shared_library_so_install
-print shared_library_install[0]                  
+                  "cd ${SOURCE.dir}; ln -sf ${SOURCE.file} ${TARGET.file}")                
 
 #install the package-config file
 pkgc_inst = build_env.Install("${LIBINSTPATH}/pkgconfig",[pkg_config_file])
