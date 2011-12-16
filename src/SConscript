@@ -41,10 +41,10 @@ pkg_config_file = build_env.Substfile(target="${LIBNAME}",source=["pkgconf.in"],
 #-------------------adding everyting to the "all" and "library" target----------
 build_env.Alias("all",[temp_shared_library,
                        shared_library,shared_library_link,shared_library_so,
-                       static_library,pkg_config_file])
+                       static_library])
 build_env.Alias("library",[temp_shared_library,
                            shared_library,shared_library_link,shared_library_so,
-                           static_library,pkg_config_file])
+                           static_library])
 
 #---------------------installation----------------------------------------------
 
