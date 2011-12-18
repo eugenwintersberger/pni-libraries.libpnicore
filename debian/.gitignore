@@ -17,3 +17,7 @@
 /libpniutils0-doc.substvars
 /files
 /changelog
+/*.substvars
+/*.debhelper
+/*.dirs
+/*.install

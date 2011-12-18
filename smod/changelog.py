@@ -1,23 +1,55 @@
-#!/usr/bin/env python
-
 import git
 import time
-
-repo = git.Repo(".")
 
 class DebChangelogFile(object):
     def __init__(self,reppath,ptag):
         self.repo = git.Repo(reppath)
         self.head = self.__get_head()
         self.tag = self.__get_ptag(ptag)
-        self.pkg_version = ""
-        self.pkg_name = ""
-        self.pkg_dist = ""
-        self.pkg_ulevel = ""
-        self.entry_header = ""
+        self.__pkg_version = ""
+        self.__pkg_name = ""
+        self.__pkg_dist = ""
+        self.__pkg_ulevel = ""
+        self.__entry_header = ""
 
         self.eh_format = "%s (%s) %s; urgency=%s\n"
         self.eh = ""
+
+    def __get_pkg_version(self):
+        return self.__pkg_version
+
+    def __set_pkg_version(self,version):
+        self.__pkg_version = version
+        self.__eh_update()
+
+    version = property(__get_pkg_version,__set_pkg_version)
+
+    def __get_pkg_name(self):
+        return self.__pkg_name
+
+    def __set_pkg_name(self,name):
+        self.__pkg_name = name
+        self.__eh_update()
+
+    pkg_name = property(__get_pkg_name,__set_pkg_name)
+
+    def __get_pkg_dist(self):
+        return self.__pkg_dist
+
+    def __set_pkg_dist(self,dist):
+        self.__pkg_dist = dist
+        self.__eh_update()
+
+    distribution = property(__get_pkg_dist,__set_pkg_dist)
+
+    def __get_pkg_ulevel(self):
+        return self.__pkg_ulevel
+
+    def __set_pkg_ulevel(self,level):
+        self.__pkg_ulevel = level
+        self.__eh_update()
+
+    urgency = property(__get_pkg_ulevel,__set_pkg_ulevel)
 
 
     def __get_head(self):
@@ -41,7 +73,7 @@ class DebChangelogFile(object):
         Returns the tag of the previous release.
         """
         #get the last tagged version
-        for t in repo.tags:
+        for t in self.repo.tags:
             if t.name == tname:
                 tag = t
                 break
@@ -49,9 +81,7 @@ class DebChangelogFile(object):
         return tag
 
     def __eh_update(self):
-        ostr = self.eh_format %(self.pkg_name,self.pkg_version,self.pkg_dist,self.pkg_ulevel)
-
-        return ostr
+        self.__entry_header = self.eh_format %(self.pkg_name,self.version,self.distribution,self.urgency)
 
     def ce_footer(self,name,mail,date):
         date_format = "%a, %d %b %Y %H:%M:%S"
@@ -63,7 +93,7 @@ class DebChangelogFile(object):
         tz_offmin = tz_offset%60
         tz_offh = (tz_offset-tz_offmin)/60
 
-        ostr = "-- %s <%s>  %s %s%02i%02i\n" %(name,mail,date_str,tz_sign,tz_offh,tz_offmin)
+        ostr = " -- %s <%s>  %s %s%02i%02i\n" %(name,mail,date_str,tz_sign,tz_offh,tz_offmin)
         return ostr
 
     def ce_text(self,text):
@@ -79,23 +109,27 @@ class DebChangelogFile(object):
         """
 
         #iterate over all commits since the last version
-        citer = repo.commits_between(self.tag.commit.id,self.head.commit.id)
+        citer = self.repo.commits_between(self.tag.commit.id,self.head.commit.id)
         lc = []
         for c in citer:
             lc.append(c)
 
         lc.reverse()
+            
+        
+        lfile = open(clname,"w")
 
         for c in lc:
             text = c.message
             author = c.author.name
             email = c.author.email
             date = c.committed_date
-            text = ce_text(text)
-            footer = ce_footer(author,email,date)
-            print ce_head("libpniutils","0.1.0","unstable","low")
-            print text
-            print footer
-
+            text = self.ce_text(text)
+            footer = self.ce_footer(author,email,date)
+            lfile.write(self.__entry_header+"\n")
+            lfile.write(text+"\n")
+            lfile.write(footer+"\n")
+    
+        lfile.close()
     
 
