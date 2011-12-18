@@ -1,5 +1,6 @@
 Import("build_env")
 
+from smod import DebChangelogFile
 
 debian_dict = {"@SOURCE@":"$LIBPREFIX$LIBNAME","@MAINTAINER@":"$MAINTAINER",
                "@MAINTAINER_MAIL@":"$MAINTAINER_MAIL",
@@ -12,13 +13,14 @@ debian_dict = {"@SOURCE@":"$LIBPREFIX$LIBNAME","@MAINTAINER@":"$MAINTAINER",
 control_file = build_env.Substfile(["control.in"],SUBST_DICT=debian_dict)
 build_env.NoClean(control_file)
 
-changelog_source = [ "libpniutils (${VERSION}) unstable; urgency=low",
-                     "",
-                     "  * Initial Release.",
-                     " -- ${MAINTAINER} <${MAINTAINER_MAIL}>  Tue, 24 May 2011 11:15:08 +0200",
-                     ""]
-changelog_file = build_env.Textfile(target="changelog",source=changelog_source,
-                                    TEXTFILESUFFIX="")                                  
+
+changelog = DebChangelogFile("../","v0.0.1")
+changelog.version=build_env["VERSION"]
+changelog.pkg_name = build_env["PKGNAME"]
+changelog.urgency = "low"
+changelog.distribution = "testing"
+changelog.create("changelog.in")
+changelog_file = build_env.Substfile(["changelog.in"])                                  
 build_env.NoClean(changelog_file)
 
 rules_file = build_env.Substfile(["rules.in"])

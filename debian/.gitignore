@@ -21,3 +21,5 @@
 /*.debhelper
 /*.dirs
 /*.install
+/changelog.in
+
