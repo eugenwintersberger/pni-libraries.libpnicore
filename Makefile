@@ -6,6 +6,7 @@ clean:
 	$(SCONS) -c
 
 all:
+	$(SCONS) debian
 	$(SCONS) all
 
 install:
