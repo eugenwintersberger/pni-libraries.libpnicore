@@ -40,15 +40,63 @@
 namespace pni{
 namespace utils{
 
+//! \defgroup Exceptions
+//! Libpniutils provides a set of standard exceptions that can be used throughout
+//! your C++ code. All exceptions derive from a base class Exception
+//! which by itself is a child  of std::exception. Each exception has a name,
+//! an issuer and a description which can be evaluated by the instance that
+//! catches the exception. The issuer is the signature of the method or
+//! function that throws the exception.
+//! To simplify the setup of the exception system use the
+//! EXCEPTION_SETUP() macro at the very beginning of a method or function to
+//! initialize some local variables which will be used for exception handling.
+//! In case of an error the macros EXCEPTION_INIT() and EXCEPTION_THROW()
+//! can be used to initialize and throw a particular exception.
+//!
+//! To explain this in more detail lets have a look in the following example:
+//! \code
+//! int myfunction(double x,double y){
+//!     EXCEPTION_SETUP("int myfunction(double x,double y)");
+//!
+//!     ..... code omitted ....
+//!
+//!     if(x<0){
+//!         EXCEPTION_INIT(RangeError,"X must not be smaller than 0!");
+//!         EXCEPTION_THROW();
+//!     }
+//!
+//!     ..... code omitted ....
+//!
+//! }
+//! \endcode
+//! Right after the definition of the function the macro EXCEPTION_SETUP() is
+//! called where the signature of the function is passed as its only argument.
+//! This signature will be later used as the issuer for all exceptions thrown
+//! within this function.
+//! Later when an error occurs EXCEPTION_INIT() is used to initialize an
+//! exception of a particular type along with a description of the error.
+//! In the example above RangeError exception is thrown.
+//! Finally use EXCEPTION_THROW() to throw the exception.
+
 //================Macros related to exceptions==================================
 
-//Macro for setting up exceptions at the very begin of a function or method
+//! \ingroup Exceptions
+//! \brief exception setup macro
+
+//! This macro is used to set to local variables within a method or function
+//! which will be used for exception management.
+//! \param issuer signature of the exception issuer
 #define EXCEPTION_SETUP(issuer) \
 	static String __ExIssuer = (issuer);\
 	String __ExDescription
 
-//Macro called directly before an exception is called it sets up the
-//exception which will be thrown
+//! \ingroup Exceptions
+//! \brief initialize an exception
+
+//! Initializes a particular exception of type extype along with a description
+//! exdesc.
+//! \param extype exception type
+//! \param exdesc string with the description of the exception
 #define EXCEPTION_INIT(extype,exdesc)\
 	extype __error;\
 	__ExDescription = (exdesc);\
@@ -56,7 +104,11 @@ namespace utils{
 	__error.description(__ExDescription);
 
 
-//Throw an exception
+//! \ingroup Exceptions
+//! \brief throw an exception
+
+//! After previous usage of EXCEPTION_SETUP and EXCEPTION_INIT this macro
+//! throws the last initialized exception.
 #define EXCEPTION_THROW()\
 	std::cerr<<__error<<std::endl;\
 	std::cerr<<"in line: "<<__LINE__<<" of file "<<__FILE__<<std::endl<<std::endl;\
@@ -64,12 +116,6 @@ namespace utils{
 
 
 //========================Exception classes=====================================
-
-//! \defgroup Exceptions
-//! Libpniutils provides a set of standard exceptions that can be used throughout
-//! your C++ code. All exceptions derive from a base class Exception
-//! which by itself is a child  of std::exception
-
 //! \ingroup Exceptions
 //! \brief Exceptions base class
 
