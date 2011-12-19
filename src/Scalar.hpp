@@ -40,8 +40,6 @@
 #include "TypeInfo.hpp"
 #include "Exceptions.hpp"
 #include "ResultTypeTrait.hpp"
-#include "TypeCompat.hpp"
-#include "TypeRange.hpp"
 #include "TypeIDMap.hpp"
 #include "ComplexUtils.hpp"
 #include "type_conversion.hpp"
