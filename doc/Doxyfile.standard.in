@@ -62,7 +62,7 @@ WARN_NO_PARAMDOC       = NO
 #---------------------------------------------------------------------------
 # configuration options related to the input files
 #---------------------------------------------------------------------------
-INPUT                  = ../src/
+INPUT                  = ../src/ mainpage
 RECURSIVE              = YES
 EXCLUDE_SYMLINKS       = NO
 EXAMPLE_PATH           =

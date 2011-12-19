@@ -43,10 +43,14 @@
 namespace pni{
 namespace utils{
 
-//! Shape object
+//! \ingroup util_classes
+//! \brief Shape object
 
-//! ArrayShape objects describe the shape of an array. In particular
-//! they are important to access array data stored in a linear,
+//! The Shape class describes the shape of a multidimensional array.
+//! Such an array has a rank \f$r\f$ (the number of dimensions) and a particular
+//! number of elements along each dimension.
+//! In general such an array is stored linearly in memory.
+//! In particular they are important to access array data stored in a linear,
 //! contiguous stream of data. In all cases we assume C-ordering.
 //! This means that the last index in the array varies fastest.
 //! Each array is stored as a linear sequence of data values. To
@@ -72,8 +76,8 @@ namespace utils{
 class Shape{
     private:
         Buffer<size_t> _dimstrides;  //!< the strides for the offset calculation
-        Buffer<size_t> _shape;       //!< the number of values along each dimension
-        size_t _size;         //!< the total number of elements in the array
+        Buffer<size_t> _shape;    //!< the number of values along each dimension
+        size_t _size;             //!< the total number of elements in the array
         
         //! compute dimension strides
 
