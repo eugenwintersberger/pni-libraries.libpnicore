@@ -204,7 +204,7 @@ Export("python_build_env")
 SConscript(["src/SConscript"])
 SConscript(["test/SConscript","debian/SConscript"])
 SConscript(["doc/SConscript"])
-#SConscript(["python/SConscript"])
+SConscript(["python/SConscript"])
 
 #set the default target
 Default("all")

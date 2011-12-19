@@ -2,13 +2,17 @@ from distutils import sysconfig
 Import("python_build_env")
 
 
-python_build_env.Append(LIBS=["pniutils"])
-python_build_env.Append(LIBPATH=["../src"])
+python_build_env.Prepend(LIBS=["pniutils"])
+python_build_env.Prepend(LIBPATH=["../src"])
 
-python_build_env.Append(LIBS=["boost_python","boost_python-py27"])
+python_version = sysconfig.get_python_version()
+python_version = python_version.replace(".","")
+
+python_build_env.Append(LIBS=["boost_python","boost_python-py"+python_version])
 python_build_env.Append(CPPPATH=[sysconfig.get_python_inc()])
 
 python_sources = ["pniutils.cpp"]
 
 module = python_build_env.SharedLibrary("pniutils",python_sources,SHLIBPREFIX="")
-python_build_env.Alias("all",[module])
+python_build_env.Alias("python",[module])
+
