@@ -31,6 +31,8 @@
 #include "Exceptions.hpp"
 #include "service.hpp"
 
+#include <boost/static_assert.hpp>
+
 
 namespace pni{
 namespace utils{
@@ -84,6 +86,7 @@ NumericObject &NumericObject::operator=(const NumericObject &o){
 	return *this;
 }
 
+//------------------------------------------------------------------------------
 NumericObject &NumericObject::operator=(NumericObject &&o){
 	if(this != &o){
 		(DataObject &)(*this) = std::move((DataObject &)o);
@@ -93,23 +96,21 @@ NumericObject &NumericObject::operator=(NumericObject &&o){
 	return *this;
 }
 //================Implementation of inquiry methods============================
-
-
 String NumericObject::unit() const {
 	return _unit;
 }
 
-
+//------------------------------------------------------------------------------
 void NumericObject::unit(const String &u){
 	_unit = u;
 }
 
-
+//------------------------------------------------------------------------------
 TypeID NumericObject::type_id() const {
 	return TypeID::NONE;
 }
 
-
+//------------------------------------------------------------------------------
 void *NumericObject::void_ptr(){
 	EXCEPTION_SETUP("void *NumericObject::void_ptr()");
 
@@ -117,9 +118,9 @@ void *NumericObject::void_ptr(){
 	EXCEPTION_THROW();
 
 	return nullptr;
-
 }
 
+//------------------------------------------------------------------------------
 const void *NumericObject::void_ptr() const {
 	EXCEPTION_SETUP("const void *NumericObject::void_ptr() const");
 
@@ -127,7 +128,6 @@ const void *NumericObject::void_ptr() const {
 	EXCEPTION_THROW();
 
 	return nullptr;
-
 }
 
 //end of namespace

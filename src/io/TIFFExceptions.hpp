@@ -49,7 +49,7 @@ public:
 	//! \param d description of the error
 	TIFFReadError(const String &i,const String &d):Exception("TIFFReadError",i,d){}
 	//! destructor
-	virtual ~TIFFReadError(){}
+	virtual ~TIFFReadError() throw() {}
 
 	//! output operator
 	friend std::ostream &operator<<(std::ostream &o,const TIFFReadError &e);

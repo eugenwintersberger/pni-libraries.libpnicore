@@ -32,8 +32,9 @@
 
 #include<iostream>
 #include<string>
+#include<exception>
 
-#include "Exceptions.hpp"
+//#include "Exceptions.hpp"
 #include "Types.hpp"
 
 namespace pni{
@@ -65,7 +66,9 @@ namespace utils{
 //========================Exception classes=====================================
 
 //! \defgroup Exceptions
-//! Exception object used throughout the library for Error handling.
+//! Libpniutils provides a set of standard exceptions that can be used throughout
+//! your C++ code. All exceptions derive from a base class Exception
+//! which by itself is a child  of std::exception
 
 //! \ingroup Exceptions
 //! \brief Exceptions base class
@@ -74,7 +77,7 @@ namespace utils{
 //! to take either const char * values or const std::string references as
 //! valid input arguments. This should provide maximum flexibility in exception
 //! creation.
-class Exception{
+class Exception:public std::exception{
 private:
 	String _name; //!< name of the exception
 	String _issuer; //!< issuer of the exception
@@ -83,7 +86,7 @@ protected:
 	std::ostream &print(std::ostream &) const;
 public:
 	//! default constructor
-	Exception() {
+	Exception():std::exception() {
 	}
 	//! constructor with name as string
 
@@ -101,7 +104,7 @@ public:
 	//! \param d description of the exception
 	Exception(const String &n, const String &w, const String &d);
 	//! virtual destructor
-	virtual ~Exception() {
+	virtual ~Exception() throw() {
 	}
 
 	//! set the exception name
@@ -153,8 +156,8 @@ public:
 //! \ingroup Exceptions
 //! \brief memory allocation error
 
-//! This exception is typically raised if memory allocation fails. In other
-//! words if a call of the new operator returns NULL.
+//! This exception is typically raised when allocation of memory on the heap
+//! fails. In other words when a call to new leads to a nullptr.
 class MemoryAllocationError: public Exception {
 public:
 	//! default constructor
@@ -169,9 +172,10 @@ public:
 		Exception("MemoryAllocationError", i, d) {
 	}
 	//! destructor
-	virtual ~MemoryAllocationError() {
+	virtual ~MemoryAllocationError() throw() {
 	}
 
+	//! output operator
 	friend std::ostream &operator<<(std::ostream &o,const MemoryAllocationError &e);
 };
 
@@ -179,8 +183,7 @@ public:
 //! \ingroup Exceptions
 //! \brief Shape mismatch error
 
-//! This exception is usually raised in cases where array operations require
-//! shape matching of the involved arrays but their shapes are different.
+//! Raised in cases where the Shape objects of two objects are not equal.
 class ShapeMissmatchError: public Exception {
 public:
 	//! default constructor
@@ -196,7 +199,7 @@ public:
 	}
 
 	//! destructor
-	virtual ~ShapeMissmatchError() {
+	virtual ~ShapeMissmatchError() throw() {
 	}
 
 	friend std::ostream &operator<<(std::ostream &o,const ShapeMissmatchError &e);
@@ -207,9 +210,7 @@ public:
 //! \brief Size missmatch error
 
 //! This exception will be raised in cases where buffer sizes do not meet the
-//! requirements. A typical situation would be that a buffer is passed to an
-//! Array object whose size does not match the size given by the ArrayShape
-//! object of the Array.
+//! requirements.
 class SizeMissmatchError: public Exception {
 public:
 	//! default constructor
@@ -225,9 +226,10 @@ public:
 	}
 
 	//! destructor
-	virtual ~SizeMissmatchError() {
+	virtual ~SizeMissmatchError() throw() {
 	}
 
+	//! output operator
 	friend std::ostream &operator<<(std::ostream &o,const SizeMissmatchError &e);
 };
 
@@ -235,9 +237,8 @@ public:
 //! \ingroup Exceptions
 //! \brief index error
 
-//! Raised typically in cases where the [] operator is used to access a data
-//! element but the provided index goes beyond the address space of the buffer
-//! or array.
+//! Raised if the index passed to a [] operator exceeds the size of the
+//! container it belongs to.
 class IndexError: public Exception {
 public:
 	//! default constructor
@@ -252,17 +253,18 @@ public:
 		Exception("IndexError", i, d) {
 	}
 	//! destructor
-	virtual ~IndexError() {
+	virtual ~IndexError() throw() {
 	}
 
+	//! output operator
 	friend std::ostream &operator<<(std::ostream &o,const IndexError &e);
 };
 
 //------------------------------------------------------------------------------
 //! \ingroup Exceptions
-//! \brief key exception
+//! \brief key error
 
-//! Raised in cases where a problem with the key of a hash map.
+//! Raised in cases where a problem with the key of a hash map occurs.
 class KeyError: public Exception{
 public:
 	//! default constructor
@@ -273,7 +275,7 @@ public:
 	//! \param d description of the error
 	KeyError(const String &i,const String &d):Exception("KeyError",i,d){}
 	//! destructor
-	virtual ~KeyError(){}
+	virtual ~KeyError() throw() {}
 
 	//! output operator
 	friend std::ostream &operator<<(std::ostream &o,const KeyError &e);
@@ -281,9 +283,9 @@ public:
 
 //------------------------------------------------------------------------------
 //! \ingroup Exceptions
-//! \brief indicates file IO problems
+//! \brief file IO fails
 
-//! Raised typically in case of File IO problems
+//! Raised typically in cases of problems with files.
 class FileError: public Exception {
 public:
 	//! default constructor
@@ -299,7 +301,7 @@ public:
 	}
 
 	//! destructor
-	virtual ~FileError() {
+	virtual ~FileError() throw() {
 	}
 
 	//! output operator
@@ -309,9 +311,9 @@ public:
 
 //------------------------------------------------------------------------------
 //! \ingroup Exceptions
-//! \brief data type errors
+//! \brief data type error
 
-//! This exception is raised in cases of data type errors.
+//! This exception is raised in cases of errors concerning data types.
 class TypeError: public Exception {
 public:
 	//! default constructor
@@ -327,7 +329,7 @@ public:
 		Exception("TypeError", i, d) {
 	}
 	//! destructor
-	virtual ~TypeError() {
+	virtual ~TypeError() throw() {
 	}
 
 	//! output operator
@@ -357,7 +359,7 @@ public:
 	}
 
 	//! destructor
-	virtual ~RangeError(){
+	virtual ~RangeError() throw() {
 	}
 
 	//! output operator
@@ -369,7 +371,7 @@ public:
 //! \brief not implemented exception
 
 //! This exception can be used to mark methods of abstract or base classes
-//! as not implemented. Such an approach can be quite usefull for debugging
+//! as not implemented. Such an approach can be quite useful for debugging
 //! and development.
 class NotImplementedError:public Exception{
 public:
@@ -388,7 +390,7 @@ public:
 	}
 
 	//! destructor
-	virtual ~NotImplementedError(){
+	virtual ~NotImplementedError() throw() {
 	}
 
 	//! output operator
@@ -417,7 +419,7 @@ public:
 	}
 
 	//! destructor
-	virtual ~MemoryAccessError(){
+	virtual ~MemoryAccessError() throw() {
 	}
 
 	//! output operator
@@ -446,7 +448,7 @@ public:
 	}
 
 	//! destructor
-	virtual ~ProcessingError(){
+	virtual ~ProcessingError() throw() {
 	}
 
 	//! output operator
@@ -457,8 +459,8 @@ public:
 //! \ingroup Exceptions
 //! \brief error during assignment
 
-//! A very general exception thrown in case of any error during an assignment
-//! operation.
+//! A very general exception thrown in case of any error occurring during an
+//! assignment operation.
 class AssignmentError:public Exception{
 public:
 	//! default constructor
@@ -475,7 +477,7 @@ public:
 	}
 
 	//! destructor
-	virtual ~AssignmentError(){
+	virtual ~AssignmentError() throw() {
 
 	}
 
