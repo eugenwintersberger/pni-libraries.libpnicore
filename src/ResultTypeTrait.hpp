@@ -34,12 +34,22 @@
 namespace pni{
 namespace utils{
 
+//! \ingroup type_classes
+//! \brief arithmetic result type trait
 
+//! Template representing an arithmetic result type trait. Basically the
+//! result type of an arithmetic operation is determined from its argument
+//! argument types.
 template<typename A,typename B>
 class ResultTypeTrait{
 public:
 };
 
+//! \ingroup type_classes
+//! \brief single type trait macro
+
+//! This macro is used to specialize a result type trait for the case that
+//! the two arguments of the arithmetic operation are of equal type.
 #define ARITHMETICS_RESULT_TYPES_SINGLE(TA,ART,SRT,MRT,DRT)\
 	template<> class ResultTypeTrait<TA,TA>{\
 	public:\
@@ -49,7 +59,11 @@ public:
 	typedef DRT DivResultType;\
 };
 
+//! \ingroup type_classes
+//! \brief multiple type trait macro
 
+//! This macro can be used to specialize a result type trait for arithmetic
+//! operations where the operands are of different type.
 #define ARITHMETICS_RESULT_TYPES(TA,TB,ART,SRT,MRT,DRT)\
 	template<> class ResultTypeTrait<TA,TB>{ \
 	public: \

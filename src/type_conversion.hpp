@@ -40,6 +40,16 @@ using namespace boost::numeric;
 namespace pni{
 namespace utils{
 
+//! \ingroup type_classes
+//! \brief general conversion strategy template
+
+//! This template implements a generic type conversion between two types.
+//! The type conversion is done from type U to T. There are some special cases
+//! in the case where one or both of the types are complex. The core of the
+//! convert method is the boost::numeric_cast template function for type
+//! conversion.
+//! \sa class ConversionStrategy<T,U,true,false>
+//! \sa class ConversionStrategy<T,U,true,true>
 template<typename T, typename U,bool t_complex,bool u_complex>
 class ConversionStrategy{
 public:
@@ -63,6 +73,13 @@ public:
 	}
 };
 
+//! \ingroup type_classes
+//! \brief specialization of the type conversion template
+
+//! This is a specialization of ConversionStrategy template for the case
+//! that the target type T is complex. In this case the rhs object
+//! of the conversion operation (which is of type U) is converted to the
+//! base type of T and assigned to the real part of the complex value.
 template<typename T,typename U> class ConversionStrategy<T,U,true,false>{
 public:
 	static T convert(const U &u){
@@ -86,7 +103,11 @@ public:
 	}
 };
 
+//! \ingroup type_classes
+//! \brief specialization of the type conversion template
 
+//! A specialization of the ConversionStrategy template for the case that
+//! both types are complex. In this case the conversion is straight forwared.
 template<typename T,typename U> class ConversionStrategy<T,U,true,true>{
 public:
 	static T convert(const U &u){
@@ -112,7 +133,13 @@ public:
 	}
 };
 
+//! ingroup type_classes
+//! \brief type conversion function template
 
+//! This function template finally performs the type conversion. Several
+//! static asserts are performed which ensure the two cases of conversions
+//! will not even compile: conversion from a floating point number fo an
+//! integer value and conversion from a complex value to a non-complex type.
 template<typename T,typename U> T convert_type(const U &u){
 	EXCEPTION_SETUP("template<typename T,typename U> T convert_type(const U &u)");
 	//static assert of the source type is float and T is an integer type

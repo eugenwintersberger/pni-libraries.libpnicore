@@ -37,7 +37,7 @@
 namespace pni{
 namespace utils{
 
-//! \ingroup IO
+//! \ingroup io_classes
 //! typecodes to identify the type of an IFD entry
 enum IFDEntryTypeCode {IDFE_BYTE,       //!< ID of an unsigned 8Bit integer type
 	     	 	 	   IDFE_ASCII,      //!< ID of a string type (NUL terminated)
@@ -53,7 +53,7 @@ enum IFDEntryTypeCode {IDFE_BYTE,       //!< ID of an unsigned 8Bit integer type
                        IDFE_DOUBLE      //!< ID of a 64Bit IEEE float type
 					  };
 
-//! \ingroup IO
+//! \ingroup io_classes
 //! \brief abstract IFD entry
 
 //! The IFDAbstractEntry class describes the basic properties of an IFD entry.

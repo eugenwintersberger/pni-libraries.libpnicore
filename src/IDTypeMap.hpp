@@ -36,10 +36,13 @@
 namespace pni{
 namespace utils{
 
-//! template defining a mapping between type IDs and types.
+//! \ingroup type_classes
+//! \brief map from TypeID to type
+
+//! This template implements a map from a TypeID to a specific data type.
 template<TypeID id> class IDTypeMap{
 public:
-	typedef UInt8 Type;
+	typedef UInt8 Type; //!< type identified by the template parameter
 };
 
 //! \cond NO_API_DOC

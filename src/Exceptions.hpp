@@ -40,47 +40,9 @@
 namespace pni{
 namespace utils{
 
-//! \defgroup Exceptions
-//! Libpniutils provides a set of standard exceptions that can be used throughout
-//! your C++ code. All exceptions derive from a base class Exception
-//! which by itself is a child  of std::exception. Each exception has a name,
-//! an issuer and a description which can be evaluated by the instance that
-//! catches the exception. The issuer is the signature of the method or
-//! function that throws the exception.
-//! To simplify the setup of the exception system use the
-//! EXCEPTION_SETUP() macro at the very beginning of a method or function to
-//! initialize some local variables which will be used for exception handling.
-//! In case of an error the macros EXCEPTION_INIT() and EXCEPTION_THROW()
-//! can be used to initialize and throw a particular exception.
-//!
-//! To explain this in more detail lets have a look in the following example:
-//! \code
-//! int myfunction(double x,double y){
-//!     EXCEPTION_SETUP("int myfunction(double x,double y)");
-//!
-//!     ..... code omitted ....
-//!
-//!     if(x<0){
-//!         EXCEPTION_INIT(RangeError,"X must not be smaller than 0!");
-//!         EXCEPTION_THROW();
-//!     }
-//!
-//!     ..... code omitted ....
-//!
-//! }
-//! \endcode
-//! Right after the definition of the function the macro EXCEPTION_SETUP() is
-//! called where the signature of the function is passed as its only argument.
-//! This signature will be later used as the issuer for all exceptions thrown
-//! within this function.
-//! Later when an error occurs EXCEPTION_INIT() is used to initialize an
-//! exception of a particular type along with a description of the error.
-//! In the example above RangeError exception is thrown.
-//! Finally use EXCEPTION_THROW() to throw the exception.
-
 //================Macros related to exceptions==================================
 
-//! \ingroup Exceptions
+//! \ingroup error_classes
 //! \brief exception setup macro
 
 //! This macro is used to set to local variables within a method or function
@@ -90,7 +52,7 @@ namespace utils{
 	static String __ExIssuer = (issuer);\
 	String __ExDescription
 
-//! \ingroup Exceptions
+//! \ingroup error_classes
 //! \brief initialize an exception
 
 //! Initializes a particular exception of type extype along with a description
@@ -104,7 +66,7 @@ namespace utils{
 	__error.description(__ExDescription);
 
 
-//! \ingroup Exceptions
+//! \ingroup error_classes
 //! \brief throw an exception
 
 //! After previous usage of EXCEPTION_SETUP and EXCEPTION_INIT this macro
@@ -116,7 +78,7 @@ namespace utils{
 
 
 //========================Exception classes=====================================
-//! \ingroup Exceptions
+//! \ingroup error_classes
 //! \brief Exceptions base class
 
 //! The base class for all exceptions in the library. Constructors are design
@@ -199,7 +161,7 @@ public:
 
 
 //------------------------------------------------------------------------------
-//! \ingroup Exceptions
+//! \ingroup error_classes
 //! \brief memory allocation error
 
 //! This exception is typically raised when allocation of memory on the heap
@@ -226,7 +188,7 @@ public:
 };
 
 //------------------------------------------------------------------------------
-//! \ingroup Exceptions
+//! \ingroup error_classes
 //! \brief Shape mismatch error
 
 //! Raised in cases where the Shape objects of two objects are not equal.
@@ -252,7 +214,7 @@ public:
 };
 
 //------------------------------------------------------------------------------
-//! \ingroup Exceptions
+//! \ingroup error_classes
 //! \brief Size missmatch error
 
 //! This exception will be raised in cases where buffer sizes do not meet the
@@ -280,7 +242,7 @@ public:
 };
 
 //------------------------------------------------------------------------------
-//! \ingroup Exceptions
+//! \ingroup error_classes
 //! \brief index error
 
 //! Raised if the index passed to a [] operator exceeds the size of the
@@ -307,7 +269,7 @@ public:
 };
 
 //------------------------------------------------------------------------------
-//! \ingroup Exceptions
+//! \ingroup error_classes
 //! \brief key error
 
 //! Raised in cases where a problem with the key of a hash map occurs.
@@ -328,7 +290,7 @@ public:
 };
 
 //------------------------------------------------------------------------------
-//! \ingroup Exceptions
+//! \ingroup error_classes
 //! \brief file IO fails
 
 //! Raised typically in cases of problems with files.
@@ -356,7 +318,7 @@ public:
 };
 
 //------------------------------------------------------------------------------
-//! \ingroup Exceptions
+//! \ingroup error_classes
 //! \brief data type error
 
 //! This exception is raised in cases of errors concerning data types.
@@ -383,7 +345,7 @@ public:
 };
 
 //------------------------------------------------------------------------------
-//! \ingroup Exceptions
+//! \ingroup error_classes
 //! \brief data range error
 
 //! This exception is raised in cases where data values exceed the range
@@ -413,7 +375,7 @@ public:
 };
 
 //------------------------------------------------------------------------------
-//! \ingroup Exceptions
+//! \ingroup error_classes
 //! \brief not implemented exception
 
 //! This exception can be used to mark methods of abstract or base classes
@@ -444,7 +406,7 @@ public:
 };
 
 //------------------------------------------------------------------------------
-//! \ingroup Exceptions
+//! \ingroup error_classes
 //! \brief for access to not allocated memory
 
 //! This exception will be thrown in cases where a user wants to access
@@ -473,7 +435,7 @@ public:
 };
 
 //------------------------------------------------------------------------------
-//! \ingroup Exceptions
+//! \ingroup error_classes
 //! \brief error during processing
 
 //! This exception will be thrown in basically all cases where an error
@@ -502,7 +464,7 @@ public:
 };
 
 //------------------------------------------------------------------------------
-//! \ingroup Exceptions
+//! \ingroup error_classes
 //! \brief error during assignment
 
 //! A very general exception thrown in case of any error occurring during an

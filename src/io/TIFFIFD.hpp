@@ -57,7 +57,7 @@ namespace utils{
 #define ENTRY_TYPE_FLOAT 11
 #define ENTRY_TYPE_DOUBLE 12
 
-//! \ingroup IO
+//! \ingroup io_classes
 //! \brief TIFFIFD - Image File Directory class
 
 //! This class describes an Image File Directory (IFD) block in a TIFF file.

@@ -42,7 +42,7 @@
 namespace pni{
 namespace utils{
 
-//! \ingroup IO
+//! \ingroup io_classes
 //! \brief type trait for TIFF IFD entries
 
 //! This trait is used to set the type code in the getEntryTypeCode method of
@@ -55,77 +55,77 @@ public:
 
 //! \cond NO_API_DOC
 
-//! \ingroup IO
+//! \ingroup io_classes
 //! \brief trait specialication for 8Bit unsigned integer entries
 template<> class IFDEntryTypeTrait<UInt8>{
 public:
 	static const IFDEntryTypeCode TypeCode = IDFE_BYTE; //!< IDFEntryTypeCode value
 };
 
-//! \ingroup IO
+//! \ingroup io_classes
 //! \brief trait specialization for 8Bit signed integer entries
 template<> class IFDEntryTypeTrait<Int8>{
 public:
 	static const IFDEntryTypeCode TypeCode = IDFE_SBYTE; //!< IDFEntryTypeCode value
 };
 
-//! \ingroup IO
+//! \ingroup io_classes
 //! \brief trait specialization for 16Bit unsigned integer entries
 template<> class IFDEntryTypeTrait<UInt16>{
 public:
 	static const IFDEntryTypeCode TypeCode = IDFE_SHORT; //!< IDFEntryTypeCode value
 };
 
-//! \ingroup IO
+//! \ingroup io_classes
 //! \brief trait specialization for 16Bit signed integer entries
 template<> class IFDEntryTypeTrait<Int16>{
 public:
 	static const IFDEntryTypeCode TypeCode = IDFE_SSHORT; //!< IDFEntryTypeCode value
 };
 
-//! \ingroup IO
+//! \ingroup io_classes
 //! \brief trait specialization for 32Bit unsigned integer entries
 template<> class IFDEntryTypeTrait<UInt32>{
 public:
 	static const IFDEntryTypeCode TypeCode = IDFE_LONG; //!< IDFEntryTypeCode value
 };
 
-//! \ingroup IO
+//! \ingroup io_classes
 //! \brief trait specialization for 32Bit signed integer entries
 template<> class IFDEntryTypeTrait<Int32>{
 public:
 	static const IFDEntryTypeCode TypeCode = IDFE_SLONG; //!< IDFEntryTypeCode value
 };
 
-//! \ingroup IO
+//! \ingroup io_classes
 //! \brief trait specialization for 32Bit IEEE float entries
 template<> class IFDEntryTypeTrait<Float32>{
 public:
 	static const IFDEntryTypeCode TypeCode = IDFE_FLOAT; //!< IDFEntryTypeCode value
 };
 
-//! \ingroup IO
+//! \ingroup io_classes
 //! \brief trait specialization for 64Bit IEEE float entries
 template<> class IFDEntryTypeTrait<Float64>{
 public:
 	static const IFDEntryTypeCode TypeCode = IDFE_DOUBLE; //!< IDFEntryTypeCode value
 };
 
-//! \ingroup IO
+//! \ingroup io_classes
 //! \brief trait specialization for 32Bit unsigned integer Rational entries
 template<> class IFDEntryTypeTrait<URational>{
 public:
 	static const IFDEntryTypeCode TypeCode = IDFE_RATIONAL; //!< IDFEntryTypeCode value
 };
 
-//! \ingroup IO
+//! \ingroup io_classes
 //! \brief trait specialization for 32Bit signed integer Rational entries
 template<> class IFDEntryTypeTrait<SRational>{
 public:
 	static const IFDEntryTypeCode TypeCode = IDFE_SRATIONAL; //!< IDFEntryTypeCode value
 };
 
-//! \ingroup IO
+//! \ingroup io_classes
 //! \brief trait specialization for String entries
 template<> class IFDEntryTypeTrait<String>{
 public:
@@ -137,7 +137,7 @@ template<typename T> class IFDEntry;
 template<typename T> std::ifstream &operator>>(std::ifstream &,IFDEntry<T> &);
 template<typename T> std::ostream &operator<<(std::ostream &,const IFDEntry<T> &);
 
-//! \ingroup IO
+//! \ingroup io_classes
 //! \brief typed IFDEntry
 
 //! The IFDEntry template represents an IFD entry. Read/write access to the

@@ -39,7 +39,7 @@ namespace pni {
 
 namespace utils {
 
-//! \ingroup IO
+//! \ingroup io_classes
 //! \brief image data of a TIFF IFD
 
 //! This class holds the data stored in the image of a TIFF IFD.

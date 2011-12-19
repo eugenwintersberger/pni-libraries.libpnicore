@@ -37,6 +37,7 @@
 namespace pni {
 namespace utils {
 
+//! \ingroup util_classes
 //! \brief array index class
 
 //! This class describes an index object which can be used to address data

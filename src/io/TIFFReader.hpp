@@ -40,7 +40,11 @@
 namespace pni{
 namespace utils{
 
+//! \ingroup io_classes
+//! \brief TIFF file reader
 
+//! TIFFReader is an implementation of the Reader class for reading TIFF
+//! image files.
 class TIFFReader:public Reader {
 private:
 	//like all other derivatives of Reader the TIFFReader
@@ -50,15 +54,23 @@ private:
 protected:
 	TIFFFile _file;
 public:
+	//! default constructor
 	TIFFReader();
+	//! destructor
 	virtual ~TIFFReader();
 
+	//! set the filename
 	virtual void setFileName(const String &n);
+	//! set the filename
 	virtual void setFileName(const char *n);
 
+	//! open the file
 	virtual void open();
+	//! close the file
 	virtual void close();
+	//! read data
 	virtual DataObject::sptr read();
+	//! read data
 	virtual DataObject::sptr read(const UInt64 &i);
 };
 

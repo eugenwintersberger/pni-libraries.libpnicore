@@ -35,7 +35,7 @@
 namespace pni{
 namespace utils{
 
-//! \ingroup IO
+//! \ingroup io_classes
 //! \brief holds TIFF standard values
 
 //! This class provides methods to primarily access TIFF standard names

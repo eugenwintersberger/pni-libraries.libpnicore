@@ -38,7 +38,7 @@
 namespace pni{
 namespace utils{
 
-//! \ingroup Data-objects
+//! \ingroup data_classes
 //! \brief Base class for numeric arrays
 
 //! The class ArrayObject acts as a base class for all array-like classes.

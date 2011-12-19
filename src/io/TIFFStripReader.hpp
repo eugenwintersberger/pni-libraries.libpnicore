@@ -43,7 +43,7 @@ namespace pni {
 
 namespace utils {
 
-//! \ingroup IO
+//! \ingroup io_classes
 //! \brief reader for strip data in a TIFF file
 class TIFFStripReader {
 private:

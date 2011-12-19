@@ -80,7 +80,7 @@ template<typename T> bool operator!=(const Array<T> &, const Array<T> &);
 template<typename T> std::ostream &operator<<(std::ostream &o,
 		const Array<T> &a);
 
-//! \ingroup Data-objects
+//! \ingroup data_classes
 //! \brief template for a multi-dimensional array class
 
 //! This class represents a multidimensional array of data values. It consists of two

@@ -37,10 +37,7 @@
 namespace pni{
 namespace utils{
 
-
-//! \addtogroup Data-objects
-//! @{
-
+//! \ingroup data_classes
 //! \brief abstract buffer class
 
 //! BufferObject is an abstract class from which all buffer like objects
@@ -146,8 +143,6 @@ public:
 	//! \return type id of the buffer elements
 	virtual TypeID type_id() const = 0;
 };
-
-//! @}
 
 //end of namespace
 }

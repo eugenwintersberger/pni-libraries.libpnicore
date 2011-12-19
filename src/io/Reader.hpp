@@ -41,11 +41,7 @@
 namespace pni{
 namespace utils {
 
-//! \defgroup IO
-//! The pni::utils namespace contains classes primarily for reading data stored in  various
-//! file formats. These classes are described here in the IO module.
-
-//! \ingroup IO
+//! \ingroup io_classes
 //! \brief base class for file reader objects
 
 //! The Reader class is the basement for all data readers.

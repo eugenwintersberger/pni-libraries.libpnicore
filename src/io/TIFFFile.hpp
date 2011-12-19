@@ -42,7 +42,7 @@
 namespace pni{
 namespace utils{
 
-//! \ingroup IO
+//! \ingroup io_classes
 //! \brief class representing a TIFF file
 
 //! The TIFF file object represents data stored in the Tagged Image File Format.

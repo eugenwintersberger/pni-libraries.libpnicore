@@ -63,7 +63,7 @@ namespace utils{
 #define CIF_DATA_3FAST_DIM_KEY  "X-Binary-Size-Third-Dimension"
 #define CIF_DATA_NELEMENTS_KEY  "X-Binary-Number-of-Elements"
 
-//! \ingroup IO
+//! \ingroup io_classes
 //! \brief Header of a binary CIF file
 
 //! CIFBinaryHeader represents the header structure of a binary CIF file. The structure
@@ -153,7 +153,7 @@ public:
 	}
 };
 
-//! \ingroup IO
+//! \ingroup io_classes
 //! \brief Dectris Pilatus CBF header class
 
 //! As usual Dectris is not following all the CIF conventions strictly. As a descendant of

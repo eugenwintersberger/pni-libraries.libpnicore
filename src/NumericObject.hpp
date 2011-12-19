@@ -40,7 +40,7 @@
 namespace pni{
 namespace utils{
 
-//! \ingroup Data-objects
+//! \ingroup data_classes
 //! \brief base class for numerical objects
 
 //! NumericObject is the base class for all objects in the

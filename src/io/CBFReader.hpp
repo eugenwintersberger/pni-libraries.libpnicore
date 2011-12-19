@@ -51,7 +51,7 @@
 namespace pni{
 namespace utils{
 
-//! \ingroup IO
+//! \ingroup io_classes
 //! \brief base clase for CBF readers
 
 //! CBFReader is the base class for all readers of data stored in binary CIF format.

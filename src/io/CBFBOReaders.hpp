@@ -40,7 +40,7 @@
 namespace pni{
 namespace utils{
 
-//! \ingroup IO
+//! \ingroup io_classes
 //! \brief CBF reader for byte-offset compressed data
 
 //! This template provides a reader object for binary data stored in CBF files

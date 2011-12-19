@@ -38,7 +38,7 @@
 namespace pni{
 namespace utils{
 
-//! \ingroup IO
+//! \ingroup io_classes
 //! \brief binary CBF data reader
 
 //! This is the base class for all binary CBF reades. The aim of all this

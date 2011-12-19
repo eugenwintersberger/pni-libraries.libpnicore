@@ -38,7 +38,7 @@ namespace pni{
 namespace utils{
 
 
-//! \addtogroup Data-objects
+//! \addtogroup type_classes
 //! @{
 typedef char           Int8;   //!< 8Bit signed integer type
 typedef unsigned char  UInt8;  //!< 8Bit unsigned integer type

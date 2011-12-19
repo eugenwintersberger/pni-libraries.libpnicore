@@ -46,7 +46,7 @@
 namespace pni{
 namespace utils{
 
-//! \ingroup Data-objects
+//! \ingroup type_classes
 //! \brief type information class
 
 //! class that describes a PNI type as defined in PNITypes.hpp.
@@ -54,20 +54,28 @@ namespace utils{
 //! classes like arrays and scalars.
 template<typename T> class TypeInfo{
 public:
-	typedef T Type;
-	typedef T BaseType;
+	typedef T Type;        //!< the type of T
+	typedef T BaseType;    //!< the base type (only interesting for complex types)
 
+	//! sign check
+
+	//! Method returns true if value is negative, false otherwise.
+	//! \param value value for which to check the sign
+	//! \return true if value<0, false otherwise
 	static bool is_negative(T value){
 		if (value < 0) return true;
 		return false;
 	}
 
-	static const size_t size = sizeof(T);
-	static const bool is_integer = std::numeric_limits<T>::is_integer;
-	static const bool is_signed = std::numeric_limits<T>::is_signed;
-	static const bool is_complex = false;
+	static const size_t size = sizeof(T); //!< size of the type in bytes
+	static const bool is_integer = std::numeric_limits<T>::is_integer; //!< true if the type is an integer, false otherwise
+	static const bool is_signed = std::numeric_limits<T>::is_signed; //!< true if the type is signed, false otherwise
+	static const bool is_complex = false; //!< true if the type represents a complex number, false otherwise
 
-	//! return minimum value of the type
+	//! minimum limit
+
+	//! returns the smallest value that can be represented by type T.
+	//! \return lower limit of T
 	static T min(){
 		//in the case of integers we can use min
 		if (std::numeric_limits<T>::is_integer){
@@ -79,7 +87,10 @@ public:
 		}
 	}
 
-	//! return maximum value of the type
+	//! maximum limit
+
+	//! Returns the largest value that can be represented by T.
+	//! \return upper limit of T
 	static T max(){
 		return std::numeric_limits<T>::max();
 	}

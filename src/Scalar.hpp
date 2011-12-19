@@ -51,7 +51,7 @@ namespace utils {
 
 using namespace boost::numeric;
 
-//! \ingroup Data-objects
+//! \ingroup data_classes
 //! \brief Scalar template for scalar values
 
 //! Basically one can consider this as a concrete implementation of

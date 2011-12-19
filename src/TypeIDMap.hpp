@@ -32,10 +32,13 @@
 namespace pni{
 namespace utils{
 
-//! template defining a mapping between type IDs and types.
+//! \ingroup type_classes
+//! \brief map from a type to TypeID
+
+//! This template implements a map from a concrete type to its TypeID
 template<typename T> class TypeIDMap{
 public:
-	static const TypeID type_id = TypeID::NONE;
+	static const TypeID type_id = TypeID::NONE; //!< id value for type T
 };
 
 //! \cond NO_API_DOC

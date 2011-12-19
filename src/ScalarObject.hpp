@@ -39,7 +39,7 @@
 namespace pni{
 namespace utils{
 
-//! \ingroup Data-objects
+//! \ingroup data_classes
 //! \brief base class for numeric scalar templates
 
 //! This class represents a single numeric value. In many cases it would be

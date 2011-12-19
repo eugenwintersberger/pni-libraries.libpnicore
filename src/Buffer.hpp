@@ -45,9 +45,7 @@
 namespace pni{
 namespace utils{
 
-//! \addtogroup Data-objects
-//! @{
-
+//! \ingroup data_classes
 //! \brief buffer template
 
 //! This template is a concrete implementation of the BufferObject base class.
@@ -157,8 +155,6 @@ public:
 
 
 };
-
-//! @}
 
 //=================Implementation of constructors and destructors===============
 //implementation of the default constructor

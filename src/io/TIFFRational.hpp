@@ -40,7 +40,7 @@ namespace utils{
 template<typename T> class Rational;
 template<typename T> std::ostream &operator<<(std::ostream &o,const Rational<T> &r);
 
-//! \ingroup IO
+//! \ingroup io_classes
 //! \brief rational type for TIFF IFD entries
 
 //! IFD entries in TIFF files can consist of a rational number. This class

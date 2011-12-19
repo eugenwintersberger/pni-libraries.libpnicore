@@ -40,10 +40,7 @@
 namespace pni{
 namespace utils{
 
-//! \defgroup Data-objects
-//! Data holding objects in memory
-
-//! \ingroup Data-objects
+//! \ingroup data_classes
 //! \brief base class for all data holding objects
 
 //! This class is the basement for all data holding classes in the pni::utils

@@ -34,7 +34,7 @@
 namespace pni{
 namespace utils{
 
-//! \ingroup Exceptions
+//! \ingroup error_classes
 //! \brief error during TIFF reading
 
 //! This exception is thrown in cases where errors occur during reading
