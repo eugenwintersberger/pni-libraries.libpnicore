@@ -1,5 +1,12 @@
 /*! \mainpage libpniutils @VERSION@ documentation
- 
+
+Libpniutils is a utility library for a bunch of PNI related libraries. 
+It provides the basic data structures and type definitions as well as 
+type conversion facilities needed to write reliable code. 
+
+This is the API documentation for libpniutils. If you are interested in a more
+general discussion about the library and its components please read the 
+uses guide or the administrators guide.  
  
  
  
@@ -50,14 +57,28 @@ Finally use EXCEPTION_THROW() to throw the exception.
 */
 
 /*! \defgroup data_classes Data classes
-    Classes holding the real data
+    This classes hold data in memory. Actually this data is considered to 
+    be of numeric type. Each data holding entity has a name and a description
+    where the latter provides information about what data is held by the 
+    object. The name is just for identification of the object.
+    NumericObject is the root of all numeric objects provided by the 
+    library (which are basically scalars and arrays). In addition to name and 
+    description each numerical data object holds a string representing the 
+    physical unit of the numbers stored in the object.
+    Scalar and array objects derive from NumericObject.
 */
 
 /*! \defgroup io_classes IO classes
-    Classes responsible for reading (and maybe in future writing) data
+    Classes responsible for reading (and maybe in future writing) data. The 
+    aim of these classes is to read data from proprietary image formats used 
+    by detector vendors. Actually only TIFF and the CBF dialect from DECTRIS
+    are supported. 
 */
 
 /*! \defgroup type_classes Data type related classes
-    Classes used to manipulate and handle data types. 
+    Data types and their correct handling plays an important role for 
+    experiment data. This module contains all type definitions and classes 
+    to obtain information from a type as well as converting types from one 
+    to each other.  
 */
 
