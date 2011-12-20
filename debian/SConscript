@@ -11,6 +11,13 @@ debian_dict = {"@SOURCE@":"$LIBPREFIX$LIBNAME","@MAINTAINER@":"$MAINTAINER",
 #-------------------------create control file-----------------------------------
                   
 control_file = build_env.Substfile(["control.in"],SUBST_DICT=debian_dict)
+build_env.Clean(control_file,"tmp")
+build_env.Clean(control_file,Glob("*.log"))
+build_env.Clean(control_file,Glob("*.substvars"))
+build_env.Clean(control_file,Glob("*.debhelper"))
+build_env.Clean(control_file,"${PKGNAME}")
+build_env.Clean(control_file,"${PKGNAME}-dev")
+build_env.Clean(control_file,"${PKGNAME}-doc")
 
 
 changelog = DebChangelogFile("../","v0.0.1")
@@ -50,6 +57,6 @@ doc_pkg_install = build_env.Substfile(target="${PKGNAME}-doc",
                                      SUBST_DICT=debian_dict,
                                      SUBSTFILESUFFIX=".install")
 
-build_env.Alias("debian",[control_file,compat_file,lib_pkg_dirs,lib_pkg_install,
+debian = build_env.Alias("debian",[control_file,compat_file,lib_pkg_dirs,lib_pkg_install,
                           dev_pkg_dirs,dev_pkg_install,
                           doc_pkg_dirs,doc_pkg_install,changelog_file,rules_file])
