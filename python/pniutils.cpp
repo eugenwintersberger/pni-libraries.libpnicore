@@ -5,6 +5,10 @@
  *      Author: Eugen Wintersberger
  */
 
+extern "C"{
+    #include<Python.h>
+}
+
 #include <boost/python.hpp>
 #include <iostream>
 
@@ -19,6 +23,7 @@
 #include "../src/Scalar.hpp"
 #include "../src/ArrayObject.hpp"
 #include "../src/Array.hpp"
+#include "../src/Exceptions.hpp"
 
 using namespace pni::utils;
 using namespace boost::python;
@@ -192,8 +197,43 @@ using namespace boost::python;
 				;
 
 
+//=====================translate exceptions=====================================
+void index_error_translator(IndexError const &error){
+    PyErr_SetString(PyExc_UserWarning,"Index Error");
+}
+
 BOOST_PYTHON_MODULE(pniutils)
 {
+    //==================Wrap exceptions=========================================
+    const String& (Exception::*Exception_get_name)() const = &Exception::name;
+    void (Exception::*Exception_set_name)(const String &) = &Exception::name;
+    const String& (Exception::*Exception_get_issuer)() const = &Exception::issuer;
+    void (Exception::*Exception_set_issuer)(const String &) = &Exception::issuer;
+    const String& (Exception::*Exception_get_description)() const =
+        &Exception::description;
+    void (Exception::*Exception_set_description)(const String &) =
+        &Exception::description;
+    class_<Exception>("Exception")
+        .def(init<>())
+        .def(init<String,String,String>())
+        .add_property("name",
+                make_function(Exception_get_name,return_internal_reference<1>()),
+                Exception_set_name)
+        .add_property("issuer",
+                make_function(Exception_get_issuer,return_internal_reference<1>()),
+                Exception_set_issuer)
+        .add_property("description",
+                make_function(Exception_get_description,return_internal_reference<1>()),
+                Exception_set_description)
+        ;
+
+    class_<IndexError,bases<Exception> >("IndexError")
+        .def(init<>())
+        .def(init<String,String>())
+        ;
+
+    //===================register exception translators=========================
+    register_exception_translator<IndexError>(index_error_translator);
 	//===============Wrap TypeID enum class=====================================
 	enum_<TypeID>("TypeID")
 			.value("NONE",TypeID::NONE)
@@ -280,6 +320,8 @@ BOOST_PYTHON_MODULE(pniutils)
 			.def("size",&Shape::size)
 			.def("offset",&Shape::offset)
 			.def("index",&Shape::index)
+            .def("__getitem__",shape_get_dimension)
+            .def("__len__",shape_get_rank)
 			.def(self == self)
 			.def(self != self)
 			//need some operators
@@ -336,7 +378,8 @@ BOOST_PYTHON_MODULE(pniutils)
 					set_buffer)
 			.add_property("shape",make_function(get_shape,return_internal_reference<1>()),set_shape)
 
-			;
+            .def("allocate",&Array<Float64>::allocate)
+            ;
 
 }
 
