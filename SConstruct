@@ -6,7 +6,7 @@ import os
 from smod import ProgramVersion
 from smod import GCCVersionParser
 from smod import CheckProgram
-
+from smod import LibFileNames
 
 debug = ARGUMENTS.get("DEBUG",0)
 
@@ -49,18 +49,12 @@ var.Add("PKGNAME","name of the package for installation","")
 env = Environment(variables=var,ENV={'PATH':os.environ['PATH']},
 				  tools=['default','packaging','textfile'])
 
-#create library names
-if os.name == "posix":
-	env.Append(LIBFULLNAME = env["LIBPREFIX"]+env["LIBNAME"]+env["SHLIBSUFFIX"]+"."
-    	                     +env["SOVERSION"]+"."+env["VERSION"])
-	env.Append(LIBSONAME = env["LIBPREFIX"]+env["LIBNAME"]+env["SHLIBSUFFIX"]+"."+
-    	                     env["SOVERSION"])
-	env.Append(LIBLINKNAME = env["LIBPREFIX"]+env["LIBNAME"]+env["SHLIBSUFFIX"])
-elif os.name == "nt":
-	env.Append(LIBFULLNAME = env["LIBPREFIX"]+env["LIBNAME"]+"."+env["SOVERSION"]+
-	                         "."+env["VERSION"]+env["SHLIBSUFFIX"])
-	env.Append(LIBSONAME = env["LIBPREFIX"]+env["LIBNAME"]+"."+env["SOVERSION"]+env["SHLIBSUFFIX"])
-	env.Append(LIBLINKNAME = env["LIBPREFIX"]+env["LIBNAME"]+env["SHLIBSUFFIX"])
+#create library namesl
+libname = LibFileNames(env["LIBNAME"],env["VERSION"],env["SOVERSION"])
+env.Append(LIBFULLNAME = libname.full_name(env))
+env.Append(LIBSONAME   = libname.so_name(env))
+env.Append(LIBLINKNAME = libname.link_name(env))
+
 
 #create installation paths
 env.Append(INCINSTPATH = path.join(env["PREFIX"],"include/pni/utils"))
