@@ -58,7 +58,10 @@ env.Append(LIBLINKNAME = libname.link_name(env))
 
 #create installation paths
 env.Append(INCINSTPATH = path.join(env["PREFIX"],"include/pni/utils"))
-env.Append(LIBINSTPATH = path.join(env["PREFIX"],"lib"))
+if platform.machine()=="x86_64":
+    env.Append(LIBINSTPATH = path.join(env["PREFIX"],"lib64"))
+else:
+    env.Append(LIBINSTPATH = path.join(env["PREFIX"],"lib"))
 
 if env["DOCDIR"] == "":
     #set default documentation directory for installation
