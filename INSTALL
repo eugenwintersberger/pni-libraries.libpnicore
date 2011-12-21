@@ -1,53 +1,102 @@
 Installing pniutils
 ===================
 
-Requirements to build the library
----------------------------------
+1.) Requirements to build the library
+    ---------------------------------
 Minimum requirements:
-C++ Compiler g++ >= 4.1
+C++ Compiler g++ >= 4.4.1
 Boost library > 1.4
 SCons build system >= 2.0.0
+doxygen 
+
 
 To build the documentation doxygen should be installed.
 To get the test code compiled the cppunit and plplot libraries are 
 required.
 
-Simple build and install
-------------------------
-To build the library on an up-to-date Linux system simply type
+2.) Build and installation
+    ----------------------
+
+2.1.) Building the code on Linux
+      --------------------------
+
+If all the required programs and libraries are installed in their standard
+locations just type 
+
+$> scons 
+
+on a terminal in the root directory of the source distribution. This is  
+synonymous to
+
+$> scons all
+
+In this case the library along with the documentation and the unit tests 
+is built. The shared and static libraries as well as the header files can be
+found below "./src" in the source distribution. For building only the library use 
 
 > scons library 
 
-for building the library along with the test code use
-
-> scons all
-
-Shared and static libraries will be found below src/ and the testing
-code below test/. 
-In order to get the documentation built use the "doc" target with
+to build only the documentation use
 
 > scons doc
- 
+
+The documentation resides below "./doc" in the source tree. To build unit tests
+only use 
+
+> scons test
+
+The test program can be found below "./test". To run the test change to this
+directory and use 
+
+$> export LD_LIBRARY_PATH=../src:$LD_LIBRARY_PATH
+$> ./pniutilstest 
+
+The first line ensures that the test program uses the newly built library
+instead of an old one that might be already installed on your system. 
+
 If you have the Boost library on a custom site you can add the path 
 to the Boost installation prefix with
 
-> scons BOOSTPREFIX=/opt/boost library
+> scons BOOSTPREFIX=/opt/boost [all,library]
 
-To install the library to /home/eugen/Applications/inst use
+To cleanup the source tree after a build use 
 
-> scons PREFIX=/home/eugen/Applications/inst BOOSTPREFIX=/opt/boost install
+$> scons -c
 
-The default value of PREFIX is "/usr/local"
-Root privileges are required if you want to install the software in one 
-of the sytem directories. However, it is not recommended to install 
-this code directly to a system location - rather build a package for 
-your local operating system. This allows easy updating and removal of the 
-software. 
+
+2.2) Installation on Linux
+     ---------------------
+Installation is as easy as the build, just type
+
+$> scons install
+
+Which will install libpniutils below the default installation prefix which is
+"/usr". This implies that you need administrative permissions to install the 
+software (in other words, you have to be root). 
+
+To install below a different prefix use the PREFIX build variable
+
+> scons PREFIX=/opt/pniutils install 
+
+It is in generally not a good idea to install software directly from the sources
+to a default system location. Rather build a package for your package management
+system and use this for installation (this allows painless removal of the
+software if you do not like it ;)). 
+Building Debian packages is directly supported by the build system used. 
+To build Debian packages simply run
+
+$> scons debian
+
+You will find the resulting packages one level above the source distribution 
+on your file system. To cleanup after a Debian package build you have to use 
+
+$> scons -c
+$> scons -d debian
+
 For package maintainers it might be interesting to use the --install-sandbox
-provided by scons in connection with the DESTDIR environment variable. 
-For instance in a Makefile with 
+provided by scons in connection with the DESTDIR environment variable 
 
->scons install --install-sandbox=$(DESTDIR)
+$> scons install --install-sandbox=$(DESTDIR)
 
 
 Building MSI packages for Windows
@@ -64,10 +113,6 @@ I use the deb-helper tools to create Debian packages. Thus you first need to
 create the configuration files below debian/. This is done by calling 
 
 > scons debian
-
-A subsequent call to  
-
->dpkg-buildpackage -uc -us
 
 will create three Debian packages on level above the root directory of the 
 source tree. A binary package with the library, a devel package with the 
