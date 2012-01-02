@@ -19,13 +19,56 @@
 using namespace pni::utils;
 using namespace boost::python;
 
-template<typename T> T get_flat_array_item(const Array<T> &a,size_t i){
-    return a[i];
-}
+template<typename T>
+class ArrayWrapper{
+    private:
+        Array<T> _array;
+        PyObject *_obj;
 
-template<typename T> void set_flat_array_item(Array<T> &a,size_t i,T value){
-    a[i] = value;
-}
+    public:
+        ArrayWrapper(){
+
+        }
+
+        ArrayWrapper(const Shape &s){
+            _array = Array<T>(s);
+            _array.allocate();
+
+            //need to allocate the numpy array now
+
+        }
+
+        virtual ~ArrayWrapper();
+
+        String get_name() const{
+            return _array.name();
+        }
+
+        void set_name(const String &n){
+            _array.name(n);
+        }
+
+        String get_unit() const {
+            return _array.unit();
+        }
+
+        void set_unit(const String &u){
+            _array.unit(u);
+        }
+
+        String get_description() const {
+            return _array.description();
+        }
+
+        void set_description(const String &d){
+            _array.description(d);
+        }
+
+        
+
+
+        
+};
 
 
 void wrap_array(){
