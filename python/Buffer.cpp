@@ -21,7 +21,7 @@ using namespace boost::python;
 
 #define BUFFER_CLASS(type,name) \
 	size_t (Buffer<type>::*(name ## size))() const = &Buffer<type>::size;\
-	class_<Buffer<type> >(#name)\
+	class_<Buffer<type>,bases<BufferObject> >(#name)\
 			.def(init<Buffer<type> >())\
 			.def(init<type>())\
 			.add_property("size",(name ## size))\

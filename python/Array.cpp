@@ -19,6 +19,14 @@
 using namespace pni::utils;
 using namespace boost::python;
 
+template<typename T> T get_flat_array_item(const Array<T> &a,size_t i){
+    return a[i];
+}
+
+template<typename T> void set_flat_array_item(Array<T> &a,size_t i,T value){
+    a[i] = value;
+}
+
 
 void wrap_array(){
 	//================Wrapping the Array template===============================
@@ -39,5 +47,7 @@ void wrap_array(){
 			.add_property("shape",make_function(get_shape,return_internal_reference<1>()),set_shape)
 
             .def("allocate",&Array<Float64>::allocate)
+
             ;
+
 }

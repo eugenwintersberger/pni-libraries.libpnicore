@@ -4,7 +4,7 @@ import unittest
 import ShapeTest
 import IndexTest
 import ScalarTest
-import ArrayTes
+import ArrayTest
 
 
 suite = unittest.TestSuite()
