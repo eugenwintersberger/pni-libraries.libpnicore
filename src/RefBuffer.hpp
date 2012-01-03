@@ -199,7 +199,7 @@ template<typename T> RefBuffer<T>::RefBuffer(const RefBuffer<T>& o)
 //------------------------------------------------------------------------------
 //implementation of the copy constructor
 template<typename T> RefBuffer<T>::RefBuffer(const Buffer<T> &b):BufferObject(b){
-	_data = b.ptr();
+	_data = (T*)b.ptr();
 }
 
 //------------------------------------------------------------------------------
