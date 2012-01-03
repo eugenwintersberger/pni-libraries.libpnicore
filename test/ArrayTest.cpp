@@ -36,19 +36,20 @@ void ArrayTest::tearDown(){
 
 //------------------------------------------------------------------------------
 void ArrayTest::testConstruction(){
+    typedef Array<double,Buffer> DArray;
 	//check for simple array-construction
-	Array<double> a1(s1);
-	Array<double> a2(s2);
+	DArray a1(s1);
+	DArray a2(s2);
 
 	//this should check if third
-	Array<double> a3;
-	CPPUNIT_ASSERT_NO_THROW(a3 = Array<double>(s2));
+	DArray a3;
+	CPPUNIT_ASSERT_NO_THROW(a3 = DArray(s2));
 
 	Int16Array a4;
 	CPPUNIT_ASSERT_NO_THROW(a4 = Int16Array());
 	CPPUNIT_ASSERT_NO_THROW(a4 = Int16Array());
 
-	CPPUNIT_ASSERT_NO_THROW(a3 = Array<double>());
+	CPPUNIT_ASSERT_NO_THROW(a3 = DArray());
 
 }
 
@@ -87,7 +88,7 @@ void ArrayTest::testSlowArrayConstruction(){
 
 //------------------------------------------------------------------------------
 void ArrayTest::testSetAndGet(){
-	Array<double> a1(s1);
+	Array<double,Buffer> a1(s1);
 	Index in;
 
 	//access via [] operator

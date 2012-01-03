@@ -164,7 +164,7 @@ public:
 		Shape s(ndims);
 		for (UInt32 d=0;d<s.rank();d++) s.dim(d,dims[d]);
 		for (UInt64 i = 0; i < _nchannels; i++)
-			idata->appendChannel(typename Array<T>::sptr(new Array<T>(s)));
+			idata->appendChannel(typename Array<T,Buffer>::sptr(new Array<T,Buffer>(s)));
 
 		//loop over all strips
 		for (UInt64 i = 0; i < _nstrips; i++) {
@@ -177,7 +177,7 @@ public:
 
 				//loop over all channels (samples)
 				for (UInt64 k = 0; k < _nchannels; k++) {
-					Array<T> &a = *boost::dynamic_pointer_cast<Array<T> >(idata->getChannel(k));
+					Array<T,Buffer> &a = *boost::dynamic_pointer_cast<Array<T,Buffer> >(idata->getChannel(k));
 					stream.read((char*) (&buffer), ssize);
 					a[ecnt] = (T) buffer;
 				}

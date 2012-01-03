@@ -75,8 +75,8 @@ ArrayObject *CIFBinaryHeader::createArray(){
 	}
 
 	switch(_data_type){
-	case(SIGNED_INT_32): return (ArrayObject*)(new Array<Int32>(s)); break;
-	case(SIGNED_INT_16): return (ArrayObject*)(new Array<Int16>(s)); break;
+	case(SIGNED_INT_32): return (ArrayObject*)(new Array<Int32,Buffer>(s)); break;
+	case(SIGNED_INT_16): return (ArrayObject*)(new Array<Int16,Buffer>(s)); break;
 	default: return NULL;
 	}
 

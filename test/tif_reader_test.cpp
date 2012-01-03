@@ -26,11 +26,11 @@ using namespace pni::utils;
 
 template<typename T> class PlPlotArrayDecorator:public Contourable_Data{
 private:
-	typename Array<T>::sptr _array;
+	typename Array<T,Buffer>::sptr _array;
 public:
 	PlPlotArrayDecorator(){}
-	PlPlotArrayDecorator(Array<T> *a);
-	PlPlotArrayDecorator(const typename Array<T>::sptr &a);
+	PlPlotArrayDecorator(Array<T,Buffer> *a);
+	PlPlotArrayDecorator(const typename Array<T,Buffer>::sptr &a);
 	virtual ~PlPlotArrayDecorator(){
 		_array.reset();
 	}
@@ -40,12 +40,14 @@ public:
 	}
 };
 
-template<typename T> PlPlotArrayDecorator<T>::PlPlotArrayDecorator(Array<T> *a)
+template<typename T>
+PlPlotArrayDecorator<T>::PlPlotArrayDecorator(Array<T,Buffer> *a)
 	:Contourable_Data(a->getShape().getDimension(0),
 			          a->getShape().getDimension(1)){
 	_array.reset(a);
 }
-template<typename T> PlPlotArrayDecorator<T>::PlPlotArrayDecorator(const typename Array<T>::sptr &a)
+template<typename T> PlPlotArrayDecorator<T>::PlPlotArrayDecorator(const
+        typename Array<T,Buffer>::sptr &a)
 	:Contourable_Data(a->getShape().getDimension(0),
 			          a->getShape().getDimension(1)){
 	_array = a;
@@ -116,7 +118,8 @@ PlotArray::~PlotArray(){
 
 
 template<typename T> void PlotArray::image_plot(const pni::utils::ArrayObject::sptr data){
-	pni::utils::Array<T> &a = *boost::dynamic_pointer_cast<pni::utils::Array<T> >(data);
+	pni::utils::Array<T,Buffer> &a =
+        *boost::dynamic_pointer_cast<pni::utils::Array<T,Buffer> >(data);
 	//PlPlotArrayDecorator<T> adec((pni::utils::Array<T> *)data);
 	int i,j;
 

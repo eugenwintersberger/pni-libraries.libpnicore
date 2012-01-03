@@ -24,11 +24,11 @@ using namespace pni::utils;
 
 template<typename T> class PlPlotArrayDecorator:public Contourable_Data{
 private:
-	Array<T> *_array;
+	Array<T,Buffer> *_array;
 	Index _index;
 public:
 	PlPlotArrayDecorator(){}
-	PlPlotArrayDecorator(Array<T> *a);
+	PlPlotArrayDecorator(Array<T,Buffer> *a);
 	virtual ~PlPlotArrayDecorator(){
 		_array = NULL;
 	}
@@ -41,7 +41,8 @@ public:
 	}
 };
 
-template<typename T> PlPlotArrayDecorator<T>::PlPlotArrayDecorator(Array<T> *a)
+template<typename T> 
+PlPlotArrayDecorator<T>::PlPlotArrayDecorator(Array<T,Buffer> *a)
 	:Contourable_Data(a->shape().dim(0),
 			          a->shape().dim(1)){
 	_array = a;
@@ -116,8 +117,8 @@ PlotArray::~PlotArray(){
 
 
 template<typename T> void PlotArray::image_plot(const ArrayObject *data){
-	pni::utils::Array<T> &a = *(Array<T> *)data;
-	PlPlotArrayDecorator<T> adec((Array<T> *)data);
+	pni::utils::Array<T,Buffer> &a = *(Array<T,Buffer> *)data;
+	PlPlotArrayDecorator<T> adec((Array<T,Buffer> *)data);
 	Index index(2);
 
 	int nx = a.shape().dim(0);
