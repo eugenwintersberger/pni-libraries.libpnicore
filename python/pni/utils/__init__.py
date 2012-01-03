@@ -17,6 +17,19 @@ from pniutils import Float32Buffer
 from pniutils import Float64Buffer
 from pniutils import Float128Buffer
 
+#import reference Buffers
+from pniutils import UInt8RefBuffer
+from pniutils import Int8RefBuffer
+from pniutils import UInt16RefBuffer
+from pniutils import Int16RefBuffer
+from pniutils import UInt32RefBuffer
+from pniutils import Int32RefBuffer
+from pniutils import UInt64RefBuffer
+from pniutils import Int64RefBuffer
+from pniutils import Float32RefBuffer
+from pniutils import Float64RefBuffer
+from pniutils import Float128RefBuffer
+
 #import scalar objects
 from pniutils import ScalarObject
 from pniutils import UInt8Scalar

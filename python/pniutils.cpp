@@ -35,6 +35,7 @@ void wrap_shape();
 void wrap_bufferobject();
 void wrap_arrayobject();
 void wrap_buffer();
+void wrap_refbuffer();
 void wrap_scalar();
 void wrap_array();
 
@@ -142,6 +143,7 @@ BOOST_PYTHON_MODULE(pniutils)
     wrap_bufferobject();
     wrap_arrayobject();
     wrap_buffer();
+    wrap_refbuffer(); 
     wrap_scalar();
     wrap_array();
 
