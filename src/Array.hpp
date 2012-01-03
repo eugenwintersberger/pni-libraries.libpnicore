@@ -37,6 +37,7 @@
 #include<boost/shared_ptr.hpp>
 
 #include "Buffer.hpp"
+#include "RefBuffer.hpp"
 #include "Shape.hpp"
 #include "Exceptions.hpp"
 #include "Types.hpp"
@@ -1344,6 +1345,17 @@ typedef Array<Complex64,Buffer> Complex64Array;
 typedef Array<Complex128,Buffer> Complex128Array;
 
 
+typedef Array<Int8,RefBuffer> Int8RefArray;
+typedef Array<UInt8,RefBuffer> UInt8RefArray;
+typedef Array<Int16,RefBuffer> Int16RefArray;
+typedef Array<UInt16,RefBuffer> UInt16RefArray;
+typedef Array<Int32,RefBuffer> Int32RefArray;
+typedef Array<UInt32,RefBuffer> UInt32RefArray;
+typedef Array<Int64,RefBuffer> Int64RefArray;
+typedef Array<UInt64,RefBuffer> UInt64RefArray;
+typedef Array<Float32,RefBuffer> Float32RefArray;
+typedef Array<Float64,RefBuffer> Float64RefArray;
+typedef Array<Float128,RefBuffer> Float128RefArray;
 
 }
 }

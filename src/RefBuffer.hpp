@@ -30,8 +30,8 @@
 
 
 
-#ifndef BUFFER_HPP_
-#define BUFFER_HPP_
+#ifndef __REFBUFFER_HPP_
+#define __REFBUFFER_HPP_
 
 #include <iostream>
 #include <string>
@@ -40,6 +40,7 @@
 #include "Exceptions.hpp"
 #include "Types.hpp"
 #include "BufferObject.hpp"
+#include "Buffer.hpp"
 #include "TypeIDMap.hpp"
 
 namespace pni{
@@ -409,18 +410,7 @@ bool operator==(const RefBuffer<T> &a,const RefBuffer<U> &b){
 	return true;
 }
 
-//-----------------------------------------------------------------------------
-template<typename T,typename U> operator==(const RefBuffer<T> &a,const Buffer<U>
-        &b){
-    RefBuffer<U> refb = b;
-    return a == refb;
-}
 
-//-----------------------------------------------------------------------------
-template<typename T,typename U> operator==(const Buffer<T> &a,const RefBuffer<U>
-        &b){
-    return b==a;
-}
 
 
 //-----------------------------------------------------------------------------
@@ -430,19 +420,7 @@ bool operator!=(const RefBuffer<T> &a,const RefBuffer<U> &b){
 	return true;
 }
 
-//-----------------------------------------------------------------------------
-template<typename T,typename U> 
-bool operator!=(const RefBuffer<T> &a,const Buffer<U> &b){
-    RefBuffer<U> refb;
 
-    return a!=refb;
-}
-
-//------------------------------------------------------------------------------
-template<typename T,typename U>
-bool operator!=(const Buffer<T> &a,const RefBuffer<U> &b){
-    return b!=a;
-}
 
 
 //end of namespace
