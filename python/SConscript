@@ -14,6 +14,7 @@ python_build_env.Append(CPPPATH=[sysconfig.get_python_inc()])
 python_sources = ["NumericObject.cpp","DataObject.cpp","Index.cpp",
                   "Shape.cpp","Buffer.cpp","Scalar.cpp",
                   "BufferObject.cpp","ArrayObject.cpp","RefBuffer.cpp",
+                  "Array.cpp",
                   "pniutils.cpp"]
 
 module = python_build_env.SharedLibrary("pni/utils/pniutils",python_sources,SHLIBPREFIX="")

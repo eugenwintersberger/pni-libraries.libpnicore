@@ -15,6 +15,6 @@ using namespace pni::utils;
 using namespace boost::python;
 
 void wrap_arrayobject(){
-    class_<ArrayObject,boost::noncopyable>("ArrayObject",no_init)
+    class_<ArrayObject,bases<NumericObject>,boost::noncopyable>("ArrayObject",no_init)
         ;
 }

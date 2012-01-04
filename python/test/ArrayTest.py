@@ -2,10 +2,7 @@ import sys
 import unittest
 sys.path.append("../")
 
-from pni.utils import Float64Array
-from pni.utils import Float64Buffer
-from pni.utils import Shape
-
+from pni.utils import Array
 
 #implementing test fixture
 class ArrayTest(unittest.TestCase):

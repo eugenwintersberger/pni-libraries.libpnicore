@@ -11,7 +11,7 @@ suite = unittest.TestSuite()
 suite.addTests(unittest.defaultTestLoader.loadTestsFromModule(ShapeTest))
 suite.addTests(unittest.defaultTestLoader.loadTestsFromModule(IndexTest))
 suite.addTests(unittest.defaultTestLoader.loadTestsFromModule(ScalarTest))
-suite.addTests(unittest.defaultTestLoader.loadTestsFromModule(ArrayTest))
+#suite.addTests(unittest.defaultTestLoader.loadTestsFromModule(ArrayTest))
 
 runner = unittest.TextTestRunner()
 result = runner.run(suite)

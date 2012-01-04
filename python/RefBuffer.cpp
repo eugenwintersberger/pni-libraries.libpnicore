@@ -10,6 +10,10 @@
 
 #include <boost/python.hpp>
 
+extern "C"{
+#include <numpy/ndarrayobject.h>
+#include <numpy/ndarraytypes.h>
+}
 
 #include "../src/Types.hpp"
 #include "../src/BufferObject.hpp"
@@ -36,6 +40,31 @@ using namespace boost::python;
 			.def("__setitem__",&RefBuffer<type>::set)\
 			;
 
+template<typename T> RefBuffer<T> create_buffer_from_numpy_array(object a)
+{
+    if(a.is_none()){
+        std::cerr<<"Object not initialized!"<<std::endl;
+        //most probably one should throw an exception here. 
+    }
+    //need to obtain the python object from object
+    PyObject *obj = a.ptr();
+
+    PyArrayObject *array = (PyArrayObject*)obj;
+    size_t size=1;
+    for(ssize_t i=0;i<array->nd;i++){
+        size *= array->dimensions[i];
+    }
+
+    T *ptr = nullptr;
+    ptr = (T *)PyArray_DATA(obj);
+
+    return RefBuffer<T>(size,ptr);
+}
+
+#define REFBUFFER_GENERATOR(name,type) \
+    def(name,create_buffer_from_numpy_array<type>)\
+    ;
+
 void wrap_refbuffer(){
 	//======================Wrapping buffer objects=============================
 	BUFFER_CLASS(UInt8,UInt8RefBuffer);
@@ -49,6 +78,18 @@ void wrap_refbuffer(){
 	BUFFER_CLASS(Float32,Float32RefBuffer);
 	BUFFER_CLASS(Float64,Float64RefBuffer);
 	BUFFER_CLASS(Float128,Float128RefBuffer);
+
+    REFBUFFER_GENERATOR("UInt8RefBufferGenerator",UInt8);
+    REFBUFFER_GENERATOR("Int8RefBufferGenerator",Int8);
+    REFBUFFER_GENERATOR("UInt16RefBufferGenerator",UInt16);
+    REFBUFFER_GENERATOR("Int16RefBufferGenerator",Int16);
+    REFBUFFER_GENERATOR("UInt32RefBufferGenerator",UInt32);
+    REFBUFFER_GENERATOR("Int32RefBufferGenerator",Int32);
+    REFBUFFER_GENERATOR("UInt64RefBufferGenerator",UInt64);
+    REFBUFFER_GENERATOR("Int64RefBufferGenerator",Int64);
+    REFBUFFER_GENERATOR("Float32RefBufferGenerator",Float32);
+    REFBUFFER_GENERATOR("Float64RefBufferGenerator",Float64);
+    REFBUFFER_GENERATOR("Float128RefBufferGenerator",Float128);
 
 }
 
