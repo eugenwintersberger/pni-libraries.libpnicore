@@ -1,0 +1,3 @@
+@LIBINSTPATH@/python*/*/pni/*.py
+@LIBINSTPATH@/python*/*/pni/utils/*.py
+@LIBINSTPATH@/python*/*/pni/utils/*.so
