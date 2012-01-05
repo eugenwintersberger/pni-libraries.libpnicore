@@ -3,6 +3,7 @@
 
 import subprocess
 import os
+from distutils import sysconfig
 
 class ProgramVersion:
     """
@@ -150,5 +151,23 @@ class DoxyVersionParser(VersionParser):
             
         return ProgramVersion(major,minor,release)
         
-    
+class PythonVersionParser(VersionParser):
+    def __init__(self):
+        VersionParser.__init__(self,"","")
+
+    def parse(self,prog=None,opts=None):
+        vstr = sysconfig.get_python_version()
+
+        vlist = vstr.split(".")
+        major = 0
+        minor = 0
+        release = 0
+
+        for i in range(len(vlist)):
+            if i==0: major = int(vlist[i])
+            if i==1: minor = int(vlist[i])
+            if i==2: release = int(vlist[i])
+
+        return ProgramVersion(major,minor,release)
+
     
