@@ -57,6 +57,14 @@ void BufferTest::testAssignment(){
 	//nothing happens - both are not allocated
 	CPPUNIT_ASSERT_NO_THROW(buffer1 = buffer2);
 	//now the lhs is not allocated and the rhs is
+    CPPUNIT_ASSERT_NO_THROW(buffer2.allocate(n1));
+    CPPUNIT_ASSERT_NO_THROW(buffer1 = buffer2);
+    //now the rhs is not allocate dnad the lhs is
+    CPPUNIT_ASSERT_NO_THROW(buffer1.free());
+    CPPUNIT_ASSERT_NO_THROW(buffer2 = buffer1);
+
+
+    //booth buffers are allocated
 	CPPUNIT_ASSERT_NO_THROW(buffer2.allocate(n1));
 	CPPUNIT_ASSERT_NO_THROW(buffer1.allocate(n2));
 	//reallocation of the lhs
