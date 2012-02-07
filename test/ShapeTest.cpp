@@ -62,6 +62,14 @@ void ShapeTest::testConstruction(){
 	//copy constructor
 	Shape s2(s);
 	CPPUNIT_ASSERT(s==s2);
+
+    //construct from an initializer list
+    Shape s3 = {10,30,12};
+    CPPUNIT_ASSERT(s3[0] == 10);
+    CPPUNIT_ASSERT(s3[1] == 30);
+    CPPUNIT_ASSERT(s3[2] == 12);
+    CPPUNIT_ASSERT(s3.rank() == 3);
+
 }
 
 //------------------------------------------------------------------------------
@@ -79,6 +87,13 @@ void ShapeTest::testAssignment(){
 	Shape snon;
 	CPPUNIT_ASSERT_NO_THROW(s1 = snon);
 	CPPUNIT_ASSERT(s1 == snon);
+
+    snon = {1,2,3,4};
+    CPPUNIT_ASSERT(snon.rank() == 4);
+    CPPUNIT_ASSERT(snon[0] == 1);
+    CPPUNIT_ASSERT(snon[1] == 2);
+    CPPUNIT_ASSERT(snon[2] == 3);
+    CPPUNIT_ASSERT(snon[3] == 4);
 }
 
 //------------------------------------------------------------------------------
@@ -118,12 +133,14 @@ void ShapeTest::testOffset(){
 	index[0] = 2;
 	index[1] = 1;
 	CPPUNIT_ASSERT(s1.offset(index)==9);
+    CPPUNIT_ASSERT(s1.offset({2,1}) == 9);
 
 	index.rank(s2.rank());
 	index[0] = 0;
 	index[1] = 1;
 	index[2] = 3;
 	CPPUNIT_ASSERT(s2.offset(index)==8);
+    CPPUNIT_ASSERT(s2.offset({0,1,3}) == 8);
 
 }
 

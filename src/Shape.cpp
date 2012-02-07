@@ -44,7 +44,7 @@ void Shape::_compute_dimstrides()
 
     //compute the dimension  strides
     for(i=rank()-1;i>=0;i--){
-        if(i==rank()-1){
+        if(i==(ssize_t)rank()-1){
             _dimstrides[(size_t)i] = 1;
             continue;
         }
@@ -65,19 +65,31 @@ Shape::Shape(){
 
 //------------------------------------------------------------------------------
 //implementation of the standard constructor
-Shape::Shape(const size_t &r){
+Shape::Shape(const size_t &r)
+    :_dimstrides(r),
+     _shape(r)
+{
 	EXCEPTION_SETUP("ArrayShape::ArrayShape(const UInt32 &r)");
 
 	//initialize member variables
 	_size = 0;
+    _dimstrides = 0;
+    _shape = 0;
+}
 
-	_dimstrides.allocate(r);
-	_shape.allocate(r);
+//------------------------------------------------------------------------------
+//implementation of the constructor with initializer list
+Shape::Shape(std::initializer_list<size_t> list)
+    :_dimstrides(list.size()),
+     _shape(list)
+{
+    EXCEPTION_SETUP("Shape::Shape(std::initializer_list<size_t> list)");
 
-	for(size_t i=0;i<r;i++){
-		_dimstrides[i] = 0;
-		_shape[i] = 0;
-	}
+    _size = 0;
+    _dimstrides = 0;
+
+    _compute_size();
+    _compute_dimstrides();
 }
 
 //------------------------------------------------------------------------------
@@ -149,6 +161,24 @@ void Shape::dim(const size_t &i,const size_t &d){
 	_compute_size();
 }
 
+//-------------------------------------------------------------------------------
+//implementation of the set dimension by initializer list
+void Shape::dim(std::initializer_list<size_t> list){
+    EXCEPTION_SETUP("void Shape::dim(std::initializer_list<size_t> list)");
+
+    if(list.size() != rank()){
+        EXCEPTION_INIT(SizeMissmatchError,
+                "Initializer list size does not match rank of Shape!");
+        EXCEPTION_THROW();
+    }
+    
+    size_t cntr = 0;
+    for(const size_t &i: list){
+        _shape[cntr] = i;
+        cntr++;
+    }
+}
+
 //-----------------------------------------------------------------------------
 //implementation of get dimension
 size_t Shape::dim(const size_t &i) const{
@@ -159,10 +189,10 @@ size_t Shape::dim(const size_t &i) const{
 
 //===========Methods concerning offset and index handling=======================
 //implementation of offset calculation
-UInt64 Shape::offset(const Index &i) const {
+size_t Shape::offset(const Index &i) const {
 	EXCEPTION_SETUP("UInt64 ArrayShape::getOffset(const Index &i)");
-	UInt64 offset = 0;
-	UInt64 index = 0;
+	size_t offset = 0;
+	size_t index = 0;
 
 	if(!_shape.is_allocated()){
 		EXCEPTION_INIT(MemoryAccessError,"ArrayShape object is not allocated (rank == 0)!");
@@ -188,6 +218,40 @@ UInt64 Shape::offset(const Index &i) const {
 		offset += index*_dimstrides[d];
 	}
 	return offset;
+}
+
+//------------------------------------------------------------------------------
+//compute an offset form an initializer list
+size_t Shape::offset(std::initializer_list<size_t> list) const{
+    EXCEPTION_SETUP("size_t Shape::"
+            "offset(std::initializer_list<size_t> list) const");
+
+	size_t offset = 0;
+
+	if(!_shape.is_allocated()){
+		EXCEPTION_INIT(MemoryAccessError,"Shape object is not allocated (rank == 0)!");
+		EXCEPTION_THROW();
+	}
+
+
+	if(list.size() != rank()){
+		EXCEPTION_INIT(ShapeMissmatchError,
+                "Shape rank and initializer list size do not match!");
+		EXCEPTION_THROW();
+	}
+
+    size_t cntr = 0;
+    for(const size_t &index: list){
+        if(index >= dim(cntr)){
+			EXCEPTION_INIT(IndexError,"Index out of bounds!");
+			EXCEPTION_THROW();
+        }
+        offset += index*_dimstrides[cntr];
+        cntr++; //increment list counter
+    }
+
+	return offset;
+
 }
 
 //------------------------------------------------------------------------------

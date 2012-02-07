@@ -93,7 +93,7 @@ class Shape{
     public:
         typedef boost::shared_ptr<Shape> sptr;  //!< smart pointer to an ArrayShape object
         //! default constructor
-        Shape();
+        explicit Shape();
         //! copy constructor
 
         //! Initialize an object of type ArrayShape with the content of an
@@ -108,9 +108,16 @@ class Shape{
         //! to allocate memory during creation.
         //! \throws MemoryAllocationError if memory allocation fails
         //! \param r rank of the shape (number of dimensions)
-        Shape(const size_t &r);
+        explicit Shape(const size_t &r);
+
+        //! constructor for initialization list
+
+        //! An initialization list can be used for the construction of a 
+        //! Shape object.
+        Shape(std::initializer_list<size_t> list);
+
         //! destructor
-        virtual ~Shape();
+        ~Shape();
         
         //! set the rank of the shape object
 
@@ -144,6 +151,11 @@ class Shape{
         //! \param i index of the dimension
         //! \return the number of elements along dimension i
         virtual size_t dim(const size_t &i) const;
+        //! set all dimensions
+
+        //! Set all dimensions using an initializer list
+        virtual void dim(std::initializer_list<size_t> list);
+
         //! total number of elements
 
         //! Returns the total number of elements that can be described by the
@@ -160,6 +172,13 @@ class Shape{
         //! \param Index index object
         //! \return offset for an index
         virtual size_t offset(const Index &i) const;
+
+        //! compute element offset
+
+        //! Here the element offset is computed from an initializer list.
+        //! This can make reading code much easier. 
+        size_t offset(std::initializer_list<size_t> list) const;
+
         //! creates index from offset
 
         //! Creates an index object that belongs to a particular linear offset.
