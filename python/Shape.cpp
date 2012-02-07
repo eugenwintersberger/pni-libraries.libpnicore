@@ -13,6 +13,7 @@
 
 #include "../src/Types.hpp"
 #include "../src/Shape.hpp"
+#include "../src/Index.hpp"
 
 
 using namespace pni::utils;
@@ -24,6 +25,7 @@ void wrap_shape(){
 	void   (Shape::*shape_set_rank)(const size_t &) = &Shape::rank;
 	size_t (Shape::*shape_get_dimension)(const size_t &) const = &Shape::dim;
 	void   (Shape::*shape_set_dimension)(const size_t &,const size_t &) = &Shape::dim;
+    size_t (Shape::*shape_get_offset)(const Index &) const = &Shape::offset;
 	class_<Shape>("Shape")
 			.def(init<Shape>())
 			.def(init<size_t>())
@@ -31,7 +33,7 @@ void wrap_shape(){
 			.def("dim",shape_set_dimension)
 			.def("dim",shape_get_dimension)
 			.add_property("size",&Shape::size)
-			.def("offset",&Shape::offset)
+			.def("offset",shape_get_offset)
 			.def("index",&Shape::index)
 			.def(self == self)
 			.def(self != self)

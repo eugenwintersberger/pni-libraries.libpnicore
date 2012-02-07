@@ -66,7 +66,7 @@ public:
 	typedef boost::shared_ptr<RefBuffer<T> > sptr; //!< smart pointer to a typed buffer
     //-----------------constructors and destructors----------------------------
 	//! default constructor
-	RefBuffer();
+	explicit RefBuffer();
 	//! copy constructor
 
 	//! The buffer is initialized by an already existing reference buffer. 
@@ -83,7 +83,7 @@ public:
 	//! Using this constructor the buffer will automatically allocate memory.
 	//! \throws MemoryAllocationError if allocation on the heap fails
 	//! \param n number of elements of type T in the buffer
-	RefBuffer(size_t n,T *data);
+	explicit RefBuffer(size_t n,T *data);
 	//! destructor
 	virtual ~RefBuffer();
 

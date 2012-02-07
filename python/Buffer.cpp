@@ -21,6 +21,7 @@ using namespace boost::python;
 
 #define BUFFER_CLASS(type,name) \
 	size_t (Buffer<type>::*(name ## size))() const = &Buffer<type>::size;\
+    void (Buffer<type>::*(name ## set))(size_t ,const type &) = &Buffer<type>::set; \
 	class_<Buffer<type>,bases<BufferObject> >(#name)\
 			.def(init<Buffer<type> >())\
 			.def(init<type>())\
@@ -31,7 +32,7 @@ using namespace boost::python;
 			.def("free",&Buffer<type>::free)\
 			.add_property("type_id",&Buffer<type>::type_id)\
 			.def("__getitem__",&Buffer<type>::get)\
-			.def("__setitem__",&Buffer<type>::set)\
+			.def("__setitem__",(name ## set))\
 			;
 
 void wrap_buffer(){
