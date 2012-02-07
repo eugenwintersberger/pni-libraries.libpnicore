@@ -45,6 +45,12 @@ void BufferTest::testConstructors(){
 	CPPUNIT_ASSERT(dbuffer4.is_allocated());
 	CPPUNIT_ASSERT(dbuffer4.size() == dbuffer3.size());
 	CPPUNIT_ASSERT(!dbuffer2.is_allocated());
+
+    //test constructor with initializer list
+    Buffer<Int32> ibuffer = {1,-6,12};
+    CPPUNIT_ASSERT(ibuffer[0] == 1);
+    CPPUNIT_ASSERT(ibuffer[1] == -6);
+    CPPUNIT_ASSERT(ibuffer[2] == 12);
 }
 
 //------------------------------------------------------------------------------
@@ -115,6 +121,17 @@ void BufferTest::testAccess(){
 	for(UInt64 i=0;i<1000;i++){
 		CPPUNIT_ASSERT(((Float64)i)==dbuffer[i]);
 	}
+
+    Buffer<Int32> ibuffer(4);
+    CPPUNIT_ASSERT_NO_THROW(ibuffer.set({1,2,3,4}));
+    CPPUNIT_ASSERT(ibuffer[0] = 1);
+    CPPUNIT_ASSERT(ibuffer[1] = 2);
+    CPPUNIT_ASSERT(ibuffer[2] = 3);
+    CPPUNIT_ASSERT(ibuffer[3] = 4);
+
+    CPPUNIT_ASSERT_THROW(ibuffer.set({1,2}),SizeMissmatchError);
+    CPPUNIT_ASSERT_THROW(ibuffer.set({1,2,3,4,54,6,7}),SizeMissmatchError);
+
 }
 
 //------------------------------------------------------------------------------

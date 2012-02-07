@@ -61,7 +61,7 @@ private:
 public:
 	typedef boost::shared_ptr<Buffer<T> > sptr; //!< smart pointer to a typed buffer
 	//! default constructor
-	Buffer();
+	explicit Buffer();
 	//! copy constructor
 
 	//! The buffer is initialized by an already existing buffer. All data will
@@ -75,7 +75,13 @@ public:
 	//! Using this constructor the buffer will automatically allocate memory.
 	//! \throws MemoryAllocationError if allocation on the heap fails
 	//! \param n number of elements of type T in the buffer
-	Buffer(size_t n);
+	explicit Buffer(size_t n);
+
+    //! construct with initializer list
+
+    //! This constructor allows the construction of Buffer<T> objects 
+    //! using an initializer list. 
+    Buffer(std::initializer_list<T> list);
 	//! destructor
 	virtual ~Buffer();
 
@@ -116,6 +122,7 @@ public:
 
 	virtual T get(size_t i) const;
 	virtual void set(size_t i,const T &o);
+    virtual void set(std::initializer_list<T> list);
 
 	//! [] operator for read and write access
 
@@ -178,6 +185,35 @@ template<typename T> Buffer<T>::Buffer(size_t n):BufferObject(n){
 			EXCEPTION_INIT(MemoryAllocationError,"Memory allocation for Buffer failed!");
 			EXCEPTION_THROW();
 		}
+	}
+}
+
+//------------------------------------------------------------------------------
+//implementation using an initializer list
+template<typename T> Buffer<T>::Buffer(std::initializer_list<T> list)
+    :BufferObject(list.size())
+{
+    EXCEPTION_SETUP("template<typename T> Buffer<T>::"
+            "Buffer(std::initializer_list<T> list)");
+    _data = nullptr;
+
+	//we try to allocate memory only if the size is not zero - otherwise
+	//an exception will be raised.
+	if(this->size()!=0){
+		try{
+			this->allocate(this->size());
+		}catch(...){
+			EXCEPTION_INIT(MemoryAllocationError,"Memory allocation for Buffer failed!");
+			EXCEPTION_THROW();
+		}
+
+        //once memory allocation was successfull we can use the values 
+        //from the initializer list to fill the buffer
+        size_t index = 0;
+        for(const T &value: list){
+            _data[index] = value;
+            index++;
+        }
 	}
 }
 
@@ -279,7 +315,7 @@ template<typename T> Buffer<T> &Buffer<T>::operator=(const Buffer<T> &b){
 		//free this buffer if it is allocated
 		this->free();
 		//now assign all parameters from the original buffer to the new one
-		(BufferObject &)(*this) = (BufferObject &)b;
+        BufferObject::operator=(b);
 		//call allocate (which will do nothing if there is nothing to allocate)
 
 		if(this->size()){
@@ -297,7 +333,7 @@ template<typename T> Buffer<T> &Buffer<T>::operator=(const Buffer<T> &b){
 template<typename T> Buffer<T> &Buffer<T>::operator=(Buffer<T> &&b){
 	if(this != &b){
 		this->free();
-		(BufferObject &)(*this) = std::move((BufferObject &)b);
+        BufferObject::operator=(std::move(b));
 
 		_data = b._data;
 		b._data = nullptr;
@@ -361,6 +397,24 @@ template<typename T> void Buffer<T>::set(size_t i,const T &o){
 	}
 
 	_data[i] = o;
+}
+
+template<typename T> void Buffer<T>::set(std::initializer_list<T> list){
+    EXCEPTION_SETUP("template<typename T> void Buffer<T>::"
+            "set(std::initializer_list<T> list)");
+
+    if(list.size() != this->size()){
+        //raise an exception here
+        EXCEPTION_INIT(SizeMissmatchError,
+                "Initializer list does not match size of buffer!");
+        EXCEPTION_THROW();
+    }
+
+    size_t cntr = 0;
+    for(const T &value: list){
+        _data[cntr] = value;
+        cntr++;
+    }
 }
 
 //======================operators for data access===============================

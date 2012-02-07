@@ -37,14 +37,12 @@ namespace utils{
 
 //================Constructors and destructors==================================
 //implementation of the default constructor
-BufferObject::BufferObject(){
-	_size = 0;
+BufferObject::BufferObject():_size(0){
 }
 
 //------------------------------------------------------------------------------
 //implementation of the copy constructor
-BufferObject::BufferObject(const BufferObject &b){
-	_size = b._size;
+BufferObject::BufferObject(const BufferObject &b):_size(b._size){
 }
 
 //------------------------------------------------------------------------------
@@ -56,15 +54,13 @@ BufferObject::BufferObject(BufferObject &&o){
 
 //------------------------------------------------------------------------------
 //implementation of the protected standard constructor
-BufferObject::BufferObject(size_t n){
-	_size = n;
+BufferObject::BufferObject(size_t n):_size(n){
 }
 
 //------------------------------------------------------------------------------
 //implementation of the destructor
 BufferObject::~BufferObject(){
 	_size = 0;
-
 }
 
 //===============Implementation of assignment operators=========================

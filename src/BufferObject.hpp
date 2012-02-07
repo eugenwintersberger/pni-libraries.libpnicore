@@ -58,7 +58,7 @@ protected:
 
 	//! This constructor is used by derived classes in order to
 	//! set internal members of the base class
-	BufferObject(size_t size);
+	explicit BufferObject(size_t size);
 
 	//! set number of elements
 
@@ -72,11 +72,11 @@ public:
 	//! smart pointer to a BufferObject
 	typedef boost::shared_ptr<BufferObject> sptr;
 	//! default constructor
-	BufferObject();
+	explicit BufferObject();
 	//! copy constructor
-	BufferObject(const BufferObject &b);
+	explicit BufferObject(const BufferObject &b);
 	//! move constructor
-	BufferObject(BufferObject &&b);
+	explicit BufferObject(BufferObject &&b);
 
 	//! destructor
 	virtual ~BufferObject();
