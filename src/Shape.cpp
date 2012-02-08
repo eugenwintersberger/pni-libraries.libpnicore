@@ -79,7 +79,7 @@ Shape::Shape(const size_t &r)
 
 //------------------------------------------------------------------------------
 //implementation of the constructor with initializer list
-Shape::Shape(std::initializer_list<size_t> list)
+Shape::Shape(const std::initializer_list<size_t> &list)
     :_dimstrides(list.size()),
      _shape(list)
 {
@@ -163,7 +163,7 @@ void Shape::dim(const size_t &i,const size_t &d){
 
 //-------------------------------------------------------------------------------
 //implementation of the set dimension by initializer list
-void Shape::dim(std::initializer_list<size_t> list){
+void Shape::dim(const std::initializer_list<size_t> &list){
     EXCEPTION_SETUP("void Shape::dim(std::initializer_list<size_t> list)");
 
     if(list.size() != rank()){
@@ -222,7 +222,7 @@ size_t Shape::offset(const Index &i) const {
 
 //------------------------------------------------------------------------------
 //compute an offset form an initializer list
-size_t Shape::offset(std::initializer_list<size_t> list) const{
+size_t Shape::offset(const std::initializer_list<size_t> &list) const{
     EXCEPTION_SETUP("size_t Shape::"
             "offset(std::initializer_list<size_t> list) const");
 

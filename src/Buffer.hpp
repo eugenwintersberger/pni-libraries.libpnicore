@@ -81,7 +81,7 @@ public:
 
     //! This constructor allows the construction of Buffer<T> objects 
     //! using an initializer list. 
-    Buffer(std::initializer_list<T> list);
+    Buffer(const std::initializer_list<T> &list);
 	//! destructor
 	virtual ~Buffer();
 
@@ -122,7 +122,7 @@ public:
 
 	virtual T get(size_t i) const;
 	virtual void set(size_t i,const T &o);
-    virtual void set(std::initializer_list<T> list);
+    virtual void set(const std::initializer_list<T> &list);
 
 	//! [] operator for read and write access
 
@@ -190,7 +190,7 @@ template<typename T> Buffer<T>::Buffer(size_t n):BufferObject(n){
 
 //------------------------------------------------------------------------------
 //implementation using an initializer list
-template<typename T> Buffer<T>::Buffer(std::initializer_list<T> list)
+template<typename T> Buffer<T>::Buffer(const std::initializer_list<T> &list)
     :BufferObject(list.size())
 {
     EXCEPTION_SETUP("template<typename T> Buffer<T>::"
@@ -399,7 +399,7 @@ template<typename T> void Buffer<T>::set(size_t i,const T &o){
 	_data[i] = o;
 }
 
-template<typename T> void Buffer<T>::set(std::initializer_list<T> list){
+template<typename T> void Buffer<T>::set(const std::initializer_list<T> &list){
     EXCEPTION_SETUP("template<typename T> void Buffer<T>::"
             "set(std::initializer_list<T> list)");
 

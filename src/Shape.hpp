@@ -114,7 +114,7 @@ class Shape{
 
         //! An initialization list can be used for the construction of a 
         //! Shape object.
-        Shape(std::initializer_list<size_t> list);
+        Shape(const std::initializer_list<size_t> &list);
 
         //! destructor
         ~Shape();
@@ -154,7 +154,7 @@ class Shape{
         //! set all dimensions
 
         //! Set all dimensions using an initializer list
-        virtual void dim(std::initializer_list<size_t> list);
+        virtual void dim(const std::initializer_list<size_t> &list);
 
         //! total number of elements
 
@@ -177,7 +177,7 @@ class Shape{
 
         //! Here the element offset is computed from an initializer list.
         //! This can make reading code much easier. 
-        size_t offset(std::initializer_list<size_t> list) const;
+        size_t offset(const std::initializer_list<size_t> &list) const;
 
         //! creates index from offset
 
