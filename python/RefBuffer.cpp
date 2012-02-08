@@ -29,7 +29,6 @@ using namespace boost::python;
 	class_<RefBuffer<type>,bases<BufferObject> >(#name)\
             .def(init<Buffer<type> >())\
             .def(init<RefBuffer<type> >())\
-			.def(init<type>())\
 			.add_property("size",(name ## size))\
 			.add_property("element_size",&RefBuffer<type>::element_size)\
 			.add_property("mem_size",&RefBuffer<type>::mem_size)\
