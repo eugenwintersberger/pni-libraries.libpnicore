@@ -13,6 +13,7 @@ class BinaryTest : public CppUnit::TestFixture{
     CPPUNIT_TEST(test_comparison);
     CPPUNIT_TEST(test_assignment);
     CPPUNIT_TEST(test_compatability);
+    CPPUNIT_TEST(test_io_operator);
     CPPUNIT_TEST(test_io);
 	CPPUNIT_TEST_SUITE_END();
 public:
@@ -22,6 +23,7 @@ public:
     void test_comparison();
     void test_assignment();
     void test_compatability();
+    void test_io_operator();
     void test_io();
 
 };

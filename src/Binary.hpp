@@ -72,7 +72,7 @@ namespace pni{
                         BinaryType<NATIVETYPE> &b);
             public:
                 //! native type that is used for binary data
-                typedef NATIVETYPE type;
+                typedef NATIVETYPE binary_type;
                 //constructors
                 explicit BinaryType();
                 BinaryType(NATIVETYPE value);
@@ -86,18 +86,6 @@ namespace pni{
                 operator NATIVETYPE() const{
                     return _value;
                 }
-
-                std::ostream operator<<(std::ostream &o){
-                    o<<_value;
-                    return o;
-                }
-
-                std::istream operator>>(std::istream &i){
-                    i>>_value;
-                    return i;
-                }
-
-
 
 
         };
@@ -141,10 +129,8 @@ namespace pni{
             return *this;
         }
 
-        /*
         template<typename NATIVETYPE>
-        std::ostream &operator<<(std::ostream &os,const BinaryType<NATIVETYPE>
-                &o)
+        std::ostream &operator<<(std::ostream &os,const BinaryType<NATIVETYPE> &o)
         {
             NATIVETYPE b = o;
             os<<b;
@@ -157,7 +143,7 @@ namespace pni{
             is>>b;
             o = b;
             return is;
-        }*/
+        }
 
     }
 }

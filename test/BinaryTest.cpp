@@ -71,16 +71,42 @@ void BinaryTest::test_compatability(){
 
     for(size_t i=0;i<10;i++) CPPUNIT_ASSERT(*rptr == *bptr);
 
+
     delete [] rptr;
     delete [] bptr;
 }
 
+void BinaryTest::test_io_operator(){
+    std::cout<<"void BinaryTest::test_io_operator()---------------------------";
+    std::cout<<std::endl;
+    BinaryType<UInt8>  b = 'a';
+
+    CPPUNIT_ASSERT(b == 'a');
+    b = 'x';
+    CPPUNIT_ASSERT(b == 'x');
+
+    BinaryType<UInt8>::binary_type bvalue;
+
+    bvalue = b;
+    CPPUNIT_ASSERT(bvalue == 'x');
+    
+    std::cout<<"value = "<<bvalue<<std::endl;
+    std::cout<<"value = "<<b<<std::endl;
+    Int8 ivalue = 'z';
+    b = ivalue;
+    std::cout<<"value = "<<b<<std::endl;
+
+}
+
 void BinaryTest::test_io(){
+    std::cout<<"void BinaryTest::test_io()------------------------------------";
+    std::cout<<std::endl;
+
     std::ifstream istream;
     std::ofstream ostream;
 
     //open the file for reading
-    istream.open("mscp03_au_sputter2_00057.tif",
+    istream.open("mscp03_au_sputter2_00057.tif", 
             std::ifstream::in | std::ifstream::binary);
    
     //need to determine the size of the file
@@ -89,16 +115,15 @@ void BinaryTest::test_io(){
     istream.seekg(0,std::ios::beg);
 
 
-    ostream.open("test.tif",
+    ostream.open("test.tif", 
             std::ofstream::out | std::ofstream::binary);
    
     //copy binary file
-    BinaryType<UInt8> buffer;
+    char buffer;
     while(!istream.eof()){
         istream>>buffer;
         ostream<<buffer;
     }
-
 
     istream.close();
     ostream.close();
