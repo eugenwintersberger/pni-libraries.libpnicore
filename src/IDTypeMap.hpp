@@ -41,105 +41,105 @@ namespace utils{
 
 //! This template implements a map from a TypeID to a specific data type.
 template<TypeID id> class IDTypeMap{
-public:
-	typedef UInt8 Type; //!< type identified by the template parameter
+    public:
+        typedef UInt8 type; //!< type identified by the template parameter
 };
 
 //! \cond NO_API_DOC
 //------------------------------------------------------------------------------
 template<> class IDTypeMap<TypeID::UINT8>{
-public:
-	typedef UInt8 Type;
+    public:
+        typedef UInt8 type;
 };
 
 //------------------------------------------------------------------------------
 template<> class IDTypeMap<TypeID::INT8>{
-public:
-	typedef Int8 Type;
+    public:
+        typedef Int8 type;
 };
 
 //------------------------------------------------------------------------------
 template<> class IDTypeMap<TypeID::UINT16>{
-public:
-	typedef UInt16 Type;
+    public:
+        typedef UInt16 type;
 };
 
 //------------------------------------------------------------------------------
 template<> class IDTypeMap<TypeID::INT16>{
-public:
-	typedef Int16 Type;
+    public:
+        typedef Int16 type;
 };
 
 //------------------------------------------------------------------------------
 template<> class IDTypeMap<TypeID::INT32>{
-public:
-	typedef Int32 Type;
+    public:
+        typedef Int32 type;
 };
 
 //------------------------------------------------------------------------------
 template<> class IDTypeMap<TypeID::UINT32>{
-public:
-	typedef UInt32 Type;
+    public:
+        typedef UInt32 type;
 };
 
 //------------------------------------------------------------------------------
 template<> class IDTypeMap<TypeID::INT64>{
-public:
-	typedef Int64 Type;
+    public:
+        typedef Int64 type;
 };
 
 //------------------------------------------------------------------------------
 template<> class IDTypeMap<TypeID::UINT64>{
-public:
-	typedef UInt64 Type;
+    public:
+        typedef UInt64 type;
 };
 
 //------------------------------------------------------------------------------
 template<> class IDTypeMap<TypeID::FLOAT32>{
-public:
-	typedef Float32 Type;
+    public:
+        typedef Float32 type;
 };
 
 //------------------------------------------------------------------------------
 template<> class IDTypeMap<TypeID::FLOAT64>{
-public:
-	typedef Float64 Type;
+    public:
+        typedef Float64 type;
 };
 
 //------------------------------------------------------------------------------
 template<> class IDTypeMap<TypeID::FLOAT128>{
-public:
-	typedef Float128 Type;
+    public:
+        typedef Float128 type;
 };
 
 //------------------------------------------------------------------------------
 template<> class IDTypeMap<TypeID::COMPLEX32>{
-public:
-	typedef Complex32 Type;
+    public:
+        typedef Complex32 type;
 };
 
 //------------------------------------------------------------------------------
 template<> class IDTypeMap<TypeID::COMPLEX64>{
-public:
-	typedef Complex64 Type;
+    public:
+        typedef Complex64 type;
 };
 
 //------------------------------------------------------------------------------
 template<> class IDTypeMap<TypeID::COMPLEX128>{
-public:
-	typedef Complex128 Type;
+    public:
+        typedef Complex128 type;
 };
 
 //------------------------------------------------------------------------------
 template<> class IDTypeMap<TypeID::STRING>{
-public:
-	typedef String Type;
-}
+    public:
+        typedef String type;
+};
 
 //------------------------------------------------------------------------------
 template<> class IDTypeMap<TypeID::BINARY>{
-public:
-	typedef Binary Type;
+    public:
+        typedef Binary type;
 };
 
 //! \endcond

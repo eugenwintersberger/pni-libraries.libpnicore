@@ -37,99 +37,105 @@ namespace utils{
 
 //! This template implements a map from a concrete type to its TypeID
 template<typename T> class TypeIDMap{
-public:
-	static const TypeID type_id = TypeID::NONE; //!< id value for type T
+    public:
+        static const TypeID type_id = TypeID::NONE; //!< id value for type T
 };
 
 //! \cond NO_API_DOC
 //------------------------------------------------------------------------------
 template<> class TypeIDMap<UInt8>{
-public:
-	static const TypeID type_id = TypeID::UINT8;
+    public:
+        static const TypeID type_id = TypeID::UINT8;
 };
 
 //------------------------------------------------------------------------------
 template<> class TypeIDMap<Int8>{
-public:
-	static const TypeID type_id = TypeID::INT8;
+    public:
+        static const TypeID type_id = TypeID::INT8;
 };
 
 //------------------------------------------------------------------------------
 template<> class TypeIDMap<UInt16>{
-public:
-	static const TypeID type_id = TypeID::UINT16;
+    public:
+        static const TypeID type_id = TypeID::UINT16;
 };
 
 //------------------------------------------------------------------------------
 template<> class TypeIDMap<Int16>{
-public:
-	static const TypeID type_id = TypeID::INT16;
+    public:
+        static const TypeID type_id = TypeID::INT16;
 };
 
 //------------------------------------------------------------------------------
 template<> class TypeIDMap<Int32>{
-public:
-	static const TypeID type_id = TypeID::INT32;
+    public:
+        static const TypeID type_id = TypeID::INT32;
 };
 
 //------------------------------------------------------------------------------
 template<> class TypeIDMap<UInt32>{
-public:
-	static const TypeID type_id = TypeID::UINT32;
+    public:
+        static const TypeID type_id = TypeID::UINT32;
 };
 
 //------------------------------------------------------------------------------
 template<> class TypeIDMap<Int64>{
-public:
-	static const TypeID type_id = TypeID::INT64;
+    public:
+        static const TypeID type_id = TypeID::INT64;
 };
 
 //------------------------------------------------------------------------------
 template<> class TypeIDMap<UInt64>{
-public:
-	static const TypeID type_id = TypeID::UINT64;
+    public:
+        static const TypeID type_id = TypeID::UINT64;
 };
 
 //------------------------------------------------------------------------------
 template<> class TypeIDMap<Float32>{
-public:
-	static const TypeID type_id = TypeID::FLOAT32;
+    public:
+        static const TypeID type_id = TypeID::FLOAT32;
 };
 
 //------------------------------------------------------------------------------
 template<> class TypeIDMap<Float64>{
-public:
-	static const TypeID type_id = TypeID::FLOAT64;
+    public:
+        static const TypeID type_id = TypeID::FLOAT64;
 };
 
 //------------------------------------------------------------------------------
 template<> class TypeIDMap<Float128>{
-public:
-	static const TypeID type_id = TypeID::FLOAT128;
+    public:
+        static const TypeID type_id = TypeID::FLOAT128;
 };
 
 //------------------------------------------------------------------------------
 template<> class TypeIDMap<Complex32>{
-public:
-	static const TypeID type_id = TypeID::COMPLEX32;
+    public:
+        static const TypeID type_id = TypeID::COMPLEX32;
 };
 
 //------------------------------------------------------------------------------
 template<> class TypeIDMap<Complex64>{
-public:
-	static const TypeID type_id = TypeID::COMPLEX64;
+    public:
+        static const TypeID type_id = TypeID::COMPLEX64;
 };
 
 //------------------------------------------------------------------------------
 template<> class TypeIDMap<Complex128>{
-public:
-	static const TypeID type_id = TypeID::COMPLEX128;
+    public:
+        static const TypeID type_id = TypeID::COMPLEX128;
 };
 
 //------------------------------------------------------------------------------
 template<> class TypeIDMap<String> {
-public:
-	static const TypeID type_id = TypeID::STRING;
+    public:
+	    static const TypeID type_id = TypeID::STRING;
+};
+
+//------------------------------------------------------------------------------
+template<> class TypeIDMap<Binary> {
+    public:
+        static const TypeID type_id = TypeID::BINARY;
 };
 
 

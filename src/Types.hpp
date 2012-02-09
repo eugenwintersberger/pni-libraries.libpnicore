@@ -29,6 +29,8 @@
 #include <complex>
 #include <string>
 
+#include "Binary.hpp"
+
 #ifndef PNITYPES_HPP_
 #define PNITYPES_HPP_
 
@@ -61,7 +63,7 @@ typedef std::complex<long double> Complex128; //!< 128Bit complex floating point
 
 typedef std::string String; //!< String type
 
-typedef UInt8 Binary; //!< data type for binary data
+typedef BinaryType<UInt8> Binary; //!< data type for binary data
 typedef bool Bool;    //!< data type for boolean expressions
 
 

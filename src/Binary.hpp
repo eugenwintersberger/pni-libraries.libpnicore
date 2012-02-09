@@ -1,8 +1,6 @@
 #ifndef __BINARY_HPP__
 #define __BINARY_HPP__
 
-#include "type_conversion.hpp"
-#include "Buffer.hpp"
 
 namespace pni{
     namespace utils{
@@ -43,103 +41,97 @@ namespace pni{
         //! The only thing one can do is to read and write data as binary. 
         //! This is not a limitation but thats exactly what this type 
         //! was made for.
-        template<typename NATIVETYPE> class BinaryType{
+        template<typename NTYPE> class BinaryType{
             private:
-                NATIVETYPE _value;
+                NTYPE _value;
 
                 //we do not want to allow any numerical calculation on 
                 //binary data.
-                friend BinaryType<NATIVETYPE> operator+ <> 
-                    (const BinaryType<NATIVETYPE> &a,const
-                     BinaryType<NATIVETYPE> &b);
-                friend BinaryType<NATIVETYPE> operator- <> 
-                    (const BinaryType<NATIVETYPE> &a,
-                     const BinaryType<NATIVETYPE> &b);
-                friend BinaryType<NATIVETYPE> operator* <>
-                    (const BinaryType<NATIVETYPE> &a,
-                     const BinaryType<NATIVETYPE> &b);
-                friend BinaryType<NATIVETYPE> operator/ <> 
-                    (const BinaryType<NATIVETYPE> &a,
-                     const BinaryType<NATIVETYPE> &b);
+                friend BinaryType<NTYPE> operator+ <> 
+                    (const BinaryType<NTYPE> &a,const BinaryType<NTYPE> &b);
+                friend BinaryType<NTYPE> operator- <> 
+                    (const BinaryType<NTYPE> &a, const BinaryType<NTYPE> &b);
+                friend BinaryType<NTYPE> operator* <>
+                    (const BinaryType<NTYPE> &a, const BinaryType<NTYPE> &b);
+                friend BinaryType<NTYPE> operator/ <> 
+                    (const BinaryType<NTYPE> &a, const BinaryType<NTYPE> &b);
 
-                const BinaryType<NATIVETYPE> & operator+=(const
-                        BinaryType<NATIVETYPE> &b);
-                const BinaryType<NATIVETYPE> & operator-=(const
-                        BinaryType<NATIVETYPE> &b);
-                const BinaryType<NATIVETYPE> & operator*=(const
-                        BinaryType<NATIVETYPE> &b);
-                const BinaryType<NATIVETYPE> & operator/=(const
-                        BinaryType<NATIVETYPE> &b);
+                const BinaryType<NTYPE> & operator+=(const BinaryType<NTYPE> &b);
+                const BinaryType<NTYPE> & operator-=(const BinaryType<NTYPE> &b);
+                const BinaryType<NTYPE> & operator*=(const BinaryType<NTYPE> &b);
+                const BinaryType<NTYPE> & operator/=(const BinaryType<NTYPE> &b);
             public:
                 //! native type that is used for binary data
-                typedef NATIVETYPE binary_type;
+                typedef NTYPE binary_type;
                 //constructors
                 explicit BinaryType();
-                BinaryType(NATIVETYPE value);
-                BinaryType(const BinaryType<NATIVETYPE> &o);
+                BinaryType(const NTYPE &value);
+                BinaryType(const BinaryType<NTYPE> &o);
                 ~BinaryType();
 
                 //assignment operators
-                BinaryType<NATIVETYPE> &operator=(const BinaryType<NATIVETYPE> &o);
-                BinaryType<NATIVETYPE> &operator=(const NATIVETYPE &value);
+                BinaryType<NTYPE> &operator=(const BinaryType<NTYPE> &o);
+                BinaryType<NTYPE> &operator=(const NTYPE &value);
 
-                operator NATIVETYPE() const{
+                operator NTYPE() const{
                     return _value;
                 }
 
 
         };
+
         
         //=========implementation of constructors===============================
         //implementation of the default constructor
-        template<typename NATIVETYPE> BinaryType<NATIVETYPE>::BinaryType(){
+        template<typename NTYPE> BinaryType<NTYPE>::BinaryType(){
         }
 
-        template<typename NATIVETYPE> BinaryType<NATIVETYPE>::BinaryType(NATIVETYPE
-                value)
+
+        template<typename NTYPE> 
+            BinaryType<NTYPE>::BinaryType(const NTYPE &value)
         {
             _value = value;
         }
 
-        template<typename NATIVETYPE> BinaryType<NATIVETYPE>::BinaryType(const
-                BinaryType<NATIVETYPE> &o)
+        template<typename NTYPE> 
+            BinaryType<NTYPE>::BinaryType(const BinaryType<NTYPE> &o)
         {
             _value = o._value;
         }
 
-        template<typename NATIVETYPE> BinaryType<NATIVETYPE>::~BinaryType(){
+        template<typename NTYPE> BinaryType<NTYPE>::~BinaryType(){
 
         }
 
         //===============implementation of the assignment operators=============
-        template<typename NATIVETYPE> BinaryType<NATIVETYPE> &
-            BinaryType<NATIVETYPE>::operator=(const BinaryType<NATIVETYPE> &o)
+        template<typename NTYPE> BinaryType<NTYPE> &
+            BinaryType<NTYPE>::operator=(const BinaryType<NTYPE> &o)
         {
-            if(this == &o) return &this;
+            if(this == &o) return *this;
 
             _value = o._value;
 
             return *this;
         }
 
-        template<typename NATIVETYPE> BinaryType<NATIVETYPE> &
-            BinaryType<NATIVETYPE>::operator=(const NATIVETYPE &value)
+        template<typename NTYPE> BinaryType<NTYPE> &
+            BinaryType<NTYPE>::operator=(const NTYPE &value)
         {
             _value = value;
             return *this;
         }
 
-        template<typename NATIVETYPE>
-        std::ostream &operator<<(std::ostream &os,const BinaryType<NATIVETYPE> &o)
+        template<typename NTYPE>
+        std::ostream &operator<<(std::ostream &os,const BinaryType<NTYPE> &o)
         {
-            NATIVETYPE b = o;
+            NTYPE b = o;
             os<<b;
             return os;
         }
 
-        template<typename NATIVETYPE>
-        std::istream &operator>>(std::istream &is,BinaryType<NATIVETYPE> &o){
-            NATIVETYPE b;
+        template<typename NTYPE>
+        std::istream &operator>>(std::istream &is,BinaryType<NTYPE> &o){
+            NTYPE b;
             is>>b;
             o = b;
             return is;
@@ -147,6 +139,76 @@ namespace pni{
 
     }
 }
+/*
+namespace std{
+  template<>
+      template<typename NTYPE>
+    struct char_traits<pni::utils::BinaryType<NTYPE> >
+    {
+      typedef pni::utils::BinaryType<NTYPE> char_type;
+      typedef int               int_type;
+      typedef streampos         pos_type;
+      typedef streamoff         off_type;
+      typedef mbstate_t         state_type;
 
+      static void
+      assign(char_type& __c1, const char_type& __c2)
+      { __c1 = __c2; }
 
+      static _GLIBCXX_CONSTEXPR bool
+      eq(const char_type& __c1, const char_type& __c2)
+      { return __c1 == __c2; }
+
+      static _GLIBCXX_CONSTEXPR bool
+      lt(const char_type& __c1, const char_type& __c2)
+      { return __c1 < __c2; }
+
+      static int
+      compare(const char_type* __s1, const char_type* __s2, size_t __n)
+      { return __builtin_memcmp(__s1, __s2, __n); }
+
+      static size_t
+      length(const char_type* __s)
+      { return __builtin_strlen(__s); }
+
+      static const char_type*
+      find(const char_type* __s, size_t __n, const char_type& __a)
+      { return static_cast<const char_type*>(__builtin_memchr(__s, __a, __n)); }
+
+      static char_type*
+      move(char_type* __s1, const char_type* __s2, size_t __n)
+      { return static_cast<char_type*>(__builtin_memmove(__s1, __s2, __n)); }
+
+      static char_type*
+      copy(char_type* __s1, const char_type* __s2, size_t __n)
+      { return static_cast<char_type*>(__builtin_memcpy(__s1, __s2, __n)); }
+
+      static char_type*
+      assign(char_type* __s, size_t __n, char_type __a)
+      { return static_cast<char_type*>(__builtin_memset(__s, __a, __n)); }
+
+      static _GLIBCXX_CONSTEXPR char_type
+      to_char_type(const int_type& __c)
+      { return static_cast<char_type>(__c); }
+
+      // To keep both the byte 0xff and the eof symbol 0xffffffff
+      // from ending up as 0xffffffff.
+      static _GLIBCXX_CONSTEXPR int_type
+      to_int_type(const char_type& __c)
+      { return static_cast<int_type>(static_cast<unsigned char>(__c)); }
+
+      static _GLIBCXX_CONSTEXPR bool
+      eq_int_type(const int_type& __c1, const int_type& __c2)
+      { return __c1 == __c2; }
+
+      static _GLIBCXX_CONSTEXPR int_type
+      eof()
+      { return static_cast<int_type>(_GLIBCXX_STDIO_EOF); }
+
+      static _GLIBCXX_CONSTEXPR int_type
+      not_eof(const int_type& __c)
+      { return (__c == eof()) ? 0 : __c; }
+  };
+}
+*/
 #endif

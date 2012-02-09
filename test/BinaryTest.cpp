@@ -102,6 +102,9 @@ void BinaryTest::test_io(){
     std::cout<<"void BinaryTest::test_io()------------------------------------";
     std::cout<<std::endl;
 
+    typedef
+        std::fstream fstream;
+
     std::ifstream istream;
     std::ofstream ostream;
 
@@ -119,10 +122,10 @@ void BinaryTest::test_io(){
             std::ofstream::out | std::ofstream::binary);
    
     //copy binary file
-    char buffer;
-    while(!istream.eof()){
-        istream>>buffer;
-        ostream<<buffer;
+
+    BinaryType<UInt8> buffer;
+    while(istream.get(((char&)buffer))){
+        ostream.put(((char&)buffer));
     }
 
     istream.close();

@@ -16,6 +16,7 @@ sources_list.extend(["ArrayTest.cpp"])
 sources_list.extend(["ShapeTest.cpp"])
 sources_list.extend(["ScalarTest.cpp"])
 sources_list.extend(["BinaryTest.cpp"])
+sources_list.extend(["TypeMapsTest.cpp"])
 #sources_list.extend(["libpniutils_typeinfo.cpp"])
 #sources_list.extend(["InplaceArithmeticsTest.cpp"])
 
