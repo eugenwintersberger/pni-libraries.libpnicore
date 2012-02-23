@@ -86,15 +86,41 @@ env.Append(CPPPATH=path.join(env["BOOSTPREFIX"],"include"))
 env.Replace(CXX = env["CXX"])
 
 
-gcc_version = GCCVersionParser().parse(prog=env["CXX"])
-#set some flags depending on the compiler versions
-if gcc_version < ProgramVersion(4,6,0):    
-    env.Append(CXXFLAGS=["-Dnullptr=NULL"])
-    env.Append(CXXFLAGS=["-DNOFOREACH"])
+nullptr_test_code="""
+int main(int argc,char **argv){
+    char *ptr=nullptr;
+    return 0;
+}
+"""
+
+def CheckNullPtr(context):
+    context.Message("Checking if compiler supports nullptr idiom ...")
+    result = context.TryCompile(nullptr_test_code,".cpp")
+    context.Result(result)
+    return result
+
+foreach_test_code="""
+#include<iostream>
+#include<vector>
+int main(int argc,char **arv){
+std::vector<int> vec = {1,2,3,4};
+for(int &v: vec){
+   std::cout<<v<<std::endl; 
+}
+return 0;
+}
+"""
+
+def CheckForEach(context):
+    context.Message("Check if compiler supports foreach loops ...")
+    result = context.TryCompile(foreach_test_code,".cpp")
+    context.Result(result)
+    return result
     
 #-------------------------------------------------------------------------------   
 #start with configuration
-conf = Configure(env,custom_tests = {"CheckProgram":CheckProgram})
+conf = Configure(env,custom_tests =
+{"CheckProgram":CheckProgram,"CheckNullPtr":CheckNullPtr,"CheckForEach":CheckForEach})
 
 #check available programs
 if not conf.CheckProgram("pdflatex -v"):
@@ -108,6 +134,15 @@ if not conf.CheckProgram("dot -V"):
 if not conf.CheckProgram("perl -v"):
 	print "perl not installed!"
 	Exit(1)
+
+#checking compiler capabilities
+if not conf.CheckNullPtr():
+    print "nullptr not supported - use NULL"
+    env.Append(CXXFLAGS=["-Dnullptr=NULL"])
+
+if not conf.CheckForEach():
+    print "foreach construction not supported - use workaround"
+    env.Append(CXXFLAGS=["-DNOFOREACH"])
 
 #check for header files
 if not conf.CheckCXXHeader("boost/numeric/conversion/cast.hpp"):
