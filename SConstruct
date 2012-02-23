@@ -222,7 +222,6 @@ else:
 
 
 test_build_env = build_env.Clone()
-python_build_env = build_env.Clone()
 #the next line is necessary for the linker on Debian system - this needs 
 #a bit more information
 if os.name == "posix":
@@ -230,14 +229,12 @@ if os.name == "posix":
 
 Export("build_env")
 Export("test_build_env")
-Export("python_build_env")
 
 
 #build
 SConscript(["src/SConscript"])
 SConscript(["test/SConscript","debian/SConscript"])
 SConscript(["doc/SConscript"])
-SConscript(["python/SConscript"])
 
 #set the default target
 Default("all")
