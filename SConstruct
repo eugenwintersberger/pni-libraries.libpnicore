@@ -120,8 +120,7 @@ def CheckForEach(context):
 #-------------------------------------------------------------------------------   
 #start with configuration
 conf = Configure(env,custom_tests =
-{"CheckProgram":CheckProgram,"CheckNullPtr":CheckNullPtr,"CheckForEach":CheckForEach},
-clean=False)
+{"CheckProgram":CheckProgram,"CheckNullPtr":CheckNullPtr,"CheckForEach":CheckForEach})
 
 #check available programs
 if not conf.CheckProgram("pdflatex -v"):
