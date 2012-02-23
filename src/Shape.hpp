@@ -116,6 +116,12 @@ class Shape{
         //! Shape object.
         Shape(const std::initializer_list<size_t> &list);
 
+        /*! \brief constructor with vector
+
+        Construct a shape object form a vector object
+        */
+        Shape(const std::vector<size_t> &vector);
+
         //! destructor
         ~Shape();
         
@@ -155,6 +161,13 @@ class Shape{
 
         //! Set all dimensions using an initializer list
         virtual void dim(const std::initializer_list<size_t> &list);
+
+        /*! \brief set all dimensions from a vector
+
+        Set all dimensions of the shape using a vector object.
+        */
+        virtual void dim(const std::vector<size_t> &vector);
+
 
         //! total number of elements
 

@@ -82,6 +82,9 @@ public:
     //! This constructor allows the construction of Buffer<T> objects 
     //! using an initializer list. 
     Buffer(const std::initializer_list<T> &list);
+
+    //! initialize object from a vector
+    Buffer(const std::vector<T> &vector);
 	//! destructor
 	virtual ~Buffer();
 
@@ -215,6 +218,40 @@ template<typename T> Buffer<T>::Buffer(const std::initializer_list<T> &list)
             const T &value = *iter;
 #else        
         for(const T &value: list){
+#endif
+            _data[index] = value;
+            index++;
+        }
+	}
+}
+
+//------------------------------------------------------------------------------
+//implementation using an initializer list
+template<typename T> Buffer<T>::Buffer(const std::vector<T> &vector)
+    :BufferObject(vector.size())
+{
+    EXCEPTION_SETUP("template<typename T> Buffer<T>::"
+            "Buffer(std::vector<T> list)");
+    _data = nullptr;
+
+	//we try to allocate memory only if the size is not zero - otherwise
+	//an exception will be raised.
+	if(this->size()!=0){
+		try{
+			this->allocate(this->size());
+		}catch(...){
+			EXCEPTION_INIT(MemoryAllocationError,"Memory allocation for Buffer failed!");
+			EXCEPTION_THROW();
+		}
+
+        //once memory allocation was successfull we can use the values 
+        //from the initializer list to fill the buffer
+        size_t index = 0;
+#ifdef NOFOREACH
+        for(auto iter = vector.begin();iter!=vector.end();iter++){
+            const T &value = *iter;
+#else        
+        for(const T &value: vector){
 #endif
             _data[index] = value;
             index++;

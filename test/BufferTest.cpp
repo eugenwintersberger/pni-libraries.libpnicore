@@ -51,6 +51,15 @@ void BufferTest::testConstructors(){
     CPPUNIT_ASSERT(ibuffer[0] == 1);
     CPPUNIT_ASSERT(ibuffer[1] == -6);
     CPPUNIT_ASSERT(ibuffer[2] == 12);
+
+    //test constructor with vector
+    std::vector<Int64> vec = {3,9,1};
+    Buffer<Int64> vbuffer = vec;
+    CPPUNIT_ASSERT(vbuffer.is_allocated());
+    CPPUNIT_ASSERT(vbuffer.size() == 3);
+    CPPUNIT_ASSERT(vbuffer[0] == 3);
+    CPPUNIT_ASSERT(vbuffer[1] == 9);
+    CPPUNIT_ASSERT(vbuffer[2] == 1);
 }
 
 //------------------------------------------------------------------------------

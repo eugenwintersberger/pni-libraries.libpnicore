@@ -93,6 +93,19 @@ Shape::Shape(const std::initializer_list<size_t> &list)
 }
 
 //------------------------------------------------------------------------------
+//implementation of a constructor with a vector
+Shape::Shape(const std::vector<size_t> &vector)
+    :_dimstrides(vector.size()),
+     _shape(vector)
+{
+    _size = 0;
+    _dimstrides = 0;
+
+    _compute_size();
+    _compute_dimstrides();
+}
+
+//------------------------------------------------------------------------------
 //implementation of the copy constructor
 Shape::Shape(const Shape &s){
 	EXCEPTION_SETUP("ArrayShape::ArrayShape(const ArrayShape &s)");
@@ -178,6 +191,31 @@ void Shape::dim(const std::initializer_list<size_t> &list){
         const size_t &i = *iter;
 #else
     for(const size_t &i: list){
+#endif
+        _shape[cntr] = i;
+        cntr++;
+    }
+    _compute_dimstrides();
+    _compute_size();
+}
+
+//-----------------------------------------------------------------------------
+//implementation of the set dimension method using a vector
+void Shape::dim(const std::vector<size_t> &vector){
+    EXCEPTION_SETUP("void Shape::dim(std::vector<size_t> list)");
+
+    if(vector.size() != rank()){
+        EXCEPTION_INIT(SizeMissmatchError,
+                "Initializer list size does not match rank of Shape!");
+        EXCEPTION_THROW();
+    }
+    
+    size_t cntr = 0;
+#ifdef NOFOREACH
+    for(auto iter = vector.begin();iter!=vector.end();iter++){
+        const size_t &i = *iter;
+#else
+    for(const size_t &i: vector){
 #endif
         _shape[cntr] = i;
         cntr++;

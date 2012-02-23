@@ -76,6 +76,15 @@ void ShapeTest::testConstruction(){
     s4.dim({1,2,3});
     CPPUNIT_ASSERT(s4.size()==6);
 
+    //construction from a vector
+    std::vector<size_t> dims={10,2,5};
+    Shape s5 = dims;
+    CPPUNIT_ASSERT(s5.size() == 100);
+    CPPUNIT_ASSERT(s5.rank() == 3);
+    CPPUNIT_ASSERT(s5[0] == 10);
+    CPPUNIT_ASSERT(s5[1] == 2);
+    CPPUNIT_ASSERT(s5[2] == 5);
+
 }
 
 //------------------------------------------------------------------------------
@@ -176,6 +185,15 @@ void ShapeTest::testIndex(){
 	CPPUNIT_ASSERT(s2.offset(index)==8);
 	CPPUNIT_ASSERT_NO_THROW(s2.index(8,ti));
 	CPPUNIT_ASSERT(ti == index);
+
+    //testing setting dimensions using a vector
+    std::vector<size_t> indices = {5,2,9};
+    s2.dim(indices);
+    CPPUNIT_ASSERT(s2.size() == 90);
+    CPPUNIT_ASSERT(s2.rank() == 3);
+    CPPUNIT_ASSERT(s2[0] == 5);
+    CPPUNIT_ASSERT(s2[1] == 2);
+    CPPUNIT_ASSERT(s2[2] == 9);
 
 }
 
