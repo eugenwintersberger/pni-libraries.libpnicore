@@ -36,6 +36,7 @@
 #include <iostream>
 #include <string>
 #include <sstream>
+#include <vector>
 #include <boost/shared_array.hpp>
 #include "Exceptions.hpp"
 #include "Types.hpp"
