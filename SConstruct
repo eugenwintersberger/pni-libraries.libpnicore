@@ -163,7 +163,7 @@ if not conf.CheckLib("plplotcxxd"):
 	print "PLPLOT C++ bindings are not installed!"
 	Exit(1)
 	
-if not conf.CheckLib("cppunit"):
+if not conf.CheckLib("cppunit",language="C++"):
 	print "CPPUNIT unit test libraray is not installed!"
 	Exit(1)
 	
