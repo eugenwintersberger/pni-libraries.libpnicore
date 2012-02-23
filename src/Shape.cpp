@@ -182,6 +182,8 @@ void Shape::dim(const std::initializer_list<size_t> &list){
         _shape[cntr] = i;
         cntr++;
     }
+    _compute_dimstrides();
+    _compute_size();
 }
 
 //-----------------------------------------------------------------------------

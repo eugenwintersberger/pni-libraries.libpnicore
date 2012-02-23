@@ -40,6 +40,7 @@ void ShapeTest::testConstruction(){
 		s.dim(i,_s1[i]);
 	}
 
+
 	//check here if all parameters are set correctly
 	CPPUNIT_ASSERT(_r1==s.rank());
 	for(size_t i=0;i<_r1;i++){
@@ -57,6 +58,7 @@ void ShapeTest::testConstruction(){
 
 	Shape s1(_r2);
 	for(size_t i=0;i<s1.rank();i++) s1.dim(i,_s2[i]);
+
 	CPPUNIT_ASSERT(s1 == s);
 
 	//copy constructor
@@ -69,6 +71,10 @@ void ShapeTest::testConstruction(){
     CPPUNIT_ASSERT(s3[1] == 30);
     CPPUNIT_ASSERT(s3[2] == 12);
     CPPUNIT_ASSERT(s3.rank() == 3);
+
+    Shape s4(3);
+    s4.dim({1,2,3});
+    CPPUNIT_ASSERT(s4.size()==6);
 
 }
 

@@ -144,7 +144,6 @@ void BufferTest::testComparison(){
 	CPPUNIT_ASSERT(b1 != b2);
 	b2 = 1.;
 	CPPUNIT_ASSERT(b1 == b2);
-
 }
 
 
