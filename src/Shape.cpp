@@ -173,7 +173,12 @@ void Shape::dim(const std::initializer_list<size_t> &list){
     }
     
     size_t cntr = 0;
+#ifdef NOFOREACH
+    for(auto iter = list.begin();iter!=list.end();iter++){
+        const size_t &i = *iter;
+#else
     for(const size_t &i: list){
+#endif
         _shape[cntr] = i;
         cntr++;
     }
@@ -241,7 +246,12 @@ size_t Shape::offset(const std::initializer_list<size_t> &list) const{
 	}
 
     size_t cntr = 0;
+#ifdef NOFOREACH
+    for(auto iter = list.begin();iter!=list.end();iter++){
+        const size_t &index = *iter;
+#else
     for(const size_t &index: list){
+#endif
         if(index >= dim(cntr)){
 			EXCEPTION_INIT(IndexError,"Index out of bounds!");
 			EXCEPTION_THROW();

@@ -90,6 +90,7 @@ gcc_version = GCCVersionParser().parse(prog=env["CXX"])
 #set some flags depending on the compiler versions
 if gcc_version < ProgramVersion(4,6,0):    
     env.Append(CXXFLAGS=["-Dnullptr=NULL"])
+    env.Append(CXXFLAGS=["-DNOFOREACH"])
     
 #-------------------------------------------------------------------------------   
 #start with configuration

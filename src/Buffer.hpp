@@ -210,7 +210,12 @@ template<typename T> Buffer<T>::Buffer(const std::initializer_list<T> &list)
         //once memory allocation was successfull we can use the values 
         //from the initializer list to fill the buffer
         size_t index = 0;
+#ifdef NOFOREACH
+        for(auto iter = list.begin();iter!=list.end();iter++){
+            const T &value = *iter;
+#else        
         for(const T &value: list){
+#endif
             _data[index] = value;
             index++;
         }
@@ -411,7 +416,12 @@ template<typename T> void Buffer<T>::set(const std::initializer_list<T> &list){
     }
 
     size_t cntr = 0;
+#ifdef NOFOREACH
+    for(auto iter = list.begin(); iter!=list.end();iter++){
+        const T &value = *iter;
+#else
     for(const T &value: list){
+#endif
         _data[cntr] = value;
         cntr++;
     }
