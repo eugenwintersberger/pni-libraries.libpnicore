@@ -144,6 +144,40 @@ if not conf.CheckForEach():
     print "foreach construction not supported - use workaround"
     env.Append(CXXFLAGS=["-DNOFOREACH"])
 
+#check type sizes
+if not conf.CheckTypeSize('char',expect=1):
+    pass
+
+if not conf.CheckTypeSize('unsigned char',expect=1):
+    pass
+
+if not conf.CheckTypeSize('short',expect=2):
+    pass
+
+if not conf.CheckTypeSize('unsigned short',expect=2):
+    pass
+
+if not conf.CheckTypeSize('int',expect=4):
+    pass
+
+if not conf.CheckTypeSize('unsigned int',expect=4):
+    pass
+
+if not conf.CheckTypeSize('long',expect=8):
+    pass
+
+if not conf.CheckTypeSize('unsigned long',expect=8):
+    pass
+
+if not conf.CheckTypeSize('float',expect=4):
+    pass
+
+if not conf.CheckTypeSize('double',expect=8):
+    pass
+
+if not conf.CheckTypeSize('long doube',expect = 16):
+    pass
+
 #check for header files
 if not conf.CheckCXXHeader("boost/numeric/conversion/cast.hpp"):
 	print "BOOST header file cast.hpp does not exist!"
