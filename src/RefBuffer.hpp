@@ -36,7 +36,6 @@
 #include <iostream>
 #include <string>
 #include <sstream>
-#include <boost/shared_array.hpp>
 #include "Exceptions.hpp"
 #include "Types.hpp"
 #include "BufferObject.hpp"
@@ -63,7 +62,7 @@ private:
 	T *_data; //!< pointer to the data block
 
 public:
-	typedef boost::shared_ptr<RefBuffer<T> > sptr; //!< smart pointer to a typed buffer
+	typedef std::shared_ptr<RefBuffer<T> > sptr; //!< smart pointer to a typed buffer
     //-----------------constructors and destructors----------------------------
 	//! default constructor
 	explicit RefBuffer();

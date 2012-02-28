@@ -31,7 +31,6 @@
 
 #include <vector>
 #include <iostream>
-#include <boost/shared_ptr.hpp>
 
 #include "../ArrayObject.hpp"
 
@@ -59,7 +58,7 @@ protected:
 public:
 	typedef std::vector<ArrayObject::sptr>::iterator iterator;    //!< iterator over the channels in a TIFFImageData object
 	typedef std::vector<ArrayObject::sptr>::const_iterator const_iterator; //!< const iterator over the channels in a TIFFImageData object
-	typedef boost::shared_ptr<TIFFImageData> sptr;  //!< shared pointer to a TIFFImageData object
+	typedef std::shared_ptr<TIFFImageData> sptr;  //!< shared pointer to a TIFFImageData object
 	//! default constructor
 	TIFFImageData();
 	//! copy constructor

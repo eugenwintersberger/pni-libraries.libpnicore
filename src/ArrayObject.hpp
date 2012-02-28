@@ -33,7 +33,6 @@
 #include "Buffer.hpp"
 #include "Shape.hpp"
 #include "NumericObject.hpp"
-#include "boost/shared_ptr.hpp"
 
 namespace pni{
 namespace utils{
@@ -51,7 +50,7 @@ protected:
 	Shape _shape; //!< shape object describing the shape of the array
 					   //!< and managing the access to the data
 public:
-	typedef boost::shared_ptr<ArrayObject> sptr;  //!< shared pointer to an ArrayObject
+	typedef std::shared_ptr<ArrayObject> sptr;  //!< shared pointer to an ArrayObject
 	//! default constructor
 	ArrayObject();
 	//! copy constructor
@@ -64,7 +63,6 @@ public:
 	//! the Array-object.
 	//!
 	//! \param s - reference to a shape object
-	//! \sa Array(const boost::shared_ptr<ArrayShape> &s)
 	ArrayObject(const Shape &s);
 	//! destructor
 	virtual ~ArrayObject();
@@ -86,7 +84,6 @@ public:
 	//! created. Furthermore, the size of the shape object must not be zero.
 	//! \throws SizeMissmatchError shape sizes do not match or size is zero
 	//! \param s reference to the existing shape object
-	//! \sa void setShape(boost::shared_ptr<ArrayShape> &s)
 	virtual void shape(const Shape &s);
 	//! obtain the shape of an array
 

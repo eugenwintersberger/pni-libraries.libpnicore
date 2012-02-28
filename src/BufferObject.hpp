@@ -30,8 +30,9 @@
 #ifndef BUFFEROBJECT_HPP_
 #define BUFFEROBJECT_HPP_
 
+#include<memory>
+
 #include "Types.hpp"
-#include "boost/shared_ptr.hpp"
 #include "service.hpp"
 
 namespace pni{
@@ -70,7 +71,7 @@ protected:
 	virtual void size(size_t s);
 public:
 	//! smart pointer to a BufferObject
-	typedef boost::shared_ptr<BufferObject> sptr;
+	typedef std::shared_ptr<BufferObject> sptr;
 	//! default constructor
 	explicit BufferObject();
 	//! copy constructor

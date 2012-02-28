@@ -180,9 +180,9 @@ TIFFImageData::sptr TIFFFile::getData(UInt64 i) const {
 	}
 	switch(e->getEntryTypeCode()){
 	case IDFE_SHORT:
-		uibuffer = (*boost::dynamic_pointer_cast<ShortEntry>(e))[0]; break;
+		uibuffer = (*std::dynamic_pointer_cast<ShortEntry>(e))[0]; break;
 	case IDFE_LONG:
-		uibuffer = (*boost::dynamic_pointer_cast<LongEntry>(e))[0]; break;
+		uibuffer = (*std::dynamic_pointer_cast<LongEntry>(e))[0]; break;
 	default:
 		//raise an exception if the type of the IFD etnry is not known
 		EXCEPTION_INIT(TypeError,"Unknown IDF entry type!");
@@ -199,9 +199,9 @@ TIFFImageData::sptr TIFFFile::getData(UInt64 i) const {
 	}
 	switch(e->getEntryTypeCode()){
 	case IDFE_SHORT:
-		uibuffer = (*boost::dynamic_pointer_cast<ShortEntry>(e))[0]; break;
+		uibuffer = (*std::dynamic_pointer_cast<ShortEntry>(e))[0]; break;
 	case IDFE_LONG:
-		uibuffer = (*boost::dynamic_pointer_cast<LongEntry>(e))[0];break;
+		uibuffer = (*std::dynamic_pointer_cast<LongEntry>(e))[0];break;
 	default:
 		EXCEPTION_INIT(TypeError,"Unknown IDF entry type!");
 		EXCEPTION_THROW();
@@ -217,13 +217,13 @@ TIFFImageData::sptr TIFFFile::getData(UInt64 i) const {
 		EXCEPTION_INIT(TIFFReadError,"Error reading TIFF file - BitsPerSample entry not found!");
 		EXCEPTION_THROW();
 	}
-	UInt16 pbs = (*boost::dynamic_pointer_cast<ShortEntry>(e))[0];
+	UInt16 pbs = (*std::dynamic_pointer_cast<ShortEntry>(e))[0];
 
 	//determine the data type used to store the data
 	UInt16 dtype = 1;
 	try{
 		e = idf["SampleFormat"];
-		dtype = (*boost::dynamic_pointer_cast<ShortEntry>(e))[0];
+		dtype = (*std::dynamic_pointer_cast<ShortEntry>(e))[0];
 	}catch(KeyError &error){
 		//do nothing here
 		dtype = 1;
@@ -234,7 +234,7 @@ TIFFImageData::sptr TIFFFile::getData(UInt64 i) const {
 	UInt16 ns = 1;
 	try{
 		e = idf["SamplesPerPixel"];
-		ns = (*boost::dynamic_pointer_cast<ShortEntry>(e))[0];
+		ns = (*std::dynamic_pointer_cast<ShortEntry>(e))[0];
 	}catch(KeyError &error){
 		ns = 1;
 	}
@@ -246,9 +246,9 @@ TIFFImageData::sptr TIFFFile::getData(UInt64 i) const {
 		e = idf["RowsPerStrip"];
 		switch(e->getEntryTypeCode()){
 		case IDFE_SHORT:
-			rps = (*boost::dynamic_pointer_cast<ShortEntry>(e))[0]; break;
+			rps = (*std::dynamic_pointer_cast<ShortEntry>(e))[0]; break;
 		case IDFE_LONG:
-			rps = (*boost::dynamic_pointer_cast<LongEntry>(e))[0]; break;
+			rps = (*std::dynamic_pointer_cast<LongEntry>(e))[0]; break;
 		default:
 			EXCEPTION_INIT(TypeError,"Unknown IFD entry type!");
 			EXCEPTION_THROW();
@@ -276,9 +276,9 @@ TIFFImageData::sptr TIFFFile::getData(UInt64 i) const {
 	for(UInt64 i=0;i<(UInt64)nstrips;i++){
 		switch(e->getEntryTypeCode()){
 		case IDFE_SHORT:
-			uibuffer = (*boost::dynamic_pointer_cast<ShortEntry>(e))[i]; break;
+			uibuffer = (*std::dynamic_pointer_cast<ShortEntry>(e))[i]; break;
 		case IDFE_LONG:
-			uibuffer = (*boost::dynamic_pointer_cast<LongEntry>(e))[i]; break;
+			uibuffer = (*std::dynamic_pointer_cast<LongEntry>(e))[i]; break;
 		default:
 			EXCEPTION_INIT(TypeError,"Unknown IFD entry type!");
 			EXCEPTION_THROW();
@@ -298,10 +298,10 @@ TIFFImageData::sptr TIFFFile::getData(UInt64 i) const {
 	for (UInt64 i = 0; i < (UInt64)nstrips; i++) {
 		switch (e->getEntryTypeCode()) {
 		case IDFE_SHORT:
-			uibuffer = (*boost::dynamic_pointer_cast<ShortEntry>(e))[i];
+			uibuffer = (*std::dynamic_pointer_cast<ShortEntry>(e))[i];
 			break;
 		case IDFE_LONG:
-			uibuffer = (*boost::dynamic_pointer_cast<LongEntry>(e))[i];
+			uibuffer = (*std::dynamic_pointer_cast<LongEntry>(e))[i];
 			break;
 		default:
 			EXCEPTION_INIT(TypeError,"Unknown IFD entry type!");

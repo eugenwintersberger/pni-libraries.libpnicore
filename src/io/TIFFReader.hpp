@@ -29,7 +29,6 @@
 #ifndef TIFFREADER_HPP_
 #define TIFFREADER_HPP_
 
-#include <boost/shared_ptr.hpp>
 
 #include "Reader.hpp"
 #include "TIFFFile.hpp"

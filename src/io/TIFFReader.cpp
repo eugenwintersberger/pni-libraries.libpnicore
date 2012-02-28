@@ -65,14 +65,14 @@ DataObject::sptr TIFFReader::read(){
 	//read the first image from the stack
 	idata = _file.getData(0);
 
-	return boost::dynamic_pointer_cast<DataObject>(idata->getChannel(0));
+	return std::dynamic_pointer_cast<DataObject>(idata->getChannel(0));
 }
 
 DataObject::sptr TIFFReader::read(const UInt64 &i){
 	TIFFImageData::sptr idata;
 
 	idata = _file.getData(i);
-	return boost::dynamic_pointer_cast<DataObject>(idata->getChannel(0));
+	return std::dynamic_pointer_cast<DataObject>(idata->getChannel(0));
 }
 
 

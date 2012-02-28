@@ -31,7 +31,6 @@
 #ifndef NUMERICOBJECT_HPP_
 #define NUMERICOBJECT_HPP_
 
-#include <boost/shared_ptr.hpp>
 
 #include "DataObject.hpp"
 #include "Types.hpp"
@@ -55,7 +54,7 @@ class NumericObject:public DataObject {
 private:
 	String _unit; //!< string holding the physical unit of the object
 public:
-	typedef boost::shared_ptr<NumericObject> sptr; //!< shared pointer to a numeric object
+	typedef std::shared_ptr<NumericObject> sptr; //!< shared pointer to a numeric object
 	//! default constructor
 	NumericObject();
 	//! copy constructor

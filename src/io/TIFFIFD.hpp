@@ -29,10 +29,10 @@
 #ifndef TIFFIFD_HPP_
 #define TIFFIFD_HPP_
 
+#include <memory>
 #include <vector>
 #include <fstream>
 #include <iostream>
-#include <boost/shared_ptr.hpp>
 
 #include "../Types.hpp"
 #include "../Array.hpp"
@@ -79,7 +79,7 @@ protected:
 	IFDAbstractEntry::list _entry_list; //!< list of IFD entries
 public:
 	//some data types that can be useful for IFDs
-	typedef boost::shared_ptr<TIFFIFD> IFDSptr;        //!< shared pointer to an IDF entry
+	typedef std::shared_ptr<TIFFIFD> IFDSptr;        //!< shared pointer to an IDF entry
 	typedef std::vector<IFDSptr>       IFDList;        //!< vector to IDF entries
 	typedef IFDList::iterator       IFDIterator;       //!< iterator over IDF entries in IDFList
 	typedef IFDList::const_iterator const_IFDIterator; //!< const. iterator over IDF entries in IDF List

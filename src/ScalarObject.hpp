@@ -31,7 +31,6 @@
 
 #include <iostream>
 #include <vector>
-#include <boost/shared_ptr.hpp>
 
 #include "Types.hpp"
 #include "NumericObject.hpp"
@@ -50,7 +49,7 @@ namespace utils{
 class ScalarObject:public NumericObject {
 public:
 	//public types
-	typedef boost::shared_ptr<ScalarObject> sptr; //!< shared pointer on a scalar object
+	typedef std::shared_ptr<ScalarObject> sptr; //!< shared pointer on a scalar object
 	typedef std::vector<ScalarObject> list;       //!< list of scalar objects
 	typedef std::vector<sptr> ptrlist;            //!< list of shared pointers to scalar objects
 

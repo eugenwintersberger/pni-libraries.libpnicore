@@ -104,24 +104,24 @@ std::ostream &operator<<(std::ostream &o,const TIFFImageData &d){
 
 	TIFFImageData::const_iterator iter;
 	for(iter = d.begin();iter!=d.end();iter++){
-		ArrayObject &a = *boost::dynamic_pointer_cast<ArrayObject>(*iter);
+		ArrayObject &a = *std::dynamic_pointer_cast<ArrayObject>(*iter);
 		switch(a.type_id()){
 		case TypeID::UINT8:
-			o<<*boost::dynamic_pointer_cast<UInt8Array>(*iter)<<std::endl; break;
+			o<<*std::dynamic_pointer_cast<UInt8Array>(*iter)<<std::endl; break;
 		case TypeID::INT8:
-			o<<*boost::dynamic_pointer_cast<Int8Array>(*iter)<<std::endl; break;
+			o<<*std::dynamic_pointer_cast<Int8Array>(*iter)<<std::endl; break;
 		case TypeID::UINT16:
-			o<<*boost::dynamic_pointer_cast<UInt16Array>(*iter)<<std::endl; break;
+			o<<*std::dynamic_pointer_cast<UInt16Array>(*iter)<<std::endl; break;
 		case TypeID::INT16:
-			o<<*boost::dynamic_pointer_cast<Int16Array>(*iter)<<std::endl; break;
+			o<<*std::dynamic_pointer_cast<Int16Array>(*iter)<<std::endl; break;
 		case TypeID::UINT32:
-			o<<*boost::dynamic_pointer_cast<UInt32Array>(*iter)<<std::endl; break;
+			o<<*std::dynamic_pointer_cast<UInt32Array>(*iter)<<std::endl; break;
 		case TypeID::INT32:
-			o<<*boost::dynamic_pointer_cast<Int32Array>(*iter)<<std::endl; break;
+			o<<*std::dynamic_pointer_cast<Int32Array>(*iter)<<std::endl; break;
 		case TypeID::FLOAT32:
-			o<<*boost::dynamic_pointer_cast<Float32Array>(*iter)<<std::endl; break;
+			o<<*std::dynamic_pointer_cast<Float32Array>(*iter)<<std::endl; break;
 		case TypeID::FLOAT64:
-			o<<*boost::dynamic_pointer_cast<Float64Array>(*iter)<<std::endl; break;
+			o<<*std::dynamic_pointer_cast<Float64Array>(*iter)<<std::endl; break;
 		default:
 			std::cerr<<"Array of unknown Type"<<std::endl;
 		}

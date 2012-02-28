@@ -101,7 +101,7 @@ private:
 	T _value; //!< object holding the value of the Scalar object
 public:
 	typedef T DataType;
-	typedef boost::shared_ptr<Scalar<T> > sptr;
+	typedef std::shared_ptr<Scalar<T> > sptr;
 	//! default constructor
 	Scalar();
 	//! copy constructor

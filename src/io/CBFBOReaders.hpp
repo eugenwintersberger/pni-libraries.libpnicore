@@ -30,7 +30,6 @@
 #ifndef CBFBOREADERS_HPP_
 #define CBFBOREADERS_HPP_
 
-#include <boost/shared_ptr.hpp>
 
 #include "CBFBinStreamReader.hpp"
 #include "../Exceptions.hpp"

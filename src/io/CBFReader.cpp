@@ -130,7 +130,7 @@ DataObject::sptr CBFReader::read(){
         }
 
     }
-    return boost::dynamic_pointer_cast<DataObject>(v);
+    return std::dynamic_pointer_cast<DataObject>(v);
 }
 
 DataObject::sptr CBFReader::read(const UInt64 &i){

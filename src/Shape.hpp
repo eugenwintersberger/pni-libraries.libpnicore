@@ -32,7 +32,6 @@
 #define __SHAPE_HPP__
 
 #include <string>
-#include <boost/shared_ptr.hpp>
 
 #include "Exceptions.hpp"
 #include "Index.hpp"
@@ -91,7 +90,7 @@ class Shape{
         //! once the shape is changed in a way so that the size is changed.
         void _compute_size();
     public:
-        typedef boost::shared_ptr<Shape> sptr;  //!< smart pointer to an ArrayShape object
+        typedef std::shared_ptr<Shape> sptr;  //!< smart pointer to an ArrayShape object
         //! default constructor
         explicit Shape();
         //! copy constructor

@@ -37,7 +37,6 @@
 #include <string>
 #include <sstream>
 #include <vector>
-#include <boost/shared_array.hpp>
 #include "Exceptions.hpp"
 #include "Types.hpp"
 #include "BufferObject.hpp"
@@ -60,7 +59,7 @@ private:
 	//some private methods
 	void _allocate();
 public:
-	typedef boost::shared_ptr<Buffer<T> > sptr; //!< smart pointer to a typed buffer
+	typedef std::shared_ptr<Buffer<T> > sptr; //!< smart pointer to a typed buffer
 	//! default constructor
 	explicit Buffer();
 	//! copy constructor

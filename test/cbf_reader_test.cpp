@@ -157,7 +157,7 @@ int main(int argc,char **argv){
     //reader.setFileName("LAOS3_05461.cbf"); //set the name of the file to read
     reader.setFileName("org_00009.cbf");
     reader.open();                         //open the file
-    v = boost::dynamic_pointer_cast<ArrayObject>(reader.read());                     //read data
+    v = std::dynamic_pointer_cast<ArrayObject>(reader.read());                     //read data
     reader.close();                        //close the file
 
     std::cout<<"finished with reading data"<<std::endl;
@@ -191,7 +191,7 @@ int main(int argc,char **argv){
 
     if(dtid == TypeID::INT32){
     	//For Int32 data convert the ArrayObject ot an Int32 Array type
-    	Int32Array::sptr a = boost::dynamic_pointer_cast<Int32Array>(v);
+    	Int32Array::sptr a = std::dynamic_pointer_cast<Int32Array>(v);
 
     	//call some array methods just to see if they work
     	std::cout<<a->min()<<" "<<a->max()<<std::endl;
@@ -208,7 +208,7 @@ int main(int argc,char **argv){
 
     }else if(dtid == TypeID::INT16){
     	std::cout<<"data is an Int16Array()"<<std::endl;
-    	Int16Array::sptr a = boost::dynamic_pointer_cast<Int16Array>(v);
+    	Int16Array::sptr a = std::dynamic_pointer_cast<Int16Array>(v);
 
     	std::cout<<a->min()<<" "<<a->max()<<std::endl;
     	std::cout<<a->sum()<<std::endl;

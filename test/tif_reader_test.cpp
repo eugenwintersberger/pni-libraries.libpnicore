@@ -119,7 +119,7 @@ PlotArray::~PlotArray(){
 
 template<typename T> void PlotArray::image_plot(const pni::utils::ArrayObject::sptr data){
 	pni::utils::Array<T,Buffer> &a =
-        *boost::dynamic_pointer_cast<pni::utils::Array<T,Buffer> >(data);
+        *std::dynamic_pointer_cast<pni::utils::Array<T,Buffer> >(data);
 	//PlPlotArrayDecorator<T> adec((pni::utils::Array<T> *)data);
 	int i,j;
 

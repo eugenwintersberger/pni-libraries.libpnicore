@@ -177,7 +177,7 @@ public:
 
 				//loop over all channels (samples)
 				for (UInt64 k = 0; k < _nchannels; k++) {
-					Array<T,Buffer> &a = *boost::dynamic_pointer_cast<Array<T,Buffer> >(idata->getChannel(k));
+					Array<T,Buffer> &a = *std::dynamic_pointer_cast<Array<T,Buffer> >(idata->getChannel(k));
 					stream.read((char*) (&buffer), ssize);
 					a[ecnt] = (T) buffer;
 				}

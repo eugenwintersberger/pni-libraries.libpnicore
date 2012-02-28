@@ -150,7 +150,7 @@ protected:
 	typedef typename std::vector<T>::const_iterator _const_iterator; //!< const iterator over the element entries
 	std::vector<T> _values; //!< vector holding the entry elements
 public:
-	typedef boost::shared_ptr<IFDEntry<T> > sptr;          //!< smart pointer to an entry
+	typedef std::shared_ptr<IFDEntry<T> > sptr;          //!< smart pointer to an entry
 	typedef std::vector<sptr> list;                        //!< vector type of IFD smart pointers
 	typedef typename list::iterator iterator;              //!< iterator over an entry list
 	typedef typename list::const_iterator const_iterator;  //!< const iterator over an entry list

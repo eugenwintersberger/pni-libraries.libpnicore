@@ -34,7 +34,6 @@
 #include<cstdarg>
 #include<cstdio>
 #include<typeinfo>
-#include<boost/shared_ptr.hpp>
 
 #include "Buffer.hpp"
 #include "RefBuffer.hpp"
@@ -112,7 +111,7 @@ template<typename T,template<typename> class BType >
 //! recreated by the Array object and their content will be copied.
 //! In the later case of the smart pointer versions only the pointers
 //! will be changed which allows sharing of data between the Array and external
-//! instances of the program using the array. The boost::shared_ptr avoids
+//! instances of the program using the array. The std::shared_ptr avoids
 //! problems with object ownership and makes it quite simple to implement this
 //! behavior.
 
@@ -127,7 +126,7 @@ template<typename T,template <typename> class BType> class Array: public ArrayOb
         BType<T> _data; //!< Buffer object holding the data
     public:
         typedef T ElementType;  //!< type of an array element
-    typedef boost::shared_ptr<Array<T,BType> > sptr; //!< shared pointer to an Array<T>
+    typedef std::shared_ptr<Array<T,BType> > sptr; //!< shared pointer to an Array<T>
     //! default constructor
 
     //! Neither ArrayShape nor Buffer object will be allocated. Buffer
@@ -150,7 +149,6 @@ template<typename T,template <typename> class BType> class Array: public ArrayOb
     //! the Array-object.
     //!
     //! \param s - reference to a shape object
-    //! \sa Array(const boost::shared_ptr<ArrayShape> &s)
     Array(const Shape &s);
     //! constructor where array shape and buffer object are set
 

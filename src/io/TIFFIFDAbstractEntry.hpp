@@ -29,7 +29,7 @@
 #ifndef TIFFIDFABSTRACTENTRY_HPP_
 #define TIFFIDFABSTRACTENTRY_HPP_
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 #include <vector>
 
 #include "../Types.hpp"
@@ -66,7 +66,7 @@ protected:
 	String _name;   //!<name of the entry
 	UInt32 _cnt;    //!<number of elements
 public:
-	typedef boost::shared_ptr<IFDAbstractEntry> sptr; //!< a shared pointer to an abstract entry
+	typedef std::shared_ptr<IFDAbstractEntry> sptr; //!< a shared pointer to an abstract entry
 	typedef std::vector<sptr> list;                   //!< type for IFDAbstractEntry lists
 	typedef list::iterator iterator;                  //!< iterator over an IFDAbstractEntry list
 	typedef list::const_iterator const_iterator;      //!< const iterator over an IFDAbstractEntry list

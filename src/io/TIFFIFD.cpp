@@ -132,29 +132,29 @@ std::ostream &operator<<(std::ostream &o,const TIFFIFD &idf){
 
 		switch(e->getEntryTypeCode()){
 		case IDFE_BYTE:
-			o<<*boost::dynamic_pointer_cast<ByteEntry>(e)<<std::endl; break;
+			o<<*std::dynamic_pointer_cast<ByteEntry>(e)<<std::endl; break;
 		case IDFE_ASCII:
-			o<<*boost::dynamic_pointer_cast<ASCIIEntry>(e)<<std::endl; break;
+			o<<*std::dynamic_pointer_cast<ASCIIEntry>(e)<<std::endl; break;
 		case IDFE_SHORT:
-			o<<*boost::dynamic_pointer_cast<ShortEntry>(e)<<std::endl; break;
+			o<<*std::dynamic_pointer_cast<ShortEntry>(e)<<std::endl; break;
 		case IDFE_LONG:
-			o<<*boost::dynamic_pointer_cast<LongEntry>(e)<<std::endl; break;
+			o<<*std::dynamic_pointer_cast<LongEntry>(e)<<std::endl; break;
 		case IDFE_RATIONAL:
-			o<<*boost::dynamic_pointer_cast<RationalEntry>(e)<<std::endl; break;
+			o<<*std::dynamic_pointer_cast<RationalEntry>(e)<<std::endl; break;
 		case IDFE_UNDEFINED:
-			o<<*boost::dynamic_pointer_cast<ASCIIEntry>(e)<<std::endl; break;
+			o<<*std::dynamic_pointer_cast<ASCIIEntry>(e)<<std::endl; break;
 		case IDFE_SBYTE:
-			o<<*boost::dynamic_pointer_cast<SByteEntry>(e)<<std::endl; break;
+			o<<*std::dynamic_pointer_cast<SByteEntry>(e)<<std::endl; break;
 		case IDFE_SSHORT:
-			o<<*boost::dynamic_pointer_cast<SShortEntry>(e)<<std::endl; break;
+			o<<*std::dynamic_pointer_cast<SShortEntry>(e)<<std::endl; break;
 		case IDFE_SLONG:
-			o<<*boost::dynamic_pointer_cast<SLongEntry>(e)<<std::endl; break;
+			o<<*std::dynamic_pointer_cast<SLongEntry>(e)<<std::endl; break;
 		case IDFE_SRATIONAL:
-			o<<*boost::dynamic_pointer_cast<SRationalEntry>(e)<<std::endl; break;
+			o<<*std::dynamic_pointer_cast<SRationalEntry>(e)<<std::endl; break;
 		case IDFE_FLOAT:
-			o<<*boost::dynamic_pointer_cast<FloatEntry>(e)<<std::endl; break;
+			o<<*std::dynamic_pointer_cast<FloatEntry>(e)<<std::endl; break;
 		case IDFE_DOUBLE:
-			o<<*boost::dynamic_pointer_cast<DoubleEntry>(e)<<std::endl; break;
+			o<<*std::dynamic_pointer_cast<DoubleEntry>(e)<<std::endl; break;
 		default:
 			o<<*e<<std::endl;
 
@@ -191,57 +191,57 @@ std::ifstream &operator>>(std::ifstream &in,TIFFIFD &idf){
 		//switch for the proper data type
 		switch(ttype){
 		case ENTRY_TYPE_BYTE:
-			e = boost::dynamic_pointer_cast<IFDAbstractEntry>(ByteEntry::sptr(new ByteEntry(ename,cnt)));
-			in>>*boost::dynamic_pointer_cast<ByteEntry>(e);
+			e = std::dynamic_pointer_cast<IFDAbstractEntry>(ByteEntry::sptr(new ByteEntry(ename,cnt)));
+			in>>*std::dynamic_pointer_cast<ByteEntry>(e);
 			break;
 		case ENTRY_TYPE_ASCII:
-			e = boost::dynamic_pointer_cast<IFDAbstractEntry>(
+			e = std::dynamic_pointer_cast<IFDAbstractEntry>(
 					ASCIIEntry::sptr(new ASCIIEntry(ename,cnt)));
-			in>>*boost::dynamic_pointer_cast<ASCIIEntry>(e);
+			in>>*std::dynamic_pointer_cast<ASCIIEntry>(e);
 			//actually no Idea how to handle this - most probably as string
 			break;
 		case ENTRY_TYPE_SHORT:
-			e = boost::dynamic_pointer_cast<IFDAbstractEntry>(ShortEntry::sptr(new ShortEntry(ename,cnt)));
-			in>>*boost::dynamic_pointer_cast<ShortEntry>(e);
+			e = std::dynamic_pointer_cast<IFDAbstractEntry>(ShortEntry::sptr(new ShortEntry(ename,cnt)));
+			in>>*std::dynamic_pointer_cast<ShortEntry>(e);
 			break;
 		case ENTRY_TYPE_LONG:
-			e = boost::dynamic_pointer_cast<IFDAbstractEntry>(LongEntry::sptr(new LongEntry(ename,cnt)));
-			in>>*boost::dynamic_pointer_cast<LongEntry>(e);
+			e = std::dynamic_pointer_cast<IFDAbstractEntry>(LongEntry::sptr(new LongEntry(ename,cnt)));
+			in>>*std::dynamic_pointer_cast<LongEntry>(e);
 			break;
 		case ENTRY_TYPE_RATIONAL:
-			e = boost::dynamic_pointer_cast<IFDAbstractEntry>(RationalEntry::sptr(new RationalEntry(ename,cnt)));
-			in>>*boost::dynamic_pointer_cast<RationalEntry>(e);
+			e = std::dynamic_pointer_cast<IFDAbstractEntry>(RationalEntry::sptr(new RationalEntry(ename,cnt)));
+			in>>*std::dynamic_pointer_cast<RationalEntry>(e);
 			//here one could define a kind of Pair type
 			break;
 		case ENTRY_TYPE_SBYTE:
-			e = boost::dynamic_pointer_cast<IFDAbstractEntry>(SByteEntry::sptr(new SByteEntry(ename,cnt)));
-			in>>*boost::dynamic_pointer_cast<SByteEntry>(e);
+			e = std::dynamic_pointer_cast<IFDAbstractEntry>(SByteEntry::sptr(new SByteEntry(ename,cnt)));
+			in>>*std::dynamic_pointer_cast<SByteEntry>(e);
 			break;
 		case ENTRY_TYPE_UNDEFINED:
-			e = boost::dynamic_pointer_cast<IFDAbstractEntry>(ASCIIEntry::sptr(new ASCIIEntry(ename,cnt)));
-			in>>*boost::dynamic_pointer_cast<ASCIIEntry>(e);
+			e = std::dynamic_pointer_cast<IFDAbstractEntry>(ASCIIEntry::sptr(new ASCIIEntry(ename,cnt)));
+			in>>*std::dynamic_pointer_cast<ASCIIEntry>(e);
 			//need something like void - differs in interpretation
 			break;
 		case ENTRY_TYPE_SSHORT:
-			e = boost::dynamic_pointer_cast<IFDAbstractEntry>(SShortEntry::sptr(new SShortEntry(ename,cnt)));
-			in>>*boost::dynamic_pointer_cast<SShortEntry>(e);
+			e = std::dynamic_pointer_cast<IFDAbstractEntry>(SShortEntry::sptr(new SShortEntry(ename,cnt)));
+			in>>*std::dynamic_pointer_cast<SShortEntry>(e);
 			break;
 		case ENTRY_TYPE_SLONG:
-			e = boost::dynamic_pointer_cast<IFDAbstractEntry>(SLongEntry::sptr(new SLongEntry(ename,cnt)));
-			in>>*boost::dynamic_pointer_cast<SLongEntry>(e);
+			e = std::dynamic_pointer_cast<IFDAbstractEntry>(SLongEntry::sptr(new SLongEntry(ename,cnt)));
+			in>>*std::dynamic_pointer_cast<SLongEntry>(e);
 			break;
 		case ENTRY_TYPE_SRATIONAL:
-			e = boost::dynamic_pointer_cast<IFDAbstractEntry>(SRationalEntry::sptr(new SRationalEntry(ename,cnt)));
-			in>>*boost::dynamic_pointer_cast<SRationalEntry>(e);
+			e = std::dynamic_pointer_cast<IFDAbstractEntry>(SRationalEntry::sptr(new SRationalEntry(ename,cnt)));
+			in>>*std::dynamic_pointer_cast<SRationalEntry>(e);
 			//like above - something like a Pair type can do the job
 			break;
 		case ENTRY_TYPE_FLOAT:
-			e = boost::dynamic_pointer_cast<IFDAbstractEntry>(FloatEntry::sptr(new FloatEntry(ename,cnt)));
-			in>>*boost::dynamic_pointer_cast<FloatEntry>(e);
+			e = std::dynamic_pointer_cast<IFDAbstractEntry>(FloatEntry::sptr(new FloatEntry(ename,cnt)));
+			in>>*std::dynamic_pointer_cast<FloatEntry>(e);
 			break;
 		case ENTRY_TYPE_DOUBLE:
-			e = boost::dynamic_pointer_cast<IFDAbstractEntry>(DoubleEntry::sptr(new DoubleEntry(ename,cnt)));
-			in>>*boost::dynamic_pointer_cast<DoubleEntry>(e);
+			e = std::dynamic_pointer_cast<IFDAbstractEntry>(DoubleEntry::sptr(new DoubleEntry(ename,cnt)));
+			in>>*std::dynamic_pointer_cast<DoubleEntry>(e);
 			break;
 		default:
 			std::cerr<<"IDF entry has unknow type code - do not know what to do with it!";

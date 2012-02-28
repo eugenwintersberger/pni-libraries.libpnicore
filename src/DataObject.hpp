@@ -28,12 +28,12 @@
  *
  */
 
-#ifndef DATAOBJECT_HPP_
-#define DATAOBJECT_HPP_
+#ifndef __DATAOBJECT_HPP_
+#define __DATAOBJECT_HPP_
 
+#include<memory>
 #include<iostream>
 #include<string>
-#include<boost/shared_ptr.hpp>
 
 #include "Types.hpp"
 
@@ -51,7 +51,7 @@ private:
 	String _name;         //!< name of the data object
 	String _description;  //!< description of the object
 public:
-	typedef boost::shared_ptr<DataObject> sptr; //!< shared pointer to a data object
+	typedef std::shared_ptr<DataObject> sptr; //!< shared pointer to a data object
 	//! default constructor
 	DataObject();
 	//! copy constructor

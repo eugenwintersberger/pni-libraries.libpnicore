@@ -29,8 +29,8 @@
 #ifndef CBFBINSTREAMREADER_HPP_
 #define CBFBINSTREAMREADER_HPP_
 
+#include<memory>
 #include<iostream>
-#include<boost/shared_ptr.hpp>
 
 #include "../Buffer.hpp"
 #include "../Types.hpp"
