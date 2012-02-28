@@ -3,10 +3,37 @@ import os.path as path
 import platform
 import os
 
-from smod import ProgramVersion
-from smod import GCCVersionParser
-from smod import CheckProgram
-from smod import LibFileNames
+###================================================================================
+#Function to assemble library filenames depending on the operating system for
+#which the library is built.
+class LibFileNames(object):
+    def __init__(self,libname,version,soversion):
+        self.libname = libname
+        self.version = version
+        self.soversion = soversion
+    
+    def full_name(self,env):
+        rstr = env["LIBPREFIX"]+self.libname
+        if os.name == "posix":
+            rstr += env["SHLIBSUFFIX"]+"."+self.soversion+"."+self.version
+        if os.name == "nt":
+            rstr += "."+self.soversion+"."+self.version+env["SHLIBSUFFIX"]
+            
+        return rstr
+    
+    def so_name(self,env):
+        rstr = env["LIBPREFIX"]+self.libname
+        if os.name == "posix":
+            rstr += env["SHLIBSUFFIX"]+"."+self.soversion
+        if os.name == "nt":
+            rstr += "."+self.soversion+env["SHLIBSUFFIX"]
+            
+        return rstr
+    
+    def link_name(self,env):
+        rstr = env["LIBPREFIX"]+self.libname+env["SHLIBSUFFIX"]
+        return rstr
+#==================================================================================
 
 debug = ARGUMENTS.get("DEBUG",0)
 
@@ -34,13 +61,11 @@ var.Add("CXX","set the compiler to use","g++")
 var.Add("MAINTAINER","package maintainer for the project","Eugen Wintersberger")
 var.Add("MAINTAINER_MAIL","e-mail of the package maintainer","eugen.wintersberger@desy.de")
 var.Add("DOCDIR","installation directory for the documentation","")
-var.Add("MANDIR","installation directory for man pages","share/man")
 var.Add("LIBSONAME","name of the library including the SO-version","")
 var.Add("LIBLINKNAME","name of the library used for linking","")
 var.Add("LIBFULLNAME","full name of the library binary","")
-var.Add("INCINSTPATH","installation path for header files","")
-var.Add("LIBINSTPATH","library installation path","")
-var.Add("PKGNAMEROOT","root package name (actually only used for Debian packages)","")
+var.Add("INCDIR","installation path for header files","")
+var.Add("LIBDIR","library installation path","")
 var.Add("PKGNAME","name of the package for installation","")
 
 #need now to create the proper library suffix
@@ -68,11 +93,6 @@ if env["DOCDIR"] == "":
     env.Append(DOCDIR = path.join(env["PREFIX"],"share/doc/"+
                                   env["LIBPREFIX"]+env["LIBNAME"]
                                   +env["SOVERSION"]+"-doc"))
-
-if env["PKGNAMEROOT"] == "":
-    env.Append(PKGNAMEROOT = env["LIBPREFIX"]+env["LIBNAME"]+env["SOVERSION"])
-    env.Append(PKGNAME = env["LIBPREFIX"]+env["LIBNAME"]+env["SOVERSION"])
-
 
 
 
@@ -119,21 +139,8 @@ def CheckForEach(context):
     
 #-------------------------------------------------------------------------------   
 #start with configuration
-conf = Configure(env,custom_tests =
-{"CheckProgram":CheckProgram,"CheckNullPtr":CheckNullPtr,"CheckForEach":CheckForEach})
+conf = Configure(env,custom_tests = {"CheckNullPtr":CheckNullPtr,"CheckForEach":CheckForEach})
 
-#check available programs
-if not conf.CheckProgram("pdflatex -v"):
-	print "pdflatex not installed!"
-	Exit(1)
-	
-if not conf.CheckProgram("dot -V"):
-	print "graphviz not installed!"
-	Exit(1)
-	
-if not conf.CheckProgram("perl -v"):
-	print "perl not installed!"
-	Exit(1)
 
 #checking compiler capabilities
 if not conf.CheckNullPtr():
@@ -267,7 +274,7 @@ Export("test_build_env")
 
 #build
 SConscript(["src/SConscript"])
-SConscript(["test/SConscript","debian/SConscript"])
+SConscript(["test/SConscript"])
 SConscript(["doc/SConscript"])
 
 #set the default target

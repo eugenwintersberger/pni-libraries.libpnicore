@@ -1,21 +1,18 @@
 import os.path as path
 import subprocess
-from smod import DoxyVersionParser
-from smod import ProgramVersion
 Import("build_env")
 
 
 api_doc_dir = "api-doc"
 api_doc_html_dir = "html"
 
-doxygen_version = DoxyVersionParser().parse()
 doxygen_dict = {"@LIBPREFIX@":"${LIBPREFIX}","@LIBNAME@":"${LIBNAME}",
                 "@VERSION@":"${VERSION}"}
 
 doxygen_mainpage = build_env.Substfile(["mainpage.in"],SUBST_DICT=doxygen_dict)
 doxyfile_source = ["Doxyfile.standard.in"]
-if doxygen_version > ProgramVersion(1,6,0):
-    doxyfile_source.extend(["Doxyfile.extension.in"])
+doxyfile_source.extend(["Doxyfile.extension.in"])
+#if doxygen_version > ProgramVersion(1,6,0):
 
 doxyfile = build_env.Substfile(target="Doxyfile",source=doxyfile_source,
                                SUBST_DICT=doxygen_dict,SUBSTFILESUFFIX="")

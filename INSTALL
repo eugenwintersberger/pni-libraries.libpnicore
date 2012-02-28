@@ -78,20 +78,12 @@ To install below a different prefix use the PREFIX build variable
 
 > scons PREFIX=/opt/pniutils install 
 
+In this case the installation will run 
+
 It is in generally not a good idea to install software directly from the sources
 to a default system location. Rather build a package for your package management
 system and use this for installation (this allows painless removal of the
 software if you do not like it ;)). 
-Building Debian packages is directly supported by the build system used. 
-To build Debian packages simply run
-
-$> scons debian
-
-You will find the resulting packages one level above the source distribution 
-on your file system. To cleanup after a Debian package build you have to use 
-
-$> scons -c
-$> scons -d debian
 
 For package maintainers it might be interesting to use the --install-sandbox
 provided by scons in connection with the DESTDIR environment variable 

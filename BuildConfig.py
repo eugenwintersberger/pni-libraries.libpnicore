@@ -12,6 +12,12 @@ LIBNAME="pniutils" #name of the shared library
 MAINTAINER="Eugen Wintersberger"
 MAINTAINER_MAIL="eugen.wintersberger@desy.de"
 
+#where the installation should go
+PREFIX="/usr"
+INCDIR=PREFIX+"/include/pni/utils"
+LIBDIR=PREFIX+"/lib"
+DOCDIR=PREFIX+"/share/doc/lib"+LIBNAME+SOVERSION+"-"+VERSION
+
 
 
 
