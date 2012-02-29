@@ -84,28 +84,20 @@ env.Append(LIBLINKNAME = libname.link_name(env))
 
 
 #create installation paths
-if env["INCDIR"]:
-    #set custom path for header installation
-    env.Append(INCINSTPATH=env["INCDIR"])
-else:
-    env.Append(INCINSTPATH = path.join(env["PREFIX"],"include/pni/utils"))
+if not env["INCDIR"]:
+    env.Append(INCDIR = path.join(env["PREFIX"],"include/pni/utils"))
 
-print env["LIBDIR"]
-if env["LIBDIR"]:
-    #set custom path for library installation
-    env.Append(LIBINSTPATH = env["LIBDIR"])
-else:
-    env.Append(LIBINSTPATH = path.join(env["PREFIX"],"lib"))
+if not env["LIBDIR"]:
+    env.Append(LIBDIR = path.join(env["PREFIX"],"lib"))
 
-print env["LIBINSTPATH"]
-
-if env["DOCDIR"] == "":
+if not env["DOCDIR"]:
     #set default documentation directory for installation
     env.Append(DOCDIR = path.join(env["PREFIX"],"share/doc/"+
                                   env["LIBPREFIX"]+env["LIBNAME"]
                                   +env["SOVERSION"]+"-doc"))
 
 
+print env["LIBDIR"]
 #set default compiler flags
 env.Append(CXXFLAGS = ["-Wall","-std=c++0x"])
 env.Append(LIBS=["dl"])
