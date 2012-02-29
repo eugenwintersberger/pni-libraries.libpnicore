@@ -104,6 +104,7 @@ if env["DOCDIR"] == "":
 
 #set default compiler flags
 env.Append(CXXFLAGS = ["-Wall","-std=c++0x"])
+env.Append(LIBS=["dl"])
 env.Append(LIBPATH=path.join(env["BOOSTPREFIX"],"lib"))
 env.Append(CPPPATH=path.join(env["BOOSTPREFIX"],"include"))
 
@@ -220,7 +221,7 @@ if not conf.CheckCXXHeader("cppunit/TestCaller.h"):
 	print "CPPUNIT header TestCaller.h does not exist!"
 	Exit(1)
 	
-if not conf.CheckCXXHeader("cppunit/TestResult.h"):
+if not conf.CheckCXXHeader(["string","cppunit/TestResult.h"]):
 	print "CPPUNIT header TestResult.h does not exist!"
 	Exit(1)
 	
