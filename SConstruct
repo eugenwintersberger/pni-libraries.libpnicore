@@ -67,6 +67,7 @@ var.Add("LIBFULLNAME","full name of the library binary","")
 var.Add("INCDIR","installation path for header files","")
 var.Add("LIBDIR","library installation path","")
 var.Add("PKGNAME","name of the package for installation","")
+var.Add(BoolVariable("NOPLPLOT","set if no PlPlot library is available",0))
 
 #need now to create the proper library suffix
 
@@ -185,7 +186,7 @@ if not conf.CheckTypeSize('double',expect=8):
 if not conf.CheckTypeSize('long doube',expect = 16):
     pass
 
-#check for header files
+#check for mandatory header files
 if not conf.CheckCXXHeader("boost/numeric/conversion/cast.hpp"):
 	print "BOOST header file cast.hpp does not exist!"
 	Exit(1)
@@ -226,23 +227,26 @@ if not conf.CheckCXXHeader("cppunit/ui/text/TextTestRunner.h"):
 	print "CPPUNIT header TextTestRunner.h does not exist!"
 	Exit(1)
 	
-if not conf.CheckCHeader("plplot/plplot.h"):
-	print "PLPLOT header plplot.h does not exist!";
-	Exit(1)
-	
-if not conf.CheckCXXHeader("plplot/plstream.h"):
-	print "PLPLOT header plstream.h does not exist!";
-	Exit(1)
-	
-#check for libraries
-if not conf.CheckLib("plplotcxxd"):
-	print "PLPLOT C++ bindings are not installed!"
-	Exit(1)
-	
+
+#check for mandatory libraries
 if not conf.CheckLib("cppunit",language="C++"):
 	print "CPPUNIT unit test libraray is not installed!"
 	Exit(1)
+
+#check for optional headers
+if not conf.CheckCHeader("plplot/plplot.h"):
+    print "PLPLOT header plplot.h does not exist!"
+    env["NOPLPLOT"] = 1
 	
+if not conf.CheckCXXHeader("plplot/plstream.h"):
+    print "PLPLOT header plstream.h does not exist!"
+    env["NOPLPLOT"] = 1
+
+
+#check for optional libraries
+if not conf.CheckLib("plplotcxxd"):
+    print "PLPLOT C++ bindings are not installed!";
+    env["NOPLPLOT"] = 1
 	
 env = conf.Finish()
 
