@@ -44,7 +44,8 @@ if os.name == "nt":
                          "C:\\Program Files\\libpniutils",
                          PathVariable.PathAccept))
 elif os.name=="posix":
-	var.Add(PathVariable("PREFIX","set installation prefix","/usr"))
+	var.Add(PathVariable("PREFIX","set installation prefix","/usr",
+                         PathVariable.PathAccept))
 
 if os.name == "nt":
 	var.Add(PathVariable("BOOSTPREFIX",
@@ -89,11 +90,14 @@ if env["INCDIR"]:
 else:
     env.Append(INCINSTPATH = path.join(env["PREFIX"],"include/pni/utils"))
 
+print env["LIBDIR"]
 if env["LIBDIR"]:
     #set custom path for library installation
     env.Append(LIBINSTPATH = env["LIBDIR"])
 else:
     env.Append(LIBINSTPATH = path.join(env["PREFIX"],"lib"))
+
+print env["LIBINSTPATH"]
 
 if env["DOCDIR"] == "":
     #set default documentation directory for installation
