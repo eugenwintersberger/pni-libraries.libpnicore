@@ -90,22 +90,12 @@ provided by scons in connection with the DESTDIR environment variable
 
 $> scons install --install-sandbox=$(DESTDIR)
 
+Some 64Bit distributions install libraries not below lib but below lib64. In
+such cases the LIBDIR variable can be used 
 
-Building MSI packages for Windows
-----------------------------------
-NOT SUPPORTED YET - still needs to be tested. 
+$> scons install PREFIX=/usr LIBDIR=/usr/lib64 --install-sandbox=/opt/pniutils 
+
+With this command everything will be installed below the standard directories in 
+/opt/pniutils/usr but the libraries will go to /opt/pniutils/usr/lib64. 
 
 
-Building Debian packages
-------------------------
-
-Actually there is rudimentary support for building Debian packages that should work 
-for all systems based on Debian GNU/Linux (Ubuntu and others).
-I use the deb-helper tools to create Debian packages. Thus you first need to 
-create the configuration files below debian/. This is done by calling 
-
-> scons debian
-
-will create three Debian packages on level above the root directory of the 
-source tree. A binary package with the library, a devel package with the 
-header files, and a package including the documentation.

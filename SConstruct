@@ -83,9 +83,15 @@ env.Append(LIBLINKNAME = libname.link_name(env))
 
 
 #create installation paths
-env.Append(INCINSTPATH = path.join(env["PREFIX"],"include/pni/utils"))
-if platform.machine()=="x86_64":
-    env.Append(LIBINSTPATH = path.join(env["PREFIX"],"lib"))
+if env["INCDIR"]:
+    #set custom path for header installation
+    env.Append(INCINSTPATH=env["INCDIR"])
+else:
+    env.Append(INCINSTPATH = path.join(env["PREFIX"],"include/pni/utils"))
+
+if env["LIBDIR"]:
+    #set custom path for library installation
+    env.Append(LIBINSTPATH = env["LIBDIR"])
 else:
     env.Append(LIBINSTPATH = path.join(env["PREFIX"],"lib"))
 
@@ -96,13 +102,10 @@ if env["DOCDIR"] == "":
                                   +env["SOVERSION"]+"-doc"))
 
 
-
 #set default compiler flags
 env.Append(CXXFLAGS = ["-Wall","-std=c++0x"])
 env.Append(LIBPATH=path.join(env["BOOSTPREFIX"],"lib"))
 env.Append(CPPPATH=path.join(env["BOOSTPREFIX"],"include"))
-
-print env["CPPPATH"]
 
 #set the proper compiler - this should be changed to something 
 #more general - independent of the underlying operating system
