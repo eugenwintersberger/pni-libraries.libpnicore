@@ -102,6 +102,8 @@ env.Append(CXXFLAGS = ["-Wall","-std=c++0x"])
 env.Append(LIBPATH=path.join(env["BOOSTPREFIX"],"lib"))
 env.Append(CPPPATH=path.join(env["BOOSTPREFIX"],"include"))
 
+print env["CPPPATH"]
+
 #set the proper compiler - this should be changed to something 
 #more general - independent of the underlying operating system
 env.Replace(CXX = env["CXX"])
