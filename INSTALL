@@ -4,11 +4,14 @@ Installing pniutils
 1.) Requirements to build the library
     ---------------------------------
 Minimum requirements:
-C++ Compiler g++ >= 4.4.1
-Boost library > 1.4
-SCons build system >= 2.0.0
-doxygen 
+-> C++ Compiler g++ >= 4.4.1
+-> Boost library > 1.4
+-> SCons build system >= 2.0.0
 
+To build the documentation some additional software is required:
+-> doxygen 
+-> pygmented
+-> pdflatex
 
 To build the documentation doxygen should be installed.
 To get the test code compiled the cppunit and plplot libraries are 
@@ -45,6 +48,26 @@ only use
 
 > scons test
 
+In all cases scons tries to do auto-configuration of the build. If all required
+libraries can be found by the linker there is nothing to do at all. However,
+there are situation where libraries are installed in places not known to the
+linker. For such situations the build system provdies command line variables to
+tell scons where to look for these libraries.
+
+If you have the Boost library on a custom site you can add the path 
+to the Boost installation prefix with
+
+> scons BOOSTPREFIX=/opt/boost [all,library]
+
+It is assumed that the libraries can be found below BOOSTPREFIX/lib and the
+headers in BOOSTPREFIX/include.
+
+To cleanup the source tree after a build use 
+
+$> scons -c
+
+2.2.) Running tests
+      -------------
 The test program can be found below "./test". To run the test change to this
 directory and use 
 
@@ -54,14 +77,6 @@ $> ./pniutilstest
 The first line ensures that the test program uses the newly built library
 instead of an old one that might be already installed on your system. 
 
-If you have the Boost library on a custom site you can add the path 
-to the Boost installation prefix with
-
-> scons BOOSTPREFIX=/opt/boost [all,library]
-
-To cleanup the source tree after a build use 
-
-$> scons -c
 
 
 2.2) Installation on Linux
