@@ -320,7 +320,15 @@ template<typename T> void Buffer<T>::allocate(const size_t &s){
 	//set the new size of the buffer
 	this->size(s);
 
-	_data = new T[this->size()];
+    //use here a try statement - new compilers do not return nullptr but rather
+    //throw an exception if memory allocation fails.
+    try{
+	    _data = new T[this->size()];
+    }catch(...){
+        EXCEPTION_INIT(MemoryAllocationError,"Error allocating buffer memory!");
+        EXCEPTION_THROW();
+    }
+
 	if(!_data){
 		EXCEPTION_INIT(MemoryAllocationError,"Error allocating buffer memory!");
 		EXCEPTION_THROW();
