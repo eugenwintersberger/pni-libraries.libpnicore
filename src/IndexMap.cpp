@@ -25,6 +25,9 @@
  *
  */
 
+#include <sstream>
+
+#include "Exceptions.hpp"
 #include "IndexMap.hpp"
 
 
@@ -69,7 +72,25 @@ namespace pni{
             _offset(o),
             _stride(s),
             _count(c)
-        { }
+        { 
+            EXCEPTION_SETUP("IndexMap::IndexMap(const Buffer<ssize_t> &o,"
+                    "const Buffer<ssize_t> &s, const Buffer<ssize_t> &c)");
+
+            //need to check if all buffers have the same size
+            if((_offset.size() != _stride.size())||
+               (_offset.size() != _count.size())||
+               (_stride.size() != _count.size()))
+            {
+                std::stringstream estrm(std::stringstream::in);
+                estrm<<"Buffer sizes are not equal: "<<std::endl;
+                estrm<<"Offset buffer: "<<_offset.size()<<std::endl;
+                estrm<<"Stride buffer: "<<_stride.size()<<std::endl;
+                estrm<<"Count  buffer: "<<_count.size()<<std::endl;
+                estrm<<"Construction of IndexMap failed!";
+                EXCEPTION_INIT(SizeMissmatchError,estrm.str());
+                EXCEPTION_THROW();
+            }
+        }
 
         //---------------------------------------------------------------------
         //implementation of the destructor
@@ -82,7 +103,7 @@ namespace pni{
 
         //================implementation of assignment operators===============
         //implementation of copy assignment
-        IndexMap &operator=(const IndexMap &o)
+        IndexMap &IndexMap::operator=(const IndexMap &o)
         {
             if(this != &o)
             {
@@ -95,7 +116,7 @@ namespace pni{
 
         //---------------------------------------------------------------------
         //implementation of move assignment
-        IndexMap &operator=(IndexMap &&o)
+        IndexMap &IndexMap::operator=(IndexMap &&o)
         {
             if(this != &o)
             {
@@ -106,7 +127,131 @@ namespace pni{
             return *this;
         }
 
+        //==============access methods for map parameters======================
+        void IndexMap::offset(size_t i,ssize_t o)
+        {
+            _offset[i] = o;
+        }
 
+        //---------------------------------------------------------------------
+        void IndexMap::offset(const Buffer<ssize_t> &o)
+        {
+            EXCEPTION_SETUP("void IndexMap::offset(const Buffer<ssize_t> &o)");
+
+            if(o.size()!=rank())
+            {
+                std::stringstream estrm(std::stringstream::in);
+                estrm<<"Buffer size ("<<o.size()<<") does not match ";
+                estrm<<"IndexMap rank ("<<rank()<<")!";
+                EXCEPTION_INIT(SizeMissmatchError,estrm.str());
+                EXCEPTION_THROW();
+            }
+
+            _offset = o;
+        }
+        
+        //---------------------------------------------------------------------
+        ssize_t IndexMap::offset(size_t i) const
+        {
+            return _offset[i];
+        }
+
+        //---------------------------------------------------------------------
+        const Buffer<ssize_t> &IndexMap::offset() const
+        {
+            return _offset;
+        }
+
+        //---------------------------------------------------------------------
+        void IndexMap::stride(size_t i,ssize_t s)
+        {
+            _stride[i] = s;
+        }
+
+        //---------------------------------------------------------------------
+        void IndexMap::stride(const Buffer<ssize_t> &s)
+        {
+            EXCEPTION_SETUP("void IndexMap::stride(const Buffer<ssize_t> &s)");
+
+            if(s.size()!=rank())
+            {
+                std::stringstream estrm(std::stringstream::in);
+                estrm<<"Buffer size ("<<s.size()<<") does not match ";
+                estrm<<"IndexMap rank ("<<rank()<<")!";
+                EXCEPTION_INIT(SizeMissmatchError,estrm.str());
+                EXCEPTION_THROW();
+            }
+
+            _stride = s;
+        }
+        
+        //---------------------------------------------------------------------
+        ssize_t IndexMap::stride(size_t i) const
+        {
+            return _stride[i];
+        }
+
+        //---------------------------------------------------------------------
+        const Buffer<ssize_t> &IndexMap::stride() const
+        {
+            return _stride;
+        }
+
+        //---------------------------------------------------------------------
+        void IndexMap::count(size_t i,ssize_t c)
+        {
+            _count[i] = c;
+        }
+
+        //---------------------------------------------------------------------
+        void IndexMap::count(const Buffer<ssize_t> &c)
+        {
+            EXCEPTION_SETUP("void IndexMap::count(const Buffer<ssize_t> &c)");
+
+            if(c.size()!=rank())
+            {
+                std::stringstream estrm(std::stringstream::in);
+                estrm<<"Buffer size ("<<c.size()<<") does not match ";
+                estrm<<"IndexMap rank ("<<rank()<<")!";
+                EXCEPTION_INIT(SizeMissmatchError,estrm.str());
+                EXCEPTION_THROW();
+            }
+
+            _count = c;
+        }
+        
+        //---------------------------------------------------------------------
+        ssize_t IndexMap::count(size_t i) const
+        {
+            return _count[i];
+        }
+
+        //---------------------------------------------------------------------
+        const Buffer<ssize_t> &IndexMap::count() const
+        {
+            return _count;
+        }
+
+        //---------------------------------------------------------------------
+        /*
+        Buffer<size_t> index(size_t offset)
+        {
+            Buffer<size_t> ibuffer(rank());
+
+
+            size_t o,t;
+            o = offset;
+            for(size_t d = 0;d<rank();d++){
+                //compute dimension stride 
+                
+
+                t = o%_dimstrides[d];
+                i[d] = (o-t)/_dimstrides[d];
+                o = t;
+            }
+
+            return ibuffer;
+        }*/
 
     //end of namespace
     }

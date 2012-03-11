@@ -21,6 +21,7 @@ sources_list.extend(["ShapeTest.cpp"])
 sources_list.extend(["ScalarTest.cpp"])
 sources_list.extend(["BinaryTest.cpp"])
 sources_list.extend(["TypeMapsTest.cpp"])
+sources_list.extend(["IndexMapTest.cpp"])
 
 pniutils_test = test_env.Program("pniutilstest",sources_list)
 showtypes = test_env.Program("showPNITypes.cpp")

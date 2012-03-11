@@ -6,7 +6,7 @@ Import("build_env")
 source_list = ["ScalarObject.cpp","BufferObject.cpp",
                "ArrayObject.cpp","Shape.cpp","Exceptions.cpp",
                "DataObject.cpp","NumericObject.cpp","Index.cpp","Selection.cpp",
-               "ComplexUtils.cpp"]
+               "ComplexUtils.cpp","IndexMap.cpp"]
                
 #build static and shared objects               
 shared_objects = build_env.SharedObject(source_list)
