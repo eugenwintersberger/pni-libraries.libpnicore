@@ -33,5 +33,14 @@ if not test_env["NOPLPLOT"]:
     tifreader_test = test_env.Program("tif_reader_test",["tif_reader_test.cpp"])
     test_targets.extend([cbfreader_test,tifreader_test])
 
+if 'testrun' in COMMAND_LINE_TARGETS:
+    print "Running unit tests ...."
+    #delete the original log file
+    test_run = test_env.Command("testrun.log",pniutils_test,
+                    ["export LD_LIBRARY_PATH=src; echo \"start test\"; $SOURCE > $TARGET"])
+
+    AlwaysBuild(test_run) 
+    test_env.Alias("testrun",[test_run])
+
 test_env.Alias("test",test_targets)
-test_env.Alias("all",test_targets)
+test_env.Alias("all",[test_targets])

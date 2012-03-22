@@ -13,3 +13,4 @@ utbmark
 /*.deb
 /*.changes
 Makefile
+*.tif
