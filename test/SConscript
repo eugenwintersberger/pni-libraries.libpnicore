@@ -1,3 +1,5 @@
+from os import path
+import re
 Import("test_build_env")
 
 test_env = test_build_env.Clone()
@@ -34,13 +36,29 @@ if not test_env["NOPLPLOT"]:
     test_targets.extend([cbfreader_test,tifreader_test])
 
 if 'testrun' in COMMAND_LINE_TARGETS:
+    def check_test_log(target,source,env):
+        end_of_test = re.compile(r"^Test Results:")
+        issue = re.compile(r"\d*\)")
+    
+        #open the log file
+        lfile = file(path.join("test",source[0].name))
+        #move to the results section
+        for line in lfile: 
+            if end_of_test.match(line): break
+
+        #show test results
+        for line in lfile:
+            if issue.match(line): 
+                print line
+                Exit(1)
+
     print "Running unit tests ...."
     #delete the original log file
     test_run = test_env.Command("testrun.log",pniutils_test,
                     ["export LD_LIBRARY_PATH=src; echo \"start test\"; $SOURCE > $TARGET"])
-
     AlwaysBuild(test_run) 
-    test_env.Alias("testrun",[test_run])
+    test_check = test_env.Command("testrun.check",test_run,check_test_log)
+    test_env.Alias("testrun",[test_run,test_check])
 
 test_env.Alias("test",test_targets)
 test_env.Alias("all",[test_targets])
