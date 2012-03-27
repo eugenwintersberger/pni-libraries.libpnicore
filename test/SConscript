@@ -47,10 +47,14 @@ if 'testrun' in COMMAND_LINE_TARGETS:
             if end_of_test.match(line): break
 
         #show test results
+        error_flag = False
         for line in lfile:
+            print line
             if issue.match(line): 
-                print line
-                Exit(1)
+                error_flag = True
+
+        if error_flag: 
+            Exit(1)
 
     print "Running unit tests ...."
     #delete the original log file
