@@ -99,7 +99,7 @@ if not env["DOCDIR"]:
 
 print env["LIBDIR"]
 #set default compiler flags
-env.Append(CXXFLAGS = ["-Wall","-std=c++0x"])
+env.Append(CXXFLAGS = ["-Wall","-std=c++0x","-m128bit-long-double"])
 env.Append(LIBS=["dl"])
 env.Append(LIBPATH=path.join(env["BOOSTPREFIX"],"lib"))
 env.Append(CPPPATH=path.join(env["BOOSTPREFIX"],"include"))
@@ -185,7 +185,7 @@ if not conf.CheckTypeSize('float',expect=4):
 if not conf.CheckTypeSize('double',expect=8):
     pass
 
-if not conf.CheckTypeSize('long doube',expect = 16):
+if not conf.CheckTypeSize('long double',expect = 16):
     pass
 
 #check for mandatory header files
