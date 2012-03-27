@@ -100,7 +100,6 @@ if not env["DOCDIR"]:
 print env["LIBDIR"]
 #set default compiler flags
 env.Append(CXXFLAGS = ["-Wall","-std=c++0x","-m128bit-long-double"])
-env.Append(CXXFLAGS = ["-mlong-double-128"])
 env.Append(LIBS=["dl"])
 env.Append(LIBPATH=path.join(env["BOOSTPREFIX"],"lib"))
 env.Append(CPPPATH=path.join(env["BOOSTPREFIX"],"include"))
@@ -187,7 +186,10 @@ if not conf.CheckTypeSize('double',expect=8):
     pass
 
 if not conf.CheckTypeSize('long double',expect = 16):
+    #in this case we are on 32Bit PC platform
     pass
+
+
 
 #check for mandatory header files
 if not conf.CheckCXXHeader("boost/numeric/conversion/cast.hpp"):
