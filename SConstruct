@@ -99,7 +99,7 @@ if not env["DOCDIR"]:
 
 print env["LIBDIR"]
 #set default compiler flags
-env.Append(CXXFLAGS = ["-Wall","-std=c++0x","-m128bit-long-double"])
+env.Append(CXXFLAGS = ["-Wall","-std=c++0x"])
 env.Append(LIBS=["dl"])
 env.Append(LIBPATH=path.join(env["BOOSTPREFIX"],"lib"))
 env.Append(CPPPATH=path.join(env["BOOSTPREFIX"],"include"))
