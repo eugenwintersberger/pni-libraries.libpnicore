@@ -148,7 +148,7 @@ public:
 
 	//! return a pointer to the number of elements along each dimension
 	//! of the data.
-	const unsigned long *getDimensions() const {
+	const UInt64 *getDimensions() const {
 		return _dims;
 	}
 };
