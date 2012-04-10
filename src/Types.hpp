@@ -42,14 +42,14 @@ namespace utils{
 
 //! \addtogroup type_classes
 //! @{
-typedef char           Int8;   //!< 8Bit signed integer type
-typedef unsigned char  UInt8;  //!< 8Bit unsigned integer type
-typedef short          Int16;  //!< 16Bit signed integer type
-typedef unsigned short UInt16; //!< 16Bit unsigned integer type
-typedef int            Int32;  //!< 32Bit signed integer type
-typedef unsigned int   UInt32; //!< 32Bit unsigned integer type
-typedef long           Int64;  //!< 64Bit signed integer type
-typedef unsigned long  UInt64; //!< 64Bit unsigned integer type
+typedef int8_t   Int8;   //!< 8Bit signed integer type
+typedef uint8_t  UInt8;  //!< 8Bit unsigned integer type
+typedef int16_t  Int16;  //!< 16Bit signed integer type
+typedef uint16_t UInt16; //!< 16Bit unsigned integer type
+typedef int32_t  Int32;  //!< 32Bit signed integer type
+typedef uint32_t UInt32; //!< 32Bit unsigned integer type
+typedef int64_t  Int64;  //!< 64Bit signed integer type
+typedef uint64_t UInt64; //!< 64Bit unsigned integer type
 
 //floating point numbers
 typedef double Float64;         //!< 64Bit IEEE floating point type
