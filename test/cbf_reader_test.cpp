@@ -14,12 +14,57 @@
 #include<plplot/plplot.h>
 #include<plplot/plstream.h>
 
+#include <vtkRenderWindow.h>
+#include <vtkRenderWindowInteractor.h>
+#include <vtkRenderer.h>
+#include <vtkFloatArray.h>
+#include <vtkImageData.h>
+#include <vtkPointData.h>
+#include <vtkImageViewer2.h>
+
 #include "../src/io/CBFReader.hpp"
 #include "../src/Array.hpp"
 #include "../src/Shape.hpp"
 
 using namespace pni::utils;
 
+
+void plot_image(const Float32Array &array)
+{
+    vtkRenderer *renderer = vtkRenderer::New();
+    vtkRenderWindow *window = vtkRenderWindow::New();
+    vtkRenderWindowInteractor *interactor = vtkRenderWindowInteractor::New();
+    vtkImageViewer2 *viewer = vtkImageViewer2::New();
+
+    vtkFloatArray *ia = vtkFloatArray::New();
+    ia->SetArray((float *)array.ptr(),array.size(),1);
+    vtkImageData *idata = vtkImageData::New();
+    idata->GetPointData()->SetScalars(ia);
+    idata->SetDimensions(array.shape()[1],array.shape()[0],1);
+    idata->SetScalarType(VTK_FLOAT);
+    idata->SetSpacing(1.0,1.0,1.0);
+    idata->SetOrigin(0,0,0);
+
+    viewer->SetInput(idata);
+    viewer->SetZSlice(0);
+    viewer->SetupInteractor(interactor);
+    viewer->Render();
+    interactor->Start();
+
+/*
+    window->AddRenderer(renderer);
+    interactor->SetRenderWindow(window);
+
+    window->Render();
+    interactor->Start();
+*/
+
+    //cleanup everything
+    renderer->Delete();
+    window->Delete();
+    interactor->Delete();
+
+}
 
 int main(int argc,char **argv){
 
@@ -37,6 +82,7 @@ int main(int argc,char **argv){
     std::cout<<info<<std::endl;
 
     Float32Array array = reader.image<Float32Array>(0);
+    plot_image(array);
 
     return 0;
 }

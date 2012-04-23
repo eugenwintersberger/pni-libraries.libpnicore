@@ -109,7 +109,7 @@ public:
 	virtual void allocate() = 0;
 
 	//! total number of elements in the array
-	virtual UInt64 size(){
+	virtual UInt64 size() const{
 		return _shape.size();
 	}
 

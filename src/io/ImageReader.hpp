@@ -97,15 +97,14 @@ namespace pni{
                 virtual std::vector<ImageInfo> info() const = 0;
 
                 //--------------------------------------------------------------
-                template<typename T,template<typename> class BT> 
-                    Array<T,BT> image(size_t i=0) 
+                template<typename ArrayType> ArrayType image(size_t i) 
                 {
                     EXCEPTION_SETUP("template<typename T,typename BT> "
                                      "Array<T,BT> image(size_t i=0) const");
                     EXCEPTION_INIT(NotImplementedError,
                                    "Method not implemented!");
                     EXCEPTION_THROW();
-                    return Array<T,BT>();
+                    return ArrayType();
                 }
                 
                 template<typename T,template<typename> class BT> 
@@ -118,7 +117,6 @@ namespace pni{
                     EXCEPTION_INIT(NotImplementedError,
                                    "Method not implemented!");
                     EXCEPTION_THROW();
-                    return Array<T,BT>();
                 }
 
         };

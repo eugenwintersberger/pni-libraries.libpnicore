@@ -247,22 +247,23 @@ if not conf.CheckLib("cppunit",language="C++"):
 	print "CPPUNIT unit test libraray is not installed!"
 	Exit(1)
 
-#check for optional headers
-if not conf.CheckCHeader("plplot/plplot.h"):
-    print "PLPLOT header plplot.h does not exist!"
-    env["NOPLPLOT"] = 1
-	
-if not conf.CheckCXXHeader("plplot/plstream.h"):
-    print "PLPLOT header plstream.h does not exist!"
-    env["NOPLPLOT"] = 1
 
-
-#check for optional libraries
-if not conf.CheckLib("plplotcxxd"):
-    print "PLPLOT C++ bindings are not installed!";
-    env["NOPLPLOT"] = 1
+if not conf.CheckLib("vtkFiltering",language="C++") or \
+   not conf.CheckLib("vtkftgl",language="C++") or \
+   not conf.CheckLib("vtkGenericFiltering",language="C++") or \
+   not conf.CheckLib("vtkGraphics",language="C++") or \
+   not conf.CheckLib("vtkHybrid",language="C++") or \
+   not conf.CheckLib("vtkImaging",language="C++") or \
+   not conf.CheckLib("vtkInfovis",language="C++") or \
+   not conf.CheckLib("vtkCommon",language="C++") or \
+   not conf.CheckLib("vtkRendering",language="C++") or \
+   not conf.CheckLib("vtkIO",language="C++"):
+    print "VTK libraries are missing!"
+    Exit(1)
 	
 env = conf.Finish()
+
+env.Append(CPPPATH=["/usr/include/vtk-5.6"])
 
 
 #create optimized environment

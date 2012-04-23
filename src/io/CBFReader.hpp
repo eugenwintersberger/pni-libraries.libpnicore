@@ -110,60 +110,65 @@ namespace pni{
                 {
                     return std::move(_image_info);
                 }
-                
+
+                //-------------------------------------------------------------
+                template<typename ArrayType> ArrayType image(size_t i);
+               
+                //-------------------------------------------------------------
                 template<typename T,template<typename> class BT> 
-                    Array<T,BT> image(size_t i=0) 
-                {
-                    EXCEPTION_SETUP("template<typename T,typename BT> "
-                                     "Array<T,BT> image(size_t i=0) const");
-
-                    ImageInfo info = _image_info[i];
-                    Shape shape(2);
-                    shape.dim(0,info.nx());
-                    shape.dim(1,info.ny());
-
-                    Array<T,BT> array(shape);
-                    
-                    image(i,array);
-
-                    return array;
-                }
-                
-                template<typename T,template<typename> class BT> 
-                    void image(size_t i,Array<T,BT> &array) 
-                {
-                    EXCEPTION_SETUP("template<typename T, template<typename> "
-                            "class BT> void image(size_t i=0,Array<T,BT>"
-                            "&array) const");
-                    
-                    ImageInfo inf = _image_info[i];
-                    ImageChannelInfo channel = inf.get_channel(0);
-
-                    if(_detector_vendor == CBFDetectorVendor::DECTRIS)
-                    {
-                        if(channel.type_id() == TypeID::INT16)
-                            DectrisCBFReader::read_data_byte_offset<Int16>(
-                                    _get_stream(),inf,array);
-                        if(channel.type_id() == TypeID::INT32)
-                            DectrisCBFReader::read_data_byte_offset<Int32>(
-                                _get_stream(),inf,array);
-                        else
-                        {
-                            EXCEPTION_INIT(FileError,"No data reader for "
-                                    "this data type!");
-                        }
-
-                    }
-                    else
-                    {
-                        EXCEPTION_INIT(FileError,"Unknown detector vendor!");
-                        EXCEPTION_THROW();
-                    }
-
-                }
+                    void image(size_t i,Array<T,BT> &array);
 
         };
 
+        template<typename ArrayType> ArrayType CBFReader::image(size_t i) 
+        {
+            EXCEPTION_SETUP("template<typename ArrayType> "
+                             "ArrayType image(size_t i=0) const");
+
+            ImageInfo info = _image_info[i];
+            Shape shape(2);
+            shape.dim(0,info.nx());
+            shape.dim(1,info.ny());
+
+            ArrayType array(shape);
+            
+            image(i,array);
+
+            return array;
+        }
+
+        template<typename T,template<typename> class BT> 
+            void CBFReader::image(size_t i,Array<T,BT> &array) 
+        {
+            EXCEPTION_SETUP("template<typename T, template<typename> "
+                    "class BT> void image(size_t i=0,Array<T,BT>"
+                    "&array) const");
+            
+            ImageInfo inf = _image_info[i];
+            ImageChannelInfo channel = inf.get_channel(0);
+
+            if(_detector_vendor == CBFDetectorVendor::DECTRIS)
+            {
+                if(channel.type_id() == TypeID::INT16)
+                    DectrisCBFReader::read_data_byte_offset<Int16>(
+                            _get_stream(),inf,array);
+                if(channel.type_id() == TypeID::INT32)
+                    DectrisCBFReader::read_data_byte_offset<Int32>(
+                        _get_stream(),inf,array);
+                else
+                {
+                    EXCEPTION_INIT(FileError,"No data reader for "
+                            "this data type!");
+                }
+
+            }
+            else
+            {
+                EXCEPTION_INIT(FileError,"Unknown detector vendor!");
+                EXCEPTION_THROW();
+            }
+
+        }
     //end of namespace
     }
 }
