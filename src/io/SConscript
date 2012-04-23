@@ -10,7 +10,7 @@ tiffsources = ["TIFFReader.cpp","TIFFFile.cpp",
            
 cbfsources = ["Reader.cpp","CBFReader.cpp","strutils.cpp","CIFBinHeader.cpp",
            "PCIFBinHeader.cpp","CBFBinStreamReader.cpp"]
-sources = []
+sources = ["DataReader.cpp","ImageInfo.cpp","ImageReader.cpp"]
 sources.extend(cbfsources)
 sources.extend(tiffsources)
 sobjs = build_env.SharedObject(sources)
