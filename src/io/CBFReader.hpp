@@ -35,72 +35,137 @@
 #include<sstream>
 #include<cstdio>
 #include<cstdlib>
+#include<vector>
+
+#include<boost/regex.hpp>
 
 #include "../Types.hpp"
 #include "../DataObject.hpp"
 
-#include "Reader.hpp"
-#include "CBFHeader.hpp"
+#include "ImageReader.hpp"
+#include "DectrisCBFReader.hpp"
+#include "CBFTypes.hpp"
 
 
-#define CIF_BINARY_SECTION "--CIF-BINARY-FORMAT-SECTION--"
-#define CIF_HEADER_CONVENTION "_array_data.header_convention"
-#define CIF_HEADER_CONVENTION_SLS "\"SLS_1.0\""
-#define CIF_HEADER_CONVENTION_SLS_11 "\"SLS/DECTRIS_1.1\""
 
 namespace pni{
-namespace utils{
+    namespace utils{
 
-//! \ingroup io_classes
-//! \brief base clase for CBF readers
 
-//! CBFReader is the base class for all readers of data stored in binary CIF format.
-//! Although CBF is standardized by the ICUR the guys from Dectris (the vendor of the Pilatus
-//! detector) use a kind of dialect which must be treated in a slightly different way.
-//! The field _header_convention in the class indicates whether or not the header is
-//! in standard CBF format or in the Dectris dialect.
-//!
-//! Reading a CBF file is a two step process:
-//! - the header is read and the information stored there kept in in a CIFBinaryHeader object
-//! - the binary data is read from the stream using a CBFBinStreamReader object
-//! The header information contains enough information to decide which binary reader to use
-//! and to construct the data objects which will hold the data read from the file.
-//! From such a point of view the header object can be consideres as a factory for the binary
-//! readers and the array objects holding the data.
-class CBFReader: public Reader {
-private:
-	//like all other readers the CBFReader must not be
-	//copied or assigned
-	CBFReader(const CBFReader &r){}
-	CBFReader &operator=(const CBFReader &r){return *this;}
-protected:
-	String _header_convention_;  //!< string defining the header convention
-	char buffer_[1024]; 		 //!< buffer for what ever purpose
-	CIFBinaryHeader *_binheader; //!< header object
-public:
-	//! default constructor
-	CBFReader();
-	//! standard constructor
+        /*! 
+        \ingroup io_classes
+        \brief base clase for CBF readers
 
-	//! The name of the CBFFile is passed as a C string.
-	CBFReader(const char* filename);
-	//! standard constructor
+        CBFReader is the base class for all readers of data stored in binary CIF format.
+        Although CBF is standardized by the ICUR the guys from Dectris (the vendor of the Pilatus
+        detector) use a kind of dialect which must be treated in a slightly different way.
+        The field _header_convention in the class indicates whether or not the header is
+        in standard CBF format or in the Dectris dialect.
+        
+        Reading a CBF file is a two step process:
+        - the header is read and the information stored there kept in in a CIFBinaryHeader object
+        - the binary data is read from the stream using a CBFBinStreamReader object
+        The header information contains enough information to decide which binary reader to use
+        and to construct the data objects which will hold the data read from the file.
+        From such a point of view the header object can be consideres as a factory for the binary
+        readers and the array objects holding the data.
+        */
+        class CBFReader: public ImageReader {
+            private:
+                CBFDetectorVendor _detector_vendor;     //!< string holding the detector vendor ID
+                std::vector<ImageInfo> _image_info; //!< info structure for data
+                std::streampos _data_offset; 
+                CBFCompressionType _compression_type;    //!< compression type
+                void _parse_file();
+                
+            public:
+                //=================constructors and destructor==================
+                //! default constructor
+                CBFReader();
+                //! standard constructor
 
-	//! The name of the CBFFile is passed as a String object.
-	CBFReader(const String &fname);
-	//! destructor
-	virtual ~CBFReader();
+                //! The name of the CBFFile is passed as a String object.
+                CBFReader(const String &fname);
+                //! destructor
+                virtual ~CBFReader();
 
-	//! read data from the file
+                //---------------------------------------------------------------
+                //delete copy constructor
+                CBFReader(const CBFReader &r) = delete;
 
-	//! Data is read from the CBF file and returned as a general
-	//! DataObject. This DataObject is typically an instance of Array<T>
-	//! - at least in the case of CBF files.
-	virtual DataObject::sptr read();
-	virtual DataObject::sptr read(const UInt64 &i);
-};
+                //====================assignment operators=======================
+                //! move assignment
+                CBFReader &operator=(CBFReader &&r);
 
-}
+                //delete copy assignment
+                CBFReader &operator=(const CBFReader &r) = delete;
+                
+                
+                virtual size_t nimages() const 
+                { 
+                    return _image_info.size(); 
+                }
+                
+                virtual std::vector<ImageInfo> info() const 
+                {
+                    return std::move(_image_info);
+                }
+                
+                template<typename T,template<typename> class BT> 
+                    Array<T,BT> image(size_t i=0) 
+                {
+                    EXCEPTION_SETUP("template<typename T,typename BT> "
+                                     "Array<T,BT> image(size_t i=0) const");
+
+                    ImageInfo info = _image_info[i];
+                    Shape shape(2);
+                    shape.dim(0,info.nx());
+                    shape.dim(1,info.ny());
+
+                    Array<T,BT> array(shape);
+                    
+                    image(i,array);
+
+                    return array;
+                }
+                
+                template<typename T,template<typename> class BT> 
+                    void image(size_t i,Array<T,BT> &array) 
+                {
+                    EXCEPTION_SETUP("template<typename T, template<typename> "
+                            "class BT> void image(size_t i=0,Array<T,BT>"
+                            "&array) const");
+                    
+                    ImageInfo inf = _image_info[i];
+                    ImageChannelInfo channel = inf.get_channel(0);
+
+                    if(_detector_vendor == CBFDetectorVendor::DECTRIS)
+                    {
+                        if(channel.type_id() == TypeID::INT16)
+                            DectrisCBFReader::read_data_byte_offset<Int16>(
+                                    _get_stream(),inf,array);
+                        if(channel.type_id() == TypeID::INT32)
+                            DectrisCBFReader::read_data_byte_offset<Int32>(
+                                _get_stream(),inf,array);
+                        else
+                        {
+                            EXCEPTION_INIT(FileError,"No data reader for "
+                                    "this data type!");
+                        }
+
+                    }
+                    else
+                    {
+                        EXCEPTION_INIT(FileError,"Unknown detector vendor!");
+                        EXCEPTION_THROW();
+                    }
+
+                }
+
+        };
+
+    //end of namespace
+    }
 }
 
 #endif /* CBFREADER_HPP_ */

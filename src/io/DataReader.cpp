@@ -51,7 +51,9 @@ namespace pni{
         //implementation of the standard constructor
         DataReader::DataReader(const String &fname):
             _fname(fname)
-        { }
+        { 
+            open();
+        }
 
         //implementation of the move constructor
         DataReader::DataReader(DataReader &&r):
@@ -59,7 +61,11 @@ namespace pni{
         {}
 
         //implementation of the destructor
-        DataReader::~DataReader() {}
+        DataReader::~DataReader() 
+        {
+            //close the file in case the object is getting destroied.
+            close(); 
+        }
 
         //=============implementation of assignment operators==================
         DataReader &DataReader::operator=(DataReader &&r)
@@ -86,7 +92,13 @@ namespace pni{
         //----------------------------------------------------------------------
         void DataReader::close()
         {
-            _istream.close();
+            if(_istream.is_open()) _istream.close();
+        }
+
+        //---------------------------------------------------------------------
+        void DataReader::open()
+        {
+            _open_stream();
         }
 
     //end of namespace

@@ -57,8 +57,14 @@ namespace pni{
                 //! move constructor
                 ImageInfo(ImageInfo &&i);
 
+                //! copy constructor
+                ImageInfo(const ImageInfo &i);
+
                 //! move assignment operator
                 ImageInfo &operator=(ImageInfo &&i);
+
+                //! copy assignment operator
+                ImageInfo &operator=(const ImageInfo &i);
 
                 //====================general class methods====================
                 /*! \brief get pixels along x
@@ -98,6 +104,9 @@ namespace pni{
                 ImageChannelInfo get_channel(size_t i) const;
 
         };
+
+        //! output operator
+        std::ostream &operator<<(std::ostream &o,const ImageInfo &i);
 
 
     //end of namespace

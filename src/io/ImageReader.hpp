@@ -98,10 +98,23 @@ namespace pni{
 
                 //--------------------------------------------------------------
                 template<typename T,template<typename> class BT> 
-                    Array<T,BT> image(size_t i=0) const
+                    Array<T,BT> image(size_t i=0) 
                 {
                     EXCEPTION_SETUP("template<typename T,typename BT> "
                                      "Array<T,BT> image(size_t i=0) const");
+                    EXCEPTION_INIT(NotImplementedError,
+                                   "Method not implemented!");
+                    EXCEPTION_THROW();
+                    return Array<T,BT>();
+                }
+                
+                template<typename T,template<typename> class BT> 
+                    void image(size_t i,Array<T,BT> &array) 
+                {
+                    EXCEPTION_SETUP("template<typename T, template<typename> "
+                            "class BT> void image(size_t i=0,Array<T,BT>"
+                            "&array) const");
+
                     EXCEPTION_INIT(NotImplementedError,
                                    "Method not implemented!");
                     EXCEPTION_THROW();

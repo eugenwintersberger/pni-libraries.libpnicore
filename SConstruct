@@ -231,7 +231,16 @@ if not conf.CheckCXXHeader("cppunit/TextTestProgressListener.h"):
 if not conf.CheckCXXHeader("cppunit/ui/text/TextTestRunner.h"):
 	print "CPPUNIT header TextTestRunner.h does not exist!"
 	Exit(1)
+
+if not conf.CheckCXXHeader("boost/regex.hpp"):
+    print "Boost regular expressions header file not found!"
+    Exit(1)
 	
+
+#check for boost regular expressions library
+if not conf.CheckLib("boost_regex",language="C++"):
+    print "BOOST regular expression library not found"
+    Exit(1)
 
 #check for mandatory libraries
 if not conf.CheckLib("cppunit",language="C++"):

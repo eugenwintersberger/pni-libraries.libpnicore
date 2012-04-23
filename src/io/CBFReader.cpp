@@ -31,113 +31,85 @@
 #include "strutils.hpp"
 #include "../Exceptions.hpp"
 #include "../Array.hpp"
-#include "../DataObject.hpp"
 #include "../Types.hpp"
 
+//need to use regular expressions from boost
+#include<boost/regex.hpp>
+
+
 namespace pni{
-namespace utils{
-
-CBFReader::CBFReader():Reader()
-{
-	_binheader = NULL;
-}
-
-CBFReader::CBFReader(const char* filename):Reader(filename)
-{
-    _binheader = NULL;
-}
-
-CBFReader::~CBFReader(){
-	//closes the file on object destruction.
-    if(_binheader!=NULL) delete _binheader;
-}
-
-DataObject::sptr CBFReader::read(){
-    UInt8 byte;
-    String linebuffer;
-    String key,value;
-    ArrayObject::sptr v;
-
-    while(!_istream.eof()){
-        byte = _istream.get();
-
-        //if(byte == 0xd5) break;
+    namespace utils{
+            
 
 
-        if(byte == '\n'){
-        	//if the byte we have read is a newline we reached the end of an ASCII line
-            //the first thing to do is to get rid of leading and trailing blanks and other mess
-            linebuffer=strip(linebuffer);
+        //================implementation of constructors and destructor========
+        //implementation of the default constructor
+        CBFReader::CBFReader():ImageReader()
+        { }
 
-            try{
-            	//try to split string into a key value pair - if this fails - who cares
-                get_key_value(linebuffer," ",key,value);
-
-                if(key == CIF_HEADER_CONVENTION){
-                    //need to set the proper header convention
-                    if((value == CIF_HEADER_CONVENTION_SLS)||(value==CIF_HEADER_CONVENTION_SLS_11)){
-                        _header_convention_ = CIF_HEADER_CONVENTION_SLS;
-                        //std::cout<<"header convention "<<_header_convention_<<std::endl;
-                    }
-                }
-            }catch(...){
-                //in case that the linebuffer cannot be split into
-                //key value pairs  - we do not care for the moment
-            }
-
-
-            if(linebuffer == CIF_BINARY_SECTION){
-            	//ok we reached the binary section of the file
-            	//std::cout<<"found binary section"<<std::endl;
-                if(_header_convention_ == CIF_HEADER_CONVENTION_SLS){
-                    //if the header convention identifies the file as a
-                    //Dectris CBF file we use this particular reader
-                    //for the binary section
-                    _binheader = new PCIFBinaryHeader(_istream);
-                }
-                //std::cout<<*_binheader<<std::endl;
-            }
-            linebuffer.clear();
-            continue;
-        }else if(((unsigned char)byte) == 0xd5){
-            //ok here comes the tricky part - we have to start the
-            //binary reader - this depends mainly on the compression
-            //algorithm used. However, we do not have to make this
-            //decision by ourself - the header object will act as a
-            //factory for the reader
-        	//std::cout<<"create the binary stream reader!"<<std::endl;
-        	CBFBinStreamReader *reader = _binheader->createBinaryReader();
-        	v.reset((ArrayObject *)_binheader->createArray());
-        	v->name(_fname);
-        	v->description("Dectris CBF detector data");
-
-        	reader->setStream(&_istream);
-        	reader->setBuffer(v->buffer());
-        	//call the reader method
-        	reader->read();
-
-        	//std::cout<<"finished with reading data!"<<std::endl;
-
-        	//once we are done we have to destroy the reader again and leave the
-        	//loop
-        	delete reader;
-        	break;
-
-        }else{
-            //if there are no other things to do we add the
-            //byte to the linebuffer
-            linebuffer += byte;
+        //---------------------------------------------------------------------
+        //implementation of the standard constructor
+        CBFReader::CBFReader(const String &fname):
+            ImageReader(fname)
+        {
+            //here the file is immediately opened  - we have to parse the 
+            //header to obtain information about the data
+            _parse_file();
+        
         }
 
+        //---------------------------------------------------------------------
+        //implementation of the destructor
+        CBFReader::~CBFReader()
+        { }
+
+        //================implementation of assignment operators===============
+        CBFReader &CBFReader::operator=(CBFReader &&r)
+        {
+            if(this == &r) return *this;
+
+            ImageReader::operator=(std::move(r));
+            return *this;
+        }
+
+        //===============implemenetation of private methods====================
+        void CBFReader::_parse_file(){
+            EXCEPTION_SETUP("void CBFReader::_parse_file()");
+
+            char linebuffer[1024];
+            std::ifstream &_istream = _get_stream();
+
+            boost::regex header_convention("^_array_data.header_convention.*");
+            boost::regex regex_sls("SLS");
+            boost::regex regex_dectris("DECTRIS");
+            boost::regex quoted_text("\".*\"");
+            boost::cmatch match;
+
+            while(!_istream.eof())
+            {
+                _istream.getline(linebuffer,1024);    
+                if(boost::regex_match(linebuffer,match,header_convention)){
+                    //extract the convention string from the header
+                    //convention
+                    boost::regex_search(linebuffer,match,quoted_text);
+                    if(boost::regex_search(match.str(0),regex_sls)||
+                       boost::regex_search(match.str(0),regex_dectris))
+                    {
+                        _data_offset = DectrisCBFReader::read_header(_istream,
+                                _image_info,_compression_type);
+                        _detector_vendor = CBFDetectorVendor::DECTRIS;
+                        return;
+                    }else{
+                        //should raise an exception here
+                        EXCEPTION_INIT(FileError,"Unknown CBF style!");
+                        EXCEPTION_THROW();
+                    }
+                }
+            }
+        }
+
+
+    //end of namespace
     }
-    return std::dynamic_pointer_cast<DataObject>(v);
-}
-
-DataObject::sptr CBFReader::read(const UInt64 &i){
-	return read();
-}
-
-
-}
 }
 

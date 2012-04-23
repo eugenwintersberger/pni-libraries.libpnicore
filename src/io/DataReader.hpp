@@ -55,8 +55,8 @@ namespace pni{
                 \throws FileError if opening the file fails
                 */
                 virtual void _open_stream();
-
-
+            protected:
+                std::ifstream &_get_stream() { return _istream; } 
             public:
                 //===============constructor and destructors===================
                 //! default constructor
