@@ -11,9 +11,6 @@
 #include<typeinfo>
 #include<cmath>
 
-#include<plplot/plplot.h>
-#include<plplot/plstream.h>
-
 #include <vtkRenderWindow.h>
 #include <vtkRenderWindowInteractor.h>
 #include <vtkRenderer.h>
@@ -51,14 +48,6 @@ void plot_image(const Float32Array &array)
     viewer->Render();
     interactor->Start();
 
-/*
-    window->AddRenderer(renderer);
-    interactor->SetRenderWindow(window);
-
-    window->Render();
-    interactor->Start();
-*/
-
     //cleanup everything
     renderer->Delete();
     window->Delete();
@@ -83,6 +72,8 @@ int main(int argc,char **argv){
 
     Float32Array array = reader.image<Float32Array>(0);
     plot_image(array);
+
+    reader.close();
 
     return 0;
 }

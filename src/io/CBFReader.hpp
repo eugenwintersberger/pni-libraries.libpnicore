@@ -72,10 +72,10 @@ namespace pni{
         */
         class CBFReader: public ImageReader {
             private:
-                CBFDetectorVendor _detector_vendor;     //!< string holding the detector vendor ID
-                std::vector<ImageInfo> _image_info; //!< info structure for data
-                std::streampos _data_offset; 
-                CBFCompressionType _compression_type;    //!< compression type
+                CBFDetectorVendor _detector_vendor;   //!< string holding the detector vendor ID
+                std::vector<ImageInfo> _image_info;   //!< info structure for data
+                std::streampos _data_offset;          //!< store data offset 
+                CBFCompressionType _compression_type; //!< compression type
                 void _parse_file();
                 
             public:
@@ -99,7 +99,23 @@ namespace pni{
 
                 //delete copy assignment
                 CBFReader &operator=(const CBFReader &r) = delete;
-                
+
+                virtual void close()
+                {
+                    //close the stream
+                    DataReader::close();
+                    //reset data offset
+                    _data_offset = 0;
+                    //clear the _image_info vector
+                    _image_info.clear();
+                }
+
+                virtual void open()
+                {
+                    close();
+                    DataReader::open();
+                    _parse_file();
+                }
                 
                 virtual size_t nimages() const 
                 { 

@@ -26,106 +26,99 @@
  *
  */
 
-#ifndef TIFFRATIONAL_HPP_
-#define TIFFRATIONAL_HPP_
+#ifndef __TIFFRATIONAL_HPP_
+#define __TIFFRATIONAL_HPP_
 
 #include <iostream>
 
 #include "../Types.hpp"
 
 namespace pni{
-namespace utils{
+    namespace utils{
 
 
-template<typename T> class Rational;
-template<typename T> std::ostream &operator<<(std::ostream &o,const Rational<T> &r);
+        /*! \ingroup io_classes
+        \brief rational type for TIFF IFD entries
 
-//! \ingroup io_classes
-//! \brief rational type for TIFF IFD entries
+        IFD entries in TIFF files can consist of a rational number. This class
+        implements such a type as a template.
+        */
+        template<typename T> class Rational{
+            protected:
+                T _numerator;    //!< numerator of the rational number
+                T _denominator;  //!< denominator of the rational number
+            public:
+                //=================constructors and destructor=================
+                //! default constructor
+                Rational();
+                //! copy constructor
+                Rational(const Rational &o);
+                //! standard constructor
+                Rational(const T &,const T&);
+                //! destructor
+                ~Rational(){}
 
-//! IFD entries in TIFF files can consist of a rational number. This class
-//! implements such a type as a template.
-template<typename T> class Rational{
-protected:
-	T _numerator;    //!< numerator of the rational number
-	T _denominator;  //!< denominator of the rational number
-public:
-	//! default constructor
-	Rational();
-	//! copy constructor
-	Rational(const Rational &o);
-	//! standard constructor
-	Rational(const T &,const T&);
-	//! destructor
-	virtual ~Rational(){}
+                //================assignment operator===========================
+                //! copy assignment operator
+                virtual Rational<T> &operator=(const Rational<T> &r);
 
-	//! set the numerator
-	virtual void setNumerator(const T &);
-	//! get the numerator
-	virtual T getNumerator() const;
+                //! set the numerator
+                void numerator(const T &v) { _numerator = v; }
+                //! get the numerator
+                T numerator() const { return _numerator; } 
 
-	//! assignment operator
-	virtual Rational<T> &operator=(const Rational<T> &r);
+                //! set the denominator
+                void denominator(T &v) { _denominator = v; }
+                //! get the denominator
+                T denominator() const { return _denominator; }
 
-	//! set the denominator
-	virtual void setDenominator(const T &);
-	//! get the denominator
-	virtual T getDenominator() const;
+        };
 
-	//! operator for console output
-	friend std::ostream &operator<<<> (std::ostream &o,const Rational<T> &r);
+        //=============implementation of template methods======================
+        //implementation of the default constructor
+        template<typename T> Rational<T>::Rational():
+            _numerator(0),
+            _denominator(0)
+        { }
 
-};
+        //implementation of the copy constructor
+        template<typename T> Rational<T>::Rational(const Rational<T> &r):
+            _numerator(r._numerator),
+            _denominator(r._denominator)
+        { }
 
-template<typename T> Rational<T>::Rational(){
-	_numerator = 0;
-	_denominator = 0;
-}
+        //implementation of the standard constructor
+        template<typename T> Rational<T>::Rational(const T &n,const T &d):
+            _numerator(n),
+            _denominator(d)
+        { }
 
-template<typename T> Rational<T>::Rational(const Rational<T> &r){
-	_numerator = r._numerator;
-	_denominator = r._denominator;
-}
+        //implementation of the copy assignment operator
+        template<typename T> 
+            Rational<T> &Rational<T>::operator=(const Rational<T> &r)
+        {
+            if(this != &r){
+                _numerator = r._numerator;
+                _denominator = r._denominator;
+            }
+            return *this;
+        }
+        
+        //implementation of the output operator
+        template<typename T> 
+            std::ostream &operator<<(std::ostream &o,const Rational<T> &r)
+        {
+            o<<r.numerator()<<"/"<<r.denominator();
+            return o;
+        }
 
-template<typename T> Rational<T>::Rational(const T &n,const T &d){
-	_numerator = n;
-	_denominator = d;
-}
 
-template<typename T> void Rational<T>::setNumerator(const T &n){
-	_numerator = n;
-}
+        //some default types 
+        typedef Rational<UInt32> URational;
+        typedef Rational<Int32> SRational;
 
-template<typename T> T Rational<T>::getNumerator() const {
-	return _numerator;
-}
-
-template<typename T> void Rational<T>::setDenominator(const T &d){
-	_denominator = d;
-}
-
-template<typename T> T Rational<T>::getDenominator() const {
-	return _denominator;
-}
-
-template<typename T> Rational<T> &Rational<T>::operator=(const Rational<T> &r){
-	if(this != &r){
-		_numerator = r._numerator;
-		_denominator = r._denominator;
-	}
-	return *this;
-}
-
-template<typename T> std::ostream &operator<<(std::ostream &o,const Rational<T> &r){
-	o<<r._numerator<<"/"<<r._denominator;
-	return o;
-}
-
-typedef Rational<UInt32> URational;
-typedef Rational<Int32> SRational;
-
-//end namespaces
-}
+    //end namespaces
+    }
 }
 
 

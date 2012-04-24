@@ -33,15 +33,35 @@ namespace pni{
     namespace utils{
         //===========implementation of private methods=========================
         //default implementation
-        void DataReader::_open_stream()
+        std::unique_ptr<std::ifstream> DataReader::
+            _open_stream(const String &fname) const
         {
-            EXCEPTION_SETUP("void DataReader::_open_stream()");
-            try{
-                _istream.open(filename());
-            }catch(...){
-                EXCEPTION_INIT(FileError,"Error opening file ["+filename()+"]!");
+            EXCEPTION_SETUP("std::unique_ptr<std::ifstream> DataReader::"
+                    "_open_stream(const String &fname,bool binary)");
+
+            std::unique_ptr<std::ifstream> stream(new std::ifstream()); 
+            if(!stream)
+            {
+                EXCEPTION_INIT(MemoryAllocationError,"Cannot allocate memory "
+                        "for stream object!");
                 EXCEPTION_THROW();
             }
+
+            try{
+                if(_is_binary)
+                {
+                    stream->open(fname);
+                }
+                else
+                {
+                    stream->open(fname,std::ifstream::binary);
+                }
+            }catch(...){
+                EXCEPTION_INIT(FileError,"Error opening file ["+fname+"]!");
+                EXCEPTION_THROW();
+            }
+
+            return stream;
         }
    
         //====================Implementation of constructors===================
@@ -49,22 +69,24 @@ namespace pni{
         DataReader::DataReader() {}
 
         //implementation of the standard constructor
-        DataReader::DataReader(const String &fname):
-            _fname(fname)
-        { 
-            open();
-        }
+        DataReader::DataReader(const String &fname,bool binary):
+            _fname(fname),
+            _is_binary(binary),
+            _istream(_open_stream(fname))
+        { }
 
         //implementation of the move constructor
         DataReader::DataReader(DataReader &&r):
-            _fname(std::move(r._fname))
+            _fname(std::move(r._fname)),
+            _is_binary(std::move(r._is_binary)),
+            _istream(std::move(r._istream))
         {}
 
         //implementation of the destructor
         DataReader::~DataReader() 
         {
             //close the file in case the object is getting destroied.
-            close(); 
+            if(_istream->is_open()) _istream->close();
         }
 
         //=============implementation of assignment operators==================
@@ -73,6 +95,7 @@ namespace pni{
             if(this == &r) return *this;
 
             _fname = std::move(r._fname);
+            _istream = std::move(_istream);
 
             return *this;
         }
@@ -92,13 +115,14 @@ namespace pni{
         //----------------------------------------------------------------------
         void DataReader::close()
         {
-            if(_istream.is_open()) _istream.close();
+            if(_istream->is_open()) _istream->close();
         }
 
         //---------------------------------------------------------------------
         void DataReader::open()
         {
-            _open_stream();
+            close(); //close the file if it is already open
+            _istream = _open_stream(filename());
         }
 
     //end of namespace

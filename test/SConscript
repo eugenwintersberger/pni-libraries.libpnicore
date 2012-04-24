@@ -33,7 +33,8 @@ test_targets = [pniutils_test,showtypes,benchmark]
 if not test_env["NOPLPLOT"]:
     cbfreader_test = test_env.Program("cbf_reader_test",["cbf_reader_test.cpp"])
     tifreader_test = test_env.Program("tif_reader_test",["tif_reader_test.cpp"])
-    test_targets.extend([cbfreader_test,tifreader_test])
+    test_targets.extend([cbfreader_test])
+    test_targets.extend([tifreader_test])
 
 if 'testrun' in COMMAND_LINE_TARGETS:
     def check_test_log(target,source,env):

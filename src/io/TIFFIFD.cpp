@@ -171,7 +171,6 @@ std::ifstream &operator>>(std::ifstream &in,TIFFIFD &idf){
 	UInt32 cnt;
 	IFDAbstractEntry::sptr e;
 	String ename;
-	TIFFStandard standard;
 
 	idf._idf_offset = in.tellg();
 	//first we have to read the number of entries in the IDF
@@ -184,7 +183,7 @@ std::ifstream &operator>>(std::ifstream &in,TIFFIFD &idf){
 		in.read((char*)(&ttype),2);
 		in.read((char*)(&cnt),4);
 		//in.read((char*)(&vo),4);
-		ename = standard.getTagName(tag);
+		ename = TIFFTagNameMap[tag];
 
 		//now we have to do something with the data
 

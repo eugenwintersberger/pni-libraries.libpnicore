@@ -3,13 +3,12 @@ import os.path as path
 Import("build_env")
 
 
-tiffsources = ["TIFFReader.cpp","TIFFFile.cpp",
-           "TIFFIFD.cpp","TIFFIFDAbstractEntry.cpp","TIFFStandard.cpp",
+tiffsources = ["TIFFReader.cpp"]
+tiffsources.extend(["TIFFIFD.cpp","TIFFIFDAbstractEntry.cpp",
            "TIFFIFDEntry.cpp","TIFFImageData.cpp","TIFFStripReader.cpp",
-           "TIFFExceptions.cpp"]
+           "TIFFExceptions.cpp"])
            
-cbfsources = ["Reader.cpp","CBFReader.cpp","strutils.cpp","CIFBinHeader.cpp",
-           "PCIFBinHeader.cpp","CBFBinStreamReader.cpp","DectrisCBFReader.cpp"]
+cbfsources = ["CBFReader.cpp","strutils.cpp","DectrisCBFReader.cpp"]
 sources = ["DataReader.cpp","ImageInfo.cpp","ImageReader.cpp"]
 sources.extend(cbfsources)
 sources.extend(tiffsources)

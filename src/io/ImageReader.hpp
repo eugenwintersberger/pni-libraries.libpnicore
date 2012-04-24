@@ -50,9 +50,14 @@ namespace pni{
         image readers. It opens the file and provides a stream from which to
         read data. ImageReader objects cannot be copied or copy-assigned. 
         However, they can be moved using std::move. 
+
+        Like DataReader (from which it is derived) an ImageReader object cannot
+        be instantiated using this class. All constructors and assignment
+        operators are thus protected making them only available to derived
+        classes.
         */
         class ImageReader:public DataReader{
-            public:
+            protected:
                 //=================constructors and destructor=================
                 //! default constructor
                 ImageReader();
@@ -61,16 +66,18 @@ namespace pni{
                 //! move constructor
                 ImageReader(ImageReader &&r);
                 //! standard constructor taking the filename as string object
-                explicit ImageReader(const String &fname);
-                //! destructor
-                virtual ~ImageReader();
-
+                explicit ImageReader(const String &fname,bool binary=false);
+                
                 //==================assignment operators=======================
                 //copy assignment is deleted
                 ImageReader &operator=(const ImageReader &r) = delete;
 
                 //! move assignment operator
                 ImageReader &operator=(ImageReader &&r);
+            public:
+                //! destructor
+                virtual ~ImageReader();
+
 
                 //====================methods==================================
                 /*! \brief get number of images

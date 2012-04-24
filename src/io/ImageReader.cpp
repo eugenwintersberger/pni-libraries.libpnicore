@@ -43,8 +43,8 @@ namespace pni{
 
         //---------------------------------------------------------------------
         //implementation of the standard constructor
-        ImageReader::ImageReader(const String &fname):
-            DataReader(fname)
+        ImageReader::ImageReader(const String &fname,bool binary):
+            DataReader(fname,binary)
         {}
 
         //---------------------------------------------------------------------

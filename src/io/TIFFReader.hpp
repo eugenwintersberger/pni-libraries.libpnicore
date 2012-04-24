@@ -1,6 +1,4 @@
 /*
- * Declaration of class TIFFReader
- *
  * (c) Copyright 2011 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
  *
  * This file is part of libpniutils.
@@ -26,55 +24,79 @@
  *
  */
 
-#ifndef TIFFREADER_HPP_
-#define TIFFREADER_HPP_
+#ifndef __TIFFREADER_HPP__
+#define __TIFFREADER_HPP__
 
+#include<iostream>
+#include<vector>
 
-#include "Reader.hpp"
-#include "TIFFFile.hpp"
-#include "TIFFImageData.hpp"
+#include "ImageReader.hpp"
+#include "ImageInfo.hpp"
+#include "TIFFIFD.hpp"
+//#include "TIFFFile.hpp"
+//#include "TIFFImageData.hpp"
 
 
 
 namespace pni{
-namespace utils{
+    namespace utils{
 
-//! \ingroup io_classes
-//! \brief TIFF file reader
+        /*! 
+        \ingroup io_classes
+        \brief TIFF file reader
 
-//! TIFFReader is an implementation of the Reader class for reading TIFF
-//! image files.
-class TIFFReader:public Reader {
-private:
-	//like all other derivatives of Reader the TIFFReader
-	//cannot be copied or assigned to.
-	TIFFReader(const TIFFReader &){}
-	TIFFReader &operator=(const TIFFReader &o){return *this;}
-protected:
-	TIFFFile _file;
-public:
-	//! default constructor
-	TIFFReader();
-	//! destructor
-	virtual ~TIFFReader();
+        TIFFReader is an implementation of the Reader class for reading TIFF
+        image files. Actually only uncompressed TIFF images are supported. 
 
-	//! set the filename
-	virtual void setFileName(const String &n);
-	//! set the filename
-	virtual void setFileName(const char *n);
+        */
+        class TIFFReader:public ImageReader {
+            private:
+                bool _little_endian;  //!< true if data is stored as littel endian
+                TIFFIFD::IFDList _ifd_list; //!< IFD list
+                std::vector<ImageInfo> _image_info; //!< image info list
+               
+                /*! \brief read image information
 
-	//! open the file
-	virtual void open();
-	//! close the file
-	virtual void close();
-	//! read data
-	virtual DataObject::sptr read();
-	//! read data
-	virtual DataObject::sptr read(const UInt64 &i);
-};
+                Reads all the image information contained in the file.
+                */
+                void _read_file_info(); 
+                void _IFD2ImageInfo();
+            public:
+                //==========constructors and destructor========================
+                //! default constructor
+                TIFFReader();
 
-//end of namespace
-}
+                //! move constructor
+                TIFFReader(TIFFReader &&r);
+
+                //! standard constructor
+                explicit TIFFReader(const String &fname);
+
+                //copy constructor is deleted 
+                TIFFReader(const TIFFReader &) = delete;
+                //! destructor
+                ~TIFFReader();
+
+                //==================assignment operators=======================
+                //! move assignment operator
+                TIFFReader &operator=(TIFFReader &&r);
+
+                //! copy assignment operator is deleted
+                TIFFReader &operator=(const TIFFReader &r) = delete;
+
+                //=====================class methods===========================
+                virtual size_t nimages() const;
+
+                virtual std::vector<ImageInfo> info() const;
+
+                virtual void open();
+
+                virtual void close();
+
+        };
+
+    //end of namespace
+    }
 }
 
 #endif /* TIFFREADER_HPP_ */
