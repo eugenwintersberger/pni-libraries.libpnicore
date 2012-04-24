@@ -1,6 +1,4 @@
 /*
- * Implementation of class TIFFIFDEntry
- *
  * (c) Copyright 2011 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
  *
  * This file is part of libpniutils.
@@ -19,136 +17,93 @@
  * along with libpniutils.  If not, see <http://www.gnu.org/licenses/>.
  *************************************************************************
  *
- * Implementation of class TIFFIFDEntry.
+ * Implementation of class TIFFIFDEntry
  *
- * Created on: Jun 20, 2011
+ * Created on: Apr 24, 2012
  *     Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
  *
  */
 
-#include <iostream>
 
-#include "TIFFIFDEntry.hpp"
+#include "TIFFStandard.hpp"
+
 
 namespace pni{
-namespace utils{
+    namespace utils{
 
-template<> std::ifstream &operator>>(std::ifstream &in,IFDEntry<URational> &e){
-	UInt32 buffer1;
-	UInt32 buffer2;
-	Int32 vo;
-	Int32 old_offset;
 
-	//In the case of the 32Bit long values the last 4Byte entry of a
-	//entry stream is always a stream offset.
 
-	//data does not fit - interpret the 4 bytes as an offset
-	in.read((char *) (&vo), 4);
-	//safe the offset in the stream
-	old_offset = in.tellg();
+        //==================constructors and destructor========================
+        //implementation of the  default constructor
+        TIFFIFDEntry::TIFFIFDEntry():
+            _id(0),
+            _start(0)
+        {}
 
-	in.seekg(vo, std::ios::beg);
-	//read the data
-	for (UInt64 i = 0; i < e._cnt; i++) {
-		in.read((char *) (&buffer1), sizeof(UInt32));  //read the numerator
-		in.read((char *) (&buffer2), sizeof(UInt32));  //read the denominator
-		e._values.push_back(URational(buffer1,buffer2));
-	}
+        //---------------------------------------------------------------------
+        //implementation of the copy constructor
+        TIFFIFDEntry::TIFFIFDEntry(const TIFFIFDEntry &e):
+            _id(e._id),
+            _start(e._start)
+        {}
 
-	//reset the stream position
-	in.seekg(old_offset, std::ios::beg);
+        //---------------------------------------------------------------------
+        //implementation of the  move constructor
+        TIFFIFDEntry::TIFFIFDEntry(TIFFIFDEntry &&e)
+            _id(std::move(e._id)),
+            _start(std::move(e._start))
+        {}
 
-	return in;
+        //---------------------------------------------------------------------
+        //implementation of the standard constructor
+        TIFFIFDEntry::TIFFIFDEntry(UInt16 id,const std::streampos &start):
+            _id(id),
+            _start(start)
+        { }
+
+        //---------------------------------------------------------------------
+        //implementation of the destructor
+        TIFFIFDEntry::~TIFFIFDEntry()
+        {}
+
+        //=====================assignment operators============================
+        //implementation of the copy assignment operator
+        TIFFIFDEntry &TIFFIFDEntry::operator=(const TIFFIFDEntry &e)
+        {
+            if(this == &e) return *this;
+
+            _id = e._id;
+            _start = e._start;
+            return *this;
+        }
+
+        //---------------------------------------------------------------------
+        //implementation of the move assignment operator
+        TIFFIFDEntry &TIFFIFDEntry::operator=(TIFFIFDEntry &&e)
+        {
+            if(this == &e) return *this;
+            _id = std::move(e._id);
+            _start = std::move(e._start);
+            return *this;
+        }
+
+        //=======================class methods=================================
+        //implementation of nelements
+        size_t nelements() const;
+
+        //----------------------------------------------------------------------
+        String TIFFIFDEntry::name() const
+        {
+           try{
+               return TIFFTagNameMap[_id];
+           }catch(...){
+               return String("unknown");
+           }
+        }
+
+        //----------------------------------------------------------------------
+        template<typename T> T read(size_t i,std::ifstream &stream);
+
+    //end of namespace
+    }
 }
-
-template<> std::ifstream &operator>>(std::ifstream &in,IFDEntry<SRational> &e){
-	Int32 buffer1;
-	Int32 buffer2;
-	Int32 vo;
-	Int32 old_offset;
-
-	//In the case of the 32Bit long values the last 4Byte entry of a
-	//entry stream is always a stream offset.
-
-	//data does not fit - interpret the 4 bytes as an offset
-	in.read((char *) (&vo), 4);
-	//safe the offset in the stream
-	old_offset = in.tellg();
-
-	in.seekg(vo, std::ios::beg);
-	//read the data
-	for (UInt64 i = 0; i < e._cnt; i++) {
-		in.read((char *) (&buffer1), sizeof(Int32));  //read the numerator
-		in.read((char *) (&buffer2), sizeof(Int32));  //read the denominator
-		e._values.push_back(SRational(buffer1,buffer2));
-	}
-
-	//reset the stream position
-	in.seekg(old_offset, std::ios::beg);
-
-	return in;
-}
-
-template<> std::ifstream &operator>>(std::ifstream &in,IFDEntry<String> &e){
-	char buffer;
-	String s;
-	UInt64 s_cnt=0;  //string counter
-	Int32 vo;
-	Int32 old_offset;
-	//the frist thing we have to do is to check whether or not the Tag data fits into
-	//the next 4 byte in the stream
-	if (sizeof(char) * e._cnt > 4) {
-		//data does not fit - interpret the 4 bytes as an offset
-		in.read((char *) (&vo), 4);
-		//safe the offset in the stream
-		old_offset = in.tellg();
-
-		in.seekg(vo, std::ios::beg);
-		//read the data
-		for (UInt64 i = 0; i < e._cnt; i++) {
-			//read a character from the stream
-			in.read((char *) (&buffer), sizeof(char));
-
-			if(buffer=='\0'){
-				e._values.push_back(s);
-				s_cnt++;
-				s.clear();
-			}else{
-				s += buffer;
-			}
-		}
-
-		//reset the stream position
-		in.seekg(old_offset, std::ios::beg);
-
-	} else {
-		//data fits
-		for (UInt64 i = 0; i < e._cnt; i++) {
-			//read a character from the stream
-			in.read((char *) (&buffer), sizeof(char));
-
-			if (buffer == '\0') {
-				e._values.push_back(s);
-				s_cnt++;
-				s.clear();
-			}else{
-				s += buffer;
-			}
-		}
-		//need to modify the stream position in cases where the
-		//amount of data read from the stream is smaller than 4 Byte
-		in.seekg((4 - (sizeof(char) * e._cnt)), std::ios::cur);
-
-	}
-
-	e._cnt = s_cnt;  //reset the counter - this should reflect now the number
-	                 //of strings in the entry
-
-	return in;
-}
-
-//end of namespace
-}
-}
-
-

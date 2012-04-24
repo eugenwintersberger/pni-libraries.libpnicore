@@ -104,7 +104,18 @@ namespace pni{
                 virtual std::vector<ImageInfo> info() const = 0;
 
                 //--------------------------------------------------------------
-                template<typename ArrayType> ArrayType image(size_t i) 
+                /*! \brief method to read a single channel
+
+                This method returns an object determined by ArrayType holding
+                the data from channel c (default is 0) of image i in the file.
+                This method must be implemented by all child classes of
+                ImageReader. It is assumed that the method will allocate enough
+                memory and configure the returning object appropriately.
+                \param i index of the image in the file
+                \param c (default = 0) image channel to read
+                \return instance of ArrayType holding the channel data
+                */
+                template<typename ArrayType> ArrayType image(size_t i,size_t c=0) 
                 {
                     EXCEPTION_SETUP("template<typename T,typename BT> "
                                      "Array<T,BT> image(size_t i=0) const");
@@ -113,9 +124,23 @@ namespace pni{
                     EXCEPTION_THROW();
                     return ArrayType();
                 }
-                
+               
+                //--------------------------------------------------------------
+                /*! \brief method to read a single image channel
+
+                This method reads the data from channle c (default = 0) of image
+                i in the file and stores it in an Array template supplied by the
+                user. The array must provide enough space to hold the data
+                otherwise exceptions will be thrown. The addvantage of this
+                method is that it does not waste time with memory allocation. It
+                is thus useful in cases where data from many files of same size
+                must be read.
+                \param array array where to store the data
+                \param i index of the image in the file
+                \param c (default = 0) index of the channel from which to read data.
+                */
                 template<typename T,template<typename> class BT> 
-                    void image(size_t i,Array<T,BT> &array) 
+                    void image(Array<T,BT> &array,size_t i,size_t c=0) 
                 {
                     EXCEPTION_SETUP("template<typename T, template<typename> "
                             "class BT> void image(size_t i=0,Array<T,BT>"

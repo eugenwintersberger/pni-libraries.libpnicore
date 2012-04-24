@@ -128,15 +128,17 @@ namespace pni{
                 }
 
                 //-------------------------------------------------------------
-                template<typename ArrayType> ArrayType image(size_t i);
+                template<typename ArrayType> ArrayType image(size_t i,size_t c=0);
                
                 //-------------------------------------------------------------
                 template<typename T,template<typename> class BT> 
-                    void image(size_t i,Array<T,BT> &array);
+                    void image(Array<T,BT> &array,size_t i,size_t c=0);
 
         };
 
-        template<typename ArrayType> ArrayType CBFReader::image(size_t i) 
+        //---------------------------------------------------------------------
+        template<typename ArrayType> 
+            ArrayType CBFReader::image(size_t i,size_t c) 
         {
             EXCEPTION_SETUP("template<typename ArrayType> "
                              "ArrayType image(size_t i=0) const");
@@ -148,20 +150,21 @@ namespace pni{
 
             ArrayType array(shape);
             
-            image(i,array);
+            image(array,i,c);
 
             return array;
         }
 
+        //---------------------------------------------------------------------
         template<typename T,template<typename> class BT> 
-            void CBFReader::image(size_t i,Array<T,BT> &array) 
+            void CBFReader::image(Array<T,BT> &array,size_t i,size_t c) 
         {
             EXCEPTION_SETUP("template<typename T, template<typename> "
                     "class BT> void image(size_t i=0,Array<T,BT>"
                     "&array) const");
             
             ImageInfo inf = _image_info[i];
-            ImageChannelInfo channel = inf.get_channel(0);
+            ImageChannelInfo channel = inf.get_channel(c);
 
             if(_detector_vendor == CBFDetectorVendor::DECTRIS)
             {
