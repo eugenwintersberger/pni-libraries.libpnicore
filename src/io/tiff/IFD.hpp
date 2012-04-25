@@ -64,13 +64,6 @@ namespace tiff{
     class IFD {
         protected:
             std::vector<IFDEntry> _entries; //!< list of IFD entries
-
-            /*! \brief read entries 
-
-            This private method reads the entries of an IFD from the stream and
-            fill the _entry_list member variable.
-            */
-            void _read_entries(std::ifstream &s);
         public:
             //===============public data types=================================
             //some data types that can be useful for IFDs

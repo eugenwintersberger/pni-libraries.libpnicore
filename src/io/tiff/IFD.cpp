@@ -33,23 +33,6 @@ namespace pni{
 namespace io{
 namespace tiff{
 
-    //====================implementation of private methods====================
-    void IFD::_read_entries(std::ifstream &stream)
-    {
-        size_t nentries;
-        //first we have to read the number of entries in the IDF
-        stream.read((char *)(&nentries),2);
-        _entries = std::vector<IFDEntry>(nentries);
-
-        //loop over all IDF entries
-        for(auto entry: _entries)
-        {
-            entry = IFDEntry::create_from_stream(stream);
-        }
-        //one we are finished here with reading all the entries for the current
-        //IFD the stream should point to a location which holds the position of
-        //the next IFD. 
-    }
     //================implementation of constructors and destructor============ 
     //implementation of the default constructor
     IFD::IFD():

@@ -139,15 +139,14 @@ namespace tiff{
         stream.read((char *)(&tag),2);
         
         UInt16 tid = 0;
-        stream.read((char *)(&tag),2);
+        stream.read((char *)(&tid),2);
 
         UInt32 count = 0;
         stream.read((char *)(&count),4);
 
+        IFDEntry e(tag,TypeTag2EntryTypeId[tid],count,stream.tellg());
         //add additional for byte 
         stream.seekg(4,std::ios::cur);
-
-        IFDEntry e(tag,TypeTag2EntryTypeId[tid],count,stream.tellg());
         return e;
     
     }
@@ -175,9 +174,10 @@ namespace tiff{
         return EntryTypeId2TypeID[_tid];
     }
 
+    //=================implementation of friend methods and operators========
     std::ostream &operator<<(std::ostream &o,const IFDEntry &e)
     {
-        o<<"IFD entry: "<<e.name()<<" with "<<e.nelements()<<" of type ";
+        o<<"IFD entry: "<<e.name()<<" (tag="<< e._tag<<") with "<<e.nelements()<<" of type ";
         o<<e.type_id();
         return o;
     }
