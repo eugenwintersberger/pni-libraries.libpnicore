@@ -25,85 +25,164 @@
  */
 
 
-#include "TIFFStandard.hpp"
+
+#include "IFDEntry.hpp"
+#include "Standard.hpp"
 
 
 namespace pni{
-    namespace utils{
+namespace io{
+namespace tiff{
+
+    //map object associating TIFF type tags to IDFEntryTypeId enums
+    std::map<UInt16,IFDEntryTypeID> 
+        TypeTag2EntryTypeId = {{1,IFDEntryTypeID::BYTE},
+                               {2,IFDEntryTypeID::ASCII},
+                               {3,IFDEntryTypeID::SHORT},
+                               {4,IFDEntryTypeID::LONG},
+                               {5,IFDEntryTypeID::RATIONAL},
+                               {6,IFDEntryTypeID::SBYTE},
+                               {7,IFDEntryTypeID::UNDEFINED},
+                               {8,IFDEntryTypeID::SSHORT},
+                               {9,IFDEntryTypeID::SLONG},
+                               {10,IFDEntryTypeID::SRATIONAL},
+                               {11,IFDEntryTypeID::FLOAT},
+                               {12,IFDEntryTypeID::DOUBLE}};
+
+    //map object associating IDFEntryTypeIds to PNI TypeIDs
+    std::map<IFDEntryTypeID,TypeID> 
+        EntryTypeId2TypeID = {{IFDEntryTypeID::BYTE,TypeID::UINT8},
+                              {IFDEntryTypeID::ASCII,TypeID::STRING},
+                              {IFDEntryTypeID::SHORT,TypeID::UINT16},
+                              {IFDEntryTypeID::LONG,TypeID::UINT32},
+                              {IFDEntryTypeID::RATIONAL,TypeID::FLOAT64},
+                              {IFDEntryTypeID::SBYTE,TypeID::INT8},
+                              {IFDEntryTypeID::UNDEFINED,TypeID::NONE},
+                              {IFDEntryTypeID::SSHORT,TypeID::INT16},
+                              {IFDEntryTypeID::SLONG,TypeID::INT32},
+                              {IFDEntryTypeID::SRATIONAL,TypeID::FLOAT64},
+                              {IFDEntryTypeID::FLOAT,TypeID::FLOAT32},
+                              {IFDEntryTypeID::DOUBLE,TypeID::FLOAT64}};
 
 
+    //==================constructors and destructor========================
+    //implementation of the  default constructor
+    IFDEntry::IFDEntry():
+        _tag(0),
+        _tid(IFDEntryTypeID::UNDEFINED),
+        _size(0),
+        _data(0)
+    {}
 
-        //==================constructors and destructor========================
-        //implementation of the  default constructor
-        TIFFIFDEntry::TIFFIFDEntry():
-            _id(0),
-            _start(0)
-        {}
+    //---------------------------------------------------------------------
+    //implementation of the copy constructor
+    IFDEntry::IFDEntry(const IFDEntry &e):
+        _tag(e._tag),
+        _tid(e._tid),
+        _size(e._size),
+        _data(e._data)
+    {}
 
-        //---------------------------------------------------------------------
-        //implementation of the copy constructor
-        TIFFIFDEntry::TIFFIFDEntry(const TIFFIFDEntry &e):
-            _id(e._id),
-            _start(e._start)
-        {}
+    //---------------------------------------------------------------------
+    //implementation of the  move constructor
+    IFDEntry::IFDEntry(IFDEntry &&e):
+        _tag(std::move(e._tag)),
+        _tid(std::move(e._tid)),
+        _size(std::move(e._size)),
+        _data(std::move(e._data))
+    {}
 
-        //---------------------------------------------------------------------
-        //implementation of the  move constructor
-        TIFFIFDEntry::TIFFIFDEntry(TIFFIFDEntry &&e)
-            _id(std::move(e._id)),
-            _start(std::move(e._start))
-        {}
+    //---------------------------------------------------------------------
+    //implementation of the standard constructor
+    IFDEntry::IFDEntry(UInt16 tag,IFDEntryTypeID tid,size_t size, 
+                      std::streampos data):
+        _tag(tag),
+        _tid(tid),
+        _size(size),
+        _data(data)
+    { }
 
-        //---------------------------------------------------------------------
-        //implementation of the standard constructor
-        TIFFIFDEntry::TIFFIFDEntry(UInt16 id,const std::streampos &start):
-            _id(id),
-            _start(start)
-        { }
+    //---------------------------------------------------------------------
+    //implementation of the destructor
+    IFDEntry::~IFDEntry()
+    {}
 
-        //---------------------------------------------------------------------
-        //implementation of the destructor
-        TIFFIFDEntry::~TIFFIFDEntry()
-        {}
-
-        //=====================assignment operators============================
-        //implementation of the copy assignment operator
-        TIFFIFDEntry &TIFFIFDEntry::operator=(const TIFFIFDEntry &e)
-        {
-            if(this == &e) return *this;
-
-            _id = e._id;
-            _start = e._start;
-            return *this;
-        }
-
-        //---------------------------------------------------------------------
-        //implementation of the move assignment operator
-        TIFFIFDEntry &TIFFIFDEntry::operator=(TIFFIFDEntry &&e)
-        {
-            if(this == &e) return *this;
-            _id = std::move(e._id);
-            _start = std::move(e._start);
-            return *this;
-        }
-
-        //=======================class methods=================================
-        //implementation of nelements
-        size_t nelements() const;
-
-        //----------------------------------------------------------------------
-        String TIFFIFDEntry::name() const
-        {
-           try{
-               return TIFFTagNameMap[_id];
-           }catch(...){
-               return String("unknown");
-           }
-        }
-
-        //----------------------------------------------------------------------
-        template<typename T> T read(size_t i,std::ifstream &stream);
-
-    //end of namespace
+    //=====================assignment operators============================
+    //implementation of the copy assignment operator
+    IFDEntry &IFDEntry::operator=(const IFDEntry &e)
+    {
+        if(this == &e) return *this;
+        
+        _tag = e._tag;
+        _tid = e._tid;
+        _size = e._size;
+        _data = e._data;
+        return *this;
     }
+
+    //---------------------------------------------------------------------
+    //implementation of the move assignment operator
+    IFDEntry &IFDEntry::operator=(IFDEntry &&e)
+    {
+        if(this == &e) return *this;
+        _tag = std::move(e._tag);
+        _tid = std::move(e._tid);
+        _size = std::move(e._size);
+        _data = std::move(e._data);
+        return *this;
+    }
+
+    //===========implementation of static methods==========================
+    IFDEntry IFDEntry::create_from_stream(std::ifstream &stream)
+    {
+        UInt16 tag = 0;
+        stream.read((char *)(&tag),2);
+        
+        UInt16 tid = 0;
+        stream.read((char *)(&tag),2);
+
+        UInt32 count = 0;
+        stream.read((char *)(&count),4);
+
+        //add additional for byte 
+        stream.seekg(4,std::ios::cur);
+
+        IFDEntry e(tag,TypeTag2EntryTypeId[tid],count,stream.tellg());
+        return e;
+    
+    }
+
+    //=======================class methods=================================
+    //implementation of nelements
+    size_t IFDEntry::nelements() const
+    {
+        return _size;
+    }
+
+    //----------------------------------------------------------------------
+    String IFDEntry::name() const
+    {
+       try{
+           return TIFFTagNameMap[_tag];
+       }catch(...){
+           return String("unknown");
+       }
+    }
+
+    //-----------------------------------------------------------------------
+    TypeID IFDEntry::type_id() const
+    {
+        return EntryTypeId2TypeID[_tid];
+    }
+
+    std::ostream &operator<<(std::ostream &o,const IFDEntry &e)
+    {
+        o<<"IFD entry: "<<e.name()<<" with "<<e.nelements()<<" of type ";
+        o<<e.type_id();
+        return o;
+    }
+
+//end of namespace
+}
+}
 }

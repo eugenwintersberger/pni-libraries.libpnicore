@@ -14,6 +14,7 @@
 #include "../src/io/TIFFReader.hpp"
 
 using namespace pni::utils;
+using namespace pni::io;
 
 
 int main(int argc,char **argv){
@@ -25,9 +26,10 @@ int main(int argc,char **argv){
 
     //open file for reading
     String filename(argv[1]);
-    pni::utils::TIFFReader reader(filename);
+    TIFFReader reader(filename);
 
     std::cout<<"number of images: "<<reader.nimages()<<std::endl;
+    std::cout<<reader<<std::endl;
     
     
 

@@ -31,122 +31,178 @@
 #include "TIFFReader.hpp"
 
 namespace pni{
-    namespace utils{
-        //============implementation of private methods========================
-        //implementation of _read_image_info
-        void TIFFReader::_read_file_info()
-        {
-            EXCEPTION_SETUP("void TIFFReader::_read_image_info()");
-            //obtain stream
-            std::ifstream &stream = _get_stream();
-            
-            //in the first step we need to find out if the file is really a
-            //TIFF file and how it looks with endieness
-            char buffer[2];
-            stream.read(buffer,2);
-            if((buffer[0]=='I')&&(buffer[1]=='I')) _little_endian = true;
-            if((buffer[0]=='M')&&(buffer[1]=='M')) _little_endian = false;
+namespace io{
 
-            UInt16 magic;
-            stream.read((char *)(&magic),2);
-            if(magic!=42){
-                EXCEPTION_INIT(FileError,"File "+filename()+"is not a valid TIFF file!");
-                EXCEPTION_THROW();
-            }
+    //============implementation of private methods============================
+    //implementation of _set_endianess
+    bool TIFFReader::_is_little_endian(std::ifstream &stream)
+    {
+        //TIFF file and how it looks with endieness
+        char buffer[2];
+        stream.read(buffer,2);
+        if((buffer[0]=='I')&&(buffer[1]=='I')) return true;
+        if((buffer[0]=='M')&&(buffer[1]=='M')) return false;
 
-            //no we need to read the IFD entries
-            //read the first IFD offset
-            Int32 ifd_offset = 0;
-            stream.read((char*)(&ifd_offset),4);
-
-            //read IFDs from the file
-            do{
-                TIFFIFD::IFDSptr ifd(new TIFFIFD());
-                stream.seekg(ifd_offset, std::ios::beg);
-                stream >> *ifd;
-                _ifd_list.push_back(ifd);
-                ifd_offset = ifd->getNextOffset();
-            }while(ifd_offset);
-
- 
-        }
-
-        //---------------------------------------------------------------------
-        //implementation of _IFD2ImageInfo 
-        void TIFFReader::_IFD2ImageInfo()
-        {
-            EXCEPTION_SETUP("void TIFFReader::_IFD2ImageInfo()");
-            
-
-        }
-
-        //=============implementation of constructors and destructor===========
-        //implementation of the default constructor
-        TIFFReader::TIFFReader():ImageReader()
-        { 
-            //set the stream format to binary
-            DataReader::_set_binary();
-        }
-
-        //---------------------------------------------------------------------
-        //implementation of the move constructor
-        TIFFReader::TIFFReader(TIFFReader &&r):
-            ImageReader(std::move(r)),
-            _little_endian(std::move(r._little_endian)),
-            _ifd_list(std::move(r._ifd_list)),
-            _image_info(std::move(r._image_info))
-        {}
-
-        //---------------------------------------------------------------------
-        //implementation of the standard constructor
-        TIFFReader::TIFFReader(const String &fname):ImageReader(fname,true)
-        { 
-            _read_file_info(); 
-        }
-
-        //---------------------------------------------------------------------
-        //imlementation of the destructor
-        TIFFReader::~TIFFReader() 
-        { }
-
-        //==================implementation of assignment operators=============
-        TIFFReader &TIFFReader::operator=(TIFFReader &&r)
-        {
-            if(this == &r) return *this;
-            ImageReader::operator=(std::move(r));
-            _ifd_list = std::move(r._ifd_list);
-            _image_info = std::move(r._image_info);
-
-            return *this;
-        }
-
-        //=====================implementation of member methods================
-
-        size_t TIFFReader::nimages() const
-        {
-            return _ifd_list.size();
-        }
-
-        std::vector<ImageInfo> TIFFReader::info() const
-        {
-            return std::vector<ImageInfo>();
-        }
-
-        void TIFFReader::open()
-        {
-            DataReader::open();
-            _read_file_info();
-        }
-
-        void TIFFReader::close()
-        {
-            DataReader::close();
-            _ifd_list.clear();
-            _image_info.clear();
-
-        }
-
-
-    //end of namespace
+        return false; //just to avoid compiler warnings
     }
+
+    //-------------------------------------------------------------------------
+    //implementation of check tiff
+    void TIFFReader::_check_if_tiff(std::ifstream &stream)
+    {
+        EXCEPTION_SETUP("void TIFFReader::_check_if_tiff(std::ifstream &"
+                "stream)");
+
+        UInt16 magic;
+        stream.read((char *)(&magic),2);
+        if(magic!=42){
+            EXCEPTION_INIT(FileError,"File "+filename()+" is not a valid "
+                    "TIFF file!");
+            EXCEPTION_THROW();
+        }
+    }
+    
+    //--------------------------------------------------------------------------
+    //implementation of read IFD offset
+    Int32 TIFFReader::_read_ifd_offset(std::ifstream &stream)
+    {
+        //no we need to read the IFD entries read the first IFD offset
+        Int32 offset = 0;
+        stream.read((char*)(&offset),4);
+        return offset;
+    }
+    
+    //-------------------------------------------------------------------------
+    size_t TIFFReader::_read_ifd_size(std::ifstream &stream)
+    {
+        size_t size = 0;
+        stream.read((char *)(&size),2);
+        return size;
+    }
+
+    //-------------------------------------------------------------------------
+    //implementation of _read_image_info
+    void TIFFReader::_read_ifds()
+    {
+        EXCEPTION_SETUP("void TIFFReader::_read_ifds()");
+        //obtain stream
+        std::ifstream &stream = _get_stream();
+
+        //check endianess of the data - we need to do this before all other
+        //things in order to interpret binary data correctly
+        _little_endian = _is_little_endian(stream);
+        
+        //now we check if the file is really a TIFF file
+        _check_if_tiff(stream);
+
+        //no we need to read the IFD entries read the first IFD offset
+        Int32 ifd_offset = _read_ifd_offset(stream);
+        if(ifd_offset == 0)
+        {
+            EXCEPTION_INIT(FileError,"File "+filename()+" does not "
+                    "contain an IDF entry!");
+            EXCEPTION_THROW();
+        }
+
+        //read IFDs from the file
+        do{
+            //move the stream to the staring position of the IDF
+            stream.seekg(ifd_offset, std::ios::beg);
+
+            //create the IDF from the stream - here we assume that the IFD
+            //constructor returns the stream at the position where the offset of
+            //the next IFD is stored.
+            tiff::IFD ifd(_read_ifd_size(stream));
+            for(auto entry: ifd) 
+            {
+                entry = tiff::IFDEntry::create_from_stream(stream);
+            }
+            //store the IFD
+            _ifds.push_back(ifd);
+
+            //read next IFD offset
+            ifd_offset = _read_ifd_offset(stream);
+        }while(ifd_offset);
+    }
+
+    //=============implementation of constructors and destructor===========
+    //implementation of the default constructor
+    TIFFReader::TIFFReader():ImageReader()
+    { 
+        //set the stream format to binary
+        DataReader::_set_binary();
+    }
+
+    //---------------------------------------------------------------------
+    //implementation of the move constructor
+    TIFFReader::TIFFReader(TIFFReader &&r):
+        ImageReader(std::move(r)),
+        _little_endian(std::move(r._little_endian)),
+        _ifds(std::move(r._ifds))
+    {}
+
+    //---------------------------------------------------------------------
+    //implementation of the standard constructor
+    TIFFReader::TIFFReader(const String &fname):ImageReader(fname,true)
+    { 
+        _read_ifds(); 
+    }
+
+    //---------------------------------------------------------------------
+    //imlementation of the destructor
+    TIFFReader::~TIFFReader() 
+    { }
+
+    //==================implementation of assignment operators=============
+    TIFFReader &TIFFReader::operator=(TIFFReader &&r)
+    {
+        if(this == &r) return *this;
+        ImageReader::operator=(std::move(r));
+        _ifds = std::move(r._ifds);
+
+        return *this;
+    }
+
+    //=====================implementation of member methods================
+
+    size_t TIFFReader::nimages() const
+    {
+        return _ifds.size();
+    }
+
+    ImageInfo TIFFReader::info(size_t i) const
+    {
+        //get the right ifd
+        const tiff::IFD &ifd = _ifds[i];
+
+        //assemble the ImageInfo object form the IFD
+        return ImageInfo(1,1,1);
+
+    }
+
+    void TIFFReader::open()
+    {
+        DataReader::open();
+        _read_ifds();
+    }
+
+    void TIFFReader::close()
+    {
+        DataReader::close();
+        _ifds.clear();
+    }
+
+    //=====================implementation of friend functions and operators====
+    std::ostream &operator<<(std::ostream &o,const TIFFReader &r)
+    {
+        o<<"TIFFReader for file: "<<r.filename()<<std::endl;
+        o<<"File contains: "<<r.nimages()<<" images"<<std::endl; 
+        size_t cnt=0;
+        for(auto ifd: r._ifds) o<<ifd;
+        return o;
+    }
+
+
+//end of namespace
+}
 }

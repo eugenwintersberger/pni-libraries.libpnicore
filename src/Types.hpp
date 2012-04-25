@@ -88,6 +88,8 @@ enum class TypeID {NONE,   //!< no data type
 	            BOOLEAN      //!< boolean data
 				};
 
+std::ostream &operator<<(std::ostream &o,const TypeID &tid);
+
 //! classes of data types provided by the PNI utility library
 enum class TypeClass { NONE,       //!< unspecified type
 	                INTEGER,    //!< integer type

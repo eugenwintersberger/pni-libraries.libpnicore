@@ -19,108 +19,114 @@
  * along with libpniutils.  If not, see <http://www.gnu.org/licenses/>.
  *************************************************************************
  *
- * Implementation of class TIFFIFD.
+ * Implementation of class IFD.
  *
  * Created on: Jun 16, 2011
  *     Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
  *
  */
 
-#include "TIFFIFD.hpp"
-#include "TIFFIFDEntry.hpp"
-#include "TIFFStandard.hpp"
-#include "TIFFIFDAbstractEntry.hpp"
+#include "IFD.hpp"
+#include "IFDEntry.hpp"
 
 namespace pni{
-namespace utils{
+namespace io{
+namespace tiff{
+
+    //====================implementation of private methods====================
+    void IFD::_read_entries(std::ifstream &stream)
+    {
+        size_t nentries;
+        //first we have to read the number of entries in the IDF
+        stream.read((char *)(&nentries),2);
+        _entries = std::vector<IFDEntry>(nentries);
+
+        //loop over all IDF entries
+        for(auto entry: _entries)
+        {
+            entry = IFDEntry::create_from_stream(stream);
+        }
+        //one we are finished here with reading all the entries for the current
+        //IFD the stream should point to a location which holds the position of
+        //the next IFD. 
+    }
+    //================implementation of constructors and destructor============ 
+    //implementation of the default constructor
+    IFD::IFD():
+        _entries(0)
+    { }
+
+    //-------------------------------------------------------------------------
+    //implementation of the copy constructor
+    IFD::IFD(const IFD &ifd):
+        _entries(ifd._entries)
+    { }
+
+    //-------------------------------------------------------------------------
+    //implementation fo the move constructor
+    IFD::IFD(IFD &&ifd):
+        _entries(std::move(ifd._entries))
+    {}
+
+    //-------------------------------------------------------------------------
+    //implementation of the standard constructor
+    IFD::IFD(size_t size):
+        _entries(size)
+    { }
+
+    //------------------------------------------------------------------------------
+    //implementation of the destructor
+    IFD::~IFD() 
+    {
+        _entries.clear();
+    }
+
+    //==============implementation of assignment operators=====================
+    //implementation of copy assignment operator
+    IFD &IFD::operator=(const IFD &o){
+        if(this != &o){
+            _entries = o._entries;
+        }
+
+        return *this;
+    }
+
+    //-------------------------------------------------------------------------
+    //implementation of the move assignment operator
+    IFD &IFD::operator=(IFD &&o)
+    {
+        if(this != &o) _entries = std::move(o._entries);
+        return *this;
+    }
+
+    //===============implementation of public member methods===================
+    //implementation of the index access operator 
+    IFDEntry IFD::operator[](const size_t i) const{
+        return _entries[i];
+    }
+
+    //------------------------------------------------------------------------------
+    IFDEntry IFD::operator[](const String &n) const{
+        EXCEPTION_SETUP("IFDEntry IFD::operator[](const String &n) const");
+        for(auto entry: *this)
+        {
+            if(entry.name() == n) return entry;
+        }
+
+        KeyError error(__ExIssuer,"IFD entry key ["+n+"] not found in IFD!");
+        throw error;
+    }
+
+    //==================implementation of friend operators=====================
+    std::ostream &operator<<(std::ostream &o,const IFD &ifd)
+    {
+        o<<"IFD content ("<<ifd.size()<<" entries):"<<std::endl;
+        for(auto entry: ifd) o<<entry<<std::endl;
+        return o;
+    }
 
 //------------------------------------------------------------------------------
-TIFFIFD::TIFFIFD() {
-	_idf_offset = 0;
-	_idf_next_offset = 0;
-	_number_of_idf_entries = 0;
-	_entry_list.clear();
-}
-
-//------------------------------------------------------------------------------
-TIFFIFD::TIFFIFD(const TIFFIFD &idf){
-	_idf_offset = idf._idf_offset;
-	_idf_next_offset = idf._idf_next_offset;
-	_number_of_idf_entries = idf._number_of_idf_entries;
-	_entry_list = idf._entry_list;
-}
-
-//------------------------------------------------------------------------------
-TIFFIFD::~TIFFIFD() {
-	_entry_list.clear();
-}
-
-//------------------------------------------------------------------------------
-TIFFIFD &TIFFIFD::operator=(const TIFFIFD &o){
-	if(this != &o){
-		_idf_offset = o._idf_offset;
-		_idf_next_offset = o._idf_next_offset;
-		_number_of_idf_entries = o._number_of_idf_entries;
-		_entry_list.clear();
-		_entry_list = o._entry_list;
-	}
-
-	return *this;
-}
-
-//------------------------------------------------------------------------------
-UInt16 TIFFIFD::getNumberOfEntries() const{
-	return _number_of_idf_entries;
-}
-//------------------------------------------------------------------------------
-bool TIFFIFD::isLastIDF() const {
-	if(_idf_next_offset==0) return true;
-
-	return false;
-}
-
-//------------------------------------------------------------------------------
-Int32 TIFFIFD::getNextOffset() const{
-	return _idf_next_offset;
-}
-
-//------------------------------------------------------------------------------
-Int32 TIFFIFD::getOffset() const {
-	return _idf_offset;
-}
-
-//------------------------------------------------------------------------------
-void TIFFIFD::setOffset(const Int32 &o){
-	_idf_offset = o;
-}
-
-//------------------------------------------------------------------------------
-IFDAbstractEntry::sptr TIFFIFD::operator[](const UInt16 i){
-	EXCEPTION_SETUP("IFDAbstractEntry::sptr TIFFIFD::operator[](const UInt16 i)");
-	if(i>=getNumberOfEntries()){
-		EXCEPTION_INIT(IndexError,"Index exceeds number of IFD entries!");
-		EXCEPTION_THROW();
-	}
-	return _entry_list[i];
-}
-
-//------------------------------------------------------------------------------
-IFDAbstractEntry::sptr TIFFIFD::operator[](const String &n){
-	EXCEPTION_SETUP("IFDAbstractEntry::sptr TIFFIFD::operator[](const String &n)");
-	IFDAbstractEntry::const_iterator iter;
-	IFDAbstractEntry::sptr entry;
-
-	for(iter = _entry_list.begin(); iter != _entry_list.end();iter++ ){
-		entry = *iter;
-		if(entry->getName()==n){
-			return entry;
-		}
-	}
-	KeyError error(__ExIssuer,"IFD entry key ["+n+"] not found in IFD!");
-	throw error;
-}
-
-//------------------------------------------------------------------------------
+    /*
 std::ostream &operator<<(std::ostream &o,const TIFFIFD &idf){
 	o<<"IDF at offset "<<idf._idf_offset<<" with "<<idf._number_of_idf_entries<<" entries"<<std::endl;
 	o<<idf._entry_list.size()<<std::endl;
@@ -162,9 +168,10 @@ std::ostream &operator<<(std::ostream &o,const TIFFIFD &idf){
 	}
 
 	return o;
-}
+}*/
 
 //------------------------------------------------------------------------------
+/*
 std::ifstream &operator>>(std::ifstream &in,TIFFIFD &idf){
 	UInt64 i;
 	UInt16 tag,ttype;
@@ -255,9 +262,10 @@ std::ifstream &operator>>(std::ifstream &in,TIFFIFD &idf){
 
 	return in;
 }
-
+*/
 
 
 //end of namespace
+}
 }
 }

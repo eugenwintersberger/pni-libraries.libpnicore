@@ -32,71 +32,79 @@
 
 #include "ImageReader.hpp"
 #include "ImageInfo.hpp"
-#include "TIFFIFD.hpp"
-//#include "TIFFFile.hpp"
-//#include "TIFFImageData.hpp"
+#include "tiff/IFD.hpp"
+#include "tiff/IFDEntry.hpp"
 
-
+using namespace pni::utils;
 
 namespace pni{
-    namespace utils{
+namespace io{
 
-        /*! 
-        \ingroup io_classes
-        \brief TIFF file reader
+    /*! 
+    \ingroup io_classes
+    \brief TIFF file reader
 
-        TIFFReader is an implementation of the Reader class for reading TIFF
-        image files. Actually only uncompressed TIFF images are supported. 
+    TIFFReader is an implementation of the Reader class for reading TIFF
+    image files. Actually only uncompressed TIFF images are supported. 
 
-        */
-        class TIFFReader:public ImageReader {
-            private:
-                bool _little_endian;  //!< true if data is stored as littel endian
-                TIFFIFD::IFDList _ifd_list; //!< IFD list
-                std::vector<ImageInfo> _image_info; //!< image info list
-               
-                /*! \brief read image information
+    */
+    class TIFFReader:public ImageReader {
+        private:
+            bool _little_endian;  //!< true if data is stored as littel endian
+            std::vector<tiff::IFD> _ifds; //!< IFD list
+           
+            /*! \brief read image information
 
-                Reads all the image information contained in the file.
-                */
-                void _read_file_info(); 
-                void _IFD2ImageInfo();
-            public:
-                //==========constructors and destructor========================
-                //! default constructor
-                TIFFReader();
+            Reads all the image information contained in the file.
+            */
+            bool _is_little_endian(std::ifstream &stream);
+            void _check_if_tiff(std::ifstream &stream);
+            Int32 _read_ifd_offset(std::ifstream &stream);
+            size_t _read_ifd_size(std::ifstream &stream);
+            
+            void _read_ifds(); 
+        public:
+            //==========constructors and destructor========================
+            //! default constructor
+            TIFFReader();
 
-                //! move constructor
-                TIFFReader(TIFFReader &&r);
+            //! move constructor
+            TIFFReader(TIFFReader &&r);
 
-                //! standard constructor
-                explicit TIFFReader(const String &fname);
+            //! standard constructor
+            explicit TIFFReader(const String &fname);
 
-                //copy constructor is deleted 
-                TIFFReader(const TIFFReader &) = delete;
-                //! destructor
-                ~TIFFReader();
+            //copy constructor is deleted 
+            TIFFReader(const TIFFReader &) = delete;
+            //! destructor
+            ~TIFFReader();
 
-                //==================assignment operators=======================
-                //! move assignment operator
-                TIFFReader &operator=(TIFFReader &&r);
+            //==================assignment operators=======================
+            //! move assignment operator
+            TIFFReader &operator=(TIFFReader &&r);
 
-                //! copy assignment operator is deleted
-                TIFFReader &operator=(const TIFFReader &r) = delete;
+            //! copy assignment operator is deleted
+            TIFFReader &operator=(const TIFFReader &r) = delete;
 
-                //=====================class methods===========================
-                virtual size_t nimages() const;
+            //=====================class methods===========================
+            virtual size_t nimages() const;
 
-                virtual std::vector<ImageInfo> info() const;
+            virtual ImageInfo info(size_t i) const;
 
-                virtual void open();
+            virtual void open();
 
-                virtual void close();
+            virtual void close();
 
-        };
+            friend std::ostream &operator<<(std::ostream &o,const TIFFReader
+                    &r);
 
-    //end of namespace
-    }
+    };
+
+
+
+
+//end of namespace
+}
 }
 
 #endif /* TIFFREADER_HPP_ */

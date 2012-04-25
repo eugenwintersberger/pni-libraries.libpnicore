@@ -3,15 +3,13 @@ import os.path as path
 Import("build_env")
 
 
-#tiffsources = ["TIFFReader.cpp"]
-#tiffsources.extend(["tiff/IFD.cpp","tiff/IFDAbstractEntry.cpp",
-#           "tiff/IFDEntry.cpp","TIFFImageData.cpp","tiff/StripReader.cpp",
-#           "tiff/Exceptions.cpp"])
+tiffsources = ["TIFFReader.cpp"]
+tiffsources.extend(["tiff/IFD.cpp","tiff/IFDEntry.cpp"])
            
 cbfsources = ["CBFReader.cpp","strutils.cpp","cbf/DectrisReader.cpp"]
 sources = ["DataReader.cpp","ImageInfo.cpp","ImageReader.cpp"]
 sources.extend(cbfsources)
-#sources.extend(tiffsources)
+sources.extend(tiffsources)
 sobjs = build_env.SharedObject(sources)
 aobjs = build_env.StaticObject(sources)
 

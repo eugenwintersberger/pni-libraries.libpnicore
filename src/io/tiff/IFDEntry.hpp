@@ -28,65 +28,89 @@
 
 
 #ifndef __TIFFIFDENTRY_HPP__
-#ifndef __TIFFIFDENTRY_HPP__
+#define __TIFFIFDENTRY_HPP__
 
 
 #include <iostream>
 #include <fstream>
+#include <map>
 
-#include "../Types.hpp"
+#include "../../Types.hpp"
+
+using namespace pni::utils;
 
 namespace pni{
-    namespace utils{
+namespace io{
+namespace tiff{
     
-        class TIFFIFDEntry
-        {
-            private:
-                UInt16 _id;            //!< ID of the entry
-                std::streampos _start; //!< marks the start position of the entry
-
-            public:
-                //=============constructors and destructor====================
-                //! default constructor
-                TIFFIFDEntry();
-
-                //! copy constructor
-                TIFFIFDEntry(const TIFFIFDEntry &e);
-
-                //! move constructor
-                TIFFIFDEntry(TIFFIFDEntry &&e);
-
-                //! standard constructor
-                TIFFIFDEntry(UInt16 id,const std::streampos &start);
-
-                //! destructor
-                ~TIFFIFDEntry();
-
-                //=====================assignment operators====================
-                //! copy assignment operator
-                TIFFIFDEntry &operator=(const TIFFIFDEntry &e);
-
-                //! move assignment operator
-                TIFFIFDEntry &operator=(TIFFIFDEntry &&e);
-
-                //==================class methods==============================
-                /*! \brief number of elements
-
-                Returns the number of elements that make up the entry.
-                \return number of elements
-                */
-                size_t nelements() const;
-
-                String name() const;
-
-                template<typename T> T read(size_t i,std::ifstream &stream);
+    enum class IFDEntryTypeID { BYTE, ASCII,SHORT,LONG,RATIONAL,SBYTE,UNDEFINED,
+                                  SSHORT,SLONG,SRATIONAL,FLOAT,DOUBLE};
 
 
-        };
+    class IFDEntry
+    {
+        private:
+            UInt16 _tag;            //!< ID of the entry
+            IFDEntryTypeID _tid;   //!< type id of the entry
+            size_t _size;          //!< number of elements of the entry
+            std::streampos _data;  //!< marks data position
+
+        public:
+            //=============constructors and destructor====================
+            //! default constructor
+            IFDEntry();
+
+            //! copy constructor
+            IFDEntry(const IFDEntry &e);
+
+            //! move constructor
+            IFDEntry(IFDEntry &&e);
+
+            /*! \brief standard constructor
+
+            Standard constructor to create a IFDEntry.
+            \param tag TIFF tag of the entry
+            \param tid type ID of the entry
+            \param size number of elements stored in this entry
+            \param data starting position of data in the stream
+            */
+            IFDEntry(UInt16 tag,IFDEntryTypeID tid,size_t size,std::streampos
+                    data);
+
+            //! destructor
+            ~IFDEntry();
+
+            //=====================assignment operators====================
+            //! copy assignment operator
+            IFDEntry &operator=(const IFDEntry &e);
+
+            //! move assignment operator
+            IFDEntry &operator=(IFDEntry &&e);
+
+            //===============static methods================================
+            static IFDEntry create_from_stream(std::ifstream &stream);
+
+            //==================class methods==============================
+            /*! \brief number of elements
+
+            Returns the number of elements that make up the entry.
+            \return number of elements
+            */
+            size_t nelements() const;
+
+            String name() const;
+
+            TypeID type_id() const;
+
+            friend std::ostream &operator<<(std::ostream &o,const IFDEntry &e);
+
+    };
 
 
-    //end of namespace
-    }
+
+//end of namespace
+}
+}
 }
 
 
