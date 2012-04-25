@@ -153,7 +153,7 @@ namespace tiff{
 
     //=======================class methods=================================
     //implementation of nelements
-    size_t IFDEntry::nelements() const
+    size_t IFDEntry::size() const
     {
         return _size;
     }
@@ -177,7 +177,7 @@ namespace tiff{
     //=================implementation of friend methods and operators========
     std::ostream &operator<<(std::ostream &o,const IFDEntry &e)
     {
-        o<<"IFD entry: "<<e.name()<<" (tag="<< e._tag<<") with "<<e.nelements()<<" of type ";
+        o<<"IFD entry: "<<e.name()<<" (tag="<< e._tag<<") with "<<e.size()<<" of type ";
         o<<e.type_id();
         return o;
     }

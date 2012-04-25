@@ -117,7 +117,6 @@ namespace io{
             {
                 entry = std::move(tiff::IFDEntry::create_from_stream(stream));
             }
-            for(auto entry: ifd) std::cout<<entry<<std::endl;
             //store the IFD
             _ifds.push_back(ifd);
 
@@ -174,6 +173,16 @@ namespace io{
     ImageInfo TIFFReader::info(size_t i) const
     {
         //get the right ifd
+        IFD &ifd = _ifds[i];
+
+        //need to obtain all the information required
+
+        //the number of pixels in x-direction is associated with the image width
+        //in TIFF
+        size_t nx = ifd["ImageWidth"].value<size_t>(_get_stream());
+        //the number of pixels in y-direction is associated with the image
+        //length in TIFF
+        size_t ny = ifd["ImageLength"].value<size_t>(_get_stream());
 
         //assemble the ImageInfo object form the IFD
         return ImageInfo(1,1,1);
