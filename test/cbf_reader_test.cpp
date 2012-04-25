@@ -24,6 +24,7 @@
 #include "../src/Shape.hpp"
 
 using namespace pni::utils;
+using namespace pni::io;
 
 
 void plot_image(const Float32Array &array)
@@ -67,7 +68,7 @@ int main(int argc,char **argv){
 
 
     CBFReader reader(file_name);
-    ImageInfo info = reader.info()[0];
+    ImageInfo info = reader.info(0);
     std::cout<<info<<std::endl;
 
     Float32Array array = reader.image<Float32Array>(0);

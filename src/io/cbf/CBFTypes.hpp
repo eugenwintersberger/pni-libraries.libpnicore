@@ -29,12 +29,13 @@
 #define __CBFTYPES_HPP__
 
 namespace pni{
-    namespace utils { 
-        enum class CBFCompressionType { CBF_BYTE_OFFSET };
-        enum class CBFDetectorVendor { DECTRIS };
+namespace io{ 
 
-    //end of namespace
-    }
+    enum class CBFCompressionType { CBF_BYTE_OFFSET };
+    enum class CBFDetectorVendor { DECTRIS };
+
+//end of namespace
+}
 }
 
 #endif
