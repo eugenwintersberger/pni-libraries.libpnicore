@@ -93,9 +93,9 @@ namespace io{
                 if(boost::regex_search(match.str(0),regex_sls)||
                    boost::regex_search(match.str(0),regex_dectris))
                 {
-                    _data_offset = DectrisCBFReader::read_header(_istream,
+                    _data_offset = cbf::DectrisCBFReader::read_header(_istream,
                             _image_info,_compression_type);
-                    _detector_vendor = CBFDetectorVendor::DECTRIS;
+                    _detector_vendor = cbf::VendorID::DECTRIS;
                     return;
                 }else{
                     //should raise an exception here

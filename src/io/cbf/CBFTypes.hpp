@@ -30,11 +30,13 @@
 
 namespace pni{
 namespace io{ 
+namespace cbf{
 
-    enum class CBFCompressionType { CBF_BYTE_OFFSET };
-    enum class CBFDetectorVendor { DECTRIS };
+    enum class CompressionID { CBF_BYTE_OFFSET };
+    enum class VendorID { DECTRIS };
 
 //end of namespace
+}
 }
 }
 

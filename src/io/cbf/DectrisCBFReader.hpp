@@ -39,17 +39,18 @@ using namespace pni::utils;
 
 namespace pni{
 namespace io{
+namespace cbf{
 
     class DectrisCBFReader
     {
         public:
             static std::streampos read_header(std::ifstream &is,
-                    std::vector<ImageInfo> &info,CBFCompressionType &ct);
+                    std::vector<pni::io::ImageInfo> &info,CompressionID &ct);
 
             template<typename CBFT,typename T,template<typename> class BT>
                 static void read_data_byte_offset(
                         std::ifstream &is,
-                        const ImageInfo &info,
+                        const pni::io::ImageInfo &info,
                         Array<T,BT> &array);
 
 
@@ -57,7 +58,7 @@ namespace io{
 
     template<typename CBFT,typename T,template<typename> class BT>
         void DectrisCBFReader::read_data_byte_offset( std::ifstream &is,
-                const ImageInfo &info, Array<T,BT> &array)
+                const pni::io::ImageInfo &info, Array<T,BT> &array)
     {
 
         //unsigned long i;
@@ -110,6 +111,7 @@ namespace io{
     }
 
 //end of namespace
+}
 }
 }
 

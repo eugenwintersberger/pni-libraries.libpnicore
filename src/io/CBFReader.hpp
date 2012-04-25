@@ -72,10 +72,10 @@ namespace io{
     */
     class CBFReader: public ImageReader {
         private:
-            CBFDetectorVendor _detector_vendor;   //!< string holding the detector vendor ID
+            cbf::VendorID _detector_vendor;   //!< string holding the detector vendor ID
             std::vector<ImageInfo> _image_info;   //!< info structure for data
             std::streampos _data_offset;          //!< store data offset 
-            CBFCompressionType _compression_type; //!< compression type
+            cbf::CompressionID _compression_type; //!< compression type
             void _parse_file();
             
         public:
@@ -166,13 +166,13 @@ namespace io{
         ImageInfo inf = _image_info[i];
         ImageChannelInfo channel = inf.get_channel(c);
 
-        if(_detector_vendor == CBFDetectorVendor::DECTRIS)
+        if(_detector_vendor == cbf::VendorID::DECTRIS)
         {
             if(channel.type_id() == TypeID::INT16)
-                DectrisCBFReader::read_data_byte_offset<Int16>(
+                cbf::DectrisCBFReader::read_data_byte_offset<Int16>(
                         _get_stream(),inf,array);
             if(channel.type_id() == TypeID::INT32)
-                DectrisCBFReader::read_data_byte_offset<Int32>(
+                cbf::DectrisCBFReader::read_data_byte_offset<Int32>(
                     _get_stream(),inf,array);
             else
             {

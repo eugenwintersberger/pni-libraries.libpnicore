@@ -31,11 +31,12 @@
 
 namespace pni{
 namespace io{
+namespace cbf{
 
     //==================implementation of static memeber functions=========
     //implementation of the read_header method
     std::streampos DectrisCBFReader::read_header(std::ifstream &is,
-            std::vector<ImageInfo> &info,CBFCompressionType &ct)
+            std::vector<pni::io::ImageInfo> &info,CompressionID &ct)
     {
         EXCEPTION_SETUP("std::streampos DectrisCBFReader::read_header("
             "std::ifstream &is,std::vector<ImageInfo> &info)");
@@ -94,7 +95,7 @@ namespace io{
                     
                     if(match.str(0) == "\"x-CBF_BYTE_OFFSET\"")
                     {
-                        ct = CBFCompressionType::CBF_BYTE_OFFSET;
+                        ct = CompressionID::CBF_BYTE_OFFSET;
                     }
                     else
                     {
@@ -165,5 +166,6 @@ namespace io{
     }
 
 //end of namespace
+}
 }
 }
