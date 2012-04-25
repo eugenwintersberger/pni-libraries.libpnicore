@@ -29,38 +29,38 @@
 #include "ImageReader.hpp"
 
 namespace pni{
-    namespace utils{
+namespace io{
 
-        //============implementation of constructors==========================
-        //implementation of the default constructor
-        ImageReader::ImageReader():DataReader() {}
+    //================implementation of constructors===========================
+    //implementation of the default constructor
+    ImageReader::ImageReader():DataReader() {}
 
-        //--------------------------------------------------------------------
-        //implementation of the move constructor
-        ImageReader::ImageReader(ImageReader &&i):
-            DataReader(std::move(i))
-        {}
+    //-------------------------------------------------------------------------
+    //implementation of the move constructor
+    ImageReader::ImageReader(ImageReader &&i):
+        DataReader(std::move(i))
+    {}
 
-        //---------------------------------------------------------------------
-        //implementation of the standard constructor
-        ImageReader::ImageReader(const String &fname,bool binary):
-            DataReader(fname,binary)
-        {}
+    //-------------------------------------------------------------------------
+    //implementation of the standard constructor
+    ImageReader::ImageReader(const String &fname,bool binary):
+        DataReader(fname,binary)
+    {}
 
-        //---------------------------------------------------------------------
-        //implementation of the destructor
-        ImageReader::~ImageReader() {} 
+    //-------------------------------------------------------------------------
+    //implementation of the destructor
+    ImageReader::~ImageReader() {} 
 
-        //===========implementation of assignment operators====================
-        //implementation of move assignment
-        ImageReader &ImageReader::operator=(ImageReader &&i)
-        {
-            if(this == &i) return *this;
+    //===========implementation of assignment operators========================
+    //implementation of move assignment
+    ImageReader &ImageReader::operator=(ImageReader &&i)
+    {
+        if(this == &i) return *this;
 
-            DataReader::operator=(std::move(i));
-            return *this;
-        }
-
-    //end of namespace
+        DataReader::operator=(std::move(i));
+        return *this;
     }
+
+//end of namespace
+}
 }

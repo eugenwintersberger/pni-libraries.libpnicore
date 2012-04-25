@@ -27,40 +27,41 @@
 #ifndef __IMAGECHANNELINFO_HPP__
 #define __IMAGECHANLELINFO_HPP__
 
+#include "../Types.hpp"
+
+using namespace pni::utils;
 
 namespace pni{
-    namespace utils{
-   
-        /*!
-        \ingroup io_classes
-        \brief image channel information class
+namespace io{
+    /*!
+    \ingroup io_classes
+    \brief image channel information class
 
-        ImageChannelInfo holds information specific to a particular image
-        channel. 
-        */
-        class ImageChannelInfo{
-            private:
-                TypeID _tid;  //!< ID of the datatype used for this channel
-            public:
-                /*! \brief standard constructor
+    ImageChannelInfo holds information specific to a particular image channel. 
+    */
+    class ImageChannelInfo{
+        private:
+            TypeID _tid;  //!< ID of the datatype used for this channel
+        public:
+            /*! \brief standard constructor
 
-                \param id Typd id for the channel
-                */
-                ImageChannelInfo(const TypeID &id):
-                    _tid(id)
-                {}
+            \param id Typd id for the channel
+            */
+            ImageChannelInfo(const TypeID &id):
+                _tid(id)
+            {}
 
-                /*! \brief get type ID
+            /*! \brief get type ID
 
-                Returns the TypeID for the channel described by this object.
-                \return type ID 
-                */
-                TypeID type_id() const { return _tid; }
+            Returns the TypeID for the channel described by this object.
+            \return type ID 
+            */
+            TypeID type_id() const { return _tid; }
 
-        };
+    };
 
-    //end of namespace
-    }
+//end of namespace
+}
 }
 
 #endif
