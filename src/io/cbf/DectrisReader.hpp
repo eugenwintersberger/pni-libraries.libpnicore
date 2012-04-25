@@ -24,8 +24,8 @@
  *
  */
 
-#ifndef __DECTRISCBFREADER_HPP__
-#define __DECTRISCBFREADER_HPP__
+#ifndef __DECTRISREADER_HPP__
+#define __DECTRISREADER_HPP__
 
 #include<iostream>
 #include<fstream>
@@ -33,7 +33,7 @@
 
 #include "../../Array.hpp"
 #include "../ImageInfo.hpp"
-#include "CBFTypes.hpp"
+#include "Types.hpp"
 
 using namespace pni::utils;
 
@@ -41,7 +41,7 @@ namespace pni{
 namespace io{
 namespace cbf{
 
-    class DectrisCBFReader
+    class DectrisReader
     {
         public:
             static std::streampos read_header(std::ifstream &is,
@@ -57,7 +57,7 @@ namespace cbf{
     };
 
     template<typename CBFT,typename T,template<typename> class BT>
-        void DectrisCBFReader::read_data_byte_offset( std::ifstream &is,
+        void DectrisReader::read_data_byte_offset( std::ifstream &is,
                 const pni::io::ImageInfo &info, Array<T,BT> &array)
     {
 

@@ -8,7 +8,7 @@ Import("build_env")
 #           "tiff/IFDEntry.cpp","TIFFImageData.cpp","tiff/StripReader.cpp",
 #           "tiff/Exceptions.cpp"])
            
-cbfsources = ["CBFReader.cpp","strutils.cpp","cbf/DectrisCBFReader.cpp"]
+cbfsources = ["CBFReader.cpp","strutils.cpp","cbf/DectrisReader.cpp"]
 sources = ["DataReader.cpp","ImageInfo.cpp","ImageReader.cpp"]
 sources.extend(cbfsources)
 #sources.extend(tiffsources)

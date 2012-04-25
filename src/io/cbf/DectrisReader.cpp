@@ -25,7 +25,7 @@
  */
 
 #include<boost/regex.hpp>
-#include "DectrisCBFReader.hpp"
+#include "DectrisReader.hpp"
 #include "../../Exceptions.hpp"
 
 
@@ -35,7 +35,7 @@ namespace cbf{
 
     //==================implementation of static memeber functions=========
     //implementation of the read_header method
-    std::streampos DectrisCBFReader::read_header(std::ifstream &is,
+    std::streampos DectrisReader::read_header(std::ifstream &is,
             std::vector<pni::io::ImageInfo> &info,CompressionID &ct)
     {
         EXCEPTION_SETUP("std::streampos DectrisCBFReader::read_header("

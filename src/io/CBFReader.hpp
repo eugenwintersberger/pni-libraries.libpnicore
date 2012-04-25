@@ -43,8 +43,8 @@
 #include "../DataObject.hpp"
 
 #include "ImageReader.hpp"
-#include "cbf/DectrisCBFReader.hpp"
-#include "cbf/CBFTypes.hpp"
+#include "cbf/DectrisReader.hpp"
+#include "cbf/Types.hpp"
 
 using namespace pni::utils;
 
@@ -169,10 +169,10 @@ namespace io{
         if(_detector_vendor == cbf::VendorID::DECTRIS)
         {
             if(channel.type_id() == TypeID::INT16)
-                cbf::DectrisCBFReader::read_data_byte_offset<Int16>(
+                cbf::DectrisReader::read_data_byte_offset<Int16>(
                         _get_stream(),inf,array);
             if(channel.type_id() == TypeID::INT32)
-                cbf::DectrisCBFReader::read_data_byte_offset<Int32>(
+                cbf::DectrisReader::read_data_byte_offset<Int32>(
                     _get_stream(),inf,array);
             else
             {

@@ -17,8 +17,7 @@
  * along with libpniutils.  If not, see <http://www.gnu.org/licenses/>.
  *************************************************************************
  *
- * Class Reader is the base class for all readers which retrieve data from
- * files and other sources.
+ * Header files with types used for CBF readers.
  *
  * Created on: Apr 23, 2012
  *     Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
