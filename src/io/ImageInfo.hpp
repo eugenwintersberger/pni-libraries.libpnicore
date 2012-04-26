@@ -110,6 +110,68 @@ namespace io{
     //! output operator
     std::ostream &operator<<(std::ostream &o,const ImageInfo &i);
 
+    /*! 
+    \ingroup io_classes
+    \brief function allocated image data
+
+    This template function allocates an array capable of holding the data for an
+    image as described by an ImageInfo object.
+    */
+    template<typename ATYPE> ATYPE array_from_imageinfo(const ImageInfo &info)
+    {
+        Shape s({info.nx(),info.ny()});
+        ATYPE array(s);
+        return array;
+    }
+
+    /*!
+    \ingroup io_classes
+    \brief check array
+
+    Checks if an array is capable of holding the data for an image described by
+    an Image info. The function throws exceptions if this is not the case.
+    \throws MemoryAccessError if the array is not allocated
+    \throws ShapeMissmatchError if the shape of the array does not fit 
+    \param info the ImageInfo object for which to check the array
+    \param array he array to check
+    */
+
+    template<typename ATYPE> void array_check_from_imageinfo(const ImageInfo
+            &info,const ATYPE &array)
+    {
+        EXCEPTION_SETUP("template<typename ATYPE> void "
+                "array_check_from_imageinfo(const ImageInfo &info,const "
+                "ATYPE &array)");
+
+        //check if the array is allocated
+        if(!array.is_allocated())
+        {
+            EXCEPTION_INIT(MemoryAccessError, "Array is not allocated!");
+            EXCEPTION_THROW();
+        }
+
+        //check the shape of the array
+        Shape s(array.shape());
+
+        if(s.rank() != 2)
+        {
+            EXCEPTION_INIT(ShapeMissmatchError,"Array is not of rank 2!");
+            EXCEPTION_THROW();
+        }
+
+        if((s.dim(0)!=info.ny()) || (s.dim(1) != info.nx()))
+        {
+            std::stringstream ss;
+            ss<<"Array shape ("<<s.dim(1)<<","<<s.dim(0)<<") does not match ";
+            ss<<"image size ("<<info.nx()<<","<<info.ny()<<")!";
+            EXCEPTION_INIT(ShapeMissmatchError,ss.str());
+            EXCEPTION_THROW();
+        }
+
+    }
+
+
+
 
 //end of namespace
 }

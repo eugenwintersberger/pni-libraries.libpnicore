@@ -76,6 +76,7 @@ namespace io{
 
             //! move assignment operator
             ImageReader &operator=(ImageReader &&r);
+
         public:
             //! destructor
             virtual ~ImageReader();

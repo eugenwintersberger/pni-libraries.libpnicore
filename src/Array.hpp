@@ -125,7 +125,8 @@ template<typename T,template <typename> class BType> class Array: public ArrayOb
     protected:
         BType<T> _data; //!< Buffer object holding the data
     public:
-        typedef T ElementType;  //!< type of an array element
+        typedef T element_type;  //!< type of an array element
+        typedef BType buffer_type; //!< type of the buffer object
     typedef std::shared_ptr<Array<T,BType> > sptr; //!< shared pointer to an Array<T>
     //! default constructor
 
