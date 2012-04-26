@@ -54,7 +54,7 @@ namespace io{
             //the stream is accessed via a unique pointer
             //this allows moveing the stream around while benefiting from
             //all advantages of a smart pointer
-            std::unique_ptr<std::ifstream> _istream;  //!< stream from which to read data
+            mutable std::unique_ptr<std::ifstream> _istream;  //!< stream from which to read data
 
             /*! \brief open the stream
 
@@ -74,7 +74,7 @@ namespace io{
             which can use this method to obtain a reference to the stream.
             \return non-const stream reference
             */
-            std::ifstream &_get_stream() { return *_istream; } 
+            std::ifstream &_get_stream() const { return *_istream; } 
 
             /*! \brief set binary mode
 

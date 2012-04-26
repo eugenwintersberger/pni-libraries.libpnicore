@@ -36,6 +36,8 @@
 #include <map>
 
 #include "../../Types.hpp"
+#include "Rational.hpp"
+#include "IFDEntryReader.hpp"
 
 using namespace pni::utils;
 
@@ -46,7 +48,6 @@ namespace tiff{
     enum class IFDEntryTypeID { BYTE, ASCII,SHORT,LONG,RATIONAL,SBYTE,UNDEFINED,
                                   SSHORT,SLONG,SRATIONAL,FLOAT,DOUBLE};
 
-
     class IFDEntry
     {
         private:
@@ -55,6 +56,11 @@ namespace tiff{
             size_t _size;          //!< number of elements of the entry
             std::streampos _data;  //!< marks data position
 
+            //===============private methods==============================
+            template<typename T> void _read_entry_data(std::vector<T>
+                    &r,std::ifstream &stream);
+            void _read_entry_data(std::vector<String> &r,std::ifstream &stream);
+            
         public:
             //=============constructors and destructor====================
             //! default constructor
@@ -103,46 +109,87 @@ namespace tiff{
             TypeID type_id() const;
 
             template<typename T> std::vector<T> value(std::ifstream &stream);
+            //template<> std::vector<String> value<String>(std::ifstream &stream);
+            //std::vector<String> value(std::ifstream &stream);
 
             friend std::ostream &operator<<(std::ostream &o,const IFDEntry &e);
 
     };
 
+
+    //==============implementation of public template methods==================
     template<typename T> std::vector<T> IFDEntry::value(std::ifstream &stream)
     {
-        std::vector<T> result;
-        //now we have to walk through all types available in TIFF - not very
-        //nice but we have no other choice at runtime
-        if(this->_tid == IFDEntryTypeID::BYTE)
-            result = this->_read_entry<T,IFDEntryTypeID::BYTE>();
-        if(this->_tid == IFDEntryTypeID::ASCII)
-            result =  this->_read_entry<T,IFDEntryTypeID::ASCII>();
-        if(this->_tid == IFDEntryTypeID::SHORT)
-            result = this->_read_entry<T,IFDEntryTypeID::SHORT>();
-        if(this->_tid == IFDEntryTypeID::LONG)
-            result = this->_read_entry<T,IFDEntryTypeID::LONG>();
-        if(this->_tid == IFDEntryTypeID::RATIONAL)
-            result = this->_read_entry<T,IFDEntryTypeID::RATIONAL>();
-        if(this->_tid == IFDEntryTypeID::SBYTE)
-            result = this->_read_entry<T,IFDEntryTypeID::SBYTE>();
-        if(this-> tid == IFDEntryTypeID::SSHORT)
-            result = this->_read_entry<T,IFDEntryTypeID::SSHORT>();
-        if(this->_tid == IFDEntryTypeID::SLONG)
-            result = this->_read_entry<T,IFDEntryTypeID::SLONG>();
-        if(this->_tid
+        EXCEPTION_SETUP("template<typename T> std::vector<T> IFDEntry::"
+                        "value(std::ifstream &stream)");
 
-        
+        //create a vector of appropriate length
+        std::vector<T> result(this->size());
+        //save the original stream position
+        std::streampos orig_stream_pos = stream.tellg();
 
+        //set the stream to the begining of the data section
+        stream.seekg(this->_data,std::ios::beg);
 
+        //here comes the tricky part. Though the user defines the type T he
+        //wants to have the IFD entry not all entry types can be converted to T
+        //without loss of information. Thus wee need a selection function that
+        //picks for each T all acceptable types and throws an exception if the
+        //entry is of an incompatible type. 
+        //
+        //This operation is carried out by the next function which cann choose
+        //the proper version by argument type deduction.
+        try{
+            this->_read_entry_data(result,stream);
+        }
+        catch(TypeError &e)
+        {
+            //reset the stream to its original position
+            stream.seekg(orig_stream_pos,std::ios::beg);
+            throw e;
+        }
+            
+       
+        //reset stream to its original position
+        stream.seekg(orig_stream_pos,std::ios::beg);
 
-
-
-
-        //in the very end we have to reset the stream to its original position
-        stream.seekg(orig_pos,std::ios::beg);
-
+        return result;
     }
 
+    template<typename T> void IFDEntry::_read_entry_data(std::vector<T> &r,std::ifstream
+            &stream)
+    {
+        EXCEPTION_SETUP("template<typename T> void IFDEntry::_read_entry_data"
+                "(std::vector<T> &r,std::ifstream &stream)");
+
+        if(this->_tid == IFDEntryTypeID::BYTE) 
+            IFDEntryReader<T,UInt8>::read(r,stream);
+        else if(this->_tid == IFDEntryTypeID::SHORT)
+            IFDEntryReader<T,UInt16>::read(r,stream);
+        else if(this->_tid == IFDEntryTypeID::LONG)
+            IFDEntryReader<T,UInt32>::read(r,stream);
+        else if(this->_tid == IFDEntryTypeID::RATIONAL)
+            IFDEntryReader<T,Rational<UInt16> >::read(r,stream);
+        else if(this->_tid == IFDEntryTypeID::SBYTE)
+            IFDEntryReader<T,Int8>::read(r,stream);
+        else if(this->_tid == IFDEntryTypeID::SSHORT)
+            IFDEntryReader<T,Int16>::read(r,stream);
+        else if(this->_tid == IFDEntryTypeID::SLONG)
+            IFDEntryReader<T,Int32>::read(r,stream);
+        else if(this->_tid == IFDEntryTypeID::SRATIONAL)
+            IFDEntryReader<T,Rational<Int32> >::read(r,stream);
+        else if(this->_tid == IFDEntryTypeID::FLOAT)
+            IFDEntryReader<T,Float32>::read(r,stream);
+        else if(this->_tid == IFDEntryTypeID::DOUBLE)
+            IFDEntryReader<T,Float64>::read(r,stream);
+        else
+        {
+            //reset stream position
+            EXCEPTION_INIT(TypeError,"IFD entry ["+this->name()+
+                    "] contains unknown data!");
+            EXCEPTION_THROW();
+        }
+    }
 
 
 //end of namespace

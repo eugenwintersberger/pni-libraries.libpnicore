@@ -24,6 +24,8 @@
  *
  */
 
+#include <numeric>
+
 #include "../Exceptions.hpp"
 #include "../Array.hpp"
 #include "../Types.hpp"
@@ -125,6 +127,97 @@ namespace io{
         }while(ifd_offset);
     }
 
+    //-------------------------------------------------------------------------
+    std::vector<size_t> 
+        TIFFReader::_get_bits_per_sample(const tiff::IFD &ifd) const
+    {
+        std::vector<size_t> bits_per_sample(1);
+        try
+        {
+            bits_per_sample =
+                ifd["BitsPerSample"].value<size_t>(_get_stream());
+        }catch(...)
+        {
+            //ok - a bilevel image has only one bit per sample and only one
+            //sample per pixel 
+            bits_per_sample[0] = 1; 
+        }
+        return bits_per_sample;
+    }
+
+    //-------------------------------------------------------------------------
+    std::vector<size_t> 
+        TIFFReader::_get_sample_format(const tiff::IFD &ifd) const
+    {
+        std::vector<size_t> sample_format(1);
+        try
+        {
+            sample_format = ifd["SampleFormat"].value<size_t>(_get_stream());
+        }
+        catch(...)
+        {
+            sample_format[0] = 1;
+        }
+        return sample_format;
+    }
+
+    //---------------------------------------------------------------------
+    TypeID TIFFReader::_get_type_id(size_t bps,size_t sf) const
+    {
+        EXCEPTION_SETUP("TypeID TIFFReader::_get_type_id(size_t bps,"
+                        "size_t sf) const");
+
+        switch(sf)
+        {
+            case 1:
+                //unsigned integer data
+                switch(bps)
+                {
+                    case 8: return TypeID::UINT8;
+                    case 16: return TypeID::UINT16;
+                    case 32: return TypeID::UINT32;
+                    case 64: return TypeID::UINT64;
+                    default:
+                         EXCEPTION_INIT(TypeError,
+                                 "Invalid unsiged integer type!");
+                         EXCEPTION_THROW();
+                }
+                break;
+            case 2:
+                //signed integer data
+                switch(bps)
+                {
+                    case 8: return TypeID::INT8;
+                    case 16: return TypeID::INT16;
+                    case 32: return TypeID::INT32;
+                    case 64: return TypeID::INT64;
+                    default:
+                         EXCEPTION_INIT(TypeError,
+                                 "Invalid siged integer type!");
+                         EXCEPTION_THROW();
+                }
+                break;
+            case 3: 
+                //IEEE floating point data
+                switch(bps)
+                {
+                    case 32: return TypeID::FLOAT32;
+                    case 64: return TypeID::FLOAT64;
+                    default:
+                         EXCEPTION_INIT(TypeError,
+                                 "Invalid floating point type!");
+                         EXCEPTION_THROW();
+                }
+                break;
+
+            default:
+                //throw an exception here
+                EXCEPTION_INIT(TypeError,"Cannot derive type id!");
+                EXCEPTION_THROW();
+
+        }
+    }
+
     //=============implementation of constructors and destructor===========
     //implementation of the default constructor
     TIFFReader::TIFFReader():ImageReader()
@@ -163,38 +256,65 @@ namespace io{
         return *this;
     }
 
-    //=====================implementation of member methods================
+    //=====================implementation of member methods====================
 
     size_t TIFFReader::nimages() const
     {
         return _ifds.size();
     }
 
-    ImageInfo TIFFReader::info(size_t i) const
+    ImageInfo TIFFReader::info(size_t i) const 
     {
         //get the right ifd
-        IFD &ifd = _ifds[i];
-
-        //need to obtain all the information required
+        const tiff::IFD &ifd = _ifds[i];
 
         //the number of pixels in x-direction is associated with the image width
         //in TIFF
-        size_t nx = ifd["ImageWidth"].value<size_t>(_get_stream());
+        size_t nx = ifd["ImageWidth"].value<size_t>(_get_stream())[0];
         //the number of pixels in y-direction is associated with the image
         //length in TIFF
-        size_t ny = ifd["ImageLength"].value<size_t>(_get_stream());
+        size_t ny = ifd["ImageLength"].value<size_t>(_get_stream())[0];
+
+        
+        //need to obtain the number of bits per sample. From this field we can
+        //also obtain the number of channels. If the field BitsPerSample does
+        //not exists the image is Bilevel image which is very unlikely to be
+        //used for detectors :)
+        std::vector<size_t> bits_per_sample(_get_bits_per_sample(ifd));
+
+        //the other information required is the sample format for each channel
+        std::vector<size_t> sample_format(_get_sample_format(ifd));
+
+        //the information gathered so far should be enough to assemble image
+        //information
+        ImageInfo info(nx,ny,
+                       std::accumulate(bits_per_sample.begin(),
+                                       bits_per_sample.end(),0)
+                      );
+        //now we need to add the channels
+        for(size_t i=0;i<bits_per_sample.size();i++)
+        {
+            ImageChannelInfo channel(_get_type_id(bits_per_sample[i],
+                                                  sample_format[i])
+                                    );
+            info.append_channel(channel);
+        }
 
         //assemble the ImageInfo object form the IFD
-        return ImageInfo(1,1,1);
+        return info;
 
     }
 
+    //-------------------------------------------------------------------------
+    //implementation of open
     void TIFFReader::open()
     {
         DataReader::open();
         _read_ifds();
     }
 
+    //-------------------------------------------------------------------------
+    //implementation of close
     void TIFFReader::close()
     {
         DataReader::close();

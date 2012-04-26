@@ -26,6 +26,7 @@
 
 
 
+#include "../../Exceptions.hpp"
 #include "IFDEntry.hpp"
 #include "Standard.hpp"
 
@@ -172,6 +173,26 @@ namespace tiff{
     TypeID IFDEntry::type_id() const
     {
         return EntryTypeId2TypeID[_tid];
+    }
+
+    //-----------------------------------------------------------------------
+    void IFDEntry::_read_entry_data(std::vector<String> &r,std::ifstream &stream)
+    {
+        EXCEPTION_SETUP("void IFDEntry::_read_entry_data(std::vector<String> "
+                "&r,std::ifstream &stream)");
+
+        //now we have to walk through all types available in TIFF - not very
+        //nice but we have no other choice at runtime
+        if(this->_tid == IFDEntryTypeID::ASCII)
+            IFDEntryReader<String,String>::read(r,stream);
+        else
+        {
+            //reset stream position
+            EXCEPTION_INIT(TypeError,"IFD entry is of unknown or "
+                    "incompatible type!");
+            EXCEPTION_THROW();
+        }
+       
     }
 
     //=================implementation of friend methods and operators========

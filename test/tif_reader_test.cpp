@@ -29,7 +29,8 @@ int main(int argc,char **argv){
     TIFFReader reader(filename);
 
     std::cout<<"number of images: "<<reader.nimages()<<std::endl;
-   // std::cout<<reader<<std::endl;
+    std::cout<<reader<<std::endl;
+    std::cout<<reader.info(0)<<std::endl;
     
     
 

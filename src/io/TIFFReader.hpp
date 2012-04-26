@@ -61,6 +61,9 @@ namespace io{
             void _check_if_tiff(std::ifstream &stream);
             Int32 _read_ifd_offset(std::ifstream &stream);
             size_t _read_ifd_size(std::ifstream &stream);
+            std::vector<size_t> _get_bits_per_sample(const tiff::IFD &ifd) const;
+            std::vector<size_t> _get_sample_format(const tiff::IFD &ifd) const;
+            TypeID _get_type_id(size_t bps,size_t sf) const;
             
             void _read_ifds(); 
         public:
@@ -99,6 +102,7 @@ namespace io{
                     &r);
 
     };
+
 
 
 
