@@ -68,8 +68,8 @@ namespace cbf{
             if(((unsigned char)byte) == 0xd5)
             {
                 //ok - if we came here we are done with all the rubish
-                ImageInfo iinfo(nx,ny,bits_per_pixel);
-                iinfo.append_channel(ImageChannelInfo(tid));
+                ImageInfo iinfo(nx,ny);
+                iinfo.append_channel(ImageChannelInfo(tid,bits_per_pixel));
                 info.push_back(iinfo);
 
                 //this means that we have to store the offset and can 

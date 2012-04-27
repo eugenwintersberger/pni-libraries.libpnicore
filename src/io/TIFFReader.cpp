@@ -39,9 +39,16 @@ namespace io{
     //implementation of _set_endianess
     bool TIFFReader::_is_little_endian(std::ifstream &stream)
     {
+        std::streampos orig_pos = stream.tellg();
+
+        //set the stream to the very beginning of the file
+        stream.seekg(0,std::ios::beg);
         //TIFF file and how it looks with endieness
         char buffer[2];
         stream.read(buffer,2);
+        //reset the stream to its original position
+        stream.seekg(orig_pos,std::ios::beg);
+
         if((buffer[0]=='I')&&(buffer[1]=='I')) return true;
         if((buffer[0]=='M')&&(buffer[1]=='M')) return false;
 
@@ -52,16 +59,24 @@ namespace io{
     //implementation of check tiff
     void TIFFReader::_check_if_tiff(std::ifstream &stream)
     {
-        EXCEPTION_SETUP("void TIFFReader::_check_if_tiff(std::ifstream &"
-                "stream)");
+        std::streampos orig_pos = stream.tellg();
 
+        //set stream to the correct position in the TIFF file
+        stream.seekg(2,std::ios::beg);
+
+        //read the magic number
         UInt16 magic;
         stream.read((char *)(&magic),2);
+            
+        //reset stream position
+        stream.seekg(orig_pos,std::ios::beg);
         if(magic!=42){
-            EXCEPTION_INIT(FileError,"File "+filename()+" is not a valid "
-                    "TIFF file!");
-            EXCEPTION_THROW();
+            FileError e;
+            e.issuer("void TIFFReader::_check_if_tiff(std::ifstream &stream)");
+            e.description("Not a TIFF file!");
+            throw e;
         }
+
     }
     
     //--------------------------------------------------------------------------
@@ -92,11 +107,14 @@ namespace io{
 
         //check endianess of the data - we need to do this before all other
         //things in order to interpret binary data correctly
-        _little_endian = _is_little_endian(stream);
+        _little_endian = TIFFReader::_is_little_endian(stream);
         
         //now we check if the file is really a TIFF file
-        _check_if_tiff(stream);
+        TIFFReader::_check_if_tiff(stream);
 
+
+        //set the stream to the position of the first IFD offse
+        stream.seekg(4,std::ios::beg);
         //no we need to read the IFD entries read the first IFD offset
         Int32 ifd_offset = _read_ifd_offset(stream);
         if(ifd_offset == 0)
@@ -128,14 +146,14 @@ namespace io{
     }
 
     //-------------------------------------------------------------------------
-    std::vector<size_t> 
-        TIFFReader::_get_bits_per_sample(const tiff::IFD &ifd) const
+    std::vector<size_t> TIFFReader::
+        _get_bits_per_sample(std::ifstream &stream,const tiff::IFD &ifd) 
     {
         std::vector<size_t> bits_per_sample(1);
         try
         {
             bits_per_sample =
-                ifd["BitsPerSample"].value<size_t>(_get_stream());
+                ifd["BitsPerSample"].value<size_t>(stream);
         }catch(...)
         {
             //ok - a bilevel image has only one bit per sample and only one
@@ -146,13 +164,13 @@ namespace io{
     }
 
     //-------------------------------------------------------------------------
-    std::vector<size_t> 
-        TIFFReader::_get_sample_format(const tiff::IFD &ifd) const
+    std::vector<size_t> TIFFReader::
+        _get_sample_format(std::ifstream &stream,const tiff::IFD &ifd)
     {
         std::vector<size_t> sample_format(1);
         try
         {
-            sample_format = ifd["SampleFormat"].value<size_t>(_get_stream());
+            sample_format = ifd["SampleFormat"].value<size_t>(stream);
         }
         catch(...)
         {
@@ -162,7 +180,7 @@ namespace io{
     }
 
     //---------------------------------------------------------------------
-    TypeID TIFFReader::_get_type_id(size_t bps,size_t sf) const
+    TypeID TIFFReader::_get_type_id(size_t bps,size_t sf) 
     {
         EXCEPTION_SETUP("TypeID TIFFReader::_get_type_id(size_t bps,"
                         "size_t sf) const");
@@ -263,6 +281,7 @@ namespace io{
         return _ifds.size();
     }
 
+    //-------------------------------------------------------------------------
     ImageInfo TIFFReader::info(size_t i) const 
     {
         //get the right ifd
@@ -280,23 +299,20 @@ namespace io{
         //also obtain the number of channels. If the field BitsPerSample does
         //not exists the image is Bilevel image which is very unlikely to be
         //used for detectors :)
-        std::vector<size_t> bits_per_sample(_get_bits_per_sample(ifd));
+        std::vector<size_t> bits_per_sample(_get_bits_per_sample(_get_stream(),ifd));
 
         //the other information required is the sample format for each channel
-        std::vector<size_t> sample_format(_get_sample_format(ifd));
+        std::vector<size_t> sample_format(_get_sample_format(_get_stream(),ifd));
 
         //the information gathered so far should be enough to assemble image
         //information
-        ImageInfo info(nx,ny,
-                       std::accumulate(bits_per_sample.begin(),
-                                       bits_per_sample.end(),0)
-                      );
+        ImageInfo info(nx,ny);
         //now we need to add the channels
         for(size_t i=0;i<bits_per_sample.size();i++)
         {
             ImageChannelInfo channel(_get_type_id(bits_per_sample[i],
-                                                  sample_format[i])
-                                    );
+                                                  sample_format[i]),
+                                     bits_per_sample[i]);
             info.append_channel(channel);
         }
 

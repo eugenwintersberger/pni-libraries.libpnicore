@@ -126,8 +126,9 @@ template<typename T,template <typename> class BType> class Array: public ArrayOb
         BType<T> _data; //!< Buffer object holding the data
     public:
         typedef T element_type;  //!< type of an array element
-        typedef BType buffer_type; //!< type of the buffer object
-    typedef std::shared_ptr<Array<T,BType> > sptr; //!< shared pointer to an Array<T>
+        typedef BType<T> buffer_type; //!< type of the buffer object
+        typedef std::shared_ptr<Array<T,BType> > shared_ptr; //!< shared pointer to an Array<T>
+        typedef std::unique_ptr<Array<T,BType> > unique_ptr; //!< unique pointer type
     //! default constructor
 
     //! Neither ArrayShape nor Buffer object will be allocated. Buffer

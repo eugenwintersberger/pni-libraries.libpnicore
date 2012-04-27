@@ -42,13 +42,15 @@ namespace io{
     class ImageChannelInfo{
         private:
             TypeID _tid;  //!< ID of the datatype used for this channel
+            size_t _bits; //!< number of bits per channel
         public:
             /*! \brief standard constructor
 
             \param id Typd id for the channel
             */
-            ImageChannelInfo(const TypeID &id):
-                _tid(id)
+            ImageChannelInfo(const TypeID &id,size_t bits):
+                _tid(id),
+                _bits(bits)
             {}
 
             /*! \brief get type ID
@@ -57,6 +59,13 @@ namespace io{
             \return type ID 
             */
             TypeID type_id() const { return _tid; }
+
+            /*! \brief get bits 
+
+            Return the number of bits used to store this channels data
+            \return number of bits
+            */
+            size_t bits() const { return _bits; }
 
     };
 

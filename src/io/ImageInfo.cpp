@@ -31,8 +31,7 @@ namespace io{
        
     //---------------------------------------------------------------------
     //implementation of the standard constructor
-    ImageInfo::ImageInfo(size_t nx,size_t ny,size_t bits_per_pixel):
-        _bits_per_pixel(bits_per_pixel),
+    ImageInfo::ImageInfo(size_t nx,size_t ny):
         _nx(nx),
         _ny(ny),
         _channel_info()
@@ -41,7 +40,6 @@ namespace io{
     //---------------------------------------------------------------------
     //implementation of the move constructor
     ImageInfo::ImageInfo(ImageInfo &&i):
-        _bits_per_pixel(std::move(i._bits_per_pixel)),
         _nx(std::move(i._nx)),
         _ny(std::move(i._ny)),
         _channel_info(std::move(i._channel_info))
@@ -51,7 +49,6 @@ namespace io{
     //---------------------------------------------------------------------
     //implementation of the copy constructor
     ImageInfo::ImageInfo(const ImageInfo &i):
-        _bits_per_pixel(i._bits_per_pixel),
         _nx(i._nx),
         _ny(i._ny),
         _channel_info(i._channel_info)
@@ -63,7 +60,6 @@ namespace io{
     {
         if(this == &i) return *this;
 
-        _bits_per_pixel = std::move(i._bits_per_pixel);
         _nx = std::move(i._nx);
         _ny = std::move(i._ny);
         _channel_info = std::move(i._channel_info);
@@ -77,11 +73,26 @@ namespace io{
     {
         if(this == &i) return *this;
 
-        _bits_per_pixel = i._bits_per_pixel;
         _nx = i._nx;
         _ny = i._ny;
         _channel_info = i._channel_info;
         return *this;
+    }
+
+    //-------------------------------------------------------------------------
+    std::vector<size_t> ImageInfo::bits_per_channel() const
+    {
+        std::vector<size_t> result;
+        for(auto c: _channel_info) result.push_back(c.bits());
+        return result;
+    }
+
+    //-------------------------------------------------------------------------
+    std::vector<TypeID> ImageInfo::types_per_channel() const
+    {
+        std::vector<TypeID> types;
+        for(auto c: _channel_info) types.push_back(c.type_id());
+        return types;
     }
 
     //---------------------------------------------------------------------
@@ -106,19 +117,7 @@ namespace io{
         o<<"Channel information: "<<std::endl;
         for(size_t n=0;n<i.nchannels();n++)
         {
-            o<<"channel "<<n<<" of type ";
-            if(i.get_channel(n).type_id() == TypeID::UINT8) o<<"UINT8";
-            if(i.get_channel(n).type_id() == TypeID::INT8) o<<"INT8";
-            if(i.get_channel(n).type_id() == TypeID::UINT16) o<<"UINT16";
-            if(i.get_channel(n).type_id() == TypeID::INT16) o<<"INT16";
-            if(i.get_channel(n).type_id() == TypeID::UINT32) o<<"UINT32";
-            if(i.get_channel(n).type_id() == TypeID::INT32) o<<"INT32";
-            if(i.get_channel(n).type_id() == TypeID::UINT64) o<<"UINT64";
-            if(i.get_channel(n).type_id() == TypeID::INT64) o<<"INT64";
-            if(i.get_channel(n).type_id() == TypeID::FLOAT32) o<<"FLOAT32";
-            if(i.get_channel(n).type_id() == TypeID::FLOAT64) o<<"FLOAT64";
-            if(i.get_channel(n).type_id() == TypeID::FLOAT128) o<<"FLOAT128";
-
+            o<<"channel "<<n<<" of type "<<i.get_channel(n).type_id();
             o<<std::endl;      
         }
         return o;

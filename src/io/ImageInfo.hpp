@@ -29,8 +29,11 @@
 
 #include<iostream>
 #include<vector>
+#include<numeric>
 
 #include "../Types.hpp"
+#include "../Exceptions.hpp"
+#include "../Shape.hpp"
 #include "ImageChannelInfo.hpp"
 
 using namespace pni::utils;
@@ -46,7 +49,6 @@ namespace io{
     */
     class ImageInfo{
         private:
-            size_t _bits_per_pixel; //!< number of bits per pixel
             size_t _nx;             //!< number of pixels in x-direction
             size_t _ny;             //!< number of pixels in y-direction
             std::vector<ImageChannelInfo> _channel_info; //!< channel information
@@ -54,7 +56,7 @@ namespace io{
             /*! \brief standard constructor
 
             */
-            ImageInfo(size_t nx,size_t ny,size_t bits_per_pixel);
+            ImageInfo(size_t nx,size_t ny);
 
             //! move constructor
             ImageInfo(ImageInfo &&i);
@@ -68,80 +70,120 @@ namespace io{
             //! copy assignment operator
             ImageInfo &operator=(const ImageInfo &i);
 
-            //====================general class methods====================
+            //====================general class methods========================
             /*! \brief get pixels along x
 
             */
             size_t nx() const { return _nx; }
 
+            //-----------------------------------------------------------------
             /*! \brief get pixels along y
 
             */
             size_t ny() const { return _ny; }
 
+            //-----------------------------------------------------------------
             /*! \brief get total number of pixels
 
             */
             size_t npixels() const { return _nx*_ny;}
 
+            //-----------------------------------------------------------------
             /*! \brief get number of bits per pixel
 
             */
-            size_t bit_per_pixel() const { return _bits_per_pixel; }
+            size_t bit_per_pixel() const 
+            {
+                std::vector<size_t> bpc = bits_per_channel();
+                return std::accumulate(bpc.begin(),
+                                       bpc.end(),0);
+            }
+           
+            //-----------------------------------------------------------------
+            /*! \brief get bits per channel
 
+            Return the number of bits used to store data for each channel.
+            */
+            std::vector<size_t> bits_per_channel() const;
+
+            //-----------------------------------------------------------------
+            /*! \brief get types per channel
+
+            Return a vector with the different types per channel.
+            */
+            std::vector<TypeID> types_per_channel() const;
+
+            //-----------------------------------------------------------------
             /*! \brief get number of channels
 
             */
             size_t nchannels() const { return _channel_info.size(); }
 
-            
+            //-----------------------------------------------------------------            
             /*! \brief append a new channel
             
             */ 
             void append_channel(const ImageChannelInfo &i);
 
+            //-----------------------------------------------------------------
             /*! \brief get channel information
 
             */
             ImageChannelInfo get_channel(size_t i) const;
+
+
+            //=============static member methods===============================
+            /*! 
+            \ingroup io_classes
+            \brief static array allocator
+
+            This template function allocates an array capable of holding the data for an
+            image as described by an ImageInfo object.
+            */
+            template<typename ATYPE> 
+                static ATYPE create_array(const ImageInfo &info);
+
+            //-----------------------------------------------------------------
+            /*!
+            \ingroup io_classes
+            \brief check array
+
+            Checks if an array is capable of holding the data for an image 
+            described by an Image info. The function throws exceptions if this 
+            is not the case.
+            \throws MemoryAccessError if the array is not allocated
+            \throws ShapeMissmatchError if the shape of the array does not fit 
+            \param info the ImageInfo object for which to check the array
+            \param array he array to check
+            */
+            template<typename ATYPE>
+                static void check_array(const ATYPE &a,const ImageInfo
+                        &info);
 
     };
 
     //! output operator
     std::ostream &operator<<(std::ostream &o,const ImageInfo &i);
 
-    /*! 
-    \ingroup io_classes
-    \brief function allocated image data
-
-    This template function allocates an array capable of holding the data for an
-    image as described by an ImageInfo object.
-    */
-    template<typename ATYPE> ATYPE array_from_imageinfo(const ImageInfo &info)
+    //==============implementation of static template methods==================
+    template<typename ATYPE> 
+        ATYPE ImageInfo::create_array(const ImageInfo &info)
     {
+        EXCEPTION_SETUP("template<typename ATYPE> ATYPE ImageInfo::"
+                        "create_array(const ImageInfo &info)");
+
         Shape s({info.nx(),info.ny()});
         ATYPE array(s);
         return array;
     }
 
-    /*!
-    \ingroup io_classes
-    \brief check array
-
-    Checks if an array is capable of holding the data for an image described by
-    an Image info. The function throws exceptions if this is not the case.
-    \throws MemoryAccessError if the array is not allocated
-    \throws ShapeMissmatchError if the shape of the array does not fit 
-    \param info the ImageInfo object for which to check the array
-    \param array he array to check
-    */
-
-    template<typename ATYPE> void array_check_from_imageinfo(const ImageInfo
-            &info,const ATYPE &array)
+    //-------------------------------------------------------------------------
+    template<typename ATYPE> 
+        void ImageInfo::check_array(const ATYPE &array,const ImageInfo &info)
     {
-        EXCEPTION_SETUP("template<typename ATYPE> void "
-                "array_check_from_imageinfo(const ImageInfo &info,const "
-                "ATYPE &array)");
+        EXCEPTION_SETUP("template<typename ATYPE> void ImageInfo::"
+                         "check_array(const ATYPE &array,const ImageInfo "
+                         "&info)");
 
         //check if the array is allocated
         if(!array.is_allocated())

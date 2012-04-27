@@ -11,11 +11,47 @@
 #include<typeinfo>
 #include<cmath>
 
+#include <vtkRenderWindow.h>
+#include <vtkRenderWindowInteractor.h>
+#include <vtkRenderer.h>
+#include <vtkFloatArray.h>
+#include <vtkImageData.h>
+#include <vtkPointData.h>
+#include <vtkImageViewer2.h>
+
 #include "../src/io/TIFFReader.hpp"
 
 using namespace pni::utils;
 using namespace pni::io;
 
+void plot_image(const Float32Array &array)
+{
+    vtkRenderer *renderer = vtkRenderer::New();
+    vtkRenderWindow *window = vtkRenderWindow::New();
+    vtkRenderWindowInteractor *interactor = vtkRenderWindowInteractor::New();
+    vtkImageViewer2 *viewer = vtkImageViewer2::New();
+
+    vtkFloatArray *ia = vtkFloatArray::New();
+    ia->SetArray((float *)array.ptr(),array.size(),1);
+    vtkImageData *idata = vtkImageData::New();
+    idata->GetPointData()->SetScalars(ia);
+    idata->SetDimensions(array.shape()[0],array.shape()[1],1);
+    idata->SetScalarType(VTK_FLOAT);
+    idata->SetSpacing(1.0,1.0,1.0);
+    idata->SetOrigin(0,0,0);
+
+    viewer->SetInput(idata);
+    viewer->SetZSlice(0);
+    viewer->SetupInteractor(interactor);
+    viewer->Render();
+    interactor->Start();
+
+    //cleanup everything
+    renderer->Delete();
+    window->Delete();
+    interactor->Delete();
+
+}
 
 int main(int argc,char **argv){
 
@@ -33,8 +69,9 @@ int main(int argc,char **argv){
     std::cout<<reader.info(0)<<std::endl;
     
     
-
+    auto array = reader.image<Float32Array>(0);
     //close the reader object when we are done
+    plot_image(array);
 
     return 0;
 }
