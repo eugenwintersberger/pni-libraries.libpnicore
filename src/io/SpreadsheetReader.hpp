@@ -29,13 +29,18 @@
 
 #include <vector>
 #include "../Types.hpp"
+#include "../Exceptions.hpp"
 #include "DataReader.hpp"
+#include "ColumnInfo.hpp"
 
 namespace pni{
 namespace io{
 
     class SpreadsheetReader:public DataReader
     {
+        private:
+            std::vector<ColumnInfo> _columns_info; //!< column information
+
         protected:
             //============constructors and destructor==========================
             //! default constructor
@@ -50,7 +55,44 @@ namespace io{
             //! standard constructor
             SpreadsheetReader(const String &n);
 
+            //==================protected member functions=====================
+            virtual void _append_column(const ColumnInfo &i)
+            {
+                _columns_info.push_back(i);
+            }
+
+            virtual ColumnInfo _get_column(size_t i) const
+            {
+                return _columns_info.at(i);
+            }
+
+            virtual ColumnInfo _get_column(const String &n) const
+            {
+                EXCEPTION_SETUP("virtual ColumnInfo SpreadsheetReader::"
+                        "_get_column(const String &n) const");
+
+                size_t i=0;
+                for(auto c: _columns_info)
+                {
+                    if(c.name() == n)
+                        return _get_column(i); 
+
+                    //increment column counter
+                    i++;
+                }
+                
+                EXCEPTION_INIT(KeyError,"Column ["+n+"] not found!");
+                EXCEPTION_THROW();
+                return ColumnInfo(); //just to get rid of compiler warning
+            }
+
+
         public:
+            //========================public type==============================
+            typedef std::vector<ColumnInfo>::iterator column_info_iterator;
+            typedef std::vector<ColumnInfo>::const_iterator
+                column_info_const_iterator;
+            //=======================destructor================================
             //! destructor
             virtual ~SpreadsheetReader();
 
@@ -67,7 +109,10 @@ namespace io{
             Returns the number of columns. 
             \return number of columns
             */
-            virtual size_t ncolumns() const = 0;
+            size_t ncolumns() const
+            {
+                return _columns_info.size();
+            }
 
             /*! \brief get record number
 
