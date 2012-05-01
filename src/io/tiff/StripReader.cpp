@@ -66,7 +66,7 @@ namespace tiff {
         _byte_cnts(byte_counts),
         _bits_per_channel(bits_per_channel),
         _channel_types(channel_types)
-    {}
+    { }
 
     //-------------------------------------------------------------------------
     //implementation of the destructor
@@ -109,7 +109,24 @@ namespace tiff {
                           info.types_per_channel());
     }
 
+    
+    //output operator
+    std::ostream &operator<<(std::ostream &o,const StripReader &r)
+    {
+        for(size_t i=0;i<r._bits_per_channel.size();i++)
+        {
+            o<<"channel "<<i<<" of type "<<r._channel_types[i];
+            o<<" with "<<r._bits_per_channel[i]<<" bits"<<std::endl;
+        }
 
+        o<<"Total number of strip: "<<r._offsets.size()<<std::endl;
+        for(size_t i=0;i<r._offsets.size();i++)
+        {
+            o<<"strip "<<i<<" at offset "<<r._offsets[i];
+            o<<" of size "<<r._byte_cnts[i]<<std::endl;
+        }
+        return o;
+    }
 
 
 

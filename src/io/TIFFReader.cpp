@@ -289,10 +289,10 @@ namespace io{
 
         //the number of pixels in x-direction is associated with the image width
         //in TIFF
-        size_t nx = ifd["ImageWidth"].value<size_t>(_get_stream())[0];
+        size_t nx = ifd["ImageLength"].value<size_t>(_get_stream())[0];
         //the number of pixels in y-direction is associated with the image
         //length in TIFF
-        size_t ny = ifd["ImageLength"].value<size_t>(_get_stream())[0];
+        size_t ny = ifd["ImageWidth"].value<size_t>(_get_stream())[0];
 
         
         //need to obtain the number of bits per sample. From this field we can

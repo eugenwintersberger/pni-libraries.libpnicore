@@ -263,7 +263,7 @@ if not conf.CheckLib("vtkFiltering",language="C++") or \
 	
 env = conf.Finish()
 
-env.Append(CPPPATH=["/usr/include/vtk-5.6"])
+env.Append(CPPPATH=["/usr/include/vtk-5.8"])
 
 
 #create optimized environment

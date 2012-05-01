@@ -97,7 +97,8 @@ namespace tiff {
 
 
         //! template to read image data of various type
-        template<typename ATYPE> void read(size_t c,std::ifstream &stream,ATYPE &array) {
+        template<typename ATYPE> 
+            void read(size_t c,std::ifstream &stream,ATYPE &array) {
             EXCEPTION_SETUP("template<typename ATYPE> void read(size_t c,"
                             "std::ifstream &stream,ATYPE &array)");
 
@@ -132,19 +133,20 @@ namespace tiff {
 
             
         }
+
+        //=====================output operator=================================
+        friend std::ostream &operator<<(std::ostream &o,const StripReader &r);
     };
 
-    template<typename CTYPE,typename T,template<typename> class BT> void StripReader::
-        _read_interlace(size_t channel,std::ifstream &stream,Array<T,BT> &array)
-        const
+    template<typename CTYPE,typename T,template<typename> class BT> 
+        void StripReader::_read_interlace(size_t channel,
+                std::ifstream &stream,Array<T,BT> &array) const
     {
         //we can assume here that the buffer is already properly allocated
-        size_t pix_cnt = 0;         //pixel counter
         Buffer<char> read_buffer;   //buffer where to read data to
         size_t tot_bits_per_pix = std::accumulate(this->_bits_per_channel.begin(),
                                                   this->_bits_per_channel.end(),0);
 
-        
         //loop over all strips
         for(size_t strip=0;strip<this->_offsets.size();strip++)
         {
@@ -163,23 +165,19 @@ namespace tiff {
             size_t npix = 8*this->_byte_cnts[strip]/tot_bits_per_pix;
             //loop over all pixels
             char *ptr = read_buffer.ptr();
-            for(size_t i=0;i<npix;i++)
+            for(size_t i=0,pix_cnt=0;i<npix;i++,pix_cnt++)
             {
                 //loop over all channels
                 for(size_t c=0;c<this->_bits_per_channel.size();c++)
                 {
                     //extract data from the stream
-                    if(c==channel) array[pix_cnt] =  (T)((CTYPE)(*ptr));
+                    if(c==channel) array[pix_cnt] =  T((CTYPE)(*ptr));
                     //continue with the pointer
                     ptr += this->_bits_per_channel[c]/8;
                 }
 
-                //increment the pixel counter
-                pix_cnt++;
             }
         }
-
-
     }
 
 
