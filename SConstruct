@@ -68,7 +68,7 @@ var.Add("LIBFULLNAME","full name of the library binary","")
 var.Add("INCDIR","installation path for header files","")
 var.Add("LIBDIR","library installation path","")
 var.Add("PKGNAME","name of the package for installation","")
-var.Add(BoolVariable("NOPLPLOT","set if no PlPlot library is available",0))
+var.Add(PathVariable("VTKINCDIR","header installation path for VTK",""))
 
 #need now to create the proper library suffix
 
@@ -103,6 +103,8 @@ env.Append(CXXFLAGS = ["-Wall","-std=c++0x"])
 env.Append(LIBS=["dl"])
 env.Append(LIBPATH=path.join(env["BOOSTPREFIX"],"lib"))
 env.Append(CPPPATH=path.join(env["BOOSTPREFIX"],"include"))
+
+env.Append(CPPPATH=[env["VTKINCDIR"]])
 
 #set the proper compiler - this should be changed to something 
 #more general - independent of the underlying operating system
@@ -263,7 +265,6 @@ if not conf.CheckLib("vtkFiltering",language="C++") or \
 	
 env = conf.Finish()
 
-env.Append(CPPPATH=["/usr/include/vtk-5.8"])
 
 
 #create optimized environment
