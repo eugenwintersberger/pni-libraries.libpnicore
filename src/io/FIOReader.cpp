@@ -110,16 +110,16 @@ namespace io{
     //-------------------------------------------------------------------------
     void FIOReader::_parse_data(std::ifstream &stream)
     {
-        static const boost::regex comment("^!"); //regular expression for comment lines
-        static const boost::regex col("^ Col");
-        boost::smatch match;
+        boost::regex comment("^!"); //regular expression for comment lines
+        boost::regex col("^ Col");
+        boost::cmatch match;
 
-        String linebuffer;
+        char linebuffer[1024];
 
         while(!stream.eof())
         {
-            std::getline(stream,linebuffer);                
-            std::cout<<linebuffer<<std::endl;
+            stream.getline(linebuffer,1024);                
+            //std::cout<<linebuffer<<std::endl;
             if(boost::regex_match(linebuffer,match,col))
             {
                 std::cout<<linebuffer<<std::endl;
