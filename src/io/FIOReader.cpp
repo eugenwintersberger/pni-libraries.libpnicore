@@ -24,6 +24,7 @@
  *
  */
 
+#include <sstream>
 #include <string>
 #include "FIOReader.hpp"
 
@@ -56,6 +57,8 @@ namespace io{
             }
         }
 
+        //reset EOF bit
+        stream.clear();
     }
 
     //-------------------------------------------------------------------------
@@ -87,7 +90,6 @@ namespace io{
             {
                 //finished with this parameter
                 _param_map.insert({param_name,stream.tellg()});
-                std::cout<<param_name<<" at "<<stream.tellg()<<std::endl;
                
                 //reset the paremter name
                 param_name.clear();
@@ -111,21 +113,47 @@ namespace io{
     void FIOReader::_parse_data(std::ifstream &stream)
     {
         boost::regex comment("^!"); //regular expression for comment lines
-        boost::regex col("^ Col");
-        boost::cmatch match;
+        boost::regex col("^ Col.*"); //column description match
+        //boost::regex dcol("[+-]?\\d*.?\\d*[e]?[+-]?\\d*");
+        boost::regex is_dcol("^\\s+[+-]?\\d+\\.?\\d*e?[+-]?\\d*.*");
+        boost::smatch match;
 
-        char linebuffer[1024];
+        String linebuffer;
+        std::streampos data_offset_tmp = 0;
+        size_t nr = 0; //number of records
 
         while(!stream.eof())
         {
-            stream.getline(linebuffer,1024);                
-            //std::cout<<linebuffer<<std::endl;
+            //save the position of the stream pointer in case we will need it
+            //later
+            data_offset_tmp = stream.tellg();
+
+            //read a line
+            std::getline(stream,linebuffer);                
+            
+            //check if the line matches a column definition line
             if(boost::regex_match(linebuffer,match,col))
             {
-                std::cout<<linebuffer<<std::endl;
+                _append_column(_read_column_info(linebuffer));
+                continue;
             }
-           
+
+            //if the column belongs to a data line we save the stream pointer
+            //and break the loop - we have everything we wanted 
+            if(boost::regex_match(linebuffer,match,is_dcol))
+            {
+                //if the _dataoffset has not been written yet 
+                if(!_data_offset) _data_offset = data_offset_tmp;
+                _read_data_line(linebuffer);
+                nr++;
+            }
         }
+       
+        //set the number of records in the file
+        _nrecords(nr);
+        //must be called here to clear EOF error bit
+        //must be called before next call to seekg
+        stream.clear();
     }
 
     //-------------------------------------------------------------------------
@@ -143,18 +171,65 @@ namespace io{
         }
     }
 
+    //=================implementation of static private methods================
+    TypeID FIOReader::_typestr2id(const String &tstr)
+    {
+        if(tstr == "FLOAT") 
+            return TypeID::FLOAT32;
+        else if(tstr == "DOUBLE")
+            return TypeID::FLOAT64;
+        else
+            return TypeID::NONE;
+    }
+
+    //-------------------------------------------------------------------------
+    ColumnInfo FIOReader::_read_column_info(const String &line)
+    {
+        String cname;
+        String ctype;
+        size_t cindex;
+        std::stringstream ss(line);
+        ss>>cname>>cindex>>cname>>ctype;
+        
+        return ColumnInfo(cname,_typestr2id(ctype),Shape());
+    }
+
+    //-------------------------------------------------------------------------
+    std::vector<String> FIOReader::_read_data_line(const String &line)
+    {
+        boost::regex dcol("[+-]?\\d+\\.?\\d*e?[+-]?\\d*");
+        std::vector<String> record;
+
+        boost::match_results<String::const_iterator> imatch;
+        String::const_iterator start = line.begin();
+        String::const_iterator end   = line.end();
+        while(boost::regex_search(start,end,imatch,dcol,boost::match_default))
+        {
+            record.push_back(imatch.str());
+            start = imatch[0].second;
+        }
+
+        return record;
+    }
+
     //=======================constructors and destructor======================= 
     //default constructor implementation
     FIOReader::FIOReader():SpreadsheetReader() {}
 
     //--------------------------------------------------------------------------
     //move constructor implementation
-    FIOReader::FIOReader(FIOReader &&r):SpreadsheetReader(std::move(r)){}
+    FIOReader::FIOReader(FIOReader &&r):
+        SpreadsheetReader(std::move(r)),
+        _param_map(std::move(r._param_map)),
+        _data_offset(std::move(r._data_offset))
+    {}
 
     //-------------------------------------------------------------------------
     //standard constructor implementation
     FIOReader::FIOReader(const String &n):
-        SpreadsheetReader(n)
+        SpreadsheetReader(n),
+        _param_map(),
+        _data_offset(0)
     {
         _parse_file(_get_stream()); 
     }
@@ -170,7 +245,8 @@ namespace io{
     {
         if(this == &r) return *this;
         SpreadsheetReader::operator=(std::move(r));
-
+        _param_map = std::move(r._param_map);
+        _data_offset = std::move(r._data_offset);
 
         return *this;
     }
@@ -191,25 +267,7 @@ namespace io{
         return pnames;
     }
 
-    //-------------------------------------------------------------------------
-    //implementation of nrecords()
-    size_t FIOReader::nrecords() const
-    {
 
-    }
-
-    //-------------------------------------------------------------------------
-    std::vector<String> FIOReader::column_names() const
-    {
-
-    }
-
-    //-------------------------------------------------------------------------
-    std::vector<TypeID> FIOReader::column_types() const
-    {
-
-
-    }
 
 //end of namespace
 }

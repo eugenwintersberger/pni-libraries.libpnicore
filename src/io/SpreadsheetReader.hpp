@@ -40,6 +40,7 @@ namespace io{
     {
         private:
             std::vector<ColumnInfo> _columns_info; //!< column information
+            size_t _nrec;    //!< number of records in the sheet
 
         protected:
             //============constructors and destructor==========================
@@ -86,12 +87,19 @@ namespace io{
                 return ColumnInfo(); //just to get rid of compiler warning
             }
 
+            /*! \brief set number of records
+
+            Child classes can use this method to set the number of records in
+            the spreadsheet. 
+            \param n number of records
+            */
+            void _nrecords(size_t n) { _nrec = n; }
+
 
         public:
             //========================public type==============================
-            typedef std::vector<ColumnInfo>::iterator column_info_iterator;
-            typedef std::vector<ColumnInfo>::const_iterator
-                column_info_const_iterator;
+            typedef std::vector<ColumnInfo>::iterator iterator;
+            typedef std::vector<ColumnInfo>::const_iterator const_iterator;
             //=======================destructor================================
             //! destructor
             virtual ~SpreadsheetReader();
@@ -119,18 +127,12 @@ namespace io{
             Return the number of records in the spreadsheet.
             \return number of records
             */
-            virtual size_t nrecords() const = 0;
+            size_t nrecords() const { return _nrec; }
 
-            /*! \brief get column names
-
-            Return a vector of strings holding the names of the columns if
-            available. 
-            \return column names
-            */
-            virtual std::vector<String> column_names() const = 0;
-
-            virtual std::vector<TypeID> column_types() const = 0;
-
+            iterator begin() { return _columns_info.begin(); }
+            const_iterator begin() const { return _columns_info.begin(); }
+            iterator end() { return _columns_info.end(); }
+            const_iterator end() const { return _columns_info.end(); }
 
     };
 

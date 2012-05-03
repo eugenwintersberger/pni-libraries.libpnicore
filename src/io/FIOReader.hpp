@@ -32,6 +32,7 @@
 #include<map>
 #include<boost/regex.hpp>
 
+#include "../Array.hpp"
 #include "SpreadsheetReader.hpp"
 
 namespace pni{
@@ -69,6 +70,33 @@ namespace io{
             */
             void _parse_data(std::ifstream &stream);
 
+            /*! \brief type id from type string 
+
+            Method converts a FIO type string to a TypeID as provided by
+            libpniutils.
+            \param tstr type string
+            \return TypeID 
+            */
+            static TypeID _typestr2id(const String &tstr);
+
+            /*! \brief get ColumnInfo from line
+
+            Method retrievs column information from a line. 
+            \param line string object holding the lines content
+            \return instance of ColumnInfo
+            */
+            static ColumnInfo _read_column_info(const String &line);
+           
+            /*! \brief read data line
+
+            Reads a data line and splits the line into its cells. The method
+            returns a vector of Strings where each elements corresponds to a
+            particular cell. 
+            \param line input line
+            \return vector with cell content as strings
+            */
+            static std::vector<String> _read_data_line(const String &line);
+
             /*! \brief read parameter data
 
             This template is used internally to extract parameter data from the
@@ -79,7 +107,24 @@ namespace io{
             template<typename T>
                 void _get_parameter_data(std::ifstream &stream,T &value) const;
 
+            /*! \brief read string parameter
+
+            Overloaded version of the _get_parameter_data template method to
+            handle string data. 
+            \parma stream input stream
+            \param value string value where to store parameter data
+            */
             void _get_parameter_data(std::ifstream &stream,String &value) const;
+
+            /*! \brief read column data
+
+            Private template method to read column data and store it to an array
+            object.
+            \param index index of the column in the file
+            \param array instance of the Array template where to store the data
+            */
+            template<typename T,template<typename> class BT> 
+                void _read_column(size_t index,Array<T,BT> &array) const;
 
             //static regular expressions
 
@@ -132,11 +177,6 @@ namespace io{
             */
             template<typename T> T parameter(const String &name) const;
 
-            virtual size_t nrecords() const;
-
-            virtual std::vector<String> column_names() const;
-
-            virtual std::vector<TypeID> column_types() const;
 
             template<typename ATYPE> ATYPE column(const String &n) const;
 
@@ -173,6 +213,51 @@ namespace io{
     //-------------------------------------------------------------------------
     template<typename ATYPE> ATYPE FIOReader::column(const String &n) const
     {
+        EXCEPTION_SETUP("template<typename ATYPE> ATYPE FIOReader::"
+                        "column(const String &n) const");
+
+        //allocate a new array
+        Shape s({this->nrecords()});
+        ATYPE array(s);
+
+        //determine the index of the column
+        size_t index = 0;
+        for(auto c: *this)
+        {
+            if(c.name() == n) 
+            {
+                this->_read_column(index,array);
+                return array;
+            }
+            index++;
+        }
+
+        //throw an exception here
+        EXCEPTION_INIT(KeyError,"File ["+this->filename()+"] does not have a "
+                "a column ["+n+"]!");
+        EXCEPTION_THROW();
+        return array; //just to avoid compiler warnings
+    }
+
+    template<typename T,template<typename> class BT> 
+        void FIOReader::_read_column(size_t index,Array<T,BT> &array) const
+    {
+        std::ifstream &stream = this->_get_stream();
+        std::streampos orig_pos = stream.tellg();
+        //move stream to data section
+        stream.seekg(_data_offset,std::ios::beg);
+
+        size_t lcnt=0;
+        String linebuffer;
+        while(!stream.eof())
+        {
+            std::getline(stream,linebuffer);
+            std::vector<String> string_data = this->_read_data_line(linebuffer);
+            std::stringstream ss(string_data[index]);
+            ss>>array[lcnt];
+            lcnt++;
+            if(lcnt == this->nrecords()) break;
+        }
 
     }
 

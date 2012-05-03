@@ -34,8 +34,6 @@ int main(int argc,char **argv){
 
     FIOReader reader(file_name);
     std::cout<<"File has "<<reader.nparameters()<<" parameters: "<<std::endl;
-    for(auto names: reader.parameter_names()) std::cout<<names<<std::endl;
-
     //print parameters
     std::cout<<"ALPHA_OFF = "<<reader.parameter<Int32>("ALPHA_OFF")<<std::endl;
     std::cout<<"ENT_SL_B  = "<<reader.parameter<Float32>("ENT_SL_B")<<std::endl;
@@ -56,6 +54,11 @@ int main(int argc,char **argv){
     std::cout<<"REF_POS   = "<<reader.parameter<Float32>("REF_POS")<<std::endl;
     std::cout<<"SAMPLE    = "<<reader.parameter<String>("SAMPLE")<<std::endl;
     std::cout<<"SAMPLE_POS= "<<reader.parameter<Float32>("SAMPLE_POS")<<std::endl;
+
+    for(auto c: reader) std::cout<<c<<std::endl;
+    std::cout<<"File contains: "<<reader.nrecords()<<std::endl;
+
+    auto array = reader.column<Float32Array>("TIO2_KRONOS_0001_ENERGIE_HHE1");
 
     reader.close();
 

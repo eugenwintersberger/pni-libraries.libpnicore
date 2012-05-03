@@ -91,6 +91,14 @@ namespace io{
         return *this;
     }
 
+    //=================implementation of non-member operators==================
+    std::ostream &operator<<(std::ostream &o,const ColumnInfo &ci)
+    {
+        o<<"Column ["<<ci.name()<<"] of type ["<<ci.type_id()<<"] and element shape [";
+        o<<ci.shape()<<"]";
+        return o;
+    }
+
 //end of namespace
 }
 }

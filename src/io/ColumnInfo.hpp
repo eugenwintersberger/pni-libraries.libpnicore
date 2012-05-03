@@ -99,6 +99,8 @@ namespace io{
 
     };
 
+    std::ostream &operator<<(std::ostream &o,const ColumnInfo &ci);
+
 
 //end of namespace
 }
