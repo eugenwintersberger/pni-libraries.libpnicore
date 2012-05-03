@@ -302,6 +302,7 @@ Export("build_env")
 Export("test_env")
 
 
+print build_env["LIBPATH"]
 #build
 SConscript(["src/SConscript"])
 SConscript(["test/SConscript"])

@@ -36,15 +36,16 @@ static_library = build_env.StaticLibrary("${LIBNAME}",static_objects)
 #---------------------build the pkg-config file---------------------------------              
 pkg_config_file = build_env.Substfile(target="${LIBNAME}",source=["pkgconf.in"],
                   SUBST_DICT={"@PREFIX@":"${PREFIX}","@LIBNAME@":"${LIBNAME}",
-                  "@VERSION@":"${VERSION}"},SUBSTFILESUFFIX=".pc")
+                  "@VERSION@":"${VERSION}","@BOOSTINCDIR@":"${BOOSTINCDIR}",
+                  "@VTKINCDIR@":"${VTKINCDIR}"},SUBSTFILESUFFIX=".pc")
 
 #-------------------adding everyting to the "all" and "library" target----------
 build_env.Alias("all",[temp_shared_library,
                        shared_library,shared_library_link,shared_library_so,
-                       static_library])
+                       static_library,pkg_config_file])
 build_env.Alias("library",[temp_shared_library,
                            shared_library,shared_library_link,shared_library_so,
-                           static_library])
+                           static_library,pkg_config_file])
 
 #---------------------installation----------------------------------------------
 
