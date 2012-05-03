@@ -14,7 +14,7 @@
 #include <vtkRenderWindow.h>
 #include <vtkRenderWindowInteractor.h>
 #include <vtkRenderer.h>
-#include <vtkUnsignedShortArray.h>
+#include <vtkFloatArray.h>
 #include <vtkImageData.h>
 #include <vtkPointData.h>
 #include <vtkImageViewer2.h>
@@ -24,19 +24,19 @@
 using namespace pni::utils;
 
 
-void plot_image(const UInt16Array &array)
+void plot_image(const Float32Array &array)
 {
     vtkRenderer *renderer = vtkRenderer::New();
     vtkRenderWindow *window = vtkRenderWindow::New();
     vtkRenderWindowInteractor *interactor = vtkRenderWindowInteractor::New();
     vtkImageViewer2 *viewer = vtkImageViewer2::New();
 
-    vtkUnsignedShortArray *ia = vtkUnsignedShortArray::New();
-    ia->SetArray((UInt16 *)array.ptr(),array.size(),1);
+    vtkFloatArray *ia = vtkFloatArray::New();
+    ia->SetArray((Float32 *)array.ptr(),array.size(),1);
     vtkImageData *idata = vtkImageData::New();
     idata->GetPointData()->SetScalars(ia);
     idata->SetDimensions(array.shape()[1],array.shape()[0],1);
-    idata->SetScalarType(VTK_UNSIGNED_SHORT);
+    idata->SetScalarType(VTK_FLOAT);
     idata->SetSpacing(1.0,1.0,1.0);
     idata->SetOrigin(0,0,0);
 
@@ -71,7 +71,7 @@ int main(int argc,char **argv){
     std::cout<<reader.info(0)<<std::endl;
     
     
-    auto array = reader.image<UInt16Array>(0);
+    auto array = reader.image<Float32Array>(0);
     //close the reader object when we are done
     plot_image(array);
 

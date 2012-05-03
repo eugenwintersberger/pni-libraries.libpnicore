@@ -162,7 +162,7 @@ namespace tiff {
             //now as we have all the strip data in the memory we need to select
             //the proper channel data from it
             //determine the number of pixels in the strip
-            size_t npix = 8*this->_byte_cnts[strip]/tot_bits_per_pix;
+            size_t npix = (8*this->_byte_cnts[strip])/tot_bits_per_pix;
             //loop over all pixels
             char *ptr = read_buffer.ptr();
             for(size_t i=0,pix_cnt=0;i<npix;i++,pix_cnt++)
@@ -171,7 +171,11 @@ namespace tiff {
                 for(size_t c=0;c<this->_bits_per_channel.size();c++)
                 {
                     //extract data from the stream
-                    if(c==channel) array[pix_cnt] =  T((CTYPE)(*ptr));
+                    if(c==channel) 
+                    {
+                        CTYPE buffer(*ptr);
+                        array[pix_cnt] =  T(buffer);
+                    }
                     //continue with the pointer
                     ptr += this->_bits_per_channel[c]/8;
                 }
