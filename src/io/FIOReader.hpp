@@ -37,12 +37,20 @@
 
 namespace pni{
 namespace io{
-    
+   
+    /*! \ingroup io_classes
+    \brief FIO data reader
+
+    FIO files are written by ONLINE a data acquisition and experiment control
+    software used at DESY. FIO files are basically ACII files where data is
+    stored in columns. Thus such files correspond to the family of spreadsheet
+    style files. 
+    */
     class FIOReader:public SpreadsheetReader
     {
         private:
-            std::map<String,std::streampos> _param_map;
-            std::streampos _data_offset;
+            std::map<String,std::streampos> _param_map; //!< parameter stream positions
+            std::streampos _data_offset; //!< offset where real data starts
 
             //====================private member methods=======================
             /*! \brief initial file parseing
@@ -119,14 +127,14 @@ namespace io{
             /*! \brief read column data
 
             Private template method to read column data and store it to an array
-            object.
+            object. If EOF is reached before all data was read an exception will
+            be thrown.
+            \throw FileError if EOF is reached before end of data
             \param index index of the column in the file
             \param array instance of the Array template where to store the data
             */
             template<typename T,template<typename> class BT> 
                 void _read_column(size_t index,Array<T,BT> &array) const;
-
-            //static regular expressions
 
         public:
             //==============constructor and destructor=========================
@@ -176,8 +184,16 @@ namespace io{
             \return parameter value as type T
             */
             template<typename T> T parameter(const String &name) const;
+            
+            /*! \brief get single column
 
-
+            Returns a single column and stores the data into an array object.
+            If the column name does not exist an exception is thrown.
+            \throws KeyError if column does not exist
+            \throws FileError if EOF is reached before end of data
+            \param n name of the column
+            \return instance of ATYPE holding the data.
+            */
             template<typename ATYPE> ATYPE column(const String &n) const;
 
     };
@@ -239,9 +255,14 @@ namespace io{
         return array; //just to avoid compiler warnings
     }
 
+    //-------------------------------------------------------------------------
     template<typename T,template<typename> class BT> 
         void FIOReader::_read_column(size_t index,Array<T,BT> &array) const
     {
+        EXCEPTION_SETUP("template<typename T,template<typename> class BT> "
+                        "void FIOReader::_read_column(size_t index,"
+                        "Array<T,BT> &array) const");
+
         std::ifstream &stream = this->_get_stream();
         std::streampos orig_pos = stream.tellg();
         //move stream to data section
@@ -256,11 +277,26 @@ namespace io{
             std::stringstream ss(string_data[index]);
             ss>>array[lcnt];
             lcnt++;
-            if(lcnt == this->nrecords()) break;
+            if(lcnt == this->nrecords())
+            {
+                //reset the stream position
+                stream.seekg(orig_pos,std::ios::beg);
+                //return from this method
+                return;
+            }
         }
+
+        //if we come to some reason here to this point the stream ended before
+        //data was finished - throw an exception
+        //reset the stream 
+        stream.seekg(orig_pos,std::ios::beg);
+        EXCEPTION_INIT(FileError,"EOF of file ["+this->filename()+"] before"
+                " reading data was completed!");
+        EXCEPTION_THROW();
 
     }
 
+//end of namespace
 }
 }
 
