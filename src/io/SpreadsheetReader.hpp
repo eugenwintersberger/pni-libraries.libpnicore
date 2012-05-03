@@ -36,6 +36,13 @@
 namespace pni{
 namespace io{
 
+    /*! \ingroup io_classes
+    \brief base class for spreadsheet reader
+
+    This class is the basement for all readers dealing with spreadsheet like
+    data files. Most of the ASCII formats written following this storage
+    convention.
+    */
     class SpreadsheetReader:public DataReader
     {
         private:
@@ -129,6 +136,7 @@ namespace io{
             */
             size_t nrecords() const { return _nrec; }
 
+            //
             iterator begin() { return _columns_info.begin(); }
             const_iterator begin() const { return _columns_info.begin(); }
             iterator end() { return _columns_info.end(); }
