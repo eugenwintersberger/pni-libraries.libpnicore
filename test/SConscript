@@ -1,8 +1,7 @@
 from os import path
 import re
-Import("test_build_env")
+Import("test_env")
 
-test_env = test_build_env.Clone()
 
 #need to use here prepend in order to avoid triggering the istallation process
 test_env.Prepend(LIBPATH=["../src/"])
@@ -65,4 +64,3 @@ if 'testrun' in COMMAND_LINE_TARGETS:
     test_env.Alias("testrun",[test_run,test_check])
 
 test_env.Alias("test",test_targets)
-test_env.Alias("all",[test_targets])

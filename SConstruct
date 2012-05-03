@@ -198,7 +198,6 @@ if not conf.CheckTypeSize('long double',expect = 16):
     pass
 
 
-
 #check for mandatory header files
 if not conf.CheckCXXHeader("boost/numeric/conversion/cast.hpp"):
 	print "BOOST header file cast.hpp does not exist!"
@@ -212,33 +211,6 @@ if not conf.CheckCXXHeader("boost/static_assert.hpp"):
 	print "BOOST header static_assert.hpp does not exist!"
 	Exit(1)
 	
-if not conf.CheckCXXHeader("cppunit/TestFixture.h"):
-	print "CPPUNIT header TestFixture.h does not exist!"
-	Exit(1)
-	
-if not conf.CheckCXXHeader("cppunit/TestRunner.h"):
-	print "CPPUNIT header TestRunner.h does not exist!"
-	Exit(1)
-	
-if not conf.CheckCXXHeader("cppunit/extensions/HelperMacros.h"):
-	print "CPPUNIT header HelperMacros.h does not exist!"
-	Exit(1)
-	
-if not conf.CheckCXXHeader("cppunit/TestCaller.h"):
-	print "CPPUNIT header TestCaller.h does not exist!"
-	Exit(1)
-	
-if not conf.CheckCXXHeader(["string","cppunit/TestResult.h"]):
-	print "CPPUNIT header TestResult.h does not exist!"
-	Exit(1)
-	
-if not conf.CheckCXXHeader("cppunit/TextTestProgressListener.h"):
-	print "CPPUNIT header TextTestProgressListener.h does not exist!"
-	Exit(1)
-	
-if not conf.CheckCXXHeader("cppunit/ui/text/TextTestRunner.h"):
-	print "CPPUNIT header TextTestRunner.h does not exist!"
-	Exit(1)
 
 if not conf.CheckCXXHeader("boost/regex.hpp"):
     print "Boost regular expressions header file not found!"
@@ -249,11 +221,6 @@ if not conf.CheckCXXHeader("boost/regex.hpp"):
 if not conf.CheckLib("boost_regex",language="C++"):
     print "BOOST regular expression library not found"
     Exit(1)
-
-#check for mandatory libraries
-if not conf.CheckLib("cppunit",language="C++"):
-	print "CPPUNIT unit test libraray is not installed!"
-	Exit(1)
 
 
 if not conf.CheckLib("vtkFiltering",language="C++") or \
@@ -268,34 +235,71 @@ if not conf.CheckLib("vtkFiltering",language="C++") or \
    not conf.CheckLib("vtkIO",language="C++"):
     print "VTK libraries are missing!"
     Exit(1)
+
+#check for CPPUNIT headers and library if building tests
+
 	
 env = conf.Finish()
 
+#create the build environments for the library and the test
+build_env = env.Clone()
+test_env  = env.Clone()
+
+#============================start configuration for tests=====================
+test_conf = Configure(test_env)
+
+if not test_conf.CheckCXXHeader("cppunit/TestFixture.h"):
+    print "CPPUNIT header TestFixture.h does not exist!"
+    Exit(1)
+    
+if not test_conf.CheckCXXHeader("cppunit/TestRunner.h"):
+    print "CPPUNIT header TestRunner.h does not exist!"
+    Exit(1)
+    
+if not test_conf.CheckCXXHeader("cppunit/extensions/HelperMacros.h"):
+    print "CPPUNIT header HelperMacros.h does not exist!"
+    Exit(1)
+    
+if not test_conf.CheckCXXHeader("cppunit/TestCaller.h"):
+    print "CPPUNIT header TestCaller.h does not exist!"
+    Exit(1)
+    
+if not test_conf.CheckCXXHeader(["string","cppunit/TestResult.h"]):
+    print "CPPUNIT header TestResult.h does not exist!"
+    Exit(1)
+    
+if not test_conf.CheckCXXHeader("cppunit/TextTestProgressListener.h"):
+    print "CPPUNIT header TextTestProgressListener.h does not exist!"
+    Exit(1)
+    
+if not test_conf.CheckCXXHeader("cppunit/ui/text/TextTestRunner.h"):
+    print "CPPUNIT header TextTestRunner.h does not exist!"
+    Exit(1)
+
+#check for mandatory libraries
+if not test_conf.CheckLib("cppunit",language="C++"):
+    print "CPPUNIT unit test libraray is not installed!"
+    Exit(1)
+
+test_env = test_conf.Finish()
 
 
-#create optimized environment
-opt_env = env.Clone()
-opt_env.Append(CXXFLAGS = ["-O2"])
-
-
-#create debugging environment
-dbg_env = env.Clone()
-dbg_env.Append(CXXFLAGS = ["-O0","-g"])
-
+#============================set debugging options=============================
 if debug:
-    build_env = dbg_env.Clone()
+    build_env.Append(CXXFLAGS=["-O2"])
+    test_env.Append(CXXFLAGS=["-O2"])
 else:
-    build_env = opt_env.Clone()
+    build_env.Append(CXXFLAGS=["-O0","-g"])
+    test_env.Append(CXXFLAGS=["-O0","-g"])
 
 
-test_build_env = build_env.Clone()
 #the next line is necessary for the linker on Debian system - this needs 
 #a bit more information
 if os.name == "posix":
 	build_env.Append(LINKFLAGS=["-Wl,-h$LIBSONAME"]) 
 
 Export("build_env")
-Export("test_build_env")
+Export("test_env")
 
 
 #build
