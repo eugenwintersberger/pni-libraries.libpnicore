@@ -10,9 +10,9 @@ doxygen_dict = {"@LIBPREFIX@":"${LIBPREFIX}","@LIBNAME@":"${LIBNAME}",
                 "@VERSION@":"${VERSION}"}
 
 doxygen_mainpage = build_env.Substfile(["mainpage.in"],SUBST_DICT=doxygen_dict)
+doxygen_install  = build_env.Substfile(["installation.in"],SUBST_DICT=doxygen_dict)
 doxyfile_source = ["Doxyfile.standard.in"]
 doxyfile_source.extend(["Doxyfile.extension.in"])
-#if doxygen_version > ProgramVersion(1,6,0):
 
 doxyfile = build_env.Substfile(target="Doxyfile",source=doxyfile_source,
                                SUBST_DICT=doxygen_dict,SUBSTFILESUFFIX="")
@@ -20,6 +20,7 @@ doxyfile = build_env.Substfile(target="Doxyfile",source=doxyfile_source,
 doxygen_api_doc = build_env.Command(["api-doc/html"],doxyfile,
                                     "cd doc; doxygen $SOURCE.file")
 build_env.Depends(doxygen_api_doc,doxygen_mainpage)
+build_env.Depends(doxygen_api_doc,doxygen_install)
 
 Clean(doxygen_api_doc,"api-doc")
 admin_guide = SConscript("admin-guide/SConscript")
