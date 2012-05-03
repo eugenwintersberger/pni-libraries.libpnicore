@@ -54,21 +54,29 @@ if os.name == "nt":
 elif os.name == "posix":	
 	var.Add(PathVariable("BOOSTPREFIX","set the installation prefix for boost",
                          "/usr"))
-	
+
+#this are variables which should not be used by a user
 var.Add("VERSION","library version","0.0.0")
 var.Add("LIBNAME","library name","pniutils")
 var.Add("SOVERSION","SOVersion of the library (binary interface version)","0")
-var.Add("CXX","set the compiler to use","g++")
 var.Add("MAINTAINER","package maintainer for the project","Eugen Wintersberger")
 var.Add("MAINTAINER_MAIL","e-mail of the package maintainer","eugen.wintersberger@desy.de")
-var.Add("DOCDIR","installation directory for the documentation","")
 var.Add("LIBSONAME","name of the library including the SO-version","")
 var.Add("LIBLINKNAME","name of the library used for linking","")
 var.Add("LIBFULLNAME","full name of the library binary","")
+var.Add("PKGNAME","name of the package for installation","")
+
+#build variables interesting for users that want to build from source
+var.Add("CXX","set the compiler to use","g++")
+var.Add("DOCDIR","installation directory for the documentation","")
 var.Add("INCDIR","installation path for header files","")
 var.Add("LIBDIR","library installation path","")
-var.Add("PKGNAME","name of the package for installation","")
-var.Add(PathVariable("VTKINCDIR","header installation path for VTK",""))
+var.Add(PathVariable("VTKINCDIR","header installation path for VTK","/usr/include/vtk"))
+var.Add(PathVariable("VTKLIBDIR","VTK library installation","/usr/lib"))
+var.Add(PathVariable("BOOSTINCDIR","BOOST header installation path","/usr/include"))
+var.Add(PathVariable("BOOSTLIBDIR","BOOST library installation path","/usr/lib"))
+var.Add(PathVariable("CPPUINCDIR","CPPUnit header installation path","/usr/include"))
+var.Add(PathVariable("CPPULIBDIR","CPPUnit library installation path","/usr/lib"))
 
 #need now to create the proper library suffix
 
@@ -101,10 +109,8 @@ print env["LIBDIR"]
 #set default compiler flags
 env.Append(CXXFLAGS = ["-Wall","-std=c++0x"])
 env.Append(LIBS=["dl"])
-env.Append(LIBPATH=path.join(env["BOOSTPREFIX"],"lib"))
-env.Append(CPPPATH=path.join(env["BOOSTPREFIX"],"include"))
-
-env.Append(CPPPATH=[env["VTKINCDIR"]])
+env.AppendUnique(LIBPATH=[env["VTKLIBDIR"],env["BOOSTLIBDIR"],env["CPPULIBDIR"]])
+env.AppendUnique(CPPPATH=[env["VTKINCDIR"],env["BOOSTINCDIR"],env["CPPUINCDIR"]])
 
 #set the proper compiler - this should be changed to something 
 #more general - independent of the underlying operating system
