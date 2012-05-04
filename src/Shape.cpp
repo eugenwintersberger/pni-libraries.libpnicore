@@ -60,7 +60,7 @@ namespace utils{
         return size;
     }
 
-    //===================constructors and destructors===============================
+    //===================constructors and destructors===========================
     //implementation of the default constructor
     Shape::Shape():
         _shape(),
@@ -68,7 +68,7 @@ namespace utils{
         _size(0)
     { }
 
-    //------------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
     //implementation of the constructor with initializer list
     Shape::Shape(const std::initializer_list<size_t> &list):
         _shape(list),
@@ -76,7 +76,7 @@ namespace utils{
         _size(_compute_size(_shape))
     { }
 
-    //------------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
     //implementation of a constructor with a vector
     Shape::Shape(const std::vector<size_t> &vector):
         _shape(vector),
@@ -84,7 +84,7 @@ namespace utils{
         _size(_compute_size(_shape))
     { }
 
-    //------------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
     //implementation of the copy constructor
     Shape::Shape(const Shape &s):
         _shape(s._shape),
@@ -92,7 +92,7 @@ namespace utils{
         _size(s._size)
     { }
 
-    //------------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
     //implementation of the move constructor
     Shape::Shape(Shape &&o):
         _shape(std::move(o._shape)),
@@ -110,11 +110,10 @@ namespace utils{
         _shape.free();
     }
 
-    //=============Implementation of the assignment operators=======================
+    //=============Implementation of the assignment operators===================
     //implementation of the copy assignment
-    Shape &Shape::operator=(const Shape &a){
-        EXCEPTION_SETUP("ArrayShape &ArrayShape::operator=(const ArrayShape &a)");
-        
+    Shape &Shape::operator=(const Shape &a)
+    {
         if(this == &a) return *this;
 
         _size = a._size;
@@ -124,7 +123,7 @@ namespace utils{
         return *this;
     }
 
-    //------------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
     //implementation of move assignment
     Shape &Shape::operator=(Shape &&o){
 
@@ -143,11 +142,9 @@ namespace utils{
         return _shape.size();
     }
 
-    //============methods to access and manipulate dimensions=======================
+    //============methods to access and manipulate dimensions===================
     //implementation of set dimension
     void Shape::dim(const size_t &i,const size_t &d){
-        EXCEPTION_SETUP("void ArrayShape::setDimension(const UInt32 &i,const UInt32 &d)");
-
         _shape[i] = d;
 
         //like for setDimensions - strides and array size must be adopted
@@ -155,7 +152,7 @@ namespace utils{
         _size = _compute_size(_shape);
     }
 
-    //-------------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
     //implementation of the set dimension by initializer list
     void Shape::dim(const std::initializer_list<size_t> &list){
         EXCEPTION_SETUP("void Shape::dim(std::initializer_list<size_t> list)");
@@ -180,7 +177,7 @@ namespace utils{
         _size = _compute_size(_shape);
     }
 
-    //-----------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
     //implementation of the set dimension method using a vector
     void Shape::dim(const std::vector<size_t> &vector){
         EXCEPTION_SETUP("void Shape::dim(std::vector<size_t> list)");
@@ -205,33 +202,36 @@ namespace utils{
         _size = _compute_size(_shape);
     }
 
-    //-----------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
     //implementation of get dimension
     size_t Shape::dim(const size_t &i) const{
-        EXCEPTION_SETUP("UInt32 ArrayShape::getDimension(const UInt32 &i) const");
+        EXCEPTION_SETUP("size_t Shape::dim(const size_t &i) const");
 
         return _shape[i];
     }
 
-    //===========Methods concerning offset and index handling=======================
+    //===========Methods concerning offset and index handling===================
     //implementation of offset calculation
     size_t Shape::offset(const Index &i) const {
-        EXCEPTION_SETUP("UInt64 ArrayShape::getOffset(const Index &i)");
+        EXCEPTION_SETUP("size_t Shape::offset(const Index &i) const");
         size_t offset = 0;
         size_t index = 0;
 
         if(!_shape.is_allocated()){
-            EXCEPTION_INIT(MemoryAccessError,"ArrayShape object is not allocated (rank == 0)!");
+            EXCEPTION_INIT(MemoryAccessError,
+                    "Shape object is not allocated (rank == 0)!");
             EXCEPTION_THROW();
         }
 
         if(i.rank() == 0){
-            EXCEPTION_INIT(MemoryAccessError,"Index object is not allocated (rank = 0)!");
+            EXCEPTION_INIT(MemoryAccessError,
+                    "Index object is not allocated (rank = 0)!");
             EXCEPTION_THROW();
         }
 
         if(i.rank() != rank()){
-            EXCEPTION_INIT(ShapeMissmatchError,"ArrayShape and Index rank do not match!");
+            EXCEPTION_INIT(ShapeMissmatchError,
+                    "Shape and Index rank do not match!");
             EXCEPTION_THROW();
         }
 
@@ -246,7 +246,7 @@ namespace utils{
         return offset;
     }
 
-    //------------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
     //compute an offset form an initializer list
     size_t Shape::offset(const std::initializer_list<size_t> &list) const{
         EXCEPTION_SETUP("size_t Shape::"
@@ -255,7 +255,8 @@ namespace utils{
         size_t offset = 0;
 
         if(!_shape.is_allocated()){
-            EXCEPTION_INIT(MemoryAccessError,"Shape object is not allocated (rank == 0)!");
+            EXCEPTION_INIT(MemoryAccessError,
+                    "Shape object is not allocated (rank == 0)!");
             EXCEPTION_THROW();
         }
 
@@ -285,22 +286,26 @@ namespace utils{
 
     }
 
-    //------------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
     //implementation of index calculation
     void Shape::index(const size_t &offset,Index &i) const {
-        EXCEPTION_SETUP("void ArrayShape::getIndex(const UInt64 &offset,Index &i) const");
+        EXCEPTION_SETUP("void Shape::index(const size_t &offset,Index &i) "
+                        "const");
 
         if(!_shape.is_allocated()){
-            EXCEPTION_INIT(MemoryAccessError,"ArrayShape object is not allocated (rank == 0)!");
+            EXCEPTION_INIT(MemoryAccessError,
+                    "Shape object is not allocated (rank == 0)!");
             EXCEPTION_THROW();
         }
 
         if(i.rank() == 0){
-            EXCEPTION_INIT(MemoryAccessError,"Index object is not allocated (rank == 0)!")
+            EXCEPTION_INIT(MemoryAccessError,
+                    "Index object is not allocated (rank == 0)!")
         }
 
         if(i.rank() != rank()){
-            EXCEPTION_INIT(ShapeMissmatchError,"ArrayShape and Index have different rank!");
+            EXCEPTION_INIT(ShapeMissmatchError,
+                    "Shape and Index have different rank!");
             EXCEPTION_THROW();
         }
 
@@ -318,7 +323,7 @@ namespace utils{
         }
     }
 
-    //================Implementation of comparison operators========================
+    //================Implementation of comparison operators===================
     //implementation of equality check
     bool operator==(const Shape &a,const Shape &b){
         //check the rank of the two shapes
@@ -335,7 +340,7 @@ namespace utils{
         return true;
     }
 
-    //------------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
     //implementation if inequality checkc
     bool operator!=(const Shape &a,const Shape &b){
         if(a==b){
@@ -345,7 +350,7 @@ namespace utils{
         return true;
     }
 
-    //=====================Implementation of output operator========================
+    //=====================Implementation of output operator====================
     std::ostream &operator<<(std::ostream &o,const Shape &s){
         o<<"Rank = "<<s.rank()<<":";
         o<<"( ";
@@ -354,7 +359,7 @@ namespace utils{
         return o;
     }
 
-    //================Implementation of access operators============================
+    //================Implementation of access operators========================
     //implementation of read only access
     const size_t Shape::operator[](size_t i) const{
         return _shape[i];

@@ -204,6 +204,8 @@ namespace utils{
             //! assignment operator
 
             //! copy assignment operator
+
+            //! \throws MemoryAllocationError if memory allocation for the new Shape fails
             Shape &operator=(const Shape &);
             //! move assignment operator
             Shape &operator=(Shape &&o);
