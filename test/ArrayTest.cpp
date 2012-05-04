@@ -16,17 +16,8 @@ using namespace pni::utils;
 
 //------------------------------------------------------------------------------
 void ArrayTest::setUp(){
-	r1 = 2;
-	r2 = 3;
-
-	s1.rank(r1);
-	s2.rank(r2);
-
-	s1.dim(0,3); s1.dim(1,4);
-	s2.dim(0,2);
-	s2.dim(1,3);
-	s2.dim(2,5);
-
+    s1 = {3,4};
+    s2 = {2,3,5};
 }
 
 //------------------------------------------------------------------------------
@@ -60,27 +51,24 @@ void ArrayTest::testAssignment(){
 
 //------------------------------------------------------------------------------
 void ArrayTest::testSlowArrayConstruction(){
-	Shape s;
-	Int32Array a;
-	Index in;
 
 	//construct the shape object
-	s.rank(2);
-	in.rank(s.rank());
-	s.dim(0,1024);
-	s.dim(1,2048);
+	Shape s = {1024,2048};
 
+	Int32Array a;
 	a.shape(s);
 	Buffer<Int32> buffer;
 	buffer.allocate(s.size());
 	a.buffer(buffer);
+    CPPUNIT_ASSERT(a.is_allocated());
 
+	Index in(s.rank());
 	in[0] = 100; in[1] = 100;
-	a(in) = 1000;
+	CPPUNIT_ASSERT_NO_THROW(a(in) = 1000);
 	in[0] = 50; in[1] = 23;
-	a(in) = -10;
+	CPPUNIT_ASSERT_NO_THROW(a(in) = -10);
 	in[0] = 1023; in[1] = 2047;
- 	a(in) = 50;
+ 	CPPUNIT_ASSERT_NO_THROW(a(in) = 50);
 
 	CPPUNIT_ASSERT(a.min() == -10);
 	CPPUNIT_ASSERT(a.max() == 1000);

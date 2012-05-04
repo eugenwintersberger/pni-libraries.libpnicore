@@ -37,375 +37,328 @@
 namespace pni{
 namespace utils{
 
-//===========================private methods====================================
-void Shape::_compute_dimstrides()
-{
-    ssize_t i; //we need here a signed value
+    //===========================private methods================================
+    Buffer<size_t> Shape::_compute_dimstrides(const Buffer<size_t> &s)
+    {
+        Buffer<size_t> ds(s.size());
 
-    //compute the dimension  strides
-    for(i=rank()-1;i>=0;i--){
-        if(i==(ssize_t)rank()-1){
-            _dimstrides[(size_t)i] = 1;
-            continue;
+        //compute the dimension  strides
+        for(ssize_t i=ds.size()-1;i>=0;i--){
+            if(i==(ssize_t)ds.size()-1){
+                ds[(size_t)i] = 1;
+                continue;
+            }
+            ds[(size_t)i] = ds[(size_t)i+1]*s[(size_t)i+1];
         }
-        _dimstrides[(size_t)i] = _dimstrides[(size_t)i+1]*_shape[(size_t)i+1];
+        return ds;
     }
-}
 
-void Shape::_compute_size(){
-    _size = 1;
-    for(size_t i=0;i<rank();i++) _size *= _shape[i];
-}
-
-//===================constructors and destructors===============================
-//implementation of the default constructor
-Shape::Shape(){
-    _size = 0;
-}
-
-//------------------------------------------------------------------------------
-//implementation of the standard constructor
-Shape::Shape(const size_t &r)
-    :_dimstrides(r),
-     _shape(r)
-{
-	EXCEPTION_SETUP("ArrayShape::ArrayShape(const UInt32 &r)");
-
-	//initialize member variables
-	_size = 0;
-    _dimstrides = 0;
-    _shape = 0;
-}
-
-//------------------------------------------------------------------------------
-//implementation of the constructor with initializer list
-Shape::Shape(const std::initializer_list<size_t> &list)
-    :_dimstrides(list.size()),
-     _shape(list)
-{
-    EXCEPTION_SETUP("Shape::Shape(std::initializer_list<size_t> list)");
-
-    _size = 0;
-    _dimstrides = 0;
-
-    _compute_size();
-    _compute_dimstrides();
-}
-
-//------------------------------------------------------------------------------
-//implementation of a constructor with a vector
-Shape::Shape(const std::vector<size_t> &vector)
-    :_dimstrides(vector.size()),
-     _shape(vector)
-{
-    _size = 0;
-    _dimstrides = 0;
-
-    _compute_size();
-    _compute_dimstrides();
-}
-
-//------------------------------------------------------------------------------
-//implementation of the copy constructor
-Shape::Shape(const Shape &s){
-	EXCEPTION_SETUP("ArrayShape::ArrayShape(const ArrayShape &s)");
-
-	//initialize variables
-	_size = 0;
-
-	_dimstrides = s._dimstrides;
-	_shape = s._shape;
-
-	_compute_size();
-	_compute_dimstrides();
-}
-
-//------------------------------------------------------------------------------
-//implementation of the move constructor
-Shape::Shape(Shape &&o){
-	_size = o._size;
-	o._size = 0;
-
-	_shape = std::move(o._shape);
-	_dimstrides = std::move(o._dimstrides);
-}
-
-//------------------------------------------------------------------------------
-//implementation of the destructor
-Shape::~Shape(){
-	_size = 0;
-	_dimstrides.free();
-	_shape.free();
-}
-
-//==============methods to access and manipulate the rank of a shape============
-
-void Shape::rank(const size_t &r){
-	EXCEPTION_SETUP("void ArrayShape::setRank(const UInt32 &r)");
-
-	if(r!=0){
-		_dimstrides.allocate(r);
-		_shape.allocate(r);
-
-		for(size_t i=0;i<r;i++){
-			_shape[i] = 0;
-			_dimstrides[i] = 0;
-		}
-	}else{
-		_dimstrides.free();
-		_shape.free();
-	}
-	_size = 0;
-}
-
-size_t Shape::rank() const{
-    return _shape.size();
-}
-
-//============methods to access and manipulate dimensions=======================
-//implementation of set dimension
-void Shape::dim(const size_t &i,const size_t &d){
-	EXCEPTION_SETUP("void ArrayShape::setDimension(const UInt32 &i,const UInt32 &d)");
-
-	_shape[i] = d;
-
-	//like for setDimensions - strides and array size must be adopted
-	_compute_dimstrides();
-	_compute_size();
-}
-
-//-------------------------------------------------------------------------------
-//implementation of the set dimension by initializer list
-void Shape::dim(const std::initializer_list<size_t> &list){
-    EXCEPTION_SETUP("void Shape::dim(std::initializer_list<size_t> list)");
-
-    if(list.size() != rank()){
-        EXCEPTION_INIT(SizeMissmatchError,
-                "Initializer list size does not match rank of Shape!");
-        EXCEPTION_THROW();
+    //-------------------------------------------------------------------------
+    size_t Shape::_compute_size(const Buffer<size_t> &s){
+        size_t size = 1;
+        for(size_t i=0;i<s.size();i++) size *= s[i];
+        return size;
     }
-    
-    size_t cntr = 0;
-#ifdef NOFOREACH
-    for(auto iter = list.begin();iter!=list.end();iter++){
-        const size_t &i = *iter;
-#else
-    for(const size_t &i: list){
-#endif
-        _shape[cntr] = i;
-        cntr++;
+
+    //===================constructors and destructors===============================
+    //implementation of the default constructor
+    Shape::Shape():
+        _shape(),
+        _dimstrides(0),
+        _size(0)
+    { }
+
+    //------------------------------------------------------------------------------
+    //implementation of the constructor with initializer list
+    Shape::Shape(const std::initializer_list<size_t> &list):
+        _shape(list),
+        _dimstrides(_compute_dimstrides(_shape)),
+        _size(_compute_size(_shape))
+    { }
+
+    //------------------------------------------------------------------------------
+    //implementation of a constructor with a vector
+    Shape::Shape(const std::vector<size_t> &vector):
+        _shape(vector),
+        _dimstrides(_compute_dimstrides(_shape)),
+        _size(_compute_size(_shape))
+    { }
+
+    //------------------------------------------------------------------------------
+    //implementation of the copy constructor
+    Shape::Shape(const Shape &s):
+        _shape(s._shape),
+        _dimstrides(s._dimstrides),
+        _size(s._size)
+    { }
+
+    //------------------------------------------------------------------------------
+    //implementation of the move constructor
+    Shape::Shape(Shape &&o):
+        _shape(std::move(o._shape)),
+        _dimstrides(std::move(o._dimstrides)),
+        _size(std::move(o._size))
+    {
+        o._size = 0;
     }
-    _compute_dimstrides();
-    _compute_size();
-}
 
-//-----------------------------------------------------------------------------
-//implementation of the set dimension method using a vector
-void Shape::dim(const std::vector<size_t> &vector){
-    EXCEPTION_SETUP("void Shape::dim(std::vector<size_t> list)");
-
-    if(vector.size() != rank()){
-        EXCEPTION_INIT(SizeMissmatchError,
-                "Initializer list size does not match rank of Shape!");
-        EXCEPTION_THROW();
+    //--------------------------------------------------------------------------
+    //implementation of the destructor
+    Shape::~Shape(){
+        _size = 0;
+        _dimstrides.free();
+        _shape.free();
     }
-    
-    size_t cntr = 0;
-#ifdef NOFOREACH
-    for(auto iter = vector.begin();iter!=vector.end();iter++){
-        const size_t &i = *iter;
-#else
-    for(const size_t &i: vector){
-#endif
-        _shape[cntr] = i;
-        cntr++;
+
+    //=============Implementation of the assignment operators=======================
+    //implementation of the copy assignment
+    Shape &Shape::operator=(const Shape &a){
+        EXCEPTION_SETUP("ArrayShape &ArrayShape::operator=(const ArrayShape &a)");
+        
+        if(this == &a) return *this;
+
+        _size = a._size;
+        _dimstrides = a._dimstrides;
+        _shape = a._shape;
+
+        return *this;
     }
-    _compute_dimstrides();
-    _compute_size();
-}
 
-//-----------------------------------------------------------------------------
-//implementation of get dimension
-size_t Shape::dim(const size_t &i) const{
-	EXCEPTION_SETUP("UInt32 ArrayShape::getDimension(const UInt32 &i) const");
+    //------------------------------------------------------------------------------
+    //implementation of move assignment
+    Shape &Shape::operator=(Shape &&o){
 
-	return _shape[i];
-}
+        if(this == &o) return *this;
+        
+        _size = o._size;
+        o._size = 0;
+        _dimstrides = std::move(o._dimstrides);
+        _shape = std::move(o._shape);
 
-//===========Methods concerning offset and index handling=======================
-//implementation of offset calculation
-size_t Shape::offset(const Index &i) const {
-	EXCEPTION_SETUP("UInt64 ArrayShape::getOffset(const Index &i)");
-	size_t offset = 0;
-	size_t index = 0;
+        return *this;
+    }
+    //========methods to access and manipulate the rank of a shape==============
 
-	if(!_shape.is_allocated()){
-		EXCEPTION_INIT(MemoryAccessError,"ArrayShape object is not allocated (rank == 0)!");
-		EXCEPTION_THROW();
-	}
+    size_t Shape::rank() const{
+        return _shape.size();
+    }
 
-	if(i.rank() == 0){
-		EXCEPTION_INIT(MemoryAccessError,"Index object is not allocated (rank = 0)!");
-		EXCEPTION_THROW();
-	}
+    //============methods to access and manipulate dimensions=======================
+    //implementation of set dimension
+    void Shape::dim(const size_t &i,const size_t &d){
+        EXCEPTION_SETUP("void ArrayShape::setDimension(const UInt32 &i,const UInt32 &d)");
 
-	if(i.rank() != rank()){
-		EXCEPTION_INIT(ShapeMissmatchError,"ArrayShape and Index rank do not match!");
-		EXCEPTION_THROW();
-	}
+        _shape[i] = d;
 
-	for(size_t d=0;d<rank();d++){
-		index = i[d];
-		if(index >= dim(d)){
-			EXCEPTION_INIT(IndexError,"Index out of bounds!");
-			EXCEPTION_THROW();
-		}
-		offset += index*_dimstrides[d];
-	}
-	return offset;
-}
+        //like for setDimensions - strides and array size must be adopted
+        _dimstrides = _compute_dimstrides(_shape);
+        _size = _compute_size(_shape);
+    }
 
-//------------------------------------------------------------------------------
-//compute an offset form an initializer list
-size_t Shape::offset(const std::initializer_list<size_t> &list) const{
-    EXCEPTION_SETUP("size_t Shape::"
-            "offset(std::initializer_list<size_t> list) const");
+    //-------------------------------------------------------------------------------
+    //implementation of the set dimension by initializer list
+    void Shape::dim(const std::initializer_list<size_t> &list){
+        EXCEPTION_SETUP("void Shape::dim(std::initializer_list<size_t> list)");
 
-	size_t offset = 0;
-
-	if(!_shape.is_allocated()){
-		EXCEPTION_INIT(MemoryAccessError,"Shape object is not allocated (rank == 0)!");
-		EXCEPTION_THROW();
-	}
-
-
-	if(list.size() != rank()){
-		EXCEPTION_INIT(ShapeMissmatchError,
-                "Shape rank and initializer list size do not match!");
-		EXCEPTION_THROW();
-	}
-
-    size_t cntr = 0;
-#ifdef NOFOREACH
-    for(auto iter = list.begin();iter!=list.end();iter++){
-        const size_t &index = *iter;
-#else
-    for(const size_t &index: list){
-#endif
-        if(index >= dim(cntr)){
-			EXCEPTION_INIT(IndexError,"Index out of bounds!");
-			EXCEPTION_THROW();
+        if(list.size() != rank()){
+            EXCEPTION_INIT(SizeMissmatchError,
+                    "Initializer list size does not match rank of Shape!");
+            EXCEPTION_THROW();
         }
-        offset += index*_dimstrides[cntr];
-        cntr++; //increment list counter
+        
+        size_t cntr = 0;
+#ifdef NOFOREACH
+        for(auto iter = list.begin();iter!=list.end();iter++){
+            const size_t &i = *iter;
+#else
+        for(const size_t &i: list){
+#endif
+            _shape[cntr] = i;
+            cntr++;
+        }
+        _dimstrides = _compute_dimstrides(_shape);
+        _size = _compute_size(_shape);
     }
 
-	return offset;
+    //-----------------------------------------------------------------------------
+    //implementation of the set dimension method using a vector
+    void Shape::dim(const std::vector<size_t> &vector){
+        EXCEPTION_SETUP("void Shape::dim(std::vector<size_t> list)");
 
-}
-
-//------------------------------------------------------------------------------
-//implementation of index calculation
-void Shape::index(const size_t &offset,Index &i) const {
-	EXCEPTION_SETUP("void ArrayShape::getIndex(const UInt64 &offset,Index &i) const");
-
-	if(!_shape.is_allocated()){
-		EXCEPTION_INIT(MemoryAccessError,"ArrayShape object is not allocated (rank == 0)!");
-		EXCEPTION_THROW();
-	}
-
-	if(i.rank() == 0){
-		EXCEPTION_INIT(MemoryAccessError,"Index object is not allocated (rank == 0)!")
-	}
-
-	if(i.rank() != rank()){
-		EXCEPTION_INIT(ShapeMissmatchError,"ArrayShape and Index have different rank!");
-		EXCEPTION_THROW();
-	}
-
-	if(offset>=size()){
-		EXCEPTION_INIT(MemoryAccessError,"Offset is larger than size!");
-		EXCEPTION_THROW();
-	}
-
-	size_t o,t;
-	o = offset;
-	for(size_t d = 0;d<rank();d++){
-		t = o%_dimstrides[d];
-		i[d] = (o-t)/_dimstrides[d];
-		o = t;
-	}
-}
-
-//=============Implementation of the assignment operators=======================
-//implementation of the copy assignment
-Shape &Shape::operator=(const Shape &a){
-	EXCEPTION_SETUP("ArrayShape &ArrayShape::operator=(const ArrayShape &a)");
-
-	if(this != &a){
-		_size = a._size;
-		_dimstrides = a._dimstrides;
-		_shape = a._shape;
-	}
-
-	return *this;
-}
-
-//------------------------------------------------------------------------------
-//implementation of move assignment
-Shape &Shape::operator=(Shape &&o){
-	if(this != &o){
-		_size = o._size;
-		o._size = 0;
-		_dimstrides = std::move(o._dimstrides);
-		_shape = std::move(o._shape);
-	}
-
-	return *this;
-}
-
-
-//================Implementation of comparison operators========================
-//implementation of equality check
-bool operator==(const Shape &a,const Shape &b){
-    //check the rank of the two shapes
-    if(a.rank() != b.rank()) return false;
-    
-    //check the sizes of the two shapes
-    if(a.size() != b.size()) return false;
-    
-    //check the shape of the two array shapes
-    for(size_t i=0;i<a.rank();i++){
-        if(a[i] != b[i]) return false;
-    }
-    
-    return true;
-}
-
-//------------------------------------------------------------------------------
-//implementation if inequality checkc
-bool operator!=(const Shape &a,const Shape &b){
-    if(a==b){
-    	return false;
+        if(vector.size() != rank()){
+            EXCEPTION_INIT(SizeMissmatchError,
+                    "Initializer list size does not match rank of Shape!");
+            EXCEPTION_THROW();
+        }
+        
+        size_t cntr = 0;
+#ifdef NOFOREACH
+        for(auto iter = vector.begin();iter!=vector.end();iter++){
+            const size_t &i = *iter;
+#else
+        for(const size_t &i: vector){
+#endif
+            _shape[cntr] = i;
+            cntr++;
+        }
+        _dimstrides = _compute_dimstrides(_shape);
+        _size = _compute_size(_shape);
     }
 
-    return true;
-}
+    //-----------------------------------------------------------------------------
+    //implementation of get dimension
+    size_t Shape::dim(const size_t &i) const{
+        EXCEPTION_SETUP("UInt32 ArrayShape::getDimension(const UInt32 &i) const");
 
-//=====================Implementation of output operator========================
-std::ostream &operator<<(std::ostream &o,const Shape &s){
-	o<<"Rank = "<<s.rank()<<":";
-	o<<"( ";
-	for(size_t i=0;i<s.rank();i++) o<<s[i]<<" ";
-	o<<")";
-	return o;
-}
+        return _shape[i];
+    }
 
-//================Implementation of access operators============================
-//implementation of read only access
-const size_t Shape::operator[](size_t i) const{
-	return _shape[i];
-}
+    //===========Methods concerning offset and index handling=======================
+    //implementation of offset calculation
+    size_t Shape::offset(const Index &i) const {
+        EXCEPTION_SETUP("UInt64 ArrayShape::getOffset(const Index &i)");
+        size_t offset = 0;
+        size_t index = 0;
+
+        if(!_shape.is_allocated()){
+            EXCEPTION_INIT(MemoryAccessError,"ArrayShape object is not allocated (rank == 0)!");
+            EXCEPTION_THROW();
+        }
+
+        if(i.rank() == 0){
+            EXCEPTION_INIT(MemoryAccessError,"Index object is not allocated (rank = 0)!");
+            EXCEPTION_THROW();
+        }
+
+        if(i.rank() != rank()){
+            EXCEPTION_INIT(ShapeMissmatchError,"ArrayShape and Index rank do not match!");
+            EXCEPTION_THROW();
+        }
+
+        for(size_t d=0;d<rank();d++){
+            index = i[d];
+            if(index >= dim(d)){
+                EXCEPTION_INIT(IndexError,"Index out of bounds!");
+                EXCEPTION_THROW();
+            }
+            offset += index*_dimstrides[d];
+        }
+        return offset;
+    }
+
+    //------------------------------------------------------------------------------
+    //compute an offset form an initializer list
+    size_t Shape::offset(const std::initializer_list<size_t> &list) const{
+        EXCEPTION_SETUP("size_t Shape::"
+                "offset(std::initializer_list<size_t> list) const");
+
+        size_t offset = 0;
+
+        if(!_shape.is_allocated()){
+            EXCEPTION_INIT(MemoryAccessError,"Shape object is not allocated (rank == 0)!");
+            EXCEPTION_THROW();
+        }
+
+
+        if(list.size() != rank()){
+            EXCEPTION_INIT(ShapeMissmatchError,
+                    "Shape rank and initializer list size do not match!");
+            EXCEPTION_THROW();
+        }
+
+        size_t cntr = 0;
+#ifdef NOFOREACH
+        for(auto iter = list.begin();iter!=list.end();iter++){
+            const size_t &index = *iter;
+#else
+        for(const size_t &index: list){
+#endif
+            if(index >= dim(cntr)){
+                EXCEPTION_INIT(IndexError,"Index out of bounds!");
+                EXCEPTION_THROW();
+            }
+            offset += index*_dimstrides[cntr];
+            cntr++; //increment list counter
+        }
+
+        return offset;
+
+    }
+
+    //------------------------------------------------------------------------------
+    //implementation of index calculation
+    void Shape::index(const size_t &offset,Index &i) const {
+        EXCEPTION_SETUP("void ArrayShape::getIndex(const UInt64 &offset,Index &i) const");
+
+        if(!_shape.is_allocated()){
+            EXCEPTION_INIT(MemoryAccessError,"ArrayShape object is not allocated (rank == 0)!");
+            EXCEPTION_THROW();
+        }
+
+        if(i.rank() == 0){
+            EXCEPTION_INIT(MemoryAccessError,"Index object is not allocated (rank == 0)!")
+        }
+
+        if(i.rank() != rank()){
+            EXCEPTION_INIT(ShapeMissmatchError,"ArrayShape and Index have different rank!");
+            EXCEPTION_THROW();
+        }
+
+        if(offset>=size()){
+            EXCEPTION_INIT(MemoryAccessError,"Offset is larger than size!");
+            EXCEPTION_THROW();
+        }
+
+        size_t o,t;
+        o = offset;
+        for(size_t d = 0;d<rank();d++){
+            t = o%_dimstrides[d];
+            i[d] = (o-t)/_dimstrides[d];
+            o = t;
+        }
+    }
+
+    //================Implementation of comparison operators========================
+    //implementation of equality check
+    bool operator==(const Shape &a,const Shape &b){
+        //check the rank of the two shapes
+        if(a.rank() != b.rank()) return false;
+        
+        //check the sizes of the two shapes
+        if(a.size() != b.size()) return false;
+        
+        //check the shape of the two array shapes
+        for(size_t i=0;i<a.rank();i++){
+            if(a[i] != b[i]) return false;
+        }
+        
+        return true;
+    }
+
+    //------------------------------------------------------------------------------
+    //implementation if inequality checkc
+    bool operator!=(const Shape &a,const Shape &b){
+        if(a==b){
+            return false;
+        }
+
+        return true;
+    }
+
+    //=====================Implementation of output operator========================
+    std::ostream &operator<<(std::ostream &o,const Shape &s){
+        o<<"Rank = "<<s.rank()<<":";
+        o<<"( ";
+        for(size_t i=0;i<s.rank();i++) o<<s[i]<<" ";
+        o<<")";
+        return o;
+    }
+
+    //================Implementation of access operators============================
+    //implementation of read only access
+    const size_t Shape::operator[](size_t i) const{
+        return _shape[i];
+    }
 
 //end of namespace
 }

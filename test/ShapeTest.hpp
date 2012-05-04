@@ -5,6 +5,7 @@
 
 #include<cppunit/TestFixture.h>
 #include<cppunit/extensions/HelperMacros.h>
+#include<vector>
 #include "Shape.hpp"
 
 using namespace pni::utils;
@@ -19,9 +20,9 @@ class ShapeTest: public CppUnit::TestFixture {
 	CPPUNIT_TEST(testExceptions);
 	CPPUNIT_TEST_SUITE_END();
 private:
-	unsigned int *_s1;
+    std::vector<size_t> _s1;
 	size_t _r1, _r2;
-	unsigned int *_s2;
+    std::vector<size_t> _s2;
 	Shape _sh1, _sh2;
 public:
 	void setUp();

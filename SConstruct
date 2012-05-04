@@ -286,11 +286,11 @@ test_env = test_conf.Finish()
 
 #============================set debugging options=============================
 if debug:
-    build_env.Append(CXXFLAGS=["-O2"])
-    test_env.Append(CXXFLAGS=["-O2"])
-else:
     build_env.Append(CXXFLAGS=["-O0","-g"])
     test_env.Append(CXXFLAGS=["-O0","-g"])
+else:
+    build_env.Append(CXXFLAGS=["-O2"])
+    test_env.Append(CXXFLAGS=["-O2"])
 
 
 #the next line is necessary for the linker on Debian system - this needs 

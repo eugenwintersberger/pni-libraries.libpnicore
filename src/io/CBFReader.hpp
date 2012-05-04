@@ -144,9 +144,7 @@ namespace io{
                          "ArrayType image(size_t i=0) const");
 
         ImageInfo info = _image_info[i];
-        Shape shape(2);
-        shape.dim(0,info.nx());
-        shape.dim(1,info.ny());
+        Shape shape = {info.nx(),info.ny()};
 
         ArrayType array(shape);
         

@@ -64,7 +64,7 @@ ArrayObject::~ArrayObject(){
 	//we have to do here something - so we set the rank to 0
 	//that might be used as an indication that the array is
 	//destroyed.
-	_shape.rank(0);
+	_shape = Shape();
 }
 
 //======================Implementation of assignment operators==================

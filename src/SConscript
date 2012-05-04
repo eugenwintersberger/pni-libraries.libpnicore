@@ -5,7 +5,7 @@ Import("build_env")
 #----------------------Building object files------------------------------------
 source_list = ["ScalarObject.cpp","BufferObject.cpp",
                "ArrayObject.cpp","Shape.cpp","Exceptions.cpp",
-               "DataObject.cpp","NumericObject.cpp","Index.cpp","Selection.cpp",
+               "DataObject.cpp","NumericObject.cpp","Index.cpp",
                "ComplexUtils.cpp","IndexMap.cpp","Types.cpp"]
                
 #build static and shared objects               

@@ -11,59 +11,40 @@ CPPUNIT_TEST_SUITE_REGISTRATION(ShapeTest);
 
 //------------------------------------------------------------------------------
 void ShapeTest::setUp(){
-	_r1 = 2;
-	_r2 = 3;
-
-	_s1 = new unsigned int[_r1];
-	_s2 = new unsigned int[_r2];
-
-	_s1[0] = 3; _s1[1] = 4;
-	_s2[0] = 2; _s2[1] = 3; _s2[2] = 5;
+    _s1 = {3,4};
+    _s2 = {2,3,5};
 }
 
 //------------------------------------------------------------------------------
 void ShapeTest::tearDown(){
-	if (_s1!=NULL) delete [] _s1;
-	if (_s2!=NULL) delete [] _s2;
 }
 
 //------------------------------------------------------------------------------
 void ShapeTest::testConstruction(){
 	std::cout<<"void ShapeTest::testConstruction()-----------------------";
 	std::cout<<std::endl;
-	Shape s;
+    //default initialization of a shape from a std::vector object
+	Shape s(_s1);
 
 	//manual construction
-	CPPUNIT_ASSERT_NO_THROW(s.rank(_r1));
-	CPPUNIT_ASSERT(s.rank() == _r1);
+	CPPUNIT_ASSERT(s.rank() == _s1.size());
 	for(size_t i=0;i<s.rank();i++){
-		s.dim(i,_s1[i]);
+        CPPUNIT_ASSERT(s[i]==_s1[i]);
 	}
 
-
-	//check here if all parameters are set correctly
-	CPPUNIT_ASSERT(_r1==s.rank());
-	for(size_t i=0;i<_r1;i++){
-		CPPUNIT_ASSERT(_s1[i]==s.dim(i));
-		CPPUNIT_ASSERT(s[i]==_s1[i]);
-	}
-
-	//now we change rank and shape of the object
-	s.rank(_r2);
-	for(size_t i=0;i<s.rank();i++) s.dim(i,_s2[i]);
+	//now we change rank and shape of the object - this should go via 
+    //implicit conversion from the std::vector object to the shape
+	s = _s2;
 	for(size_t i=0;i<s.rank();i++){
 		CPPUNIT_ASSERT(_s2[i] == s.dim(i));
 		CPPUNIT_ASSERT(s[i] == _s2[i]);
 	}
 
-	Shape s1(_r2);
-	for(size_t i=0;i<s1.rank();i++) s1.dim(i,_s2[i]);
+    //using copy construction
+	Shape s1(s);
 
+    //check comparison of shape objects
 	CPPUNIT_ASSERT(s1 == s);
-
-	//copy constructor
-	Shape s2(s);
-	CPPUNIT_ASSERT(s==s2);
 
     //construct from an initializer list
     Shape s3 = {10,30,12};
@@ -72,18 +53,16 @@ void ShapeTest::testConstruction(){
     CPPUNIT_ASSERT(s3[2] == 12);
     CPPUNIT_ASSERT(s3.rank() == 3);
 
-    Shape s4(3);
+    //using move construction
+    Shape s4 = std::move(s);
+    CPPUNIT_ASSERT(s4.rank() == _s2.size());
+    CPPUNIT_ASSERT(s4.size() == s1.size());
+    CPPUNIT_ASSERT(s.rank() == 0);
+    CPPUNIT_ASSERT(s.size() == 0);
+
+    //reset dimensions using an initializer list
     s4.dim({1,2,3});
     CPPUNIT_ASSERT(s4.size()==6);
-
-    //construction from a vector
-    std::vector<size_t> dims={10,2,5};
-    Shape s5 = dims;
-    CPPUNIT_ASSERT(s5.size() == 100);
-    CPPUNIT_ASSERT(s5.rank() == 3);
-    CPPUNIT_ASSERT(s5[0] == 10);
-    CPPUNIT_ASSERT(s5[1] == 2);
-    CPPUNIT_ASSERT(s5[2] == 5);
 
 }
 
@@ -92,17 +71,22 @@ void ShapeTest::testAssignment(){
 	std::cout<<"void ShapeTest::testAssignment()------------------------------";
 	std::cout<<std::endl;
 	//testing the assignment operator
-	Shape s1,s2;
+	Shape s1 = {1,2,3,4};
+    Shape s2,s3;
 
-	CPPUNIT_ASSERT_NO_THROW(s1 = s2);
-	s1.rank(3);
-	CPPUNIT_ASSERT_NO_THROW(s2 = s1);
-	CPPUNIT_ASSERT(s1.rank() == s2.rank());
+    //copy assignment
+    CPPUNIT_ASSERT_NO_THROW(s2 = s1);
+    CPPUNIT_ASSERT(s2 == s1);
+    CPPUNIT_ASSERT_NO_THROW(s3 = std::move(s1));
+    CPPUNIT_ASSERT(s3 == s2);
+    CPPUNIT_ASSERT(s3 != s1);
+    CPPUNIT_ASSERT(s1.rank() == 0);
+    CPPUNIT_ASSERT(s1.size() == 0);
 
 	Shape snon;
-	CPPUNIT_ASSERT_NO_THROW(s1 = snon);
 	CPPUNIT_ASSERT(s1 == snon);
 
+    //this is done implicitely via the conversion constructor
     snon = {1,2,3,4};
     CPPUNIT_ASSERT(snon.rank() == 4);
     CPPUNIT_ASSERT(snon[0] == 1);
@@ -115,10 +99,8 @@ void ShapeTest::testAssignment(){
 void ShapeTest::testComparison(){
 	std::cout<<"void ShapeTest::testComparison()------------------------------";
 	std::cout<<std::endl;
-	Shape s1(_r1);
-	Shape s2(_r2);
-	for(size_t i=0;i<s1.rank();i++) s1.dim(i,_s1[i]);
-	for(size_t i=0;i<s2.rank();i++) s2.dim(i,_s2[i]);
+    Shape s1(_s1);
+    Shape s2(_s2);
 
 	Shape s3(s2);
 
@@ -135,14 +117,9 @@ void ShapeTest::testComparison(){
 void ShapeTest::testOffset(){
 	std::cout<<"void ShapeTest::testOffset()----------------------------------";
 	std::cout<<std::endl;
-	Shape s1;
-	Shape s2;
+	Shape s1(_s1);
+	Shape s2(_s2);
 	Index index;
-
-	s1.rank(_r1);
-	for(size_t i=0;i<s1.rank();i++) s1.dim(i,_s1[i]);
-	s2.rank(_r2);
-	for(size_t i=0;i<s2.rank();i++) s2.dim(i,_s2[i]);
 
 	index.rank(s1.rank());
 	index[0] = 2;
@@ -163,10 +140,7 @@ void ShapeTest::testOffset(){
 void ShapeTest::testIndex(){
 	std::cout<<"void ShapeTest::testIndex()-----------------------------------";
 	std::cout<<std::endl;
-	Shape s1(_r1);
-	for(size_t i=0;i<s1.rank();i++) s1.dim(i,_s1[i]);
-	Shape s2(_r2);
-	for(size_t i=0;i<s2.rank();i++) s2.dim(i,_s2[i]);
+	Shape s1(_s1),s2(_s2);
 	Index index;
 
 	index.rank(s1.rank());
@@ -201,7 +175,7 @@ void ShapeTest::testIndex(){
 void ShapeTest::testExceptions(){
 	std::cout<<"void ShapeTest::testExceptions()------------------------------";
 	std::cout<<std::endl;
-	Shape s(_r2);
+	Shape s(_s1);
 
 	CPPUNIT_ASSERT_THROW(s.dim(10,0),IndexError);
 	CPPUNIT_ASSERT_THROW(s.dim(-10,0),IndexError);
@@ -210,7 +184,7 @@ void ShapeTest::testExceptions(){
 	CPPUNIT_ASSERT_THROW(s[10],IndexError);
 	CPPUNIT_ASSERT_THROW(s[-10],IndexError);
 
-	for(size_t i=0;i<s.rank();i++) s.dim(i,_s2[i]);
+    s = _s2;
 
 	Index i(s.rank());
 	i[0] = 1; i[1] = 100; i[2] = 1;

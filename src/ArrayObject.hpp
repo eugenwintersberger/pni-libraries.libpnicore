@@ -117,7 +117,7 @@ public:
 	virtual void *void_ptr() = 0;
 	virtual const void *void_ptr() const = 0;
 	virtual void reset(){
-		_shape.rank(0);
+		_shape = Shape();
 	}
 
 };
