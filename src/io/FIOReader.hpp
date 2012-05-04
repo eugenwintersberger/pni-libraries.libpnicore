@@ -133,8 +133,9 @@ namespace io{
             \param index index of the column in the file
             \param array instance of the Array template where to store the data
             */
-            template<typename T,template<typename> class BT> 
-                void _read_column(size_t index,Array<T,BT> &array) const;
+            template<typename T,template<typename,typename> class BT,typename
+                Allocator> 
+                void _read_column(size_t index,Array<T,BT,Allocator> &array) const;
 
         public:
             //==============constructor and destructor=========================
@@ -256,8 +257,8 @@ namespace io{
     }
 
     //-------------------------------------------------------------------------
-    template<typename T,template<typename> class BT> 
-        void FIOReader::_read_column(size_t index,Array<T,BT> &array) const
+    template<typename T,template<typename,typename> class BT,typename Allocator> 
+        void FIOReader::_read_column(size_t index,Array<T,BT,Allocator> &array) const
     {
         EXCEPTION_SETUP("template<typename T,template<typename> class BT> "
                         "void FIOReader::_read_column(size_t index,"

@@ -53,9 +53,10 @@ namespace tiff {
         std::vector<size_t> _bits_per_channel; //!< number of bits per channel
         std::vector<TypeID> _channel_types; //!< type ids of channel data
 
-        template<typename CTYPE,typename T,template<typename> class BT> 
+        template<typename CTYPE,typename T,template<typename,typename> class
+            BT,typename Allocator> 
             void _read_interlace(size_t c,std::ifstream &stream,
-                                 Array<T,BT> &array) const;
+                                 Array<T,BT,Allocator> &array) const;
 
     public:
         //====================constructors and destructor======================
@@ -138,9 +139,10 @@ namespace tiff {
         friend std::ostream &operator<<(std::ostream &o,const StripReader &r);
     };
 
-    template<typename CTYPE,typename T,template<typename> class BT> 
+    template<typename CTYPE,typename T,template<typename,typename> class
+        BT,typename Allocator> 
         void StripReader::_read_interlace(size_t channel,
-                std::ifstream &stream,Array<T,BT> &array) const
+                std::ifstream &stream,Array<T,BT,Allocator> &array) const
     {
         //we can assume here that the buffer is already properly allocated
         Buffer<char> read_buffer;   //buffer where to read data to

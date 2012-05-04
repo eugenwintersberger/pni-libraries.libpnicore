@@ -47,18 +47,20 @@ namespace cbf{
             static std::streampos read_header(std::ifstream &is,
                     std::vector<pni::io::ImageInfo> &info,CompressionID &ct);
 
-            template<typename CBFT,typename T,template<typename> class BT>
+            template<typename CBFT,typename T,template<typename,typename> class
+                BT,typename Allocator>
                 static void read_data_byte_offset(
                         std::ifstream &is,
                         const pni::io::ImageInfo &info,
-                        Array<T,BT> &array);
+                        Array<T,BT,Allocator> &array);
 
 
     };
 
-    template<typename CBFT,typename T,template<typename> class BT>
+    template<typename CBFT,typename T,template<typename,typename> class
+        BT,typename Allocator>
         void DectrisReader::read_data_byte_offset( std::ifstream &is,
-                const pni::io::ImageInfo &info, Array<T,BT> &array)
+                const pni::io::ImageInfo &info, Array<T,BT,Allocator> &array)
     {
 
         //unsigned long i;

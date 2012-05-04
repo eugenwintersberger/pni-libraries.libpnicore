@@ -40,10 +40,8 @@
 #include "Shape.hpp"
 #include "Exceptions.hpp"
 #include "Types.hpp"
-#include "DataObject.hpp"
-#include "ArrayObject.hpp"
 #include "Index.hpp"
-#include "Selection.hpp"
+#include "NumericObject.hpp"
 
 #include "ArrayTrait.hpp"
 #include "TypeInfo.hpp"
@@ -56,689 +54,814 @@ namespace utils {
 
 
 //! \internal
-template<typename T,template <typename> class BType > class Array;
+template<typename T,template <typename,typename> class BType,typename Allocator> class Array;
 
 //binary operators must be defined here since they are implemented as friend operators
-template<typename T,template <typename> class BType > 
-    Array<T,BType> operator+(const Array<T,BType>&, const T&);
-template<typename T,template<typename> class BType> 
-    Array<T,BType> operator+(const T&, const Array<T,BType>&);
-template<typename T,template<typename> class BType > 
-    Array<T,BType> operator+(const Array<T,BType>&, const Array<T,BType>&);
-
-template<typename T,template<typename> class BType > 
-    Array<T,BType> operator-(const Array<T,BType>&, const T&);
-template<typename T,template<typename> class BType> 
-    Array<T,BType> operator-(const T&, const Array<T,BType>&);
-template<typename T,template<typename> class BType> 
-    Array<T,BType> operator-(const Array<T,BType>&, const Array<T,BType>&);
-
-template<typename T,template<typename> class BType> 
-    Array<T,BType> operator*(const Array<T,BType>&, const T&);
-template<typename T,template<typename> class BType > 
-    Array<T,BType> operator*(const T&, const Array<T,BType>&);
-template<typename T,template<typename> class BType> 
-    Array<T,BType> operator*(const Array<T,BType>&, const Array<T,BType>&);
-
-template<typename T,template<typename> class BType > 
-    Array<T,BType> operator/(const Array<T,BType>&, const T&);
-template<typename T,template<typename> class BType > 
-    Array<T,BType> operator/(const T&, const Array<T,BType>&);
-template<typename T,template<typename> class BType > 
-    Array<T,BType> operator/(const Array<T,BType>&, const Array<T,BType>&);
-
-template<typename T,template<typename> class BType > 
-    bool operator==(const Array<T,BType> &, const Array<T,BType> &);
-template<typename T,template<typename> class BType > 
-    bool operator!=(const Array<T,BType> &, const Array<T,BType> &);
-template<typename T,template<typename> class BType > 
-    std::ostream &operator<<(std::ostream &o, const Array<T,BType> &a);
-
-//! \ingroup data_classes
-//! \brief template for a multi-dimensional array class
-
-//! This class represents a multidimensional array of data values. It consists of two
-//! components: a pointer to an instance of type Buffer and a pointer to an instance
-//! of type ArrayShape. From the point of object oriented programming such an array can
-//! be considered as a special view on the linear data stream represented by the Buffer
-//! object. The ArrayShape and Buffer object of the array are hold by smart pointers
-//! which allows sharing of these objects between different arrays or other
-//! program instances. How data is handled depends on which constructors are used
-//! to create the array and which methods are used to modify data elements of an
-//! instance of Array. Usually set and get methods as well as constructors come
-//! in two flavors: one where constant references of native objects are passed to them
-//! and one where smart pointers are used. In the former case the objects will be
-//! recreated by the Array object and their content will be copied.
-//! In the later case of the smart pointer versions only the pointers
-//! will be changed which allows sharing of data between the Array and external
-//! instances of the program using the array. The std::shared_ptr avoids
-//! problems with object ownership and makes it quite simple to implement this
-//! behavior.
-
-//! The motivation for the reallocation and copy processes for the reference type
-//! methods and constructors is quite simple: one cannot be sure that the
-//! instance which created the object or a simple pointer will not destroy the
-//! object while still being used in the array. Therefore the copy process is
-//! absolutely necessary.
-
-template<typename T,template <typename> class BType> class Array: public ArrayObject {
-    protected:
-        BType<T> _data; //!< Buffer object holding the data
-    public:
-        typedef T value_type;  //!< type of an array element
-        typedef BType<T> buffer_type; //!< type of the buffer object
-        typedef std::shared_ptr<Array<T,BType> > shared_ptr; //!< shared pointer to an Array<T>
-        typedef std::unique_ptr<Array<T,BType> > unique_ptr; //!< unique pointer type
-    //! default constructor
-
-    //! Neither ArrayShape nor Buffer object will be allocated. Buffer
-    //! as well as shape must be handled later using the appropriate
-    //! setBuffer(), setShape(), and allocate methods. This constructor
-    //! is perfectly applicable in all cases where the type of the array
-    //! is known at the time of definition but all other parameters
-    //! are obtained later in the code.
-    Array();
-    //! copy constructor
-
-    //! This constructor is a full copy constructor. A new array is created
-    //! and the content of the original array is copied.
-    Array(const Array<T,BType> &);
-    //! move constructor
-    Array(Array<T,BType> &&);
-    //! constructor with an array shape pointer
-
-    //! The pointer to an existing ArrayShape object is used to construct
-    //! the Array-object.
-    //!
-    //! \param s - reference to a shape object
-    Array(const Shape &s);
-    //! constructor where array shape and buffer object are set
-
-    //! The constructor takes pointers to a shape object and a buffer
-    //! object. An exception will be raised if their sizes do not match.
-    //! To keep ownership the objects will be copied.
-
-    //! \param s pointer to a shape object
-    //! \param b pointer to a buffer object
-    Array(const Shape &s, const BType<T> &b);
-
-    //! constructor
-
-    //! This constructors sets also name, unit, and description
-    //! of the NumericObject base class.
-    Array(const Shape &s,const String &n,const String &u,const String &d);
-    Array(const Shape &s,const BType<T> &b,
-          const String &n,const String &u,const String &d);
-
-    //! destructor
-    virtual ~Array();
-
-    virtual TypeID type_id() const;
-
-    //! set the buffer of the array
-
-    //! Manually set the Buffer object of the array. Here a reference to an
-    //! existing Buffer object is passed to the method. In this case
-    //! the Array object will allocate new memory and copy the content
-    //! from the argument Buffer to the newly allocated.
-    //! If the size of the Buffer object and the ArrayShape object in the
-    //! Array do not match an exception will be raised.
-
-    //! \param b reference to a Buffer object
-    virtual void buffer(const BufferObject &b);
-
-    //! obtain a smart pointer to the array Buffer
-    virtual const BufferObject &buffer() const;
-
-    //! assign a native type to the array
-
-    //! Here a value of a native type will be assigned to the Array.
-    //! The value is assigned to all elements of the array. Thus, this
-    //! operator can be used for a quick initialization of an array with numbers.
-    Array<T,BType> &operator =(const T&);
-
-    template<typename U> Array<T,BType> &operator=(const U &v);
-    //! assignment between two arrays
-
-    //! This operation is only possible if the shapes of the two arrays are equal.
-    //! If this is not the case an exception will be raised. The content of the
-    //! array on the r.h.s of the operator is copied to the array on the l.h.s.
-    //! of the operator. No memory allocation is done - only copying.
-    Array<T,BType> &operator =(const Array<T,BType> &a);
-    //! move assignemnt operator
-    Array<T,BType> &operator =(Array<T,BType> &&a);
-
-    template<typename U> Array<T,BType> &operator=(const Array<U,BType> &a);
-
-    //overloaded simple binary arithmetic operators
-    //! binary + operator for arrays
-
-    //! This version of the operator implements Array<T> + T operations.
-    //! During the operation a temporary array object is created.
-    friend Array<T,BType> operator+<> (const Array<T,BType>&, const T&);
-    //overloaded simple binary arithmetic operators
-    //! binary + operator for arrays
-
-    //! This version of the operator implements T + Array<T> operations.
-    //! During the operation a temporary array object is created.
-    friend Array<T,BType> operator+<> (const T&, const Array<T,BType>&);
-    //overloaded simple binary arithmetic operators
-    //! binary + operator for arrays
-
-    //! This version of the operator implements Array<T> + Array<T> operations.
-    //! During the operation a temporary array object is created.
-    friend Array<T,BType> operator+<> (const Array<T,BType>&, const Array<T,BType>&);
-
-    //! binary - operator for arrays
-
-    //! This version of the operator implements Array<T> - T operations.
-    //! During the operation a temporary array object is created.
-    friend Array<T,BType> operator-<> (const Array<T,BType>&, const T&);
-    //! binary - operator for arrays
-
-    //! This version of the operator implements Array<T> - Array<T> operations.
-    //! During the operation a temporary array object is created.
-    friend Array<T,BType> operator-<> (const Array<T,BType>&, const Array<T,BType>&);
-    //! binary - operator for arrays
-
-    //! This version of the operator implements T - Array<T> operations.
-    //! During the operation a temporary array object is created.
-    friend Array<T,BType> operator-<> (const T&, const Array<T,BType>&);
-
-    //! binary * operator for arrays
-
-    //! This version of the operator implements Array<T> * T operations.
-    //! During the operation a temporary array object is created.
-    friend Array<T,BType> operator*<> (const Array<T,BType>&, const T&);
-    //! binary * operator for arrays
-
-    //! This version of the operator implements Array<T> * Array<T> operations.
-    //! During the operation a temporary array object is created.
-    friend Array<T,BType> operator*<> (const Array<T,BType>&, const Array<T,BType>&);
-    //! binary * operator for arrays
-
-    //! This version of the operator implements T * Array<T> operations.
-    //! During the operation a temporary array object is created.
-    friend Array<T,BType> operator*<> (const T&, const Array<T,BType>&);
-
-    //! binary / operator for arrays
-
-    //! This version of the operator implements Array<T> / T operations.
-    //! During the operation a temporary array object is created.
-    friend Array<T,BType> operator /<> (const Array<T,BType>&, const T&);
-    //! binary / operator for arrays
-
-    //! This version of the operator implements Array<T> / Array<T> operations.
-    //! During the operation a temporary array object is created.
-    friend Array<T,BType> operator /<> (const Array<T,BType>&, const Array<T,BType>&);
-    //! binary / operator for arrays
-
-    //! This version of the operator implements T / Array<T> operations.
-    //! During the operation a temporary array object is created.
-    friend Array<T,BType> operator /<> (const T&, const Array<T,BType>&);
-
-    //these operators are important because they are performed
-    //in-place - no new array is allocated
-    //! addition operator - unary
-
-    //! Adds a single native value of type T to all elements in the Array.
-    //! This unary operator performs the operation in-place. No temporary
-    //! array will be allocated.
-    Array<T,BType> &operator +=(const T&);
-    //! addition operator - unary
-
-    //! Adds the array on the r.h.s to that on the l.h.s. of the operator.
-    //! The operation is performed in-place without the allocation of a
-    //! temporary array. The shapes of the tow arrays must match otherwise
-    //! a ShapeMissmatchError exception will be raised.
-    Array<T,BType> &operator +=(const Array<T,BType>&);
-    //! subtraction operator - unary
-
-    //! Subtracts a single value of type T on the r.h.s. of the operator
-    //! to the array on the l.h.s. The operation is performed in-place without
-    //! creation of a temporary array.
-    Array<T,BType> &operator -=(const T&);
-    //! subtraction operator - unary
-
-    //! Subtracts the  array on the r.h.s. of the operator from that on the
-    //! l.h.s. The operation is performed in-place without allocation of a
-    //! temporary array. The shapes of the arrays must match otherwise a
-    //! ShapeMissmatchError exception will be raised.
-    Array<T,BType> &operator -=(const Array<T,BType>&);
-    //! multiplication operator - unary
-
-    //! Multiplies the single value of type T on the r.h.s. of the operator
-    //! with all elements of the array on the l.h.s. The operation is performed
-    //! in-place without allocation of a temporary array.
-    Array<T,BType> &operator *=(const T&);
-    //! multiplication operator - unary
-
-    //! Element wise multiplication of the array on the r.h.s of the operator
-    //! with the array of the l.h.s. The operation is stored in-place without
-    //! allocation of a temporary array. The shapes of the arrays must match
-    //! otherwise a ShapeMissmatchError exception will be raised.
-    Array<T,BType> &operator *=(const Array<T,BType>&);
-    //! Division operator - unary
-
-    //! Divide the elements of the array on the l.h.s. of the operator by the
-    //! single value of type T on the r.h.s. THe operation is performed in-place
-    //! without allocation of a temporary array.
-    Array<T,BType> &operator /=(const T&);
-    //! Division operator - unary
-
-    //! Element wise division of the array on the l.h.s. with the array on the
-    //! r.h.s. The operation is done in-place without allocation of a temporary array.
-    //! The arrays must match in shape otherwise a ShapeMissmatchError exception will be raised.
-    Array<T,BType> &operator /=(const Array<T,BType>&);
-
-    //some functions that are of importance for arrays
-
-    //! compute the sum of all element in the array
-
-    //! Computes the sum of all elements stored in the array.
-    //! \return number of type T
-    typename ArrayType<T>::Type sum() const;
-    //! minimum value
-
-    //! returns the minimum element in the array.
-    //! \return value of type T
-    T min() const;
-    //! maximum value
-
-    //! returns the maximum element in the array
-    //! \return value of type T
-    T max() const;
-    //! minimum and maximum in the array
-
-    //! returns the minimum and maximum values in the array.
-    //! \param min minimum value
-    //! \param max maximum value
-    void min_max(T &min, T &max) const;
-    //! clip the array data
-
-    //! Set values greater or equal maxth to maxth and those smaller or equal minth
-    //! to minth.
-
-    //! \param minth minimum threshold
-    //! \param maxth maximum threshold
-    void clip(T minth, T maxth);
-    //! clip the array data
-
-    //! Set values smaller or equal to minth to minval and those larger or equal than
-    //! maxth to maxval.
-
-    //! \param minth minimum threshold
-    //! \param minval value for numbers smaller or equal to minth
-    //! \param maxth maximum threshold
-    //! \param maxval value for numbers larger or equal to maxth
-    void clip(T minth, T minval, T maxth, T maxval);
-    //! clip minimum values
-
-    //! Set value smaller or equal to a threshold value to threshold.
-
-    //! \param threshold threshold value
-    void min_clip(T threshold);
-    //! clip minimum values
-
-    //! Set values smaller or equal than a threshold value to value
-    //! \param threshold threshold value
-    //! \param value value to set the numbers to
-    void min_clip(T threshold, T value);
-    //! clip maximum values
-
-    //! Set values larger or equal than threshold to threshold.
-    //! \param threshold threshold value
-    void max_clip(T threshold);
-    //! clip maximum values
-
-    //! Set values larger or equal than threshold to value.
-
-    //! \param threshold the threshold value for the clip operation
-    //! \param value the value to set the numbers to
-    void max_clip(T threshold, T value);
-    //! bracket operator - accessing linear data
-
-    //! Using the []-operator allows to access the data stored in the array
-    //! in a linear manner as it is stored by the buffer object.
-    T& operator[](const size_t &i);
-    T operator[](const size_t &i) const;
-    T& operator()(const Index &i);
-    T operator()(const Index &i) const;
-
-    void operator()(const Selection &s,Array<T,BType> &a) const;
-
-    //operators for comparison
-
-    //! equality between arrays
-
-    //! Tow arrays are considered equal if they coincide in shape and data content.
-    friend bool operator==<> (const Array<T,BType> &b1, const Array<T,BType> &b2);
-    //! inequality between arrays
-
-    //! Tow arrays are considered different if they have different shape or
-    //! content.
-    friend bool operator!=<> (const Array<T,BType> &b1, const Array<T,BType> &b2);
-    //! output operator for console output
-    friend std::ostream &operator<<<> (std::ostream &o, const Array<T,BType> &a);
-
-    virtual void allocate();
-
-    virtual bool is_allocated() const{
-        return _data.is_allocated();
+template<typename T,template <typename,typename> class BType,typename Allocator > 
+    Array<T,BType,Allocator> operator+(const Array<T,BType,Allocator>&, const T&);
+template<typename T,template<typename,typename> class BType,typename Allocator> 
+    Array<T,BType,Allocator> operator+(const T&, const Array<T,BType,Allocator>&);
+template<typename T,template<typename,typename> class BType,typename Allocator > 
+    Array<T,BType,Allocator> operator+(const Array<T,BType,Allocator>&, const
+            Array<T,BType,Allocator>&);
+
+template<typename T,template<typename,typename> class BType,typename Allocator > 
+    Array<T,BType,Allocator> operator-(const Array<T,BType,Allocator>&, const T&);
+template<typename T,template<typename,typename> class BType,typename Allocator> 
+    Array<T,BType,Allocator> operator-(const T&, const Array<T,BType,Allocator>&);
+template<typename T,template<typename,typename> class BType,typename Allocator> 
+    Array<T,BType,Allocator> operator-(const Array<T,BType,Allocator>&, const Array<T,BType,Allocator>&);
+
+template<typename T,template<typename,typename> class BType,typename Allocator> 
+    Array<T,BType,Allocator> operator*(const Array<T,BType,Allocator>&, const T&);
+template<typename T,template<typename,typename> class BType,typename Allocator > 
+    Array<T,BType,Allocator> operator*(const T&, const Array<T,BType,Allocator>&);
+template<typename T,template<typename,typename> class BType,typename Allocator> 
+    Array<T,BType,Allocator> operator*(const Array<T,BType,Allocator>&, const Array<T,BType,Allocator>&);
+
+template<typename T,template<typename,typename> class BType,typename Allocator > 
+    Array<T,BType,Allocator> operator/(const Array<T,BType,Allocator>&, const T&);
+template<typename T,template<typename,typename> class BType,typename Allocator > 
+    Array<T,BType,Allocator> operator/(const T&, const Array<T,BType,Allocator>&);
+template<typename T,template<typename,typename> class BType,typename Allocator > 
+    Array<T,BType,Allocator> operator/(const Array<T,BType,Allocator>&, const Array<T,BType,Allocator>&);
+
+template<typename T,template<typename,typename> class BType,typename Allocator > 
+    bool operator==(const Array<T,BType,Allocator> &, const Array<T,BType,Allocator> &);
+template<typename T,template<typename,typename> class BType,typename Allocator > 
+    bool operator!=(const Array<T,BType,Allocator> &, const Array<T,BType,Allocator> &);
+template<typename T,template<typename,typename> class BType,typename Allocator > 
+    std::ostream &operator<<(std::ostream &o, const Array<T,BType,Allocator> &a);
+
+    //! \ingroup data_classes
+    //! \brief template for a multi-dimensional array class
+
+    //! This class represents a multidimensional array of data values. It consists of two
+    //! components: a pointer to an instance of type Buffer and a pointer to an instance
+    //! of type ArrayShape. From the point of object oriented programming such an array can
+    //! be considered as a special view on the linear data stream represented by the Buffer
+    //! object. The ArrayShape and Buffer object of the array are hold by smart pointers
+    //! which allows sharing of these objects between different arrays or other
+    //! program instances. How data is handled depends on which constructors are used
+    //! to create the array and which methods are used to modify data elements of an
+    //! instance of Array. Usually set and get methods as well as constructors come
+    //! in two flavors: one where constant references of native objects are passed to them
+    //! and one where smart pointers are used. In the former case the objects will be
+    //! recreated by the Array object and their content will be copied.
+    //! In the later case of the smart pointer versions only the pointers
+    //! will be changed which allows sharing of data between the Array and external
+    //! instances of the program using the array. The std::shared_ptr avoids
+    //! problems with object ownership and makes it quite simple to implement this
+    //! behavior.
+
+    //! The motivation for the reallocation and copy processes for the reference type
+    //! methods and constructors is quite simple: one cannot be sure that the
+    //! instance which created the object or a simple pointer will not destroy the
+    //! object while still being used in the array. Therefore the copy process is
+    //! absolutely necessary.
+
+    template<typename T,
+             template <typename,typename> class BType,
+             typename Allocator=NewAllocator
+            > 
+    class Array: public NumericObject {
+        private:
+            Shape _shape;   //!< shape of the array holding thed ata
+            BType<T,Allocator> _data; //!< Buffer object holding the data
+
+            //==================private methods================================
+            /*! \brief throws if array is not allocated
+            
+            A static class method that throws an exception if the array is not 
+            allocated.
+            \throws MemoryAccessError if array is not allocated
+            \param a reference to an array
+            */
+            static void _throw_if_not_allocated(const Array<T,BType,Allocator> &a);
+        public:
+            //================public types=====================================
+            typedef Allocator allocator_type; //!< allocator type
+            typedef T value_type;  //!< type of an array element
+            typedef BType<T,Allocator> buffer_type; //!< type of the buffer object
+            typedef std::shared_ptr<Array<T,BType,Allocator> > shared_ptr; //!< shared pointer to an Array<T>
+            typedef std::unique_ptr<Array<T,BType,Allocator> > unique_ptr; //!< unique pointer type
+            
+            //==================public members=================================
+            static const TypeID type_id = TypeIDMap<T>::type_id;
+            static const size_t value_size = sizeof(T);
+
+            //=================constructors and destructor=====================
+            /*! \brief default constructor
+
+            Neither ArrayShape nor Buffer object will be allocated. Buffer
+            as well as shape must be handled later using the appropriate
+            buffer(), shape(), and allocate methods. This constructor
+            is perfectly applicable in all cases where the type of the array
+            is known at the time of definition but all other parameters
+            are obtained later in the code.
+            */
+            Array();
+
+            //-----------------------------------------------------------------
+            /*! \brief copy constructor
+
+            This constructor is a full copy constructor. A new array is created
+            and the content of the original array is copied.
+            */
+            Array(const Array<T,BType,Allocator> &);
+
+            //-----------------------------------------------------------------
+            //! move constructor
+            Array(Array<T,BType,Allocator> &&);
+            
+            //-----------------------------------------------------------------
+            /*! \brief constructor with an array shape pointer
+
+            The pointer to an existing ArrayShape object is used to construct
+            the Array-object.
+            
+            \param s - reference to a shape object
+            */
+            Array(const Shape &s);
+
+            //-----------------------------------------------------------------
+            /*! \brief constructor where array shape and buffer object are set
+
+            The constructor takes pointers to a shape object and a buffer
+            object. An exception will be raised if their sizes do not match.
+            To keep ownership the objects will be copied.
+
+            \param s pointer to a shape object
+            \param b pointer to a buffer object
+            */
+            Array(const Shape &s, const BType<T,Allocator> &b);
+
+            //-----------------------------------------------------------------
+            //! constructor
+
+            //! This constructors sets also name, unit, and description
+            //! of the NumericObject base class.
+            Array(const Shape &s,const String &n,const String &u,const String &d);
+            Array(const Shape &s,const BType<T,Allocator> &b,
+                  const String &n,const String &u,const String &d);
+
+            //! destructor
+            ~Array();
+
+            //===================assignment operators==========================
+            //! assign a native type to the array
+
+            //! Here a value of a native type will be assigned to the Array.
+            //! The value is assigned to all elements of the array. Thus, this
+            //! operator can be used for a quick initialization of an array with numbers.
+            Array<T,BType,Allocator> &operator =(const T&);
+
+            //-----------------------------------------------------------------
+            template<typename U> Array<T,BType,Allocator> &operator=(const U &v);
+
+            //-----------------------------------------------------------------
+            //! assignment between two arrays
+
+            //! This operation is only possible if the shapes of the two arrays are equal.
+            //! If this is not the case an exception will be raised. The content of the
+            //! array on the r.h.s of the operator is copied to the array on the l.h.s.
+            //! of the operator. No memory allocation is done - only copying.
+            Array<T,BType,Allocator> &operator =(const Array<T,BType,Allocator> &a);
+
+            //-----------------------------------------------------------------
+            //! move assignemnt operator
+            Array<T,BType,Allocator> &operator =(Array<T,BType,Allocator> &&a);
+
+            //-----------------------------------------------------------------
+            template<typename U> Array<T,BType,Allocator> &
+                operator=(const Array<U,BType,Allocator> &a);
+
+
+            //================public methods===================================
+            /*! \brief set array shape
+
+            Use this method to set the shape of the array. This is typically
+            used if the array was created by the default constructor. If the
+            buffer holding the arrays data is already allocated this method
+            causes a reshape of the array. In order to succeed the size of the
+            shape must correpsond with the size of the allocated buffer. If the
+            sizes do not match an excpetion will be thrown.
+
+            The second possibility is that the arrays buffer is not allocated
+            (as it would be the case when the array was created using the
+            defautl constructor). In this case this method allocated memory.
+            \throws SizeMissmatchError if allocated buffer and shape size do not
+            match
+            \throws MemoryAllocationError if array buffer allocation fails
+            \param s shape of the array
+            */
+            void shape(const Shape &s);
+
+            //-----------------------------------------------------------------
+            /*! \brief get array shape
+
+            Return a constant reference to the array shape. 
+            \return array shape const reference
+            */
+            const Shape &shape() const
+            {
+                return _shape;
+            }
+
+            //-----------------------------------------------------------------
+            /*! \brief copy buffer to array
+
+            Copies the content of buffer b to the arrays buffer. If the buffer
+            holing the array data is not allocated new memory will be allocated
+            for it and the content of b is copied to the array buffer. 
+
+            If the array buffer is, however, already allocated the sizes of b
+            and the array buffer must match in order to copy the data from b to
+            the array buffer. If this is not the case an exception will be
+            thrown.
+            \throws SizeMissmatchError if size of b and array buffer size do not
+            match
+            \throws MemoryAllocationError if array buffer allocation fails
+            \param b reference to a Buffer object
+            */
+            void buffer(const BType<T,Allocator> &b);
+
+            //-----------------------------------------------------------------
+            /*! \brief move buffer to array
+
+            The content of buffer b will be moved to the arrays buffer avoiding
+            unnecessary memory allocation. If the buffer of the array is already
+            allocated the sizes of b and the array buffer must match. Otherwise
+            an exception will b thrown
+            \throws SizeMissmatchError if size of b and the array buffer do not
+            match
+            \param b r-value reference to the original buffer
+            */
+            void buffer(BType<T,Allocator> &&b);
+
+            /*! \brief obtain buffer reference
+
+            Return a const reference to the arrays buffer object.
+            \return buffer reference
+            */
+            const BType<T,Allocator> &buffer() const
+            {
+                return _data;
+            }
+
+            //==================Uniary arithmetic operators====================
+            //these operators are important because they are performed
+            //in-place - no new array is allocated
+
+            /*! \brief unary scalar addition 
+
+            Adds a single native value of type T to all elements in the Array.
+            This unary operator performs the operation in-place. No temporary
+            array will be allocated.
+            \param v scalar to add
+            */
+            Array<T,BType,Allocator> &operator +=(const T&v)
+            {
+                for(size_t i=0;i<this->size();i++) (*this)[i] +=v;
+                return *this;
+            }
+
+            //-----------------------------------------------------------------
+            /*! \brief unary array addition
+
+            Adds the array on the r.h.s to that on the l.h.s. of the operator.
+            The operation is performed in-place without the allocation of a
+            temporary array. 
+            \throws ShapeMissmatchError if array shapes do not match
+            \param 
+            */
+            Array<T,BType,Allocator> &operator +=(const Array<T,BType,Allocator> &a)
+            {
+                for(size_t i=0;i<this->size();i++) (*this)[i] += a[i];
+                return *this;
+            }
+
+            //-----------------------------------------------------------------
+            /*! \brief unary scalar subtraction 
+
+            Subtracts a single value of type T on the r.h.s. of the operator
+            to the array on the l.h.s. The operation is performed in-place without
+            creation of a temporary array.
+            */
+            Array<T,BType,Allocator> &operator -=(const T&v)
+            {
+                for(size_t i=0;i<this->size();i++) (*this)[i] -= v;
+                return *this;
+            }
+
+            //-----------------------------------------------------------------
+            /*! \brief unary array subtraction
+
+            Subtracts the  array on the r.h.s. of the operator from that on the
+            l.h.s. The operation is performed in-place without allocation of a
+            temporary array. The shapes of the arrays must match otherwise a
+            ShapeMissmatchError exception will be raised.
+            */
+            Array<T,BType,Allocator> &
+                operator -=(const Array<T,BType,Allocator>&a)
+            {
+                for(size_t i=0;i<this->size();i++) (*this)[i] -=a[i];
+                return *this;
+            }
+
+            //-----------------------------------------------------------------
+            /*! \brief unary scalar multiplication
+
+            Multiplies the single value of type T on the r.h.s. of the operator
+            with all elements of the array on the l.h.s. The operation is performed
+            in-place without allocation of a temporary array.
+            */
+            Array<T,BType,Allocator> &operator *=(const T&v)
+            {
+                for(size_t i=0;i<this->size();i++) (*this)[i] *= v;
+                return *this;
+            }
+
+            //-----------------------------------------------------------------
+            /*! \brief unary array multiplication 
+
+            Element wise multiplication of the array on the r.h.s of the operator
+            with the array of the l.h.s. The operation is stored in-place without
+            allocation of a temporary array. The shapes of the arrays must match
+            otherwise a ShapeMissmatchError exception will be raised.
+            */
+            Array<T,BType,Allocator> &
+                operator *=(const Array<T,BType,Allocator>&a)
+            {
+                for(size_t i=0;i<this->size();i++) (*this)[i] *= a[i];
+                return *this;
+            }
+            
+            //-----------------------------------------------------------------
+            /*! \brief unary scalar division 
+
+            Divide the elements of the array on the l.h.s. of the operator by the
+            single value of type T on the r.h.s. THe operation is performed in-place
+            without allocation of a temporary array.
+            */
+            Array<T,BType,Allocator> &operator /=(const T&v)
+            {
+                for(size_t i=0;i<this->size();i++) (*this)[i] /= v;
+                return *this;
+            }
+
+            //-----------------------------------------------------------------
+            /*! \brief unary array division
+
+            Element wise division of the array on the l.h.s. with the array on the
+            r.h.s. The operation is done in-place without allocation of a temporary array.
+            The arrays must match in shape otherwise a ShapeMissmatchError exception will be raised.
+            */
+            Array<T,BType,Allocator> &
+                operator /=(const Array<T,BType,Allocator>&a)
+            {
+                for(size_t i=0;i<this->size();i++) (*this)[i] /=a[i];
+                return *this;
+            }
+
+
+            //================Binary arithemtic operators======================
+            //overloaded simple binary arithmetic operators
+            //! binary + operator for arrays
+
+            //! This version of the operator implements Array<T> + T operations.
+            //! During the operation a temporary array object is created.
+            friend Array<T,BType,Allocator> operator+<> 
+                (const Array<T,BType,Allocator>&, const T&);
+            //overloaded simple binary arithmetic operators
+            //! binary + operator for arrays
+
+            //! This version of the operator implements T + Array<T> operations.
+            //! During the operation a temporary array object is created.
+            friend Array<T,BType,Allocator> operator+<> 
+                (const T&, const Array<T,BType,Allocator>&);
+            //overloaded simple binary arithmetic operators
+            //! binary + operator for arrays
+
+            //! This version of the operator implements Array<T> + Array<T> operations.
+            //! During the operation a temporary array object is created.
+            friend Array<T,BType,Allocator> operator+<> 
+                (const Array<T,BType>&, const Array<T,BType,Allocator>&);
+
+            //! binary - operator for arrays
+
+            //! This version of the operator implements Array<T> - T operations.
+            //! During the operation a temporary array object is created.
+            friend Array<T,BType,Allocator> operator-<> 
+                (const Array<T,BType,Allocator>&, const T&);
+            //! binary - operator for arrays
+
+            //! This version of the operator implements Array<T> - Array<T> operations.
+            //! During the operation a temporary array object is created.
+            friend Array<T,BType,Allocator> operator-<> 
+                (const Array<T,BType,Allocator>&, const Array<T,BType,Allocator>&);
+            //! binary - operator for arrays
+
+            //! This version of the operator implements T - Array<T> operations.
+            //! During the operation a temporary array object is created.
+            friend Array<T,BType,Allocator> operator-<> 
+                (const T&, const Array<T,BType,Allocator>&);
+
+            //! binary * operator for arrays
+
+            //! This version of the operator implements Array<T> * T operations.
+            //! During the operation a temporary array object is created.
+            friend Array<T,BType,Allocator> operator*<> 
+                (const Array<T,BType,Allocator>&, const T&);
+            //! binary * operator for arrays
+
+            //! This version of the operator implements Array<T> * Array<T> operations.
+            //! During the operation a temporary array object is created.
+            friend Array<T,BType,Allocator> operator*<> 
+                (const Array<T,BType,Allocator>&, const Array<T,BType,Allocator>&);
+            //! binary * operator for arrays
+
+            //! This version of the operator implements T * Array<T> operations.
+            //! During the operation a temporary array object is created.
+            friend Array<T,BType,Allocator> operator*<> 
+                (const T&, const Array<T,BType,Allocator>&);
+
+            //! binary / operator for arrays
+
+            //! This version of the operator implements Array<T> / T operations.
+            //! During the operation a temporary array object is created.
+            friend Array<T,BType,Allocator> operator /<> 
+                (const Array<T,BType,Allocator>&, const T&);
+            //! binary / operator for arrays
+
+            //! This version of the operator implements Array<T> / Array<T> operations.
+            //! During the operation a temporary array object is created.
+            friend Array<T,BType,Allocator> operator /<> 
+                (const Array<T,BType,Allocator>&, const Array<T,BType,Allocator>&);
+            //! binary / operator for arrays
+
+            //! This version of the operator implements T / Array<T> operations.
+            //! During the operation a temporary array object is created.
+            friend Array<T,BType,Allocator> operator /<> 
+                (const T&, const Array<T,BType,Allocator>&);
+
+
+            //========methods for array data inquery===========================
+            //some functions that are of importance for arrays
+
+            //! compute the sum of all element in the array
+
+            //! Computes the sum of all elements stored in the array.
+            //! \return number of type T
+            typename ArrayType<T>::Type sum() const;
+
+            //-----------------------------------------------------------------
+            //! minimum value
+
+            //! returns the minimum element in the array.
+            //! \return value of type T
+            T min() const;
+
+            //-----------------------------------------------------------------
+            //! maximum value
+
+            //! returns the maximum element in the array
+            //! \return value of type T
+            T max() const;
+
+            //-----------------------------------------------------------------
+            //! minimum and maximum in the array
+
+            //! returns the minimum and maximum values in the array.
+            //! \param min minimum value
+            //! \param max maximum value
+            void min_max(T &min, T &max) const;
+
+            //-----------------------------------------------------------------
+            //! clip the array data
+
+            //! Set values greater or equal maxth to maxth and those smaller or equal minth
+            //! to minth.
+
+            //! \param minth minimum threshold
+            //! \param maxth maximum threshold
+            void clip(T minth, T maxth);
+
+            //-----------------------------------------------------------------
+            //! clip the array data
+
+            //! Set values smaller or equal to minth to minval and those larger or equal than
+            //! maxth to maxval.
+
+            //! \param minth minimum threshold
+            //! \param minval value for numbers smaller or equal to minth
+            //! \param maxth maximum threshold
+            //! \param maxval value for numbers larger or equal to maxth
+            void clip(T minth, T minval, T maxth, T maxval);
+
+            //-----------------------------------------------------------------
+            //! clip minimum values
+
+            //! Set value smaller or equal to a threshold value to threshold.
+
+            //! \param threshold threshold value
+            void min_clip(T threshold);
+
+            //-----------------------------------------------------------------
+            //! clip minimum values
+
+            //! Set values smaller or equal than a threshold value to value
+            //! \param threshold threshold value
+            //! \param value value to set the numbers to
+            void min_clip(T threshold, T value);
+
+            //-----------------------------------------------------------------
+            //! clip maximum values
+
+            //! Set values larger or equal than threshold to threshold.
+            //! \param threshold threshold value
+            void max_clip(T threshold);
+
+            //-----------------------------------------------------------------
+            //! clip maximum values
+
+            //! Set values larger or equal than threshold to value.
+
+            //! \param threshold the threshold value for the clip operation
+            //! \param value the value to set the numbers to
+            void max_clip(T threshold, T value);
+
+            //=============operators and methods to access array data==========
+            //! bracket operator - accessing linear data
+
+            //! Using the []-operator allows to access the data stored in the array
+            //! in a linear manner as it is stored by the buffer object.
+            T& operator[](const size_t &i) { return this->_data[i]; }
+            T operator[](const size_t &i) const { return this->_data[i]; }
+
+            //-----------------------------------------------------------------
+            /*! \brief access with multidimensional index
+
+            Returns the data at a position described by the multidimensional
+            index i. This method performs no range checking.
+            \param i multidimensional index 
+            \return reference to the element at position i
+            */
+            T& operator()(const Index &i) 
+            { 
+                return this->_data[this->_shape.offset(i)];
+            }
+
+            //-----------------------------------------------------------------
+            T operator()(const Index &i) const
+            {
+                return this->_data[this->_shape.offset(i)];
+            }
+
+
+            //=====================comparison operators========================
+            //operators for comparison
+
+            //! equality between arrays
+
+            //! Tow arrays are considered equal if they coincide in shape and data content.
+            friend bool operator==<> (const Array<T,BType,Allocator> &b1, const Array<T,BType,Allocator> &b2);
+            //! inequality between arrays
+
+            //! Tow arrays are considered different if they have different shape or
+            //! content.
+            friend bool operator!=<> (const Array<T,BType,Allocator> &b1, const Array<T,BType,Allocator> &b2);
+            //! output operator for console output
+            friend std::ostream &operator<<<> (std::ostream &o, const Array<T,BType,Allocator> &a);
+
+
+            bool is_allocated() const{
+                return _data.is_allocated();
+            }
+
+
+            T *ptr(){ return _data.ptr(); }
+
+            const T* ptr() const { return _data.ptr(); }
+
+            void *void_ptr(){ return _data.void_ptr(); }
+
+            const void *void_ptr() const{ return _data.void_ptr(); }
+
+    };
+
+    //=====================Constructors and destructors=========================
+    //default constructor
+    template<typename T,template <typename,typename>  class BType,typename Allocator> 
+    Array<T,BType,Allocator>::Array():
+        NumericObject(),
+        _shape(),
+        _data()
+    {}
+
+    //--------------------------------------------------------------------------
+    //copy constructor - allocate new memory and really copy the data
+    template<typename T,template <typename,typename>  class BType,typename Allocator>
+    Array<T,BType,Allocator>::Array(const Array<T,BType,Allocator> &a):
+        NumericObject(),
+        _shape(a._shape()),
+        _data(a._data())
+    { }
+
+    //--------------------------------------------------------------------------
+    template<typename T,template <typename,typename> class BType,typename Allocator>
+    Array<T,BType,Allocator>::Array(Array<T,BType,Allocator> &&a):
+        NumericObject(std::move(a)),
+        _shape(std::move(a._shape)),
+        _data(std::move(a._data))
+    { }
+
+    //--------------------------------------------------------------------------
+    //construct a new array from a shape object - the recommended way
+    template<typename T,template <typename,typename> class BType,typename Allocator> 
+    Array<T,BType,Allocator>::Array(const Shape &s): 
+        NumericObject(),
+        _shape(s),
+        _data(s.size())
+    { }
+
+    //--------------------------------------------------------------------------
+    //implementation of an array constructor
+    template<typename T,template <typename,typename> class BType,typename Allocator> 
+    Array<T,BType,Allocator>::Array(const Shape &s,const String &n,const String &u,
+        const String &d):
+        NumericObject(n,u,d),
+        _shape(s),
+        _data(s.size())
+    { }
+
+    //--------------------------------------------------------------------------
+    //Array construction from a shape and a buffer
+    template<typename T,template <typename,typename> class BType,typename Allocator>
+    Array<T,BType,Allocator>::Array(const Shape &s, const BType<T,Allocator> &b):
+        NumericObject(),
+        _shape(s)
+    {
+        EXCEPTION_SETUP("template<typename T,template <typename> class BType>"
+                        "Array<T,BType>::Array(const ArrayShape &s, "
+                        "const BType<T> &b):ArrayObject(s)");
+
+        //first we need to check if buffer and shape have matching sizes
+        if (s.size() != b.size()) {
+            EXCEPTION_INIT(SizeMissmatchError,"Size of shape and buffer objects do not match!");
+            EXCEPTION_THROW();
+        }
+
+        //creates a new buffer object
+        try{
+            _data = b;
+        }catch(MemoryAllocationError &error){
+            EXCEPTION_INIT(MemoryAllocationError,"Memory allocation for array failed!");
+            EXCEPTION_THROW();
+        }
     }
 
-    virtual void reset(){
+    //--------------------------------------------------------------------------
+    //implementation of an array constructor
+    template<typename T,template <typename,typename> class BType,typename Allocator>
+    Array<T,BType,Allocator>::Array(const Shape &s, const BType<T,Allocator> &b,
+            const String &n,const String &u,const String &d) : 
+        NumericObject(n,u,d),
+        _shape(s)
+    {
+        EXCEPTION_SETUP("template<typename T,template <typename> class BType>"
+                        "Array<T,BType>::Array(const Shape &s, const BType<T> &b,"
+                        "const String &n, const String &u,const String &d):ArrayObject(s)");
+
+        //first we need to check if buffer and shape have matching sizes
+        if (s.size() != b.size()) {
+            EXCEPTION_INIT(SizeMissmatchError,"Size of shape and buffer objects do not match!");
+            EXCEPTION_THROW();
+        }
+
+        //creates a new buffer object
+        try{
+            _data = b;
+        }catch(MemoryAllocationError &error){
+            EXCEPTION_INIT(MemoryAllocationError,"Memory allocation for array failed!");
+            EXCEPTION_THROW();
+        }
+
+    }
+
+    //--------------------------------------------------------------------------
+    //destructor for the array object
+    template<typename T,template <typename,typename> class BType,typename Allocator> 
+        Array<T,BType,Allocator>::~Array() 
+    {
         _data.free();
-        ArrayObject::reset();
     }
 
-    virtual inline T *ptr(){
-        return _data.ptr();
+
+
+    //===============================output operators==============================
+    template<typename T,template <typename,typename> class BType,typename Allocator>
+    std::ostream &operator<<(std::ostream &o,const Array<T,BType,Allocator> &a){
+        o << "Array of shape ("<<a.shape()<<")"<<std::endl;
+        return o;
     }
 
-    virtual inline const T* ptr() const {
-        return _data.ptr();
+    //======================Methods for data access and array manipulation======
+    template<typename T,template<typename,typename> class BType,typename Allocator>
+        void Array<T,BType,Allocator>::shape(const Shape &s)
+    {
+        EXCEPTION_SETUP("template<typename T,template<typename> class BType,"
+                "typename Allocator> void Array<T,BType,Allocator>::shape"
+                "(const Shape &s)");
+
+        if(this->_data.is_allocated())
+        {
+            if(this->_data.size() != s.size())
+            {
+                std::stringstream ss;
+                ss<<"Size of shape ("<<s.size()<<") and allocate buffer (";
+                ss<<this->_data.size()<<") do not match!";
+                EXCEPTION_INIT(SizeMissmatchError,ss.str());
+                EXCEPTION_THROW();
+            }
+        }
+        else
+        {
+            this->_data.allocate(s.size());
+        }
+       
+        //finally we can set the shape
+        this->_shape = s;
     }
 
-    virtual inline void *void_ptr(){
-        return _data.void_ptr();
+    //-------------------------------------------------------------------------
+    template<typename T,template <typename,typename> class BType,typename Allocator>
+        void Array<T,BType,Allocator>::buffer(const BType<T,Allocator> &b) 
+    {
+        EXCEPTION_SETUP("template<typename T,template <typename> class "
+                "BType,typename Allocator> void Array<T,BType,Allocator>::"
+                "buffer(const BType<T,Allocator> &b)");
+
+
+        if(this->_data.is_allocated())
+        {
+            if(this->_data.size() != b.size())
+            {
+                std::stringstream ss;
+                ss<<"Size of new buffer ("<<b.size()<<") does not match";
+                ss<<"the original array buffer size ("<<this->_data.size();
+                ss<<")!";
+                EXCEPTION_INIT(SizeMissmatchError,ss.str());
+                EXCEPTION_THROW();
+            }
+        }
+        
+        this->_data = b;
     }
 
-    virtual inline const void *void_ptr() const{
-        return _data.void_ptr();
+    //-------------------------------------------------------------------------
+    template<typename T,template <typename,typename> class BType,typename Allocator>
+        void Array<T,BType,Allocator>::buffer(BType<T,Allocator> &&b) 
+    {
+        EXCEPTION_SETUP("template<typename T,template <typename> class "
+                "BType,typename Allocator> void Array<T,BType,Allocator>::"
+                "buffer(BType<T,Allocator> &&b)");
+
+
+        if(this->_data.is_allocated())
+        {
+            if(this->_data.size() != b.size())
+            {
+                std::stringstream ss;
+                ss<<"Size of new buffer ("<<b.size()<<") does not match";
+                ss<<"the original array buffer size ("<<this->_data.size();
+                ss<<")!";
+                EXCEPTION_INIT(SizeMissmatchError,ss.str());
+                EXCEPTION_THROW();
+            }
+        }
+        
+        this->_data = std::move(b);
     }
 
-};
 
-//=====================Constructors and destructors=============================
-//default constructor
-template<typename T,template <typename>  class BType> 
-Array<T,BType>::Array():ArrayObject() {
-EXCEPTION_SETUP("template<typename T,template <typename> class BType>"
-                "Array<T,BType<T> >::Array():ArrayObject()");
-
-//there is nothing to do in the default constructor
-}
-
-//------------------------------------------------------------------------------
-//copy constructor - allocate new memory and really copy the data
-template<typename T,template <typename>  class BType>
-Array<T,BType>::Array(const Array<T,BType> &a):ArrayObject(a){
-EXCEPTION_SETUP("template<typename T,template <typename> class BType>"
-                "Array<T,BType>::Array(const Array<T,BType> &a)"
-                ":ArrayObject(a)");
-
-    //set buffer object
-    try{
-        _data = a._data;
-    }catch(MemoryAllocationError &error){
-        //raise an exception here if memory allocation failes
-        EXCEPTION_INIT(MemoryAllocationError,"Cannot allocate memory for Buffer instance!");
-        EXCEPTION_THROW();
-    }
-}
-
-//------------------------------------------------------------------------------
-template<typename T,template <typename> class BType>
-Array<T,BType>::Array(Array<T,BType> &&a):ArrayObject(std::move(a)){
-    _data = std::move(a._data);
-}
-
-//------------------------------------------------------------------------------
-//construct a new array from a shape object - the recommended way
-template<typename T,template <typename> class BType> 
-Array<T,BType>::Array(const Shape &s) : ArrayObject(s) {
-EXCEPTION_SETUP("template<typename T,template <typename> class BType>"
-                "Array<T,BType>::Array(const ArrayShape &s)");
-
-    try{
-        _data.allocate(s.size());
-    }catch(MemoryAllocationError &error){
-        EXCEPTION_INIT(MemoryAllocationError,"Cannot allocate memory for Buffer object!");
-        EXCEPTION_THROW();
-    }
-}
-
-//------------------------------------------------------------------------------
-//implementation of an array constructor
-template<typename T,template <typename> class BType> 
-Array<T,BType>::Array(const Shape &s,const String &n,const String &u,
-    const String &d):ArrayObject(s){
-    EXCEPTION_SETUP("template<typename T,template <typename> class BType>"
-                    "Array<T,BType>::Array(const ArrayShape &s,"
-                    "const String &n,const String &u,const String &d)");
-
-    try{
-        _data.allocate(s.size());
-    }catch(MemoryAllocationError &error){
-        EXCEPTION_INIT(MemoryAllocationError,"Cannot allocate memory for Buffer object!");
-        EXCEPTION_THROW();
-    }
-
-    //set additional attributes
-    this->name(n);
-    this->unit(u);
-    this->description(d);
-}
-
-//-----------------------------------------------------------------------------
-//Array construction from a shape and a buffer
-template<typename T,template <typename> class BType>
-Array<T,BType>::Array(const Shape &s, const BType<T> &b):ArrayObject(s) {
-	EXCEPTION_SETUP("template<typename T,template <typename> class BType>"
-                    "Array<T,BType>::Array(const ArrayShape &s, "
-                    "const BType<T> &b):ArrayObject(s)");
-
-	//first we need to check if buffer and shape have matching sizes
-	if (s.size() != b.size()) {
-		EXCEPTION_INIT(SizeMissmatchError,"Size of shape and buffer objects do not match!");
-		EXCEPTION_THROW();
-	}
-
-	//creates a new buffer object
-	try{
-		_data = b;
-	}catch(MemoryAllocationError &error){
-		EXCEPTION_INIT(MemoryAllocationError,"Memory allocation for array failed!");
-		EXCEPTION_THROW();
-	}
-
-}
-
-//------------------------------------------------------------------------------
-//implementation of an array constructor
-template<typename T,template <typename> class BType>
-Array<T,BType>::Array(const Shape &s, const BType<T> &b,const String &n,
-        const String &u,const String &d) : ArrayObject(s) {
-	EXCEPTION_SETUP("template<typename T,template <typename> class BType>"
-                    "Array<T,BType>::Array(const Shape &s, const BType<T> &b,"
-                    "const String &n, const String &u,const String &d):ArrayObject(s)");
-
-	//first we need to check if buffer and shape have matching sizes
-	if (s.size() != b.size()) {
-		EXCEPTION_INIT(SizeMissmatchError,"Size of shape and buffer objects do not match!");
-		EXCEPTION_THROW();
-	}
-
-	//creates a new buffer object
-	try{
-		_data = b;
-	}catch(MemoryAllocationError &error){
-		EXCEPTION_INIT(MemoryAllocationError,"Memory allocation for array failed!");
-		EXCEPTION_THROW();
-	}
-
-	//set additional parameters
-	this->name(n);
-	this->unit(u);
-	this->description(d);
-
-}
-
-//------------------------------------------------------------------------------
-//destructor for the array object
-template<typename T,template <typename> class BType> Array<T,BType>::~Array() {
-	_data.free();
-}
-
-//==============================================================================================
-//Introspection of element type ID
-
-template<typename T,template <typename> class BType> 
-TypeID Array<T,BType>::type_id() const {
-	return TypeIDMap<T>::type_id;
-}
-
-
-
-
-//===============================output operators==============================
-template<typename T,template <typename> class BType>
-std::ostream &operator<<(std::ostream &o,const Array<T,BType> &a){
-	o << "Array of shape ("<<a.shape()<<")"<<std::endl;
-	return o;
-}
-
-//======================Methods for data access and array manipulation=========
-
-template<typename T,template <typename> class BType>
-void Array<T,BType>::buffer(const BufferObject &b) {
-	EXCEPTION_SETUP("template<typename T,template <typename> class BType>"
-                    "void Array<T,BType>::setBuffer(const BufferObject &b)");
-
-	if(b.type_id() != this->type_id()){
-		EXCEPTION_INIT(TypeError,"Buffer and Array type do not match!");
-		EXCEPTION_THROW();
-	}
-
-	//if the shape is not set yet (means that its rank is 0) we do not have
-	//to care.
-	if (this->shape().size()!=0) {
-		//if there exists already a shape object we have to check the size
-		if (b.size() != this->shape().size()) {
-			EXCEPTION_INIT(SizeMissmatchError,"Buffer and array size do not match!");
-			EXCEPTION_THROW();
-		}
-	} try{ 
-        _data = (BType<T> &)b; 
-    }catch(MemoryAllocationError &error){ 
-        EXCEPTION_INIT(MemoryAllocationError,"Error allocating memory for the array!"); 
-        EXCEPTION_THROW(); 
-    } 
-}
-
-//------------------------------------------------------------------------------
-template<typename T,template <typename> class BType>
-const BufferObject &Array<T,BType>::buffer() const {
-	return _data;
-}
-
-//------------------------------------------------------------------------------
-template<typename T,template <typename> class BType>
-T &Array<T,BType>::operator[](const size_t &i){
-	EXCEPTION_SETUP("template<typename T,template <typename> class BType>"
-                    "T &Array<T,BType>::operator[](const size_t &i)");
-
-	try{
-		T &res = _data[i];
-		return res;
-	}catch(...){
-		EXCEPTION_INIT(MemoryAccessError,"Memory access failed!");
-		EXCEPTION_THROW();
-	}
-}
-
-//------------------------------------------------------------------------------
-template<typename T,template <typename> class BType> 
-T Array<T,BType>::operator[](const size_t &i) const{
-	EXCEPTION_SETUP("template<typename T,template <typename> class BType>"
-                    "T Array<T,BType>::operator[](const size_t &i)");
-	T res = 0;
-
-	try{
-		res = _data[i];
-	}catch(...){
-		EXCEPTION_INIT(MemoryAccessError,"Memory access failed!");
-		EXCEPTION_THROW();
-	}
-
-	return res;
-}
-
-//------------------------------------------------------------------------------
-template<typename T,template <typename> class BType>
-T &Array<T,BType>::operator()(const Index &i){
-	EXCEPTION_SETUP("template<typename T,template <typename> class BType>"
-                    "T &Array<T,BType>::operator()(const Index &i)");
-
-	try{
-		T &res = _data[this->shape().offset(i)];
-		return res;
-	}catch(...){
-		EXCEPTION_INIT(MemoryAccessError,"Error accessing array data!");
-		EXCEPTION_THROW();
-	}
-}
-
-//------------------------------------------------------------------------------
-template<typename T,template <typename> class BType>
-T Array<T,BType>::operator()(const Index &i) const{
-	EXCEPTION_SETUP("template<typename T,template <typename> class BType>"
-                    "T Array<T,BType>::operator()(const Index &i) const");
-
-	try{
-		T result = _data[this->shape().offset(i)];
-		return result;
-	}catch(...){
-		EXCEPTION_INIT(MemoryAccessError,"Error accessing array data!");
-		EXCEPTION_THROW();
-	}
-
-	return 0;
-}
-
-//------------------------------------------------------------------------------
-template<typename T,template <typename> class BType>
-void Array<T,BType>::operator()(const Selection &s,Array<T,BType> &a) const {
-	EXCEPTION_SETUP("template<typename T,template <typename> class BType>"
-                    "void Array<T,BType>::operator()(const Selection &i,"
-                    "Array<T,BType> &a) const ");
-
-	//loop over the target array
-	Index sindex(this->shape().rank());
-	Index index (s.getRank());
-
-	//loop over the target array
-	UInt64 offset = 0;
-	for(UInt64 i=0;i<a.shape().size();i++){
-		a[i] = _data[offset];
-	}
-
-
-}
-
-//------------------------------------------------------------------------------
-template<typename T,template <typename> class BType> 
-void Array<T,BType>::allocate(){
-	if(_data.is_allocated()) _data.free();
-	_data.allocate(this->shape().size());
-}
 
 //===============================Comparison operators==========================
-template<typename T,template <typename> class BType> 
-bool operator==(const Array<T,BType> &b1, const Array<T,BType> &b2) {
+template<typename T,template <typename,typename> class BType,typename Allocator> 
+bool operator==(const Array<T,BType,Allocator> &b1, const Array<T,BType,Allocator> &b2) {
 	const Shape &as = b1.shape();
 	const Shape &bs = b2.shape();
-	BType<T> &ad = (BType<T> &)b1.buffer();
-	BType<T> &bd = (BType<T> &)b2.buffer();
+	BType<T,Allocator> &ad = b1.buffer();
+	BType<T,Allocator> &bd = b2.buffer();
 
 	if ((as == bs) && (ad == bd)) return true;
 
 	return false;
 }
 
-template<typename T,template <typename> class BType>
-bool operator!=(const Array<T,BType> &b1, const Array<T,BType> &b2) {
+template<typename T,template <typename,typename> class BType,typename Allocator>
+bool operator!=(const Array<T,BType,Allocator> &b1, const
+        Array<T,BType,Allocator> &b2) {
 	if (!(b1 == b2)) {
 		return true;
 	}
@@ -746,8 +869,8 @@ bool operator!=(const Array<T,BType> &b1, const Array<T,BType> &b2) {
 }
 
 //==============Methods for in-place array manipulation========================
-template<typename T,template <typename> class BType>
-typename ArrayType<T>::Type Array<T,BType>::sum() const {
+template<typename T,template <typename,typename> class BType,typename Allocator>
+typename ArrayType<T>::Type Array<T,BType,Allocator>::sum() const {
 	EXCEPTION_SETUP("template<typename T,template <typename> class BType>"
                     "typename ArrayType<T>::Type Array<T,BType>"
                     "::Sum() const");
@@ -766,8 +889,8 @@ typename ArrayType<T>::Type Array<T,BType>::sum() const {
 }
 
 //------------------------------------------------------------------------------
-template<typename T,template <typename> class BType>
-T Array<T,BType>::min() const {
+template<typename T,template <typename,typename> class BType,typename Allocator>
+T Array<T,BType,Allocator>::min() const {
 	EXCEPTION_SETUP("template<typename T,template <typename> class BType>"
                     "T Array<T,BType>::Min() const");
 
@@ -788,8 +911,8 @@ T Array<T,BType>::min() const {
 }
 
 //------------------------------------------------------------------------------
-template<typename T,template <typename> class BType>
-T Array<T,BType>::max() const {
+template<typename T,template <typename,typename> class BType,typename Allocator>
+T Array<T,BType,Allocator>::max() const {
 	EXCEPTION_SETUP("template<typename T,template <typename> class BType>"
                     "T Array<T,BType>::Max() const");
 
@@ -810,8 +933,8 @@ T Array<T,BType>::max() const {
 }
 
 //------------------------------------------------------------------------------
-template<typename T,template <typename> class BType>
-void Array<T,BType>::min_max(T &min, T &max) const {
+template<typename T,template <typename,typename> class BType,typename Allocator>
+void Array<T,BType,Allocator>::min_max(T &min, T &max) const {
 	EXCEPTION_SETUP("template<typename T,template <typename> class BType>"
                     "void Array<T,BType>::MinMax(T &min, T &max) const");
 	min = 0;
@@ -832,8 +955,8 @@ void Array<T,BType>::min_max(T &min, T &max) const {
 }
 
 //------------------------------------------------------------------------------
-template<typename T,template <typename> class BType>
-void Array<T,BType>::clip(T minth, T maxth) {
+template<typename T,template <typename,typename> class BType,typename Allocator>
+void Array<T,BType,Allocator>::clip(T minth, T maxth) {
 	EXCEPTION_SETUP("template<typename T,template <typename> class BType>"
                     "void Array<T,BType>::Clip(T minth, T maxth)");
 	T value = 0;
@@ -852,8 +975,8 @@ void Array<T,BType>::clip(T minth, T maxth) {
 }
 
 //------------------------------------------------------------------------------
-template<typename T,template <typename> class BType>
-void Array<T,BType>::clip(T minth, T minval, T maxth, T maxval) {
+template<typename T,template <typename,typename> class BType,typename Allocator>
+void Array<T,BType,Allocator>::clip(T minth, T minval, T maxth, T maxval) {
 	EXCEPTION_SETUP("template<typename T,template <typename> class BType>"
                     "void Array<T,BType>::Clip(T minth, T minval, T maxth,"
                     "T maxval)");
@@ -873,8 +996,8 @@ void Array<T,BType>::clip(T minth, T minval, T maxth, T maxval) {
 }
 
 //------------------------------------------------------------------------------
-template<typename T,template <typename> class BType>
-void Array<T,BType>::min_clip(T threshold) {
+template<typename T,template <typename,typename> class BType,typename Allocator>
+void Array<T,BType,Allocator>::min_clip(T threshold) {
 	EXCEPTION_SETUP("template<typename T,template <typename> class BType>"
                     "void Array<T,BType>::MinClip(T threshold)");
 
@@ -889,8 +1012,8 @@ void Array<T,BType>::min_clip(T threshold) {
 }
 
 //------------------------------------------------------------------------------
-template<typename T,template <typename> class BType>
-void Array<T,BType>::min_clip(T threshold, T value) {
+template<typename T,template <typename,typename> class BType,typename Allocator>
+void Array<T,BType,Allocator>::min_clip(T threshold, T value) {
 	EXCEPTION_SETUP("template<typename T,template <typename> class BType>"
                     "void Array<T,BType>::MinClip(T threshold, T value)");
 
@@ -905,8 +1028,8 @@ void Array<T,BType>::min_clip(T threshold, T value) {
 }
 
 //------------------------------------------------------------------------------
-template<typename T,template <typename> class BType>
-void Array<T,BType>::max_clip(T threshold) {
+template<typename T,template <typename,typename> class BType,typename Allocator>
+void Array<T,BType,Allocator>::max_clip(T threshold) {
 	EXCEPTION_SETUP("template<typename T,template <typename> class BType>"
                     "void Array<T,BType>::MaxClip(T threshold)");
 
@@ -922,8 +1045,8 @@ void Array<T,BType>::max_clip(T threshold) {
 }
 
 //------------------------------------------------------------------------------
-template<typename T,template <typename> class BType>
-void Array<T,BType>::max_clip(T threshold, T value) {
+template<typename T,template <typename,typename> class BType,typename Allocator>
+void Array<T,BType,Allocator>::max_clip(T threshold, T value) {
 	EXCEPTION_SETUP("template<typename T,template <typename> class BType>"
                     "void Array<T,BType>::MaxClip(T threshold, T value)");
 
@@ -938,395 +1061,266 @@ void Array<T,BType>::max_clip(T threshold, T value) {
 	}
 }
 
-//==============================Assignment operators===========================
-
-template<typename T,template <typename> class BType>
-Array<T,BType> &Array<T,BType>::operator =(const T &v) {
-	EXCEPTION_SETUP("template<typename T,template <typename> class BType>"
-                    "Array<T,BType> &Array<T,BType>"
-                    "::operator =(const T &v)");
-
-	try{
-		for (size_t i = 0; i < this->shape().size(); i++) {
-			(*this)[i] = v;
-		}
-	}catch(...){
-		EXCEPTION_INIT(AssignmentError,"Object assignment failed!");
-		EXCEPTION_THROW();
-	}
-
-	return *this;
-}
-
-//------------------------------------------------------------------------------
-template<typename T,template <typename> class BType>
-template<typename U> 
-Array<T,BType> &Array<T,BType>::operator=(const U &v){
-	EXCEPTION_SETUP("template<typename T,template <typename> class BType>"
-                    "template<typename U> Array<T,BType> &"
-                    "Array<T,BType>::operator=(const U &v)");
-
-	try{
-		_data = convert_type<T>(v);
-	}catch(...){
-		EXCEPTION_INIT(AssignmentError,"Object assignment failed!");
-		EXCEPTION_THROW();
-	}
-
-	return *this;
-}
-
-//------------------------------------------------------------------------------
-template<typename T,template <typename> class BType> 
-Array<T,BType> &Array<T,BType>::operator =(const Array<T,BType> &v) {
-	EXCEPTION_SETUP("template<typename T,template <typename> class BType>"
-                    "Array<T,BType> &Array<T,BType>::operator ="
-                    "(const Array<T,BType> &v)");
-
-	if(this != &v){
-		//check the array shapes
-		try{
-			this->reset();
-			this->shape(v.shape());
-			this->buffer(v.buffer());
-		}catch(...){
-			EXCEPTION_INIT(AssignmentError,"Object assignment failed!");
-			EXCEPTION_THROW();
-		}
-	}
-
-
-	return *this;
-}
-//------------------------------------------------------------------------------
-template<typename T,template <typename> class BType>
-Array<T,BType> &Array<T,BType>::operator=(Array<T,BType> &&a){
-	if(this != &a){
-		(ArrayObject &)(*this) = std::move((ArrayObject &)a);
-		_data = std::move(a._data);
-	}
-
-	return *this;
-}
-
-//------------------------------------------------------------------------------
-template<typename T,template <typename> class BType>
-template<typename U> 
-Array<T,BType> &Array<T,BType>::operator=(const Array<U,BType> &v) {
-	EXCEPTION_SETUP("template<typename T,template <typename> class BType>"
-                    "template<typename U> Array<T,BType> &"
-                    "Array<T,BType>::operator=(const Array<U,BType> &v)");
-
-	try{
-		this->reset();
-		this->shape(v.shape());
-		this->allocate();
-		for(size_t i=0;i<this->size();i++) (*this)[i] = convert_type<T>(v.buffer()[i]);
-	}catch(...){
-		EXCEPTION_INIT(AssignmentError,"Object assignment failed!");
-		EXCEPTION_THROW();
-	}
-}
-
-
-
-//====================binary addition operators=================================
-template<typename T,template <typename> class BType>
-Array<T,BType> operator+(const Array<T,BType> &a, const T &b) {
-	EXCEPTION_SETUP("template<typename T,template <typename> class BType>"
-                    "Array<T,BType> operator+(const Array<T,BType> &a,"
-                    "const T &b)");
-	Array<T,BType> tmp(a.shape());
-	T *tmpbuf = tmp.buffer().ptr();
-	T *abuf = tmp.buffer().ptr();
+    //==============================Assignment operators=======================
+
+    template<typename T,template <typename,typename> class BType,typename Allocator>
+        Array<T,BType,Allocator> &Array<T,BType,Allocator>::
+        operator =(const T &v)
+    {
+        EXCEPTION_SETUP("template<typename T,template <typename> class BType,"
+                "typename Allocator> Array<T,BType,Allocator> &Array<T,"
+                "BType,Allocator>::operator =(const T &v)");
+
+        if(!this->is_allocated())
+        {
+            EXCEPTION_INIT(MemoryAccessError,"Array buffer not allocated!");
+            EXCEPTION_THROW();
+        }
+
+        for (size_t i = 0; i < this->shape().size(); i++)  (*this)[i] = v;
+
+        return *this;
+    }
+
+    //--------------------------------------------------------------------------
+    template<typename T,template <typename,typename> class BType,typename Allocator>
+    template<typename U> 
+        Array<T,BType,Allocator> &Array<T,BType,Allocator>::
+        operator=(const U &v)
+    {
+        EXCEPTION_SETUP("template<typename T,template <typename> class BType,"
+                "typename Allocator> template<typename U> Array<T,BType,"
+                "Allocator> &Array<T,BType,Allocator>::operator=(const U &v)");
+
+        if(!this->is_allocated())
+        {
+            EXCEPTION_INIT(MemoryAccessError,"Array buffer not allocated!");
+            EXCEPTION_THROW();
+        }
+
+        try{
+            _data = convert_type<T>(v);
+        }catch(...){
+            EXCEPTION_INIT(AssignmentError,"Object assignment failed!");
+            EXCEPTION_THROW();
+        }
+
+        return *this;
+    }
+
+    //--------------------------------------------------------------------------
+    template<typename T,template <typename,typename> class BType,typename Allocator> 
+    Array<T,BType,Allocator> &Array<T,BType,Allocator>::operator =(const
+            Array<T,BType,Allocator> &v) {
+        EXCEPTION_SETUP("template<typename T,template <typename> class BType>"
+                        "Array<T,BType> &Array<T,BType>::operator ="
+                        "(const Array<T,BType> &v)");
+
+        if(this == &v) return *this;
+
+        this->_data = v._data;
+        this->_shape = v._shape;
+
+        return *this;
+    }
+    //--------------------------------------------------------------------------
+    template<typename T,template <typename,typename> class BType,typename Allocator>
+        Array<T,BType,Allocator> &Array<T,BType,Allocator>::
+        operator=(Array<T,BType,Allocator> &&a)
+    {
+        if (this == &a) return *this;
+        
+        this->_data = std::move(a._data);
+        this->_shape = std::move(a._shape);
+
+        return *this;
+    }
+
+    //--------------------------------------------------------------------------
+    template<typename T,template <typename,typename> class BType,typename Allocator>
+    template<typename U> 
+        Array<T,BType,Allocator> &Array<T,BType,Allocator>::
+        operator=(const Array<U,BType,Allocator> &v) 
+    {
+        EXCEPTION_SETUP("template<typename T,template <typename> class BType>"
+                        "template<typename U> Array<T,BType> &"
+                        "Array<T,BType>::operator=(const Array<U,BType> &v)");
+
+
+        try{
+            this->reset();
+            this->shape(v.shape());
+            this->allocate();
+            for(size_t i=0;i<this->size();i++) (*this)[i] = convert_type<T>(v.buffer()[i]);
+        }catch(...){
+            EXCEPTION_INIT(AssignmentError,"Object assignment failed!");
+            EXCEPTION_THROW();
+        }
+    }
+
+
+
+    //====================binary addition operators=================================
+    template<typename T,template <typename,typename> class BType,typename Allocator>
+    Array<T,BType,Allocator> operator+(const Array<T,BType,Allocator> &a, const T &b) 
+    {
+        Array<T,BType,Allocator> tmp(a.shape());
+        for (size_t i = 0; i < a.shape().size(); i++)  tmp[i] = a[i] + b;
+
+        return tmp;
+    }
 
-	try{
-		for (size_t i = 0; i < a.shape().size(); i++)  tmpbuf[i] = abuf[i] + b;
-	}catch(...){
-		EXCEPTION_INIT(ProcessingError,"Error during array processing!");
-		EXCEPTION_THROW();
-	}
+    //------------------------------------------------------------------------------
+    template<typename T,template <typename,typename> class BType,typename Allocator>
+    Array<T,BType,Allocator> operator+(const T &a, const Array<T,BType,Allocator> &b) {
+        EXCEPTION_SETUP("template<typename T,template <typename> class BType>"
+                        "Array<T,BType> operator+(const T &a,"
+                        "const Array<T,BType> &b)");
+        return b + a;
 
-	return tmp;
-}
+    }
 
-//------------------------------------------------------------------------------
-template<typename T,template <typename> class BType>
-Array<T,BType> operator+(const T &a, const Array<T,BType> &b) {
-	EXCEPTION_SETUP("template<typename T,template <typename> class BType>"
-                    "Array<T,BType> operator+(const T &a,"
-                    "const Array<T,BType> &b)");
-	Array<T,BType> tmp;
+    //------------------------------------------------------------------------------
+    template<typename T,template <typename,typename> class BType,typename Allocator>
+    Array<T,BType,Allocator> operator+(const Array<T,BType,Allocator> &a, const
+            Array<T,BType,Allocator> &b) {
+        EXCEPTION_SETUP("template<typename T,template <typename> class BType>"
+                        "Array<T,BType> operator+(const Array<T,BType> &a,"
+                        "const Array<T,BType> &b)");
 
-	try{
-		tmp = b + a;
-	}catch(...){
-		EXCEPTION_INIT(ProcessingError,"Error during array processing!");
-		EXCEPTION_THROW();
-	}
+        if (a.shape() != b.shape()) {
+            EXCEPTION_INIT(ShapeMissmatchError,"shapes of arrays a and b do not match!");
+            EXCEPTION_THROW();
+        }
 
-	return tmp;
+        Array<T,BType,Allocator> tmp(a.shape());
+        for (size_t i = 0; i < a.shape().size(); i++) tmp[i] = a[i] + b[i];
 
-}
+        return tmp;
+    }
 
-//------------------------------------------------------------------------------
-template<typename T,template <typename> class BType>
-Array<T,BType> operator+(const Array<T,BType> &a, const Array<T,BType> &b) {
-	EXCEPTION_SETUP("template<typename T,template <typename> class BType>"
-                    "Array<T,BType> operator+(const Array<T,BType> &a,"
-                    "const Array<T,BType> &b)");
+    //=================Binary subtraction operators=================================
+    template<typename T,template <typename,typename> class BType,typename Allocator>
+    Array<T,BType,Allocator> operator-(const Array<T,BType,Allocator> &a, const T &b) {
+        Array<T,BType,Allocator> tmp(a.shape());
 
-	if (a.shape() != b.shape()) {
-		EXCEPTION_INIT(ShapeMissmatchError,"shapes of arrays a and b do not match!");
-		EXCEPTION_THROW();
-	}
+        for (size_t i = 0; i < a.shape().size(); i++)  tmp[i] = a[i] - b;
 
-	Array<T,BType> tmp(a.shape());
-	T *tmpbuf = tmp.buffer().ptr();
-	T *abuf = a.buffer().ptr();
-	T *bbuf = b.buffer().ptr();
+        return tmp;
+    }
 
+    //------------------------------------------------------------------------------
+    template<typename T,template <typename,typename> class BType,typename Allocator>
+    Array<T,BType,Allocator> operator-(const T &a,const Array<T,BType,Allocator> &b){
+        Array<T,BType,Allocator> tmp(b.shape());
 
-	for (size_t i = 0; i < a.shape().size(); i++) tmpbuf[i] = abuf[i] + bbuf[i];
+        for (size_t i = 0; i < b.shape().size(); i++) tmp[i] = a - b[i];
 
-	return tmp;
-}
+        return tmp;
 
-//=================Binary subtraction operators=================================
-template<typename T,template <typename> class BType>
-Array<T,BType> operator-(const Array<T,BType> &a, const T &b) {
-	Array<T,BType> tmp(a.shape());
+    }
 
-	T *tmpbuf = tmp.buffer().ptr();
-	T *abuf = a.getBuffer().ptr();
+    //------------------------------------------------------------------------------
+    template<typename T,template <typename,typename> class BType,typename Allocator>
+    Array<T,BType,Allocator> operator-(const Array<T,BType,Allocator> &a, const
+            Array<T,BType,Allocator> &b) {
+        EXCEPTION_SETUP("template<typename T,template <typename> class BType>"
+                        "Array<T,BType> operator-(const Array<T,BType> &a,"
+                        "const Array<T,BType> &b)");
 
-	for (size_t i = 0; i < a.shape().size(); i++)  tmpbuf[i] = abuf[i] - b;
+        if (a.shape() != b.shape()) {
+            EXCEPTION_INIT(ShapeMissmatchError,"shapes of arrays a and b do not match!");
+            EXCEPTION_THROW();
+        }
+        Array<T,BType,Allocator> tmp(a.shape());
 
-	return tmp;
-}
+        for (size_t i = 0; i < a.shape().size(); i++) tmp[i] = a[i] - b[i];
 
-//------------------------------------------------------------------------------
-template<typename T,template <typename> class BType>
-Array<T,BType> operator-(const T &a,const Array<T,BType> &b){
-	Array<T,BType> tmp(b.shape());
+        return tmp;
+    }
 
-	T *tmpbuf = tmp.buffer().ptr();
-	T *bbuf = b.buffer().ptr();
+    //==================Binary multiplication operators=============================
+    template<typename T,template <typename,typename> class BType,typename Allocator>
+    Array<T,BType,Allocator> operator*(const Array<T,BType,Allocator> &a, const T &b) {
+        Array<T,BType,Allocator> tmp(a.shape());
 
-	for (size_t i = 0; i < b.shape().size(); i++) tmpbuf[i] = a - bbuf[i];
+        for (size_t i = 0; i < a.shape().size(); i++) tmp[i] = a[i] * b;
 
-	return tmp;
+        return tmp;
+    }
 
-}
+    //------------------------------------------------------------------------------
+    template<typename T,template <typename,typename> class BType,typename Allocator>
+    Array<T,BType,Allocator> operator*(const T &a, const Array<T,BType,Allocator> &b) {
+        Array<T,BType,Allocator> tmp(b.shape());
 
-//------------------------------------------------------------------------------
-template<typename T,template <typename> class BType>
-Array<T,BType> operator-(const Array<T,BType> &a, const Array<T,BType> &b) {
-	EXCEPTION_SETUP("template<typename T,template <typename> class BType>"
-                    "Array<T,BType> operator-(const Array<T,BType> &a,"
-                    "const Array<T,BType> &b)");
+        for (size_t i = 0; i < b.shape().size(); i++) tmp[i] = b[i] * a;
 
-	if (a.shape() != b.shape()) {
-		EXCEPTION_INIT(ShapeMissmatchError,"shapes of arrays a and b do not match!");
-		EXCEPTION_THROW();
-	}
-	Array<T,BType> tmp(a.shape());
+        return tmp;
 
-	T *tmpbuf = tmp.buffer().ptr();
-	T *abuf = a.buffer().ptr();
-	T *bbuf = b.buffer().ptr();
+    }
 
-	for (size_t i = 0; i < a.shape().size(); i++) tmpbuf[i] = abuf[i] - bbuf[i];
+    //------------------------------------------------------------------------------
+    template<typename T,template <typename,typename> class BType,typename Allocator>
+    Array<T,BType,Allocator> operator*(const Array<T,BType,Allocator> &a, const
+            Array<T,BType,Allocator> &b) {
+        EXCEPTION_SETUP("template<typename T,template <typename> class BType>"
+                        "Array<T,BType> operator*(const Array<T,BType> &a,"
+                        "const Array<T,BType> &b)");
 
-	return tmp;
-}
+        if (a.shape() != b.shape()) {
+            EXCEPTION_INIT(ShapeMissmatchError,"shapes of arrays a and b do not match!");
+            EXCEPTION_THROW();
+        }
+        Array<T,BType,Allocator> tmp(a.shape());
 
-//==================Binary multiplication operators=============================
-template<typename T,template <typename> class BType>
-Array<T,BType> operator*(const Array<T,BType> &a, const T &b) {
-	Array<T,BType> tmp(a.shape());
+        for (size_t i = 0; i < a.shape().size(); i++) tmp[i] = a[i] * b[i];
 
-	for (size_t i = 0; i < a.shape().size(); i++) tmp[i] = a[i] * b;
 
-	return tmp;
-}
+        return tmp;
+    }
 
-//------------------------------------------------------------------------------
-template<typename T,template <typename> class BType>
-Array<T,BType> operator*(const T &a, const Array<T,BType> &b) {
-	Array<T,BType> tmp(b.shape());
+    //===================Binary division operators==================================
+    template<typename T,template <typename,typename> class BType,typename Allocator>
+    Array<T,BType,Allocator> operator/(const Array<T,BType,Allocator> &a, const T &b) {
+        Array<T,BType,Allocator> tmp(a.shape());
 
-	for (size_t i = 0; i < b.shape().size(); i++) tmp[i] = b[i] * a;
+        for (size_t i = 0; i < a.shape().size(); i++) tmp[i] = a[i] / b;
 
-	return tmp;
+        return tmp;
+    }
 
-}
+    //------------------------------------------------------------------------------
+    template<typename T,template <typename,typename> class BType,typename Allocator>
+    Array<T,BType,Allocator> operator/(const T &a, const Array<T,BType,Allocator> &b) {
+        Array<T,BType,Allocator> tmp(b.shape());
 
-//------------------------------------------------------------------------------
-template<typename T,template <typename> class BType>
-Array<T,BType> operator*(const Array<T,BType> &a, const Array<T,BType> &b) {
-	EXCEPTION_SETUP("template<typename T,template <typename> class BType>"
-                    "Array<T,BType> operator*(const Array<T,BType> &a,"
-                    "const Array<T,BType> &b)");
+        for (size_t i = 0; i < b.shape().size(); i++) tmp[i] = a / b[i];
 
-	if (a.shape() != b.shape()) {
-		EXCEPTION_INIT(ShapeMissmatchError,"shapes of arrays a and b do not match!");
-		EXCEPTION_THROW();
-	}
-	Array<T,BType> tmp(a.shape());
+        return tmp;
 
-	for (size_t i = 0; i < a.shape().size(); i++) tmp[i] = a[i] * b[i];
+    }
 
+    //------------------------------------------------------------------------------
+    template<typename T,template <typename,typename> class BType,typename Allocator>
+    Array<T,BType,Allocator> operator/(const Array<T,BType,Allocator> &a, const
+            Array<T,BType,Allocator> &b) 
+    {
+        EXCEPTION_SETUP("template<typename T,template <typename> class BType>"
+                        "Array<T,BType> operator/(const Array<T,BType> &a,"
+                        "const Array<T,BType> &b)");
 
-	return tmp;
-}
+        if (a.shape() != b.shape()) {
+            EXCEPTION_INIT(ShapeMissmatchError,"shapes of arrays a and b do not match!");
+            EXCEPTION_THROW();
+        }
+        Array<T,BType,Allocator> tmp(a.shape());
 
-//===================Binary division operators==================================
-template<typename T,template <typename> class BType>
-Array<T,BType> operator/(const Array<T,BType> &a, const T &b) {
-	Array<T,BType> tmp(a.shape());
+        for (size_t i = 0; i < a.shape().size(); i++) tmp[i] = a[i] / b[i];
 
-	for (size_t i = 0; i < a.shape().size(); i++) tmp[i] = a[i] / b;
+        return tmp;
+    }
 
-	return tmp;
-}
-
-//------------------------------------------------------------------------------
-template<typename T,template <typename> class BType>
-Array<T,BType> operator/(const T &a, const Array<T,BType> &b) {
-	Array<T,BType> tmp(b.shape());
-
-	for (size_t i = 0; i < b.shape().size(); i++) tmp[i] = a / b[i];
-
-	return tmp;
-
-}
-
-//------------------------------------------------------------------------------
-template<typename T,template <typename> class BType>
-Array<T,BType> operator/(const Array<T,BType> &a, const Array<T,BType> &b) {
-	EXCEPTION_SETUP("template<typename T,template <typename> class BType>"
-                    "Array<T,BType> operator/(const Array<T,BType> &a,"
-                    "const Array<T,BType> &b)");
-
-	if (a.shape() != b.shape()) {
-		EXCEPTION_INIT(ShapeMissmatchError,"shapes of arrays a and b do not match!");
-		EXCEPTION_THROW();
-	}
-	Array<T,BType> tmp(a.shape());
-
-	for (size_t i = 0; i < a.shape().size(); i++) tmp[i] = a[i] / b[i];
-
-	return tmp;
-}
-
-//=======================Unary addition operations==============================
-template<typename T,template <typename> class BType>
-Array<T,BType> &Array<T,BType>::operator +=(const T &v) {
-
-	for (size_t i = 0; i < this->shape().size(); i++) (*this)[i] += v;
-
-	return *this;
-}
-
-//------------------------------------------------------------------------------
-template<typename T,template <typename> class BType>
-Array<T,BType> &Array<T,BType>::operator +=(const Array<T,BType> &v) {
-	EXCEPTION_SETUP("template<typename T,template <typename> class BType>"
-                    "Array<T,BType> &Array<T,BType>::operator +="
-                    "(const Array<T,BType> &v)");
-
-	if (this->shape() != v.shape()) {
-		EXCEPTION_INIT(ShapeMissmatchError,"shapes of arrays on left and right "
-                                            "side of += do not match!");
-		EXCEPTION_THROW();
-	}
-
-	for (size_t i = 0; i < this->shape().size(); i++) (*this)[i] += v[i];
-
-	return *this;
-}
-
-//==========================Unary subtraction operator==========================
-template<typename T,template <typename> class BType>
-Array<T,BType> &Array<T,BType>::operator -=(const T &v) {
-
-	for (size_t i = 0; i < this->shape().size(); i++) (*this)[i] -= v;
-
-	return *this;
-}
-
-//------------------------------------------------------------------------------
-template<typename T,template <typename> class BType>
-Array<T,BType> &Array<T,BType>::operator -=(const Array<T,BType> &v) {
-	EXCEPTION_SETUP("template<typename T,template <typename> class BType>"
-                    "Array<T,BType> &Array<T,BType>::operator -="
-                    "(const Array<T,BType> &v)");
-
-	if (this->shape() != v.shape()) {
-		EXCEPTION_INIT(ShapeMissmatchError,"shapes of arrays on left and right "
-                                            "side of -= do not match!");
-		EXCEPTION_THROW();
-	}
-
-	for (size_t i = 0; i < this->shape().size(); i++) (*this)[i] -= v[i];
-
-	return *this;
-}
-
-//=======================Unary multiplication operator==========================
-template<typename T,template <typename> class BType>
-Array<T,BType> &Array<T,BType>::operator *=(const T &v) {
-
-	for (size_t i = 0; i < this->shape().size(); i++) (*this)[i] *= v;
-
-	return *this;
-}
-
-//------------------------------------------------------------------------------
-template<typename T,template <typename> class BType>
-Array<T,BType> &Array<T,BType>::operator *=(const Array<T,BType> &v) {
-	EXCEPTION_SETUP("template<typename T,template <typename> class BType>"
-                    "Array<T,BType> &Array<T,BType>::operator *="
-                    "(const Array<T,BType> &v)");
-
-	if (this->shape() != v.shape()) {
-		EXCEPTION_INIT(ShapeMissmatchError,"shapes of arrays on left and right "
-                       "side of *= do not match!");
-		EXCEPTION_THROW();
-	}
-
-	for (size_t i = 0; i < this->shape().size(); i++) (*this)[i] *= v[i];
-
-	return *this;
-}
-
-//======================Unary division operator=================================
-template<typename T,template <typename> class BType>
-Array<T,BType> &Array<T,BType>::operator /=(const T &v) {
-
-	for (size_t i = 0; i < this->shape().size(); i++) (*this)[i] /= v;
-
-	return *this;
-}
-
-//------------------------------------------------------------------------------
-template<typename T,template <typename> class BType>
-Array<T,BType> &Array<T,BType>::operator /=(const Array<T,BType> &v) {
-	EXCEPTION_SETUP("template<typename T,template <typename> class BType>"
-                    "Array<T,BType> &Array<T,BType>::operator /="
-                    "(const Array<T,BType> &v)");
-
-	if (this->shape() != v.shape()) {
-		EXCEPTION_INIT(ShapeMissmatchError,"shapes of arrays on left and right "
-                       "side of /= do not match!");
-		EXCEPTION_THROW();
-	}
-
-	for (size_t i = 0; i < this->shape().size(); i++) (*this)[i] /= v[i];
-
-	return *this;
-}
 
 //===============================definition of some standard arrays============
 typedef Array<Int8,Buffer> Int8Array;
@@ -1344,7 +1338,7 @@ typedef Array<Complex32,Buffer> Complex32Array;
 typedef Array<Complex64,Buffer> Complex64Array;
 typedef Array<Complex128,Buffer> Complex128Array;
 
-
+/*
 typedef Array<Int8,RefBuffer> Int8RefArray;
 typedef Array<UInt8,RefBuffer> UInt8RefArray;
 typedef Array<Int16,RefBuffer> Int16RefArray;
@@ -1356,7 +1350,7 @@ typedef Array<UInt64,RefBuffer> UInt64RefArray;
 typedef Array<Float32,RefBuffer> Float32RefArray;
 typedef Array<Float64,RefBuffer> Float64RefArray;
 typedef Array<Float128,RefBuffer> Float128RefArray;
-
+*/
 }
 }
 

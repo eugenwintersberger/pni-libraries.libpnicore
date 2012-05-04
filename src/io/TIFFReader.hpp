@@ -150,8 +150,9 @@ namespace io{
             
 
             */
-            template<typename T,template<typename> class BTYPE> 
-                void _read_data(size_t i,size_t c,Array<T,BTYPE> &array);
+            template<typename T,template<typename,typename> class BTYPE,typename
+                Allocator> 
+                void _read_data(size_t i,size_t c,Array<T,BTYPE,Allocator> &array);
         public:
             //==========constructors and destructor========================
             //! default constructor
@@ -234,8 +235,9 @@ namespace io{
             \param i index of the image in the file
             \param c index of the image channel to read
             */
-            template<typename T,template<typename> class BT> 
-                void image(Array<T,BT> &array,size_t i,size_t c=0) 
+            template<typename T,template<typename,typename> class BT,typename
+                Allocator> 
+                void image(Array<T,BT,Allocator> &array,size_t i,size_t c=0) 
             {
                 ImageInfo info = this->info(i);
 
@@ -252,8 +254,9 @@ namespace io{
 
     };
 
-    template<typename T,template<typename> class BTYPE> 
-        void TIFFReader::_read_data(size_t i,size_t c,Array<T,BTYPE> &array)
+    template<typename T,template<typename,typename> class BTYPE,typename
+        Allocator> 
+        void TIFFReader::_read_data(size_t i,size_t c,Array<T,BTYPE,Allocator> &array)
     {
         //obtain the proper IFD
         tiff::IFD &ifd = this->_ifds.at(i);
