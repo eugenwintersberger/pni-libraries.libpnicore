@@ -1,6 +1,6 @@
 prefix = @PREFIX@
 exec_prefix = ${prefix}
-includedir = ${prefix}/include/pni/utils
+includedir = @INCDIR@
 libdir = ${prefix}/lib
 
 Name: @LIBNAME@
