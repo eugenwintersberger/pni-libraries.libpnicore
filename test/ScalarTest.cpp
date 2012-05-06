@@ -110,7 +110,6 @@ void ScalarTest::testSetGetValue(){
 	Float128 f128;
 	Float128Scalar sf128;
 	UInt32Scalar su32;
-	UInt32 u32;
 	Int32 i32;
 	Int32Scalar si32;
 
@@ -502,7 +501,6 @@ void ScalarTest::testBinarySubtractionOperation(){
 	Float64Scalar saf64,sbf64,scf64;
 	Float64 af64,bf64;
 	Float32Scalar saf32,sbf32,scf32;
-	Float32 af32,bf32;
 
 	af64 = 123.123; bf64 = 3.e+2;
 	saf64 = af64; sbf64 = bf64;
@@ -859,16 +857,15 @@ void ScalarTest::testUnaryAddOperation(){
 	std::cout<<"void ScalarTest::testUnaryAddOperation()----------------------";
 	std::cout<<std::endl;
 	Float64Scalar saf64,sbf64;
-	Float64 af64,bf64;
+	Float64 bf64;
 	Float128Scalar sf128,saf128,sbf128;
-	Float128 f128,af128,bf128;
+	Float128 f128;
 	Complex64 c64;
 
 	//some integer scalars
 	UInt8Scalar sui8,saui8,sbui8;
-	UInt8 ui8,aui8,bui8;
 	Int32Scalar si32,sai32,sbi32;
-	Int32 i32,ai32,bi32;
+	Int32 i32;
 
 	//checking unary integer operations
 	sui8 = 0;
@@ -978,7 +975,7 @@ void ScalarTest::testUnarySubOperation(){
 	std::cout<<"void ScalarTest::testUnarySubOperation()----------------------";
 	std::cout<<std::endl;
 	Float64Scalar saf64,sbf64;
-	Float64 af64,bf64;
+	Float64 bf64;
 	Complex64 c64;
 	UInt8Scalar sui8;
 	Int32Scalar si32;

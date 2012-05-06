@@ -59,14 +59,14 @@ namespace utils{
     Furthermore we assume an multidimensional index for an array element
     \f$(i_0,i_1,....,i_{(M-1)})\f$. From this the linear memory location can be
     obtained with
-    f[
+    \f[
         o = \sum_{j=0}^{M-1} i_jS_j
-    f]
-    where S_j is the stride of each dimension which is determined by
-    f[
+    \f]
+    where \f$S_j\f$ is the stride of each dimension which is determined by
+    \f[
     S_j = \prod_{k=j}^{M-2} N_{k+1}
-    with S_{M-1} = 1
-    f]
+    \mbox{ with } S_{M-1} = 1
+    \f]
     After an ArrayShape object has been instantiated all its parameters
     can be adjusted dynamically to whatever values are required.
     The class takes care about all kinds of adoptions.
@@ -115,7 +115,7 @@ namespace utils{
             \code
             Shape s={3,4,6};
             \endcode
-            \param initializer list
+            \param list initializer list
             */
             Shape(const std::initializer_list<size_t> &list);
 
@@ -177,7 +177,7 @@ namespace utils{
             //! characterized by the indices in index. The offset is the address of
             //! the element in a linear buffer.
             //! \throws IndexError if one of the indices in the Index objects exceeds its dimension
-            //! \param Index index object
+            //! \param i index object
             //! \return offset for an index
             size_t offset(const Index &i) const;
 
