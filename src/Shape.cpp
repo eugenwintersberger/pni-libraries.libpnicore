@@ -144,7 +144,17 @@ namespace utils{
 
     //============methods to access and manipulate dimensions===================
     //implementation of set dimension
-    void Shape::dim(const size_t &i,const size_t &d){
+    void Shape::dim(const size_t &i,const size_t &d)
+    {
+        EXCEPTION_SETUP("void Shape::dim(const size_t &i,const size_t &d)");
+        if(i>=rank())
+        {
+            std::stringstream ss;
+            ss<<"Dimension index ("<<i<<") exceeds shape rank ("<<rank()<<")!";
+            EXCEPTION_INIT(IndexError,ss.str());
+            EXCEPTION_THROW();
+        }
+
         _shape[i] = d;
 
         //like for setDimensions - strides and array size must be adopted
@@ -206,6 +216,14 @@ namespace utils{
     //implementation of get dimension
     size_t Shape::dim(const size_t &i) const{
         EXCEPTION_SETUP("size_t Shape::dim(const size_t &i) const");
+
+        if(i>=rank())
+        {
+            std::stringstream ss;
+            ss<<"Dimension index ("<<i<<") exceeds shape rank ("<<rank()<<")!";
+            EXCEPTION_INIT(IndexError,ss.str());
+            EXCEPTION_THROW();
+        }
 
         return _shape[i];
     }

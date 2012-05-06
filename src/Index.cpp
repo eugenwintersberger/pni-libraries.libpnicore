@@ -124,13 +124,13 @@ size_t Index::rank() const{
 //============Methods for modifying and accessing index values==================
 //implementation of get an index
 size_t Index::get(size_t index) const{
-	return _index[index];
+	return _index.at(index);
 }
 
 //------------------------------------------------------------------------------
 //implementation of set an index
 void Index::set(size_t index,size_t value){
-	_index[index] = value;
+	_index.at(index) = value;
 }
 
 //------------------------------------------------------------------------------
@@ -140,12 +140,12 @@ void Index::inc(size_t index){
 
 	//throw an exception in cases where the increment would exceed
 	//the numeric range of size_t
-	if((*this)[index] == std::numeric_limits<size_t>::max()){
+	if(get(index) == std::numeric_limits<size_t>::max()){
 		EXCEPTION_INIT(RangeError,"Index exceeds numeric limits!");
 		EXCEPTION_THROW();
 	}
 
-	(*this)[index]++;
+	_index.at(index)++;
 }
 
 //------------------------------------------------------------------------------
@@ -161,7 +161,7 @@ void Index::dec(size_t index){
 		EXCEPTION_THROW();
 	}
 
-	(*this)[index]--;
+    _index.at(index)--;
 }
 
 //=================Implementation of output operators===========================

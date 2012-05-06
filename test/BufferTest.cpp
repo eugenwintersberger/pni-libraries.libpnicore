@@ -125,21 +125,21 @@ void BufferTest::testAllocation(){
 void BufferTest::testAccess(){
 	Buffer<Float64> dbuffer(1000);
 
-	for(UInt64 i=0;i<1000;i++) dbuffer[i] = (Float64)i;
+	for(size_t i=0;i<1000;i++) dbuffer[i] = (Float64)i;
 
-	for(UInt64 i=0;i<1000;i++){
+	for(size_t i=0;i<1000;i++){
 		CPPUNIT_ASSERT(((Float64)i)==dbuffer[i]);
 	}
 
     Buffer<Int32> ibuffer(4);
-    CPPUNIT_ASSERT_NO_THROW(ibuffer.set({1,2,3,4}));
-    CPPUNIT_ASSERT(ibuffer[0] = 1);
-    CPPUNIT_ASSERT(ibuffer[1] = 2);
-    CPPUNIT_ASSERT(ibuffer[2] = 3);
-    CPPUNIT_ASSERT(ibuffer[3] = 4);
+    for(size_t i=0;i<ibuffer.size();i++)
+        ibuffer.at(i) = i;
 
-    CPPUNIT_ASSERT_THROW(ibuffer.set({1,2}),SizeMissmatchError);
-    CPPUNIT_ASSERT_THROW(ibuffer.set({1,2,3,4,54,6,7}),SizeMissmatchError);
+    for(size_t i=0;i<ibuffer.size();i++)
+        CPPUNIT_ASSERT(ibuffer.at(i) == i);
+
+    //check for IndexError exception
+    CPPUNIT_ASSERT_THROW(ibuffer.at(100),IndexError);
 
 }
 

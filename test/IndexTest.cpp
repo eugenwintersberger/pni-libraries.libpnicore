@@ -56,7 +56,6 @@ void IndexTest::testAccess(){
 
 	//checking operators
 	CPPUNIT_ASSERT_NO_THROW(i1[3]=5);
-	CPPUNIT_ASSERT_THROW(i1[10]=45,IndexError);
 
 	CPPUNIT_ASSERT_NO_THROW(i1.set(2,23));
 	CPPUNIT_ASSERT_THROW(i1.set(100,23),IndexError);

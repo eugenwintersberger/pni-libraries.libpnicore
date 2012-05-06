@@ -38,386 +38,337 @@
 #include <sstream>
 #include "Exceptions.hpp"
 #include "Types.hpp"
-#include "BufferObject.hpp"
 #include "Buffer.hpp"
 #include "TypeIDMap.hpp"
 
 namespace pni{
 namespace utils{
 
-//! \ingroup data_classes
-//! \brief ref. buffer template
+#define RBUFFTMPDEC template<typename T,typename Allocator>
+#define RBUFFTMP RefBuffer<T,Allocator>
 
-//! This template is a concrete implementation of the BufferObject base class.
-//! Unlike the Buffer<T> template this object can be used to provide a buffer
-//! interface to memory allocated by other instances. Hence it is quite useful
-//! to connect to third party libraries.
-//! As the class is not responsible  for memory allocation it also frees no 
-//! memory. Thus memory management is entirely in the hand of third party
-//! instances.
-//! Such a reference buffer can either be initialized from a raw pointer, an
-//! instance of Buffer<T>, or from a different RefBuffer object.
-template<typename T>class RefBuffer:public BufferObject{
-private:
-	T *_data; //!< pointer to the data block
+    /*! \ingroup data_classes
+    \brief ref. buffer template
 
-public:
-	typedef std::shared_ptr<RefBuffer<T> > sptr; //!< smart pointer to a typed buffer
-    //-----------------constructors and destructors----------------------------
-	//! default constructor
-	explicit RefBuffer();
-	//! copy constructor
+    This template is a concrete implementation of the BufferObject base class.
+    Unlike the Buffer<T> template this object can be used to provide a buffer
+    interface to memory allocated by other instances. Hence it is quite useful
+    to connect to third party libraries.
+    As the class is not responsible  for memory allocation it also frees no 
+    memory. Thus memory management is entirely in the hand of third party
+    instances.
+    Such a reference buffer can either be initialized from a raw pointer, an
+    instance of Buffer<T>, or from a different RefBuffer object.
+    */
+    RBUFFTMPDEC class RefBuffer
+    {
+        private:
+            T *_data; //!< pointer to the data block
+            size_t _size; //!< number of elements allocated in the buffer
+        public:
+            //===================public types =================================
+            typedef std::unique_ptr<RBUFFTMP > unique_ptr;
+            typedef std::shared_ptr<RBUFFTMP > shared_ptr; //!< smart pointer to a typed buffer
+            typedef T value_type;
+            typedef Allocator allocator_type;
 
-	//! The buffer is initialized by an already existing reference buffer. 
-	RefBuffer(const RefBuffer<T> &b);
+            //===================public static member variables================
+            static const size_t value_size = sizeof(T);
+            static const TypeID type_id    = TypeIDMap<T>::type_id;
 
-    //! copy constructor
+            //=================constructors and destructors====================
+            //! default constructor
+            explicit RefBuffer();
 
-    //! A reference buffer can also be initialized by a Buffer<T> object. 
-    RefBuffer(const Buffer<T> &b);
-	//! move constructor
-	RefBuffer(RefBuffer<T> &&b);
-	//! constructor with buffer size
+            //-----------------------------------------------------------------
+            //! copy constructor
+            RefBuffer(const RBUFFTMP &b);
 
-	//! Using this constructor the buffer will automatically allocate memory.
-	//! \throws MemoryAllocationError if allocation on the heap fails
-	//! \param n number of elements of type T in the buffer
-	explicit RefBuffer(size_t n,T *data);
-	//! destructor
-	virtual ~RefBuffer();
+            //-----------------------------------------------------------------
+            //! copy constructor
+            RefBuffer(const Buffer<T,Allocator> &b);
 
-    //---------------assignment operators---------------------------------------
-	//! copy assignment operator
+            //-----------------------------------------------------------------
+            //! move constructor
+            RefBuffer(RBUFFTMP &&b);
 
-	//! \return reference to a Buffer<T> object
-	RefBuffer<T> &operator=(const RefBuffer<T> &b);
-	//! move assignment operator
-	RefBuffer<T> &operator=(RefBuffer<T> &&b);
-    //! copy assignment operator from Buffer<T>
+            //-----------------------------------------------------------------
+            /*! \brief standard constructor
 
-    //! The reference buffer holds a reference to the data which was allocated 
-    //! by the b. 
-    RefBuffer<T> &operator=(const Buffer<T> &b);
-	//! single value assignment operator
+            This constructor takes the number of elements and a raw pointer to
+            the allocated memory region. It is the responsibility of the user to
+            ensure that memory is allocated.
+            \param n number of elements of type T in the buffer
+            \param data pointer to the allocated memory
+            */
+            explicit RefBuffer(size_t n,T *data);
+            
+            //-----------------------------------------------------------------
+            //! destructor
+            virtual ~RefBuffer();
 
-	//! This special form of the assignment operator can be used to assign
-	//! a single value to all elements of the buffer. Thus, it is quite useful
-	//! for initializing a buffer object.
-	//! \param v value which to assign to all buffer elements
-	//! \return reference to a buffer object
-	RefBuffer<T> &operator=(const T &v);
+            //====================assignment operators=========================
+            //! copy assignment operator
+            RBUFFTMP &operator=(const RBUFFTMP &b);
 
-    //---------------data access methods---------------------------------------
-	//! return data pointer
+            //-----------------------------------------------------------------
+            //! move assignment operator
+            RBUFFTMP &operator=(RBUFFTMP &&b);
 
-	//! Returns a typed const pointer to the allocated memory. The pointer must
-	//! not be used to modify data values.
-	//! \return pointer to allocated memory
-	const T* ptr() const;
-	//! return data pointer
+            //-----------------------------------------------------------------
+            /*! copy assignment operator from Buffer<T>
 
-	//! Returns a typed pointer to the allocated memory. The pointer can be
-	//! used for altering the buffer content.
-	//! \return pointer to allocated memory
-	T *ptr();
+            The reference buffer holds a reference to the data which was allocated 
+            by the b. 
+            */
+            RBUFFTMP &operator=(const Buffer<T,Allocator> &b);
 
-	virtual void *void_ptr();
+            //-----------------------------------------------------------------
+            /*! \brief single value assignment operator
 
-	virtual const void *void_ptr() const;
+            This special form of the assignment operator can be used to assign
+            a single value to all elements of the buffer. Thus, it is quite useful
+            for initializing a buffer object.
+            \param v value which to assign to all buffer elements
+            */
+            RBUFFTMP &operator=(const T &v);
 
-	virtual T get(size_t i) const;
-	virtual void set(size_t i,const T &o);
+            //====================data access methods==========================
+            //! return data pointer
 
-	//! [] operator for read and write access
+            //! Returns a typed const pointer to the allocated memory. The pointer must
+            //! not be used to modify data values.
+            //! \return pointer to allocated memory
+            const T* ptr() const { return this->_data; }
+            //! return data pointer
 
-	//! This operator will be used in expressions where the buffer access stands
-	//! on the left side of an assignment operation. In other words - when data should
-	//! be written to the buffer.
-	//! \throws IndexError if n is larger than the number of elements in the buffer
-	//! \param n index of element to fetch
-	//! \return reference to the n-th element in the buffer
-	T& operator[](size_t n);
-	//! [] operator for read only access
+            //! Returns a typed pointer to the allocated memory. The pointer can be
+            //! used for altering the buffer content.
+            //! \return pointer to allocated memory
+            T *ptr() { return this->_data; }
 
-	//! This operator will be used in expressions where read only access to the
-	//! data values in the buffer is required.
-	//! \throws IndexError if n is larger than the number of elements in the buffer
-	//! \param n index of the element to fetch
-	//! \return value of the buffer at position n
-	T operator[](size_t n) const;
+            void *void_ptr() { return (void *)this->_data;}
 
-    //! allocate memory - does nothing
+            const void *void_ptr() const { return (const void *)this->_data; }
 
-    //! For a RefBuffer this method has no effect.
-	virtual void allocate(const size_t &size);
-    
-    //! check if buffer is allocated
+            T at(size_t i) const;
+            T &at(size_t i);
 
-    //! The behavior of this method varies slightly from the original
-    //! definition. As a RefBuffer has no influence on the allocation 
-    //! of memory this method returns true if the pointer it referes 
-    //! to is not a nullptr. 
-    //! \return true if pointer is not nullptr, false otherwise
-	virtual bool is_allocated() const;
+            //! [] operator for read and write access
 
-    //! free memory - does nothing
+            //! This operator will be used in expressions where the buffer access stands
+            //! on the left side of an assignment operation. In other words - when data should
+            //! be written to the buffer.
+            //! \param n index of element to fetch
+            //! \return reference to the n-th element in the buffer
+            T& operator[](size_t n) { return this->_data[n];}
+            //! [] operator for read only access
 
-    //! In the case of a RefBuffer this method does not free memory 
-    //! but resets the internal data pointer to nullptr.
-	virtual void free();
+            //! This operator will be used in expressions where read only access to the
+            //! data values in the buffer is required.
+            //! \param n index of the element to fetch
+            //! \return value of the buffer at position n
+            T operator[](size_t n) const { return this->_data[n]; }
 
-	virtual size_t element_size() const {
-		return sizeof(T);
-	}
+            //! allocate memory - does nothing
 
-	virtual size_t mem_size() const {
-		return sizeof(T)*this->size();
-	}
+            //! For a RefBuffer this method has no effect.
+            void allocate(size_t size) {}
+            
+            //! check if buffer is allocated
 
-	virtual TypeID type_id() const {
-		return TypeIDMap<T>::type_id;
-	}
+            //! The behavior of this method varies slightly from the original
+            //! definition. As a RefBuffer has no influence on the allocation 
+            //! of memory this method returns true if the pointer it referes 
+            //! to is not a nullptr. 
+            //! \return true if pointer is not nullptr, false otherwise
+            bool is_allocated() const
+            {
+                if(this->_data) return true;
+                return false;
+            }
 
+            //! free memory - does nothing
 
-};
+            //! In the case of a RefBuffer this method does not free memory 
+            //! but resets the internal data pointer to nullptr.
+            void free() 
+            {
+                _data = nullptr;
+                _size = 0;
+            }
 
-//=================Implementation of constructors and destructors===============
-//implementation of the default constructor
-template<typename T> RefBuffer<T>::RefBuffer():BufferObject(){
-	_data = nullptr;
-}
+            virtual size_t mem_size() const {
+                return sizeof(T)*this->size();
+            }
 
-//------------------------------------------------------------------------------
-//implementation of the copy from RefBuffer constructor
-template<typename T> RefBuffer<T>::RefBuffer(const RefBuffer<T>& o)
-:BufferObject(o)
-{
-    _data = o._data;
-}
+    };
 
-//------------------------------------------------------------------------------
-//implementation of the copy constructor
-template<typename T> RefBuffer<T>::RefBuffer(const Buffer<T> &b):BufferObject(b){
-	_data = (T*)b.ptr();
-}
+    //=================Implementation of constructors and destructors===============
+    //implementation of the default constructor
+    RBUFFTMPDEC RBUFFTMP::RefBuffer():
+        _data(nullptr),
+        _size(0)
+    { }
 
-//------------------------------------------------------------------------------
-//implementation of the move constructor
-template<typename T> RefBuffer<T>::RefBuffer(RefBuffer<T> &&b)
-    :BufferObject(std::move(b)){
-	_data = b._data;
-	b._data = nullptr;
-}
+    //------------------------------------------------------------------------------
+    //implementation of the copy from RefBuffer constructor
+    RBUFFTMPDEC RBUFFTMP::RefBuffer(const RBUFFTMP& o):
+        _data(o._data),
+        _size(o._size)
+    { }
 
-//------------------------------------------------------------------------------
-//implementation of the standard constructor
-template<typename T> RefBuffer<T>::RefBuffer(size_t n,T *data):BufferObject(n){
-	_data = data;
-}
+    //------------------------------------------------------------------------------
+    //implementation of the copy constructor
+    RBUFFTMPDEC RBUFFTMP::RefBuffer(const Buffer<T,Allocator> &b):
+        _data(b.ptr()),
+        _size(b.size())
+    { }
 
-//------------------------------------------------------------------------------
-//implementation of the destructor
-template<typename T> RefBuffer<T>::~RefBuffer(){
-	free();
-}
+    //------------------------------------------------------------------------------
+    //implementation of the move constructor
+    RBUFFTMPDEC RBUFFTMP::RefBuffer(RBUFFTMP &&b):
+        _data(std::move(b._data)),
+        _size(std::move(b._size))
+    {
+        b._data = nullptr;
+        b._size = 0;
+    }
 
-//===================assignment operators=======================================
-//implementation of copy assignment
-template<typename T> RefBuffer<T> &RefBuffer<T>::operator=(const RefBuffer<T> &b){
-    
-	if(&b != this){
-		//now assign all parameters from the original buffer to the new one
-		(BufferObject &)(*this) = (BufferObject &)b;
-		//call allocate (which will do nothing if there is nothing to allocate)
+    //------------------------------------------------------------------------------
+    //implementation of the standard constructor
+    RBUFFTMPDEC RBUFFTMP::RefBuffer(size_t n,T *data):
+        _data(data),
+        _size(n)
+    { }
+
+    //------------------------------------------------------------------------------
+    //implementation of the destructor
+    RBUFFTMPDEC RBUFFTMP::~RefBuffer()
+    {
+        free();
+    }
+
+    //===================assignment operators=======================================
+    //implementation of copy assignment
+    RBUFFTMPDEC RBUFFTMP &RBUFFTMP::operator=(const RBUFFTMP &b)
+    {
+        if(&b != this){
+            _data = b._data;
+            _size = b._size;
+        }
+
+        return *this;
+    }
+
+    //------------------------------------------------------------------------------
+    //implementation of the move assignment
+    RBUFFTMPDEC RBUFFTMP &RBUFFTMP::operator=(RBUFFTMP &&b)
+    {
+        if(this != &b){
+            _data = b._data;
+            b._data = nullptr;
+            _size = b._sizel;
+            b._size = 0;
+        }
+
+        return *this;
+    }
+
+    //-----------------------------------------------------------------------------
+    //copy assignment from Buffer<T> template
+    RBUFFTMPDEC RBUFFTMP &RBUFFTMP::operator=(const Buffer<T,Allocator> &b)
+    {
+        _data = b.ptr();
+        _size = b.size();
         
-        _data = b._data;
-	}
+        return *this;
+    }
 
-	return *this;
-}
+    //------------------------------------------------------------------------------
+    //implementation of single value assignment
+    RBUFFTMPDEC RBUFFTMP &RBUFFTMP::operator=(const T &d){
+        EXCEPTION_SETUP("template<typename T> RefBuffer<T> &RefBuffer<T>::operator=(const T &d)");
 
-//------------------------------------------------------------------------------
-//implementation of the move assignment
-template<typename T> RefBuffer<T> &RefBuffer<T>::operator=(RefBuffer<T> &&b){
-	if(this != &b){
-		(BufferObject &)(*this) = std::move((BufferObject &)b);
+        if(!this->is_allocated()){
+            EXCEPTION_INIT(MemoryAccessError,"Cannot assign data to an unallocated buffer!");
+            EXCEPTION_THROW();
+        }
 
-		_data = b._data;
-		b._data = nullptr;
-	}
-
-	return *this;
-}
-
-//-----------------------------------------------------------------------------
-//copy assignment from Buffer<T> template
-template<typename T> RefBuffer<T> &RefBuffer<T>::operator=(const Buffer<T> &b){
-   (BufferObject &)(*this) = (BufferObject &)(b);
-
-   _data = b.ptr();
-    
-   return *this;
-}
-
-//------------------------------------------------------------------------------
-//implementation of single value assignment
-template<typename T> RefBuffer<T> &RefBuffer<T>::operator=(const T &d){
-	EXCEPTION_SETUP("template<typename T> RefBuffer<T> &RefBuffer<T>::operator=(const T &d)");
-
-	if(!_data){
-		EXCEPTION_INIT(MemoryAccessError,"Cannot assign data to an unallocated buffer!");
-		EXCEPTION_THROW();
-	}
-
-	//we do not need to check the size here because if the buffer is allocated
-	//the size is necessarily not zero
-	for(size_t i=0;i<this->size();i++) (*this)[i] = d;
+        //we do not need to check the size here because if the buffer is allocated
+        //the size is necessarily not zero
+        for(size_t i=0;i<this->size();i++) (*this)[i] = d;
 
 
-	return *this;
-}
-//==============methods for data allocation ===================================
-//implementation of is_allocated
-template<typename T> bool RefBuffer<T>::is_allocated() const {
-	if(_data) return true;
-	return false;
-}
+        return *this;
+    }
 
-//-----------------------------------------------------------------------------
-//implementation of free
-template<typename T> void RefBuffer<T>::free(){
-    _data = nullptr;
-}
+    //===============Methods for data access========================================
+    RBUFFTMPDEC T RBUFFTMP::at(size_t i) const 
+    {
+        EXCEPTION_SETUP("RBUFFTMPDEC T RBUFFTMP::at(size_t i) const ");
 
-//------------------------------------------------------------------------------
-//implementation of allocate
-template<typename T> void RefBuffer<T>::allocate(const size_t &s){
-}
+        if(!this->is_allocated()){
+            EXCEPTION_INIT(MemoryAccessError,"Buffer not allocated");
+            EXCEPTION_THROW();
+        }
 
-//====================methods to access the data pointer========================
-template<typename T> void *RefBuffer<T>::void_ptr(){
-	return (void *)_data;
-}
+        if(i>=this->size()){
+            std::ostringstream sstr;
+            sstr<<"Index ("<<i<<") must not be larger or equal the size ("<<this->size()<<")of the buffer!";
+            EXCEPTION_INIT(IndexError,sstr.str());
+            EXCEPTION_THROW();
+        }
 
-//------------------------------------------------------------------------------
-template<typename T> const void *RefBuffer<T>::void_ptr() const {
-	return (void *)_data;
-}
+        return this->_data[i];
+    }
 
-//------------------------------------------------------------------------------
-template<typename T> T *RefBuffer<T>::ptr(){
-	return _data;
-}
+    //------------------------------------------------------------------------------
+    RBUFFTMPDEC T & RBUFFTMP::at(size_t i)
+    {
+        EXCEPTION_SETUP("RBUFFTMPDEC T & RBUFFTMP::at(size_t i)");
 
-//------------------------------------------------------------------------------
-template<typename T> const T *RefBuffer<T>::ptr() const {
-	return _data;
-}
+        if(!this->is_allocated()){
+            EXCEPTION_INIT(MemoryAccessError,"Buffer not allocated!");
+            EXCEPTION_THROW();
+        }
+
+        if(i>=this->size()){
+            std::ostringstream sstr;
+            sstr<<"Index ("<<i<<") must not be larger or equal the size ("<<this->size()<<")of the buffer!";
+            EXCEPTION_INIT(IndexError,sstr.str());
+            EXCEPTION_THROW();
+        }
+
+        return this->_data[i];
+    }
 
 
+    //==============comparison operators============================================
+    template<typename T,typename U,typename Allocator>
+    bool operator==(const RefBuffer<T,Allocator> &a,const RefBuffer<U,Allocator> &b){
+        if(a.size() != b.size()) return false;
 
-//===============Methods for data access========================================
-template<typename T> T RefBuffer<T>::get(size_t i) const {
-	EXCEPTION_SETUP("template<typename T> T get(size_t i) const");
+        if(a.is_allocated()!=b.is_allocated()) return false;
 
-	if(!this->is_allocated()){
-		EXCEPTION_INIT(MemoryAccessError,"Buffer not allocated");
-		EXCEPTION_THROW();
-	}
+        if(a.is_allocated() && b.is_allocated()){
+            for(size_t i=0;i<a.size();i++){
+                if(a[i] != b[i]) return false;
+            }
+        }
 
-	if(i>=this->size()){
-		std::ostringstream sstr;
-		sstr<<"Index ("<<i<<") must not be larger or equal the size ("<<this->size()<<")of the buffer!";
-		EXCEPTION_INIT(IndexError,sstr.str());
-		EXCEPTION_THROW();
-	}
-
-	return _data[i];
-}
-
-//------------------------------------------------------------------------------
-template<typename T> void RefBuffer<T>::set(size_t i,const T &o){
-	EXCEPTION_SETUP("template<typename T> void Buffer<T>::set(size_t i,const T &o)");
-
-	if(!this->is_allocated()){
-		EXCEPTION_INIT(MemoryAccessError,"Buffer not allocated!");
-		EXCEPTION_THROW();
-	}
-
-	if(i>=this->size()){
-		std::ostringstream sstr;
-		sstr<<"Index ("<<i<<") must not be larger or equal the size ("<<this->size()<<")of the buffer!";
-		EXCEPTION_INIT(IndexError,sstr.str());
-		EXCEPTION_THROW();
-	}
-
-	_data[i] = o;
-}
-
-//======================operators for data access===============================
-//implementation of read write access
-template<typename T> T& RefBuffer<T>::operator[](size_t n){
-	EXCEPTION_SETUP("template<typename T> T& Buffer<T>::operator[](size_t n)");
-
-	if(!this->is_allocated()){
-		EXCEPTION_INIT(MemoryAccessError,"Buffer not allocated!");
-		EXCEPTION_THROW();
-	}
-
-	if(n>=this->size()){
-		std::ostringstream sstr;
-		sstr<<"Index ("<<n<<") must not be larger or equal the size ("<<this->size()<<")of the buffer!";
-		EXCEPTION_INIT(IndexError,sstr.str());
-		EXCEPTION_THROW();
-	}
-
-	return _data[n];
-}
-
-//------------------------------------------------------------------------------
-//implementation of read only access
-template<typename T> T RefBuffer<T>::operator[](size_t n) const {
-	EXCEPTION_SETUP("template<typename T> T Buffer<T>::operator[](size_t n) const");
-
-	if(!this->is_allocated()){
-		EXCEPTION_INIT(MemoryAccessError,"Buffer not allocated!");
-		EXCEPTION_THROW();
-	}
-
-	if(n>=this->size()){
-		std::ostringstream sstr;
-		sstr<<"Index ("<<n<<") must not be larger or equal the size ("<<this->size()<<")of the buffer!";
-		EXCEPTION_INIT(IndexError,sstr.str());
-		EXCEPTION_THROW();
-	}
-	return _data[n];
-}
-
-//==============comparison operators============================================
-template<typename T,typename U>
-bool operator==(const RefBuffer<T> &a,const RefBuffer<U> &b){
-	if(a.size() != b.size()) return false;
-
-	if(a.is_allocated()!=b.is_allocated()) return false;
-
-	if(a.is_allocated() && b.is_allocated()){
-		for(size_t i=0;i<a.size();i++){
-			if(a[i] != b[i]) return false;
-		}
-	}
-
-	return true;
-}
+        return true;
+    }
 
 
 
 
-//-----------------------------------------------------------------------------
-template<typename T,typename U>
-bool operator!=(const RefBuffer<T> &a,const RefBuffer<U> &b){
-	if(a == b) return false;
-	return true;
-}
+    //-----------------------------------------------------------------------------
+    template<typename T,typename U,typename Allocator>
+    bool operator!=(const RefBuffer<T,Allocator> &a,const RefBuffer<U,Allocator> &b){
+        if(a == b) return false;
+        return true;
+    }
 
 
 

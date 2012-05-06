@@ -76,8 +76,8 @@ namespace utils{
             void _allocate();
         public:
             //============public types provided by the template================
-            typedef std::shared_ptr<Buffer<T> > shared_ptr; //!< smart pointer to a typed buffer
-            typedef std::unique_ptr<Buffer<T> > unique_ptr; //!< unique poitner type to a buffer
+            typedef std::shared_ptr<Buffer<T,Allocator> > shared_ptr; //!< smart pointer to a typed buffer
+            typedef std::unique_ptr<Buffer<T,Allocator> > unique_ptr; //!< unique poitner type to a buffer
             typedef T value_type;  //!< type stored in the buffer
             typedef Allocator allocator_type; //!< allocator type
 
@@ -177,7 +177,7 @@ namespace utils{
             must not be used to modify data values.
             \return pointer to allocated memory
             */
-            const T* ptr() const { return _data; }
+            const T* ptr() const { return this->_data; }
 
             //-----------------------------------------------------------------
             /*! return data pointer
@@ -186,7 +186,7 @@ namespace utils{
             used for altering the buffer content.
             \return pointer to allocated memory
             */
-            T *ptr();
+            T *ptr() { return this->_data; }
 
             //-----------------------------------------------------------------
             /*! \brief return a non-const pointer to the allocate memory
@@ -195,10 +195,10 @@ namespace utils{
             Buffer<T> object.
             \return return read/write pointer to data
             */
-            void *void_ptr() { return _data; }
+            void *void_ptr() { return this->_data; }
 
             //-----------------------------------------------------------------
-            const void *void_ptr() const { return _data; }
+            const void *void_ptr() const { return this->_data; }
 
             //-----------------------------------------------------------------
             /*! \brief get value at index i
@@ -391,6 +391,7 @@ namespace utils{
     template<typename T,typename Allocator> void Buffer<T,Allocator>::free()
     {
         Allocator::template free(_data);
+        this->_data = nullptr;
         _size = 0;
     }
 

@@ -139,61 +139,19 @@ void ArrayTest::testComparison(){
 
 //------------------------------------------------------------------------------
 void ArrayTest::testTypeInfo(){
-	ArrayObject *ptr;
-
-	ptr = new Int8Array();
-	CPPUNIT_ASSERT(ptr->type_id()==TypeID::INT8);
-	delete ptr;
-
-	ptr = new UInt8Array();
-	CPPUNIT_ASSERT(ptr->type_id()==TypeID::UINT8);
-	delete ptr;
-
-	ptr = new Int16Array();
-	CPPUNIT_ASSERT(ptr->type_id()==TypeID::INT16);
-	delete ptr;
-
-	ptr = new UInt16Array();
-	CPPUNIT_ASSERT(ptr->type_id()==TypeID::UINT16);
-	delete ptr;
-
-	ptr = new Int32Array();
-	CPPUNIT_ASSERT(ptr->type_id()==TypeID::INT32);
-	delete ptr;
-
-	ptr = new UInt32Array();
-	CPPUNIT_ASSERT(ptr->type_id()==TypeID::UINT32);
-	delete ptr;
-
-	ptr = new Int64Array();
-	CPPUNIT_ASSERT(ptr->type_id()==TypeID::INT64);
-	delete ptr;
-
-	ptr = new pni::utils::UInt64Array();
-	CPPUNIT_ASSERT(ptr->type_id()==TypeID::UINT64);
-	delete ptr;
-
-	ptr = new Float32Array();
-	CPPUNIT_ASSERT(ptr->type_id()==TypeID::FLOAT32);
-	delete ptr;
-
-	ptr = new Float64Array();
-	CPPUNIT_ASSERT(ptr->type_id()==TypeID::FLOAT64);
-	delete ptr;
-
-	ptr = new Float128Array();
-	CPPUNIT_ASSERT(ptr->type_id()==TypeID::FLOAT128);
-	delete ptr;
-
-	ptr = new Complex32Array();
-	CPPUNIT_ASSERT(ptr->type_id()==TypeID::COMPLEX32);
-	delete ptr;
-
-	ptr = new Complex64Array();
-	CPPUNIT_ASSERT(ptr->type_id()==TypeID::COMPLEX64);
-	delete ptr;
-
-	ptr = new Complex128Array();
-	CPPUNIT_ASSERT(ptr->type_id()==TypeID::COMPLEX128);
-	delete ptr;
+    
+	CPPUNIT_ASSERT(Int8Array::type_id==TypeID::INT8);
+	CPPUNIT_ASSERT(UInt8Array::type_id==TypeID::UINT8);
+	CPPUNIT_ASSERT(Int16Array::type_id==TypeID::INT16);
+    CPPUNIT_ASSERT(UInt16Array::type_id==TypeID::UINT16);
+	CPPUNIT_ASSERT(Int32Array::type_id==TypeID::INT32);
+	CPPUNIT_ASSERT(UInt32Array::type_id==TypeID::UINT32);
+	CPPUNIT_ASSERT(Int64Array::type_id==TypeID::INT64);
+	CPPUNIT_ASSERT(UInt64Array::type_id==TypeID::UINT64);
+	CPPUNIT_ASSERT(Float32Array::type_id==TypeID::FLOAT32);
+	CPPUNIT_ASSERT(Float64Array::type_id==TypeID::FLOAT64);
+	CPPUNIT_ASSERT(Float128Array::type_id==TypeID::FLOAT128);
+	CPPUNIT_ASSERT(Complex32Array::type_id==TypeID::COMPLEX32);
+	CPPUNIT_ASSERT(Complex64Array::type_id==TypeID::COMPLEX64);
+	CPPUNIT_ASSERT(Complex128Array::type_id==TypeID::COMPLEX128);
 }

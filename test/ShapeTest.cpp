@@ -181,8 +181,6 @@ void ShapeTest::testExceptions(){
 	CPPUNIT_ASSERT_THROW(s.dim(-10,0),IndexError);
 	CPPUNIT_ASSERT_THROW(s.dim(10),IndexError);
 	CPPUNIT_ASSERT_THROW(s.dim(-10),IndexError);
-	CPPUNIT_ASSERT_THROW(s[10],IndexError);
-	CPPUNIT_ASSERT_THROW(s[-10],IndexError);
 
     s = _s2;
 
