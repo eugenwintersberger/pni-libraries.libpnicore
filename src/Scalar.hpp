@@ -363,9 +363,11 @@ using namespace boost::numeric;
             //overload combind arithmetics and assignment operators
             //! unary and inplace / operator for Scalar<T> /= T
             Scalar<T> &operator/=(const T &v);
+            //! unary inplace / operator for Scalar<T> /= U
             template<typename U> Scalar<T> &operator/=(const U &v);
             //! unary and inplace / operator for Scalar<T> /= Scalar<T>
             Scalar<T> &operator/=(const Scalar<T> &v);
+            //! unary and inplace / operator for 
             template<typename U> Scalar<T> &operator/=(const Scalar<U> &v);
             //! unary and inplace + operator for Scalar<T> += T
             Scalar<T> &operator+=(const T &v);
