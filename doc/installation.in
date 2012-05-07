@@ -1,5 +1,4 @@
 /*! \page installation Installation instructions
-\tableofcontents
 
 \c libpniutils can be either installed from source or from a binary package. The latter one is more
 comfortable and requires not too much know how from the user, building from

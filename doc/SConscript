@@ -11,6 +11,8 @@ doxygen_dict = {"@LIBPREFIX@":"${LIBPREFIX}","@LIBNAME@":"${LIBNAME}",
 
 doxygen_mainpage = build_env.Substfile(["mainpage.in"],SUBST_DICT=doxygen_dict)
 doxygen_install  = build_env.Substfile(["installation.in"],SUBST_DICT=doxygen_dict)
+doxygen_usage    = build_env.Substfile(["usage.in"],SUBST_DICT=doxygen_dict)
+doxygen_examples = build_env.Substfile(["examples_description.in"],SUBST_DICT=doxygen_dict)
 doxyfile_source = ["Doxyfile.standard.in"]
 doxyfile_source.extend(["Doxyfile.extension.in"])
 
@@ -21,6 +23,8 @@ doxygen_api_doc = build_env.Command(["api-doc/html"],doxyfile,
                                     "cd doc; doxygen $SOURCE.file")
 build_env.Depends(doxygen_api_doc,doxygen_mainpage)
 build_env.Depends(doxygen_api_doc,doxygen_install)
+build_env.Depends(doxygen_api_doc,doxygen_usage)
+build_env.Depends(doxygen_api_doc,doxygen_examples)
 
 Clean(doxygen_api_doc,"api-doc")
 #admin_guide = SConscript("admin-guide/SConscript")

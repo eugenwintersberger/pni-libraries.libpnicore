@@ -1,0 +1,17 @@
+/*! \page examples_description Examples
+
+Sometimes it is easier to get an idea of how to use a library by watching some
+example code rather than reading through hundreds of pages of design
+descriptions. This page explains the code examples shipped with the
+distribution. 
+
+- \subpage examples_buffers 
+*/
+
+/*! \page examples_buffers Using Buffers
+
+The \c Buffer<T,Allocator> and \c RefBuffer<T,Allocator>  templates are simple
+but powerful tools to guard memory.
+\includelineno example_buffer1.cpp
+*/
+
