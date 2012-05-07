@@ -3,8 +3,7 @@ Import("build_env")
 
 
 #----------------------Building object files------------------------------------
-source_list = ["ScalarObject.cpp",
-               "Shape.cpp","Exceptions.cpp",
+source_list = [ "Shape.cpp","Exceptions.cpp",
                "DataObject.cpp","NumericObject.cpp","Index.cpp",
                "ComplexUtils.cpp","IndexMap.cpp","Types.cpp"]
                
