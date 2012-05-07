@@ -91,7 +91,13 @@ private:
 	String _issuer; //!< issuer of the exception
 	String _description; //!< description of the error occured
 protected:
-	std::ostream &print(std::ostream &) const;
+    /*! \brief ouptut method
+
+    Protected method to be used by derived classes for implementing exception
+    printing to std::out.
+    \param o reference to the ouptput stream
+    */
+	std::ostream &print(std::ostream &o) const;
 public:
 	//! default constructor
 	Exception():std::exception() {
@@ -210,6 +216,7 @@ public:
 	virtual ~ShapeMissmatchError() throw() {
 	}
 
+    //! output operator
 	friend std::ostream &operator<<(std::ostream &o,const ShapeMissmatchError &e);
 };
 
@@ -331,8 +338,8 @@ public:
 	//! constructor
 
 	//! Constructor setting source and description of the error
-	//! \param w error source as String
-	//! \param i error description as String
+	//! \param i issuer of the exception
+	//! \param d error description as String
 	TypeError(const String &i, const String &d) :
 		Exception("TypeError", i, d) {
 	}

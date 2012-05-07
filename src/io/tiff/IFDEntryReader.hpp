@@ -54,20 +54,21 @@ namespace tiff{
         public:
             /*! \brief read entry data
 
-            This static method reads IFD entry data from a stream. It assumes
-            that the stream is already properly positioned at the begining of
-            the entries data section. The method does no repositioning of the
-            stream once it is finished. This must be done by the calling
-            function or method.
-            \param size number of elements to read
+            This static method reads IFD entry data from a stream. It 
+            assumes that the stream is already properly positioned at the 
+            begining of the entries data section. The method does no 
+            repositioning of the stream once it is finished. This must be 
+            done by the calling function or method.
+            \param r number of elements to read
             \param stream input stream from which to read data
             \return vector of RTYPE values holding the result
             */
             static void read(std::vector<RTYPE> &r,std::ifstream &stream);
     };
 
-    template<typename RTYPE,typename ETYPE>
-        void IFDEntryReader<RTYPE,ETYPE>::read(std::vector<RTYPE> &r,std::ifstream &stream)
+    //-------------------------------------------------------------------------
+    template<typename RTYPE,typename ETYPE> void IFDEntryReader<RTYPE,ETYPE>::
+        read(std::vector<RTYPE> &r,std::ifstream &stream)
     {
 
         ETYPE buffer;
@@ -90,8 +91,9 @@ namespace tiff{
 
     }
 
+    //-------------------------------------------------------------------------
     /*!
-    \ingoup io_classes
+    \ingroup io_classes
     \brief IFD entry reader specialization for strings
 
     If the entry data is of type ASCII a special reader is required which is 
@@ -100,6 +102,7 @@ namespace tiff{
     template<> class IFDEntryReader<String,String>
     {
         public:
+            //! read string entry 
             static void read(std::vector<String> &r,std::ifstream &stream);
     };
 

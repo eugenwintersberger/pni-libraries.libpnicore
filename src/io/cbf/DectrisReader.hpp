@@ -40,13 +40,38 @@ using namespace pni::utils;
 namespace pni{
 namespace io{
 namespace cbf{
+    
+    /*! \ingroup io_classes
+    \brief reader for DECTRIS detector data
 
+    This type provides static method to read data from CBF files written by
+    detectors from DECTRIS. 
+    */
     class DectrisReader
     {
         public:
+            /*! \brief read header information
+
+            This static method reads the header data from a CBF file. The header
+            information is collected and stored in an ImageInfo type. In
+            addition the ct argument holds the ID of the compression use for
+            this image.
+            \param is input stream from which to read
+            \param info ImageInfo vector where to store image data
+            \param ct compression id 
+            \return position of data section
+            */
             static std::streampos read_header(std::ifstream &is,
                     std::vector<pni::io::ImageInfo> &info,CompressionID &ct);
 
+            /*! \brief read data 
+
+            Static method to read byte offset compressed data from DECTRIS CBF
+            files. 
+            \param is input stream
+            \param info instance of ImageInfo for the image to read
+            \param array array where to store the data
+            */
             template<typename CBFT,typename T,template<typename,typename> class
                 BT,typename Allocator>
                 static void read_data_byte_offset(
@@ -57,6 +82,7 @@ namespace cbf{
 
     };
 
+    //-------------------------------------------------------------------------
     template<typename CBFT,typename T,template<typename,typename> class
         BT,typename Allocator>
         void DectrisReader::read_data_byte_offset( std::ifstream &is,

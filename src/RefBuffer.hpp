@@ -67,14 +67,14 @@ namespace utils{
             size_t _size; //!< number of elements allocated in the buffer
         public:
             //===================public types =================================
-            typedef std::unique_ptr<RBUFFTMP > unique_ptr;
-            typedef std::shared_ptr<RBUFFTMP > shared_ptr; //!< smart pointer to a typed buffer
-            typedef T value_type;
-            typedef Allocator allocator_type;
+            typedef std::unique_ptr<RBUFFTMP > unique_ptr; //!< unique pointer type 
+            typedef std::shared_ptr<RBUFFTMP > shared_ptr; //!< shared pointer type
+            typedef T value_type;             //!< type of data stored
+            typedef Allocator allocator_type; //!< allocator type
 
             //===================public static member variables================
-            static const size_t value_size = sizeof(T);
-            static const TypeID type_id    = TypeIDMap<T>::type_id;
+            static const size_t value_size = sizeof(T);  //!< size of element data type
+            static const TypeID type_id    = TypeIDMap<T>::type_id; //!< ID of the element data teyp
 
             //=================constructors and destructors====================
             //! default constructor
@@ -134,40 +134,86 @@ namespace utils{
             RBUFFTMP &operator=(const T &v);
 
             //====================data access methods==========================
-            //! return data pointer
+            /*! \brief return data pointer
 
-            //! Returns a typed const pointer to the allocated memory. The pointer must
-            //! not be used to modify data values.
-            //! \return pointer to allocated memory
+            Returns a typed const pointer to the allocated memory. The 
+            pointer must not be used to modify data values.
+            \return pointer to allocated memory
+            */
             const T* ptr() const { return this->_data; }
-            //! return data pointer
 
-            //! Returns a typed pointer to the allocated memory. The pointer can be
-            //! used for altering the buffer content.
-            //! \return pointer to allocated memory
+            //-----------------------------------------------------------------
+            /*! \brief return data pointer
+
+            Returns a typed pointer to the allocated memory. The pointer can be
+            used for altering the buffer content.
+            \return pointer to allocated memory
+            */
             T *ptr() { return this->_data; }
 
+            //-----------------------------------------------------------------
+            /*! \brief get void pointer
+
+            Return a void pointer to the first element of the memory block.
+            \return void pointer
+            */
             void *void_ptr() { return (void *)this->_data;}
 
+            //-----------------------------------------------------------------
+            /*! \brief get a const void pointer
+
+            Returns a const void pointer to the first element of the memory
+            block.
+            \return const void pointer
+            */
             const void *void_ptr() const { return (const void *)this->_data; }
 
+            //-----------------------------------------------------------------
+            /*! \brief return value at index i
+
+            Return the value stored in the buffer at index i. This method
+            performe index checking and throws an exception if i exceeds the
+            size of the buffer.
+            \throws IndexError if i exceeds buffer size
+            \param i buffer index
+            \return value at index i
+            */
             T at(size_t i) const;
+
+            //-----------------------------------------------------------------
+            /*! \brief return reference to index i
+
+            Returns a reference to the element stored at index i. This method
+            performs index checking and throws an exception if i exceeds the
+            size of the buffer.
+            \throws IndexError if i exceeds buffer size
+            \param i buffer index
+            \return reference to element at i
+            */
             T &at(size_t i);
 
-            //! [] operator for read and write access
+            //-----------------------------------------------------------------
+            /*! \brief return reference to element i
 
-            //! This operator will be used in expressions where the buffer access stands
-            //! on the left side of an assignment operation. In other words - when data should
-            //! be written to the buffer.
-            //! \param n index of element to fetch
-            //! \return reference to the n-th element in the buffer
+            Return a reference to the value of the buffer stored at index i.
+            No index checking is done - use this operator with care. It should
+            be used for high performance access only. 
+            \param n index of element to fetch
+            \return reference to the n-th element in the buffer
+            \sa at()
+            */
             T& operator[](size_t n) { return this->_data[n];}
-            //! [] operator for read only access
 
-            //! This operator will be used in expressions where read only access to the
-            //! data values in the buffer is required.
-            //! \param n index of the element to fetch
-            //! \return value of the buffer at position n
+            //-----------------------------------------------------------------
+            /*! \brief return the value of element i
+
+            This operator will be used in expressions where read only access 
+            to the data values in the buffer is required. No index checking is
+            performend. Invalid indices will thus lead to segmentation faults.
+            \param n index of the element to fetch
+            \return value of the buffer at position n
+            \sa at()
+            */
             T operator[](size_t n) const { return this->_data[n]; }
 
             //! allocate memory - does nothing
@@ -198,7 +244,15 @@ namespace utils{
                 _size = 0;
             }
 
-            virtual size_t mem_size() const {
+            //-----------------------------------------------------------------
+            /*! \brief amount of memory occupied
+
+            Returns the total amount of memory occupied by the buffers data in
+            byte.
+            \return memory consumption in byte.
+            */
+            size_t mem_size() const 
+            {
                 return sizeof(T)*this->size();
             }
 

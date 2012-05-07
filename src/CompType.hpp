@@ -55,6 +55,7 @@ namespace utils{
                typedef CT CompType;\
     };
 
+    //! \cond no_doc
     COMPTYPETRAITSINGLE(UInt8,UInt8);
     COMPTYPETRAIT(UInt8,Int8,Int16);
     COMPTYPETRAIT(UInt8,UInt16,UInt16);
@@ -138,6 +139,7 @@ namespace utils{
     COMPTYPETRAITSINGLE(Complex64,Complex64);
     COMPTYPETRAIT(Complex64,Complex128,Complex128);
     COMPTYPETRAITSINGLE(Complex128,Complex128);
+    //! \endcond
 //end off namespace
 }
 }

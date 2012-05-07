@@ -16,6 +16,7 @@
 namespace pni{
 namespace utils{
 
+//! \cond no_doc
 //Inplace arithmetics of typed objects - the object can only be a left-value
 class InplaceArithmetics{
 public:
@@ -52,6 +53,8 @@ public:
 	         template <typename B> class ObjectB>
 	void div_inplace(ObjectA<A> &a,const ObjectB<B> &b);
 };
+
+// \endcond
 
 
 template<typename A,template <typename A> class ObjectA,typename ObjectB >

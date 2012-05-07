@@ -153,8 +153,8 @@ namespace io{
             is not the case.
             \throws MemoryAccessError if the array is not allocated
             \throws ShapeMissmatchError if the shape of the array does not fit 
+            \param a array to check
             \param info the ImageInfo object for which to check the array
-            \param array he array to check
             */
             template<typename ATYPE>
                 static void check_array(const ATYPE &a,const ImageInfo

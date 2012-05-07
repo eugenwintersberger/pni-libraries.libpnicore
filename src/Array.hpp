@@ -138,8 +138,8 @@ namespace utils {
             typedef std::unique_ptr<ARRAYTMP > unique_ptr; //!< unique pointer type
             
             //==================public members=================================
-            static const TypeID type_id = TypeIDMap<T>::type_id;
-            static const size_t value_size = sizeof(T);
+            static const TypeID type_id = TypeIDMap<T>::type_id; //!< type ID of the element type
+            static const size_t value_size = sizeof(T); //!< size of the element type
 
             //=================constructors and destructor=====================
             /*! \brief default constructor
@@ -193,6 +193,7 @@ namespace utils {
             //! This constructors sets also name, unit, and description
             //! of the NumericObject base class.
             Array(const Shape &s,const String &n,const String &u,const String &d);
+            //! constructor
             Array(const Shape &s,const BType<T,Allocator> &b,
                   const String &n,const String &u,const String &d);
 
@@ -208,6 +209,14 @@ namespace utils {
             ARRAYTMP &operator =(const T&);
 
             //-----------------------------------------------------------------
+            /*! conversion assignment operator
+
+            Converts a value of type U to T and assigns this value to all
+            elements of the array. An exception is thrown if U cannot be
+            converted to T.
+            \throws TypeError if conversion fails.
+            \param v value of type U
+            */
             template<typename U> ARRAYTMP &operator=(const U &v);
 
             //-----------------------------------------------------------------
@@ -224,6 +233,14 @@ namespace utils {
             ARRAYTMP &operator =(ARRAYTMP &&a);
 
             //-----------------------------------------------------------------
+            /*! \brief copy assignment operator
+
+            Reallocates the lhs array to the shape of the array on the rhs and
+            copies data. During copying data is converted from type U to T. If
+            conversion fails an exception will be thrown.
+            \throws TypeError if conversion fails
+            \param a rhs array argument of the operator
+            */
             template<typename U> Array<T,BType,Allocator> &
                 operator=(const Array<U,BType,Allocator> &a);
 
@@ -300,6 +317,11 @@ namespace utils {
                 return _data;
             }
 
+            /*! \brief get size of array
+
+            Returns the total number of elements stored in the array.
+            \return total number of elements
+            */
             size_t size() const { return this->_shape.size(); }
 
             //==================Uniary arithmetic operators====================
@@ -311,7 +333,7 @@ namespace utils {
             Adds a single native value of type T to all elements in the Array.
             This unary operator performs the operation in-place. No temporary
             array will be allocated.
-            \param v scalar to add
+            \param v rhs argument of the operator
             */
             ARRAYTMP &operator +=(const T&v)
             {
@@ -326,7 +348,7 @@ namespace utils {
             The operation is performed in-place without the allocation of a
             temporary array. 
             \throws ShapeMissmatchError if array shapes do not match
-            \param 
+            \param a rhs argment of the operator
             */
             ARRAYTMP &operator +=(const ARRAYTMP &a)
             {
@@ -564,17 +586,27 @@ namespace utils {
             //! clip maximum values
 
             //! Set values larger or equal than threshold to value.
-
             //! \param threshold the threshold value for the clip operation
             //! \param value the value to set the numbers to
             void max_clip(T threshold, T value);
 
             //=============operators and methods to access array data==========
-            //! bracket operator - accessing linear data
+            /*! \brief get referece to element i
 
-            //! Using the []-operator allows to access the data stored in the array
-            //! in a linear manner as it is stored by the buffer object.
+            Returns a reference to the element at linear index i. No index
+            checking is done! Thus use this operator with care.
+            \param i linear index 
+            \return reference to the element at linear index i
+            */
             T& operator[](const size_t &i) { return this->_data[i]; }
+
+            /*! \brief get value at i
+
+            Returns the value of the element at the linar array index i. No
+            index checking is done! Thus use this operator with care.
+            \param i linear index of the element
+            \return value of the element at linear index i
+            */
             T operator[](const size_t &i) const { return this->_data[i]; }
 
             //-----------------------------------------------------------------
@@ -591,6 +623,12 @@ namespace utils {
             }
 
             //-----------------------------------------------------------------
+            /*! \brief return value
+
+            Returns the value of the array at the multidimensional index i.
+            \param i multidimensional index
+            \return value of the array at i
+            */
             T operator()(const Index &i) const
             {
                 return this->_data[this->_shape.offset(i)];
@@ -613,17 +651,42 @@ namespace utils {
             friend std::ostream &operator<<<> (std::ostream &o, const ARRAYTMP &a);
 
 
+            /*! \brief check allocation state
+
+            Returns true if the internal buffer of the array is allocated. 
+            \return true if buffer is allocated, false otherwise
+            */
             bool is_allocated() const{
                 return _data.is_allocated();
             }
 
 
+            /*! \brief get pointer to data
+
+            Returns a pointer to the arrays data. 
+            \return pointer to data
+            */
             T *ptr(){ return _data.ptr(); }
 
+            /*! \brief get const pointer to data
+
+            Return a const pointer to the array data.
+            \return const pointer
+            */
             const T* ptr() const { return _data.ptr(); }
 
+            /*! \brief get void pointer to data
+
+            Return a void pointer to the first element of the array data.
+            \return void pointer to data
+            */
             void *void_ptr(){ return _data.void_ptr(); }
 
+            /*! \brief return const void pointer to data
+
+            Returns a const void pointer to the first element of the array data.
+            \return const void pointer
+            */
             const void *void_ptr() const{ return _data.void_ptr(); }
 
     };

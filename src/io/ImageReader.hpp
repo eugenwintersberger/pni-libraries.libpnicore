@@ -63,7 +63,7 @@ namespace io{
             //===================constructors and destructor===================
             //! default constructor
             ImageReader();
-            // copy constructor is deleted
+            //! copy constructor is deleted
             ImageReader(const ImageReader &) = delete;
             //! move constructor
             ImageReader(ImageReader &&r);
@@ -71,7 +71,7 @@ namespace io{
             explicit ImageReader(const String &fname,bool binary=false);
             
             //==================assignment operators===========================
-            //copy assignment is deleted
+            //!copy assignment is deleted
             ImageReader &operator=(const ImageReader &r) = delete;
 
             //! move assignment operator

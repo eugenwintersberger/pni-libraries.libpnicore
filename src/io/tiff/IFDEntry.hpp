@@ -56,22 +56,43 @@ namespace tiff{
             size_t _size;          //!< number of elements of the entry
             std::streampos _data;  //!< marks data position
 
-            //===============private methods==============================
+            //===============private methods===================================
+            /*! \brief read entry data from stream
+
+            Reads the entrys data from an input stream. This method assumes that
+            the input stream points to the first element of the entry. The
+            position of the stream is altered. It is the responsibility of the
+            calling method to take care about the position of the stream.
+            \param r vector where to store the data
+            \param stream input stream from which to read
+            */
             template<typename T> void _read_entry_data(std::vector<T>
                     &r,std::ifstream &stream);
+
+            /*! \brief read string entry from stream
+
+            Reads a string entry from the stream. The stream position will be
+            altered by this method. Thus the calling method must take care about
+            this.
+            \param r vector where to store data
+            \param stream input stream from which to read
+            */
             void _read_entry_data(std::vector<String> &r,std::ifstream &stream);
             
         public:
-            //=============constructors and destructor====================
+            //=============constructors and destructor=========================
             //! default constructor
             IFDEntry();
 
+            //-----------------------------------------------------------------
             //! copy constructor
             IFDEntry(const IFDEntry &e);
 
+            //-----------------------------------------------------------------
             //! move constructor
             IFDEntry(IFDEntry &&e);
 
+            //-----------------------------------------------------------------
             /*! \brief standard constructor
 
             Standard constructor to create a IFDEntry.
@@ -83,20 +104,28 @@ namespace tiff{
             IFDEntry(UInt16 tag,IFDEntryTypeID tid,size_t size,std::streampos
                     data);
 
+            //-----------------------------------------------------------------
             //! destructor
             ~IFDEntry();
 
-            //=====================assignment operators====================
+            //=====================assignment operators========================
             //! copy assignment operator
             IFDEntry &operator=(const IFDEntry &e);
 
             //! move assignment operator
             IFDEntry &operator=(IFDEntry &&e);
 
-            //===============static methods================================
+            //===============static methods====================================
+            /*! \brief create entry from stream
+
+            A static factory method to create an instance of IFDEntry from a
+            stream.
+            \param stream input stream from which to read data
+            \return instance of IFDEntry
+            */
             static IFDEntry create_from_stream(std::ifstream &stream);
 
-            //==================class methods==============================
+            //==================class methods==================================
             /*! \brief number of elements
 
             Returns the number of elements that make up the entry.
@@ -104,20 +133,44 @@ namespace tiff{
             */
             size_t size() const;
 
+            //-----------------------------------------------------------------
+            /*! \brief get name
+
+            Returns the name of the entry as a string.
+            \return name as string
+            */
             String name() const;
 
+            //-----------------------------------------------------------------
+            /*! \brief get type ID
+
+            Returns the TypeID of the entries type. 
+            \return type ID of entry
+            */
             TypeID type_id() const;
 
-            template<typename T> std::vector<T> value(std::ifstream &stream);
-            //template<> std::vector<String> value<String>(std::ifstream &stream);
-            //std::vector<String> value(std::ifstream &stream);
+            //-----------------------------------------------------------------
+            /*! \brief get entry value
 
+            Template returns the value of the entry and returs it as a vector of
+            type T. Entries are in general considered as arrays (vectors) in
+            TIFF. Thus the std::vector type is used to represent each entry.
+
+            The method makes no assumption about the position of the stream
+            pointer neither does it alter its state. 
+            \param stream input stream from which data will be read
+            \return entry as vector
+            */
+            template<typename T> std::vector<T> value(std::ifstream &stream);
+
+            //-----------------------------------------------------------------
+            //! output operator
             friend std::ostream &operator<<(std::ostream &o,const IFDEntry &e);
 
     };
 
 
-    //==============implementation of public template methods==================
+    //==============implementation of public template methods===================
     template<typename T> std::vector<T> IFDEntry::value(std::ifstream &stream)
     {
         EXCEPTION_SETUP("template<typename T> std::vector<T> IFDEntry::"
@@ -156,8 +209,9 @@ namespace tiff{
         return result;
     }
 
-    template<typename T> void IFDEntry::_read_entry_data(std::vector<T> &r,std::ifstream
-            &stream)
+    //--------------------------------------------------------------------------
+    template<typename T> void IFDEntry:: 
+        _read_entry_data(std::vector<T> &r,std::ifstream &stream)
     {
         EXCEPTION_SETUP("template<typename T> void IFDEntry::_read_entry_data"
                 "(std::vector<T> &r,std::ifstream &stream)");

@@ -100,11 +100,11 @@ namespace io{
             */
             DataReader(DataReader &&r);
 
-            //copy constructor is deleted
+            //!copy constructor is deleted
             DataReader(const DataReader &r) = delete;
             
             //=====================assignment operator=====================
-            //copy assigment is deleted
+            //! copy assigment is deleted
             DataReader &operator=(const DataReader &r) = delete;
 
             //! move assignment

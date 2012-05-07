@@ -82,8 +82,8 @@ namespace utils{
             typedef Allocator allocator_type; //!< allocator type
 
             //=============public static variables=============================
-            static const size_t value_size = sizeof(T);
-            static const TypeID type_id    = TypeIDMap<T>::type_id;
+            static const size_t value_size = sizeof(T); //!< size of the element type
+            static const TypeID type_id    = TypeIDMap<T>::type_id; //!< type ID of the element type
            
             //=================constructors and destructor=====================
             //! default constructor
@@ -198,6 +198,12 @@ namespace utils{
             void *void_ptr() { return this->_data; }
 
             //-----------------------------------------------------------------
+            /*! \brief get const void pointer
+
+            Return a const void pointer to the first element of the buffers
+            data.
+            \return const void pointer
+            */
             const void *void_ptr() const { return this->_data; }
 
             //-----------------------------------------------------------------

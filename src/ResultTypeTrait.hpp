@@ -81,6 +81,7 @@ public:
 	typedef DRT DivResultType;\
 };
 
+//! \cond no_doc
 //define results for integer integer operations
 ARITHMETICS_RESULT_TYPES_SINGLE(Int8,Int16,Int16,Int16,Float32);
 ARITHMETICS_RESULT_TYPES(Int8,UInt8,Int16,Int16,Int16,Float32);
@@ -215,6 +216,8 @@ ARITHMETICS_RESULT_TYPES(Complex128,Int32,Complex128,Complex128,Complex128,Compl
 ARITHMETICS_RESULT_TYPES(Complex128,UInt32,Complex128,Complex128,Complex128,Complex128);
 ARITHMETICS_RESULT_TYPES(Complex128,Int64,Complex128,Complex128,Complex128,Complex128);
 ARITHMETICS_RESULT_TYPES(Complex128,UInt64,Complex128,Complex128,Complex128,Complex128);
+
+//! \endcond
 
 //end of namespace
 }

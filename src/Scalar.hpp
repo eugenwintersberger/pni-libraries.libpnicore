@@ -371,21 +371,27 @@ using namespace boost::numeric;
             template<typename U> Scalar<T> &operator/=(const Scalar<U> &v);
             //! unary and inplace + operator for Scalar<T> += T
             Scalar<T> &operator+=(const T &v);
+            //! uniary addition operator
             template<typename U> Scalar<T> &operator+=(const U &v);
             //! unary and inplace + operator for Scalar<T> += Scalar<T>
             Scalar<T> &operator+=(const Scalar<T> &v);
+            //! unary addition operator
             template<typename U> Scalar<T> &operator+=(const Scalar<U> &v);
             //! unary and inplace - operator for Scalar<T> -= T
             Scalar<T> &operator-=(const T &v);
+            //! unary subtraction operator
             template<typename U> Scalar<T> &operator-=(const U &v);
             //! unary and inplace - operator for Scalar<T> -= Scalar<T>
             Scalar<T> &operator-=(const Scalar<T> &v);
+            //! unary subtraction operator
             template<typename U> Scalar<T> &operator-=(const Scalar<U> &v);
             //! unary and inplace * operator for Scalar<T> *= T
             Scalar<T> &operator*=(const T &v);
+            //! unary multiplication operator
             template<typename U> Scalar<T> &operator*=(const U &v);
             //! unary and inplace * operator for Scalar<T> *= Scalar<T>
             Scalar<T> &operator*=(const Scalar<T> &v);
+            //! unary multiplication operator
             template<typename U> Scalar<T> &operator*=(const Scalar<U> &v);
 
             //-----------------------------------------------------------------

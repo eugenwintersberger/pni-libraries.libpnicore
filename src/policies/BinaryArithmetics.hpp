@@ -8,6 +8,7 @@
 #ifndef BINARYARITHMETICS_HPP_
 #define BINARYARITHMETICS_HPP_
 
+//! \cond no_doc
 class BinaryArithmetics{
 public:
 	template<typename RType,typename AType,typename BType,
@@ -43,5 +44,7 @@ RObject<RType> BinaryArithemtics::add(const AObject<AType> &a,const BObject<BTyp
 
 	return o;
 }
+
+//! \endcond
 
 #endif /* BINARYARITHMETICS_HPP_ */

@@ -53,6 +53,16 @@ namespace tiff {
         std::vector<size_t> _bits_per_channel; //!< number of bits per channel
         std::vector<TypeID> _channel_types; //!< type ids of channel data
 
+        /*! \brief template to read interlace data 
+
+        This template method reads image data distributed over several strips. 
+        The first template parameter determines the type of the image data to
+        read while T is the type of the target array. The remaining template
+        parameters belong to the array itself and are not of importance here.
+        \param c number of the channel to read
+        \param stream input stream from which to read data
+        \param array target array where to store the data
+        */
         template<typename CTYPE,typename T,template<typename,typename> class
             BT,typename Allocator> 
             void _read_interlace(size_t c,std::ifstream &stream,
@@ -91,13 +101,29 @@ namespace tiff {
         StripReader &operator=(StripReader &&r);
 
         //===========static public member functions============================
+        /*! \brief create StripReader instance
+
+        This static factory method creates a StripReader object from the IFD of
+        an image and its ImageInfo structure. 
+        \param stream input stream from which to read data
+        \param ifd IFD of the image for which the reader should be created
+        \param info ImageInfo object for the image
+        \return instance of type StripReader
+        */
         static StripReader create(std::ifstream &stream,const IFD &ifd,
                                   const ImageInfo &info);
 
         //=====================public member methods===========================
+        /*! \brief template to read image data of various type
 
-
-        //! template to read image data of various type
+        Template method to read image data stored as strips from a file. The
+        template parameter determines the type of the output array. The method
+        assumes that the shape of the array is already set properly.
+        \throws TypeError if the image data type is unkown
+        \param c number of the channel to read
+        \param stream input stream from which to read data
+        \param array reference to the array where to store the data
+        */
         template<typename ATYPE> 
             void read(size_t c,std::ifstream &stream,ATYPE &array) {
             EXCEPTION_SETUP("template<typename ATYPE> void read(size_t c,"
@@ -136,9 +162,11 @@ namespace tiff {
         }
 
         //=====================output operator=================================
+        //! output operator
         friend std::ostream &operator<<(std::ostream &o,const StripReader &r);
     };
 
+    //-------------------------------------------------------------------------
     template<typename CTYPE,typename T,template<typename,typename> class
         BT,typename Allocator> 
         void StripReader::_read_interlace(size_t channel,

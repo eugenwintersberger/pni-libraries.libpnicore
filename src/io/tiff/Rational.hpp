@@ -62,6 +62,12 @@ namespace tiff{
             ~Rational(){}
 
             //====================conversion operator=======================
+            /*! \brief conversion operator
+
+            This operator converts the rational number to a single scalar value.
+            It will be typically used to convert from a rational number to a
+            floating point type. 
+            */
             template<typename U> operator U()
             {
                 return (U)((U)(_numerator))/((U)(_denominator));

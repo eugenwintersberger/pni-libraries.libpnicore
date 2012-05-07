@@ -63,17 +63,39 @@ namespace io{
             //! standard constructor
             SpreadsheetReader(const String &n);
 
-            //==================protected member functions=====================
+            //==================protected member functions======================
+            /*! \brief append a column
+
+            Protected method used by child classes to add a new column to the
+            reader.
+            \param i column info to add
+            */
             virtual void _append_column(const ColumnInfo &i)
             {
                 _columns_info.push_back(i);
             }
 
+            //-----------------------------------------------------------------
+            /*! \brief get column information
+
+            Protected method used by child classes to retriev the info object
+            for column i in the file.
+            \param i index of the column in the file
+            \return ColumnInfo instance for this column
+            */
             virtual ColumnInfo _get_column(size_t i) const
             {
                 return _columns_info.at(i);
             }
 
+            /*! \brief get column information 
+
+            Protected method used by child classes to obtain column information
+            by using the name of the column. 
+            \throws KeyError if the name of the column does not exist
+            \param n name of the column
+            \return ColumnInfo instance for this column
+            */
             virtual ColumnInfo _get_column(const String &n) const
             {
                 EXCEPTION_SETUP("virtual ColumnInfo SpreadsheetReader::"
@@ -105,8 +127,8 @@ namespace io{
 
         public:
             //========================public type==============================
-            typedef std::vector<ColumnInfo>::iterator iterator;
-            typedef std::vector<ColumnInfo>::const_iterator const_iterator;
+            typedef std::vector<ColumnInfo>::iterator iterator; //!< iterator type
+            typedef std::vector<ColumnInfo>::const_iterator const_iterator; //!< const iterator type
             //=======================destructor================================
             //! destructor
             virtual ~SpreadsheetReader();
@@ -136,10 +158,32 @@ namespace io{
             */
             size_t nrecords() const { return _nrec; }
 
-            //
+            /*! \brief get iterator to first column
+
+            Return an iterator pointing to the first column in the file.
+            \return iterator
+            */
             iterator begin() { return _columns_info.begin(); }
+
+            /*! \brief get const first iterator
+
+            Return a const iterator to the first column in the file.
+            \return const iterator
+            */
             const_iterator begin() const { return _columns_info.begin(); }
+
+            /*! \brief get last iterator
+
+            Return an iterator to the last column in the file.
+            \return iterator
+            */
             iterator end() { return _columns_info.end(); }
+
+            /*! \brief get const last iterator
+
+            Returns a const iterator to the last column in the file.
+            \return const iterator
+            */
             const_iterator end() const { return _columns_info.end(); }
 
     };

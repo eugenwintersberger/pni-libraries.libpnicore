@@ -43,9 +43,9 @@ namespace pni{
 namespace io{
 namespace tiff{
 
-//IDF Entry type codes
 
-    /*! \ingroup io_classes
+    /*! 
+      \ingroup io_classes
     \brief IFD - Image File Directory class
 
     This class describes an Image File Directory (IFD) block in a TIFF file.
@@ -129,9 +129,32 @@ namespace tiff{
             */
             IFDEntry operator[](const String &n) const;
 
+            /*! \brief get first iterator
+
+            Returns an iterator pointing on the first entry stored in the IFD.
+            \return iterator
+            */
             iterator begin() { return _entries.begin(); }
+
+            /*! \brief get last iterator
+
+            Returns an iterator pointing on the last entry stored in the IFD.
+            \return iterator
+            */
             iterator end()   { return _entries.end(); }
+
+            /*! \brief get const first iterator
+
+            Returns a const iterator to the first entry in the IFD.
+            \return const iterator
+            */
             const_iterator begin() const { return _entries.begin(); }
+
+            /*! \brief get const last iterator
+
+            Returns a const iterator to the last entry in the IFD.
+            \return const iterator
+            */
             const_iterator end() const { return _entries.end(); }
 
             //! overloaded ostream operator for standard output

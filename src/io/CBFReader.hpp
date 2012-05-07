@@ -90,14 +90,14 @@ namespace io{
             virtual ~CBFReader();
 
             //---------------------------------------------------------------
-            //delete copy constructor
+            //! the copy constructor is deleted
             CBFReader(const CBFReader &r) = delete;
 
             //====================assignment operators=======================
             //! move assignment
             CBFReader &operator=(CBFReader &&r);
 
-            //delete copy assignment
+            //! the copy assignment operator is deleted
             CBFReader &operator=(const CBFReader &r) = delete;
 
             virtual void close()

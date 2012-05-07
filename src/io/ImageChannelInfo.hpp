@@ -47,6 +47,7 @@ namespace io{
             /*! \brief standard constructor
 
             \param id Typd id for the channel
+            \param bits number of bits used to store channel data
             */
             ImageChannelInfo(const TypeID &id,size_t bits):
                 _tid(id),
