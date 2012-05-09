@@ -74,6 +74,9 @@ template as it does no memory management at all.
 
 /*! \page examples_io Using the IO classes
 
+\includelineno cbf_reader.cpp
+\includelineno tif_reader.cpp
+\includelineno fio_reader.cpp
 
 */
 
