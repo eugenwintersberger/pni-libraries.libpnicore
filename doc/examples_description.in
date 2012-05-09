@@ -6,9 +6,12 @@ descriptions. This page explains the code examples shipped with the
 distribution. 
 
 - \subpage examples_buffers 
+- \subpage examples_scalars
+- \subpage examples_arrays
 - \subpage examples_io
 */
 
+//===============================================================================
 /*! \page examples_buffers Using Buffers
 
 The \c Buffer<T,Allocator> and \c RefBuffer<T,Allocator>  templates are simple
@@ -72,6 +75,32 @@ template as it does no memory management at all.
 \includelineno example_buffer3.cpp
 */
 
+//=================================================================================
+/*! \page examples_scalars Scalar objects
+
+The template \c Scalar<T> is derived from class \c NumericObject. Indeed it is
+nothing more than a thin wrapper around POD data types. It allows some
+additional information to be stored aside with the value of the scalar. This 
+quantities include
+
+- the name of the object (which must not be equal to the mnemonic name of the
+  object)
+- a description of the object 
+- and finally a physical unit 
+
+In paritcular the physical unit makes this template interesting.  The unit
+system is meanwhile not implemented. 
+
+
+*/
+
+//=================================================================================
+/*! \page examples_arrays Array objects
+
+
+*/
+
+//=================================================================================
 /*! \page examples_io Using the IO classes
 
 \includelineno cbf_reader.cpp
