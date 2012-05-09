@@ -12,13 +12,12 @@
 #include<cmath>
 
 
-#include "../src/io/FIOReader.hpp"
-#include "../src/Array.hpp"
-#include "../src/Shape.hpp"
+#include <pni/utils/io/FIOReader.hpp>
+#include <pni/utils/Array.hpp>
+#include <pni/utils/Shape.hpp>
 
 using namespace pni::utils;
 using namespace pni::io;
-
 
 
 int main(int argc,char **argv){

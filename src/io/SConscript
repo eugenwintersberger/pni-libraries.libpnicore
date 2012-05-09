@@ -17,6 +17,8 @@ aobjs = build_env.StaticObject(sources)
 
 hdr_inst_path = path.join(build_env["PREFIX"],"include/pni/utils/io")
 incpniutils_inst = build_env.Install(hdr_inst_path,Glob("*.hpp"))
-build_env.Alias("install",[incpniutils_inst])
+cbfhdr_inst = build_env.Install(path.join(hdr_inst_path,"cbf"),Glob("cbf/*.hpp"))
+tiffhdr_inst = build_env.Install(path.join(hdr_inst_path,"tiff"),Glob("tiff/*.hpp"))
+build_env.Alias("install",[incpniutils_inst,cbfhdr_inst,tiffhdr_inst])
 
 Return("sobjs aobjs")

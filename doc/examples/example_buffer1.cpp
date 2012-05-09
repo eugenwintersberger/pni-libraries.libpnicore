@@ -15,7 +15,7 @@ int main(int argc,char **argv)
     Buffer<UInt8> buffer(100); 
 
     //defer memory allocation
-    Buffer<Int32> bint32();  //create buffer
+    Buffer<Int32> bint32;  //create buffer
     bint32.allocate(1014);   //allocate memory
 
     //---------------------initializing buffers--------------------------------

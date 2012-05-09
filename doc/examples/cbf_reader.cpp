@@ -19,9 +19,12 @@
 #include <vtkPointData.h>
 #include <vtkImageViewer2.h>
 
-#include "../src/io/TIFFReader.hpp"
+#include <pni/utils/io/CBFReader.hpp>
+#include <pni/utils/Array.hpp>
+#include <pni/utils/Shape.hpp>
 
 using namespace pni::utils;
+using namespace pni::io;
 
 
 void plot_image(const Float32Array &array)
@@ -32,7 +35,7 @@ void plot_image(const Float32Array &array)
     vtkImageViewer2 *viewer = vtkImageViewer2::New();
 
     vtkFloatArray *ia = vtkFloatArray::New();
-    ia->SetArray((Float32 *)array.ptr(),array.size(),1);
+    ia->SetArray((float *)array.ptr(),array.size(),1);
     vtkImageData *idata = vtkImageData::New();
     idata->GetPointData()->SetScalars(ia);
     idata->SetDimensions(array.shape()[1],array.shape()[0],1);
@@ -53,27 +56,25 @@ void plot_image(const Float32Array &array)
 
 }
 
-using namespace pni::io;
-
 int main(int argc,char **argv){
 
     if(argc<2){
-        std::cerr<<"usage: tif_reader_test <filename>"<<std::endl;
-    	return -1;
+        std::cerr<<"Usage: cbf_reader_test <filename>"<<std::endl;
+        return -1;
     }
 
-    //open file for reading
-    String filename(argv[1]);
-    TIFFReader reader(filename);
+    //get the name of the file to copen
+    String file_name(argv[1]);
 
-    std::cout<<"number of images: "<<reader.nimages()<<std::endl;
-    std::cout<<reader<<std::endl;
-    std::cout<<reader.info(0)<<std::endl;
-    
-    
-    auto array = reader.image<Float32Array>(0);
-    //close the reader object when we are done
+
+    CBFReader reader(file_name);
+    ImageInfo info = reader.info(0);
+    std::cout<<info<<std::endl;
+
+    Float32Array array = reader.image<Float32Array>(0);
     plot_image(array);
+
+    reader.close();
 
     return 0;
 }

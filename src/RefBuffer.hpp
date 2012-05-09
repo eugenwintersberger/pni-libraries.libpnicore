@@ -60,7 +60,7 @@ namespace utils{
     Such a reference buffer can either be initialized from a raw pointer, an
     instance of Buffer<T>, or from a different RefBuffer object.
     */
-    RBUFFTMPDEC class RefBuffer
+    template<typename T,typename Allocator=NewAllocator> class RefBuffer
     {
         private:
             T *_data; //!< pointer to the data block

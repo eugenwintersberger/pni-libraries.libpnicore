@@ -6,6 +6,7 @@ descriptions. This page explains the code examples shipped with the
 distribution. 
 
 - \subpage examples_buffers 
+- \subpage examples_io
 */
 
 /*! \page examples_buffers Using Buffers
@@ -57,15 +58,24 @@ pointers you somehow need access to this.
 
 \section refbuffer_examples Using the RefBuffer<T,Allocator> template
 
-While \c Buffer<T,Allocator> is used to guard memory and provide an interface
-from \c libpniutils to other 3rd party code that relies on raw pointers, the \c
-RefBuffer<T,Allocator> template can be considered the other way around. It can
-be used to get memory that is allocated by some other library and provided as a
-raw pointer in to \c libpniutils. Thus, the \c RefBuffer<T,Allocator> does no
-memory management at all. It can be considered as a kind of decorator for raw
-pointers which can be used to make this memory available to classes and
-functions \c libpniutils provides. Obviously the \c Allocator type is not of
-importance for this template as it does no memory management at all.
+While \c Buffer<T,Allocator> is used to guard memory (managed by the \c
+Buffer<T,Allocator> template by itself)  and provide an interface
+from \c libpniutils to other 3rd party code relying on raw pointers, the
+intention of the \c RefBuffer<T,Allocator> template is exactly the other way
+around. It is used to use memory managed by 3rd-party code and provided as raw
+pointer. Thus, the \c RefBuffer<T,Allocator> does no memory management at all. 
+It can be considered as a kind of decorator for raw pointers which can be 
+used to make this memory available to classes and functions \c libpniutils 
+provides. Obviously the \c Allocator type is not of importance for this 
+template as it does no memory management at all.
+
+\includelineno example_buffer3.cpp
+*/
+
+/*! \page examples_io Using the IO classes
+
+
+*/
 
 */
 
