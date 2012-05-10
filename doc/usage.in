@@ -39,6 +39,11 @@ $> export PKG_CONFIG_PATH=/opt/pnitutils/lib/pkgconfig
 \endcode
 to tell \c pkg-config where to look for the configuration file for \c
 libpniutils.
+\c pkg-config can also be use from within a Makefile as shown in this example
+(the Makefile for the examples provided with the source distribution)
+\includelineno Makefile
+In lines 2 and 3 \c pkg-config is used to obtain all the flags required to build
+code using \c libpniutils.
 
 
 
