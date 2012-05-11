@@ -256,6 +256,13 @@ namespace utils{
                 return sizeof(T)*this->size();
             }
 
+            /*! \brief return number of elements 
+
+            Returns the number of elements allocated by the buffer.
+            \return number of elements
+            */
+            size_t size() const { return this->_size; }
+
     };
 
     //=================Implementation of constructors and destructors===============
