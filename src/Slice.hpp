@@ -32,9 +32,9 @@ namespace utils{
     class Slice
     {
         private:
-            size_t _first;
-            size_t _last;
-            size_t _stride;
+            size_t _first;  //!< first index in the slice
+            size_t _last;   //!< last index in the slice
+            size_t _stride; //!< distance between indices
         public:
             //==============constructors and destructor========================
             //! no default constructor
@@ -53,13 +53,31 @@ namespace utils{
             Slice &operator=(const Slice &s);
 
             //=================public member methods===========================
+            /*! \brief return the first element
+
+            \return first element of slice
+            */
             size_t first() const { return _first; }
 
+            /*! \brief return last element 
+
+            \return last element of slice
+            */
             size_t last() const { return _last; }
 
+            /*! \brief return stride
+
+            \return stride of the slice
+            */
             size_t stride() const { return _stride; }
     }; 
 
+    /*! \brief compute slice size
+
+    Computes the number of elements spanned by a slice. 
+    \param s slice object 
+    \return number of spanned elements
+    */
     size_t size(const Stride &s);
 
 

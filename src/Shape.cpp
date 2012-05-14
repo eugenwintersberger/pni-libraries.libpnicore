@@ -186,6 +186,12 @@ namespace utils{
         _dimstrides = _compute_dimstrides(_shape);
         _size = _compute_size(_shape);
     }
+    
+    //--------------------------------------------------------------------------
+    size_t Shape::offset(const std::initializer_list<size_t> &list) const
+    {
+        return offset(std::vector<size_t>(list));
+    }
 
     //--------------------------------------------------------------------------
     //implementation of the set dimension method using a vector
@@ -226,119 +232,6 @@ namespace utils{
         }
 
         return _shape[i];
-    }
-
-    //===========Methods concerning offset and index handling===================
-    //implementation of offset calculation
-    size_t Shape::offset(const Index &i) const {
-        EXCEPTION_SETUP("size_t Shape::offset(const Index &i) const");
-        size_t offset = 0;
-        size_t index = 0;
-
-        if(!_shape.is_allocated()){
-            EXCEPTION_INIT(MemoryAccessError,
-                    "Shape object is not allocated (rank == 0)!");
-            EXCEPTION_THROW();
-        }
-
-        if(i.rank() == 0){
-            EXCEPTION_INIT(MemoryAccessError,
-                    "Index object is not allocated (rank = 0)!");
-            EXCEPTION_THROW();
-        }
-
-        if(i.rank() != rank()){
-            EXCEPTION_INIT(ShapeMissmatchError,
-                    "Shape and Index rank do not match!");
-            EXCEPTION_THROW();
-        }
-
-        for(size_t d=0;d<rank();d++){
-            index = i[d];
-            if(index >= dim(d)){
-                EXCEPTION_INIT(IndexError,"Index out of bounds!");
-                EXCEPTION_THROW();
-            }
-            offset += index*_dimstrides[d];
-        }
-        return offset;
-    }
-
-    //--------------------------------------------------------------------------
-    //compute an offset form an initializer list
-    size_t Shape::offset(const std::initializer_list<size_t> &list) const{
-        EXCEPTION_SETUP("size_t Shape::"
-                "offset(std::initializer_list<size_t> list) const");
-
-        size_t offset = 0;
-
-        if(!_shape.is_allocated()){
-            EXCEPTION_INIT(MemoryAccessError,
-                    "Shape object is not allocated (rank == 0)!");
-            EXCEPTION_THROW();
-        }
-
-
-        if(list.size() != rank()){
-            EXCEPTION_INIT(ShapeMissmatchError,
-                    "Shape rank and initializer list size do not match!");
-            EXCEPTION_THROW();
-        }
-
-        size_t cntr = 0;
-#ifdef NOFOREACH
-        for(auto iter = list.begin();iter!=list.end();iter++){
-            const size_t &index = *iter;
-#else
-        for(const size_t &index: list){
-#endif
-            if(index >= dim(cntr)){
-                EXCEPTION_INIT(IndexError,"Index out of bounds!");
-                EXCEPTION_THROW();
-            }
-            offset += index*_dimstrides[cntr];
-            cntr++; //increment list counter
-        }
-
-        return offset;
-
-    }
-
-    //--------------------------------------------------------------------------
-    //implementation of index calculation
-    void Shape::index(const size_t &offset,Index &i) const {
-        EXCEPTION_SETUP("void Shape::index(const size_t &offset,Index &i) "
-                        "const");
-
-        if(!_shape.is_allocated()){
-            EXCEPTION_INIT(MemoryAccessError,
-                    "Shape object is not allocated (rank == 0)!");
-            EXCEPTION_THROW();
-        }
-
-        if(i.rank() == 0){
-            EXCEPTION_INIT(MemoryAccessError,
-                    "Index object is not allocated (rank == 0)!")
-        }
-
-        if(i.rank() != rank()){
-            EXCEPTION_INIT(ShapeMissmatchError,
-                    "Shape and Index have different rank!");
-            EXCEPTION_THROW();
-        }
-
-        if(offset>=size()){
-            EXCEPTION_INIT(MemoryAccessError,"Offset is larger than size!");
-            EXCEPTION_THROW();
-        }
-
-        size_t o,t;
-        o = offset;
-        for(size_t d = 0;d<rank();d++){
-            t = o%_dimstrides[d];
-            i[d] = (o-t)/_dimstrides[d];
-            o = t;
-        }
     }
 
     //================Implementation of comparison operators===================

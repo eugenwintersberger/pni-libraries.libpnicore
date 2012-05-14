@@ -5,7 +5,7 @@
 #include "Types.hpp"
 #include "Shape.hpp"
 #include "ShapeTest.hpp"
-#include "Index.hpp"
+#include <list>
 
 CPPUNIT_TEST_SUITE_REGISTRATION(ShapeTest);
 
@@ -119,20 +119,15 @@ void ShapeTest::testOffset(){
 	std::cout<<std::endl;
 	Shape s1(_s1);
 	Shape s2(_s2);
-	Index index;
 
-	index.rank(s1.rank());
-	index[0] = 2;
-	index[1] = 1;
-	CPPUNIT_ASSERT(s1.offset(index)==9);
-    CPPUNIT_ASSERT(s1.offset({2,1}) == 9);
+    size_t offset = 0;
+    CPPUNIT_ASSERT_NO_THROW(offset = s1.offset(std::vector<size_t>({2,1})));
+    CPPUNIT_ASSERT(offset == 9);
+    CPPUNIT_ASSERT_NO_THROW( offset = s1.offset(2,1));
+    CPPUNIT_ASSERT(offset == 9);
 
-	index.rank(s2.rank());
-	index[0] = 0;
-	index[1] = 1;
-	index[2] = 3;
-	CPPUNIT_ASSERT(s2.offset(index)==8);
     CPPUNIT_ASSERT(s2.offset({0,1,3}) == 8);
+    CPPUNIT_ASSERT(s2.offset(0,1,3) == 8);
 
 }
 
@@ -141,33 +136,17 @@ void ShapeTest::testIndex(){
 	std::cout<<"void ShapeTest::testIndex()-----------------------------------";
 	std::cout<<std::endl;
 	Shape s1(_s1),s2(_s2);
-	Index index;
 
-	index.rank(s1.rank());
-	index[0] = 2;
-	index[1] = 1;
-	CPPUNIT_ASSERT(s1.offset(index)==9);
-	Index ti(s1.rank());
-	CPPUNIT_ASSERT_NO_THROW(s1.index(9,ti));
-	CPPUNIT_ASSERT(ti == index);
+	CPPUNIT_ASSERT(s1.offset(2,1)==9);
+    auto index = s1.index<std::vector<size_t> >(9);
+    CPPUNIT_ASSERT(index[0] == 2);
+    CPPUNIT_ASSERT(index[1] == 1);
 
-	index.rank(s2.rank());
-	ti.rank(s2.rank());
-	index[0] = 0;
-	index[1] = 1;
-	index[2] = 3;
-	CPPUNIT_ASSERT(s2.offset(index)==8);
-	CPPUNIT_ASSERT_NO_THROW(s2.index(8,ti));
-	CPPUNIT_ASSERT(ti == index);
-
-    //testing setting dimensions using a vector
-    std::vector<size_t> indices = {5,2,9};
-    s2.dim(indices);
-    CPPUNIT_ASSERT(s2.size() == 90);
-    CPPUNIT_ASSERT(s2.rank() == 3);
-    CPPUNIT_ASSERT(s2[0] == 5);
-    CPPUNIT_ASSERT(s2[1] == 2);
-    CPPUNIT_ASSERT(s2[2] == 9);
+	CPPUNIT_ASSERT(s2.offset(0,1,3)==8);
+    auto list = s2.index<std::vector<size_t> >(8);
+    CPPUNIT_ASSERT(list.at(1) == 1);
+    CPPUNIT_ASSERT(list.at(2) == 3);
+    CPPUNIT_ASSERT(list.at(0) == 0);
 
 }
 
@@ -184,27 +163,23 @@ void ShapeTest::testExceptions(){
 
     s = _s2;
 
-	Index i(s.rank());
-	i[0] = 1; i[1] = 100; i[2] = 1;
-	CPPUNIT_ASSERT_THROW(s.offset(i),IndexError);
-	i[0] = -1; i[1] = 0;
-	CPPUNIT_ASSERT_THROW(s.offset(i),IndexError);
+	CPPUNIT_ASSERT_THROW(s.offset(1,100,1),IndexError);
+	CPPUNIT_ASSERT_THROW(s.offset({-1,0}),ShapeMissmatchError);
 
-	Index i2(2);
-	CPPUNIT_ASSERT_THROW(s.offset(i2),ShapeMissmatchError);
-	Index i3;
-	CPPUNIT_ASSERT_THROW(s.offset(i3),MemoryAccessError);
+	CPPUNIT_ASSERT_THROW(s.offset(0,3),ShapeMissmatchError);
+	CPPUNIT_ASSERT_THROW(s.offset(std::vector<size_t>()),ShapeMissmatchError);
 
 	Shape s2;
-	CPPUNIT_ASSERT_THROW(s2.offset(i),MemoryAccessError);
+	CPPUNIT_ASSERT_THROW(s2.offset({0,3}),MemoryAccessError);
 
 	//now we can do the same game with the getIndex method
 	//the offset exceeds the size of the shape
-	CPPUNIT_ASSERT_THROW(s.index(10000,i),MemoryAccessError);
+	CPPUNIT_ASSERT_THROW(s.index<std::vector<size_t> >(10000),MemoryAccessError);
 	//the index has the wrong rank
-	CPPUNIT_ASSERT_THROW(s.index(1,i2),ShapeMissmatchError);
+    std::vector<size_t> index(2);
+	CPPUNIT_ASSERT_THROW(s.index(1,index),ShapeMissmatchError);
 	//the shape object is not allocated
-	CPPUNIT_ASSERT_THROW(s2.index(1,i),MemoryAccessError);
+	CPPUNIT_ASSERT_THROW(s2.index(1,index),MemoryAccessError);
 
 
 }

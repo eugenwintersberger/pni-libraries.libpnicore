@@ -617,10 +617,18 @@ namespace utils {
             \param i multidimensional index 
             \return reference to the element at position i
             */
-            T& operator()(const Index &i) 
-            { 
-                return this->_data[this->_shape.offset(i)];
+
+            template<template<typename,typename> class CONTAINER,typename IT,typename A> 
+                T &operator()(const CONTAINER<IT,A> &c)
+            {
+                return this->_data[this->_shape.offset(c)];
             }
+
+            T &operator()(const std::initializer_list<size_t> &l)
+            {
+                return (*this)(std::vector<size_t>(l));
+            }
+
 
             //-----------------------------------------------------------------
             /*! \brief return value
@@ -629,10 +637,6 @@ namespace utils {
             \param i multidimensional index
             \return value of the array at i
             */
-            T operator()(const Index &i) const
-            {
-                return this->_data[this->_shape.offset(i)];
-            }
 
 
             //=====================comparison operators========================

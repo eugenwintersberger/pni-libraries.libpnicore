@@ -38,7 +38,7 @@ namespace pni{
         IndexMap::IndexMap():
             _offset(),
             _stride(),
-            _count()
+            _shape()
         { }
 
         //---------------------------------------------------------------------
@@ -46,7 +46,7 @@ namespace pni{
         IndexMap::IndexMap(const IndexMap &o):
             _offset(o._offset),
             _stride(o._stride),
-            _count(o._count)
+            _shape(o._shape)
         {}
 
         //---------------------------------------------------------------------
@@ -54,38 +54,41 @@ namespace pni{
         IndexMap::IndexMap(IndexMap &&o):
             _offset(std::move(o._offset)),
             _stride(std::move(o._stride)),
-            _count(std::move(o._count))
+            _shape(std::move(o._shape))
         {}
         
         //---------------------------------------------------------------------
         //first standard constructor
-        IndexMap::IndexMap(size_t rank):
-            _offset(rank),
-            _stride(rank),
-            _count(rank)
-        {}
+        IndexMap::IndexMap(const Shape &s):
+            _offset(s.rank()),
+            _stride(s.rank()),
+            _shape(s)
+        {
+            _offset = 0;
+            _stride = 1;
+        }
 
         //---------------------------------------------------------------------
         //implementation of second standard constructor
-        IndexMap::IndexMap(const Buffer<ssize_t> &o,const Buffer<ssize_t> &s,
-                           const Buffer<ssize_t> &c):
-            _offset(o),
-            _stride(s),
-            _count(c)
+        IndexMap::IndexMap(const Shape &s,const Buffer<ssize_t> &offset,
+                           const Buffer<ssize_t> &stride):
+            _offset(offset),
+            _stride(stride),
+            _shape(s)
         { 
             EXCEPTION_SETUP("IndexMap::IndexMap(const Buffer<ssize_t> &o,"
                     "const Buffer<ssize_t> &s, const Buffer<ssize_t> &c)");
 
             //need to check if all buffers have the same size
             if((_offset.size() != _stride.size())||
-               (_offset.size() != _count.size())||
-               (_stride.size() != _count.size()))
+               (_offset.size() != _shape.rank())||
+               (_stride.size() != _shape.rank()))
             {
                 std::stringstream estrm(std::stringstream::in);
                 estrm<<"Buffer sizes are not equal: "<<std::endl;
                 estrm<<"Offset buffer: "<<_offset.size()<<std::endl;
                 estrm<<"Stride buffer: "<<_stride.size()<<std::endl;
-                estrm<<"Count  buffer: "<<_count.size()<<std::endl;
+                estrm<<"Count  buffer: "<<_shape.rank()<<std::endl;
                 estrm<<"Construction of IndexMap failed!";
                 EXCEPTION_INIT(SizeMissmatchError,estrm.str());
                 EXCEPTION_THROW();
@@ -97,7 +100,6 @@ namespace pni{
         IndexMap::~IndexMap()
         {
             _offset.free();
-            _count.free();
             _stride.free();
         }
 
@@ -109,7 +111,7 @@ namespace pni{
             {
                 _offset = o._offset;
                 _stride = o._stride;
-                _count  = o._count;
+                _shape  = o._shape;
             }
             return *this;
         }
@@ -122,7 +124,7 @@ namespace pni{
             {
                 _offset = std::move(o._offset);
                 _stride = std::move(o._stride);
-                _count  = std::move(o._count);
+                _shape  = std::move(o._shape);
             }
             return *this;
         }
@@ -197,61 +199,7 @@ namespace pni{
             return _stride;
         }
 
-        //---------------------------------------------------------------------
-        void IndexMap::count(size_t i,ssize_t c)
-        {
-            _count[i] = c;
-        }
 
-        //---------------------------------------------------------------------
-        void IndexMap::count(const Buffer<ssize_t> &c)
-        {
-            EXCEPTION_SETUP("void IndexMap::count(const Buffer<ssize_t> &c)");
-
-            if(c.size()!=rank())
-            {
-                std::stringstream estrm(std::stringstream::in);
-                estrm<<"Buffer size ("<<c.size()<<") does not match ";
-                estrm<<"IndexMap rank ("<<rank()<<")!";
-                EXCEPTION_INIT(SizeMissmatchError,estrm.str());
-                EXCEPTION_THROW();
-            }
-
-            _count = c;
-        }
-        
-        //---------------------------------------------------------------------
-        ssize_t IndexMap::count(size_t i) const
-        {
-            return _count[i];
-        }
-
-        //---------------------------------------------------------------------
-        const Buffer<ssize_t> &IndexMap::count() const
-        {
-            return _count;
-        }
-
-        //---------------------------------------------------------------------
-        /*
-        Buffer<size_t> index(size_t offset)
-        {
-            Buffer<size_t> ibuffer(rank());
-
-
-            size_t o,t;
-            o = offset;
-            for(size_t d = 0;d<rank();d++){
-                //compute dimension stride 
-                
-
-                t = o%_dimstrides[d];
-                i[d] = (o-t)/_dimstrides[d];
-                o = t;
-            }
-
-            return ibuffer;
-        }*/
 
     //end of namespace
     }
