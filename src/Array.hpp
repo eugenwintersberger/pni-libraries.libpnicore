@@ -629,6 +629,31 @@ namespace utils {
                 return (*this)(std::vector<size_t>(l));
             }
 
+            template<template<typename,typename> class CONTAINER,typename
+                IT,typename A>
+                T operator()(const CONTAINER<IT,A> &c) const
+            {
+                return this->_data[this->_shape.offset(c)];
+            }
+
+            T operator()(const std::initializer_list<size_t> &l) const
+            {
+                return (*this)(std::vector<size_t>(l));
+            }
+
+            
+            template<typename ...ITypes> 
+                T &operator()(size_t i,ITypes ...indices) 
+            {
+                return this->_data[this->_shape.offset(i,indices...)];
+            }
+
+            template<typename ...ITypes> 
+                T operator()(size_t i,ITypes ...indices) const
+            {
+                return this->_data[this->_shape.offset(i,indices...)];
+            }
+
 
             //-----------------------------------------------------------------
             /*! \brief return value

@@ -82,20 +82,18 @@ void ArrayTest::testSetAndGet(){
 	//check if data values have been transfered correctly
 	for(size_t i=0;i<s.size();i++) CPPUNIT_ASSERT(((double)i)==a1[i]);
 
-    /*
 	//check access via () operator
-	in.rank(s.rank());
-	for(in[0]=0; in[0]<s[0]; in.inc(0)){
-		for(in[1]=0; in[1]<s[1]; in.inc(1)){
-			a1(in) = (double)in[0]*in[1];
+	for(size_t i=0;i<s[0];i++){
+		for(size_t j=0;j<s[1];j++){
+			a1(i,j) = (double)i*j;
 		}
 	}
-	for(in[0]=0;in[0]<s[0];in.inc(0)){
-		for(in[1]=0;in[1]<s[1];in.inc(1)){
-			CPPUNIT_ASSERT(a1(in) == ((double)in[0]*in[1]));
+
+	for(size_t i=0;i<s[0];i++){
+		for(size_t j=0;j<s[1];j++){
+			CPPUNIT_ASSERT_DOUBLES_EQUAL(a1(i,j),((double)i*j),1.e-8);
 		}
 	}
-    */
 
 }
 
@@ -105,34 +103,31 @@ void ArrayTest::testComparison(){
 	Float64Array b1(s1);
 	Float64Array a2(s2);
 	Float64Array b2(s2);
-	Index in1,in2;
 
-	in1.rank(s1.rank());
-	in2.rank(s2.rank());
-
-    /*
-	for(in1[0]=0; in1[0]<s1[0]; in1.inc(0)){
-		for(in1[1]=0; in1[1]<s1[1]; in1.inc(1)){
-			a1(in1) = (Float64)in1[0];
-			b1(in1) = (Float64)in1[1]*10;
+	for(size_t i=0;i<s1[0];i++)
+    {
+		for(size_t j=0;j<s1[1];j++)
+        {
+			a1(i,j) = (Float64)i;
+			b1(i,j) = (Float64)j*10;
 		}
 	}
-    */
 	CPPUNIT_ASSERT(a1==a1);
 	CPPUNIT_ASSERT(a1!=b1);
 	CPPUNIT_ASSERT(b1==b1);
 
 
-    /*
-	for(in2[0]=0; in2[0]<s2[0]; in2.inc(0)){
-		for(in2[1]=0; in2[1]<s2[1]; in2.inc(1)){
-			for(in2[2]=0; in2[2]<s2[2]; in2.inc(2)){
-				a2(in2) = (Float64)in2[0];
-				b2(in2) = (Float64)in2[0]*10;
+	for(size_t i=0;i<s2[0];i++)
+    {
+		for(size_t j=0;j<s2[1];j++)
+        {
+			for(size_t k=0;k<s2[2];k++)
+            {
+				a2(i,j,k) = (Float64)i;
+				b2(i,j,k) = (Float64)i*10;
 			}
 		}
 	}
-    */
 	CPPUNIT_ASSERT(a2==a2);
 	CPPUNIT_ASSERT(a2!=b2);
 	CPPUNIT_ASSERT(b2==b2);
