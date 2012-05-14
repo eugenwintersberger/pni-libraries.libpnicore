@@ -52,7 +52,7 @@ namespace utils{
 
 
     //=============implementation of assignment operators======================
-    Slice &Slice::operator(const Slice &s)
+    Slice &Slice::operator=(const Slice &s)
     {
         if(this == &s) return *this;
         _first = s._first;

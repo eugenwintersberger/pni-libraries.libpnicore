@@ -40,8 +40,9 @@
 #include "Shape.hpp"
 #include "Exceptions.hpp"
 #include "Types.hpp"
-#include "Index.hpp"
 #include "NumericObject.hpp"
+#include "Slice.hpp"
+#include "ArrayView.hpp"
 
 #include "ArrayTrait.hpp"
 #include "TypeInfo.hpp"
@@ -136,6 +137,7 @@ namespace utils {
             typedef BType<T,Allocator> buffer_type; //!< type of the buffer object
             typedef std::shared_ptr<ARRAYTMP > shared_ptr; //!< shared pointer to an Array<T>
             typedef std::unique_ptr<ARRAYTMP > unique_ptr; //!< unique pointer type
+            typedef ArrayView<T,Array<T,BType,Allocator> > view_type; //!< type for array view
             
             //==================public members=================================
             static const TypeID type_id = TypeIDMap<T>::type_id; //!< type ID of the element type
@@ -624,11 +626,13 @@ namespace utils {
                 return this->_data[this->_shape.offset(c)];
             }
 
+            //-----------------------------------------------------------------
             T &operator()(const std::initializer_list<size_t> &l)
             {
                 return (*this)(std::vector<size_t>(l));
             }
 
+            //-----------------------------------------------------------------
             template<template<typename,typename> class CONTAINER,typename
                 IT,typename A>
                 T operator()(const CONTAINER<IT,A> &c) const
@@ -636,23 +640,51 @@ namespace utils {
                 return this->_data[this->_shape.offset(c)];
             }
 
+            //-----------------------------------------------------------------
             T operator()(const std::initializer_list<size_t> &l) const
             {
                 return (*this)(std::vector<size_t>(l));
             }
 
-            
+            //----------------------------------------------------------------- 
             template<typename ...ITypes> 
                 T &operator()(size_t i,ITypes ...indices) 
             {
                 return this->_data[this->_shape.offset(i,indices...)];
             }
 
+            //-----------------------------------------------------------------
             template<typename ...ITypes> 
                 T operator()(size_t i,ITypes ...indices) const
             {
                 return this->_data[this->_shape.offset(i,indices...)];
             }
+
+            //-----------------------------------------------------------------
+            template<typename ...ITypes>
+                Array<T,BType,Allocator>::view_type operator()
+                (const std::tuple<ITypes... > &tuple)
+            {
+                typedef std::tuple<ITypes...> TupleType;
+                std::vector<size_t> offset;
+                std::vector<size_t> stride;
+                std::vector<size_t> shape;
+
+                //check the size of the tuple - cannot be done at 
+                //compiletime
+                if(std::tuple_size<std::tuple<ITypes... > >::value !=
+                        this->_shape.rank())
+                {
+                    //throw shape missmatche error
+                }
+
+                ViewExpansion<TupleType,std::tuple_size<TupleType>::value >(tuple,offset,stride,shape);
+
+
+            }
+
+        
+
 
 
             //-----------------------------------------------------------------

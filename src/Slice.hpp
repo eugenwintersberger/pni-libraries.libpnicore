@@ -26,6 +26,9 @@
 #ifndef __SLICE_HPP__
 #define __SLICE_HPP__
 
+#include <iostream>
+#include <utility>
+
 namespace pni{
 namespace utils{
 
@@ -78,7 +81,7 @@ namespace utils{
     \param s slice object 
     \return number of spanned elements
     */
-    size_t size(const Stride &s);
+    size_t size(const Slice &s);
 
 
 
