@@ -13,10 +13,10 @@
 using namespace pni::utils;
 
 //testing Buffer<T> and BufferObject concepts.
-template<typename T,template<typename,typename> BTYPE,typename ALLOCATOR> 
+template<typename T,template<typename,typename> class BTYPE,typename ALLOCATOR> 
 class BufferTest : public CppUnit::TestFixture
 {
-        CPPUNIT_TEST_SUITE(BufferTest);
+        CPPUNIT_TEST_SUITE(BufferTest<T,BTYPE,ALLOCATOR>);
         CPPUNIT_TEST(test_default_constructors);
         CPPUNIT_TEST(test_specific_constructors);
         CPPUNIT_TEST(test_allocation);
@@ -40,24 +40,29 @@ class BufferTest : public CppUnit::TestFixture
 };
 
 //-----------------------------------------------------------------------------
-template<typename T,template<typename,typename> BTYPE,typename ALLOCATOR> 
-void BufferTest::setUp()
+template<typename T,template<typename,typename> class BTYPE,typename ALLOCATOR> 
+void BufferTest<T,BTYPE,ALLOCATOR>::setUp()
 {
-    n1 = 1000;
-    n2 = 2000;
+    this->n1 = 1000;
+    this->n2 = 2000;
 }
 
 //-----------------------------------------------------------------------------
-template<typename T,template<typename,typename> BTYPE,typename ALLOCATOR> 
-void BufferTest::tearDown(){ }
+template<typename T,template<typename,typename> class BTYPE,typename ALLOCATOR> 
+void BufferTest<T,BTYPE,ALLOCATOR>::tearDown(){ }
 
 //------------------------------------------------------------------------------
-template<typename T,template<typename,typename> BTYPE,typename ALLOCATOR> 
-void BufferTest::test_default_constructors()
+template<typename T,template<typename,typename> class BTYPE,typename ALLOCATOR> 
+void BufferTest<T,BTYPE,ALLOCATOR>::test_default_constructors()
 {
     //create first buffer using the default constructor
     BTYPE<T,ALLOCATOR> b1; //default constructor
     CPPUNIT_ASSERT(!b1.is_allocated());
+    
+    //create the second constructor with the standard constructor
+    //allocating memory
+    BTYPE<T,ALLOCATOR> b2(n2);
+    CPPUNIT_ASSERT(b2.is_allocated());
 
     //using copy constructor
     BTYPE<T,ALLOCATOR> b3(b2);
@@ -74,16 +79,12 @@ void BufferTest::test_default_constructors()
 }
 
 //-----------------------------------------------------------------------------
-template<typename T,template<typename,typename> BTYPE,typename ALLOCATOR> 
-void BufferTest::test_specific_constructors()
+template<typename T,template<typename,typename> class BTYPE,typename ALLOCATOR> 
+void BufferTest<T,BTYPE,ALLOCATOR>::test_specific_constructors()
 {
-    //create the second constructor with the standard constructor
-    //allocating memory
-    BTYPE<T,ALLOCATOR> b2(n2);
-    CPPUNIT_ASSERT(b2.is_allocated());
     
     //test constructor with initializer list
-    BTYPE<T> ibuffer = {1,-6,12};
+    BTYPE<T,ALLOCATOR> ibuffer = {1,-6,12};
     CPPUNIT_ASSERT(ibuffer[0] == 1);
     CPPUNIT_ASSERT(ibuffer[1] == -6);
     CPPUNIT_ASSERT(ibuffer[2] == 12);
@@ -99,8 +100,8 @@ void BufferTest::test_specific_constructors()
 }
 
 //------------------------------------------------------------------------------
-template<typename T,template<typename,typename> BTYPE,typename ALLOCATOR> 
-void BufferTest::test_assignment(){
+template<typename T,template<typename,typename> class BTYPE,typename ALLOCATOR> 
+void BufferTest<T,BTYPE,ALLOCATOR>::test_assignment(){
 	//testing here the assignment of equally typed buffers
 	BTYPE<T,ALLOCATOR> buffer1;
 	BTYPE<T,ALLOCATOR> buffer2;
@@ -109,15 +110,15 @@ void BufferTest::test_assignment(){
 	//nothing happens - both are not allocated
 	CPPUNIT_ASSERT_NO_THROW(buffer1 = buffer2);
 	//now the lhs is not allocated and the rhs is
-    CPPUNIT_ASSERT_NO_THROW(buffer2.allocate(n1));
+    CPPUNIT_ASSERT_NO_THROW(buffer2.allocate(this->n1));
     CPPUNIT_ASSERT_NO_THROW(buffer1 = buffer2);
     //now the rhs is not allocate dnad the lhs is
     CPPUNIT_ASSERT_NO_THROW(buffer1.free());
     CPPUNIT_ASSERT_NO_THROW(buffer2 = buffer1);
 
     //booth buffers are allocated
-	CPPUNIT_ASSERT_NO_THROW(buffer2.allocate(n1));
-	CPPUNIT_ASSERT_NO_THROW(buffer1.allocate(n2));
+	CPPUNIT_ASSERT_NO_THROW(buffer2.allocate(this->n1));
+	CPPUNIT_ASSERT_NO_THROW(buffer1.allocate(this->n2));
     CPPUNIT_ASSERT(buffer1.size() != buffer2.size());
 	//reallocation of the lhs
 	CPPUNIT_ASSERT_NO_THROW(buffer1 = buffer2);
@@ -150,12 +151,12 @@ void BufferTest::test_assignment(){
 }
 
 //------------------------------------------------------------------------------
-template<typename T,template<typename,typename> BTYPE,typename ALLOCATOR> 
-void BufferTest::test_allocation(){
-	BTYPE<T,ALLOCATOR> dbuffer(n1);
+template<typename T,template<typename,typename> class BTYPE,typename ALLOCATOR> 
+void BufferTest<T,BTYPE,ALLOCATOR>::test_allocation(){
+	BTYPE<T,ALLOCATOR> dbuffer(this->n1);
 
 	CPPUNIT_ASSERT(dbuffer.is_allocated());
-	CPPUNIT_ASSERT(dbuffer.size() == n1);
+	CPPUNIT_ASSERT(dbuffer.size() == this->n1);
 
 	CPPUNIT_ASSERT_NO_THROW(dbuffer.free());
 	CPPUNIT_ASSERT(dbuffer.size()==0);
@@ -172,8 +173,8 @@ void BufferTest::test_allocation(){
 }
 
 //------------------------------------------------------------------------------
-template<typename T,template<typename,typename> BTYPE,typename ALLOCATOR> 
-void BufferTest::test_access(){
+template<typename T,template<typename,typename> class BTYPE,typename ALLOCATOR> 
+void BufferTest<T,BTYPE,ALLOCATOR>::test_access(){
 	BTYPE<T,ALLOCATOR> dbuffer(1000);
 
 	for(size_t i=0;i<1000;i++) dbuffer[i] = (T)i;
@@ -195,8 +196,8 @@ void BufferTest::test_access(){
 }
 
 //------------------------------------------------------------------------------
-template<typename T,template<typename,typename> BTYPE,typename ALLOCATOR> 
-void BufferTest::testComparison(){
+template<typename T,template<typename,typename> class BTYPE,typename ALLOCATOR> 
+void BufferTest<T,BTYPE,ALLOCATOR>::test_comparison(){
 	BTYPE<T,ALLOCATOR> b1(100);
 	BTYPE<T,ALLOCATOR> b2(100);
 	b1 = T(1);
