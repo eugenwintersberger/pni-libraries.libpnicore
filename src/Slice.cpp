@@ -44,10 +44,16 @@ namespace utils{
             //throw an exception here
         }
 
-        _first = l[0];
-        _last  = l[1];
-        if(l.size()>=3) _stride = l[2];
-        else _stride = 1;
+        _stride = 1;
+        size_t cnt=0;
+        for(auto v: l)
+        {
+            if(cnt == 0) _first = v;
+            if(cnt == 1) _last = v;
+            if(cnt == 2) _stride = v ;
+
+            cnt++;
+        }
     }
 
 

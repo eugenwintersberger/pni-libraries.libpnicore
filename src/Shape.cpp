@@ -76,13 +76,6 @@ namespace utils{
         _size(_compute_size(_shape))
     { }
 
-    //--------------------------------------------------------------------------
-    //implementation of a constructor with a vector
-    Shape::Shape(const std::vector<size_t> &vector):
-        _shape(vector),
-        _dimstrides(_compute_dimstrides(_shape)),
-        _size(_compute_size(_shape))
-    { }
 
     //--------------------------------------------------------------------------
     //implementation of the copy constructor

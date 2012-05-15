@@ -9,6 +9,8 @@
 #include "Buffer.hpp"
 #include "Shape.hpp"
 #include "ArrayTest.hpp"
+#include "ArrayView.hpp"
+#include "Slice.hpp"
 
 CPPUNIT_TEST_SUITE_REGISTRATION(ArrayTest);
 
@@ -62,9 +64,9 @@ void ArrayTest::testSlowArrayConstruction(){
 	a.buffer(buffer);
     CPPUNIT_ASSERT(a.is_allocated());
 
-	CPPUNIT_ASSERT_NO_THROW(a({100,100}) = 1000);
-	CPPUNIT_ASSERT_NO_THROW(a({50,23}) = -10);
- 	CPPUNIT_ASSERT_NO_THROW(a({1023,2047}) = 50);
+	CPPUNIT_ASSERT_NO_THROW(a(100,100) = 1000);
+	CPPUNIT_ASSERT_NO_THROW(a(50,23) = -10);
+ 	CPPUNIT_ASSERT_NO_THROW(a(1023,2047) = 50);
 
 	CPPUNIT_ASSERT(a.min() == -10);
 	CPPUNIT_ASSERT(a.max() == 1000);

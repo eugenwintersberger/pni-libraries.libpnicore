@@ -30,118 +30,43 @@
 
 namespace pni{
 namespace utils{
-    class SliceManager
-    {
-        public:
-            static size_t get_offset(const size_t &i) { return 0; }
-            static size_t get_stride(const size_t &i) { return 1; }
-            static size_t get_shape(const size_t &i) { return i; }
-
-            static size_t get_offset(const Slice &s) { return s.first(); }
-            static size_t get_stride(const Slice &s) { return s.stride(); }
-            static size_t get_shape(const Slice &s) { return size(s); }
-
-    };
-
-    template<typename TUPLE,int N> class ViewExpansion
-    {
-        private:
-            template<typename VT> 
-                void extract_values(const VT &v,
-                                    std::vector<size_t> &offset,
-                                    std::vector<size_t> &stride,
-                                    std::vector<size_t> &shape)
-                {
-                    offset.push_back(SliceManager::get_offset(v));
-                    stride.push_back(SliceManager::get_stride(v));
-                    shape.push_back(SliceManager::get_shape(v));
-                }
-        public:
-            void expand(const TUPLE &t,
-                        std::vector<size_t> &offset,
-                        std::vector<size_t> &stride,
-                        std::vector<size_t> &shape)
-            {
-                //do something here
-                this->extract_values(std::get<N>(t),offset,stride,shape);
-                //call the next instance
-                ViewExpansion<TUPLE,N-1>::expand(t,offset,stride,shape);
-            }
-    };
-
-    template<typename TUPLE> class ViewExpansion<TUPLE,1>
-    {
-        public:
-            void expand(const TUPLE &t,
-                        std::vector<size_t> &offset,
-                        std::vector<size_t> &stride,
-                        std::vector<size_t> &shape)
-            {
-                this->_extract_values(std::get<1>(t),offset,stride,shape);
-            }
-    };
 
     template<typename T,typename ATYPE> class ArrayView
     {
         private:
             ATYPE &_parray; //!< parent array from which to draw data
-            Shape _shape;   //!< shape of the selection
+            Buffer<size_t> _shape;   //!< shape of the selection
             Buffer<size_t> _offset; //!<offset of the view
             Buffer<size_t> _stride; //!<stride of the view
 
             std::vector<size_t> _index;  //!<a index buffer used for index computation 
             size_t _rank;            //!< rank of the view
 
-            size_t _get_effective_rank(const Shape &s);
-
-        public:
-            //=============constructors and destructor=========================
-            ArrayView() = delete;
-
             //-----------------------------------------------------------------
-            ArrayView(ATYPE *a):
-                _parray(a),
-                _shape(a.shape()),
-                _offset(a.rank()),
-                _stride(a.rank()),
-                _index(a.rank()),
-                _rank(a.rank())
+            size_t _get_effective_rank(const Buffer<size_t> &s);
+           
+            //-----------------------------------------------------------------
+            template<typename ...ITypes> 
+                void _add_index(std::vector<size_t> &index,size_t i,ITypes
+                        ...indices)
             {
-                //initialize member variables
-                _offset = 0;
-                _stride = 1;
-                _index = 0;
+                index.push_back(i);
+                _add_index(index,indices...);
             }
 
             //-----------------------------------------------------------------
-            ArrayView(ATYPE &a,const Shape &shape,
-                      const std::initializer_list<size_t> offset,
-                      const std::initializer_list<size_t> stride):
-                _parray(a),
-                _shape(shape),
-                _offset(offset),
-                _stride(stride),
-                _index(shape.rank()),
-                _rank(_get_effective_rank(shape))
-            { 
-                //wee need to check if all the lists and shapes do match the 
-                //rank of the array
-
-            
-            }
-
-
-
-            //====================assignment operators=========================
-
-
-            //==================public member functions========================
-            template<template<typename,typename> class CONT,typename IT,typename A>
-            T &operator()(const CONT<IT,A> &index)
+            void _add_index(std::vector<size_t> &index) {}
+           
+            //-----------------------------------------------------------------
+            template<template<typename,typename> class CONT,
+                     typename IT,
+                     typename A
+                    >
+                void _set_index(const CONT<IT,A> &index)
             {
                 //compute the index whith full dimensionality
                 size_t j=0;
-                for(size_t i=0;i<this->_shape.rank();i++)
+                for(size_t i=0;i<this->_shape.size();i++)
                 {
                     if(this->_shape[i]!=1)
                     {
@@ -159,15 +84,146 @@ namespace utils{
                         this->_offset[i]+this->_stride[i]*this->_index[i];
                 }
 
+            }
+
+        public:
+            //=============constructors and destructor=========================
+            ArrayView() = delete;
+
+            //-----------------------------------------------------------------
+            ArrayView(ATYPE &a):
+                _parray(a),
+                _shape(a.shape()),
+                _offset(a.rank()),
+                _stride(a.rank()),
+                _index(a.rank()),
+                _rank(a.rank())
+            {
+                //initialize member variables
+                _offset = 0;
+                _stride = 1;
+                _index = 0;
+            }
+
+            //-----------------------------------------------------------------
+            ArrayView(ATYPE &a,const std::vector<size_t> &shape,
+                      const std::vector<size_t> offset,
+                      const std::vector<size_t> stride):
+                _parray(a),
+                _shape(shape),
+                _offset(offset),
+                _stride(stride),
+                _index(shape.size()),
+                _rank(_get_effective_rank(_shape))
+            { 
+                //wee need to check if all the lists and shapes do match the 
+                //rank of the array
+
+            
+            }
+
+            //-----------------------------------------------------------------
+            //! copy constructor
+            ArrayView(const ArrayView<T,ATYPE> &o):
+                _parray(o._parray),
+                _shape(o._shape),
+                _offset(o._offset),
+                _stride(o._stride),
+                _index(o._index),
+                _rank(o._rank)
+            {}
+
+            //-----------------------------------------------------------------
+            //! move constructor
+            ArrayView(ArrayView<T,ATYPE> &&o):
+                _parray(o._parray),
+                _shape(std::move(o._shape)),
+                _offset(std::move(o._offset)),
+                _stride(std::move(o._stride)),
+                _index(std::move(o._index)),
+                _rank(std::move(o._rank))
+            {}
+            //====================assignment operators=========================
+            //! copy assignment
+            ArrayView<T,ATYPE> &operator=(const ArrayView<T,ATYPE> &o)
+            {
+                if(this == &o) return *this;
+                this->_parray = o._parray;
+                this->_shape = o._shape;
+                this->_offset = o._offset;
+                this->_stride = o._stride;
+                this->_index = o._index;
+                this->_rank = o._rank;
+                return *this;
+            }
+
+            //-----------------------------------------------------------------
+            //! move assignment
+            ArrayView<T,ATYPE> &operator=(ArrayView<T,ATYPE> &&o)
+            {
+                if(this == &o) return *this;
+                this->_parray = o._parray;
+                this->_shape = std::move(o._shape);
+                this->_offset = std::move(o._offset);
+                this->_stride = std::move(o._stride);
+                this->_index = std::move(o._index);
+                this->_rank = std::move(o._rank);
+                return *this;
+            }
+
+            //==================public member functions========================
+            template<template<typename,typename> class CONT,
+                     typename IT,
+                     typename A
+                    >
+                T &operator()(const CONT<IT,A> &index)
+            {
+
+                this->_set_index(index);
                 //we can use now this new index to access the data from the 
                 //original array
                 return this->_parray(this->_index);
 
             }
 
-            T &operator()(const std::initializer_list<size_t> &l)
+            //-----------------------------------------------------------------
+            template<template<typename,typename> class CONT,
+                     typename IT,
+                     typename A
+                    >
+                T operator()(const CONT<IT,A> &index) const
             {
-                return (*this)(std::vector<size_t>(l));
+
+                this->_set_index(index);
+                //we can use now this new index to access the data from the 
+                //original array
+                return this->_parray(this->_index);
+
+            }
+
+
+            //-----------------------------------------------------------------
+            template<typename ...ITypes> 
+                T &operator()(size_t &i,ITypes ...indices)
+            {
+                std::vector<size_t> index;
+
+                index.push_back(i);
+                _add_index(index,indices...);
+
+                return (*this)(index);
+            }
+
+            //-----------------------------------------------------------------
+            template<typename ...ITypes> 
+                T operator()(size_t &i,ITypes ...indices) const
+            {
+                std::vector<size_t> index;
+
+                index.push_back(i);
+                _add_index(index,indices...);
+
+                return (*this)(index);
             }
 
             //-----------------------------------------------------------------
@@ -180,21 +236,21 @@ namespace utils{
             */
             Shape shape() const
             {
-                std::vector<size_t> sv;
-                for(size_t i=0;i<_shape.rank();i++)
-                    if(_shape[i]!=1) sv.push_back(_shape[i]);
+                std::vector<size_t> b;
+                for(size_t i=0;i<this->_shape.size();i++)
+                    if(this->_shape[i]!=1) b.push_back(this->_shape[i]);
 
-                return Shape(sv);
+                return Shape(b);
             }
     
     };
 
     //============implementation of private member functions====================
     template<typename T,typename ATYPE>
-    size_t ArrayView<T,ATYPE>::_get_effective_rank(const Shape &s)
+    size_t ArrayView<T,ATYPE>::_get_effective_rank(const Buffer<size_t> &s)
     {
         size_t rank=0;
-        for(size_t i=0;i<s.rank();i++)
+        for(size_t i=0;i<s.size();i++)
             if(s[i]!=1) rank++;
 
         return rank;

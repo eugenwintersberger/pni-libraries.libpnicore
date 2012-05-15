@@ -34,7 +34,7 @@ void ShapeTest::testConstruction(){
 
 	//now we change rank and shape of the object - this should go via 
     //implicit conversion from the std::vector object to the shape
-	s = _s2;
+	s = Shape(_s2);
 	for(size_t i=0;i<s.rank();i++){
 		CPPUNIT_ASSERT(_s2[i] == s.dim(i));
 		CPPUNIT_ASSERT(s[i] == _s2[i]);
@@ -161,7 +161,7 @@ void ShapeTest::testExceptions(){
 	CPPUNIT_ASSERT_THROW(s.dim(10),IndexError);
 	CPPUNIT_ASSERT_THROW(s.dim(-10),IndexError);
 
-    s = _s2;
+    s = Shape(_s2);
 
 	CPPUNIT_ASSERT_THROW(s.offset(1,100,1),IndexError);
 	CPPUNIT_ASSERT_THROW(s.offset({-1,0}),ShapeMissmatchError);

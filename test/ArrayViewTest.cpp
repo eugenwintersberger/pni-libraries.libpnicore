@@ -28,10 +28,10 @@ void ArrayViewTest::testConstruction()
    Shape s{5,10};
    Float32Array a(s);
 
-   Shape vs{1,10};
-   ArrayView<Float32,Float32Array> view(a,vs,{0,0},{1,1});
+   auto view = a(Slice(1,3),Slice(3,7));
 
-   CPPUNIT_ASSERT(view.shape().rank() == 1);
+
+   CPPUNIT_ASSERT(view.shape().rank() == 2);
 }
 
 void ArrayViewTest::test_dataaccess()
@@ -42,22 +42,23 @@ void ArrayViewTest::test_dataaccess()
     Float32Array a(s);
     a = 1.5;
 
-    Shape vs{1,5};
-    ArrayView<Float32,Float32Array> view(a,vs,{0,2},{1,1});
-    for(size_t i=0;i<vs[1];i++)
-        CPPUNIT_ASSERT_NO_THROW(view({i}) = Float32(i));
+    auto view = a(Slice(0,1),Slice(2,7));
+    CPPUNIT_ASSERT(view.shape().rank() == 1);
+    CPPUNIT_ASSERT(view.shape()[0] == 5);
+    for(size_t i=0;i<view.shape()[0];i++)
+        CPPUNIT_ASSERT_NO_THROW(view(i) = Float32(i));
 
     for(size_t j=0;j<s[0];j++)
     {
-        for(size_t i=0;i<s[1];i++) std::cout<<a({j,i})<<" ";
+        for(size_t i=0;i<s[1];i++) std::cout<<a(j,i)<<" ";
         std::cout<<std::endl;
     }
 
     for(size_t i=0;i<10;i++)
     {
-        if((i<2)||(i>6)) CPPUNIT_ASSERT_DOUBLES_EQUAL(a({0,i}),1.5,1.e-8);
+        if((i<2)||(i>6)) CPPUNIT_ASSERT_DOUBLES_EQUAL(a(0,i),1.5,1.e-8);
         else 
-            CPPUNIT_ASSERT_DOUBLES_EQUAL(a({0,i}),Float32(i-2),1.e-8);
+            CPPUNIT_ASSERT_DOUBLES_EQUAL(a(0,i),Float32(i-2),1.e-8);
     }
 
    

@@ -130,6 +130,44 @@ namespace utils {
             \param a reference to an array
             */
             static void _throw_if_not_allocated(const Array<T,BType,Allocator> &a);
+           
+            //-----------------------------------------------------------------
+            template<typename ...STypes>
+                void _slice_setup(std::vector<size_t> &offset,
+                                  std::vector<size_t> &stride,
+                                  std::vector<size_t> &shape,
+                                  Slice s,
+                                  STypes ...slices)
+            {
+                _add_offset(offset,s);
+                _add_stride(stride,s);
+                _add_shape(shape,s);
+                _slice_setup(offset,stride,shape,slices...);
+            }
+
+            //-----------------------------------------------------------------
+            void _slice_setup(std::vector<size_t> &offset,
+                              std::vector<size_t> &stride,
+                              std::vector<size_t> &shape)
+            {}
+
+            //-----------------------------------------------------------------
+            void _add_offset(std::vector<size_t> &offset,const Slice &s)
+            {
+                offset.push_back(s.first());
+            }
+
+            //-----------------------------------------------------------------
+            void _add_stride(std::vector<size_t> &stride,const Slice &s)
+            {
+                stride.push_back(s.stride());
+            }
+
+            //-----------------------------------------------------------------
+            void _add_shape(std::vector<size_t> &shape,const Slice &s)
+            {
+                shape.push_back(pni::utils::size(s));
+            }
         public:
             //================public types=====================================
             typedef Allocator allocator_type; //!< allocator type
@@ -626,11 +664,6 @@ namespace utils {
                 return this->_data[this->_shape.offset(c)];
             }
 
-            //-----------------------------------------------------------------
-            T &operator()(const std::initializer_list<size_t> &l)
-            {
-                return (*this)(std::vector<size_t>(l));
-            }
 
             //-----------------------------------------------------------------
             template<template<typename,typename> class CONTAINER,typename
@@ -640,11 +673,6 @@ namespace utils {
                 return this->_data[this->_shape.offset(c)];
             }
 
-            //-----------------------------------------------------------------
-            T operator()(const std::initializer_list<size_t> &l) const
-            {
-                return (*this)(std::vector<size_t>(l));
-            }
 
             //----------------------------------------------------------------- 
             template<typename ...ITypes> 
@@ -661,30 +689,27 @@ namespace utils {
             }
 
             //-----------------------------------------------------------------
-            template<typename ...ITypes>
+            template<typename ...STypes>
                 Array<T,BType,Allocator>::view_type operator()
-                (const std::tuple<ITypes... > &tuple)
+                (const Slice &s,STypes ...slices)
             {
-                typedef std::tuple<ITypes...> TupleType;
                 std::vector<size_t> offset;
                 std::vector<size_t> stride;
                 std::vector<size_t> shape;
-
-                //check the size of the tuple - cannot be done at 
-                //compiletime
-                if(std::tuple_size<std::tuple<ITypes... > >::value !=
-                        this->_shape.rank())
+                
+                if(((sizeof...(STypes))+1)!=this->_shape.rank())
                 {
-                    //throw shape missmatche error
+                    //throw shape missmatch error
                 }
-
-                ViewExpansion<TupleType,std::tuple_size<TupleType>::value >(tuple,offset,stride,shape);
-
+                
+                _add_offset(offset,s);
+                _add_stride(stride,s);
+                _add_shape(shape,s);
+                _slice_setup(offset,stride,shape,slices...);
+                
+                return Array<T,BType,Allocator>::view_type(*this,shape,offset,stride);
 
             }
-
-        
-
 
 
             //-----------------------------------------------------------------

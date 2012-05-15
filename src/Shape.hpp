@@ -146,11 +146,19 @@ namespace utils{
             */
             Shape(const std::initializer_list<size_t> &list);
 
-            /*! \brief constructor with vector
+            /*! \brief constructor from container
 
-            Construct a shape object form a vector object
+            Construct a shape object form an arbitrary container type.
             */
-            Shape(const std::vector<size_t> &vector);
+            template<template<typename,typename> class CONT,
+                     typename T,
+                     typename A>
+            explicit
+            Shape(const CONT<T,A> &c):
+                _shape(c),
+                _dimstrides(_compute_dimstrides(_shape)),
+                _size(_compute_size(_shape))
+            { }
 
             //! destructor
             ~Shape();
