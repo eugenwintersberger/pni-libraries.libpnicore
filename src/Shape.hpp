@@ -34,7 +34,6 @@
 #include <string>
 
 #include "Exceptions.hpp"
-#include "Index.hpp"
 #include "Types.hpp"
 #include "Buffer.hpp"
 

@@ -29,30 +29,82 @@
 #include <iostream>
 #include <utility>
 
+#include "Exceptions.hpp"
+
 namespace pni{
 namespace utils{
 
+    /*! \ingroup util_classes
+    \brief index slice
+
+    This types represents an index slice for an array. A slice can be used to
+    identify an index range along a single dimensions. 
+    Slice objects are of particular importance for creating ArrayViews from 
+    Array<T> template instances.
+
+    A slice includes all indices between the the first and last index of the
+    slice where the last index is not included. A stride can be passed during
+    construction which determines the number of steps between each subsequent
+    element. If the stride is not 1 the last index will be adopted so that the 
+
+    */
     class Slice
     {
         private:
             size_t _first;  //!< first index in the slice
             size_t _last;   //!< last index in the slice
             size_t _stride; //!< distance between indices
+
+            /*! \brief check first and last index
+
+            This private method throws an exception if the first index of the
+            range exceeds the last one. 
+            \throws RangeError if first > last
+            \pararm o signature of the origin where the error occured
+            */
+            void _check_start_stop(const String &o);
         public:
             //==============constructors and destructor========================
             //! no default constructor
             Slice() = delete;
 
-            //! standard constructor
+            /*! \brief standard constructor
+
+            This is the default constructor for a Slice object. 
+            \throws RangeError if the first index exceeds the last
+            \param first first index
+            \param last index 
+            \param stride steps between subsequent elements
+            */
             Slice(size_t first,size_t last,size_t stride=1);
 
-            //! construction from a initializer list
+            /*! \brief construction from a initializer list
+
+            This can be used for implicit conversion which is sometimes quite
+            useful for the creation fo array views. 
+            \code 
+            Float32Array a({10,100});
+
+            //default construction of a view
+            auto v1 = a(Slice(1,4),Slice(50,100));
+
+            //one can also use implicit conversion
+            auto v2 = a({1,4},{50,100});
+            \endcode
+            If the initializer list has only two elements they are treated as
+            first and last element of the slice and the stride is set to 1. 
+            In the case of a three element initializer list the last element is
+            considered as the stride of the slice.
+            \throws RangeError if the first element is larger than the last
+            \param initializer list
+            */
             Slice(const std::initializer_list<size_t> &l);
 
             //! destructor
             ~Slice(){}
 
             //===============assignment operators==============================
+            //! copy assignment operator
             Slice &operator=(const Slice &s);
 
             //=================public member methods===========================
@@ -75,13 +127,30 @@ namespace utils{
             size_t stride() const { return _stride; }
     }; 
 
-    /*! \brief compute slice size
+    /*! 
+    \ingroup util_classes   
+    \brief compute slice size
 
     Computes the number of elements spanned by a slice. 
+    \f[
+        size=\frac{last-first+stride-1}{stride}
+    \f]
     \param s slice object 
     \return number of spanned elements
     */
     size_t size(const Slice &s);
+
+    /*! \ingroup util_classes
+    \brief compute total elements spanned
+
+    Computes the total number of elements spanned by the slice. 
+    \f[
+        span = list-first
+    \f]
+    \param s slice for which to compute the span
+    \return total number of elements
+    */
+    size_t span(const Slice &s);
 
 
 

@@ -27,6 +27,21 @@
 
 namespace pni{
 namespace utils{
+
+    //============implementation of private methods============================
+    void Slice::_check_start_stop(const String &o)
+    {
+        if(_first > _last)
+        {
+            std::stringstream ss;
+            ss<<"Last index ("<<_last<<") exceeds first ("<<_first<<")!";
+
+            RangeError error;
+            error.issuer(o);
+            error.description(ss.str());
+            throw error;
+        }
+    }
     
     //==========implementation of constructors and destructor==================
 
@@ -34,7 +49,10 @@ namespace utils{
         _first(first),
         _last(last),
         _stride(stride)
-    {}
+    {
+        _check_start_stop("Slice::Slice(size_t first,size_t last,"
+                          "size_t stride)");
+    }
 
     //-------------------------------------------------------------------------
     Slice::Slice(const std::initializer_list<size_t> &l)
@@ -54,6 +72,9 @@ namespace utils{
 
             cnt++;
         }
+
+        _check_start_stop("Slice::Slice(const "
+                          "std::initializer_list<size_t> &l)");
     }
 
 
@@ -70,7 +91,13 @@ namespace utils{
     //==========implementation of non-member functions=========================
     size_t size(const Slice &s)
     {
-        return (s.last() - s.first())*s.stride();
+        return (s.last() - s.first()+s.stride()-1)/s.stride();
+    }
+
+    //-------------------------------------------------------------------------
+    size_t span(const Slice &s)
+    {
+        return (s.last()-s.first());
     }
 
 

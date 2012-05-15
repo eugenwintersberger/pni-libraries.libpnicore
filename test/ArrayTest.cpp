@@ -75,7 +75,6 @@ void ArrayTest::testSlowArrayConstruction(){
 //------------------------------------------------------------------------------
 void ArrayTest::testSetAndGet(){
 	Array<double,Buffer> a1(s1);
-	Index in;
 
 	//access via [] operator
 	Shape s = a1.shape();
