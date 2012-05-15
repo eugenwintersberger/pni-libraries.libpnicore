@@ -23,17 +23,24 @@ void ArrayViewTest::tearDown()
 {
 }
 
+//-----------------------------------------------------------------------------
 void ArrayViewTest::testConstruction()
 {
    Shape s{5,10};
    Float32Array a(s);
 
-   auto view = a(Slice(1,3),Slice(3,7));
+   auto v1 = a(Slice(1,3),Slice(3,7));
+   CPPUNIT_ASSERT(v1.shape().rank() == 2);
+   CPPUNIT_ASSERT(v1.shape()[0] == 2);
+   CPPUNIT_ASSERT(v1.shape()[1] == 4);
 
+   auto v2 = a(Slice(1,2),Slice(3,7));
+   CPPUNIT_ASSERT(v2.shape().rank() == 1);
+   CPPUNIT_ASSERT(v2.shape()[0] == 4);
 
-   CPPUNIT_ASSERT(view.shape().rank() == 2);
 }
 
+//-----------------------------------------------------------------------------
 void ArrayViewTest::test_dataaccess()
 {
     std::cout<<"void ArrayViewTest::test_dataaccess()......................";
@@ -62,4 +69,39 @@ void ArrayViewTest::test_dataaccess()
     }
 
    
+}
+
+//-----------------------------------------------------------------------------
+void ArrayViewTest::test_linearaccess()
+{
+    std::cout<<"void ArrayViewTest::test_linearaccess()-----------------------";
+    std::cout<<std::endl;
+
+    Float32Array a({100,200});
+    a = 1.24;
+
+    //create the view
+    auto v = a(Slice(10,35,2),Slice(100,150,3));
+
+    //check creation 
+    std::cout<<v.shape()<<std::endl;
+    CPPUNIT_ASSERT(v.shape().rank() == 2);
+    CPPUNIT_ASSERT(v.shape()[1] == 16);
+    CPPUNIT_ASSERT(v.shape()[0] == 12);
+
+    for(size_t i=0;i<v.size();i++)
+        CPPUNIT_ASSERT_NO_THROW(v[i] = i);
+
+    for(size_t i=0;i<v.size();i++)
+        CPPUNIT_ASSERT_DOUBLES_EQUAL(v[i],Float32(i),1.e-8);
+
+    size_t cnt = 0;
+    for(size_t i=0;i<v.shape()[0];i++)
+    {
+        for(size_t j=0;j<v.shape()[1];j++)
+        {
+            CPPUNIT_ASSERT_DOUBLES_EQUAL(v(i,j),Float32(cnt),1.e-8);
+            cnt++;
+        }
+    }
 }

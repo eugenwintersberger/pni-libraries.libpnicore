@@ -87,6 +87,10 @@ namespace utils{
             }
 
         public:
+            //====================public types=================================
+            typedef T value_type; //!< type of the data values
+            typedef std::shared_ptr<ArrayView<T,ATYPE> > shared_ptr; //<! shared pointer type
+            typedef std::unique_ptr<ArrayView<T,ATYPE> > unique_ptr; //<! unique pointer type
             //=============constructors and destructor=========================
             ArrayView() = delete;
 
@@ -172,6 +176,9 @@ namespace utils{
             }
 
             //==================public member functions========================
+            /*! \brief access with container index 
+
+            */
             template<template<typename,typename> class CONT,
                      typename IT,
                      typename A
@@ -187,6 +194,9 @@ namespace utils{
             }
 
             //-----------------------------------------------------------------
+            /*! \brief access with container index 
+
+            */
             template<template<typename,typename> class CONT,
                      typename IT,
                      typename A
@@ -226,6 +236,8 @@ namespace utils{
                 return (*this)(index);
             }
 
+
+
             //-----------------------------------------------------------------
             /*! \brief get shape of the view
 
@@ -242,6 +254,27 @@ namespace utils{
 
                 return Shape(b);
             }
+
+            //-----------------------------------------------------------------
+            T &operator[](size_t i)
+            {
+                return (*this)(this->shape().template index<std::vector<size_t> >(i)); 
+            }
+
+            T operator[](size_t i) const
+            {
+                return (*this)(this->shape().template index<std::vector<size_t> >(i)); 
+            }
+
+            //-----------------------------------------------------------------
+            size_t size() const
+            {
+                return this->shape().size();
+            }
+
+
+
+
     
     };
 

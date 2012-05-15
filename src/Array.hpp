@@ -202,6 +202,15 @@ namespace utils {
             Array(const ARRAYTMP &);
 
             //-----------------------------------------------------------------
+            /*! \brief construct from view
+
+            Constructors constructs a new Array from an existing array view. 
+            In this case all data form the view will be copied to the new array. 
+            \param v array view
+            */
+            Array(const Array<T,BType,Allocator>::view_type &v);
+
+            //-----------------------------------------------------------------
             //! move constructor
             Array(ARRAYTMP &&);
             
@@ -867,6 +876,15 @@ namespace utils {
             EXCEPTION_THROW();
         }
 
+    }
+
+    //--------------------------------------------------------------------------
+    ARRAYTMPDEF  ARRAYTMP::Array(const ARRAYTMP::view_type &v):
+        NumericObject(),
+        _shape(v.shape()),
+        _data(_shape.size())
+    {
+        for(size_t i=0;i<this->size();i++) (*this)[i] = v[i];
     }
 
     //--------------------------------------------------------------------------
