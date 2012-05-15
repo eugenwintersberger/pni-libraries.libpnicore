@@ -29,13 +29,28 @@ namespace pni{
 namespace utils{
 
     //============implementation of private methods============================
-    void Slice::_check_start_stop(const String &o)
+    void Slice::_check_start_stop(const String &o) const
     {
-        if(_first > _last)
+        if(_first >= _last)
         {
             std::stringstream ss;
-            ss<<"Last index ("<<_last<<") exceeds first ("<<_first<<")!";
+            ss<<"Last index ("<<_last<<") is equal or exceeds first ("<<_first<<")!";
 
+            RangeError error;
+            error.issuer(o);
+            error.description(ss.str());
+            throw error;
+        }
+    }
+
+    //-------------------------------------------------------------------------
+    void Slice::_check_stride(const String &o) const
+    {
+        if(span(*this)<_stride)
+        {
+            std::stringstream ss;
+            ss<<"Stride ("<<_stride<<") is larger than span ("<<span(*this);
+            ss<<")!";
             RangeError error;
             error.issuer(o);
             error.description(ss.str());
@@ -52,6 +67,8 @@ namespace utils{
     {
         _check_start_stop("Slice::Slice(size_t first,size_t last,"
                           "size_t stride)");
+        _check_stride("Slice::Slice(size_t first,size_t last,"
+                      "size_t stride)");
     }
 
     //-------------------------------------------------------------------------
@@ -75,6 +92,8 @@ namespace utils{
 
         _check_start_stop("Slice::Slice(const "
                           "std::initializer_list<size_t> &l)");
+        _check_stride("Slice::Slice(const "
+                      "std::initializer_list<size_t> &l)");
     }
 
 
@@ -91,7 +110,7 @@ namespace utils{
     //==========implementation of non-member functions=========================
     size_t size(const Slice &s)
     {
-        return (s.last() - s.first()+s.stride()-1)/s.stride();
+        return (s.last() - s.first())/s.stride();
     }
 
     //-------------------------------------------------------------------------

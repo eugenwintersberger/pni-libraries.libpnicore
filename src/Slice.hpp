@@ -62,7 +62,16 @@ namespace utils{
             \throws RangeError if first > last
             \pararm o signature of the origin where the error occured
             */
-            void _check_start_stop(const String &o);
+            void _check_start_stop(const String &o) const;
+
+            /*! \brief check stride
+
+            Checks if the stride does not exceed the span of the slice. 
+            If it does an exception will be thrown. 
+            \throws RangeError if stride exceeds span
+            \param o signature of the origin where the error occured 
+            */
+            void _check_stride(const String &o) const;
         public:
             //==============constructors and destructor========================
             //! no default constructor
@@ -127,6 +136,7 @@ namespace utils{
             size_t stride() const { return _stride; }
     }; 
 
+    //-------------------------------------------------------------------------
     /*! 
     \ingroup util_classes   
     \brief compute slice size
@@ -140,6 +150,7 @@ namespace utils{
     */
     size_t size(const Slice &s);
 
+    //-------------------------------------------------------------------------
     /*! \ingroup util_classes
     \brief compute total elements spanned
 
