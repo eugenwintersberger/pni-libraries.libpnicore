@@ -500,6 +500,34 @@ public:
 	friend std::ostream &operator<<(std::ostream &o,const AssignmentError &e);
 };
 
+//------------------------------------------------------------------------------
+//! \ingroup error_classes
+//! \brief iterator error
+
+//! Exception thrown in case of iterator errors.
+class IteratorError:public Exception{
+public:
+	//! default constructor
+	IteratorError():Exception("IteratorError"){
+	}
+
+	//! constructor
+
+	//! Constructor setting the issuer and description of the error.
+	//! \param i issuer fo the exception
+	//! \param d error description
+	IteratorError(const String &i,const String &d):
+		Exception("IteratorError",i,d){
+	}
+
+	//! destructor
+	virtual ~IteratorError() throw() {
+
+	}
+
+	//! output operator
+	friend std::ostream &operator<<(std::ostream &o,const IteratorError &e);
+};
 }
 }
 #endif

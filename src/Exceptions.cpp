@@ -123,6 +123,10 @@ std::ostream &operator<<(std::ostream &o,const AssignmentError &e){
 }
 
 //------------------------------------------------------------------------------
+std::ostream &operator<<(std::ostream &o,const IteratorError &e){
+	return e.print(o);
+}
+//------------------------------------------------------------------------------
 std::ostream &operator<<(std::ostream &o,const KeyError &e){
 	return e.print(o);
 }
