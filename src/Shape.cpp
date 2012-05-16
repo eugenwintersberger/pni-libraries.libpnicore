@@ -43,7 +43,8 @@ namespace utils{
         Buffer<size_t> ds(s.size());
 
         //compute the dimension  strides
-        for(ssize_t i=ds.size()-1;i>=0;i--){
+        for(ssize_t i=ds.size()-1;i>=0;i--)
+        {
             if(i==(ssize_t)ds.size()-1){
                 ds[(size_t)i] = 1;
                 continue;
@@ -97,7 +98,8 @@ namespace utils{
 
     //--------------------------------------------------------------------------
     //implementation of the destructor
-    Shape::~Shape(){
+    Shape::~Shape()
+    {
         _size = 0;
         _dimstrides.free();
         _shape.free();
@@ -118,8 +120,8 @@ namespace utils{
 
     //--------------------------------------------------------------------------
     //implementation of move assignment
-    Shape &Shape::operator=(Shape &&o){
-
+    Shape &Shape::operator=(Shape &&o)
+    {
         if(this == &o) return *this;
         
         _size = o._size;
@@ -129,91 +131,18 @@ namespace utils{
 
         return *this;
     }
-    //========methods to access and manipulate the rank of a shape==============
-
-    size_t Shape::rank() const{
-        return _shape.size();
-    }
 
     //============methods to access and manipulate dimensions===================
-    //implementation of set dimension
-    void Shape::dim(const size_t &i,const size_t &d)
-    {
-        EXCEPTION_SETUP("void Shape::dim(const size_t &i,const size_t &d)");
-        if(i>=rank())
-        {
-            std::stringstream ss;
-            ss<<"Dimension index ("<<i<<") exceeds shape rank ("<<rank()<<")!";
-            EXCEPTION_INIT(IndexError,ss.str());
-            EXCEPTION_THROW();
-        }
-
-        _shape[i] = d;
-
-        //like for setDimensions - strides and array size must be adopted
-        _dimstrides = _compute_dimstrides(_shape);
-        _size = _compute_size(_shape);
-    }
-
-    //-------------------------------------------------------------------------
-    //implementation of the set dimension by initializer list
-    void Shape::dim(const std::initializer_list<size_t> &list){
-        EXCEPTION_SETUP("void Shape::dim(std::initializer_list<size_t> list)");
-
-        if(list.size() != rank()){
-            EXCEPTION_INIT(SizeMissmatchError,
-                    "Initializer list size does not match rank of Shape!");
-            EXCEPTION_THROW();
-        }
-        
-        size_t cntr = 0;
-#ifdef NOFOREACH
-        for(auto iter = list.begin();iter!=list.end();iter++){
-            const size_t &i = *iter;
-#else
-        for(const size_t &i: list){
-#endif
-            _shape[cntr] = i;
-            cntr++;
-        }
-        _dimstrides = _compute_dimstrides(_shape);
-        _size = _compute_size(_shape);
-    }
-    
-    //--------------------------------------------------------------------------
     size_t Shape::offset(const std::initializer_list<size_t> &list) const
     {
         return offset(std::vector<size_t>(list));
     }
 
-    //--------------------------------------------------------------------------
-    //implementation of the set dimension method using a vector
-    void Shape::dim(const std::vector<size_t> &vector){
-        EXCEPTION_SETUP("void Shape::dim(std::vector<size_t> list)");
-
-        if(vector.size() != rank()){
-            EXCEPTION_INIT(SizeMissmatchError,
-                    "Initializer list size does not match rank of Shape!");
-            EXCEPTION_THROW();
-        }
-        
-        size_t cntr = 0;
-#ifdef NOFOREACH
-        for(auto iter = vector.begin();iter!=vector.end();iter++){
-            const size_t &i = *iter;
-#else
-        for(const size_t &i: vector){
-#endif
-            _shape[cntr] = i;
-            cntr++;
-        }
-        _dimstrides = _compute_dimstrides(_shape);
-        _size = _compute_size(_shape);
-    }
 
     //--------------------------------------------------------------------------
     //implementation of get dimension
-    size_t Shape::dim(const size_t &i) const{
+    size_t Shape::dim(const size_t &i) const
+    {
         EXCEPTION_SETUP("size_t Shape::dim(const size_t &i) const");
 
         if(i>=rank())
@@ -263,11 +192,6 @@ namespace utils{
         return o;
     }
 
-    //================Implementation of access operators========================
-    //implementation of read only access
-    const size_t Shape::operator[](size_t i) const{
-        return _shape[i];
-    }
 
 //end of namespace
 }

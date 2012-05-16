@@ -60,7 +60,7 @@ namespace utils{
             This private method throws an exception if the first index of the
             range exceeds the last one. 
             \throws RangeError if first > last
-            \pararm o signature of the origin where the error occured
+            \param o signature of the origin where the error occured
             */
             void _check_start_stop(const String &o) const;
 
@@ -105,7 +105,7 @@ namespace utils{
             In the case of a three element initializer list the last element is
             considered as the stride of the slice.
             \throws RangeError if the first element is larger than the last
-            \param initializer list
+            \param l initializer list
             */
             Slice(const std::initializer_list<size_t> &l);
 

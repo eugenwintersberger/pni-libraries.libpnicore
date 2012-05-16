@@ -60,10 +60,6 @@ void ShapeTest::testConstruction(){
     CPPUNIT_ASSERT(s.rank() == 0);
     CPPUNIT_ASSERT(s.size() == 0);
 
-    //reset dimensions using an initializer list
-    s4.dim({1,2,3});
-    CPPUNIT_ASSERT(s4.size()==6);
-
 }
 
 //------------------------------------------------------------------------------
@@ -156,8 +152,6 @@ void ShapeTest::testExceptions(){
 	std::cout<<std::endl;
 	Shape s(_s1);
 
-	CPPUNIT_ASSERT_THROW(s.dim(10,0),IndexError);
-	CPPUNIT_ASSERT_THROW(s.dim(-10,0),IndexError);
 	CPPUNIT_ASSERT_THROW(s.dim(10),IndexError);
 	CPPUNIT_ASSERT_THROW(s.dim(-10),IndexError);
 
@@ -167,7 +161,7 @@ void ShapeTest::testExceptions(){
 	CPPUNIT_ASSERT_THROW(s.offset({-1,0}),ShapeMissmatchError);
 
 	CPPUNIT_ASSERT_THROW(s.offset(0,3),ShapeMissmatchError);
-	CPPUNIT_ASSERT_THROW(s.offset(std::vector<size_t>()),ShapeMissmatchError);
+	CPPUNIT_ASSERT_THROW(s.offset(std::vector<size_t>()),MemoryAccessError);
 
 	Shape s2;
 	CPPUNIT_ASSERT_THROW(s2.offset({0,3}),MemoryAccessError);

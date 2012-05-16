@@ -94,8 +94,15 @@ namespace utils{
             static size_t _compute_size(const Buffer<size_t> &s);
             
             //-----------------------------------------------------------------
+            /*! \brief private method computing the offset
+
+            This method computes the linear offset of a point according to its
+            multidimensional index. The computation is performed by recursively
+            calling the method until no more input arguments (except the first
+            one) are available. 
+            */
             template<typename ...Ts>
-                size_t __offset(size_t d,size_t i1,Ts... is)
+                size_t __offset(size_t d,size_t i1,Ts... is) const
             {
                 EXCEPTION_SETUP("template<typename ...Ts> size_t __offset"
                                 "(size_t d,size_t i1,Ts... is)");
@@ -113,10 +120,24 @@ namespace utils{
             }
 
             //-----------------------------------------------------------------
-            size_t __offset(size_t d)
+            //! break condition for  __offset()
+            size_t __offset(size_t d) const
             {
                 return 0;
             }
+
+            //-----------------------------------------------------------------
+            /*! \brief compute index from offset
+
+            This template method computes the multidimensional index from a
+            linear offset. No checks are performed on the container type. It is
+            assumed that is was set up correctly. 
+            \throws MemoryAccessError if offset is larger than total size of the
+            shape
+            \param offset linear offset
+            \param i container which shall hold the index
+            */
+            template<typename CONT> void _index(size_t offset,CONT &i) const;
         public:
             //====================public types ================================
             typedef std::shared_ptr<Shape> shared_ptr;  //!< shared pointer type to a Shape object
@@ -125,15 +146,21 @@ namespace utils{
             //======================constructors and destructor================
             //! default constructor
             explicit Shape();
-            //! copy constructor
 
-            //! Initialize an object of type ArrayShape with the content of an
-            //! other ArrayShape object.
-            //! \throws MemoryAllocationError if memory allocation fails
+            //-----------------------------------------------------------------
+            /*! copy constructor
+
+            Initialize an object of type ArrayShape with the content of an
+            other ArrayShape object.
+            \throws MemoryAllocationError if memory allocation fails
+            */
             Shape(const Shape &s);
+
+            //-----------------------------------------------------------------
             //! move constructor
             Shape(Shape &&s);
 
+            //-----------------------------------------------------------------
             /*! constructor for initialization list
 
             An initialization list can be used for the construction of a Shape 
@@ -145,9 +172,16 @@ namespace utils{
             */
             Shape(const std::initializer_list<size_t> &list);
 
+            //-----------------------------------------------------------------
             /*! \brief constructor from container
 
             Construct a shape object form an arbitrary container type.
+            The type should follow the standard C++ container convention.
+            \code
+            std::vector<size_t> v{1,4,12};
+            Shape s(v);
+            \endcode
+            \param c instance of container type CONT
             */
             template<template<typename,typename> class CONT,
                      typename T,
@@ -159,44 +193,35 @@ namespace utils{
                 _size(_compute_size(_shape))
             { }
 
+            //-----------------------------------------------------------------
             //! destructor
             ~Shape();
             
-            //! return the array rank
+            //====================assignment operators=========================
+            //! copy assignment operator
+            Shape &operator=(const Shape &);
+            //! move assignment operator
+            Shape &operator=(Shape &&o);
+           
+            //====================public memeber functions=====================
+            /*! \brief return the array rank
 
-            //! Returns the number of dimensions in the shape object.
-            //! \return array rank
-            size_t rank() const;
-
-            //! set a single dimension of the shape object
-
-            //! Use this method to set a single dimension in an array to a new value.
-            //! If the index i is larger than the rank of the shape an exception
-            //! will be raised.
-            //! \throws IndexError if i exceeds the rank of the shape
-            //! \param i index of the dimension to set
-            //! \param d new number of elements along dimension i
-            void dim(const size_t &i,const size_t &d);
-            //! get a single dimension of the shape
-
-            //! return the number of elements along dimension i. Raises an exception
-            //! if i is larger than the rank of the shape.
-            //! \throws IndexError if i exceeds the rank of the shape
-            //! \param i index of the dimension
-            //! \return the number of elements along dimension i
-            size_t dim(const size_t &i) const;
-            //! set all dimensions
-
-            //! Set all dimensions using an initializer list
-            void dim(const std::initializer_list<size_t> &list);
-
-            /*! \brief set all dimensions from a vector
-
-            Set all dimensions of the shape using a vector object.
-            \param vector std::vector from which to set dimensions
+            Returns the number of dimensions in the shape object.
+            \return array rank
             */
-            void dim(const std::vector<size_t> &vector);
+            size_t rank() const { return _shape.size(); }
 
+
+            //-----------------------------------------------------------------
+            /*! get a single dimension of the shape
+
+            return the number of elements along dimension i. Raises an 
+            exception if i is larger than the rank of the shape.
+            \throws IndexError if i exceeds the rank of the shape
+            \param i index of the dimension
+            \return the number of elements along dimension i
+            */
+            size_t dim(const size_t &i) const;
 
             //! total number of elements
 
@@ -204,17 +229,24 @@ namespace utils{
             //! shape.
             //! \return total number of elements
             size_t size() const {return _size;}
-            
-            //! compute element offset
-
-            //! Here the element offset is computed from an initializer list.
-            //! This can make reading code much easier. 
            
-            /*! \brief compute offset with variadic template
+            //-----------------------------------------------------------------
+            /*! \brief compute linear offset from multidimensional index
 
-            This version of the offset method uses variadic templates.
+            This method computes the linear offset from a point in a
+            multidimensional array. The index is represented by the arguments 
+            of this method which is implemented as a variadic template. 
+            This makes this method quite easy to use:
+            \code
+            Shape s{3,5,5};
+            size_t offset = s.offset(1,3,2);
+            \endcode
+            If the number of arguments does not match the rank of the Shape
+            object an exception will be thrown. 
+            \throws ShapeMissmatchError if rank does not match number of arguments 
             */
-            template<typename ...ITypes> size_t offset(size_t i,ITypes ...indices)
+            template<typename ...ITypes> 
+                size_t offset(size_t i,ITypes ...indices) const
             {
                 EXCEPTION_SETUP("template<typename ...ITypes> size_t "
                                 "offset(size_t i,ITypes ...indices)");
@@ -232,68 +264,115 @@ namespace utils{
                 return offset;
             }
 
+            //------------------------------------------------------------------
             /*! \brief offset from a general container type
             
             This method permits all kind of container types as valid index
-            values. 
-            
+            values. The only requirement made to the container is that it
+            conforms to the standard container interface.
+            \code
+            std::vector<size_t> i{1,6,39};
+            Shape s(...);
+            s.offset(i);
+            \endcode
+            \throws MemoryAccessError if container size or shape rank are 0
+            \throws ShapeMissmatchError if container size and shape rank do not
+            match
+            \throws IndexError if one of the indices exceeds the number of
+            elements in its dimension
+            \param c container with indices
+            \return linear offset value
             */
-            template<template<typename,typename> class CONTAINER,typename T,typename A> 
+            template<template<typename,typename> class CONTAINER,
+                     typename T,typename A
+                     > 
                 size_t offset(const CONTAINER<T,A> &c)const;
 
+            //-----------------------------------------------------------------
             /*! \brief offset from an initializer list
 
+            Compute the linear offset from an initializer list. 
+            \code 
+            Shape s(100,1024,1024);
+            s.offset({10,15,145);
+            \endcode
+            \throws MemoryAccessError if list length or shape rank is 0
+            \throws ShapeMissmatchError if list length and shape rank do not
+            match
+            \throws IndexError if one of the indices exceeds the number of
+            elements in its dimension
+            \param list initializer list
+            \return linear offset value
             */
             size_t offset(const std::initializer_list<size_t> &list) const;
 
-            //! creates index from offset
+            //-----------------------------------------------------------------
+            /*! \brief computes indices for a linear offset
 
-            //! Creates an index object that belongs to a particular linear offset.
-            //! The Index object that is passed to the method must be allocated (rank != 0)
-            //! and have the same rank as the shape object - otherwise an
-            //! exception will be thrown.
-            //! \throws ShapeMissmatchError if Index and ArrayShape object have different rank
-            //! \throws MemoryAccessError if Index of ArrayShape object have rank 0
-            //! \param offset offset for which to compute the index
-            //! \param i index object where to store the result
-            template<typename CONT> 
-            void index(const size_t &offset,CONT &i) const;
+            Computes the multidimensional indices belonging to a particular
+            offset value and stores them in a container of type CONT. 
+            The container is assumed to be set up correctly and can hold all the
+            index values. Exceptions are thrown if this is not the case.
+            \code
+            Shape s{100,2048,512};
+            std::vector<size_t> index;
+            s.index(index);
+            \endcode
+            \throws ShapeMissmatchError if Index and ArrayShape object have 
+            different rank
+            \throws MemoryAccessError if Index of Shape object have rank 0
+            of the offset exceeds the total size of the shape
+            \param offset offset for which to compute the index
+            \param i index object where to store the result
+            */
+            template<typename CONT> void index(size_t offset,CONT &i) const;
 
-            template<typename CONT>
-                CONT index(const size_t &offset) const;
+            //-----------------------------------------------------------------
+            /*! \brief compute indices from linear offset
 
+            Comnputes the multidimensional indices belonging to a particular
+            linear offset. The result is stored in a container which allocated
+            by the method itself and returned to the caller.
+            \code
+            Shape s{100,244,2039};
+            auto index = s.index<std::vector<size_t> >(100);
+            \endcode
+            \throws MemoryAccessError if offset is larger than the total size of
+            the shape
+            \param offset linear offset
+            \return container with index values
+            */
+            template<typename CONT> CONT index(size_t offset) const;
 
-            //the assignment operator must be a member function
-            //and cannot be declared as a friend function
-            //! assignment operator
+           
+            //-----------------------------------------------------------------
+            /*! equality operator for array shapes
 
-            //! copy assignment operator
-
-            //! \throws MemoryAllocationError if memory allocation for the new Shape fails
-            Shape &operator=(const Shape &);
-            //! move assignment operator
-            Shape &operator=(Shape &&o);
-            
-            //! equality operator for array shapes
-
-            //! It returns true if the rank and dimension of two arrays are equal, false otherwise
-            //! \return boolean value representing shape equality
+            It returns true if the rank and dimension of two arrays are equal, 
+            false otherwise
+            \return boolean value representing shape equality
+            */
             friend bool operator==(const Shape &,const Shape &);
-            //! inequality operator for array shapes
 
-            //! Returns true if either the rank or one of the dimensions in two shape objects
-            //! differ.
-            //! \return boolean value
+            //-----------------------------------------------------------------
+            /*! inequality operator for array shapes
+
+            Returns true if either the rank or one of the dimensions in two 
+            shape objects differ.
+            \return boolean value
+            */
             friend bool operator!=(const Shape &,const Shape &);
-            //! [] operator for read access
 
-            //! This operator allows reading access to the array dimensions. You cannot
-            //! use this operator to set array dimensions. The reason for this is, that
-            //! once a single dimension has been changed we would have to recalculate
-            //! strides and recompute the size. However, this cannot be done easily
-            //! by operator overloading.
-            //! \sa void setDimension(const unsigned int &i,const unsigned int &d)
-            const size_t operator[](size_t i) const;
+            //-----------------------------------------------------------------
+            /*! \brief number of elements along i
+
+            Return the number of elements along dimension i. This operator
+            performs no range check. If i exceeds the rank of the Shape the
+            program will most probably terminate with a segmentation fault.
+            \param i dimension index
+            \return number of elements along i
+            */
+            size_t operator[](size_t i) const { return _shape[i]; }
 
             //! operator for console output
             friend std::ostream &operator<<(std::ostream &o,const Shape &s);
@@ -309,16 +388,24 @@ namespace utils{
 
         size_t offset = 0;
 
-        if(!_shape.is_allocated()){
-            EXCEPTION_INIT(MemoryAccessError,
-                    "Shape object is not allocated (rank == 0)!");
+        if(this->rank() == 0)
+        {
+            EXCEPTION_INIT(MemoryAccessError,"Shape is of rank 0!");
             EXCEPTION_THROW();
         }
 
+        if(c.size() == 0)
+        {
+            EXCEPTION_INIT(MemoryAccessError,"Container of size 0!");
+            EXCEPTION_THROW();
+        }
 
-        if(c.size() != rank()){
-            EXCEPTION_INIT(ShapeMissmatchError,
-                    "Shape rank and initializer list size do not match!");
+        if(c.size() != rank())
+        {
+            std::stringstream ss;
+            ss<<"Shape rank ("<<this->rank()<<") and container size (";
+            ss<<c.size()<<") do not match!";
+            EXCEPTION_INIT(ShapeMissmatchError,ss.str());
             EXCEPTION_THROW();
         }
 
@@ -342,54 +429,67 @@ namespace utils{
     }
 
     //-------------------------------------------------------------------------
-    template<typename CONT> 
-        void Shape::index(const size_t &offset,CONT &i) const
+    template<typename CONT> void Shape::index(size_t offset,CONT &i) const
     {
         EXCEPTION_SETUP("template<typename CONT>" 
                         "void Shape::index(const size_t "
                         "&offset,CONT &i) const");
 
-        if(!_shape.is_allocated()){
-            EXCEPTION_INIT(MemoryAccessError,
-                    "Shape object is not allocated (rank == 0)!");
+        if(this->rank() == 0)
+        {
+            EXCEPTION_INIT(MemoryAccessError,"Shape is of rank 0!");
             EXCEPTION_THROW();
         }
 
-        if(i.size() == 0){
-            EXCEPTION_INIT(MemoryAccessError,
-                    "Index object is not allocated (rank == 0)!")
-        }
-
-        if(i.size() != rank()){
-            EXCEPTION_INIT(ShapeMissmatchError,
-                    "Shape and Index have different rank!");
+        if(i.size() == 0)
+        {
+            EXCEPTION_INIT(MemoryAccessError,"Container is of size 0!");
             EXCEPTION_THROW();
         }
 
-        if(offset>=size()){
-            EXCEPTION_INIT(MemoryAccessError,"Offset is larger than size!");
+        if(i.size() != rank())
+        {
+            std::stringstream ss;
+            ss<<"Shape rank ("<<this->rank()<<") and container size (";
+            ss<<i.size()<<") do not match!";
+            EXCEPTION_INIT(ShapeMissmatchError,ss.str());
+            EXCEPTION_THROW();
+        }
+
+        this->_index(offset,i);
+    }
+
+    //-------------------------------------------------------------------------
+    template<typename CONT> void Shape::_index(size_t offset,CONT &i) const
+    {
+        EXCEPTION_SETUP("template<typename CONT> CONT Shape::_index(size_t "
+                        "offset,CONT &i) const");
+
+        if(offset>=this->size())
+        {
+            std::stringstream ss;
+            ss<<"Offset ("<<offset<<") is larger than shape size ";
+            ss<<"("<<this->size()<<")!";
+            EXCEPTION_INIT(MemoryAccessError,ss.str());
             EXCEPTION_THROW();
         }
 
         size_t o,t;
         o = offset;
         for(size_t d = 0;d<rank();d++){
-            t = o%_dimstrides[d];
-            i[d] = (o-t)/_dimstrides[d];
+            t = o%this->_dimstrides[d];
+            i[d] = (o-t)/this->_dimstrides[d];
             o = t;
         }
-
     }
 
     //-------------------------------------------------------------------------
-    template<typename CONT>
-        CONT Shape::index(const size_t &offset) const
+    template<typename CONT> CONT Shape::index(size_t offset) const
     {
         CONT c(this->rank());
 
-        this->index(offset,c);
+        this->_index(offset,c);
         return c;
-
     }
 
 //end of namespace
