@@ -40,6 +40,7 @@
 #include "Types.hpp"
 #include "Buffer.hpp"
 #include "TypeIDMap.hpp"
+#include "Iterator.hpp"
 
 namespace pni{
 namespace utils{
@@ -71,6 +72,8 @@ namespace utils{
             typedef std::shared_ptr<RBUFFTMP > shared_ptr; //!< shared pointer type
             typedef T value_type;             //!< type of data stored
             typedef Allocator allocator_type; //!< allocator type
+            typedef Iterator<RBUFFTMP,0> iterator; //!< iterator type
+            typedef Iterator<RBUFFTMP,1> const_iterator; //!< const iterator type
 
             //===================public static member variables================
             static const size_t value_size = sizeof(T);  //!< size of element data type
@@ -256,12 +259,57 @@ namespace utils{
                 return sizeof(T)*this->size();
             }
 
+            //-----------------------------------------------------------------
             /*! \brief return number of elements 
 
             Returns the number of elements allocated by the buffer.
             \return number of elements
             */
             size_t size() const { return this->_size; }
+            
+            //------------------------------------------------------------------
+            /*! \brief get iterator to first element
+
+            Returns an iterator pointing on the first element of the buffer.
+            \return iterator to first element
+            */
+            RBUFFTMP::iterator begin()
+            {
+                return iterator(this,0);
+            }
+
+            //------------------------------------------------------------------
+            /*! \brief get iterator to last element
+
+            Returns an iterator pointing to the last element of the buffer.
+            \return iterator to last element
+            */
+            RBUFFTMP::iterator end()
+            {
+                return iterator(this,this->size()-1);
+            }
+
+            //------------------------------------------------------------------
+            /*! \brief get const iterator to first element
+
+            Returns an const iterator pointing on the first element of the buffer.
+            \return const iterator to first element
+            */
+            RBUFFTMP::const_iterator begin() const
+            {
+                return const_iterator(this,0);
+            }
+
+            //------------------------------------------------------------------
+            /*! \brief get const iterator to last element
+
+            Returns an const iterator pointing to the last element of the buffer.
+            \return const iterator to last element
+            */
+            RBUFFTMP::const_iterator end() const
+            {
+                return const_iterator(this,this->size()-1);
+            }
 
     };
 
@@ -329,7 +377,7 @@ namespace utils{
         if(this != &b){
             _data = b._data;
             b._data = nullptr;
-            _size = b._sizel;
+            _size = b._size;
             b._size = 0;
         }
 

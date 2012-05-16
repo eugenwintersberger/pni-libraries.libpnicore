@@ -42,6 +42,7 @@
 #include "Types.hpp"
 #include "TypeIDMap.hpp"
 #include "NewAllocator.hpp"
+#include "Iterator.hpp"
 
 namespace pni{
 namespace utils{
@@ -80,6 +81,8 @@ namespace utils{
             typedef std::unique_ptr<Buffer<T,Allocator> > unique_ptr; //!< unique poitner type to a buffer
             typedef T value_type;  //!< type stored in the buffer
             typedef Allocator allocator_type; //!< allocator type
+            typedef Iterator<Buffer<T,Allocator>,0 > iterator;        //!< iterator type
+            typedef Iterator<Buffer<T,Allocator>,1 > const_iterator; //!< const iterator type
 
             //=============public static variables=============================
             static const size_t value_size = sizeof(T); //!< size of the element type
@@ -299,6 +302,51 @@ namespace utils{
             {
                 return _size;
             }
+
+            //------------------------------------------------------------------
+            /*! \brief get iterator to first element
+
+            Returns an iterator pointing on the first element of the buffer.
+            \return iterator to first element
+            */
+            Buffer<T,Allocator>::iterator begin()
+            {
+                return Buffer<T,Allocator>::iterator(this,0);
+            }
+
+            //------------------------------------------------------------------
+            /*! \brief get iterator to last element
+
+            Returns an iterator pointing to the last element of the buffer.
+            \return iterator to last element
+            */
+            Buffer<T,Allocator>::iterator end()
+            {
+                return Buffer<T,Allocator>::iterator(this,this->size()-1);
+            }
+
+            //------------------------------------------------------------------
+            /*! \brief get const iterator to first element
+
+            Returns an const iterator pointing on the first element of the buffer.
+            \return const iterator to first element
+            */
+            Buffer<T,Allocator>::const_iterator begin() const
+            {
+                return const_iterator(this,0);
+            }
+
+            //------------------------------------------------------------------
+            /*! \brief get const iterator to last element
+
+            Returns an const iterator pointing to the last element of the buffer.
+            \return const iterator to last element
+            */
+            Buffer<T,Allocator>::const_iterator end() const
+            {
+                return const_iterator(this,this->size()-1);
+            }
+
 
     };
 
