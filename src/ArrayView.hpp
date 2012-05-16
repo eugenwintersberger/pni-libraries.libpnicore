@@ -30,7 +30,13 @@
 
 namespace pni{
 namespace utils{
+    
+    /*! \ingroup data_classes
+    \brief provides a view on a part of an array
 
+    The ArrayView class provides a view on the part of an array. No new memory
+    is allocated. 
+    */
     template<typename T,typename ATYPE> class ArrayView
     {
         private:
@@ -43,6 +49,12 @@ namespace utils{
             size_t _rank;            //!< rank of the view
 
             //-----------------------------------------------------------------
+            /*! \brief compute the effective rank
+
+            Computes the effective rank of the view. This excludes all dimension
+            in the original array which have more than one element.
+            \param s buffer with the shape of the selection
+            */
             size_t _get_effective_rank(const Buffer<size_t> &s);
            
             //-----------------------------------------------------------------
@@ -95,6 +107,11 @@ namespace utils{
             ArrayView() = delete;
 
             //-----------------------------------------------------------------
+            /*! \brief constructor
+
+            This constructor creates a view which includes the entire array.
+            \param a reference to the original array
+            */
             ArrayView(ATYPE &a):
                 _parray(a),
                 _shape(a.shape()),
@@ -258,24 +275,29 @@ namespace utils{
             //-----------------------------------------------------------------
             T &operator[](size_t i)
             {
-                return (*this)(this->shape().template index<std::vector<size_t> >(i)); 
-            }
-
-            T operator[](size_t i) const
-            {
-                return (*this)(this->shape().template index<std::vector<size_t> >(i)); 
+                Shape s = this->shape();
+                auto index = s.template index<std::vector<size_t> >(i);
+                return (*this)(index); 
             }
 
             //-----------------------------------------------------------------
+            T operator[](size_t i) const
+            {
+                Shape s = this->shape();
+                auto index = s.template index<std::vector<size_t> >(i);
+                return (*this)(s); 
+            }
+
+            //-----------------------------------------------------------------
+            /*! \brief get size
+
+            Return the total number of elements referenced by this view.
+            \return total number of elements
+            */
             size_t size() const
             {
                 return this->shape().size();
             }
-
-
-
-
-    
     };
 
     //============implementation of private member functions====================
