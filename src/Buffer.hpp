@@ -73,7 +73,12 @@ namespace utils{
             T *_data; //!< pointer to the data block
             size_t _size; //!< number of allocated elements
 
-            //some private methods
+            /*! \brief allocate memory
+
+            Private method used to allocate memory. The method throws an
+            exception if allocation fails.
+            \throws MemoryAllocationError if allocation fails.
+            */ 
             void _allocate();
         public:
             //============public types provided by the template================

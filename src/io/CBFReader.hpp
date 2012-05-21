@@ -76,6 +76,11 @@ namespace io{
             std::vector<ImageInfo> _image_info;   //!< info structure for data
             std::streampos _data_offset;          //!< store data offset 
             cbf::CompressionID _compression_type; //!< compression type
+
+            /*! \brief parse the file
+
+            Parse the file and setup member variables of the class.
+            */
             void _parse_file();
             
         public:

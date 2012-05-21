@@ -48,6 +48,7 @@
 #include "TypeInfo.hpp"
 #include "TypeIDMap.hpp"
 #include "type_conversion.hpp"
+#include "Iterator.hpp"
 
 namespace pni {
 namespace utils {
@@ -130,8 +131,19 @@ namespace utils {
             \param a reference to an array
             */
             static void _throw_if_not_allocated(const Array<T,BType,Allocator> &a);
-           
+        
             //-----------------------------------------------------------------
+            /*! \brief setup view parameters from variadic template
+
+            Private member function to setup the parameters for an ArrayView
+            object from a variadic template. This method is called recursively
+            until all slices in the argument list are processed.
+            \param offset vector with offset values for the view
+            \param stride vector with stride values for the view
+            \param shape vector with shape values for the view
+            \param s first slice object 
+            \param slices residual slice objects
+            */
             template<typename ...STypes>
                 void _slice_setup(std::vector<size_t> &offset,
                                   std::vector<size_t> &stride,
@@ -146,24 +158,46 @@ namespace utils {
             }
 
             //-----------------------------------------------------------------
+            //! final version of _slice_setup 
             void _slice_setup(std::vector<size_t> &offset,
                               std::vector<size_t> &stride,
                               std::vector<size_t> &shape)
             {}
 
             //-----------------------------------------------------------------
+            /*! \brief extract offset information 
+
+            Extracts the offset information from a slice information for a
+            particular dimension and adds it the offset vector.
+            \param offset vector where to store offset values
+            \param s slice object
+            */
             void _add_offset(std::vector<size_t> &offset,const Slice &s)
             {
                 offset.push_back(s.first());
             }
 
             //-----------------------------------------------------------------
+            /*! \brief extract stride information
+
+            Extracts stride information from a Slice object and adds it to the
+            stride vector in the argument list.
+            \param stride vector holding stride data
+            \param s slice object
+            */
             void _add_stride(std::vector<size_t> &stride,const Slice &s)
             {
                 stride.push_back(s.stride());
             }
 
             //-----------------------------------------------------------------
+            /*! \brief extract shape information
+
+            Extracts shape information from a Slice object and adds it to
+            a vector.
+            \param shape vector with shape information
+            \param s Slice object
+            */
             void _add_shape(std::vector<size_t> &shape,const Slice &s)
             {
                 shape.push_back(pni::utils::size(s));
@@ -176,6 +210,8 @@ namespace utils {
             typedef std::shared_ptr<ARRAYTMP > shared_ptr; //!< shared pointer to an Array<T>
             typedef std::unique_ptr<ARRAYTMP > unique_ptr; //!< unique pointer type
             typedef ArrayView<T,Array<T,BType,Allocator> > view_type; //!< type for array view
+            typedef Iterator<ArrayTMP,0> iterator; //!< iterator type
+            typedef Iterator<ArrayTMP,1> const_iterator; //!< const iterator type
             
             //==================public members=================================
             static const TypeID type_id = TypeIDMap<T>::type_id; //!< type ID of the element type
@@ -241,11 +277,15 @@ namespace utils {
 
             //! This constructors sets also name, unit, and description
             //! of the NumericObject base class.
-            Array(const Shape &s,const String &n,const String &u,const String &d);
+            Array(const Shape &s,const String &n,const String &u,
+                  const String &d);
+
+            //-----------------------------------------------------------------
             //! constructor
             Array(const Shape &s,const BType<T,Allocator> &b,
                   const String &n,const String &u,const String &d);
 
+            //-----------------------------------------------------------------
             //! destructor
             ~Array();
 
@@ -356,16 +396,15 @@ namespace utils {
             */
             void buffer(BType<T,Allocator> &&b);
 
+            //-----------------------------------------------------------------
             /*! \brief obtain buffer reference
 
             Return a const reference to the arrays buffer object.
             \return buffer reference
             */
-            const BType<T,Allocator> &buffer() const
-            {
-                return _data;
-            }
+            const BType<T,Allocator> &buffer() const { return _data; }
 
+            //-----------------------------------------------------------------
             /*! \brief get size of array
 
             Returns the total number of elements stored in the array.
@@ -659,22 +698,35 @@ namespace utils {
             T operator[](const size_t &i) const { return this->_data[i]; }
 
             //-----------------------------------------------------------------
-            /*! \brief access with multidimensional index
+            /*! \brief access with multidimensional index using a container
 
             Returns the data at a position described by the multidimensional
-            index i. This method performs no range checking.
-            \param i multidimensional index 
+            index i. 
+            \throws ShapeMissmatchError if size of c does not match the rank of
+            the array
+            \throws IndexError if one of the indices exceeds the number of
+            elements along its dimension
+            \param c multidimensional index 
             \return reference to the element at position i
             */
-
             template<template<typename,typename> class CONTAINER,typename IT,typename A> 
                 T &operator()(const CONTAINER<IT,A> &c)
             {
                 return this->_data[this->_shape.offset(c)];
             }
 
-
             //-----------------------------------------------------------------
+            /*! \brief access with multidimensional index using a container
+
+            Returns the data at a position described by the multidimensional
+            index i. 
+            \throws ShapeMissmatchError if size of c does not match the rank of
+            the array
+            \throws IndexError if one of the indices exceeds the number of
+            elements along its dimension
+            \param c multidimensional index 
+            \return value of the element at position i
+            */
             template<template<typename,typename> class CONTAINER,typename
                 IT,typename A>
                 T operator()(const CONTAINER<IT,A> &c) const
@@ -682,8 +734,19 @@ namespace utils {
                 return this->_data[this->_shape.offset(c)];
             }
 
-
             //----------------------------------------------------------------- 
+            /*! \brief access with variadic template
+
+            Returns the data at a position described by the multidimensional
+            index represented by the argument list of this operator. 
+            \throws ShapeMissmatchError if the number of arguments  does not 
+            match the rank of the array
+            \throws IndexError if one of the indices exceeds the number of
+            elements along its dimension
+            \param i first index
+            \param indices residual indices
+            \return reference to the element at position i
+            */
             template<typename ...ITypes> 
                 T &operator()(size_t i,ITypes ...indices) 
             {
@@ -691,6 +754,18 @@ namespace utils {
             }
 
             //-----------------------------------------------------------------
+            /*! \brief access with variadic template
+
+            Returns the data at a position described by the multidimensional
+            index represented by the argument list of this operator. 
+            \throws ShapeMissmatchError if the number of arguments  does not 
+            match the rank of the array
+            \throws IndexError if one of the indices exceeds the number of
+            elements along its dimension
+            \param i first index
+            \param indices residual indices
+            \return value of the element at position i
+            */
             template<typename ...ITypes> 
                 T operator()(size_t i,ITypes ...indices) const
             {
@@ -698,6 +773,15 @@ namespace utils {
             }
 
             //-----------------------------------------------------------------
+            /*! \brief create an ArrayView object 
+
+            Creates an ArrayView instance for this array using instances of
+            class Slice as arguments to the operator.
+            \throws ShapeMissmatchError if the number of arguments does not
+            match the rank of the Array.
+            \throws ShapeMissmatchError if the number of arguments does not
+            match the rank of the array.
+            */
             template<typename ...STypes>
                 Array<T,BType,Allocator>::view_type operator()
                 (const Slice &s,STypes ...slices)
@@ -708,7 +792,15 @@ namespace utils {
                 
                 if(((sizeof...(STypes))+1)!=this->_shape.rank())
                 {
-                    //throw shape missmatch error
+                    std::stringstream ss;
+                    ss<<"Array rank ("<<this->_shape.rank()<<") does not ";
+                    ss<<"match number of arguments ("<<(sizeof..(STypes))<<")!";
+                    ShapeMissmatchError error;
+                    error.description(ss.str());
+                    error.issuer(" template<typename ...STypes> Array<T,"
+                                 "BType,Allocator>::view_type operator() "
+                                 "(const Slice &s,STypes ...slices)");
+                    throw error;
                 }
                 
                 _add_offset(offset,s);
@@ -720,32 +812,28 @@ namespace utils {
 
             }
 
+            //=====================comparison operators========================
+            /*! \brief equality between arrays
+
+            Tow arrays are considered equal if they coincide in shape and data 
+            content.
+            */
+            friend bool operator==<> (const ARRAYTMP &b1, const ARRAYTMP &b2);
 
             //-----------------------------------------------------------------
-            /*! \brief return value
+            /*! inequality between arrays
 
-            Returns the value of the array at the multidimensional index i.
-            \param i multidimensional index
-            \return value of the array at i
+            Tow arrays are considered different if they have different shape or
+            content.
             */
-
-
-            //=====================comparison operators========================
-            //operators for comparison
-
-            //! equality between arrays
-
-            //! Tow arrays are considered equal if they coincide in shape and data content.
-            friend bool operator==<> (const ARRAYTMP &b1, const ARRAYTMP &b2);
-            //! inequality between arrays
-
-            //! Tow arrays are considered different if they have different shape or
-            //! content.
             friend bool operator!=<> (const ARRAYTMP &b1, const ARRAYTMP &b2);
+
+            //-----------------------------------------------------------------
             //! output operator for console output
-            friend std::ostream &operator<<<> (std::ostream &o, const ARRAYTMP &a);
+            friend std::ostream &operator<<<> (std::ostream &o,
+                                               const ARRAYTMP &a);
 
-
+            //-----------------------------------------------------------------
             /*! \brief check allocation state
 
             Returns true if the internal buffer of the array is allocated. 
@@ -755,7 +843,7 @@ namespace utils {
                 return _data.is_allocated();
             }
 
-
+            //-----------------------------------------------------------------
             /*! \brief get pointer to data
 
             Returns a pointer to the arrays data. 
@@ -763,6 +851,7 @@ namespace utils {
             */
             T *ptr(){ return _data.ptr(); }
 
+            //-----------------------------------------------------------------
             /*! \brief get const pointer to data
 
             Return a const pointer to the array data.
@@ -770,6 +859,7 @@ namespace utils {
             */
             const T* ptr() const { return _data.ptr(); }
 
+            //-----------------------------------------------------------------
             /*! \brief get void pointer to data
 
             Return a void pointer to the first element of the array data.
@@ -777,12 +867,57 @@ namespace utils {
             */
             void *void_ptr(){ return _data.void_ptr(); }
 
+            //-----------------------------------------------------------------
             /*! \brief return const void pointer to data
 
             Returns a const void pointer to the first element of the array data.
             \return const void pointer
             */
             const void *void_ptr() const{ return _data.void_ptr(); }
+
+            //-----------------------------------------------------------------
+            /*! \brief iterator to first element
+
+            Returns a non-const iterator to the first element in the array.
+            \return iterator to first element
+            */
+            ArrayTMP::iterator begin()
+            {
+                return ArrayTMP::iterator(this,0);
+            }
+
+            //-----------------------------------------------------------------
+            /*! \brief iterator to last element
+
+            Returns a non-const iterator to the last element in the array. 
+            \return iterator to last element
+            */
+            ArrrayTMP::iterator end()
+            {
+                return ArrayTMP::iterator(this,this->size()-1);
+            }
+
+            //-----------------------------------------------------------------
+            /*! \brief const-iterator to first element
+
+            Returns a const-iterator to the first element in the array.
+            \return iterator to first element
+            */
+            ArrayTMP::const_iterator begin() const
+            {
+                return ArrayTMP::const_iterator(this,0);
+            }
+
+            //-----------------------------------------------------------------
+            /*! \brief const-iterator to last element
+
+            Returns a const-iterator to the last element in the array.
+            \return iterator to last element
+            */
+            ArrayTMP::const_iterator end() const
+            {
+                return ArrayTMP::const_iterator(this,this->size()-1);
+            }
 
     };
 

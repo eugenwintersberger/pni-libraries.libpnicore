@@ -109,7 +109,7 @@ namespace io{
 
             This template is used internally to extract parameter data from the
             input stream and store the result in a variable of type T. 
-            \parma stream input stream
+            \param stream input stream
             \param value where to store data
             */
             template<typename T>
@@ -119,7 +119,7 @@ namespace io{
 
             Overloaded version of the _get_parameter_data template method to
             handle string data. 
-            \parma stream input stream
+            \param stream input stream
             \param value string value where to store parameter data
             */
             void _get_parameter_data(std::ifstream &stream,String &value) const;

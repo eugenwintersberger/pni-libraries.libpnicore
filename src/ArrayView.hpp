@@ -28,6 +28,8 @@
 #define __ARRAYVIEW_HPP__
 
 
+#include "Iterator.hpp"
+
 namespace pni{
 namespace utils{
     
@@ -58,6 +60,14 @@ namespace utils{
             size_t _get_effective_rank(const Buffer<size_t> &s);
            
             //-----------------------------------------------------------------
+            /*! \brief add index to a vector
+
+            Adds the first element of a variadic index template to a vector.
+            The method is called recursively until no more indices are left.
+            \param index vector where to add the index
+            \param i first index to ad
+            \param indices residual indices
+            */
             template<typename ...ITypes> 
                 void _add_index(std::vector<size_t> &index,size_t i,ITypes
                         ...indices)
@@ -67,9 +77,18 @@ namespace utils{
             }
 
             //-----------------------------------------------------------------
+            //! final _add_index method 
             void _add_index(std::vector<size_t> &index) {}
            
             //-----------------------------------------------------------------
+            /*! \brief load internal index container
+
+            Loads the internal index container which has the full dimensionality
+            of the original array with the content of the index provided by as
+            an argument. This index has not necessarily the same rank as the
+            original array. 
+            \param index view index
+            */
             template<template<typename,typename> class CONT,
                      typename IT,
                      typename A
@@ -101,8 +120,10 @@ namespace utils{
         public:
             //====================public types=================================
             typedef T value_type; //!< type of the data values
-            typedef std::shared_ptr<ArrayView<T,ATYPE> > shared_ptr; //<! shared pointer type
-            typedef std::unique_ptr<ArrayView<T,ATYPE> > unique_ptr; //<! unique pointer type
+            typedef std::shared_ptr<ArrayView<T,ATYPE> > shared_ptr; //!< shared pointer type
+            typedef std::unique_ptr<ArrayView<T,ATYPE> > unique_ptr; //!< unique pointer type
+            typedef Iterator<ArrayView<T,ATYPE>,0> iterator; //!< iterator type
+            typedef Iterator<ArrayView<T,ATYPE>,1> const_iterator; //!< const iterator type
             //=============constructors and destructor=========================
             ArrayView() = delete;
 
@@ -127,6 +148,16 @@ namespace utils{
             }
 
             //-----------------------------------------------------------------
+            /*! \brief constructor
+
+            Constructs a new ArrayView from an existing array and some
+            additional information.
+            \param a reference to the original array
+            \param shape number of elements along each dimension 
+            \param offset index offset for the view
+            \param stride number of steps between each element along each
+            dimension
+            */
             ArrayView(ATYPE &a,const std::vector<size_t> &shape,
                       const std::vector<size_t> offset,
                       const std::vector<size_t> stride):
@@ -195,6 +226,12 @@ namespace utils{
             //==================public member functions========================
             /*! \brief access with container index 
 
+            Using a container object to hold the multidimensional indices to
+            access view data. 
+            \throws ShapeMissmatchError if size of container does not match
+            view rank
+            \param index container with multidimensional index
+            \return reference to value at index
             */
             template<template<typename,typename> class CONT,
                      typename IT,
@@ -203,6 +240,8 @@ namespace utils{
                 T &operator()(const CONT<IT,A> &index)
             {
 
+                //transform the local view index to a global index for the
+                //original array
                 this->_set_index(index);
                 //we can use now this new index to access the data from the 
                 //original array
@@ -213,6 +252,12 @@ namespace utils{
             //-----------------------------------------------------------------
             /*! \brief access with container index 
 
+            Using a container object to hold the multidimensional indices to
+            access view data. 
+            \throws ShapeMissmatchError if size of container does not match
+            view rank
+            \param index container with multidimensional index
+            \return value at index
             */
             template<template<typename,typename> class CONT,
                      typename IT,
@@ -220,7 +265,8 @@ namespace utils{
                     >
                 T operator()(const CONT<IT,A> &index) const
             {
-
+                //transform the local view index to a global index for the
+                //original array
                 this->_set_index(index);
                 //we can use now this new index to access the data from the 
                 //original array
@@ -230,11 +276,23 @@ namespace utils{
 
 
             //-----------------------------------------------------------------
+            /*! \brief multidimensional access to data
+
+            () operator allows access to the data using a multidimensional
+            index represented by the arguments of the operator. 
+            \code 
+            Array<Float32,Buffer> data({100,200,100});
+            auto view = data(Slice(50,75),Slice(0,200),Slice(25,41));
+            std::cout<<view(3,34,10)<<std::endl;
+            \endcode
+            This works essentially the same as for the Array template.
+            \return reference to the value at multidimensional index
+             */
             template<typename ...ITypes> 
                 T &operator()(size_t &i,ITypes ...indices)
             {
+                //store the use provided indices in a vector
                 std::vector<size_t> index;
-
                 index.push_back(i);
                 _add_index(index,indices...);
 
@@ -242,6 +300,18 @@ namespace utils{
             }
 
             //-----------------------------------------------------------------
+            /*! \brief multidimensional access to data
+
+            () operator allows access to the data using a multidimensional
+            index represented by the arguments of the operator. 
+            \code 
+            Array<Float32,Buffer> data({100,200,100});
+            auto view = data(Slice(50,75),Slice(0,200),Slice(25,41));
+            std::cout<<view(3,34,10)<<std::endl;
+            \endcode
+            This works essentially the same as for the Array template.
+            \return value at multidimensional index
+             */
             template<typename ...ITypes> 
                 T operator()(size_t &i,ITypes ...indices) const
             {
@@ -273,6 +343,15 @@ namespace utils{
             }
 
             //-----------------------------------------------------------------
+            /*! \brief linearzed access
+
+            Provides access to the linearized data. With this operator
+            linear access is provided to the elements of the view.
+            \throws MemoryAccessError if some of the involved objects is not
+            allocated
+            \param i linear index of the element
+            \return reference to the value at index i 
+            */
             T &operator[](size_t i)
             {
                 Shape s = this->shape();
@@ -281,11 +360,20 @@ namespace utils{
             }
 
             //-----------------------------------------------------------------
+            /*! \brief linearized access
+
+            Provides const access to the linearized data. With this operator
+            linear access is provided to the elements of the view.
+            \throws MemoryAccessError if some of the involved objects is not
+            allocated
+            \param i linear index of the element
+            \return value at index i 
+            */
             T operator[](size_t i) const
             {
                 Shape s = this->shape();
                 auto index = s.template index<std::vector<size_t> >(i);
-                return (*this)(s); 
+                return (*this)(index); 
             }
 
             //-----------------------------------------------------------------
@@ -297,6 +385,50 @@ namespace utils{
             size_t size() const
             {
                 return this->shape().size();
+            }
+
+            //-----------------------------------------------------------------
+            /*! \brief iterator to first element
+
+            Return an interator to the first element of the array view. 
+            \return iterator to the first element
+            */
+            ArrayView<T,ATYPE>::iterator begin()
+            {
+                return ArrayView<T,ATYPE>::iterator(this,0);
+            }
+
+            //-----------------------------------------------------------------
+            /*! \brief iterator to last element
+
+            Return an iterator to the last element of the array view.
+            \return iterator to last element
+            */
+            ArrayView<T,ATYPE>::iterator end() 
+            {
+                return ArrayView<T,ATYPE>::iterator(this,this->size()-1);
+            }
+           
+            //-----------------------------------------------------------------
+            /*! \brief const iterator to first element
+
+            Return an const interator to the first element of the array view. 
+            \return iterator to the first element
+            */
+            ArrayView<T,ATYPE>::const_iterator begin() const
+            {
+                return ArrayView<T,ATYPE>::const_iterator(this,0);
+            }
+
+            //-----------------------------------------------------------------
+            /*! \brief const iterator to last element
+
+            Return an const iterator to the last element of the array view.
+            \return iterator to last element
+            */
+            ArrayView<T,ATYPE>::const_iterator end()
+            {
+                return ArrayView<T,ATYPE>::const_iterator(this,this->size()-1);
             }
     };
 
