@@ -426,7 +426,7 @@ namespace utils{
             Return an const iterator to the last element of the array view.
             \return iterator to last element
             */
-            ArrayView<T,ATYPE>::const_iterator end()
+            ArrayView<T,ATYPE>::const_iterator end() const
             {
                 return ArrayView<T,ATYPE>::const_iterator(this,this->size()-1);
             }

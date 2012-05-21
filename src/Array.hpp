@@ -202,6 +202,13 @@ namespace utils {
             {
                 shape.push_back(pni::utils::size(s));
             }
+
+        protected:
+            Array(const Shape &s,BType<T,Allocator> &&buffer):
+                NumericObject(),
+                _shape(s),
+                _data(std::move(buffer))
+            {}
         public:
             //================public types=====================================
             typedef Allocator allocator_type; //!< allocator type
@@ -210,8 +217,8 @@ namespace utils {
             typedef std::shared_ptr<ARRAYTMP > shared_ptr; //!< shared pointer to an Array<T>
             typedef std::unique_ptr<ARRAYTMP > unique_ptr; //!< unique pointer type
             typedef ArrayView<T,Array<T,BType,Allocator> > view_type; //!< type for array view
-            typedef Iterator<ArrayTMP,0> iterator; //!< iterator type
-            typedef Iterator<ArrayTMP,1> const_iterator; //!< const iterator type
+            typedef Iterator<ARRAYTMP,0> iterator; //!< iterator type
+            typedef Iterator<ARRAYTMP,1> const_iterator; //!< const iterator type
             
             //==================public members=================================
             static const TypeID type_id = TypeIDMap<T>::type_id; //!< type ID of the element type
@@ -253,9 +260,8 @@ namespace utils {
             //-----------------------------------------------------------------
             /*! \brief constructor with an array shape pointer
 
-            The pointer to an existing ArrayShape object is used to construct
-            the Array-object.
-            
+            Array construction from a shape object. When this constructor is
+            used memory is automatically allocated by the constructor. 
             \param s - reference to a shape object
             */
             Array(const Shape &s);
@@ -697,6 +703,27 @@ namespace utils {
             */
             T operator[](const size_t &i) const { return this->_data[i]; }
 
+            /*! \brief get value at i
+
+            Return a reference to the value at linear index i. This method
+            performs index checking. 
+            \throws IndexError if i exceeds array size
+            \param i linear index of element
+            \return reference to the value at i
+            */
+            T &at(size_t i) { return this->_data.at(i); } 
+
+            /*! \brief get value at i
+
+            Return the value of element i. This method
+            performs index checking. 
+            \throws IndexError if i exceeds array size
+            \param i linear index of element
+            \return value at i
+            */
+            T at(size_t i) const { return this->_data.at(i); } 
+
+
             //-----------------------------------------------------------------
             /*! \brief access with multidimensional index using a container
 
@@ -794,7 +821,7 @@ namespace utils {
                 {
                     std::stringstream ss;
                     ss<<"Array rank ("<<this->_shape.rank()<<") does not ";
-                    ss<<"match number of arguments ("<<(sizeof..(STypes))<<")!";
+                    ss<<"match number of arguments ("<<((sizeof...(STypes))+1)<<")!";
                     ShapeMissmatchError error;
                     error.description(ss.str());
                     error.issuer(" template<typename ...STypes> Array<T,"
@@ -881,9 +908,9 @@ namespace utils {
             Returns a non-const iterator to the first element in the array.
             \return iterator to first element
             */
-            ArrayTMP::iterator begin()
+            ARRAYTMP::iterator begin()
             {
-                return ArrayTMP::iterator(this,0);
+                return ARRAYTMP::iterator(this,0);
             }
 
             //-----------------------------------------------------------------
@@ -892,9 +919,9 @@ namespace utils {
             Returns a non-const iterator to the last element in the array. 
             \return iterator to last element
             */
-            ArrrayTMP::iterator end()
+            ARRAYTMP::iterator end()
             {
-                return ArrayTMP::iterator(this,this->size()-1);
+                return ARRAYTMP::iterator(this,this->size()-1);
             }
 
             //-----------------------------------------------------------------
@@ -903,9 +930,9 @@ namespace utils {
             Returns a const-iterator to the first element in the array.
             \return iterator to first element
             */
-            ArrayTMP::const_iterator begin() const
+            ARRAYTMP::const_iterator begin() const
             {
-                return ArrayTMP::const_iterator(this,0);
+                return ARRAYTMP::const_iterator(this,0);
             }
 
             //-----------------------------------------------------------------
@@ -914,9 +941,9 @@ namespace utils {
             Returns a const-iterator to the last element in the array.
             \return iterator to last element
             */
-            ArrayTMP::const_iterator end() const
+            ARRAYTMP::const_iterator end() const
             {
-                return ArrayTMP::const_iterator(this,this->size()-1);
+                return ARRAYTMP::const_iterator(this,this->size()-1);
             }
 
     };

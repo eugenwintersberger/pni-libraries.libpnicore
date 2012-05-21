@@ -126,6 +126,30 @@ namespace utils{
             explicit Buffer(size_t n);
 
             //-----------------------------------------------------------------
+            /*! \brief constructor from raw pointer
+           
+            Construct a pointer from a size and a raw pointer to the data. 
+            The size must correspond to the number of elements stored in the
+            memory associated with the raw pointer - otherweise a segmentation
+            fault will take place.
+            The Buffer template allocates memory and copies the content of the
+            buffer to the newly allocate memory over which it posses ownership.
+            \code 
+            double *data = new double[1024];
+            ....
+            //data is copied to a buffer
+            Buffer<double> buffer(1024,data);
+
+            //you can savely free the original pointer
+            delte [] data;
+            \endcode
+            \throws MemoryAllocationError if allocation fails
+            \param n number of bytes to allocate
+            \param ptr pointer to raw data
+            */
+            explicit Buffer(size_t n,const T *ptr);
+
+            //-----------------------------------------------------------------
             /*! \brief construct with initializer list
 
             This constructor allows the construction of Buffer<T> objects 
@@ -140,13 +164,16 @@ namespace utils{
             Buffer(const std::initializer_list<T> &list);
 
             //-----------------------------------------------------------------
-            /*! \brief initialize object from a vector
-            
-            Uses a std::vector to initialize the new buffer object.
+            /*! \brief construct buffer from an iterable container
+           
+            Any iterable container can be used to construct a buffer. The data
+            will be copied from the container to the newly allocated buffer
+            object.
             \throws MemoryAllocationError if memory allocation fails
             \param vector instance of std::vector<T>
             */
-            Buffer(const std::vector<T> &vector);
+            template<template<typename,typename> class CONT,typename A> 
+                explicit Buffer(const CONT<T,A> &container);
 
             //-----------------------------------------------------------------
             //! destructor
@@ -372,6 +399,19 @@ namespace utils{
     {}
 
     //--------------------------------------------------------------------------
+    template<typename T,typename Allocator>
+        Buffer<T,Allocator>::Buffer(size_t n,const T *ptr):
+            _data(Allocator::template allocate<T>(n)),
+            _size(n)
+    {
+        //copy data
+        if((this->is_allocated())&&(ptr))
+        {
+            for(size_t i=0;i<this->size();i++) (*this)[i] = ptr[i];
+        }
+    }
+
+    //--------------------------------------------------------------------------
     //implementation using an initializer list
     template<typename T,typename Allocator> 
         Buffer<T,Allocator>::Buffer(const std::initializer_list<T> &list):
@@ -393,20 +433,20 @@ namespace utils{
 
     //--------------------------------------------------------------------------
     //implementation using an initializer list
-    template<typename T,typename Allocator> 
-        Buffer<T,Allocator>::Buffer(const std::vector<T> &vector):
-            _data(Allocator::template allocate<T>(vector.size())),
-            _size(vector.size())
+    template<typename T,typename Allocator>
+    template<template<typename,typename> class CONT,typename A>
+        Buffer<T,Allocator>::Buffer(const CONT<T,A> &container):
+            _data(Allocator::template allocate<T>(container.size())),
+            _size(container.size())
          
     {
-        //once memory allocation was successfull we can use the values 
         //from the initializer list to fill the buffer
         size_t index = 0;
 #ifdef NOFOREACH
-        for(auto iter = vector.begin();iter!=vector.end();iter++){
+        for(auto iter = container.begin();iter!=container.end();iter++){
             const T &value = *iter;
 #else        
-        for(const T &value: vector){
+        for(auto value: container){
 #endif
             _data[index] = value;
             index++;

@@ -10,128 +10,13 @@
 #include "Buffer.hpp"
 #include "NewAllocator.hpp"
 #include "RefBuffer.hpp"
-#include "TypeInfo.hpp"
-#include "Types.hpp"
+
+#include "RandomDistributions.hpp"
+#include "EqualityCheck.hpp"
 
 using namespace pni::utils;
 
-template<typename CT,bool is_int,bool is_complex> class UniformDistribution;
 
-//create integer data uniformly distributed
-template<typename CT> class UniformDistribution<CT,true,false> 
-{
-    public:
-        static CT create_data(size_t n)
-        {
-            typedef typename CT::value_type value_type;
-            CT container(n);
-            
-            std::mt19937_64 engine;
-            std::uniform_int_distribution<> 
-                dist(TypeInfo<value_type>::min(),TypeInfo<value_type>::max());
-
-            for(value_type &v: container)
-            {
-                v = dist(engine);
-            }
-
-            return container;
-        }
-};
-
-//create floating point uniform distribution
-template<typename CT> class UniformDistribution<CT,false,false>
-{
-    public:
-        static CT create_data(size_t n)
-        {
-            typedef typename CT::value_type value_type;
-            CT container(n);
-            
-            std::mt19937_64 engine;
-            std::uniform_real_distribution<> 
-                dist(TypeInfo<Float32>::min(),TypeInfo<Float32>::max());
-
-            for(value_type &v: container)
-            {
-                v = dist(engine);
-            }
-
-            return container;
-        }
-};
-
-//create complex uniform distribution
-template<typename CT> class UniformDistribution<CT,false,true>
-{
-    public:
-        static CT create_data(size_t n)
-        {
-            typedef typename CT::value_type value_type;
-            typedef typename value_type::value_type base_type;
-            CT container(n);
-            
-            std::mt19937_64 engine;
-            std::uniform_real_distribution<>
-                dist(TypeInfo<Float32>::min(),
-                     TypeInfo<Float32>::max());
-
-            for(value_type &v: container)
-            {
-                v = value_type(dist(engine),dist(engine));
-            }
-
-            return container;
-        }
-};
-
-class RandomDistribution
-{
-    public:
-        template<typename CT> static CT uniform(size_t n)
-        {
-            return UniformDistribution<CT,
-                                       TypeInfo<typename CT::value_type>::is_integer,
-                                       TypeInfo<typename CT::value_type>::is_complex>
-                                           ::create_data(n);
-        }
-};
-
-template<typename T,bool is_int,bool is_complex> class EqualityCheck;
-
-template<typename T> class EqualityCheck<T,true,false>
-{
-    public:
-        static void check(const T &a,const T &b)
-        {
-            CPPUNIT_ASSERT(a == b);
-        }
-};
-
-template<typename T> class EqualityCheck<T,false,false>
-{
-    public:
-        static void check(const T &a,const T &b)
-        {
-            CPPUNIT_ASSERT_DOUBLES_EQUAL(a,b,1.e-8);
-        }
-};
-
-template<typename T> class EqualityCheck<T,false,true>
-{
-    public:
-        static void check(const T &a,const T &b)
-        {
-            CPPUNIT_ASSERT_DOUBLES_EQUAL(a.real(),b.real(),1.e-8);
-            CPPUNIT_ASSERT_DOUBLES_EQUAL(a.imag(),b.imag(),1.e-8);
-        }
-};
-
-
-template<typename T> void check_equality(const T &a,const T &b)
-{
-    EqualityCheck<T,TypeInfo<T>::is_integer,TypeInfo<T>::is_complex>::check(a,b);
-}
 
 
 
@@ -180,7 +65,7 @@ private:
 
         //test constructor with vector
         std::vector<typename BTYPE::value_type> vec = {3,9,1};
-        BTYPE vbuffer = vec;
+        BTYPE vbuffer(vec);
         CPPUNIT_ASSERT(vbuffer.is_allocated());
         CPPUNIT_ASSERT(vbuffer.size() == 3);
         CPPUNIT_ASSERT(vbuffer[0] == value_type(3));

@@ -13,18 +13,19 @@ namespace utils{
     iterator operators depending on the const_flag in the template parameter
     list.
     */
-    template<typename ITEMTYPE,int const_flag> class IterReturnType;
+    template<typename ITERABLE,int const_flag> class IterTypes;
 
     /*! \ingroup util_classes
     \brief return types for non-const iterators
 
     Specialization of the IterReturnType template for non-const iterators.
     */
-    template<typename ITEMTYPE> class IterReturnType<ITEMTYPE,0>
+    template<typename ITERABLE> class IterTypes<ITERABLE,0>
     {
         public:
-            typedef ITEMTYPE& return_type; //!< reference type for dereferencing operator
-            typedef ITEMTYPE* ptr_type;    //!< pointer type for -> operator
+            typedef ITERABLE *cont_ptr; //!< container pointer
+            typedef typename ITERABLE::value_type& return_type; //!< reference type for dereferencing operator
+            typedef typename ITERABLE::value_type* ptr_type;    //!< pointer type for -> operator
     };
 
     /*! \ingroup util_classes
@@ -32,11 +33,12 @@ namespace utils{
 
     Specialization of the IterReturnType template for const iterators.
     */
-    template<typename ITEMTYPE> class IterReturnType<ITEMTYPE,1>
+    template<typename ITERABLE> class IterTypes<ITERABLE,1>
     {
         public:
-            typedef ITEMTYPE return_type;     //!< value type for dereferencing operator
-            typedef const ITEMTYPE *ptr_type; //!< pointer type for -> operator
+            typedef const ITERABLE *cont_ptr; //!< container pointer
+            typedef typename ITERABLE::value_type return_type;     //!< value type for dereferencing operator
+            typedef const typename ITERABLE::value_type *ptr_type; //!< pointer type for -> operator
     };
 
 
@@ -48,7 +50,7 @@ namespace utils{
     template<typename ITERABLE,int const_flag> class Iterator
     {
         private:
-            ITERABLE *_container; //!< pointer to the container object
+            typename IterTypes<ITERABLE,const_flag>::cont_ptr _container; //!< pointer to the container object
             size_t _state;        //!< actual position state of the iterator
         public:
             //================constructor and destructor===========================
@@ -63,7 +65,7 @@ namespace utils{
             \param container pointer to the container object
             \param state initial position of the iterator
             */
-            Iterator(ITERABLE *container,size_t state=0):
+            Iterator(typename IterTypes<ITERABLE,const_flag>::cont_ptr container,size_t state=0):
                 _container(container),
                 _state(state)
             { }
@@ -100,7 +102,7 @@ namespace utils{
             \throws IteratorError if the iterator is invalid
             \return reference or value of the actual object
             */
-            typename IterReturnType<typename ITERABLE::value_type,const_flag>::return_type operator*()
+            typename IterTypes<ITERABLE,const_flag>::return_type operator*()
             {
                 EXCEPTION_SETUP("typename IterReturnType<typename ITERABLE::"
                                 "value_type,const_flag>::return_type"
@@ -112,8 +114,7 @@ namespace utils{
                     EXCEPTION_THROW();
                 }
 
-                ITERABLE &c = *(this->_container);
-                return c[this->_state];
+                return (*(this->_container))[this->_state];
             }
 
             //---------------------------------------------------------------------
@@ -124,7 +125,7 @@ namespace utils{
             \throws IteratorError if the iterator is invalid
             \return pointer to actual object
             */
-            typename IterReturnType<typename ITERABLE::value_type,const_flag>::ptr_type operator->()
+            typename IterTypes<ITERABLE,const_flag>::ptr_type operator->()
             {
                 EXCEPTION_SETUP("typename IterReturnType<typename ITERABLE::"
                                 "value_type,const_flag>::ptr_type"

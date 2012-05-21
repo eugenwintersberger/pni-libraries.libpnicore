@@ -105,6 +105,19 @@ namespace utils{
             \param data pointer to the allocated memory
             */
             explicit RefBuffer(size_t n,T *data);
+
+            /*! \brief standard constructor
+
+            This constructor exists to satisfy the Buffer interface. However,
+            since a RefBuffer does not hold any data by itself it cannot be used
+            and raises a static assert. 
+            */
+            /*
+            explicit RefBuffer(size_t n):
+                _size(n)
+            {
+                static_assert(true,"Constructor cannot be used with RefBuffer");
+            }*/
             
             //-----------------------------------------------------------------
             //! destructor

@@ -223,6 +223,7 @@ namespace utils{
             */
             size_t dim(const size_t &i) const;
 
+            //-----------------------------------------------------------------
             //! total number of elements
 
             //! Returns the total number of elements that can be described by the
@@ -244,6 +245,7 @@ namespace utils{
             If the number of arguments does not match the rank of the Shape
             object an exception will be thrown. 
             \throws ShapeMissmatchError if rank does not match number of arguments 
+            \return linear offset of the data
             */
             template<typename ...ITypes> 
                 size_t offset(size_t i,ITypes ...indices) const
