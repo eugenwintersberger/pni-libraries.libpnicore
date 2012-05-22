@@ -273,7 +273,7 @@ namespace utils {
             used memory is automatically allocated by the constructor. 
             \param s - reference to a shape object
             */
-            Array(const Shape &s);
+            //Array(const Shape &s);
 
             //-----------------------------------------------------------------
             /*! \brief constructor where array shape and buffer object are set
@@ -292,8 +292,10 @@ namespace utils {
 
             //! This constructors sets also name, unit, and description
             //! of the NumericObject base class.
+            /*
             Array(const Shape &s,const String &n,const String &u,
                   const String &d);
+                  */
 
             //-----------------------------------------------------------------
             //! constructor
@@ -985,20 +987,22 @@ namespace utils {
 
     //--------------------------------------------------------------------------
     //construct a new array from a shape object - the recommended way
+    /*
     ARRAYTMPDEF ARRAYTMP::Array(const Shape &s): 
         NumericObject(),
         _shape(s),
         _data(s.size())
-    { }
+    { }*/
 
     //--------------------------------------------------------------------------
     //implementation of an array constructor
+    /*
     ARRAYTMPDEF ARRAYTMP::Array(const Shape &s,const String &n,const String &u,
         const String &d):
         NumericObject(n,u,d),
         _shape(s),
         _data(s.size())
-    { }
+    { }*/
 
     //--------------------------------------------------------------------------
     //Array construction from a shape and a buffer

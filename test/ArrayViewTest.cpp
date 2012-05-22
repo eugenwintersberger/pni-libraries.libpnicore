@@ -6,6 +6,7 @@
 #include <boost/shared_ptr.hpp>
 
 #include "Array.hpp"
+#include "ArrayFactory.hpp"
 #include "Buffer.hpp"
 #include "Shape.hpp"
 #include "ArrayViewTest.hpp"
@@ -27,7 +28,7 @@ void ArrayViewTest::tearDown()
 void ArrayViewTest::testConstruction()
 {
    Shape s{5,10};
-   Float32Array a(s);
+   auto a = ArrayFactory<Float32>::create(s);
 
    auto v1 = a(Slice(1,3),Slice(3,7));
    CPPUNIT_ASSERT(v1.shape().rank() == 2);
@@ -46,7 +47,7 @@ void ArrayViewTest::test_dataaccess()
     std::cout<<"void ArrayViewTest::test_dataaccess()......................";
     std::cout<<std::endl;
     Shape s{5,10};
-    Float32Array a(s);
+    auto a = ArrayFactory<Float32>::create(s);
     a = 1.5;
 
     auto view = a(Slice(0,1),Slice(2,7));
@@ -77,7 +78,7 @@ void ArrayViewTest::test_linearaccess()
     std::cout<<"void ArrayViewTest::test_linearaccess()-----------------------";
     std::cout<<std::endl;
 
-    Float32Array a({100,200});
+    auto a = ArrayFactory<Float32>::create({100,200});
     a = 1.24;
 
     //create the view
