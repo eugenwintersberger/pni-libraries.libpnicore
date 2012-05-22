@@ -106,3 +106,35 @@ void ArrayViewTest::test_linearaccess()
         }
     }
 }
+
+//-----------------------------------------------------------------------------
+void ArrayViewTest::test_assignment()
+{
+    std::cout<<"void ArrayViewTest::test_assignment()------------------------";
+    std::cout<<std::endl;
+    
+    //create random data
+    Shape frame_shape{1024,2048};
+
+    auto data = RandomDistribution::uniform<std::vector<Float32> >(frame_shape.size());
+    auto frame = ArrayFactory<Float32>::create(frame_shape,data);
+    auto roi = frame(Slice(512,732,2),Slice(1024,1077,3));
+
+    CPPUNIT_ASSERT(roi.shape()[0] == 110);
+    CPPUNIT_ASSERT(roi.shape()[1] == 17);
+
+    //check if selection worked
+    for(size_t i=0;i<roi.shape()[0];i++)
+        for(size_t j=0;j<roi.shape()[1];j++)
+            CPPUNIT_ASSERT_DOUBLES_EQUAL(roi(i,j),frame(512+i*2,1024+j*3),1e-8);
+
+    //create a new array holding the roi data
+    auto roi2 = ArrayFactory<Float32>::create(roi);
+
+    size_t index = 0;
+    for(auto v: roi2)
+        CPPUNIT_ASSERT_DOUBLES_EQUAL(v,roi[index++],1.e-8);
+
+    
+
+}

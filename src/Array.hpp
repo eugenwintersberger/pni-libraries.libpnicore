@@ -260,7 +260,7 @@ namespace utils {
             In this case all data form the view will be copied to the new array. 
             \param v array view
             */
-            Array(const Array<T,BType,Allocator>::view_type &v);
+            //Array(const Array<T,BType,Allocator>::view_type &v);
 
             //-----------------------------------------------------------------
             //! move constructor
@@ -349,6 +349,23 @@ namespace utils {
             */
             template<typename U> Array<T,BType,Allocator> &
                 operator=(const Array<U,BType,Allocator> &a);
+
+            /*! \brief copy assignment from a view
+
+            */
+            template<template<typename,typename> class UBUFFER,
+                     typename UALLOCATOR>
+            Array<T,BType,Allocator> &operator=(const
+                    typename Array<T,UBUFFER,UALLOCATOR>::view_type &view)
+            {
+                if(this->shape() != view.shape())
+                {
+                    //throw shape missmatch error
+                }
+
+                for(size_t i=0;i<this->size();i++) (*this)[i] = view[i];
+                return *this;
+            }
 
 
             //================public methods===================================
@@ -610,90 +627,6 @@ namespace utils {
             //! During the operation a temporary array object is created.
             friend ARRAYTMP operator /<> (const T&, const ARRAYTMP&);
 
-
-            //========methods for array data inquery===========================
-            //some functions that are of importance for arrays
-
-            //! compute the sum of all element in the array
-
-            //! Computes the sum of all elements stored in the array.
-            //! \return number of type T
-            typename ArrayType<T>::Type sum() const;
-
-            //-----------------------------------------------------------------
-            //! minimum value
-
-            //! returns the minimum element in the array.
-            //! \return value of type T
-            T min() const;
-
-            //-----------------------------------------------------------------
-            //! maximum value
-
-            //! returns the maximum element in the array
-            //! \return value of type T
-            T max() const;
-
-            //-----------------------------------------------------------------
-            //! minimum and maximum in the array
-
-            //! returns the minimum and maximum values in the array.
-            //! \param min minimum value
-            //! \param max maximum value
-            void min_max(T &min, T &max) const;
-
-            //-----------------------------------------------------------------
-            //! clip the array data
-
-            //! Set values greater or equal maxth to maxth and those smaller or equal minth
-            //! to minth.
-
-            //! \param minth minimum threshold
-            //! \param maxth maximum threshold
-            void clip(T minth, T maxth);
-
-            //-----------------------------------------------------------------
-            //! clip the array data
-
-            //! Set values smaller or equal to minth to minval and those larger or equal than
-            //! maxth to maxval.
-
-            //! \param minth minimum threshold
-            //! \param minval value for numbers smaller or equal to minth
-            //! \param maxth maximum threshold
-            //! \param maxval value for numbers larger or equal to maxth
-            void clip(T minth, T minval, T maxth, T maxval);
-
-            //-----------------------------------------------------------------
-            //! clip minimum values
-
-            //! Set value smaller or equal to a threshold value to threshold.
-
-            //! \param threshold threshold value
-            void min_clip(T threshold);
-
-            //-----------------------------------------------------------------
-            //! clip minimum values
-
-            //! Set values smaller or equal than a threshold value to value
-            //! \param threshold threshold value
-            //! \param value value to set the numbers to
-            void min_clip(T threshold, T value);
-
-            //-----------------------------------------------------------------
-            //! clip maximum values
-
-            //! Set values larger or equal than threshold to threshold.
-            //! \param threshold threshold value
-            void max_clip(T threshold);
-
-            //-----------------------------------------------------------------
-            //! clip maximum values
-
-            //! Set values larger or equal than threshold to value.
-            //! \param threshold the threshold value for the clip operation
-            //! \param value the value to set the numbers to
-            void max_clip(T threshold, T value);
 
             //=============operators and methods to access array data==========
             /*! \brief get referece to element i
@@ -986,25 +919,6 @@ namespace utils {
     { }
 
     //--------------------------------------------------------------------------
-    //construct a new array from a shape object - the recommended way
-    /*
-    ARRAYTMPDEF ARRAYTMP::Array(const Shape &s): 
-        NumericObject(),
-        _shape(s),
-        _data(s.size())
-    { }*/
-
-    //--------------------------------------------------------------------------
-    //implementation of an array constructor
-    /*
-    ARRAYTMPDEF ARRAYTMP::Array(const Shape &s,const String &n,const String &u,
-        const String &d):
-        NumericObject(n,u,d),
-        _shape(s),
-        _data(s.size())
-    { }*/
-
-    //--------------------------------------------------------------------------
     //Array construction from a shape and a buffer
     ARRAYTMPDEF ARRAYTMP::Array(const Shape &s, const BType<T,Allocator> &b):
         NumericObject(),
@@ -1054,15 +968,6 @@ namespace utils {
             EXCEPTION_THROW();
         }
 
-    }
-
-    //--------------------------------------------------------------------------
-    ARRAYTMPDEF  ARRAYTMP::Array(const ARRAYTMP::view_type &v):
-        NumericObject(),
-        _shape(v.shape()),
-        _data(_shape.size())
-    {
-        for(size_t i=0;i<this->size();i++) (*this)[i] = v[i];
     }
 
     //--------------------------------------------------------------------------
@@ -1178,195 +1083,6 @@ namespace utils {
             return true;
         }
         return false;
-    }
-
-    //==============Methods for in-place array manipulation=====================
-    ARRAYTMPDEF typename ArrayType<T>::Type ARRAYTMP::sum() const 
-    {
-        EXCEPTION_SETUP("template<typename T,template <typename> class BType>"
-                        "typename ArrayType<T>::Type Array<T,BType>"
-                        "::Sum() const");
-
-        typename ArrayType<T>::Type result = 0;
-
-        try{
-            for (size_t i = 0; i < this->shape().size(); i++) 
-                result += (*this)[i];
-        }catch(...){
-            EXCEPTION_INIT(ProcessingError,"Error during array sum operation!");
-            EXCEPTION_THROW();
-        }
-
-        return result;
-    }
-
-    //--------------------------------------------------------------------------
-    ARRAYTMPDEF T ARRAYTMP::min() const 
-    {
-        EXCEPTION_SETUP("template<typename T,template <typename> class BType>"
-                        "T Array<T,BType>::Min() const");
-
-        T result = 0,value = 0;
-
-        try{
-            for (size_t i = 0; i < this->shape().size(); i++) 
-            {
-                value = (*this)[i];
-                if (value < result) result = value;
-            }
-        }catch(...){
-            EXCEPTION_INIT(ProcessingError,"Error during array min operation!");
-            EXCEPTION_THROW();
-        }
-
-        return result;
-    }
-
-    //--------------------------------------------------------------------------
-    ARRAYTMPDEF T ARRAYTMP::max() const 
-    {
-        EXCEPTION_SETUP("template<typename T,template <typename> class BType>"
-                        "T Array<T,BType>::Max() const");
-
-        T result = 0,value=0;
-
-        try{
-            for (size_t i = 0; i < this->shape().size(); i++) 
-            {
-                value = (*this)[i];
-                if (value > result) result = value;
-            }
-        }catch(...){
-            EXCEPTION_INIT(ProcessingError,"Error during array max operation!");
-            EXCEPTION_THROW();
-        }
-
-        return result;
-    }
-
-    //--------------------------------------------------------------------------
-    ARRAYTMPDEF void ARRAYTMP::min_max(T &min, T &max) const 
-    {
-        EXCEPTION_SETUP("template<typename T,template <typename> class BType>"
-                        "void Array<T,BType>::MinMax(T &min, T &max) const");
-        min = 0;
-        max = 0;
-        T value = 0;
-
-        try{
-            for (size_t i = 0; i < this->shape().size(); i++) 
-            {
-                value = (*this)[i];
-
-                if (value > max) max = value;
-                if (value < min) min = value;
-            }
-        }catch(...){
-            EXCEPTION_INIT(ProcessingError,"Error during array minmax operation!");
-            EXCEPTION_THROW();
-        }
-    }
-
-    //--------------------------------------------------------------------------
-    ARRAYTMPDEF void ARRAYTMP::clip(T minth, T maxth) 
-    {
-        EXCEPTION_SETUP("template<typename T,template <typename> class BType>"
-                        "void Array<T,BType>::Clip(T minth, T maxth)");
-        T value = 0;
-
-        try{
-            for (size_t i = 0; i < this->shape().size(); i++) 
-            {
-                value = (*this)[i];
-
-                if (value < minth) (*this)[i] = minth;
-                if (value > maxth) (*this)[i] = maxth;
-            }
-        }catch(...){
-            EXCEPTION_INIT(ProcessingError,"Error during array operation!");
-            EXCEPTION_THROW();
-        }
-    }
-
-    //--------------------------------------------------------------------------
-    ARRAYTMPDEF void ARRAYTMP::clip(T minth, T minval, T maxth, T maxval) 
-    {
-        EXCEPTION_SETUP("template<typename T,template <typename> class BType>"
-                        "void Array<T,BType>::Clip(T minth, T minval, T maxth,"
-                        "T maxval)");
-        T value = 0;
-
-        try{
-            for (size_t i = 0; i < this->shape().size(); i++) 
-            {
-                value = (*this)[i];
-
-                if (value <= minth) (*this)[i] = minval;
-                if (value >= maxth) (*this)[i] = maxval;
-            }
-        }catch(...){
-            EXCEPTION_INIT(ProcessingError,"Error during array operation!");
-            EXCEPTION_THROW();
-        }
-    }
-
-    //--------------------------------------------------------------------------
-    ARRAYTMPDEF void ARRAYTMP::min_clip(T threshold) {
-        EXCEPTION_SETUP("template<typename T,template <typename> class BType>"
-                        "void Array<T,BType>::MinClip(T threshold)");
-
-        try{
-            for (size_t i = 0; i < this->shape().size(); i++) 
-                if ((*this)[i] < threshold) (*this)[i] = threshold;
-        }catch(...){
-            EXCEPTION_INIT(ProcessingError,"Error during array operation!");
-            EXCEPTION_THROW();
-        }
-    }
-
-    //--------------------------------------------------------------------------
-    ARRAYTMPDEF void ARRAYTMP::min_clip(T threshold, T value) 
-    {
-        EXCEPTION_SETUP("template<typename T,template <typename> class BType>"
-                        "void Array<T,BType>::MinClip(T threshold, T value)");
-
-        try{
-            for (size_t i = 0; i < this->shape().size(); i++) 
-                if ((*this)[i] < threshold) (*this)[i] = value;
-        }catch(...){
-            EXCEPTION_INIT(ProcessingError,"Error during array operation!");
-            EXCEPTION_THROW();
-        }
-    }
-
-    //--------------------------------------------------------------------------
-    ARRAYTMPDEF void ARRAYTMP::max_clip(T threshold) 
-    {
-        EXCEPTION_SETUP("template<typename T,template <typename> class BType>"
-                        "void Array<T,BType>::MaxClip(T threshold)");
-
-        try{
-            for (size_t i = 0; i < this->shape().size(); i++) 
-                if ((*this)[i] > threshold) (*this)[i] = threshold;
-        }catch(...){
-            EXCEPTION_INIT(ProcessingError,"Error during array operation!");
-            EXCEPTION_THROW();
-        }
-    }
-
-    //--------------------------------------------------------------------------
-    ARRAYTMPDEF void ARRAYTMP::max_clip(T threshold, T value) 
-    {
-        EXCEPTION_SETUP("template<typename T,template <typename> class BType>"
-                        "void Array<T,BType>::MaxClip(T threshold, T value)");
-
-        try{
-            for (size_t i = 0; i < this->shape().size(); i++) 
-                if ((*this)[i] > threshold) (*this)[i] = value;
-        }catch(...){
-            EXCEPTION_INIT(ProcessingError,"Error during array operation!");
-            EXCEPTION_THROW();
-        }
     }
 
     //==============================Assignment operators=======================

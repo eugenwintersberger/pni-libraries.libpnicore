@@ -98,6 +98,24 @@ namespace utils{
                 return a;
             }
 
+            //-----------------------------------------------------------------
+            /*! \brief create a new array from a view 
+
+            Use this method to create a new array from an array view object.
+            */
+            template<template<typename,typename> class UBUFFER, typename UALLOCATOR>
+            static Array<T,BTYPE,ALLOCATOR> create(const ArrayView<T,Array<T,UBUFFER,UALLOCATOR> > &view)
+            {
+                BTYPE<T,ALLOCATOR> buffer(view.size());
+                Array<T,BTYPE,ALLOCATOR> array(view.shape(),buffer);
+
+                //copy data
+                for(size_t i=0;i<array.size();i++) array[i] = view[i];
+
+                return array;
+            }
+                      
+
     };
 
     template<typename T,typename ALLOCATOR> 

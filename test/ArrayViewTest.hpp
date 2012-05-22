@@ -4,14 +4,17 @@
 #include<cppunit/extensions/HelperMacros.h>
 
 #include "ArrayView.hpp"
+#include "RandomDistributions.hpp"
 
 using namespace pni::utils;
+
 
 class ArrayViewTest : public CppUnit::TestFixture{
         CPPUNIT_TEST_SUITE(ArrayViewTest);
         CPPUNIT_TEST(testConstruction);
         CPPUNIT_TEST(test_dataaccess);
         CPPUNIT_TEST(test_linearaccess);
+        CPPUNIT_TEST(test_assignment);
         CPPUNIT_TEST_SUITE_END();
     private:
         Shape s1,s2;
@@ -22,4 +25,5 @@ class ArrayViewTest : public CppUnit::TestFixture{
         void testConstruction();
         void test_dataaccess();
         void test_linearaccess();
+        void test_assignment();
 };

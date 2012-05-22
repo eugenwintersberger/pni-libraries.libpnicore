@@ -47,7 +47,7 @@ namespace utils{
             Buffer<size_t> _offset; //!<offset of the view
             Buffer<size_t> _stride; //!<stride of the view
 
-            std::vector<size_t> _index;  //!<a index buffer used for index computation 
+            mutable std::vector<size_t> _index;  //!<a index buffer used for index computation 
             size_t _rank;            //!< rank of the view
 
             //-----------------------------------------------------------------
@@ -93,7 +93,7 @@ namespace utils{
                      typename IT,
                      typename A
                     >
-                void _set_index(const CONT<IT,A> &index)
+                void _set_index(const CONT<IT,A> &index) const
             {
                 //compute the index whith full dimensionality
                 size_t j=0;
