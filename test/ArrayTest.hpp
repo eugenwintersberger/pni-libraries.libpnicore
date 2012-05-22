@@ -5,6 +5,7 @@
 
 #include "Array.hpp"
 
+#include "ArrayFactory.hpp"
 #include "RandomDistributions.hpp"
 #include "EqualityCheck.hpp"
 #include "BufferHelper.hpp"
@@ -26,6 +27,8 @@ class ArrayTest : public CppUnit::TestFixture{
     private:
         Shape s1,s2;
         size_t r1,r2;
+        
+
     public:
         void setUp();
         void tearDown();
@@ -60,22 +63,26 @@ template<typename T,
         >
 void ArrayTest<T,BTYPE,ALLOCATOR>::test_construction()
 {
-    typedef Array<T,BTYPE,ALLOCATOR> array;
-	//check for simple array-construction
-	array a1(s1);
-	array a2(s2);
+    typedef ArrayFactory<T,BTYPE,ALLOCATOR> factory;
+    //check for simple array-construction
+    auto a1 = factory::create(s1);
+    auto a2 = factory::create(s2);
 
     BTYPE<T,ALLOCATOR> buffer;
     allocate_buffer(buffer,s1.size());
 
-    array a3(s1,buffer);
+    auto a3 = factory::create(s1,buffer);
 
     //construction from a default array
-    array a4;
+    auto a4 = factory::create(s1,T(17));
+    for(auto v: a4) check_equality(v,T(17));
 
-    //set the shape
-    a4.shape(s1);
-    a4.buffer(buffer);
+    auto data = RandomDistribution::uniform<std::vector<T> >(s1.size());
+    auto a5 = factory::create(s1,data);
+
+    size_t index = 0;
+    for(auto v: a5)
+        check_equality(v,data[index++]);
 }
 
 //------------------------------------------------------------------------------
@@ -85,8 +92,8 @@ template<typename T,
         >
 void ArrayTest<T,BTYPE,ALLOCATOR>::test_linear_access()
 {
-    typedef Array<T,BTYPE,ALLOCATOR> array;
-	array a1(s1);
+    typedef ArrayFactory<T,BTYPE,ALLOCATOR> factory;
+	auto a1 = factory::create(s1);
 
     //--------------------check operators without index checking----------------
 	//access via [] operator
@@ -117,15 +124,15 @@ template<typename T,
         >
 void ArrayTest<T,BTYPE,ALLOCATOR>::test_iterators()
 {
-    typedef Array<T,BTYPE,ALLOCATOR> array;
-	array a1(s1);
+    typedef ArrayFactory<T,BTYPE,ALLOCATOR> factory;
+	auto a1 = factory::create(s1);
 
     //--------------------check standard iterator----------------
 	//access via [] operator
     auto data = RandomDistribution::uniform<std::vector<T> >(a1.size());
 
     size_t index = 0;
-    for(typename array::value_type &v: a1)
+    for(typename factory::array_type::value_type &v: a1)
         v = data[index++];
     
     index = 0;
@@ -134,7 +141,7 @@ void ArrayTest<T,BTYPE,ALLOCATOR>::test_iterators()
 
 
     //-------------------check const iterator-----------------------------
-    const array &a = a1;
+    const typename factory::array_type &a = a1;
 
     index = 0;
     for(auto v: a)
@@ -148,9 +155,9 @@ template<typename T,
         >
 void ArrayTest<T,BTYPE,ALLOCATOR>::test_multiindex_access()
 {   
-    typedef Array<T,BTYPE,ALLOCATOR> array;
+    typedef ArrayFactory<T,BTYPE,ALLOCATOR> factory;
 
-    array a1(s1);
+    auto a1 = factory::create(s1);
     auto data = RandomDistribution::uniform<std::vector<T> >(a1.size());
 
     //----------------use variadic tempaltes to access data--------------

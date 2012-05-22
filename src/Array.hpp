@@ -53,6 +53,13 @@
 namespace pni {
 namespace utils {
 
+    template<typename T,
+             template<typename,typename> class BTYPE,
+             typename ALLOCATOR
+            >
+    class ArrayFactory;
+
+
 #define ARRAYTMPDEF \
     template< \
         typename T,\
@@ -208,7 +215,9 @@ namespace utils {
                 NumericObject(),
                 _shape(s),
                 _data(std::move(buffer))
-            {}
+            {
+                std::cout<<"Using buffer move constructor!"<<std::endl; 
+            }
         public:
             //================public types=====================================
             typedef Allocator allocator_type; //!< allocator type
@@ -945,6 +954,9 @@ namespace utils {
             {
                 return ARRAYTMP::const_iterator(this,this->size()-1);
             }
+
+
+            friend class ArrayFactory<T,BType,Allocator>;
 
     };
 
