@@ -33,6 +33,7 @@
 #include<iostream>
 #include<string>
 #include<exception>
+#include<typeinfo>
 
 //#include "Exceptions.hpp"
 #include "Types.hpp"
@@ -528,6 +529,8 @@ public:
 	//! output operator
 	friend std::ostream &operator<<(std::ostream &o,const IteratorError &e);
 };
+    
+
 }
 }
 #endif

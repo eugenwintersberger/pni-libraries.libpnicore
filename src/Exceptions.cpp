@@ -130,6 +130,7 @@ std::ostream &operator<<(std::ostream &o,const IteratorError &e){
 std::ostream &operator<<(std::ostream &o,const KeyError &e){
 	return e.print(o);
 }
+
 //end of namespace
 }
 }
