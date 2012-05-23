@@ -10,6 +10,7 @@
 #include "Buffer.hpp"
 #include "Shape.hpp"
 #include "ArrayViewTest.hpp"
+#include "ArrayOperations.hpp"
 
 
 CPPUNIT_TEST_SUITE_REGISTRATION(ArrayViewTest);
@@ -87,8 +88,8 @@ void ArrayViewTest::test_linearaccess()
     //check creation 
     std::cout<<v.shape()<<std::endl;
     CPPUNIT_ASSERT(v.shape().rank() == 2);
-    CPPUNIT_ASSERT(v.shape()[1] == 16);
-    CPPUNIT_ASSERT(v.shape()[0] == 12);
+    CPPUNIT_ASSERT(v.shape()[1] == 17);
+    CPPUNIT_ASSERT(v.shape()[0] == 13);
 
     for(size_t i=0;i<v.size();i++)
         CPPUNIT_ASSERT_NO_THROW(v[i] = i);
@@ -121,7 +122,7 @@ void ArrayViewTest::test_assignment()
     auto roi = frame(Slice(512,732,2),Slice(1024,1077,3));
 
     CPPUNIT_ASSERT(roi.shape()[0] == 110);
-    CPPUNIT_ASSERT(roi.shape()[1] == 17);
+    CPPUNIT_ASSERT(roi.shape()[1] == 18);
 
     //check if selection worked
     for(size_t i=0;i<roi.shape()[0];i++)
@@ -134,7 +135,42 @@ void ArrayViewTest::test_assignment()
     size_t index = 0;
     for(auto v: roi2)
         CPPUNIT_ASSERT_DOUBLES_EQUAL(v,roi[index++],1.e-8);
+   
+    auto roi3 = ArrayFactory<Float32>::create(roi.shape());
+    roi3 = roi;
+    CPPUNIT_ASSERT(roi3.shape() == roi.shape());
+    index = 0;
+    for(auto v: roi3)
+        CPPUNIT_ASSERT_DOUBLES_EQUAL(v,roi[index++],1.e-8);
+    
+
+}
+
+//-----------------------------------------------------------------------------
+void ArrayViewTest::test_operations()
+{
+    std::cout<<"void ArrayViewTest::test_operations()------------------------";
+    std::cout<<std::endl;
+
+    //create random data
+    Shape frame_shape{10,10};
+
+    std::vector<Float32> data(frame_shape.size());
+    size_t index=0;
+    for(Float32 &v: data) v = index++;
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(data[0],0,1.e-8);
+
+    auto frame = ArrayFactory<Float32>::create(frame_shape,data);
+    auto roi = frame(Slice(1,10,2),Slice(2,9,3));
+
+    for(auto v: roi) std::cout<<v<<" ";
+    std::cout<<std::endl;
+    std::cout<<roi.shape()<<std::endl;
+
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(sum(roi),825,1.e-8);
+
 
     
+
 
 }

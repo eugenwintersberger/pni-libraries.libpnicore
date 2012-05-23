@@ -15,6 +15,7 @@ class ArrayViewTest : public CppUnit::TestFixture{
         CPPUNIT_TEST(test_dataaccess);
         CPPUNIT_TEST(test_linearaccess);
         CPPUNIT_TEST(test_assignment);
+        CPPUNIT_TEST(test_operations);
         CPPUNIT_TEST_SUITE_END();
     private:
         Shape s1,s2;
@@ -26,4 +27,5 @@ class ArrayViewTest : public CppUnit::TestFixture{
         void test_dataaccess();
         void test_linearaccess();
         void test_assignment();
+        void test_operations();
 };

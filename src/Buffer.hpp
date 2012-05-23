@@ -354,7 +354,7 @@ namespace utils{
             */
             Buffer<T,Allocator>::iterator end()
             {
-                return Buffer<T,Allocator>::iterator(this,this->size()-1);
+                return Buffer<T,Allocator>::iterator(this,this->size());
             }
 
             //------------------------------------------------------------------
@@ -376,7 +376,7 @@ namespace utils{
             */
             Buffer<T,Allocator>::const_iterator end() const
             {
-                return const_iterator(this,this->size()-1);
+                return const_iterator(this,this->size());
             }
 
 

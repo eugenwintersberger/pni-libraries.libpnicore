@@ -299,7 +299,7 @@ namespace utils{
             */
             RBUFFTMP::iterator end()
             {
-                return iterator(this,this->size()-1);
+                return iterator(this,this->size());
             }
 
             //------------------------------------------------------------------
@@ -321,7 +321,7 @@ namespace utils{
             */
             RBUFFTMP::const_iterator end() const
             {
-                return const_iterator(this,this->size()-1);
+                return const_iterator(this,this->size());
             }
 
     };

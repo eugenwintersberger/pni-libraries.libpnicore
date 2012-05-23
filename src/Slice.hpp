@@ -156,7 +156,7 @@ namespace utils{
 
     Computes the total number of elements spanned by the slice. 
     \f[
-        span = list-first
+        span = last-first
     \f]
     \param s slice for which to compute the span
     \return total number of elements

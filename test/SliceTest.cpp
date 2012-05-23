@@ -92,7 +92,7 @@ void SliceTest::test_functions()
     size_t f=20,l=100,stride=13;
     Slice s(f,l,stride);
 
-    CPPUNIT_ASSERT(size(s) == 6);
+    CPPUNIT_ASSERT(size(s) == 7);
     CPPUNIT_ASSERT(span(s) == 80);
 
     Slice s1(1,3,2);

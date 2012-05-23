@@ -24,6 +24,7 @@
  */
 
 #include "Slice.hpp"
+#include <iostream>
 
 namespace pni{
 namespace utils{
@@ -108,9 +109,18 @@ namespace utils{
     }
 
     //==========implementation of non-member functions=========================
+    std::ostream &operator<<(std::ostream &o,const Slice &s)
+    {
+        o<<s.first()<<":"<<s.last();
+        if(s.stride()!=1) o<<":"<<s.stride();
+        return o;
+    }
+    
+    //-------------------------------------------------------------------------
     size_t size(const Slice &s)
     {
-        return (s.last() - s.first())/s.stride();
+        std::cout<<s<<" "<<span(s)<<" "<<span(s)%s.stride()<<std::endl;
+        return (span(s)+s.stride()-1)/s.stride();
     }
 
     //-------------------------------------------------------------------------
@@ -118,6 +128,7 @@ namespace utils{
     {
         return (s.last()-s.first());
     }
+
 
 
 //end of namespace

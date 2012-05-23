@@ -353,10 +353,8 @@ namespace utils {
             /*! \brief copy assignment from a view
 
             */
-            template<template<typename,typename> class UBUFFER,
-                     typename UALLOCATOR>
-            Array<T,BType,Allocator> &operator=(const
-                    typename Array<T,UBUFFER,UALLOCATOR>::view_type &view)
+            template<template<typename,typename> class UBUFFER,typename UALLOCATOR>
+            Array<T,BType,Allocator> &operator=(const ArrayView<T,Array<T,UBUFFER,UALLOCATOR> > &view)
             {
                 if(this->shape() != view.shape())
                 {
@@ -865,7 +863,7 @@ namespace utils {
             */
             ARRAYTMP::iterator end()
             {
-                return ARRAYTMP::iterator(this,this->size()-1);
+                return ARRAYTMP::iterator(this,this->size());
             }
 
             //-----------------------------------------------------------------
@@ -887,7 +885,7 @@ namespace utils {
             */
             ARRAYTMP::const_iterator end() const
             {
-                return ARRAYTMP::const_iterator(this,this->size()-1);
+                return ARRAYTMP::const_iterator(this,this->size());
             }
 
 

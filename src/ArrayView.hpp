@@ -406,7 +406,7 @@ namespace utils{
             */
             ArrayView<T,ATYPE>::iterator end() 
             {
-                return ArrayView<T,ATYPE>::iterator(this,this->size()-1);
+                return ArrayView<T,ATYPE>::iterator(this,this->size());
             }
            
             //-----------------------------------------------------------------
@@ -428,7 +428,7 @@ namespace utils{
             */
             ArrayView<T,ATYPE>::const_iterator end() const
             {
-                return ArrayView<T,ATYPE>::const_iterator(this,this->size()-1);
+                return ArrayView<T,ATYPE>::const_iterator(this,this->size());
             }
     };
 

@@ -43,9 +43,9 @@ like 8Bit integers.
 \return number of type T
 */
 template<typename ARRAYT> 
-    typename ArrayType<ARRAYT::value_type>::Type sum(const ARRAYT &a)
+    typename ArrayType<typename ARRAYT::value_type>::Type sum(const ARRAYT &a)
 {
-    typedef typename ArrayType<ARRAYT::value_type>::Type RType;
+    typedef typename ArrayType<typename ARRAYT::value_type>::Type RType;
     RType result(0);
 
     for(auto v: a) result += v;
@@ -129,20 +129,41 @@ template<typename ARRAYT> void min_max(const ARRAYT &a,
 \ingroup data_classes  
 \brief clip the array data
 
-Set values greater or equal maxth to maxval and those smaller or equal minth
-to minval. By default maxval and minval are equal to maxth and minth
-respectively.
+Set values greater or equal maxth to maxth and those smaller or equal minth
+to minth. 
 \param a array which to clip
 \param minth minimum threshold
 \param maxth maximum threshold
-\param minval optional value to which values small minth will be set
-\param maxval optional value to which values larger maxth will be set
+*/
+template<typename ARRAYT> void clip(ARRAYT &a,
+                                    typename ARRAYT::value_type minth, 
+                                    typename ARRAYT::value_type maxth)
+{
+    for(typename ARRAYT::value_type &v: a)
+    {
+        if(v <= minth) v = minth;
+        if(v >= maxth) v = maxth;
+    }
+}
+
+//-----------------------------------------------------------------------------
+/*! 
+\ingroup data_classes  
+\brief clip the array data
+
+Set values greater or equal maxth to maxval and those smaller or equal minth
+to minval. 
+\param a array which to clip
+\param minth minimum threshold
+\param maxth maximum threshold
+\param minval value to which values small minth will be set
+\param maxval value to which values larger maxth will be set
 */
 template<typename ARRAYT> void clip(ARRAYT &a,
                                     typename ARRAYT::value_type minth, 
                                     typename ARRAYT::value_type maxth,
-                                    typename ARRAYT::value_type minval=minth,
-                                    typename ARRAYT::value_type maxval=maxth)
+                                    typename ARRAYT::value_type minval,
+                                    typename ARRAYT::value_type maxval)
 {
     for(typename ARRAYT::value_type &v: a)
     {
@@ -151,37 +172,126 @@ template<typename ARRAYT> void clip(ARRAYT &a,
     }
 }
 
+//-----------------------------------------------------------------------------
+/*! 
+\ingroup data_classes 
+\brief clip minimum values
+
+Set values smaller or equal than threshold to threshold. 
+\param a array which to clip
+\param threshold threshold value
+\param value the value to which to set data
+*/
+template<typename ARRAYT>
+void min_clip(ARRAYT &a,typename ARRAYT::value_type threshold)
+{
+    for(typename ARRAYT::value_type &v: a)
+        if(v<=threshold) v = threshold;
+}
 
 //-----------------------------------------------------------------------------
 /*! 
 \ingroup data_classes 
 \brief clip minimum values
 
-Set values smaller or equal than threshold to value. By default value is equal
-to the threshold.
+Set values smaller or equal than threshold to value. 
 \param a array which to clip
 \param threshold threshold value
 \param value the value to which to set data
 */
 template<typename ARRAYT>
 void min_clip(ARRAYT &a,typename ARRAYT::value_type threshold,
-                        typename ARRAYT::value_type value=threshold)
+                        typename ARRAYT::value_type value)
 {
     for(typename ARRAYT::value_type &v: a)
         if(v<=threshold) v = value;
 }
+//-----------------------------------------------------------------------------
+/*! 
+\ingroup data_classes 
+\brief clip maximum values
+
+Set values larger or equal than threshold to threshold.
+\param a array to clip
+\param threshold threshold value
+*/
+template<typename ARRAYT> 
+void max_clip(ARRAYT &a,typename ARRAYT::value_type threshold)
+{
+    for(typename ARRAYT::value_type &v: a)
+        if(v>=threshold) v = threshold;
+}
 
 //-----------------------------------------------------------------------------
-//! clip maximum values
+/*! 
+\ingroup data_classes  
+\brief clip maximum values
 
-//! Set values larger or equal than threshold to threshold.
-//! \param threshold threshold value
+Set values larger or equal than threshold to valuer.
+\param a array to clip
+\param threshold threshold value
+*/
 template<typename ARRAYT> 
 void max_clip(ARRAYT &a,typename ARRAYT::value_type threshold,
-                        typename ARRAYT::value_type value=threshold)
+                        typename ARRAYT::value_type value)
 {
     for(typename ARRAYT::value_type &v: a)
         if(v>=threshold) v = value;
+}
+//-----------------------------------------------------------------------------
+/*!
+\ingroup data_classes
+\brief get linear offset of maximum
+
+Return the linear offset of the maximum value in the array.
+\param a array object to search for
+\return linear offset of maximum value
+*/
+template<typename ARRAYT> void max_offset(const ARRAYT &a)
+{
+
+}
+
+//-----------------------------------------------------------------------------
+/*!
+\ingroup data_classes
+\brief get index of maximum
+
+Return the multidimensional index of the maximum value in the array.
+\param a array where to search
+\return index in a container format requested by the user
+*/
+template<typename CONT,typename ARRAYT> CONT max_index(const ARRAYT &a)
+{
+
+}
+
+//-----------------------------------------------------------------------------
+/*!
+\ingroup data_classes
+\brief get linear offset of minimum
+
+Return the linear offset of the minimum value in the array.
+\param a array object to search for
+\return linear offset of minimum value
+*/
+template<typename ARRAYT> void min_offset(const ARRAYT &a)
+{
+
+}
+
+//-----------------------------------------------------------------------------
+/*!
+\ingroup data_classes
+\brief get index of minimum
+
+Return the multidimensional index of the minimum value in the array.
+\param a array where to search
+\return index in a container format requested by the user
+*/
+template<typename CONT,typename ARRAYT> CONT min_index(const ARRAYT &a)
+{
+
 }
 
 
