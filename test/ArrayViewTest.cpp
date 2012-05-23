@@ -151,6 +151,7 @@ void ArrayViewTest::test_operations()
 {
     std::cout<<"void ArrayViewTest::test_operations()------------------------";
     std::cout<<std::endl;
+    typedef ArrayFactory<Float32> factory;
 
     //create random data
     Shape frame_shape{10,10};
@@ -168,9 +169,73 @@ void ArrayViewTest::test_operations()
     std::cout<<roi.shape()<<std::endl;
 
     CPPUNIT_ASSERT_DOUBLES_EQUAL(sum(roi),825,1.e-8);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(max(roi),98,1.e-8);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(min(roi),12.,1.e-8);
+   
+    //copy data to reuse it for several tests
+    auto test1 = factory::create(roi.shape());
+    auto test2 = factory::create(roi.shape());
+    test2 = roi;
+    test1 = roi;
 
+    //check clipping 
+    test2(0,0) = 30; test2(0,1) = 30; test2(0,2) = 30;
+    test2(4,0) = 90; test2(4,1) = 90; test2(4,2) = 90;
+    clip(test1,30,90);
+    CPPUNIT_ASSERT(test1 == test2);
+
+    //testing clip with a particular value
+    test1 = roi;
+    test2 = roi;
+    test2(0,0) = 666; test2(0,1) = 666; test2(0,2) = 666;
+    test2(4,0) = 42; test2(4,1) = 42; test2(4,2) = 42;
+    clip(test1,30,90,666,42);
+    CPPUNIT_ASSERT(test1 == test2);
+
+    //testing min clip
+    test1 = roi;
+    test2 = roi;
+    test2(0,0) = 30; test2(0,1) = 30; test2(0,2) = 30;
+    min_clip(test1,30);
+    CPPUNIT_ASSERT(test1 == test2);
+
+    test1 = roi;
+    test2 = roi;
+    test2(0,0) = 666; test2(0,1) = 666; test2(0,2) = 666;
+    min_clip(test1,30,666);
+    CPPUNIT_ASSERT(test1 == test2);
+
+    //testing min clip
+    test1 = roi;
+    test2 = roi;
+    test2(4,0) = 90; test2(4,1) = 90; test2(4,2) = 90;
+    max_clip(test1,90);
+    CPPUNIT_ASSERT(test1 == test2);
+
+    test1 = roi;
+    test2 = roi;
+    test2(4,0) = 42; test2(4,1) = 42; test2(4,2) = 42;
+    max_clip(test1,90,42);
+    CPPUNIT_ASSERT(test1 == test2);
+
+    //testing min and max offset
+    CPPUNIT_ASSERT(max_offset(roi) == roi.size()-1);
+    CPPUNIT_ASSERT(min_offset(roi) == 0);
+
+    //testing min and max index
+    std::vector<size_t> eindex{4,2};
+    auto maxi = max_index<std::vector<size_t> >(roi);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(roi(maxi),98.,1.e-8);
+    CPPUNIT_ASSERT(maxi[0] == eindex[0]);
+    CPPUNIT_ASSERT(maxi[1] == eindex[1]);
+   
+    eindex[0] = 0; eindex[1] = 0;
+    auto mini = min_index<std::vector<size_t> >(roi);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(roi(mini),12.,1.e-8);
+    CPPUNIT_ASSERT(mini[0] == eindex[0]);
+    CPPUNIT_ASSERT(mini[1] == eindex[1]);
 
     
-
+    
 
 }

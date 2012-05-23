@@ -119,7 +119,6 @@ namespace utils{
     //-------------------------------------------------------------------------
     size_t size(const Slice &s)
     {
-        std::cout<<s<<" "<<span(s)<<" "<<span(s)%s.stride()<<std::endl;
         return (span(s)+s.stride()-1)/s.stride();
     }
 

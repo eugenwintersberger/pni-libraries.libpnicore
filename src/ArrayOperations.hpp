@@ -67,7 +67,7 @@ complex numbers.
 template<typename ARRAYT> typename ARRAYT::value_type min(const ARRAYT &a) 
 {
     typedef typename ARRAYT::value_type RType;
-    RType result(0);
+    RType result(a[0]);
 
     for(auto v: a)
         if(v<result) result = v;
@@ -91,7 +91,7 @@ template<typename ARRAYT> typename ARRAYT::value_type max(const ARRAYT &a)
 {
     typedef typename ARRAYT::value_type RType;
 
-    RType result(0);
+    RType result(a[0]);
 
     for(auto v: a)
         if(v>result) result = v;
@@ -115,8 +115,8 @@ template<typename ARRAYT> void min_max(const ARRAYT &a,
                                        typename ARRAYT::value_type &min,
                                        typename ARRAYT::value_type &max)
 {
-    min=typename ARRAYT::value_type(0);
-    max=typename ARRAYT::value_type(0);
+    min=typename ARRAYT::value_type(a[0]);
+    max=typename ARRAYT::value_type(a[0]);
     for(auto v: a)
     {
         if(v<min) min = v;
@@ -141,8 +141,17 @@ template<typename ARRAYT> void clip(ARRAYT &a,
 {
     for(typename ARRAYT::value_type &v: a)
     {
-        if(v <= minth) v = minth;
-        if(v >= maxth) v = maxth;
+        if(v <= minth)
+        {
+            v = minth;
+            continue;
+        }
+
+        if(v >= maxth)
+        {
+            v = maxth;
+            continue;
+        }
     }
 }
 
@@ -167,8 +176,17 @@ template<typename ARRAYT> void clip(ARRAYT &a,
 {
     for(typename ARRAYT::value_type &v: a)
     {
-        if(v <= minth) v = minval;
-        if(v >= maxth) v = maxval;
+        if(v <= minth)
+        {
+            v = minval;
+            continue;
+        }
+
+        if(v >= maxth)
+        {
+            v = maxval;
+            continue;
+        }
     }
 }
 
@@ -180,7 +198,6 @@ template<typename ARRAYT> void clip(ARRAYT &a,
 Set values smaller or equal than threshold to threshold. 
 \param a array which to clip
 \param threshold threshold value
-\param value the value to which to set data
 */
 template<typename ARRAYT>
 void min_clip(ARRAYT &a,typename ARRAYT::value_type threshold)
@@ -230,6 +247,7 @@ void max_clip(ARRAYT &a,typename ARRAYT::value_type threshold)
 Set values larger or equal than threshold to valuer.
 \param a array to clip
 \param threshold threshold value
+\param value value to set 
 */
 template<typename ARRAYT> 
 void max_clip(ARRAYT &a,typename ARRAYT::value_type threshold,
@@ -247,9 +265,24 @@ Return the linear offset of the maximum value in the array.
 \param a array object to search for
 \return linear offset of maximum value
 */
-template<typename ARRAYT> void max_offset(const ARRAYT &a)
+template<typename ARRAYT> size_t max_offset(const ARRAYT &a)
 {
+    typedef typename ARRAYT::value_type value_type;
+    size_t offset = 0;
+    size_t index = 0;
+    value_type max_value = value_type(a[0]);
 
+    index = 0;
+    for(auto v: a)
+    {
+        if(v > max_value)
+        {
+            max_value = v;
+            offset  = index;
+        }
+        index++;
+    }
+    return offset;
 }
 
 //-----------------------------------------------------------------------------
@@ -263,7 +296,8 @@ Return the multidimensional index of the maximum value in the array.
 */
 template<typename CONT,typename ARRAYT> CONT max_index(const ARRAYT &a)
 {
-
+    size_t offset = max_offset(a);
+    return a.shape().template index<CONT>(offset);
 }
 
 //-----------------------------------------------------------------------------
@@ -275,9 +309,25 @@ Return the linear offset of the minimum value in the array.
 \param a array object to search for
 \return linear offset of minimum value
 */
-template<typename ARRAYT> void min_offset(const ARRAYT &a)
+template<typename ARRAYT> size_t min_offset(const ARRAYT &a)
 {
+    
+    typedef typename ARRAYT::value_type value_type;
+    size_t offset = 0;
+    size_t index = 0;
+    value_type min_value = value_type(a[0]);
 
+    index = 0;
+    for(auto v: a)
+    {
+        if(v < min_value)
+        {
+            min_value = v;
+            offset  = index;
+        }
+        index++;
+    }
+    return offset;
 }
 
 //-----------------------------------------------------------------------------
@@ -291,7 +341,8 @@ Return the multidimensional index of the minimum value in the array.
 */
 template<typename CONT,typename ARRAYT> CONT min_index(const ARRAYT &a)
 {
-
+    size_t offset = min_offset(a);
+    return a.shape().template index<CONT>(offset);
 }
 
 

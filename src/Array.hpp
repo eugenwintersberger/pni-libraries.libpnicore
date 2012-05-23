@@ -211,13 +211,20 @@ namespace utils {
             }
 
         protected:
+            /*! \brief protected constructor
+
+            This protected constructor is used by the ArrayFactory templates. It
+            provides move semantics for the buffer passed to the array. Thus the
+            array takes ownership over the buffer object. The method assumes
+            that the size of the Buffer and the Shape object do match.
+            \param s shape of the array
+            \param buffer buffer object
+            */
             Array(const Shape &s,BType<T,Allocator> &&buffer):
                 NumericObject(),
                 _shape(s),
                 _data(std::move(buffer))
-            {
-                std::cout<<"Using buffer move constructor!"<<std::endl; 
-            }
+            { }
         public:
             //================public types=====================================
             typedef Allocator allocator_type; //!< allocator type
@@ -254,26 +261,9 @@ namespace utils {
             Array(const ARRAYTMP &);
 
             //-----------------------------------------------------------------
-            /*! \brief construct from view
-
-            Constructors constructs a new Array from an existing array view. 
-            In this case all data form the view will be copied to the new array. 
-            \param v array view
-            */
-            //Array(const Array<T,BType,Allocator>::view_type &v);
-
-            //-----------------------------------------------------------------
             //! move constructor
             Array(ARRAYTMP &&);
             
-            //-----------------------------------------------------------------
-            /*! \brief constructor with an array shape pointer
-
-            Array construction from a shape object. When this constructor is
-            used memory is automatically allocated by the constructor. 
-            \param s - reference to a shape object
-            */
-            //Array(const Shape &s);
 
             //-----------------------------------------------------------------
             /*! \brief constructor where array shape and buffer object are set
@@ -286,16 +276,6 @@ namespace utils {
             \param b pointer to a buffer object
             */
             Array(const Shape &s, const BType<T,Allocator> &b);
-
-            //-----------------------------------------------------------------
-            //! constructor
-
-            //! This constructors sets also name, unit, and description
-            //! of the NumericObject base class.
-            /*
-            Array(const Shape &s,const String &n,const String &u,
-                  const String &d);
-                  */
 
             //-----------------------------------------------------------------
             //! constructor

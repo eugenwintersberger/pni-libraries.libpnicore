@@ -170,7 +170,7 @@ namespace utils{
             will be copied from the container to the newly allocated buffer
             object.
             \throws MemoryAllocationError if memory allocation fails
-            \param vector instance of std::vector<T>
+            \param container instance of a container type
             */
             template<template<typename,typename> class CONT,typename A> 
                 explicit Buffer(const CONT<T,A> &container);
