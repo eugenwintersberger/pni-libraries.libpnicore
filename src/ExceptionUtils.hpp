@@ -80,6 +80,32 @@ namespace utils{
     */
     void check_equal_shape(const Shape &a,const Shape &b,const String &i);
 
+    //-------------------------------------------------------------------------
+    /*! 
+    \ingroup error_classes
+    \brief check allocation state
+
+    Checks the allocation state of an allocateable object. If the object is not
+    allocated an exception will be thrown.
+    \throws MemoryNotAllocatedError if object not allocated
+    \param o object to check
+    \param i signature of the function or method where the check was performed
+    */
+    template<typename OTYPE> void
+        check_allocation_state(const OTYPE &o,const String &i)
+    {
+        if(!o.is_allocated())
+        {
+            std::stringstream ss;
+            ss<<"Instance of "<<typeid(OTYPE).name()<<" not allocated!";
+            MemoryNotAllocatedError error;
+            error.issuer(i);
+            error.description(ss.str());
+            throw error;
+        }
+    }
+
+
 //end of namespace
 }
 }

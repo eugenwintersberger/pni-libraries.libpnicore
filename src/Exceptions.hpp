@@ -194,6 +194,33 @@ public:
 	friend std::ostream &operator<<(std::ostream &o,const MemoryAllocationError &e);
 };
 
+/*! 
+\ingroup error_classes
+\brief memory not allocated error
+
+This exception is usually thrown if one tries to access not allocated memory.
+*/
+class MemoryNotAllocatedError: public Exception
+{
+    public:
+        //! default constructor
+        MemoryNotAllocatedError():
+            Exception("MemoryNotAllocatedError") {}
+
+        //! constructor
+        MemoryNotAllocatedError(const String &i,const String &d):
+            Exception("MemoryNotAllocatedError",i,d) 
+        {}
+
+        //! destructor
+        ~MemoryNotAllocatedError() throw() {}
+
+        //! output operator
+        friend std::ostream &operator<<(std::ostream &o,const
+                MemoryNotAllocatedError &e);
+};
+
+
 //------------------------------------------------------------------------------
 //! \ingroup error_classes
 //! \brief Shape mismatch error

@@ -39,6 +39,7 @@
 #include "RefBuffer.hpp"
 #include "Shape.hpp"
 #include "Exceptions.hpp"
+#include "ExceptionUtils.hpp"
 #include "Types.hpp"
 #include "NumericObject.hpp"
 #include "Slice.hpp"
@@ -250,20 +251,27 @@ namespace utils {
             is known at the time of definition but all other parameters
             are obtained later in the code.
             */
-            Array();
+            Array():NumericObject(),_shape(),_data() {}
 
             //-----------------------------------------------------------------
             /*! \brief copy constructor
 
             This constructor is a full copy constructor. A new array is created
             and the content of the original array is copied.
+            \throws MemoryAllocationError if memory allocation fails
             */
-            Array(const ARRAYTMP &);
+            Array(const ARRAYTMP &a):
+                NumericObject(),
+                _shape(a._shape()),
+                _data(a._data())
+            { }
 
             //-----------------------------------------------------------------
             //! move constructor
-            Array(ARRAYTMP &&);
-            
+            Array(ARRAYTMP &&a):NumericObject(std::move(a)),
+                _shape(std::move(a._shape)),
+                _data(std::move(a._data))
+            { }
 
             //-----------------------------------------------------------------
             /*! \brief constructor where array shape and buffer object are set
@@ -272,19 +280,37 @@ namespace utils {
             object. An exception will be raised if their sizes do not match.
             To keep ownership the objects will be copied.
 
-            \param s pointer to a shape object
-            \param b pointer to a buffer object
+            \throws MemoryAllocationError if memory allocation fails
+            \throws SizeMissmatchError if sizes do not match
+            \param s shape object
+            \param b buffer object
             */
-            Array(const Shape &s, const BType<T,Allocator> &b);
+            Array(const Shape &s, const BType<T,Allocator> &b):
+                NumericObject(),
+                _shape(s),
+                _data(b)
+            {
+                check_equal_size(s,b,
+                        "Array(const Shape &s, const BType<T,Allocator> &b))");
+            }
 
             //-----------------------------------------------------------------
             //! constructor
             Array(const Shape &s,const BType<T,Allocator> &b,
-                  const String &n,const String &u,const String &d);
+                  const String &n,const String &u,const String &d): 
+                NumericObject(n,u,d),
+                _shape(s),
+                _data(b)
+            {
+                check_equal_size(s,b,
+                        "Array(const Shape &s,const BType<T,Allocator> &b,"
+                        "const String &n,const String &u,const String &d)");
+            }
+
 
             //-----------------------------------------------------------------
             //! destructor
-            ~Array();
+            ~Array() { _data.free(); }
 
             //===================assignment operators==========================
             //! assign a native type to the array
@@ -292,7 +318,13 @@ namespace utils {
             //! Here a value of a native type will be assigned to the Array.
             //! The value is assigned to all elements of the array. Thus, this
             //! operator can be used for a quick initialization of an array with numbers.
-            ARRAYTMP &operator =(const T&);
+            ARRAYTMP &operator =(const T &v)
+            {
+                check_allocation_state(this->buffer(),
+                                       "ARRAYTMP &operator =(const T&)");
+                for(T &a: *this) a = v;
+                return *this;
+            }
 
             //-----------------------------------------------------------------
             /*! conversion assignment operator
@@ -303,43 +335,63 @@ namespace utils {
             \throws TypeError if conversion fails.
             \param v value of type U
             */
-            template<typename U> ARRAYTMP &operator=(const U &v);
+            template<typename U> ARRAYTMP &operator=(const U &v)
+            {
+                check_allocation_state(this->buffer(),
+                        "template<typename U> ARRAYTMP &operator=(const U &v)");
+
+                for(T &a: *this) a = convert_type<T>(v);
+                return *this;
+            }
+
 
             //-----------------------------------------------------------------
-            //! assignment between two arrays
+            //! copy assignment between two arrays
 
             //! This operation is only possible if the shapes of the two arrays are equal.
             //! If this is not the case an exception will be raised. The content of the
             //! array on the r.h.s of the operator is copied to the array on the l.h.s.
             //! of the operator. No memory allocation is done - only copying.
-            ARRAYTMP &operator =(const ARRAYTMP &a);
+            ARRAYTMP &operator =(const ARRAYTMP &a)
+            {
+                if(this == &a) return *this;
+
+                this->_data = a._data;
+                this->_shape = a._shape;
+
+                return *this;
+            }
 
             //-----------------------------------------------------------------
             //! move assignemnt operator
-            ARRAYTMP &operator =(ARRAYTMP &&a);
+            ARRAYTMP &operator =(ARRAYTMP &&a)
+            {
+                if (this == &a) return *this;
+                
+                this->_data = std::move(a._data);
+                this->_shape = std::move(a._shape);
+
+                return *this;
+            }
 
             //-----------------------------------------------------------------
-            /*! \brief copy assignment operator
-
-            Reallocates the lhs array to the shape of the array on the rhs and
-            copies data. During copying data is converted from type U to T. If
-            conversion fails an exception will be thrown.
-            \throws TypeError if conversion fails
-            \param a rhs array argument of the operator
-            */
-            template<typename U> Array<T,BType,Allocator> &
-                operator=(const Array<U,BType,Allocator> &a);
-
             /*! \brief copy assignment from a view
 
+            An exception will be thrown if the shape of the view on the lhs does
+            not match the shape of the array on the rhs of the operator.
+            \throws ShapeMissmatchError if array and view shape do not match
+    
             */
-            template<template<typename,typename> class UBUFFER,typename UALLOCATOR>
-            Array<T,BType,Allocator> &operator=(const ArrayView<T,Array<T,UBUFFER,UALLOCATOR> > &view)
+            template<template<typename,typename> class UBUFFER,
+                     typename UALLOCATOR
+                    >
+            Array<T,BType,Allocator> &operator=
+            (const ArrayView<T,Array<T,UBUFFER,UALLOCATOR> > &view)
             {
-                if(this->shape() != view.shape())
-                {
-                    //throw shape missmatch error
-                }
+                check_equal_shape(this->shape(),view.shape(),
+                    "template<template<typename,typename> class UBUFFER,"
+                    "typename UALLOCATOR>Array<T,BType,Allocator> &operator="
+                    "(const ArrayView<T,Array<T,UBUFFER,UALLOCATOR> > &view)");
 
                 for(size_t i=0;i<this->size();i++) (*this)[i] = view[i];
                 return *this;
@@ -348,23 +400,27 @@ namespace utils {
 
             //================public methods===================================
             /*! \brief set array shape
+            
+            Use this method to set the shape of the array. This can be used to
+            reshape an allready allocated array. However, if the array is not
+            allocated (as it is typically the case if it was created using the
+            default constructor) an exception will be thrown.  
+            The size of the new shape must match the size of the buffer
+            associated with the array.
 
-            Use this method to set the shape of the array. This is typically
-            used if the array was created by the default constructor. If the
-            buffer holding the arrays data is already allocated this method
-            causes a reshape of the array. In order to succeed the size of the
-            shape must correpsond with the size of the allocated buffer. If the
-            sizes do not match an excpetion will be thrown.
-
-            The second possibility is that the arrays buffer is not allocated
-            (as it would be the case when the array was created using the
-            defautl constructor). In this case this method allocated memory.
             \throws SizeMissmatchError if allocated buffer and shape size do not
             match
-            \throws MemoryAllocationError if array buffer allocation fails
+            \throws MemoryNotAllocatedError if no memory is allocated
             \param s shape of the array
             */
-            void shape(const Shape &s);
+            void shape(const Shape &s)
+            {
+                check_allocation_state(this->buffer(),
+                        "void shape(const Shape &s)");
+                check_size_equal(this->buffer(),s,
+                        "void shape(const Shape &s)");
+                this->_shape = s;
+            }
 
             //-----------------------------------------------------------------
             /*! \brief get array shape
@@ -372,41 +428,7 @@ namespace utils {
             Return a constant reference to the array shape. 
             \return array shape const reference
             */
-            const Shape &shape() const
-            {
-                return _shape;
-            }
-
-            //-----------------------------------------------------------------
-            /*! \brief copy buffer to array
-
-            Copies the content of buffer b to the arrays buffer. If the buffer
-            holing the array data is not allocated new memory will be allocated
-            for it and the content of b is copied to the array buffer. 
-
-            If the array buffer is, however, already allocated the sizes of b
-            and the array buffer must match in order to copy the data from b to
-            the array buffer. If this is not the case an exception will be
-            thrown.
-            \throws SizeMissmatchError if size of b and array buffer size do not
-            match
-            \throws MemoryAllocationError if array buffer allocation fails
-            \param b reference to a Buffer object
-            */
-            void buffer(const BType<T,Allocator> &b);
-
-            //-----------------------------------------------------------------
-            /*! \brief move buffer to array
-
-            The content of buffer b will be moved to the arrays buffer avoiding
-            unnecessary memory allocation. If the buffer of the array is already
-            allocated the sizes of b and the array buffer must match. Otherwise
-            an exception will b thrown
-            \throws SizeMissmatchError if size of b and the array buffer do not
-            match
-            \param b r-value reference to the original buffer
-            */
-            void buffer(BType<T,Allocator> &&b);
+            const Shape &shape() const { return _shape; }
 
             //-----------------------------------------------------------------
             /*! \brief obtain buffer reference
@@ -437,7 +459,7 @@ namespace utils {
             */
             ARRAYTMP &operator +=(const T&v)
             {
-                for(size_t i=0;i<this->size();i++) (*this)[i] +=v;
+                for(T &a: *this) a+=v;
                 return *this;
             }
 
@@ -788,41 +810,7 @@ namespace utils {
             Returns true if the internal buffer of the array is allocated. 
             \return true if buffer is allocated, false otherwise
             */
-            bool is_allocated() const{
-                return _data.is_allocated();
-            }
-
-            //-----------------------------------------------------------------
-            /*! \brief get pointer to data
-
-            Returns a pointer to the arrays data. 
-            \return pointer to data
-            */
-            T *ptr(){ return _data.ptr(); }
-
-            //-----------------------------------------------------------------
-            /*! \brief get const pointer to data
-
-            Return a const pointer to the array data.
-            \return const pointer
-            */
-            const T* ptr() const { return _data.ptr(); }
-
-            //-----------------------------------------------------------------
-            /*! \brief get void pointer to data
-
-            Return a void pointer to the first element of the array data.
-            \return void pointer to data
-            */
-            void *void_ptr(){ return _data.void_ptr(); }
-
-            //-----------------------------------------------------------------
-            /*! \brief return const void pointer to data
-
-            Returns a const void pointer to the first element of the array data.
-            \return const void pointer
-            */
-            const void *void_ptr() const{ return _data.void_ptr(); }
+            bool is_allocated() const{ return this->_data.is_allocated(); }
 
             //-----------------------------------------------------------------
             /*! \brief iterator to first element
@@ -873,183 +861,19 @@ namespace utils {
 
     };
 
-    //=====================Constructors and destructors=========================
-    //default constructor
-    ARRAYTMPDEF ARRAYTMP::Array():
-        NumericObject(),
-        _shape(),
-        _data()
-    {}
+    //=====================non-member operators================================
 
-    //--------------------------------------------------------------------------
-    //copy constructor - allocate new memory and really copy the data
-    ARRAYTMPDEF ARRAYTMP::Array(const ARRAYTMP &a):
-        NumericObject(),
-        _shape(a._shape()),
-        _data(a._data())
-    { }
-
-    //--------------------------------------------------------------------------
-    ARRAYTMPDEF ARRAYTMP::Array(ARRAYTMP &&a):
-        NumericObject(std::move(a)),
-        _shape(std::move(a._shape)),
-        _data(std::move(a._data))
-    { }
-
-    //--------------------------------------------------------------------------
-    //Array construction from a shape and a buffer
-    ARRAYTMPDEF ARRAYTMP::Array(const Shape &s, const BType<T,Allocator> &b):
-        NumericObject(),
-        _shape(s)
-    {
-        EXCEPTION_SETUP("template<typename T,template <typename> class BType>"
-                        "Array<T,BType>::Array(const ArrayShape &s, "
-                        "const BType<T> &b):ArrayObject(s)");
-
-        //first we need to check if buffer and shape have matching sizes
-        if (s.size() != b.size()) {
-            EXCEPTION_INIT(SizeMissmatchError,"Size of shape and buffer objects do not match!");
-            EXCEPTION_THROW();
-        }
-
-        //creates a new buffer object
-        try{
-            _data = b;
-        }catch(MemoryAllocationError &error){
-            EXCEPTION_INIT(MemoryAllocationError,"Memory allocation for array failed!");
-            EXCEPTION_THROW();
-        }
-    }
-
-    //--------------------------------------------------------------------------
-    //implementation of an array constructor
-    ARRAYTMPDEF ARRAYTMP::Array(const Shape &s, const BType<T,Allocator> &b,
-            const String &n,const String &u,const String &d) : 
-        NumericObject(n,u,d),
-        _shape(s)
-    {
-        EXCEPTION_SETUP("template<typename T,template <typename> class BType>"
-                        "Array<T,BType>::Array(const Shape &s, const BType<T> &b,"
-                        "const String &n, const String &u,const String &d):ArrayObject(s)");
-
-        //first we need to check if buffer and shape have matching sizes
-        if (s.size() != b.size()) {
-            EXCEPTION_INIT(SizeMissmatchError,"Size of shape and buffer objects do not match!");
-            EXCEPTION_THROW();
-        }
-
-        //creates a new buffer object
-        try{
-            _data = b;
-        }catch(MemoryAllocationError &error){
-            EXCEPTION_INIT(MemoryAllocationError,"Memory allocation for array failed!");
-            EXCEPTION_THROW();
-        }
-
-    }
-
-    //--------------------------------------------------------------------------
-    //destructor for the array object
-    ARRAYTMPDEF ARRAYTMP::~Array() 
-    {
-        _data.free();
-    }
-
-
-
-    //===============================output operators==============================
     ARRAYTMPDEF std::ostream &operator<<(std::ostream &o,const ARRAYTMP &a)
     {
         o << "Array of shape ("<<a.shape()<<")"<<std::endl;
         return o;
     }
-
-    //======================Methods for data access and array manipulation======
-    ARRAYTMPDEF void ARRAYTMP::shape(const Shape &s)
-    {
-        EXCEPTION_SETUP("template<typename T,template<typename> class BType,"
-                "typename Allocator> void Array<T,BType,Allocator>::shape"
-                "(const Shape &s)");
-
-        if(this->_data.is_allocated())
-        {
-            if(this->_data.size() != s.size())
-            {
-                std::stringstream ss;
-                ss<<"Size of shape ("<<s.size()<<") and allocate buffer (";
-                ss<<this->_data.size()<<") do not match!";
-                EXCEPTION_INIT(SizeMissmatchError,ss.str());
-                EXCEPTION_THROW();
-            }
-        }
-        else
-        {
-            this->_data.allocate(s.size());
-        }
-       
-        //finally we can set the shape
-        this->_shape = s;
-    }
-
+   
     //-------------------------------------------------------------------------
-    ARRAYTMPDEF void ARRAYTMP::buffer(const BType<T,Allocator> &b) 
-    {
-        EXCEPTION_SETUP("template<typename T,template <typename> class "
-                "BType,typename Allocator> void Array<T,BType,Allocator>::"
-                "buffer(const BType<T,Allocator> &b)");
-
-
-        if(this->_data.is_allocated())
-        {
-            if(this->_data.size() != b.size())
-            {
-                std::stringstream ss;
-                ss<<"Size of new buffer ("<<b.size()<<") does not match";
-                ss<<"the original array buffer size ("<<this->_data.size();
-                ss<<")!";
-                EXCEPTION_INIT(SizeMissmatchError,ss.str());
-                EXCEPTION_THROW();
-            }
-        }
-        
-        this->_data = b;
-    }
-
-    //-------------------------------------------------------------------------
-    ARRAYTMPDEF void ARRAYTMP::buffer(BType<T,Allocator> &&b) 
-    {
-        EXCEPTION_SETUP("template<typename T,template <typename> class "
-                "BType,typename Allocator> void Array<T,BType,Allocator>::"
-                "buffer(BType<T,Allocator> &&b)");
-
-
-        if(this->_data.is_allocated())
-        {
-            if(this->_data.size() != b.size())
-            {
-                std::stringstream ss;
-                ss<<"Size of new buffer ("<<b.size()<<") does not match";
-                ss<<"the original array buffer size ("<<this->_data.size();
-                ss<<")!";
-                EXCEPTION_INIT(SizeMissmatchError,ss.str());
-                EXCEPTION_THROW();
-            }
-        }
-        
-        this->_data = std::move(b);
-    }
-
-
-
-    //===============================Comparison operators=======================
     ARRAYTMPDEF bool operator==(const ARRAYTMP &b1, const ARRAYTMP &b2) 
     {
-        const Shape &as = b1.shape();
-        const Shape &bs = b2.shape();
-        const BType<T,Allocator> &ad = b1.buffer();
-        const BType<T,Allocator> &bd = b2.buffer();
-
-        if ((as == bs) && (ad == bd)) return true;
+        if((b1.shape() == b2.shape()) &&
+           (b1.buffer() == b2.buffer())) return true;
 
         return false;
     }
@@ -1061,92 +885,6 @@ namespace utils {
             return true;
         }
         return false;
-    }
-
-    //==============================Assignment operators=======================
-    ARRAYTMPDEF ARRAYTMP &ARRAYTMP::operator =(const T &v)
-    {
-        EXCEPTION_SETUP("template<typename T,template <typename> class BType,"
-                "typename Allocator> Array<T,BType,Allocator> &Array<T,"
-                "BType,Allocator>::operator =(const T &v)");
-
-        if(!this->is_allocated())
-        {
-            EXCEPTION_INIT(MemoryAccessError,"Array buffer not allocated!");
-            EXCEPTION_THROW();
-        }
-
-        for (size_t i = 0; i < this->shape().size(); i++)  (*this)[i] = v;
-
-        return *this;
-    }
-
-    //--------------------------------------------------------------------------
-    ARRAYTMPDEF template<typename U> ARRAYTMP &ARRAYTMP:: operator=(const U &v)
-    {
-        EXCEPTION_SETUP("template<typename T,template <typename> class BType,"
-                "typename Allocator> template<typename U> Array<T,BType,"
-                "Allocator> &Array<T,BType,Allocator>::operator=(const U &v)");
-
-        if(!this->is_allocated())
-        {
-            EXCEPTION_INIT(MemoryAccessError,"Array buffer not allocated!");
-            EXCEPTION_THROW();
-        }
-
-        try{
-            _data = convert_type<T>(v);
-        }catch(...){
-            EXCEPTION_INIT(AssignmentError,"Object assignment failed!");
-            EXCEPTION_THROW();
-        }
-
-        return *this;
-    }
-
-    //--------------------------------------------------------------------------
-    ARRAYTMPDEF ARRAYTMP &ARRAYTMP::operator =(const ARRAYTMP &v) 
-    {
-        EXCEPTION_SETUP("template<typename T,template <typename> class BType>"
-                        "Array<T,BType> &Array<T,BType>::operator ="
-                        "(const Array<T,BType> &v)");
-
-        if(this == &v) return *this;
-
-        this->_data = v._data;
-        this->_shape = v._shape;
-
-        return *this;
-    }
-
-    //--------------------------------------------------------------------------
-    ARRAYTMPDEF ARRAYTMP &ARRAYTMP::operator=(ARRAYTMP &&a)
-    {
-        if (this == &a) return *this;
-        
-        this->_data = std::move(a._data);
-        this->_shape = std::move(a._shape);
-
-        return *this;
-    }
-
-    //--------------------------------------------------------------------------
-    ARRAYTMPDEF template<typename U> ARRAYTMP &ARRAYTMP::operator=
-        (const Array<U,BType,Allocator> &v) 
-    {
-        EXCEPTION_SETUP("template<typename T,template <typename> class BType>"
-                        "template<typename U> Array<T,BType> &"
-                        "Array<T,BType>::operator=(const Array<U,BType> &v)");
-
-        try{
-            this->reset();
-            this->shape(v.shape());
-            this->allocate();
-            for(size_t i=0;i<this->size();i++) (*this)[i] = convert_type<T>(v.buffer()[i]);
-        }catch(...){
-            EXCEPTION_INIT(AssignmentError,"Object assignment failed!");
-            EXCEPTION_THROW();
-        }
     }
 
     //====================binary addition operators=================================
@@ -1173,11 +911,9 @@ namespace utils {
         EXCEPTION_SETUP("template<typename T,template <typename> class BType>"
                         "Array<T,BType> operator+(const Array<T,BType> &a,"
                         "const Array<T,BType> &b)");
-
-        if (a.shape() != b.shape()) {
-            EXCEPTION_INIT(ShapeMissmatchError,"shapes of arrays a and b do not match!");
-            EXCEPTION_THROW();
-        }
+        
+        check_shape_equal(a.shape(),b.shape(),
+        "ARRAYTMPDEF ARRAYTMP operator+(const ARRAYTMP &a, const ARRAYTMP &b)");
 
         Array<T,BType,Allocator> tmp(a.shape());
         for (size_t i = 0; i < a.shape().size(); i++) tmp[i] = a[i] + b[i];

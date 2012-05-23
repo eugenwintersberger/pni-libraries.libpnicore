@@ -131,6 +131,12 @@ std::ostream &operator<<(std::ostream &o,const KeyError &e){
 	return e.print(o);
 }
 
+//------------------------------------------------------------------------------
+std::ostream &operator<<(std::ostream &o,const MemoryNotAllocatedError &e)
+{
+    return e.print(o);
+}
+
 //end of namespace
 }
 }
