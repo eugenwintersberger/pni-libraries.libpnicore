@@ -39,7 +39,7 @@ namespace utils{
     The ArrayView class provides a view on the part of an array. No new memory
     is allocated. 
     */
-    template<typename T,typename ATYPE> class ArrayView
+    template<typename ATYPE> class ArrayView
     {
         private:
             ATYPE &_parray; //!< parent array from which to draw data
@@ -89,11 +89,11 @@ namespace utils{
             original array. 
             \param index view index
             */
-            template<template<typename,typename> class CONT,
+            template<template<typename,typename...> class CONT,
                      typename IT,
-                     typename A
+                     typename ...OPTS
                     >
-                void _set_index(const CONT<IT,A> &index) const
+                void _set_index(const CONT<IT,OPTS...> &index) const
             {
                 //compute the index whith full dimensionality
                 size_t j=0;
@@ -119,11 +119,11 @@ namespace utils{
 
         public:
             //====================public types=================================
-            typedef T value_type; //!< type of the data values
-            typedef std::shared_ptr<ArrayView<T,ATYPE> > shared_ptr; //!< shared pointer type
-            typedef std::unique_ptr<ArrayView<T,ATYPE> > unique_ptr; //!< unique pointer type
-            typedef Iterator<ArrayView<T,ATYPE>,0> iterator; //!< iterator type
-            typedef Iterator<ArrayView<T,ATYPE>,1> const_iterator; //!< const iterator type
+            typedef typename ATYPE::value_type value_type; //!< type of the data values
+            typedef std::shared_ptr<ArrayView<ATYPE> > shared_ptr; //!< shared pointer type
+            typedef std::unique_ptr<ArrayView<ATYPE> > unique_ptr; //!< unique pointer type
+            typedef Iterator<ArrayView<ATYPE>,0> iterator; //!< iterator type
+            typedef Iterator<ArrayView<ATYPE>,1> const_iterator; //!< const iterator type
             //=============constructors and destructor=========================
             ArrayView() = delete;
 
@@ -176,7 +176,7 @@ namespace utils{
 
             //-----------------------------------------------------------------
             //! copy constructor
-            ArrayView(const ArrayView<T,ATYPE> &o):
+            ArrayView(const ArrayView<ATYPE> &o):
                 _parray(o._parray),
                 _shape(o._shape),
                 _offset(o._offset),
@@ -187,7 +187,7 @@ namespace utils{
 
             //-----------------------------------------------------------------
             //! move constructor
-            ArrayView(ArrayView<T,ATYPE> &&o):
+            ArrayView(ArrayView<ATYPE> &&o):
                 _parray(o._parray),
                 _shape(std::move(o._shape)),
                 _offset(std::move(o._offset)),
@@ -197,7 +197,7 @@ namespace utils{
             {}
             //====================assignment operators=========================
             //! copy assignment
-            ArrayView<T,ATYPE> &operator=(const ArrayView<T,ATYPE> &o)
+            ArrayView<ATYPE> &operator=(const ArrayView<ATYPE> &o)
             {
                 if(this == &o) return *this;
                 this->_parray = o._parray;
@@ -211,7 +211,7 @@ namespace utils{
 
             //-----------------------------------------------------------------
             //! move assignment
-            ArrayView<T,ATYPE> &operator=(ArrayView<T,ATYPE> &&o)
+            ArrayView<ATYPE> &operator=(ArrayView<ATYPE> &&o)
             {
                 if(this == &o) return *this;
                 this->_parray = o._parray;
@@ -233,11 +233,11 @@ namespace utils{
             \param index container with multidimensional index
             \return reference to value at index
             */
-            template<template<typename,typename> class CONT,
+            template<template<typename,typename...> class CONT,
                      typename IT,
-                     typename A
+                     typename ...OPTS 
                     >
-                T &operator()(const CONT<IT,A> &index)
+                ArrayView<ATYPE>::value_type &operator()(const CONT<IT,OPTS...> &index)
             {
 
                 //transform the local view index to a global index for the
@@ -259,11 +259,11 @@ namespace utils{
             \param index container with multidimensional index
             \return value at index
             */
-            template<template<typename,typename> class CONT,
+            template<template<typename,typename...> class CONT,
                      typename IT,
-                     typename A
+                     typename ...OPTS
                     >
-                T operator()(const CONT<IT,A> &index) const
+                ArrayView<ATYPE>::value_type operator()(const CONT<IT,OPTS...> &index) const
             {
                 //transform the local view index to a global index for the
                 //original array
@@ -289,7 +289,7 @@ namespace utils{
             \return reference to the value at multidimensional index
              */
             template<typename ...ITypes> 
-                T &operator()(size_t &i,ITypes ...indices)
+                ArrayView<ATYPE>::value_type &operator()(size_t &i,ITypes ...indices)
             {
                 //store the use provided indices in a vector
                 std::vector<size_t> index;
@@ -313,7 +313,7 @@ namespace utils{
             \return value at multidimensional index
              */
             template<typename ...ITypes> 
-                T operator()(size_t &i,ITypes ...indices) const
+                ArrayView<ATYPE>::value_type operator()(size_t &i,ITypes ...indices) const
             {
                 std::vector<size_t> index;
 
@@ -352,7 +352,7 @@ namespace utils{
             \param i linear index of the element
             \return reference to the value at index i 
             */
-            T &operator[](size_t i)
+            ArrayView<ATYPE>::value_type &operator[](size_t i)
             {
                 Shape s = this->shape();
                 auto index = s.template index<std::vector<size_t> >(i);
@@ -369,7 +369,7 @@ namespace utils{
             \param i linear index of the element
             \return value at index i 
             */
-            T operator[](size_t i) const
+            ArrayView<ATYPE>::value_type operator[](size_t i) const
             {
                 Shape s = this->shape();
                 auto index = s.template index<std::vector<size_t> >(i);
@@ -393,9 +393,9 @@ namespace utils{
             Return an interator to the first element of the array view. 
             \return iterator to the first element
             */
-            ArrayView<T,ATYPE>::iterator begin()
+            ArrayView<ATYPE>::iterator begin()
             {
-                return ArrayView<T,ATYPE>::iterator(this,0);
+                return ArrayView<ATYPE>::iterator(this,0);
             }
 
             //-----------------------------------------------------------------
@@ -404,9 +404,9 @@ namespace utils{
             Return an iterator to the last element of the array view.
             \return iterator to last element
             */
-            ArrayView<T,ATYPE>::iterator end() 
+            ArrayView<ATYPE>::iterator end() 
             {
-                return ArrayView<T,ATYPE>::iterator(this,this->size());
+                return ArrayView<ATYPE>::iterator(this,this->size());
             }
            
             //-----------------------------------------------------------------
@@ -415,9 +415,9 @@ namespace utils{
             Return an const interator to the first element of the array view. 
             \return iterator to the first element
             */
-            ArrayView<T,ATYPE>::const_iterator begin() const
+            ArrayView<ATYPE>::const_iterator begin() const
             {
-                return ArrayView<T,ATYPE>::const_iterator(this,0);
+                return ArrayView<ATYPE>::const_iterator(this,0);
             }
 
             //-----------------------------------------------------------------
@@ -426,15 +426,15 @@ namespace utils{
             Return an const iterator to the last element of the array view.
             \return iterator to last element
             */
-            ArrayView<T,ATYPE>::const_iterator end() const
+            ArrayView<ATYPE>::const_iterator end() const
             {
-                return ArrayView<T,ATYPE>::const_iterator(this,this->size());
+                return ArrayView<ATYPE>::const_iterator(this,this->size());
             }
     };
 
     //============implementation of private member functions====================
-    template<typename T,typename ATYPE>
-    size_t ArrayView<T,ATYPE>::_get_effective_rank(const Buffer<size_t> &s)
+    template<typename ATYPE>
+    size_t ArrayView<ATYPE>::_get_effective_rank(const Buffer<size_t> &s)
     {
         size_t rank=0;
         for(size_t i=0;i<s.size();i++)
