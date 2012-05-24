@@ -50,6 +50,7 @@
 #include "TypeIDMap.hpp"
 #include "type_conversion.hpp"
 #include "Iterator.hpp"
+#include "policies/InplaceArithmetics.hpp"
 
 namespace pni {
 namespace utils {
@@ -82,24 +83,13 @@ namespace utils {
     //! object while still being used in the array. Therefore the copy process is
     //! absolutely necessary.
 
-    template<typename STORAGE>
-    class DynamicArray
+    template<typename T,typename STORAGE=Buffer<T,NewAllocator> > class DynamicArray
     {
         private:
             Shape _shape;   //!< shape of the array holding thed ata
-            STORAGE _data _data; //!< Buffer object holding the data
+            STORAGE _data; //!< Buffer object holding the data
 
             //==================private methods================================
-            /*! \brief throws if array is not allocated
-            
-            A static class method that throws an exception if the array is not 
-            allocated.
-            \throws MemoryAccessError if array is not allocated
-            \param a reference to an array
-            */
-            static void _throw_if_not_allocated(const Array<STORAGE> &a);
-        
-            //-----------------------------------------------------------------
             /*! \brief setup view parameters from variadic template
 
             Private member function to setup the parameters for an ArrayView
@@ -171,6 +161,19 @@ namespace utils {
             }
 
         protected:
+        public:
+            //================public types=====================================
+            typedef T value_type;  //!< type of an array element
+            typedef STORAGE storage_type; //!< type of the buffer object
+            typedef std::shared_ptr<DynamicArray<T,STORAGE> > shared_ptr; //!< shared pointer to an Array<T>
+            typedef std::unique_ptr<DynamicArray<T,STORAGE> > unique_ptr; //!< unique pointer type
+            typedef ArrayView<DynamicArray<T,STORAGE> > view_type; //!< type for array view
+            typedef typename STORAGE::iterator iterator; //!< iterator type
+            typedef typename STORAGE::const_iterator const_iterator; //!< const iterator type
+            
+            //==================public members=================================
+            static const TypeID type_id = TypeIDMap<T>::type_id; //!< type ID of the element type
+            static const size_t value_size = sizeof(T); //!< size of the element type
             /*! \brief protected constructor
 
             This protected constructor is used by the ArrayFactory templates. It
@@ -181,23 +184,9 @@ namespace utils {
             \param buffer buffer object
             */
             DynamicArray(const Shape &s,STORAGE &&buffer):
-                NumericObject(),
                 _shape(s),
                 _data(std::move(buffer))
             { }
-        public:
-            //================public types=====================================
-            typedef typename STORAGE::value_type value_type;  //!< type of an array element
-            typedef STORAGE storage_type; //!< type of the buffer object
-            typedef std::shared_ptr<DynamicArray<STORAGE> > shared_ptr; //!< shared pointer to an Array<T>
-            typedef std::unique_ptr<DynamicArray<STORAGE> > unique_ptr; //!< unique pointer type
-            typedef ArrayView<T,DynamicArray<STORAGE> > view_type; //!< type for array view
-            typedef typename STORAGE::iterator iterator; //!< iterator type
-            typedef typename STORAGE::const_iterator const_iterator; //!< const iterator type
-            
-            //==================public members=================================
-            static const TypeID type_id = TypeIDMap<typename STORAGE::value_type>::type_id; //!< type ID of the element type
-            static const size_t value_size = sizeof(typename STORAGE::value_type); //!< size of the element type
 
             //=================constructors and destructor=====================
             /*! \brief default constructor
@@ -218,14 +207,14 @@ namespace utils {
             and the content of the original array is copied.
             \throws MemoryAllocationError if memory allocation fails
             */
-            DynamicArray(const DynamicArray<STORAGE> &a):
+            DynamicArray(const DynamicArray<T,STORAGE> &a):
                 _shape(a._shape),
                 _data(a._data)
             { }
 
             //-----------------------------------------------------------------
             //! move constructor
-            DynamicArray(DynamicArray<STORAGE> &&a)
+            DynamicArray(DynamicArray<T,STORAGE> &&a):
                 _shape(std::move(a._shape)),
                 _data(std::move(a._data))
             { }
@@ -251,17 +240,6 @@ namespace utils {
             }
 
             //-----------------------------------------------------------------
-            //! constructor
-            DynamicArray(const Shape &s,const STORAGE &b)
-                _shape(s),
-                _data(b)
-            {
-                check_equal_size(s,b,
-                        "DynamicArray(const Shape &s,const BType<T,Allocator> &b)");
-            }
-
-
-            //-----------------------------------------------------------------
             //! destructor
             ~DynamicArray() { _data.free(); }
 
@@ -271,7 +249,7 @@ namespace utils {
             //! Here a value of a native type will be assigned to the Array.
             //! The value is assigned to all elements of the array. Thus, this
             //! operator can be used for a quick initialization of an array with numbers.
-            DynamicArray<STORAGE> &operator =(const value_type &v)
+            DynamicArray<T,STORAGE> &operator =(const T &v)
             {
                 check_allocation_state(this->buffer(),
                                        "ARRAYTMP &operator =(const T&)");
@@ -288,12 +266,12 @@ namespace utils {
             \throws TypeError if conversion fails.
             \param v value of type U
             */
-            template<typename U> DynamicArray<STORAGE> &operator=(const U &v)
+            template<typename U> DynamicArray<T,STORAGE> &operator=(const U &v)
             {
                 check_allocation_state(this->buffer(),
                         "template<typename U> ARRAYTMP &operator=(const U &v)");
 
-                for(value_type &a: this->_data) a = convert_type<value_type>(v);
+                for(T &a: this->_data) a = convert_type<T>(v);
                 return *this;
             }
 
@@ -305,7 +283,7 @@ namespace utils {
             //! If this is not the case an exception will be raised. The content of the
             //! array on the r.h.s of the operator is copied to the array on the l.h.s.
             //! of the operator. No memory allocation is done - only copying.
-            DynamicArray<STORAGE> &operator =(const DynamicArray<STORAGE> &a)
+            DynamicArray<T,STORAGE> & operator =(const DynamicArray<T,STORAGE> &a)
             {
                 if(this == &a) return *this;
 
@@ -317,7 +295,7 @@ namespace utils {
 
             //-----------------------------------------------------------------
             //! move assignemnt operator
-            DynamicArray<STORAGE> &operator =(DynamicArray<STORAGE> &&a)
+            DynamicArray<T,STORAGE> & operator =(DynamicArray<T,STORAGE> &&a)
             {
                 if (this == &a) return *this;
                 
@@ -335,16 +313,21 @@ namespace utils {
             \throws ShapeMissmatchError if array and view shape do not match
     
             */
-            template<typename USTORAGE> DynamicArray<STORAGE> &operator=
-            (const ArrayView<typename STORAGE::value_type,
-                             DynamicArray<T,> > &view)
+            template<typename U,
+                     typename USTORAGE,
+                     template<typename,typename> class ATYPE
+                    >
+            DynamicArray<T,STORAGE> &operator=
+            (const ArrayView<ATYPE<U,USTORAGE> > &view)
             {
                 check_equal_shape(this->shape(),view.shape(),
                     "template<template<typename,typename> class UBUFFER,"
                     "typename UALLOCATOR>Array<T,BType,Allocator> &operator="
                     "(const ArrayView<T,Array<T,UBUFFER,UALLOCATOR> > &view)");
 
-                for(size_t i=0;i<this->size();i++) (*this)[i] = view[i];
+                for(size_t i=0;i<this->size();i++) 
+                    (*this)[i] = convert_type<T>(view[i]);
+
                 return *this;
             }
 
@@ -387,7 +370,7 @@ namespace utils {
             Return a const reference to the arrays buffer object.
             \return buffer reference
             */
-            const BType<T,Allocator> &buffer() const { return _data; }
+            const STORAGE &buffer() const { return this->_data; }
 
             //-----------------------------------------------------------------
             /*! \brief get size of array
@@ -408,9 +391,10 @@ namespace utils {
             array will be allocated.
             \param v rhs argument of the operator
             */
-            ARRAYTMP &operator +=(const T&v)
+            template<typename U>
+            DynamicArray<T,STORAGE> &operator +=(const U &v)
             {
-                for(T &a: *this) a+=v;
+                InplaceArithmetics::add_inplace(*this,v);
                 return *this;
             }
 
@@ -423,161 +407,26 @@ namespace utils {
             \throws ShapeMissmatchError if array shapes do not match
             \param a rhs argment of the operator
             */
-            ARRAYTMP &operator +=(const ARRAYTMP &a)
+            template<typename U,
+                     typename USTORAGE,
+                     template<typename,typename> class ATYPE
+                    >
+            DynamicArray<T,STORAGE> &operator +=(const ATYPE<U,USTORAGE> &a)
             {
-                for(size_t i=0;i<this->size();i++) (*this)[i] += a[i];
+                InplaceArithmetics::add_inplace(*this,a);
                 return *this;
             }
 
-            //-----------------------------------------------------------------
-            /*! \brief unary scalar subtraction 
-
-            Subtracts a single value of type T on the r.h.s. of the operator
-            to the array on the l.h.s. The operation is performed in-place without
-            creation of a temporary array.
-            */
-            ARRAYTMP &operator -=(const T&v)
+            template<typename U,
+                     typename USTORAGE,
+                     template<typename,typename> class ATYPE
+                    >
+            DynamicArray<T,STORAGE> &
+            operator +=(const ArrayView<ATYPE<U,USTORAGE> > &view)
             {
-                for(size_t i=0;i<this->size();i++) (*this)[i] -= v;
+                InplaceArithmetics::add_inplace(*this,view);
                 return *this;
             }
-
-            //-----------------------------------------------------------------
-            /*! \brief unary array subtraction
-
-            Subtracts the  array on the r.h.s. of the operator from that on the
-            l.h.s. The operation is performed in-place without allocation of a
-            temporary array. The shapes of the arrays must match otherwise a
-            ShapeMissmatchError exception will be raised.
-            */
-            ARRAYTMP &operator -=(const ARRAYTMP&a)
-            {
-                for(size_t i=0;i<this->size();i++) (*this)[i] -=a[i];
-                return *this;
-            }
-
-            //-----------------------------------------------------------------
-            /*! \brief unary scalar multiplication
-
-            Multiplies the single value of type T on the r.h.s. of the operator
-            with all elements of the array on the l.h.s. The operation is performed
-            in-place without allocation of a temporary array.
-            */
-            ARRAYTMP &operator *=(const T&v)
-            {
-                for(size_t i=0;i<this->size();i++) (*this)[i] *= v;
-                return *this;
-            }
-
-            //-----------------------------------------------------------------
-            /*! \brief unary array multiplication 
-
-            Element wise multiplication of the array on the r.h.s of the operator
-            with the array of the l.h.s. The operation is stored in-place without
-            allocation of a temporary array. The shapes of the arrays must match
-            otherwise a ShapeMissmatchError exception will be raised.
-            */
-            ARRAYTMP & operator *=(const ARRAYTMP &a)
-            {
-                for(size_t i=0;i<this->size();i++) (*this)[i] *= a[i];
-                return *this;
-            }
-            
-            //-----------------------------------------------------------------
-            /*! \brief unary scalar division 
-
-            Divide the elements of the array on the l.h.s. of the operator by the
-            single value of type T on the r.h.s. THe operation is performed in-place
-            without allocation of a temporary array.
-            */
-            ARRAYTMP &operator /=(const T&v)
-            {
-                for(size_t i=0;i<this->size();i++) (*this)[i] /= v;
-                return *this;
-            }
-
-            //-----------------------------------------------------------------
-            /*! \brief unary array division
-
-            Element wise division of the array on the l.h.s. with the array on the
-            r.h.s. The operation is done in-place without allocation of a temporary array.
-            The arrays must match in shape otherwise a ShapeMissmatchError exception will be raised.
-            */
-            ARRAYTMP & operator /=(const ARRAYTMP &a)
-            {
-                for(size_t i=0;i<this->size();i++) (*this)[i] /=a[i];
-                return *this;
-            }
-
-
-            //================Binary arithemtic operators======================
-            //overloaded simple binary arithmetic operators
-            //! binary + operator for arrays
-
-            //! This version of the operator implements Array<T> + T operations.
-            //! During the operation a temporary array object is created.
-            friend ARRAYTMP operator+<> (const ARRAYTMP&, const T&);
-            //overloaded simple binary arithmetic operators
-            //! binary + operator for arrays
-
-            //! This version of the operator implements T + Array<T> operations.
-            //! During the operation a temporary array object is created.
-            friend ARRAYTMP operator+<> (const T&, const ARRAYTMP&);
-            //overloaded simple binary arithmetic operators
-            //! binary + operator for arrays
-
-            //! This version of the operator implements Array<T> + Array<T> operations.
-            //! During the operation a temporary array object is created.
-            friend ARRAYTMP operator+<> (const ARRAYTMP&, const ARRAYTMP&);
-
-            //! binary - operator for arrays
-
-            //! This version of the operator implements Array<T> - T operations.
-            //! During the operation a temporary array object is created.
-            friend ARRAYTMP operator-<> (const ARRAYTMP&, const T&);
-            //! binary - operator for arrays
-
-            //! This version of the operator implements Array<T> - Array<T> operations.
-            //! During the operation a temporary array object is created.
-            friend ARRAYTMP operator-<> (const ARRAYTMP&, const ARRAYTMP&);
-            //! binary - operator for arrays
-
-            //! This version of the operator implements T - Array<T> operations.
-            //! During the operation a temporary array object is created.
-            friend ARRAYTMP operator-<> (const T&, const ARRAYTMP&);
-
-            //! binary * operator for arrays
-
-            //! This version of the operator implements Array<T> * T operations.
-            //! During the operation a temporary array object is created.
-            friend ARRAYTMP operator*<> (const ARRAYTMP&, const T&);
-            //! binary * operator for arrays
-
-            //! This version of the operator implements Array<T> * Array<T> operations.
-            //! During the operation a temporary array object is created.
-            friend ARRAYTMP operator*<> (const ARRAYTMP&, const ARRAYTMP&);
-            //! binary * operator for arrays
-
-            //! This version of the operator implements T * Array<T> operations.
-            //! During the operation a temporary array object is created.
-            friend ARRAYTMP operator*<> (const T&, const ARRAYTMP&);
-
-            //! binary / operator for arrays
-
-            //! This version of the operator implements Array<T> / T operations.
-            //! During the operation a temporary array object is created.
-            friend ARRAYTMP operator /<> (const ARRAYTMP&, const T&);
-            //! binary / operator for arrays
-
-            //! This version of the operator implements Array<T> / Array<T> operations.
-            //! During the operation a temporary array object is created.
-            friend ARRAYTMP operator /<> (const ARRAYTMP&, const ARRAYTMP&);
-            //! binary / operator for arrays
-
-            //! This version of the operator implements T / Array<T> operations.
-            //! During the operation a temporary array object is created.
-            friend ARRAYTMP operator /<> (const T&, const ARRAYTMP&);
-
 
             //=============operators and methods to access array data==========
             /*! \brief get referece to element i
@@ -705,7 +554,7 @@ namespace utils {
             match the rank of the array.
             */
             template<typename ...STypes>
-                Array<T,BType,Allocator>::view_type operator()
+                DynamicArray<T,STORAGE>::view_type operator()
                 (const Slice &s,STypes ...slices)
             {
                 std::vector<size_t> offset;
@@ -730,38 +579,9 @@ namespace utils {
                 _add_shape(shape,s);
                 _slice_setup(offset,stride,shape,slices...);
                 
-                return Array<T,BType,Allocator>::view_type(*this,shape,offset,stride);
+                return DynamicArray<T,STORAGE>::view_type(*this,shape,offset,stride);
 
             }
-
-            //=====================comparison operators========================
-            /*! \brief equality between arrays
-
-            Tow arrays are considered equal if they coincide in shape and data 
-            content.
-            */
-            friend bool operator==<> (const ARRAYTMP &b1, const ARRAYTMP &b2);
-
-            //-----------------------------------------------------------------
-            /*! inequality between arrays
-
-            Tow arrays are considered different if they have different shape or
-            content.
-            */
-            friend bool operator!=<> (const ARRAYTMP &b1, const ARRAYTMP &b2);
-
-            //-----------------------------------------------------------------
-            //! output operator for console output
-            friend std::ostream &operator<<<> (std::ostream &o,
-                                               const ARRAYTMP &a);
-
-            //-----------------------------------------------------------------
-            /*! \brief check allocation state
-
-            Returns true if the internal buffer of the array is allocated. 
-            \return true if buffer is allocated, false otherwise
-            */
-            bool is_allocated() const{ return this->_data.is_allocated(); }
 
             //-----------------------------------------------------------------
             /*! \brief iterator to first element
@@ -769,9 +589,9 @@ namespace utils {
             Returns a non-const iterator to the first element in the array.
             \return iterator to first element
             */
-            ARRAYTMP::iterator begin()
+            DynamicArray<T,STORAGE>::iterator begin()
             {
-                return ARRAYTMP::iterator(this,0);
+                return this->_data.begin();
             }
 
             //-----------------------------------------------------------------
@@ -780,9 +600,9 @@ namespace utils {
             Returns a non-const iterator to the last element in the array. 
             \return iterator to last element
             */
-            ARRAYTMP::iterator end()
+            DynamicArray<T,STORAGE>::iterator end()
             {
-                return ARRAYTMP::iterator(this,this->size());
+                return this->_data.end();
             }
 
             //-----------------------------------------------------------------
@@ -791,9 +611,9 @@ namespace utils {
             Returns a const-iterator to the first element in the array.
             \return iterator to first element
             */
-            ARRAYTMP::const_iterator begin() const
+            DynamicArray<T,STORAGE>::const_iterator begin() const
             {
-                return ARRAYTMP::const_iterator(this,0);
+                return this->_data.begin();
             }
 
             //-----------------------------------------------------------------
@@ -802,26 +622,27 @@ namespace utils {
             Returns a const-iterator to the last element in the array.
             \return iterator to last element
             */
-            ARRAYTMP::const_iterator end() const
+            DynamicArray<T,STORAGE>::const_iterator end() const
             {
-                return ARRAYTMP::const_iterator(this,this->size());
+                return this->_data.end();
             }
 
-
-            friend class ArrayFactory<T,BType,Allocator>;
 
     };
 
     //=====================non-member operators================================
 
-    ARRAYTMPDEF std::ostream &operator<<(std::ostream &o,const ARRAYTMP &a)
+    template<typename T,typename STORAGE>
+    std::ostream &operator<<(std::ostream &o,const DynamicArray<T,STORAGE> &a)
     {
-        o << "Array of shape ("<<a.shape()<<")"<<std::endl;
+        o << "Dynamic Array of shape ("<<a.shape()<<")"<<std::endl;
         return o;
     }
    
     //-------------------------------------------------------------------------
-    ARRAYTMPDEF bool operator==(const ARRAYTMP &b1, const ARRAYTMP &b2) 
+    template<typename T,typename STORAGE>
+    bool operator==(const DynamicArray<T,STORAGE> &b1, 
+                    const DynamicArray<T,STORAGE> &b2) 
     {
         if((b1.shape() == b2.shape()) &&
            (b1.buffer() == b2.buffer())) return true;
@@ -830,7 +651,9 @@ namespace utils {
     }
 
     //-------------------------------------------------------------------------
-    ARRAYTMPDEF bool operator!=(const ARRAYTMP &b1, const ARRAYTMP &b2) 
+    template<typename T,typename STORAGE>
+    bool operator!=(const DynamicArray<T,STORAGE> &b1, 
+                    const DynamicArray<T,STORAGE> &b2) 
     {
         if (!(b1 == b2)) {
             return true;
@@ -838,188 +661,8 @@ namespace utils {
         return false;
     }
 
-    //====================binary addition operators=================================
-    ARRAYTMPDEF ARRAYTMP operator+(const ARRAYTMP &a, const T &b) 
-    {
-        ARRAYTMP tmp(a.shape());
-        for (size_t i = 0; i < a.shape().size(); i++)  tmp[i] = a[i] + b;
-
-        return tmp;
-    }
-
-    //------------------------------------------------------------------------------
-    ARRAYTMPDEF ARRAYTMP operator+(const T &a, const ARRAYTMP &b) 
-    {
-        EXCEPTION_SETUP("template<typename T,template <typename> class BType>"
-                        "Array<T,BType> operator+(const T &a,"
-                        "const Array<T,BType> &b)");
-        return b + a;
-    }
-
-    //------------------------------------------------------------------------------
-    ARRAYTMPDEF ARRAYTMP operator+(const ARRAYTMP &a, const ARRAYTMP &b) 
-    {
-        EXCEPTION_SETUP("template<typename T,template <typename> class BType>"
-                        "Array<T,BType> operator+(const Array<T,BType> &a,"
-                        "const Array<T,BType> &b)");
-        
-        check_shape_equal(a.shape(),b.shape(),
-        "ARRAYTMPDEF ARRAYTMP operator+(const ARRAYTMP &a, const ARRAYTMP &b)");
-
-        Array<T,BType,Allocator> tmp(a.shape());
-        for (size_t i = 0; i < a.shape().size(); i++) tmp[i] = a[i] + b[i];
-
-        return tmp;
-    }
-
-    //=================Binary subtraction operators=================================
-    ARRAYTMPDEF ARRAYTMP operator-(const ARRAYTMP &a, const T &b) 
-    {
-        ARRAYTMP tmp(a.shape());
-
-        for (size_t i = 0; i < a.shape().size(); i++)  tmp[i] = a[i] - b;
-
-        return tmp;
-    }
-
-    //------------------------------------------------------------------------------
-    ARRAYTMPDEF ARRAYTMP operator-(const T &a,const ARRAYTMP &b)
-    {
-        ARRAYTMP tmp(b.shape());
-
-        for (size_t i = 0; i < b.shape().size(); i++) tmp[i] = a - b[i];
-
-        return tmp;
-
-    }
-
-    //------------------------------------------------------------------------------
-    ARRAYTMPDEF ARRAYTMP operator-(const ARRAYTMP &a, const ARRAYTMP &b) 
-    {
-        EXCEPTION_SETUP("template<typename T,template <typename> class BType>"
-                        "Array<T,BType> operator-(const Array<T,BType> &a,"
-                        "const Array<T,BType> &b)");
-
-        if (a.shape() != b.shape()) 
-        {
-            EXCEPTION_INIT(ShapeMissmatchError,"shapes of arrays a and b do not match!");
-            EXCEPTION_THROW();
-        }
-
-        ARRAYTMP tmp(a.shape());
-
-        for (size_t i = 0; i < a.shape().size(); i++) tmp[i] = a[i] - b[i];
-
-        return tmp;
-    }
-
-    //==================Binary multiplication operators=============================
-    ARRAYTMPDEF ARRAYTMP operator*(const ARRAYTMP &a, const T &b) 
-    {
-        ARRAYTMP tmp(a.shape());
-
-        for (size_t i = 0; i < a.shape().size(); i++) tmp[i] = a[i] * b;
-
-        return tmp;
-    }
-
-    //------------------------------------------------------------------------------
-    ARRAYTMPDEF ARRAYTMP operator*(const T &a, const ARRAYTMP &b) 
-    {
-        ARRAYTMP tmp(b.shape());
-
-        for (size_t i = 0; i < b.shape().size(); i++) tmp[i] = b[i] * a;
-
-        return tmp;
-
-    }
-
-    //------------------------------------------------------------------------------
-    ARRAYTMPDEF ARRAYTMP operator*(const ARRAYTMP &a, const ARRAYTMP &b) 
-    {
-        EXCEPTION_SETUP("template<typename T,template <typename> class BType>"
-                        "Array<T,BType> operator*(const Array<T,BType> &a,"
-                        "const Array<T,BType> &b)");
-
-        if (a.shape() != b.shape()) {
-            EXCEPTION_INIT(ShapeMissmatchError,"shapes of arrays a and b do not match!");
-            EXCEPTION_THROW();
-        }
-        ARRAYTMP tmp(a.shape());
-
-        for (size_t i = 0; i < a.shape().size(); i++) tmp[i] = a[i] * b[i];
 
 
-        return tmp;
-    }
-
-    //===================Binary division operators==================================
-    ARRAYTMPDEF ARRAYTMP operator/(const ARRAYTMP &a, const T &b) 
-    {
-        ARRAYTMP tmp(a.shape());
-
-        for (size_t i = 0; i < a.shape().size(); i++) tmp[i] = a[i] / b;
-
-        return tmp;
-    }
-
-    //------------------------------------------------------------------------------
-    ARRAYTMPDEF ARRAYTMP operator/(const T &a, const ARRAYTMP &b) 
-    {
-        ARRAYTMP tmp(b.shape());
-
-        for (size_t i = 0; i < b.shape().size(); i++) tmp[i] = a / b[i];
-
-        return tmp;
-
-    }
-
-    //------------------------------------------------------------------------------
-    ARRAYTMPDEF ARRAYTMP operator/(const ARRAYTMP &a, const ARRAYTMP &b) 
-    {
-        EXCEPTION_SETUP("template<typename T,template <typename> class BType>"
-                        "Array<T,BType> operator/(const Array<T,BType> &a,"
-                        "const Array<T,BType> &b)");
-
-        if (a.shape() != b.shape()) {
-            EXCEPTION_INIT(ShapeMissmatchError,"shapes of arrays a and b do not match!");
-            EXCEPTION_THROW();
-        }
-        ARRAYTMP tmp(a.shape());
-
-        for (size_t i = 0; i < a.shape().size(); i++) tmp[i] = a[i] / b[i];
-
-        return tmp;
-    }
-
-
-//===============================definition of some standard arrays============
-typedef Array<Int8,Buffer> Int8Array;
-typedef Array<UInt8,Buffer> UInt8Array;
-typedef Array<Int16,Buffer> Int16Array;
-typedef Array<UInt16,Buffer> UInt16Array;
-typedef Array<Int32,Buffer> Int32Array;
-typedef Array<UInt32,Buffer> UInt32Array;
-typedef Array<Int64,Buffer> Int64Array;
-typedef Array<UInt64,Buffer> UInt64Array;
-typedef Array<Float32,Buffer> Float32Array;
-typedef Array<Float64,Buffer> Float64Array;
-typedef Array<Float128,Buffer> Float128Array;
-typedef Array<Complex32,Buffer> Complex32Array;
-typedef Array<Complex64,Buffer> Complex64Array;
-typedef Array<Complex128,Buffer> Complex128Array;
-
-typedef Array<Int8,RefBuffer> Int8RefArray;
-typedef Array<UInt8,RefBuffer> UInt8RefArray;
-typedef Array<Int16,RefBuffer> Int16RefArray;
-typedef Array<UInt16,RefBuffer> UInt16RefArray;
-typedef Array<Int32,RefBuffer> Int32RefArray;
-typedef Array<UInt32,RefBuffer> UInt32RefArray;
-typedef Array<Int64,RefBuffer> Int64RefArray;
-typedef Array<UInt64,RefBuffer> UInt64RefArray;
-typedef Array<Float32,RefBuffer> Float32RefArray;
-typedef Array<Float64,RefBuffer> Float64RefArray;
-typedef Array<Float128,RefBuffer> Float128RefArray;
 }
 }
 
