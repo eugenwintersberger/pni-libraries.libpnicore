@@ -297,18 +297,6 @@ namespace utils{
             void allocate(size_t size);
 
             //-----------------------------------------------------------------
-            /*! \brief check allocation status
-
-            Returns true if the buffer is allocated and false otherwise.
-            \return true if allocated
-            */
-            bool is_allocated() const 
-            { 
-                if(_data) return true;
-                return false; 
-            }
-
-            //-----------------------------------------------------------------
             //! \brief free buffer memory
             void free();
 
@@ -319,10 +307,7 @@ namespace utils{
             this buffer. 
             \return total allocate memory in bytes.
             */
-            size_t mem_size() const 
-            {
-                return sizeof(T)*this->size();
-            }
+            size_t mem_size() const { return sizeof(T)*this->size(); }
 
             //-----------------------------------------------------------------
             /*! \brief get number of elements
@@ -330,10 +315,7 @@ namespace utils{
             Returns the number of elements stored in the buffer.
             \return number of elements
             */
-            size_t size() const 
-            {
-                return _size;
-            }
+            size_t size() const { return _size; }
 
             //------------------------------------------------------------------
             /*! \brief get iterator to first element
@@ -384,10 +366,9 @@ namespace utils{
 
     //=================Implementation of constructors and destructors===========
     //implementation of the default constructor
-    template<typename T,typename Allocator> 
-        Buffer<T,Allocator>::Buffer():
-            _data(nullptr),
-            _size(0)
+    template<typename T,typename Allocator> Buffer<T,Allocator>::Buffer():
+        _data(nullptr),
+        _size(0)
     { }
 
     //--------------------------------------------------------------------------
@@ -405,7 +386,7 @@ namespace utils{
             _size(n)
     {
         //copy data
-        if((this->is_allocated())&&(ptr))
+        if(this->size())
         {
             for(size_t i=0;i<this->size();i++) (*this)[i] = ptr[i];
         }
@@ -500,7 +481,7 @@ namespace utils{
         void Buffer<T,Allocator>::allocate(size_t s)
     {
         //free memory if necessary
-        if(this->is_allocated()) this->free();
+        if(this->size()) this->free();
        
         //allocate new memory
         _data = Allocator::template allocate<T>(s);
@@ -562,7 +543,8 @@ namespace utils{
                         "Buffer<T,Allocator> &Buffer<T,Allocator>::"
                         "operator=(const T &d)");
 
-        if(!this->is_allocated()){
+        if(!this->size())
+        {
             EXCEPTION_INIT(MemoryAccessError,
                     "Cannot assign data to an unallocated buffer!");
             EXCEPTION_THROW();
@@ -577,11 +559,12 @@ namespace utils{
 
     //===============Methods for data access====================================
     template<typename T,typename Allocator> 
-        T Buffer<T,Allocator>::at(size_t i) const {
+        T Buffer<T,Allocator>::at(size_t i) const 
+    {
         EXCEPTION_SETUP("template<typename T,typename Allocator> "
                         "T Buffer<T,Allocator>::at(size_t i) const");
 
-        if(!this->is_allocated()){
+        if(!this->size()){
             EXCEPTION_INIT(MemoryAccessError,"Buffer not allocated");
             EXCEPTION_THROW();
         }
@@ -603,7 +586,7 @@ namespace utils{
         EXCEPTION_SETUP("template<typename T,typename Allocator> "
                         "T Buffer<T,Allocator>::at(size_t i) const");
 
-        if(!this->is_allocated()){
+        if(!this->size()){
             EXCEPTION_INIT(MemoryAccessError,"Buffer not allocated");
             EXCEPTION_THROW();
         }
@@ -625,12 +608,10 @@ namespace utils{
     bool operator==(const Buffer<T,TAlloc> &a,const Buffer<U,UAlloc> &b){
         if(a.size() != b.size()) return false;
 
-        if(a.is_allocated()!=b.is_allocated()) return false;
-
-        if(a.is_allocated() && b.is_allocated()){
-            for(size_t i=0;i<a.size();i++){
+        if((a.size()) && (b.size()))
+        {
+            for(size_t i=0;i<a.size();i++)
                 if(a[i] != b[i]) return false;
-            }
         }
 
         return true;
@@ -642,12 +623,10 @@ namespace utils{
     {
         if(a.size() != b.size()) return false;
 
-        if(a.is_allocated()!=b.is_allocated()) return false;
-
-        if(a.is_allocated() && b.is_allocated()){
-            for(size_t i=0;i<a.size();i++){
+        if((a.size()) && (b.size()))
+        {
+            for(size_t i=0;i<a.size();i++)
                 if(a[i] != b[i]) return false;
-            }
         }
 
         return true;

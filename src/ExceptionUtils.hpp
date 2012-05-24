@@ -94,7 +94,7 @@ namespace utils{
     template<typename OTYPE> void
         check_allocation_state(const OTYPE &o,const String &i)
     {
-        if(!o.is_allocated())
+        if(!o.size())
         {
             std::stringstream ss;
             ss<<"Instance of "<<typeid(OTYPE).name()<<" not allocated!";

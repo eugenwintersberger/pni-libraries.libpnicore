@@ -66,7 +66,7 @@ private:
         //test constructor with vector
         std::vector<typename BTYPE::value_type> vec = {3,9,1};
         BTYPE vbuffer(vec);
-        CPPUNIT_ASSERT(vbuffer.is_allocated());
+        CPPUNIT_ASSERT(vbuffer.size());
         CPPUNIT_ASSERT(vbuffer.size() == 3);
         CPPUNIT_ASSERT(vbuffer[0] == value_type(3));
         CPPUNIT_ASSERT(vbuffer[1] == value_type(9));
@@ -107,25 +107,25 @@ template<typename BTYPE> void BufferTest<BTYPE>::test_default_constructors()
 {
     //create first buffer using the default constructor
     BTYPE b1; //default constructor
-    CPPUNIT_ASSERT(!b1.is_allocated());
+    CPPUNIT_ASSERT(!b1.size());
     
     //create the second constructor with the standard constructor
     //allocating memory
     BTYPE b2;
     this->_allocate_buffer(b2,this->n2);
-    CPPUNIT_ASSERT(b2.is_allocated());
+    CPPUNIT_ASSERT(b2.size());
 
     //using copy constructor
     BTYPE b3(b2);
-    CPPUNIT_ASSERT(b2.is_allocated());
-    CPPUNIT_ASSERT(b3.is_allocated());
+    CPPUNIT_ASSERT(b2.size());
+    CPPUNIT_ASSERT(b3.size());
     CPPUNIT_ASSERT(b3.size() == b2.size());
 
     //using the move constructor
     BTYPE b4 = std::move(b2);
-    CPPUNIT_ASSERT(b4.is_allocated());
+    CPPUNIT_ASSERT(b4.size());
     CPPUNIT_ASSERT(b4.size() == b3.size());
-    CPPUNIT_ASSERT(!b2.is_allocated());
+    CPPUNIT_ASSERT(!b2.size());
 
 }
 
@@ -160,29 +160,29 @@ template<typename BTYPE> void BufferTest<BTYPE>::test_assignment()
     CPPUNIT_ASSERT(buffer1.size() != buffer2.size());
 	//reallocation of the lhs
 	CPPUNIT_ASSERT_NO_THROW(buffer1 = buffer2);
-	CPPUNIT_ASSERT(buffer1.is_allocated());
-	CPPUNIT_ASSERT(buffer2.is_allocated());
+	CPPUNIT_ASSERT(buffer1.size());
+	CPPUNIT_ASSERT(buffer2.size());
     CPPUNIT_ASSERT(buffer1.size() == buffer2.size());
 
 	BTYPE buffer3;
 	CPPUNIT_ASSERT_NO_THROW(buffer3 = buffer1);
-	CPPUNIT_ASSERT(buffer3.is_allocated());
-	CPPUNIT_ASSERT(buffer1.is_allocated());
+	CPPUNIT_ASSERT(buffer3.size());
+	CPPUNIT_ASSERT(buffer1.size());
     CPPUNIT_ASSERT(buffer3.size() == buffer1.size());
 
 	//checking move assignment - moveing an  allocated
     //buffer to an not allocated one
 	BTYPE buffer4;
 	CPPUNIT_ASSERT_NO_THROW(buffer4 = std::move(buffer3));
-	CPPUNIT_ASSERT(buffer4.is_allocated());
-	CPPUNIT_ASSERT(!buffer3.is_allocated());
+	CPPUNIT_ASSERT(buffer4.size());
+	CPPUNIT_ASSERT(!buffer3.size());
 	CPPUNIT_ASSERT(buffer4.size() == buffer1.size());
 
     //buffer3 is not allocated now - moving a not allocated buffer to an
     //allocated one
     CPPUNIT_ASSERT_NO_THROW(buffer4 = std::move(buffer3));
-    CPPUNIT_ASSERT(!buffer4.is_allocated());
-    CPPUNIT_ASSERT(!buffer3.is_allocated());
+    CPPUNIT_ASSERT(!buffer4.size());
+    CPPUNIT_ASSERT(!buffer3.size());
     CPPUNIT_ASSERT(buffer4.size() == 0);
     CPPUNIT_ASSERT(buffer3.size() == 0);
 
@@ -194,19 +194,19 @@ template<typename BTYPE> void BufferTest<BTYPE>::test_allocation()
 	BTYPE dbuffer;
     this->_allocate_buffer(dbuffer,this->n1);
 
-	CPPUNIT_ASSERT(dbuffer.is_allocated());
+	CPPUNIT_ASSERT(dbuffer.size());
 	CPPUNIT_ASSERT(dbuffer.size() == this->n1);
 
 	CPPUNIT_ASSERT_NO_THROW(dbuffer.free());
 	CPPUNIT_ASSERT(dbuffer.size()==0);
-	CPPUNIT_ASSERT(!dbuffer.is_allocated());
+	CPPUNIT_ASSERT(!dbuffer.size());
 
 	BTYPE dbuffer2;
 	CPPUNIT_ASSERT(dbuffer2.size() == 0);
-	CPPUNIT_ASSERT(!dbuffer2.is_allocated());
+	CPPUNIT_ASSERT(!dbuffer2.size());
 
 	CPPUNIT_ASSERT_NO_THROW(this->_allocate_buffer(dbuffer2,n2));
-	CPPUNIT_ASSERT(dbuffer2.is_allocated());
+	CPPUNIT_ASSERT(dbuffer2.size());
 	CPPUNIT_ASSERT(dbuffer2.size() == n2);
 
 }

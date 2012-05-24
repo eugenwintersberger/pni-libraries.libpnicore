@@ -237,19 +237,6 @@ namespace utils{
             //! For a RefBuffer this method has no effect.
             void allocate(size_t size) {}
             
-            //! check if buffer is allocated
-
-            //! The behavior of this method varies slightly from the original
-            //! definition. As a RefBuffer has no influence on the allocation 
-            //! of memory this method returns true if the pointer it referes 
-            //! to is not a nullptr. 
-            //! \return true if pointer is not nullptr, false otherwise
-            bool is_allocated() const
-            {
-                if(this->_data) return true;
-                return false;
-            }
-
             //! free memory - does nothing
 
             //! In the case of a RefBuffer this method does not free memory 
@@ -412,7 +399,7 @@ namespace utils{
     RBUFFTMPDEC RBUFFTMP &RBUFFTMP::operator=(const T &d){
         EXCEPTION_SETUP("template<typename T> RefBuffer<T> &RefBuffer<T>::operator=(const T &d)");
 
-        if(!this->is_allocated()){
+        if(!this->size()){
             EXCEPTION_INIT(MemoryAccessError,"Cannot assign data to an unallocated buffer!");
             EXCEPTION_THROW();
         }
@@ -430,7 +417,7 @@ namespace utils{
     {
         EXCEPTION_SETUP("RBUFFTMPDEC T RBUFFTMP::at(size_t i) const ");
 
-        if(!this->is_allocated()){
+        if(!this->size()){
             EXCEPTION_INIT(MemoryAccessError,"Buffer not allocated");
             EXCEPTION_THROW();
         }
@@ -450,7 +437,7 @@ namespace utils{
     {
         EXCEPTION_SETUP("RBUFFTMPDEC T & RBUFFTMP::at(size_t i)");
 
-        if(!this->is_allocated()){
+        if(!this->size()){
             EXCEPTION_INIT(MemoryAccessError,"Buffer not allocated!");
             EXCEPTION_THROW();
         }
@@ -471,12 +458,10 @@ namespace utils{
     bool operator==(const RefBuffer<T,Allocator> &a,const RefBuffer<U,Allocator> &b){
         if(a.size() != b.size()) return false;
 
-        if(a.is_allocated()!=b.is_allocated()) return false;
-
-        if(a.is_allocated() && b.is_allocated()){
-            for(size_t i=0;i<a.size();i++){
+        if((a.size()) && (b.size()))
+        {
+            for(size_t i=0;i<a.size();i++)
                 if(a[i] != b[i]) return false;
-            }
         }
 
         return true;
