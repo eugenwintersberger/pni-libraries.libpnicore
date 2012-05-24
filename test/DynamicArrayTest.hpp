@@ -19,6 +19,8 @@ class DynamicArrayTest : public CppUnit::TestFixture{
         CPPUNIT_TEST(test_iterators);
         CPPUNIT_TEST(test_multiindex_access);
         CPPUNIT_TEST(test_typeinfo);
+        CPPUNIT_TEST(test_unary_addition);
+        CPPUNIT_TEST(test_unary_subtraction);
         CPPUNIT_TEST_SUITE_END();
     private:
         Shape s1,s2;
@@ -33,6 +35,8 @@ class DynamicArrayTest : public CppUnit::TestFixture{
         void test_iterators();
         void test_multiindex_access();
         void test_typeinfo();
+        void test_unary_addition();
+        void test_unary_subtraction();
 };
 
 //------------------------------------------------------------------------------
@@ -162,6 +166,53 @@ void DynamicArrayTest<T,STORAGE>::test_multiindex_access()
             check_equality(a1(index),data[a1.shape().offset(index)]);
         }
     }
+}
+
+//------------------------------------------------------------------------------
+template<typename T,typename STORAGE>
+void DynamicArrayTest<T,STORAGE>::test_unary_addition()
+{
+    std::cout<<"void DynamicArrayTest<T,STORAGE>::test_unary_addition()";
+    std::cout<<std::endl;
+    DynamicArray<T,STORAGE> a1(s1,STORAGE(s1.size())),
+                            a2(s1,STORAGE(s1.size()));
+
+    a1 = 1;
+    a2 = 4;
+    //checking scalar add
+    a1 += 3;
+    CPPUNIT_ASSERT(a1 == a2);
+    //checking array add
+    a1 = 1;
+    a2 = 5;
+    a1 += a2;
+    a2 = 6;
+    CPPUNIT_ASSERT( a1 == a2);
+
+
+}
+//------------------------------------------------------------------------------
+template<typename T,typename STORAGE>
+void DynamicArrayTest<T,STORAGE>::test_unary_subtraction()
+{
+    std::cout<<"void DynamicArrayTest<T,STORAGE>::test_unary_subtraction()";
+    std::cout<<std::endl;
+    DynamicArray<T,STORAGE> a1(s1,STORAGE(s1.size())),
+                            a2(s1,STORAGE(s1.size()));
+
+    a1 = 4;
+    a2 = 1;
+    //checking scalar subtraction
+    a1 -= 3;
+    CPPUNIT_ASSERT(a1 == a2);
+    //checking array subtraction
+    a1 = 4;
+    a2 = 3;
+    a1 -= a2;
+    a2 = 1;
+    CPPUNIT_ASSERT( a1 == a2);
+
+
 }
 //------------------------------------------------------------------------------
 template<typename T,typename STORAGE>

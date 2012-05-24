@@ -21,6 +21,7 @@ sources_list.extend(["TypeMapsTest.cpp"])
 sources_list.extend(["IndexMapTest.cpp"])
 sources_list.extend(["ArrayViewTest.cpp"])
 sources_list.extend(["SliceTest.cpp"])
+sources_list.extend(["DynamicArrayTest.cpp"])
 
 pniutils_test = test_env.Program("pniutilstest",sources_list)
 showtypes = test_env.Program("showPNITypes.cpp")

@@ -253,7 +253,7 @@ namespace utils {
             {
                 check_allocation_state(this->buffer(),
                                        "ARRAYTMP &operator =(const T&)");
-                for(value_type &a: *this->_data) a = v;
+                for(value_type &a: this->_data) a = v;
                 return *this;
             }
 
@@ -394,7 +394,7 @@ namespace utils {
             template<typename U>
             DynamicArray<T,STORAGE> &operator +=(const U &v)
             {
-                InplaceArithmetics::add_inplace(*this,v);
+                InplaceArithmetics<T,DynamicArray,STORAGE>::add_inplace(*this,v);
                 return *this;
             }
 
@@ -413,10 +413,11 @@ namespace utils {
                     >
             DynamicArray<T,STORAGE> &operator +=(const ATYPE<U,USTORAGE> &a)
             {
-                InplaceArithmetics::add_inplace(*this,a);
+                InplaceArithmetics<T,DynamicArray,STORAGE>::add_inplace(*this,a);
                 return *this;
             }
 
+            //-----------------------------------------------------------------
             template<typename U,
                      typename USTORAGE,
                      template<typename,typename> class ATYPE
@@ -424,7 +425,7 @@ namespace utils {
             DynamicArray<T,STORAGE> &
             operator +=(const ArrayView<ATYPE<U,USTORAGE> > &view)
             {
-                InplaceArithmetics::add_inplace(*this,view);
+                InplaceArithmetics<T,DynamicArray,STORAGE>::add_inplace(*this,view);
                 return *this;
             }
 

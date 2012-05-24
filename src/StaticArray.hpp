@@ -28,6 +28,7 @@
 
 #include "Types.hpp"
 #include "Shape.hpp"
+#include "StaticBuffer.hpp"
 
 namespace pni{
 namespace utils{
@@ -35,13 +36,23 @@ namespace utils{
     template<typename T,size_t N> class StaticArray
     {
         private:
-            T _data[N]; //!< static array data
+            StaticBuffer<T,N> _data' 
             Shape _shape; //!< array shape
         public:
             //================public types=====================================
-            typedef T value_type 
+            typedef T value_type;
+            typedef std::shared_ptr<StaticArray<T,N> > shared_ptr;
+            typedef std::unique_ptr<StaticArray<T,N> > unique_ptr;
+            typedef StaticBuffer<T,N>::iterator iterator;
+            typedef StaticBuffer<T,N>::const_iterator const_iterator;
+
+            //=================constructors and destructor=====================
             //! default constructor
-            StaticArray():_shape() {}
+            StaticArray():_data(),_shape() {}
+
+            //! copy constructor
+            StaticArray(const StaticArray(
+
 
             //! default constructor
 
