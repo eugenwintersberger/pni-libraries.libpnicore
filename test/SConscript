@@ -11,22 +11,23 @@ test_env.Append(CPPPATH=["../src/"])
 
 sources_list = ["pniutilstest.cpp"]
 sources_list.extend(["BufferTest.cpp"])
-sources_list.extend(["DataObjectTest.cpp"])
-sources_list.extend(["NumericObjectTest.cpp"])
-sources_list.extend(["ArrayTest.cpp"])
-sources_list.extend(["ShapeTest.cpp"])
-sources_list.extend(["ScalarTest.cpp"])
-sources_list.extend(["BinaryTest.cpp"])
-sources_list.extend(["TypeMapsTest.cpp"])
-sources_list.extend(["IndexMapTest.cpp"])
-sources_list.extend(["ArrayViewTest.cpp"])
-sources_list.extend(["SliceTest.cpp"])
-sources_list.extend(["DynamicArrayTest.cpp"])
+sources_list.extend(["RefBufferTest.cpp"])
+#sources_list.extend(["DataObjectTest.cpp"])
+#sources_list.extend(["NumericObjectTest.cpp"])
+#sources_list.extend(["ArrayTest.cpp"])
+#sources_list.extend(["ShapeTest.cpp"])
+#sources_list.extend(["ScalarTest.cpp"])
+#sources_list.extend(["BinaryTest.cpp"])
+#sources_list.extend(["TypeMapsTest.cpp"])
+#sources_list.extend(["IndexMapTest.cpp"])
+#sources_list.extend(["ArrayViewTest.cpp"])
+#sources_list.extend(["SliceTest.cpp"])
+#sources_list.extend(["DynamicArrayTest.cpp"])
 
 pniutils_test = test_env.Program("pniutilstest",sources_list)
-showtypes = test_env.Program("showPNITypes.cpp")
-benchmark = test_env.Program("utbmark","bmark.cpp")
-test_targets = [pniutils_test,showtypes,benchmark]
+#showtypes = test_env.Program("showPNITypes.cpp")
+#benchmark = test_env.Program("utbmark","bmark.cpp")
+test_targets = [pniutils_test]
 
     
 

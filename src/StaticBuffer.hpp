@@ -39,6 +39,7 @@
 #include "TypeIDMap.hpp"
 #include "NewAllocator.hpp"
 #include "Iterator.hpp"
+#include "ExceptionUtils.hpp"
 
 namespace pni{
 namespace utils{
@@ -95,6 +96,7 @@ namespace utils{
             //you can savely free the original pointer
             delte [] data;
             \endcode
+            \throws MemoryNotAllocatedError if pointer is a nullptr
             \param ptr pointer to raw data
             */
             explicit StaticBuffer(const T *ptr)
@@ -106,7 +108,7 @@ namespace utils{
                 }
                 else
                 {
-                    MemoryAccessError error;
+                    MemoryNotAllocatedError error;
                     error.issuer("explicit StaticBuffer(const T *ptr)");
                     error.description("Pointer is a nullptr!");
                     throw error;
@@ -127,17 +129,8 @@ namespace utils{
             */
             StaticBuffer(const std::initializer_list<T> &list)
             {
-                if(list.size()!=N)
-                {
-                    SizeMissmatchError error;
-                    error.issuer("StaticBuffer(const std::initializer_list"
-                                 "<T> &list)");
-                    std::stringstream ss;
-                    ss<<"List size ("<<list.size()<<") does not match ";
-                    ss<<" buffer size ("<<N<<")!";
-                    error.description(ss.str());
-                    throw error;
-                }
+                check_size_equal(*this,list,
+                        "StaticBuffer(const std::initializer_list<T> &list)");
 
                 for(size_t i=0;i<N;i++) (*this)[i] = list[i];
             }
@@ -156,19 +149,7 @@ namespace utils{
                      typename ...OPTS>
             explicit StaticBuffer(const CONT<T,OPTS...> &container)
             {
-                if(list.size()!=N)
-                {
-                    SizeMissmatchError error;
-                    error.issuer("template<typename T,template<typename,"
-                                 "typename ...> class CONT,typename ...OPTS>"
-                                 "explicit StaticBuffer(const CONT<T,OPTS...> "
-                                 "&container)");
-                    std::stringstream ss;
-                    ss<<"Container size ("<<container.size()<<") does not match ";
-                    ss<<" buffer size ("<<N<<")!";
-                    error.description(ss.str());
-                    throw error;
-                }
+                check_size_equal(*this,container);
 
                 size_t index = 0;
                 for(auto v: container) (*this)[index++] = v;
@@ -196,6 +177,18 @@ namespace utils{
             StaticBuffer<T,N> &operator=(const T &v)
             {
                 for(T &b: *this) b = v;
+                return *this;
+            }
+
+            //------------------------------------------------------------------
+            template<template<typename,typename...> class CONT,typename ...OPTS>
+            StaticBuffer<T,N> &operator=(const CONT<T,OPTS...> &container)
+            {
+                check_size_equal(*this,container);
+                size_t index = 0;
+                for(auto v: container)
+                    (*this)[index++] = v;
+
                 return *this;
             }
 
@@ -243,7 +236,11 @@ namespace utils{
             \param i buffer index
             \return value at index i
             */
-            T at(size_t i) const;
+            T at(size_t i) const
+            {
+                check_index(i,this->size(),"T at(size_t i) const");
+                return _data[i];
+            }
 
             //-----------------------------------------------------------------
             /*! \brief get value at index i
@@ -254,7 +251,11 @@ namespace utils{
             \param i buffer index
             \return reference to the element at index i
             */
-            T &at(size_t i);
+            T &at(size_t i)
+            {
+                check_index(i,this->size(),"T &at(size_t i)");
+                return _data[i];
+            }
 
             //-----------------------------------------------------------------
             /*! [] operator for read and write access
@@ -342,41 +343,6 @@ namespace utils{
 
     };
 
-    //===============Methods for data access====================================
-    template<typename T,typename Allocator> 
-        T Buffer<T,Allocator>::at(size_t i) const 
-    {
-        EXCEPTION_SETUP("template<typename T,typename Allocator> "
-                        "T Buffer<T,Allocator>::at(size_t i) const");
-
-        if(i>=this->size()){
-            std::ostringstream sstr;
-            sstr<<"Index ("<<i<<") must not be larger or equal the size ";
-            sstr<<"("<<this->size()<<")of the buffer!";
-            EXCEPTION_INIT(IndexError,sstr.str());
-            EXCEPTION_THROW();
-        }
-
-        return _data[i];
-    }
-
-    //===============Methods for data access====================================
-    template<typename T,typename Allocator> T &Buffer<T,Allocator>::at(size_t i)
-    {
-        EXCEPTION_SETUP("template<typename T,typename Allocator> "
-                        "T Buffer<T,Allocator>::at(size_t i) const");
-
-
-        if(i>=this->size()){
-            std::ostringstream sstr;
-            sstr<<"Index ("<<i<<") must not be larger or equal the size ";
-            sstr<<"("<<this->size()<<")of the buffer!";
-            EXCEPTION_INIT(IndexError,sstr.str());
-            EXCEPTION_THROW();
-        }
-
-        return _data[i];
-    }
 
 
     //==============comparison operators========================================

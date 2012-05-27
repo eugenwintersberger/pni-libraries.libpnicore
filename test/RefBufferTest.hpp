@@ -1,13 +1,13 @@
 //unit test for the Buffer class
 
-#ifndef __BUFFERTEST_HPP__
-#define __BUFFERTEST_HPP__
+#ifndef __REFBUFFERTEST_HPP__
+#define __REFBUFFERTEST_HPP__
 
 
 #include<random>
 #include<cppunit/TestFixture.h>
 #include<cppunit/extensions/HelperMacros.h>
-#include "Buffer.hpp"
+#include "RefBuffer.hpp"
 #include "NewAllocator.hpp"
 
 #include "RandomDistributions.hpp"
@@ -15,12 +15,11 @@
 
 using namespace pni::utils;
 
-template<typename T,typename Allocator> 
-class BufferTest:public CppUnit::TestFixture
+template<typename T> 
+class RefBufferTest:public CppUnit::TestFixture
 {
-    CPPUNIT_TEST_SUITE(BufferTest);
+    CPPUNIT_TEST_SUITE(RefBufferTest);
     CPPUNIT_TEST(test_constructors);
-    CPPUNIT_TEST(test_allocation);
     CPPUNIT_TEST(test_access);
     CPPUNIT_TEST(test_assignment);
     CPPUNIT_TEST(test_comparison);
@@ -37,105 +36,87 @@ public:
     void test_constructors();
     void test_assignment();
     void test_comparison();
-    void test_allocation();
     void test_access();
     void test_iterator();
 
 };
 
 //-----------------------------------------------------------------------------
-template<typename T,typename Allocator> 
-void BufferTest<T,Allocator>::setUp()
+template<typename T> void RefBufferTest<T>::setUp()
 {
     this->n1 = 1000;
     this->n2 = 2000;
 }
 
 //-----------------------------------------------------------------------------
-template<typename T,typename Allocator> 
-void BufferTest<T,Allocator>::tearDown()
+template<typename T> void RefBufferTest<T>::tearDown()
 { }
 
 //------------------------------------------------------------------------------
-template<typename T,typename Allocator> 
-void BufferTest<T,Allocator>::test_constructors()
+template<typename T> void RefBufferTest<T>::test_constructors()
 {
     //create first buffer using the default constructor
-    Buffer<T,Allocator> b1; //default constructor
+    RefBuffer<T> b1; //default constructor
     CPPUNIT_ASSERT(!b1.size());
     
     //create the second constructor with the standard constructor
     //allocating memory
-    Buffer<T,Allocator> b2(this->n2);
-    CPPUNIT_ASSERT(b2.size());
-
-    //construct from a initializier list
-    Buffer<T,Allocator> ibuffer = {T(1),T(6),T(12)};
-    CPPUNIT_ASSERT(ibuffer[0] == T(1));
-    CPPUNIT_ASSERT(ibuffer[1] == T(6));
-    CPPUNIT_ASSERT(ibuffer[2] == T(12));
-
-
-    //test constructor with vector
-    std::vector<T> vec = {3,9,1};
-    Buffer<T,Allocator> vbuffer(vec);
-    CPPUNIT_ASSERT(vbuffer.size());
-    CPPUNIT_ASSERT(vbuffer.size() == 3);
-    CPPUNIT_ASSERT(vbuffer[0] == T(3));
-    CPPUNIT_ASSERT(vbuffer[1] == T(9));
-    CPPUNIT_ASSERT(vbuffer[2] == T(1));
+    T *ptr = new T[this->n2];
+    RefBuffer<T> b2(this->n2,ptr);
+    CPPUNIT_ASSERT(b2.size() == this->n2);
 
 
     //=====================copy and move constructor=============================
     //using copy constructor
-    Buffer<T,Allocator> b3(b2);
+    RefBuffer<T> b3(b2);
     CPPUNIT_ASSERT(b2.size());
     CPPUNIT_ASSERT(b3.size());
     CPPUNIT_ASSERT(b3.size() == b2.size());
 
     //using the move constructor
-    Buffer<T,Allocator> b4 = std::move(b2);
+    RefBuffer<T> b4 = std::move(b2);
     CPPUNIT_ASSERT(b4.size());
     CPPUNIT_ASSERT(b4.size() == b3.size());
     CPPUNIT_ASSERT(!b2.size());
+
+    if(ptr) delete [] ptr;
 }
 
 //------------------------------------------------------------------------------
-template<typename T,typename Allocator> void BufferTest<T,Allocator>::test_assignment()
+template<typename T> void RefBufferTest<T>::test_assignment()
 {
 	//testing here the assignment of equally typed buffers
-	Buffer<T,Allocator> buffer1;
-	Buffer<T,Allocator> buffer2;
+	RefBuffer<T> buffer1;
+	RefBuffer<T> buffer2;
 
-	//check first for some standard problems
-	//nothing happens - both are not allocated
-	CPPUNIT_ASSERT_NO_THROW(buffer1 = buffer2);
+    T *ptr1 = new T[this->n1];
+    T *ptr2 = new T[this->n2];
+
+    CPPUNIT_ASSERT(buffer1 == buffer2);
+
 	//now the lhs is not allocated and the rhs is
-    CPPUNIT_ASSERT_NO_THROW(buffer2.allocate(this->n1));
+    CPPUNIT_ASSERT_NO_THROW(buffer2 = RefBuffer<T>(this->n2,ptr2));
     CPPUNIT_ASSERT_NO_THROW(buffer1 = buffer2);
     //now the rhs is not allocate dnad the lhs is
-    CPPUNIT_ASSERT_NO_THROW(buffer1.free());
     CPPUNIT_ASSERT_NO_THROW(buffer2 = buffer1);
 
     //booth buffers are allocated
-	CPPUNIT_ASSERT_NO_THROW(buffer2.allocate(this->n1));
-	CPPUNIT_ASSERT_NO_THROW(buffer1.allocate(this->n2));
+	CPPUNIT_ASSERT_NO_THROW(buffer2 = RefBuffer<T>(this->n2,ptr2));
+	CPPUNIT_ASSERT_NO_THROW(buffer1 = RefBuffer<T>(this->n1,ptr1));
+    CPPUNIT_ASSERT(buffer2.size() == this->n2);
+    CPPUNIT_ASSERT(buffer1.size() == this->n1);
     CPPUNIT_ASSERT(buffer1.size() != buffer2.size());
-	//reallocation of the lhs
+	//copy assignment
 	CPPUNIT_ASSERT_NO_THROW(buffer1 = buffer2);
 	CPPUNIT_ASSERT(buffer1.size());
 	CPPUNIT_ASSERT(buffer2.size());
     CPPUNIT_ASSERT(buffer1.size() == buffer2.size());
 
-	Buffer<T,Allocator> buffer3;
-	CPPUNIT_ASSERT_NO_THROW(buffer3 = buffer1);
-	CPPUNIT_ASSERT(buffer3.size());
-	CPPUNIT_ASSERT(buffer1.size());
-    CPPUNIT_ASSERT(buffer3.size() == buffer1.size());
 
 	//checking move assignment - moveing an  allocated
     //buffer to an not allocated one
-	Buffer<T,Allocator> buffer4;
+    RefBuffer<T> buffer3 = buffer1;
+	RefBuffer<T> buffer4;
 	CPPUNIT_ASSERT_NO_THROW(buffer4 = std::move(buffer3));
 	CPPUNIT_ASSERT(buffer4.size());
 	CPPUNIT_ASSERT(!buffer3.size());
@@ -149,40 +130,24 @@ template<typename T,typename Allocator> void BufferTest<T,Allocator>::test_assig
     CPPUNIT_ASSERT(buffer4.size() == 0);
     CPPUNIT_ASSERT(buffer3.size() == 0);
 
+    if(ptr1) delete [] ptr1;
+    if(ptr2) delete [] ptr2;
 }
 
 //------------------------------------------------------------------------------
-template<typename T,typename Allocator> 
-void BufferTest<T,Allocator>::test_allocation()
+template<typename T> void RefBufferTest<T>::test_access()
 {
-	Buffer<T,Allocator> dbuffer(this->n1);
-	CPPUNIT_ASSERT(dbuffer.size() == this->n1);
-
-	CPPUNIT_ASSERT_NO_THROW(dbuffer.free());
-	CPPUNIT_ASSERT(dbuffer.size()==0);
-
-	Buffer<T,Allocator> dbuffer2;
-	CPPUNIT_ASSERT(dbuffer2.size() == 0);
-
-	CPPUNIT_ASSERT_NO_THROW(dbuffer2.allocate(n2));
-	CPPUNIT_ASSERT(dbuffer2.size() == n2);
-
-}
-
-//------------------------------------------------------------------------------
-template<typename T,typename Allocator> 
-void BufferTest<T,Allocator>::test_access()
-{
-	Buffer<T,Allocator> dbuffer(1000);
+    T *ptr1 = new T[1000];
+	RefBuffer<T> dbuffer(1000,ptr1);
 
 	for(size_t i=0;i<1000;i++) 
         CPPUNIT_ASSERT_NO_THROW(dbuffer[i] = T(i));
 
-	for(size_t i=0;i<1000;i++){
+	for(size_t i=0;i<1000;i++)
 		CPPUNIT_ASSERT(T(i)==dbuffer[i]);
-	}
 
-    Buffer<T,Allocator> ibuffer(4);
+    T *ptr2 = new T[4];
+    RefBuffer<T> ibuffer(4,ptr2);
     for(size_t i=0;i<ibuffer.size();i++)
         CPPUNIT_ASSERT_NO_THROW(ibuffer.at(i) = T(i));
 
@@ -192,14 +157,18 @@ void BufferTest<T,Allocator>::test_access()
     //check for IndexError exception
     CPPUNIT_ASSERT_THROW(ibuffer.at(100),IndexError);
 
+    if(ptr1) delete [] ptr1;
+    if(ptr2) delete [] ptr2;
 }
 
 //------------------------------------------------------------------------------
-template<typename T,typename Allocator> 
-void BufferTest<T,Allocator>::test_comparison()
+template<typename T> void RefBufferTest<T>::test_comparison()
 {
-	Buffer<T,Allocator> b1(100);
-	Buffer<T,Allocator> b2(100);
+    T *ptr1 = new T[100];
+    T *ptr2 = new T[100];
+
+	RefBuffer<T> b1(100,ptr1);
+	RefBuffer<T> b2(100,ptr2);
 
 	b1 = T(1);
 	b2 = T(2);
@@ -207,15 +176,15 @@ void BufferTest<T,Allocator>::test_comparison()
 	CPPUNIT_ASSERT(b1 != b2);
 	b2 = T(1);
 	CPPUNIT_ASSERT(b1 == b2);
+    if(ptr1) delete [] ptr1;
+    if(ptr2) delete [] ptr2;
 }
 
 //-----------------------------------------------------------------------------
-template<typename T,typename Allocator> 
-void BufferTest<T,Allocator>::test_iterator()
+template<typename T> void RefBufferTest<T>::test_iterator()
 {
-    std::cout<<"void BufferTest<BTYPE>::test_iterator()----------------------";
-    std::cout<<std::endl;
-    Buffer<T,Allocator> b1(1000);
+    T *ptr = new T[1000];
+    RefBuffer<T> b1(1000,ptr);
 
     auto data = RandomDistribution::uniform<std::vector<T> >(1000);
    

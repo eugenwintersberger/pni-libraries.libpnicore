@@ -30,6 +30,7 @@ namespace pni{
 namespace utils{
 
     //=====================implementation of helper functions===================
+    /*
     void check_equal_shape(const Shape &a,const Shape &b,const String &i)
     {
         if(a != b)
@@ -42,6 +43,21 @@ namespace utils{
             throw error;
         }
 
+    }
+    */
+
+    //-------------------------------------------------------------------------
+    void check_index(size_t index,size_t maxindex,const String &i)
+    {
+        if(index>=maxindex)
+        {
+            IndexError error;
+            std::stringstream ss;
+            ss<<"Index ("<<i<<") exceeds maximum value ("<<maxindex<<")!";
+            error.issuer(i);
+            error.description(ss.str());
+            throw error;
+        }
     }
 
 //end of namespace

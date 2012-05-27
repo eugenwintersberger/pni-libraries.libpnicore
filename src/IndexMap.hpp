@@ -41,9 +41,9 @@ namespace utils{
     */
     class IndexMap{
         private:
+            Buffer<size_t> _shape;
             Buffer<ssize_t> _offset;
             Buffer<ssize_t> _stride;
-            Shape _shape;
 
             //-----------------------------------------------------------------
             size_t _compute_dimstride(size_t d)
@@ -68,30 +68,49 @@ namespace utils{
 
 
         public:
-            //========constructors and destructor======================
+            //================constructors and destructor=======================
             //! default constructor
-            IndexMap();
+            IndexMap():
+                _shape(),
+                _offset(),
+                _stride()
+            {}
 
+            //-----------------------------------------------------------------
             //! copy constructor
-            IndexMap(const IndexMap &o);
+            IndexMap(const IndexMap &o):
+                _shape(o._shape),
+                _offset(o._offset),
+                _stride(o._stride)
+            {}
 
+            //-----------------------------------------------------------------
             //! move constructor
-            IndexMap(IndexMap &&o);
+            IndexMap(IndexMap &&o):
+                _shape(std::move(o._shape)),
+                _offset(std::move(o._offset)),
+                _stride(std::move(o._stride))
+            {}
 
+            //-----------------------------------------------------------------
             /*! standard constructor
 
             Construct IndexMap from a Shape object.
             \throws MemoryAllocationError if memory allocation fails
             */
-            IndexMap(const Shape &s);
+            template<typename ITypes...> IndexMap(ITypes ....dims);
 
             /*! standard constructor
 
             Construct IndexMap object from buffer objects. 
             \throws SizeMissmatchError if buffer sizes are not equal
             */
-            IndexMap(const Shape &s,const Buffer<ssize_t> &offset,
-                     const Buffer<ssize_t> &stride);
+            template<template<typename,typename ...> class CONT>
+            IndexMap(const CONT &shape,const CONT &offset, const CONT &stride):
+                _dims(shape),
+                _offset(offset),
+                _stride(stride)
+            {}
 
             //! destructor
             ~IndexMap();

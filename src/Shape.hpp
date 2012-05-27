@@ -71,7 +71,8 @@ namespace utils{
     The class takes care about all kinds of adoptions.
     This might not be true for array classes using this ArrayShape type.
     */
-    class Shape{
+    class Shape
+    {
         private:
             Buffer<size_t> _shape;    //!< the number of values along each dimension
             Buffer<size_t> _dimstrides;  //!< the strides for the offset calculation

@@ -24,11 +24,7 @@ int main(int argc,char **argv){
     runner.addTest(registry.makeTest());
     runner.eventManager().addListener(&progress);
     
-    
     runner.run();
-
-    std::cout<<"done!"<<std::endl;
-
 
     return 0;
 }

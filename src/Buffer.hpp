@@ -43,6 +43,7 @@
 #include "TypeIDMap.hpp"
 #include "NewAllocator.hpp"
 #include "Iterator.hpp"
+#include "ExceptionUtils.hpp"
 
 namespace pni{
 namespace utils{
@@ -68,7 +69,8 @@ namespace utils{
     mutex could easily be cancled by passing the pointer held by the object
     around to other routines.
     */
-    template<typename T,typename Allocator=NewAllocator >class Buffer{
+    template<typename T,typename Allocator=NewAllocator >class Buffer
+    {
         private:
             T *_data; //!< pointer to the data block
             size_t _size; //!< number of allocated elements
@@ -80,6 +82,35 @@ namespace utils{
             \throws MemoryAllocationError if allocation fails.
             */ 
             void _allocate();
+           
+            /*! \brief check for data access
+
+            Check if a buffer with a particular index is ready for access.
+            \throws MemoryAccessError if try to access an unallocated buffer
+            \throws IndexError if the index is larger or equal the buffer size
+            */
+            void _check_access(size_t i,const String &issuer)
+            {
+                if(!this->size())
+                {
+                    MemoryAccessError error;
+                    error.issuer(issuer);
+                    error.description("Buffer not allocated!");
+                    throw error;
+                }
+                
+                if(i>=this->size())
+                {
+                    IndexError error;
+                    std::ostringstream sstr;
+                    sstr<<"Index ("<<i<<") must not be larger or equal the size ";
+                    sstr<<"("<<this->size()<<")of the buffer!";
+                    error.issuer(issuer);
+                    error.description(sstr.str());
+                    throw error;
+                }
+
+            }
         public:
             //============public types provided by the template================
             typedef std::shared_ptr<Buffer<T,Allocator> > shared_ptr; //!< smart pointer to a typed buffer
@@ -95,7 +126,10 @@ namespace utils{
            
             //=================constructors and destructor=====================
             //! default constructor
-            explicit Buffer();
+            explicit Buffer():
+                _data(nullptr),
+                _size(0)
+            {}
 
             //-----------------------------------------------------------------
             /*! \brief copy constructor
@@ -104,7 +138,14 @@ namespace utils{
             old. New memory is allocated for the newly created Buffer<T> object.
             \throws MemoryAllocationError if allocation for the new buffer fails
             */
-            Buffer(const Buffer<T,Allocator> &b);
+            Buffer(const Buffer<T,Allocator> &b):
+                _data(Allocator::template allocate<T>(b.size())),
+                _size(b.size())
+            {
+                //copy data
+                if(this->size())
+                    for(size_t i=0;i<this->size();i++) (*this)[i] = b[i];
+            }
 
             //-----------------------------------------------------------------
             /*! \brief move constructor
@@ -113,7 +154,13 @@ namespace utils{
             construction of the lhs object. However, the rhs buffer will be
             freed. 
             */
-            Buffer(Buffer<T,Allocator> &&b);
+            Buffer(Buffer<T,Allocator> &&b):
+                _data(b._data),
+                _size(b._size)
+            {
+                b._data = nullptr;
+                b._size = 0;
+            }
 
             //-----------------------------------------------------------------
             /*! \brief constructor with buffer size
@@ -123,7 +170,10 @@ namespace utils{
             \throws MemoryAllocationError if allocation on the heap fails
             \param n number of elements of type T in the buffer
             */
-            explicit Buffer(size_t n);
+            explicit Buffer(size_t n):
+                _data(Allocator::template allocate<T>(n)),
+                _size(n)
+            {}
 
             //-----------------------------------------------------------------
             /*! \brief constructor from raw pointer
@@ -147,7 +197,13 @@ namespace utils{
             \param n number of bytes to allocate
             \param ptr pointer to raw data
             */
-            explicit Buffer(size_t n,const T *ptr);
+            explicit Buffer(size_t n,const T *ptr):
+                _data(Allocator::template allocate<T>(n)),
+                _size(n)
+            {
+                if(this->size())
+                    for(size_t i=0;i<this->size();i++) (*this)[i] = ptr[i];
+            }
 
             //-----------------------------------------------------------------
             /*! \brief construct with initializer list
@@ -161,8 +217,23 @@ namespace utils{
             \throws MemoryAllocationError if memory allocation fails
             \param list reference to the initializer list
             */
-            Buffer(const std::initializer_list<T> &list);
-
+            Buffer(const std::initializer_list<T> &list):
+                _data(Allocator::template allocate<T>(list.size())),
+                _size(list.size())
+            
+            {
+                size_t index = 0;
+#ifdef NOFOREACH
+                for(auto iter = list.begin();iter!=list.end();iter++){
+                    const T &value = *iter;
+#else        
+                for(const T &value: list){
+#endif
+                    _data[index] = value;
+                    index++;
+                }
+            }
+            
             //-----------------------------------------------------------------
             /*! \brief construct buffer from an iterable container
            
@@ -172,12 +243,30 @@ namespace utils{
             \throws MemoryAllocationError if memory allocation fails
             \param container instance of a container type
             */
-            template<template<typename,typename> class CONT,typename A> 
-                explicit Buffer(const CONT<T,A> &container);
+            template <
+                template<typename,typename ...> class CONT,
+                typename ...OPTS 
+            >
+            explicit Buffer(const CONT<T,OPTS...> &container):
+                _data(Allocator::template allocate<T>(container.size())),
+                _size(container.size())
+            {
+                size_t index = 0;
+                
+#ifdef NOFOREACH
+                for(auto iter = container.begin();iter!=container.end();iter++){
+                    const T &value = *iter;
+#else        
+                for(auto value: container){
+#endif
+                    _data[index] = value;
+                    index++;
+                }
+            }
 
             //-----------------------------------------------------------------
             //! destructor
-            ~Buffer();
+            ~Buffer() { this->free(); }
 
             //===================assignment operators==========================
             /*! copy assignment operator
@@ -188,10 +277,40 @@ namespace utils{
             \param b Buffer whose content will be assigned to this buffer
             \return reference to a Buffer<T> object
             */
-            Buffer<T,Allocator> &operator=(const Buffer<T,Allocator> &b);
+            Buffer<T,Allocator> &operator=(const Buffer<T,Allocator> &b)
+            {
+                if(this == &b) return *this;
+                
+                //allocate new memory only if the original buffer is allocated
+                if(b.size())
+                {
+                    this->allocate(b.size());
+                    for(size_t i=0;i<this->size();i++) (*this)[i] = b[i];
+                }
+                else
+                {
+                    //if the orignal buffer is not allocated we only need to free
+                    //memory
+                    this->free();
+                }
+
+                return *this;
+            }
+
             //-----------------------------------------------------------------
             //! move assignment operator
-            Buffer<T,Allocator> &operator=(Buffer<T,Allocator> &&b);
+            Buffer<T,Allocator> &operator=(Buffer<T,Allocator> &&b)
+            {
+                if(this == &b) return *this;
+
+                this->free();
+                this->_data = b._data;
+                b._data = nullptr;
+                this->_size = b._size;
+                b._size = 0;
+
+                return *this;
+            }
 
             //-----------------------------------------------------------------
             /*! single value assignment operator
@@ -203,7 +322,23 @@ namespace utils{
             \param v value which to assign to all buffer elements
             \return reference to a buffer object
             */
-            Buffer<T,Allocator> &operator=(const T &v);
+            Buffer<T,Allocator> &operator=(const T &v)
+            {
+                EXCEPTION_SETUP("Buffer<T,Allocator> &operator=(const T &v)");
+
+                if(!this->size())
+                {
+                    EXCEPTION_INIT(MemoryAccessError,
+                            "Cannot assign data to an unallocated buffer!");
+                    EXCEPTION_THROW();
+                }
+
+                //we do not need to check the size here because if the buffer is 
+                //allocated the size is necessarily not zero
+                for(size_t i=0;i<this->size();i++) (*this)[i] = v;
+
+                return *this;
+            }
 
             //==============public methods for data access=====================
             /*! \brief return data pointer
@@ -250,7 +385,11 @@ namespace utils{
             \param i buffer index
             \return value at index i
             */
-            T at(size_t i) const;
+            T at(size_t i) const
+            {
+                this->_check_access(i,"T at(size_t i) const");
+                return this->_data[i];
+            }
 
             //-----------------------------------------------------------------
             /*! \brief get value at index i
@@ -261,7 +400,13 @@ namespace utils{
             \param i buffer index
             \return reference to the element at index i
             */
-            T &at(size_t i);
+            T &at(size_t i)
+            {
+                this->_check_access(i,"T &at(size_t i)");
+                return this->_data[i];
+            }
+
+
 
             //-----------------------------------------------------------------
             /*! [] operator for read and write access
@@ -294,11 +439,26 @@ namespace utils{
             \throws MemoryAllocationError if things go wrong
             \param size number of elements for which to allocate memory
             */
-            void allocate(size_t size);
+            void allocate(size_t size)
+            {
+                //free memory if necessary
+                if(this->size()) this->free();
+               
+                //allocate new memory
+                _data = Allocator::template allocate<T>(size);
+
+                //set the size member variable
+                _size = size;
+            }
 
             //-----------------------------------------------------------------
             //! \brief free buffer memory
-            void free();
+            void free()
+            {
+                Allocator::template free(_data);
+                this->_data = nullptr;
+                _size = 0;
+            }
 
             //-----------------------------------------------------------------
             /*! \brief total memory consumption
@@ -363,244 +523,6 @@ namespace utils{
 
 
     };
-
-    //=================Implementation of constructors and destructors===========
-    //implementation of the default constructor
-    template<typename T,typename Allocator> Buffer<T,Allocator>::Buffer():
-        _data(nullptr),
-        _size(0)
-    { }
-
-    //--------------------------------------------------------------------------
-    //implementation of the standard constructor
-    template<typename T,typename Allocator> 
-        Buffer<T,Allocator>::Buffer(size_t n):
-            _data(Allocator::template allocate<T>(n)),
-            _size(n)
-    {}
-
-    //--------------------------------------------------------------------------
-    template<typename T,typename Allocator>
-        Buffer<T,Allocator>::Buffer(size_t n,const T *ptr):
-            _data(Allocator::template allocate<T>(n)),
-            _size(n)
-    {
-        //copy data
-        if(this->size())
-        {
-            for(size_t i=0;i<this->size();i++) (*this)[i] = ptr[i];
-        }
-    }
-
-    //--------------------------------------------------------------------------
-    //implementation using an initializer list
-    template<typename T,typename Allocator> 
-        Buffer<T,Allocator>::Buffer(const std::initializer_list<T> &list):
-            _data(Allocator::template allocate<T>(list.size())),
-            _size(list.size())
-        
-    {
-        size_t index = 0;
-#ifdef NOFOREACH
-        for(auto iter = list.begin();iter!=list.end();iter++){
-            const T &value = *iter;
-#else        
-        for(const T &value: list){
-#endif
-            _data[index] = value;
-            index++;
-        }
-    }
-
-    //--------------------------------------------------------------------------
-    //implementation using an initializer list
-    template<typename T,typename Allocator>
-    template<template<typename,typename> class CONT,typename A>
-        Buffer<T,Allocator>::Buffer(const CONT<T,A> &container):
-            _data(Allocator::template allocate<T>(container.size())),
-            _size(container.size())
-         
-    {
-        //from the initializer list to fill the buffer
-        size_t index = 0;
-#ifdef NOFOREACH
-        for(auto iter = container.begin();iter!=container.end();iter++){
-            const T &value = *iter;
-#else        
-        for(auto value: container){
-#endif
-            _data[index] = value;
-            index++;
-        }
-    }
-
-    //--------------------------------------------------------------------------
-    //implementation of the copy constructor
-    template<typename T,typename Allocator> 
-        Buffer<T,Allocator>::Buffer(const Buffer<T,Allocator> &b):
-            _data(Allocator::template allocate<T>(b.size())),
-            _size(b.size())
-    
-    {
-        //copy data
-        if(this->size())
-            for(size_t i=0;i<this->size();i++) (*this)[i] = b[i];
-    }
-
-    //--------------------------------------------------------------------------
-    //implementation of the move constructor
-    template<typename T,typename Allocator> 
-        Buffer<T,Allocator>::Buffer(Buffer<T,Allocator> &&b):
-            _data(b._data),
-            _size(b._size)
-    {
-        b._data = nullptr;
-        b._size = 0;
-    }
-
-    //--------------------------------------------------------------------------
-    //implementation of the destructor
-    template<typename T,typename Allocator> Buffer<T,Allocator>::~Buffer(){
-        this->free(); 
-    }
-
-    //==============methods for data allocation ================================
-
-    //--------------------------------------------------------------------------
-    //implementation of free
-    template<typename T,typename Allocator> void Buffer<T,Allocator>::free()
-    {
-        Allocator::template free(_data);
-        this->_data = nullptr;
-        _size = 0;
-    }
-
-    //--------------------------------------------------------------------------
-    //implementation of allocate
-    template<typename T,typename Allocator> 
-        void Buffer<T,Allocator>::allocate(size_t s)
-    {
-        //free memory if necessary
-        if(this->size()) this->free();
-       
-        //allocate new memory
-        _data = Allocator::template allocate<T>(s);
-
-        //set the size member variable
-        _size = s;
-    }
-
-
-
-    //===================assignment operators===================================
-    //implementation of copy assignment
-    template<typename T,typename Allocator> 
-        Buffer<T,Allocator> &Buffer<T,Allocator>::
-        operator=(const Buffer<T,Allocator> &b)
-    {
-        if(this == &b) return *this;
-        
-        //allocate new memory only if the original buffer is allocated
-        if(b.size())
-        {
-            this->allocate(b.size());
-            for(size_t i=0;i<this->size();i++) (*this)[i] = b[i];
-        }
-        else
-        {
-            //if the orignal buffer is not allocated we only need to free
-            //memory
-            this->free();
-        }
-
-
-        return *this;
-    }
-
-    //--------------------------------------------------------------------------
-    //implementation of the move assignment
-    template<typename T,typename Allocator> 
-        Buffer<T,Allocator> &Buffer<T,Allocator>::
-        operator=(Buffer<T,Allocator> &&b)
-    {
-        if(this == &b) return *this;
-
-        this->free();
-        this->_data = b._data;
-        b._data = nullptr;
-        this->_size = b._size;
-        b._size = 0;
-
-        return *this;
-    }
-
-    //--------------------------------------------------------------------------
-    //implementation of single value assignment
-    template<typename T,typename Allocator> 
-        Buffer<T,Allocator> &Buffer<T,Allocator>::operator=(const T &d)
-    {
-        EXCEPTION_SETUP("template<typename T,typename Allocator>"
-                        "Buffer<T,Allocator> &Buffer<T,Allocator>::"
-                        "operator=(const T &d)");
-
-        if(!this->size())
-        {
-            EXCEPTION_INIT(MemoryAccessError,
-                    "Cannot assign data to an unallocated buffer!");
-            EXCEPTION_THROW();
-        }
-
-        //we do not need to check the size here because if the buffer is 
-        //allocated the size is necessarily not zero
-        for(size_t i=0;i<this->size();i++) (*this)[i] = d;
-
-        return *this;
-    }
-
-    //===============Methods for data access====================================
-    template<typename T,typename Allocator> 
-        T Buffer<T,Allocator>::at(size_t i) const 
-    {
-        EXCEPTION_SETUP("template<typename T,typename Allocator> "
-                        "T Buffer<T,Allocator>::at(size_t i) const");
-
-        if(!this->size()){
-            EXCEPTION_INIT(MemoryAccessError,"Buffer not allocated");
-            EXCEPTION_THROW();
-        }
-
-        if(i>=this->size()){
-            std::ostringstream sstr;
-            sstr<<"Index ("<<i<<") must not be larger or equal the size ";
-            sstr<<"("<<this->size()<<")of the buffer!";
-            EXCEPTION_INIT(IndexError,sstr.str());
-            EXCEPTION_THROW();
-        }
-
-        return _data[i];
-    }
-
-    //===============Methods for data access====================================
-    template<typename T,typename Allocator> T &Buffer<T,Allocator>::at(size_t i)
-    {
-        EXCEPTION_SETUP("template<typename T,typename Allocator> "
-                        "T Buffer<T,Allocator>::at(size_t i) const");
-
-        if(!this->size()){
-            EXCEPTION_INIT(MemoryAccessError,"Buffer not allocated");
-            EXCEPTION_THROW();
-        }
-
-        if(i>=this->size()){
-            std::ostringstream sstr;
-            sstr<<"Index ("<<i<<") must not be larger or equal the size ";
-            sstr<<"("<<this->size()<<")of the buffer!";
-            EXCEPTION_INIT(IndexError,sstr.str());
-            EXCEPTION_THROW();
-        }
-
-        return _data[i];
-    }
 
 
     //==============comparison operators========================================

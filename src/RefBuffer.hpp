@@ -37,16 +37,13 @@
 #include <string>
 #include <sstream>
 #include "Exceptions.hpp"
+#include "ExceptionUtils.hpp"
 #include "Types.hpp"
-#include "Buffer.hpp"
 #include "TypeIDMap.hpp"
 #include "Iterator.hpp"
 
 namespace pni{
 namespace utils{
-
-#define RBUFFTMPDEC template<typename T,typename Allocator>
-#define RBUFFTMP RefBuffer<T,Allocator>
 
     /*! \ingroup data_classes
     \brief ref. buffer template
@@ -61,19 +58,18 @@ namespace utils{
     Such a reference buffer can either be initialized from a raw pointer, an
     instance of Buffer<T>, or from a different RefBuffer object.
     */
-    template<typename T,typename Allocator=NewAllocator> class RefBuffer
+    template<typename T> class RefBuffer
     {
         private:
             T *_data; //!< pointer to the data block
             size_t _size; //!< number of elements allocated in the buffer
         public:
             //===================public types =================================
-            typedef std::unique_ptr<RBUFFTMP > unique_ptr; //!< unique pointer type 
-            typedef std::shared_ptr<RBUFFTMP > shared_ptr; //!< shared pointer type
+            typedef std::unique_ptr<RefBuffer<T> > unique_ptr; //!< unique pointer type 
+            typedef std::shared_ptr<RefBuffer<T> > shared_ptr; //!< shared pointer type
             typedef T value_type;             //!< type of data stored
-            typedef Allocator allocator_type; //!< allocator type
-            typedef Iterator<RBUFFTMP,0> iterator; //!< iterator type
-            typedef Iterator<RBUFFTMP,1> const_iterator; //!< const iterator type
+            typedef Iterator<RefBuffer<T>,0> iterator; //!< iterator type
+            typedef Iterator<RefBuffer<T>,1> const_iterator; //!< const iterator type
 
             //===================public static member variables================
             static const size_t value_size = sizeof(T);  //!< size of element data type
@@ -81,19 +77,27 @@ namespace utils{
 
             //=================constructors and destructors====================
             //! default constructor
-            explicit RefBuffer();
+            explicit RefBuffer():
+                _data(nullptr),
+                _size(0)
+            {}
 
             //-----------------------------------------------------------------
             //! copy constructor
-            RefBuffer(const RBUFFTMP &b);
-
-            //-----------------------------------------------------------------
-            //! copy constructor
-            RefBuffer(const Buffer<T,Allocator> &b);
+            RefBuffer(const RefBuffer<T> &b):
+                _data(b._data),
+                _size(b._size)
+            {}
 
             //-----------------------------------------------------------------
             //! move constructor
-            RefBuffer(RBUFFTMP &&b);
+            RefBuffer(RefBuffer<T> &&b):
+                _data(b._data),
+                _size(b._size)
+            {
+                b._data = nullptr;
+                b._size = 0;
+            }
 
             //-----------------------------------------------------------------
             /*! \brief standard constructor
@@ -104,40 +108,66 @@ namespace utils{
             \param n number of elements of type T in the buffer
             \param data pointer to the allocated memory
             */
-            explicit RefBuffer(size_t n,T *data);
-
-            /*! \brief standard constructor
-
-            This constructor exists to satisfy the Buffer interface. However,
-            since a RefBuffer does not hold any data by itself it cannot be used
-            and raises a static assert. 
-            */
-            /*
-            explicit RefBuffer(size_t n):
+            explicit RefBuffer(size_t n,T *data):
+                _data(data),
                 _size(n)
-            {
-                static_assert(true,"Constructor cannot be used with RefBuffer");
-            }*/
-            
+            {}
+
             //-----------------------------------------------------------------
             //! destructor
-            virtual ~RefBuffer();
+            ~RefBuffer() { this->free(); }
 
             //====================assignment operators=========================
             //! copy assignment operator
-            RBUFFTMP &operator=(const RBUFFTMP &b);
+            RefBuffer<T> &operator=(const RefBuffer<T> &b)
+            {
+                if(&b != this){
+                    _data = b._data;
+                    _size = b._size;
+                }
+
+                return *this;
+            }
 
             //-----------------------------------------------------------------
             //! move assignment operator
-            RBUFFTMP &operator=(RBUFFTMP &&b);
+            RefBuffer<T> &operator=(RefBuffer<T> &&b)
+            {
+                if(this != &b){
+                    _data = b._data;
+                    b._data = nullptr;
+                    _size = b._size;
+                    b._size = 0;
+                }
+
+                return *this;
+            }
 
             //-----------------------------------------------------------------
-            /*! copy assignment operator from Buffer<T>
+            /*! \brief copy from an other container
 
-            The reference buffer holds a reference to the data which was allocated 
-            by the b. 
+            Copies the content of a container to the RefBuffer data.
+            \throws MemoryNotAllocatedError if buffer is not allocated
+            \throws SizeMissmatchBuffer if container size does not match
             */
-            RBUFFTMP &operator=(const Buffer<T,Allocator> &b);
+            template<template<typename,typename...> class CONT,typename ...OPTS>
+            RefBuffer<T> &operator=(const CONT<T,OPTS...> &b)
+            {
+                check_allocation_state(*this,
+                                 "template<template<typename,typename...> "
+                                 "class CONT,typename ...OPTS> RefBuffer<T> "
+                                 "&operator=(const CONT<T,OPTS...> &b)");
+                check_equal_size(*this,b,
+                                 "template<template<typename,typename...> "
+                                 "class CONT,typename ...OPTS> RefBuffer<T> "
+                                 "&operator=(const CONT<T,OPTS...> &b)");
+                
+                size_t index = 0;
+                for(auto v: b)
+                    (*this)[index++] = v;
+
+                return *this;
+            }
 
             //-----------------------------------------------------------------
             /*! \brief single value assignment operator
@@ -145,9 +175,18 @@ namespace utils{
             This special form of the assignment operator can be used to assign
             a single value to all elements of the buffer. Thus, it is quite useful
             for initializing a buffer object.
+            \throws MemoryNotAllocatedError if buffer not allocated
             \param v value which to assign to all buffer elements
             */
-            RBUFFTMP &operator=(const T &v);
+            RefBuffer<T> &operator=(const T &v)
+            {
+                check_allocation_state(*this,
+                        "RefBuffer<T> &operator=(const T &v)");
+                
+                for(size_t i=0;i<this->size();i++) (*this)[i] = v;
+
+                return *this;
+            }
 
             //====================data access methods==========================
             /*! \brief return data pointer
@@ -190,11 +229,18 @@ namespace utils{
             Return the value stored in the buffer at index i. This method
             performe index checking and throws an exception if i exceeds the
             size of the buffer.
+            \throws MemoryNotAllocatedError if buffer is not allocated
             \throws IndexError if i exceeds buffer size
             \param i buffer index
             \return value at index i
             */
-            T at(size_t i) const;
+            T at(size_t i) const
+            {
+                check_allocation_state(*this,"T at(size_t i) const");
+                check_index(i,this->size(),"T at(size_t i) const");
+
+                return this->_data[i];
+            }
 
             //-----------------------------------------------------------------
             /*! \brief return reference to index i
@@ -202,11 +248,18 @@ namespace utils{
             Returns a reference to the element stored at index i. This method
             performs index checking and throws an exception if i exceeds the
             size of the buffer.
+            \throws MemoryNotAllocatedError if buffer not allocated
             \throws IndexError if i exceeds buffer size
             \param i buffer index
             \return reference to element at i
             */
-            T &at(size_t i);
+            T &at(size_t i)
+            {
+                check_allocation_state(*this,"T &at(size_t i)");
+                check_index(i,this->size(),"T &at(size_t i)");
+
+                return this->_data[i];
+            }
 
             //-----------------------------------------------------------------
             /*! \brief return reference to element i
@@ -273,7 +326,7 @@ namespace utils{
             Returns an iterator pointing on the first element of the buffer.
             \return iterator to first element
             */
-            RBUFFTMP::iterator begin()
+            RefBuffer<T>::iterator begin()
             {
                 return iterator(this,0);
             }
@@ -284,7 +337,7 @@ namespace utils{
             Returns an iterator pointing to the last element of the buffer.
             \return iterator to last element
             */
-            RBUFFTMP::iterator end()
+            RefBuffer<T>::iterator end()
             {
                 return iterator(this,this->size());
             }
@@ -295,7 +348,7 @@ namespace utils{
             Returns an const iterator pointing on the first element of the buffer.
             \return const iterator to first element
             */
-            RBUFFTMP::const_iterator begin() const
+            RefBuffer<T>::const_iterator begin() const
             {
                 return const_iterator(this,0);
             }
@@ -306,156 +359,16 @@ namespace utils{
             Returns an const iterator pointing to the last element of the buffer.
             \return const iterator to last element
             */
-            RBUFFTMP::const_iterator end() const
+            RefBuffer<T>::const_iterator end() const
             {
                 return const_iterator(this,this->size());
             }
 
     };
 
-    //=================Implementation of constructors and destructors===============
-    //implementation of the default constructor
-    RBUFFTMPDEC RBUFFTMP::RefBuffer():
-        _data(nullptr),
-        _size(0)
-    { }
-
-    //------------------------------------------------------------------------------
-    //implementation of the copy from RefBuffer constructor
-    RBUFFTMPDEC RBUFFTMP::RefBuffer(const RBUFFTMP& o):
-        _data(o._data),
-        _size(o._size)
-    { }
-
-    //------------------------------------------------------------------------------
-    //implementation of the copy constructor
-    RBUFFTMPDEC RBUFFTMP::RefBuffer(const Buffer<T,Allocator> &b):
-        _data(b.ptr()),
-        _size(b.size())
-    { }
-
-    //------------------------------------------------------------------------------
-    //implementation of the move constructor
-    RBUFFTMPDEC RBUFFTMP::RefBuffer(RBUFFTMP &&b):
-        _data(std::move(b._data)),
-        _size(std::move(b._size))
-    {
-        b._data = nullptr;
-        b._size = 0;
-    }
-
-    //------------------------------------------------------------------------------
-    //implementation of the standard constructor
-    RBUFFTMPDEC RBUFFTMP::RefBuffer(size_t n,T *data):
-        _data(data),
-        _size(n)
-    { }
-
-    //------------------------------------------------------------------------------
-    //implementation of the destructor
-    RBUFFTMPDEC RBUFFTMP::~RefBuffer()
-    {
-        free();
-    }
-
-    //===================assignment operators=======================================
-    //implementation of copy assignment
-    RBUFFTMPDEC RBUFFTMP &RBUFFTMP::operator=(const RBUFFTMP &b)
-    {
-        if(&b != this){
-            _data = b._data;
-            _size = b._size;
-        }
-
-        return *this;
-    }
-
-    //------------------------------------------------------------------------------
-    //implementation of the move assignment
-    RBUFFTMPDEC RBUFFTMP &RBUFFTMP::operator=(RBUFFTMP &&b)
-    {
-        if(this != &b){
-            _data = b._data;
-            b._data = nullptr;
-            _size = b._size;
-            b._size = 0;
-        }
-
-        return *this;
-    }
-
-    //-----------------------------------------------------------------------------
-    //copy assignment from Buffer<T> template
-    RBUFFTMPDEC RBUFFTMP &RBUFFTMP::operator=(const Buffer<T,Allocator> &b)
-    {
-        _data = b.ptr();
-        _size = b.size();
-        
-        return *this;
-    }
-
-    //------------------------------------------------------------------------------
-    //implementation of single value assignment
-    RBUFFTMPDEC RBUFFTMP &RBUFFTMP::operator=(const T &d){
-        EXCEPTION_SETUP("template<typename T> RefBuffer<T> &RefBuffer<T>::operator=(const T &d)");
-
-        if(!this->size()){
-            EXCEPTION_INIT(MemoryAccessError,"Cannot assign data to an unallocated buffer!");
-            EXCEPTION_THROW();
-        }
-
-        //we do not need to check the size here because if the buffer is allocated
-        //the size is necessarily not zero
-        for(size_t i=0;i<this->size();i++) (*this)[i] = d;
-
-
-        return *this;
-    }
-
-    //===============Methods for data access========================================
-    RBUFFTMPDEC T RBUFFTMP::at(size_t i) const 
-    {
-        EXCEPTION_SETUP("RBUFFTMPDEC T RBUFFTMP::at(size_t i) const ");
-
-        if(!this->size()){
-            EXCEPTION_INIT(MemoryAccessError,"Buffer not allocated");
-            EXCEPTION_THROW();
-        }
-
-        if(i>=this->size()){
-            std::ostringstream sstr;
-            sstr<<"Index ("<<i<<") must not be larger or equal the size ("<<this->size()<<")of the buffer!";
-            EXCEPTION_INIT(IndexError,sstr.str());
-            EXCEPTION_THROW();
-        }
-
-        return this->_data[i];
-    }
-
-    //------------------------------------------------------------------------------
-    RBUFFTMPDEC T & RBUFFTMP::at(size_t i)
-    {
-        EXCEPTION_SETUP("RBUFFTMPDEC T & RBUFFTMP::at(size_t i)");
-
-        if(!this->size()){
-            EXCEPTION_INIT(MemoryAccessError,"Buffer not allocated!");
-            EXCEPTION_THROW();
-        }
-
-        if(i>=this->size()){
-            std::ostringstream sstr;
-            sstr<<"Index ("<<i<<") must not be larger or equal the size ("<<this->size()<<")of the buffer!";
-            EXCEPTION_INIT(IndexError,sstr.str());
-            EXCEPTION_THROW();
-        }
-
-        return this->_data[i];
-    }
-
-
     //==============comparison operators============================================
-    template<typename T,typename U,typename Allocator>
-    bool operator==(const RefBuffer<T,Allocator> &a,const RefBuffer<U,Allocator> &b){
+    template<typename T,typename U>
+    bool operator==(const RefBuffer<T> &a,const RefBuffer<U> &b){
         if(a.size() != b.size()) return false;
 
         if((a.size()) && (b.size()))
@@ -467,12 +380,9 @@ namespace utils{
         return true;
     }
 
-
-
-
     //-----------------------------------------------------------------------------
-    template<typename T,typename U,typename Allocator>
-    bool operator!=(const RefBuffer<T,Allocator> &a,const RefBuffer<U,Allocator> &b){
+    template<typename T,typename U>
+    bool operator!=(const RefBuffer<T> &a,const RefBuffer<U> &b){
         if(a == b) return false;
         return true;
     }

@@ -30,7 +30,7 @@
 #include <typeinfo>
 
 #include "Exceptions.hpp"
-#include "Shape.hpp"
+//#include "Shape.hpp"
 
 namespace pni{
 namespace utils{
@@ -66,6 +66,21 @@ namespace utils{
         }
     }
 
+    /*!
+    \ingroup error_classes
+    \brief check index 
+
+    This utilty function can be used to check if an index exeeds a particular
+    value.
+    \throws IndexError if i exceeds imax
+    \param index actual index
+    \param maxindex maximum value
+    \param i signature of the function or method where the check has been
+    performed
+    */
+    void check_index(size_t index,size_t maxindex,const String &i);
+
+
     //-------------------------------------------------------------------------
     /*!
     \ingroup error_classes
@@ -78,7 +93,7 @@ namespace utils{
     \param b second shape
     \param i signature of the function or method where the check was performed
     */
-    void check_equal_shape(const Shape &a,const Shape &b,const String &i);
+    //void check_equal_shape(const Shape &a,const Shape &b,const String &i);
 
     //-------------------------------------------------------------------------
     /*! 
