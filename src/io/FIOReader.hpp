@@ -33,6 +33,7 @@
 #include<boost/regex.hpp>
 
 #include "../Array.hpp"
+#include "../ArrayFactory.hpp"
 #include "SpreadsheetReader.hpp"
 
 namespace pni{
@@ -235,7 +236,7 @@ namespace io{
 
         //allocate a new array
         Shape s({this->nrecords()});
-        ATYPE array(s);
+        ATYPE array = ArrayFactory<typename ATYPE::value_type>::create(s);
 
         //determine the index of the column
         size_t index = 0;
