@@ -84,6 +84,9 @@ var.Add(PathVariable("CPPULIBDIR","CPPUnit library installation path","/usr/lib"
 env = Environment(variables=var,ENV={'PATH':os.environ['PATH']},
 				  tools=['default','packaging','textfile'])
 
+#set the proper compiler - this should be changed to something 
+#more general - independent of the underlying operating system
+env.Replace(CXX = env["CXX"])
 #create library namesl
 libname = LibFileNames(env["LIBNAME"],env["VERSION"],env["SOVERSION"])
 env.Append(LIBFULLNAME = libname.full_name(env))
@@ -107,14 +110,13 @@ if not env["DOCDIR"]:
 
 print env["LIBDIR"]
 #set default compiler flags
-env.Append(CXXFLAGS = ["-Wall","-std=c++0x"])
+env.Append(CXXFLAGS = ["-Wall","-std=c++11"])
 env.Append(LIBS=["dl"])
 env.AppendUnique(LIBPATH=[env["VTKLIBDIR"],env["BOOSTLIBDIR"],env["CPPULIBDIR"]])
 env.AppendUnique(CPPPATH=[env["VTKINCDIR"],env["BOOSTINCDIR"],env["CPPUINCDIR"]])
+env.AppendUnique(CPPPATH=['/home/eugen/Applications/inst/include/c++/4.7'])
+env.AppendUnique(LIBPATH=["/home/eugen/Applications/inst/lib"])
 
-#set the proper compiler - this should be changed to something 
-#more general - independent of the underlying operating system
-env.Replace(CXX = env["CXX"])
 
 
 nullptr_test_code="""

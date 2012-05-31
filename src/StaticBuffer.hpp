@@ -145,7 +145,7 @@ namespace utils{
             \throws SizeMissmatchError if memory allocation fails
             \param container instance of a container type
             */
-            template<typename T,template<typename,typename ...> class CONT,
+            template<template<typename,typename ...> class CONT,
                      typename ...OPTS>
             explicit StaticBuffer(const CONT<T,OPTS...> &container)
             {
