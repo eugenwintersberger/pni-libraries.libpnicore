@@ -101,7 +101,7 @@ namespace io{
         if(this == &r) return *this;
 
         _fname = std::move(r._fname);
-        _istream = std::move(_istream);
+        _istream = std::move(r._istream);
 
         return *this;
     }
