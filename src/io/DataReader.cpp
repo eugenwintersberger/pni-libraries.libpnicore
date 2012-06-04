@@ -91,7 +91,8 @@ namespace io{
     DataReader::~DataReader() 
     {
         //close the file in case the object is getting destroied.
-        if(_istream->is_open()) _istream->close();
+        if(_istream)
+            if(_istream->good() && _istream->is_open()) _istream->close();
     }
 
     //=============implementation of assignment operators==================
