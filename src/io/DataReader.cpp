@@ -48,18 +48,13 @@ namespace io{
             EXCEPTION_THROW();
         }
 
-        try{
-            if(_is_binary)
-            {
-                stream->open(fname);
-            }
-            else
-            {
-                stream->open(fname,std::ifstream::binary);
-            }
-        }catch(...){
-            EXCEPTION_INIT(FileError,"Error opening file ["+fname+"]!");
-            EXCEPTION_THROW();
+        if(_is_binary)
+        {
+            stream->open(fname);
+        }
+        else
+        {
+            stream->open(fname,std::ifstream::binary);
         }
 
         return stream;
@@ -74,7 +69,16 @@ namespace io{
         _fname(fname),
         _is_binary(binary),
         _istream(_open_stream(fname))
-    { }
+    { 
+        EXCEPTION_SETUP("DataReader::DataReader(const String &fname,"
+                        "bool binary)");
+
+        if(_istream->fail())
+        {
+            EXCEPTION_INIT(FileError,"Error opening file ["+fname+"]!");
+            EXCEPTION_THROW();
+        }
+    }
 
     //implementation of the move constructor
     DataReader::DataReader(DataReader &&r):
