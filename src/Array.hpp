@@ -262,8 +262,8 @@ namespace utils {
             */
             Array(const ARRAYTMP &a):
                 NumericObject(),
-                _shape(a._shape()),
-                _data(a._data())
+                _shape(a._shape),
+                _data(a._data)
             { }
 
             //-----------------------------------------------------------------
