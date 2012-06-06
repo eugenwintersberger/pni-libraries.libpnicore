@@ -3,6 +3,10 @@ import os.path as path
 import platform
 import os
 
+###--------------------------------------------------------------------------------
+#add some command line options
+AddOption("--enable-vtk",dest="with_vtk",action="store_true",default=False)
+
 ###================================================================================
 #Function to assemble library filenames depending on the operating system for
 #which the library is built.
@@ -71,12 +75,14 @@ var.Add("CXX","set the compiler to use","g++")
 var.Add("DOCDIR","installation directory for the documentation","")
 var.Add("INCDIR","installation path for header files","")
 var.Add("LIBDIR","library installation path","")
-var.Add(PathVariable("VTKINCDIR","header installation path for VTK","/usr/include/vtk"))
-var.Add(PathVariable("VTKLIBDIR","VTK library installation","/usr/lib"))
 var.Add(PathVariable("BOOSTINCDIR","BOOST header installation path","/usr/include"))
 var.Add(PathVariable("BOOSTLIBDIR","BOOST library installation path","/usr/lib"))
 var.Add(PathVariable("CPPUINCDIR","CPPUnit header installation path","/usr/include"))
 var.Add(PathVariable("CPPULIBDIR","CPPUnit library installation path","/usr/lib"))
+
+if GetOption("with_vtk"):
+    var.Add(PathVariable("VTKINCDIR","header installation path for VTK","/usr/include/vtk"))
+    var.Add(PathVariable("VTKLIBDIR","VTK library installation","/usr/lib"))
 
 #need now to create the proper library suffix
 
@@ -105,12 +111,15 @@ if not env["DOCDIR"]:
                                   +env["SOVERSION"]+"-doc"))
 
 
-print env["LIBDIR"]
 #set default compiler flags
 env.Append(CXXFLAGS = ["-Wall","-std=c++0x"])
 env.Append(LIBS=["dl"])
-env.AppendUnique(LIBPATH=[env["VTKLIBDIR"],env["BOOSTLIBDIR"],env["CPPULIBDIR"]])
-env.AppendUnique(CPPPATH=[env["VTKINCDIR"],env["BOOSTINCDIR"],env["CPPUINCDIR"]])
+env.AppendUnique(LIBPATH=[env["BOOSTLIBDIR"],env["CPPULIBDIR"]])
+env.AppendUnique(CPPPATH=[env["BOOSTINCDIR"],env["CPPUINCDIR"]])
+
+if GetOption("with_vtk"):
+    env.AppendUnique(LIBPATH=[env["VTKLIBDIR"]])
+    env.AppendUnique(CPPPATH=[env["VTKINCDIR"]])
 
 #set the proper compiler - this should be changed to something 
 #more general - independent of the underlying operating system
@@ -222,22 +231,22 @@ if not conf.CheckLib("boost_regex",language="C++"):
     print "BOOST regular expression library not found"
     Exit(1)
 
-
-if not conf.CheckLib("vtkFiltering",language="C++") or \
-   not conf.CheckLib("vtkftgl",language="C++") or \
-   not conf.CheckLib("vtkGenericFiltering",language="C++") or \
-   not conf.CheckLib("vtkGraphics",language="C++") or \
-   not conf.CheckLib("vtkHybrid",language="C++") or \
-   not conf.CheckLib("vtkImaging",language="C++") or \
-   not conf.CheckLib("vtkInfovis",language="C++") or \
-   not conf.CheckLib("vtkCommon",language="C++") or \
-   not conf.CheckLib("vtkRendering",language="C++") or \
-   not conf.CheckLib("vtkIO",language="C++"):
-    print "VTK libraries are missing!"
-    Exit(1)
+if GetOption("with_vtk"):
+    if not conf.CheckLib("vtkFiltering",language="C++") or \
+       not conf.CheckLib("vtkftgl",language="C++") or \
+       not conf.CheckLib("vtkGenericFiltering",language="C++") or \
+       not conf.CheckLib("vtkGraphics",language="C++") or \
+       not conf.CheckLib("vtkHybrid",language="C++") or \
+       not conf.CheckLib("vtkImaging",language="C++") or \
+       not conf.CheckLib("vtkInfovis",language="C++") or \
+       not conf.CheckLib("vtkCommon",language="C++") or \
+       not conf.CheckLib("vtkRendering",language="C++") or \
+       not conf.CheckLib("vtkIO",language="C++"):
+        print "VTK libraries are missing!"
+        Exit(1)
 
 #check for CPPUNIT headers and library if building tests
-
+print env["LIBS"]
 	
 env = conf.Finish()
 
@@ -302,7 +311,6 @@ Export("build_env")
 Export("test_env")
 
 
-print build_env["LIBPATH"]
 #build
 SConscript(["src/SConscript"])
 SConscript(["test/SConscript"])

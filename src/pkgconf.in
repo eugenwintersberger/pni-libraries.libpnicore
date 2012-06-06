@@ -6,5 +6,5 @@ libdir = ${prefix}/lib
 Name: @LIBNAME@
 Description: PNI utility library
 Version: @VERSION@
-Cflags: -I${includedir} -I@BOOSTINCDIR@ -I@VTKINCDIR@
-Libs: -L${libdir} -l@LIBNAME@ -lboost_regex -lvtkFiltering -lvtkftgl -lvtkGenericFiltering -lvtkGraphics -lvtkHybrid -lvtkImaging -lvtkInfovis -lvtkCommon -lvtkRendering -lvtkIO
+Cflags: -I${includedir} @INCPATH@
+Libs: -L${libdir} -l@LIBNAME@ @LIBPATH@ @LIBS@
