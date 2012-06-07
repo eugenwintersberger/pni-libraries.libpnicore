@@ -6,6 +6,7 @@ import os
 ###--------------------------------------------------------------------------------
 #add some command line options
 AddOption("--enable-vtk",dest="with_vtk",action="store_true",default=False)
+AddOption("--enable-tiff",dest="with_tiff",action="store_true",default=False)
 
 ###================================================================================
 #Function to assemble library filenames depending on the operating system for
