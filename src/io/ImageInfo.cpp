@@ -83,7 +83,17 @@ namespace io{
     std::vector<size_t> ImageInfo::bits_per_channel() const
     {
         std::vector<size_t> result;
-        for(auto c: _channel_info) result.push_back(c.bits());
+#ifdef NOFOREACH
+        for(auto iter = _channel_info.begin(); iter != _channel_info.end();iter++)
+        {
+            ImageChannelInfo c = *iter;
+#else
+        for(auto c: _channel_info) 
+        {
+#endif
+            result.push_back(c.bits());
+        }
+
         return result;
     }
 
@@ -91,7 +101,17 @@ namespace io{
     std::vector<TypeID> ImageInfo::types_per_channel() const
     {
         std::vector<TypeID> types;
-        for(auto c: _channel_info) types.push_back(c.type_id());
+#ifdef NOFOREACH
+        for( auto iter = _channel_info.begin();iter!=_channel_info.end();iter++)
+        {
+            ImageChannelInfo c=*iter;
+#else
+        for(auto c: _channel_info)
+        {
+#endif
+            types.push_back(c.type_id());
+        }
+
         return types;
     }
 

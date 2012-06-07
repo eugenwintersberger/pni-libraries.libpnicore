@@ -133,8 +133,14 @@ namespace io{
             //constructor returns the stream at the position where the offset of
             //the next IFD is stored.
             tiff::IFD ifd(_read_ifd_size(stream));
+#ifdef NOFOREACH
+            for(auto iter=ifd.begin();iter!=ifd.end();iter++)
+            {
+                tiff::IFDEntry &entry = *iter;
+#else
             for(tiff::IFDEntry &entry: ifd) 
             {
+#endif
                 entry = std::move(tiff::IFDEntry::create_from_stream(stream));
             }
             //store the IFD
@@ -342,7 +348,16 @@ namespace io{
     {
         o<<"TIFFReader for file: "<<r.filename()<<std::endl;
         o<<"File contains: "<<r.nimages()<<" images"<<std::endl; 
-        for(auto ifd: r._ifds) o<<ifd;
+#ifdef NOFOREACH
+        for(auto iter=r._ifds.begin();iter!=r._ifds.end();iter++)
+        {
+            auto ifd = *iter;
+#else
+        for(auto ifd: r._ifds)
+        {
+#endif
+            o<<ifd;
+        }
         return o;
     }
 

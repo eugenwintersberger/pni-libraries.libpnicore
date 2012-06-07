@@ -240,8 +240,14 @@ namespace io{
 
         //determine the index of the column
         size_t index = 0;
+#ifdef NOFOREACH
+        for(auto iter = (*this).begin();iter!=(*this).end();iter++)
+        {
+            ColumnInfo c=*this;
+#else
         for(auto c: *this)
         {
+#endif
             if(c.name() == n) 
             {
                 this->_read_column(index,array);

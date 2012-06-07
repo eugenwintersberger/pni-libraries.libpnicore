@@ -322,7 +322,16 @@ namespace utils {
             {
                 check_allocation_state(this->buffer(),
                                        "ARRAYTMP &operator =(const T&)");
-                for(T &a: *this) a = v;
+#ifdef NOFOREACH
+                for(auto iter = (*this).begin();iter!=(*this).end();iter++)
+                {
+                    T &a = *this;
+#else
+                for(T &a: *this) 
+                {
+#endif
+                    a = v;
+                }
                 return *this;
             }
 
@@ -340,7 +349,17 @@ namespace utils {
                 check_allocation_state(this->buffer(),
                         "template<typename U> ARRAYTMP &operator=(const U &v)");
 
-                for(T &a: *this) a = convert_type<T>(v);
+#ifdef NOFOREACH
+                for(auto iter = (*this).begin();iter!=(*this).end();iter++)
+                {
+                    T &a = *iter;
+#else
+                for(T &a: *this)
+                {
+#endif
+                    a = convert_type<T>(v);
+                }
+
                 return *this;
             }
 
@@ -459,7 +478,16 @@ namespace utils {
             */
             ARRAYTMP &operator +=(const T&v)
             {
-                for(T &a: *this) a+=v;
+#ifdef NOFOREACH
+                for(auto iter=(*this).begin();iter!=(*this).end();iter++)
+                {
+                    T &a = *iter;
+#else
+                for(T &a: *this)
+                {
+#endif
+                    a+=v;
+                }
                 return *this;
             }
 

@@ -82,8 +82,14 @@ namespace utils{
 
         _stride = 1;
         size_t cnt=0;
+#ifdef NOFOREACH
+        for(auto iter = l.begin(); iter != l.end(); iter++)
+        {
+            size_t v = *iter;
+#else
         for(auto v: l)
         {
+#endif
             if(cnt == 0) _first = v;
             if(cnt == 1) _last = v;
             if(cnt == 2) _stride = v ;

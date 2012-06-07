@@ -83,8 +83,14 @@ namespace tiff{
         }
 
         //read the data
+#ifdef NOFOREACH
+        for(auto iter = r.begin();iter!=r.end();iter++)
+        {
+            RTYPE &value = *iter;
+#else
         for(RTYPE &value: r)
         {
+#endif
             stream.read((char*)(&buffer),sizeof(ETYPE));
             value = (RTYPE)(buffer);
         }
