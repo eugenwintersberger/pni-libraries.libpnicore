@@ -248,7 +248,7 @@ void min_clip(ARRAYT &a,typename ARRAYT::value_type threshold)
 #ifdef NOFOREACH
     for(auto iter=a.begin();iter!=a.end();iter++)
     {
-        typename ARRAY::value_type &v = *iter
+        typename ARRAYT::value_type &v = *iter
 #else
     for(typename ARRAYT::value_type &v: a)
     {
