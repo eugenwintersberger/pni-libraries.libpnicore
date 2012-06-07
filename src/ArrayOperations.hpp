@@ -48,7 +48,16 @@ template<typename ARRAYT>
     typedef typename ArrayType<typename ARRAYT::value_type>::Type RType;
     RType result(0);
 
-    for(auto v: a) result += v;
+#ifdef NOFOREACH
+    for(auto iter=a.begin();iter!=a.end();iter++)
+    {
+        auto v=*iter;
+#else
+    for(auto v: a)
+    {
+#endif
+        result += v;
+    }
     return result;
 }
 
@@ -69,8 +78,16 @@ template<typename ARRAYT> typename ARRAYT::value_type min(const ARRAYT &a)
     typedef typename ARRAYT::value_type RType;
     RType result(a[0]);
 
+#ifdef NOFOREACH
+    for(auto iter=a.begin();iter!=a.end();iter++)
+    {
+        auto v = *iter;
+#else
     for(auto v: a)
+    {
+#endif
         if(v<result) result = v;
+    }
 
     return result;
 }
@@ -93,8 +110,16 @@ template<typename ARRAYT> typename ARRAYT::value_type max(const ARRAYT &a)
 
     RType result(a[0]);
 
+#ifdef NOFOREACH
+    for(auto iter=a.begin();iter!=a.end();iter++)
+    {
+        auto v = *iter;
+#else
     for(auto v: a)
+    {
+#endif
         if(v>result) result = v;
+    }
 
     return result;
 }
@@ -117,8 +142,14 @@ template<typename ARRAYT> void min_max(const ARRAYT &a,
 {
     min=typename ARRAYT::value_type(a[0]);
     max=typename ARRAYT::value_type(a[0]);
+#ifdef NOFOREACH
+    for(auto iter=a.begin();iter!=a.end();iter++)
+    {
+        auto v=*iter;
+#else
     for(auto v: a)
     {
+#endif
         if(v<min) min = v;
         if(v>max) max = v;
     }
@@ -139,8 +170,14 @@ template<typename ARRAYT> void clip(ARRAYT &a,
                                     typename ARRAYT::value_type minth, 
                                     typename ARRAYT::value_type maxth)
 {
+#ifdef NOFOREACH
+    for(auto iter=a.begin();iter!=a.end();iter++)
+    {
+        auto v = *iter;
+#else
     for(typename ARRAYT::value_type &v: a)
     {
+#endif
         if(v <= minth)
         {
             v = minth;
@@ -174,8 +211,14 @@ template<typename ARRAYT> void clip(ARRAYT &a,
                                     typename ARRAYT::value_type minval,
                                     typename ARRAYT::value_type maxval)
 {
+#ifdef NOFOREACH
+    for(auto iter=a.begin();iter!=a.end();iter++)
+    {
+        auto v = *iter;
+#else
     for(typename ARRAYT::value_type &v: a)
     {
+#endif
         if(v <= minth)
         {
             v = minval;
@@ -202,8 +245,16 @@ Set values smaller or equal than threshold to threshold.
 template<typename ARRAYT>
 void min_clip(ARRAYT &a,typename ARRAYT::value_type threshold)
 {
+#ifdef NOFOREACH
+    for(auto iter=a.begin();iter!=a.end();iter++)
+    {
+        typename ARRAY::value_type &v = *iter
+#else
     for(typename ARRAYT::value_type &v: a)
+    {
+#endif
         if(v<=threshold) v = threshold;
+    }
 }
 
 //-----------------------------------------------------------------------------
@@ -220,8 +271,16 @@ template<typename ARRAYT>
 void min_clip(ARRAYT &a,typename ARRAYT::value_type threshold,
                         typename ARRAYT::value_type value)
 {
+#ifdef NOFOREACH
+    for(auto iter=a.begin();iter!=a.end();iter++)
+    {
+        typename  ARRAYT::value_type &v = *iter;
+#else
     for(typename ARRAYT::value_type &v: a)
+    {
+#endif
         if(v<=threshold) v = value;
+    }
 }
 //-----------------------------------------------------------------------------
 /*! 
@@ -235,8 +294,16 @@ Set values larger or equal than threshold to threshold.
 template<typename ARRAYT> 
 void max_clip(ARRAYT &a,typename ARRAYT::value_type threshold)
 {
+#ifdef NOFOREACH
+    for(auto iter=a.begin();iter!=a.end();iter++)
+    {
+        typename  ARRAYT::value_type &v = *iter;
+#else
     for(typename ARRAYT::value_type &v: a)
+    {
+#endif
         if(v>=threshold) v = threshold;
+    }
 }
 
 //-----------------------------------------------------------------------------
@@ -253,8 +320,16 @@ template<typename ARRAYT>
 void max_clip(ARRAYT &a,typename ARRAYT::value_type threshold,
                         typename ARRAYT::value_type value)
 {
+#ifdef NOFOREACH
+    for(auto iter=a.begin();iter!=a.end();iter++)
+    {
+        typename  ARRAYT::value_type &v = *iter;
+#else
     for(typename ARRAYT::value_type &v: a)
+    {
+#endif
         if(v>=threshold) v = value;
+    }
 }
 //-----------------------------------------------------------------------------
 /*!
@@ -273,8 +348,14 @@ template<typename ARRAYT> size_t max_offset(const ARRAYT &a)
     value_type max_value = value_type(a[0]);
 
     index = 0;
+#ifdef NOFOREACH
+    for(auto iter=a.begin();iter!=a.end();iter++)
+    {
+        auto v = *iter;
+#else
     for(auto v: a)
     {
+#endif
         if(v > max_value)
         {
             max_value = v;
@@ -318,8 +399,14 @@ template<typename ARRAYT> size_t min_offset(const ARRAYT &a)
     value_type min_value = value_type(a[0]);
 
     index = 0;
+#ifdef  NOFOREACH
+    for(auto iter=a.begin();iter!=a.end();iter++)
+    {
+        auto v = *iter;
+#else
     for(auto v: a)
     {
+#endif
         if(v < min_value)
         {
             min_value = v;
