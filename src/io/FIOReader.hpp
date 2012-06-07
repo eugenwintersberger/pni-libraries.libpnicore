@@ -243,7 +243,7 @@ namespace io{
 #ifdef NOFOREACH
         for(auto iter = (*this).begin();iter!=(*this).end();iter++)
         {
-            ColumnInfo c=*this;
+            ColumnInfo c=*iter;
 #else
         for(auto c: *this)
         {
