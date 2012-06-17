@@ -6,6 +6,7 @@
 #include<cppunit/extensions/HelperMacros.h>
 #include "SizeType.hpp"
 
+using namespace pni::utils;
 
 class SizeTypeTest:public CppUnit::TestFixture
 {
