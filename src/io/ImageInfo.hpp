@@ -53,6 +53,12 @@ namespace io{
             size_t _ny;             //!< number of pixels in y-direction
             std::vector<ImageChannelInfo> _channel_info; //!< channel information
         public:
+            //! default constructor
+            ImageInfo():
+                _nx(0),
+                _ny(0),
+                _channel_info(0)
+            {}
             /*! \brief standard constructor
 
             */
