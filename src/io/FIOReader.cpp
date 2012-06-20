@@ -263,7 +263,16 @@ namespace io{
     std::vector<String> FIOReader::parameter_names() const
     {
         std::vector<String> pnames;
-        for(auto value: _param_map) pnames.push_back(value.first);
+#ifdef NOFOREACH
+        for(auto iter = _param_map.begin();iter!=_param_map.end();iter++)
+        {
+            auto value = *iter;
+#else
+        for(auto value: _param_map) 
+        {
+#endif
+            pnames.push_back(value.first);
+        }
         return pnames;
     }
 

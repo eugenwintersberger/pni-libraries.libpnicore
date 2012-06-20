@@ -11,7 +11,8 @@ sources = ["DataReader.cpp","ImageInfo.cpp","ImageReader.cpp","SpreadsheetReader
 sources.extend(["FIOReader.cpp"])
 sources.extend(["ColumnInfo.cpp"])
 sources.extend(cbfsources)
-sources.extend(tiffsources)
+if GetOption("with_tiff"):
+    sources.extend(tiffsources)
 sobjs = build_env.SharedObject(sources)
 aobjs = build_env.StaticObject(sources)
 

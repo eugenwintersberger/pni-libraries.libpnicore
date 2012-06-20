@@ -48,18 +48,13 @@ namespace io{
             EXCEPTION_THROW();
         }
 
-        try{
-            if(_is_binary)
-            {
-                stream->open(fname);
-            }
-            else
-            {
-                stream->open(fname,std::ifstream::binary);
-            }
-        }catch(...){
-            EXCEPTION_INIT(FileError,"Error opening file ["+fname+"]!");
-            EXCEPTION_THROW();
+        if(_is_binary)
+        {
+            stream->open(fname);
+        }
+        else
+        {
+            stream->open(fname,std::ifstream::binary);
         }
 
         return stream;
@@ -74,7 +69,16 @@ namespace io{
         _fname(fname),
         _is_binary(binary),
         _istream(_open_stream(fname))
-    { }
+    { 
+        EXCEPTION_SETUP("DataReader::DataReader(const String &fname,"
+                        "bool binary)");
+
+        if(_istream->fail())
+        {
+            EXCEPTION_INIT(FileError,"Error opening file ["+fname+"]!");
+            EXCEPTION_THROW();
+        }
+    }
 
     //implementation of the move constructor
     DataReader::DataReader(DataReader &&r):
@@ -87,7 +91,8 @@ namespace io{
     DataReader::~DataReader() 
     {
         //close the file in case the object is getting destroied.
-        if(_istream->is_open()) _istream->close();
+        if(_istream)
+            if(_istream->good() && _istream->is_open()) _istream->close();
     }
 
     //=============implementation of assignment operators==================
@@ -96,7 +101,7 @@ namespace io{
         if(this == &r) return *this;
 
         _fname = std::move(r._fname);
-        _istream = std::move(_istream);
+        _istream = std::move(r._istream);
 
         return *this;
     }

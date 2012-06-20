@@ -41,6 +41,7 @@
 
 #include "../Types.hpp"
 #include "../DataObject.hpp"
+#include "../ArrayFactory.hpp"
 
 #include "ImageReader.hpp"
 #include "cbf/DectrisReader.hpp"
@@ -152,7 +153,8 @@ namespace io{
         ImageInfo info = _image_info[i];
         Shape shape = {info.nx(),info.ny()};
 
-        ArrayType array(shape);
+        ArrayType array = ArrayFactory<typename ArrayType::value_type,
+                                       Buffer,typename ArrayType::allocator_type>::create(shape);
         
         image(array,i,c);
 

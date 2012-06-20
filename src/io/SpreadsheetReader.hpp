@@ -102,8 +102,14 @@ namespace io{
                         "_get_column(const String &n) const");
 
                 size_t i=0;
+#ifdef NOFOREACH
+                for(auto iter = _columns_info.begin();iter!=_columns_info.end();iter++)
+                {
+                    ColumnInfo c = *iter;
+#else
                 for(auto c: _columns_info)
                 {
+#endif
                     if(c.name() == n)
                         return _get_column(i); 
 

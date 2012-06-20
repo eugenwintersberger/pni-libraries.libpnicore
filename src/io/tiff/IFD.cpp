@@ -91,8 +91,14 @@ namespace tiff{
     //------------------------------------------------------------------------------
     IFDEntry IFD::operator[](const String &n) const{
         EXCEPTION_SETUP("IFDEntry IFD::operator[](const String &n) const");
+#ifdef NOFOREACH
+        for(auto iter=(*this).begin();iter!=(*this).end();iter++)
+        {
+            auto entry = *iter;
+#else
         for(auto entry: *this)
         {
+#endif
             if(entry.name() == n) return entry;
         }
 
@@ -104,7 +110,16 @@ namespace tiff{
     std::ostream &operator<<(std::ostream &o,const IFD &ifd)
     {
         o<<"IFD content ("<<ifd.size()<<" entries):"<<std::endl;
-        for(auto entry: ifd) o<<entry<<std::endl;
+#ifdef NOFOREACH
+        for(auto iter=ifd.begin();iter!=ifd.end();iter++)
+        {
+            auto entry = *iter;
+#else
+        for(auto entry: ifd)
+        {
+#endif
+            o<<entry<<std::endl;
+        }
         return o;
     }
 

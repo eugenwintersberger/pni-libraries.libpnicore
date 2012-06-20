@@ -44,6 +44,11 @@ namespace io{
             TypeID _tid;  //!< ID of the datatype used for this channel
             size_t _bits; //!< number of bits per channel
         public:
+            //! default constructor
+            ImageChannelInfo():
+                _tid(TypeID::NONE),
+                _bits(0)
+            {}
             /*! \brief standard constructor
 
             \param id Typd id for the channel

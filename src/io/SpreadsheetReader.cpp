@@ -37,8 +37,12 @@ namespace io{
     //-------------------------------------------------------------------------
     //move constructor implementation
     SpreadsheetReader::SpreadsheetReader(SpreadsheetReader &&o):
-        DataReader(std::move(o))
-    {}
+        DataReader(std::move(o)),
+        _columns_info(std::move(o._columns_info)),
+        _nrec(o._nrec)
+    {
+        o._nrec = 0; 
+    }
 
     //-------------------------------------------------------------------------
     //standard constructor implementation
@@ -58,6 +62,9 @@ namespace io{
         if(this == &r) return *this;
 
         DataReader::operator=(std::move(r));
+        _columns_info = std::move(r._columns_info);
+        _nrec = r._nrec;
+        r._nrec = 0;
         return *this;
     }
 
