@@ -74,7 +74,6 @@ namespace cbf{
 
                 //this means that we have to store the offset and can 
                 //break the loop here
-                std::cout<<"reached binary data section"<<std::endl;
                 return is.tellg();
                 break;
             }
