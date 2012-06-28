@@ -133,15 +133,32 @@ void ArrayViewTest::test_assignment()
     auto roi2 = ArrayFactory<Float32>::create(roi);
 
     size_t index = 0;
+#ifdef NOFOREACH
+    for(auto iter = roi2.begin();iter!=roi2.end();iter++)
+    {
+        const Float32 &v = *iter;
+#else
     for(auto v: roi2)
+    {
+#endif
         CPPUNIT_ASSERT_DOUBLES_EQUAL(v,roi[index++],1.e-8);
+    }
    
     auto roi3 = ArrayFactory<Float32>::create(roi.shape());
     roi3 = roi;
     CPPUNIT_ASSERT(roi3.shape() == roi.shape());
     index = 0;
+
+#ifdef NOFOREACH
+    for(auto iter = roi3.begin();iter!=roi3.end();iter++)
+    {
+        const Float32 &v = *iter;
+#else
     for(auto v: roi3)
+    {
+#endif
         CPPUNIT_ASSERT_DOUBLES_EQUAL(v,roi[index++],1.e-8);
+    }
     
 
 }
@@ -158,13 +175,31 @@ void ArrayViewTest::test_operations()
 
     std::vector<Float32> data(frame_shape.size());
     size_t index=0;
-    for(Float32 &v: data) v = index++;
+#ifdef NOFOREACH
+    for(auto iter=data.begin();iter!=data.end();iter++)
+    {
+        Float32 &v = *iter;
+#else
+    for(Float32 &v: data)
+    {
+#endif 
+        v = index++;
+    }
     CPPUNIT_ASSERT_DOUBLES_EQUAL(data[0],0,1.e-8);
 
     auto frame = ArrayFactory<Float32>::create(frame_shape,data);
     auto roi = frame(Slice(1,10,2),Slice(2,9,3));
 
-    for(auto v: roi) std::cout<<v<<" ";
+#ifdef NOFOREACH
+    for(auto iter=roi.begin();iter!=roi.end();iter++)
+    {
+        const Float32 &v = *iter;
+#else
+    for(auto v: roi) 
+    {
+#endif
+        std::cout<<v<<" ";
+    }
     std::cout<<std::endl;
     std::cout<<roi.shape()<<std::endl;
 
@@ -177,11 +212,14 @@ void ArrayViewTest::test_operations()
     auto test2 = factory::create(roi.shape());
     test2 = roi;
     test1 = roi;
+    CPPUNIT_ASSERT(test1 == test2);
 
     //check clipping 
     test2(0,0) = 30; test2(0,1) = 30; test2(0,2) = 30;
     test2(4,0) = 90; test2(4,1) = 90; test2(4,2) = 90;
     clip(test1,30,90);
+    for(size_t i=0;i<test1.size();i++)
+        std::cout<<roi[i]<<"\t"<<test1[i]<<"\t"<<test2[i]<<std::endl;
     CPPUNIT_ASSERT(test1 == test2);
 
     //testing clip with a particular value

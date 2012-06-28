@@ -75,14 +75,31 @@ void ArrayTest<T,BTYPE,ALLOCATOR>::test_construction()
 
     //construction from a default array
     auto a4 = factory::create(s1,T(17));
-    for(auto v: a4) check_equality(v,T(17));
+#ifdef NOFOREACH
+    for(auto iter = a4.begin();iter!=a4.end();iter++)
+    {
+        const T &v = *iter;
+#else
+    for(auto v: a4)
+    {
+#endif
+        check_equality(v,T(17));
+    }
 
     auto data = RandomDistribution::uniform<std::vector<T> >(s1.size());
     auto a5 = factory::create(s1,data);
 
     size_t index = 0;
+#ifdef NOFOREACH
+    for(auto iter = a5.begin(); iter!=a5.end();iter++)
+    {
+        const T &v = *iter;
+#else
     for(auto v: a5)
+    {
+#endif
         check_equality(v,data[index++]);
+    }
 }
 
 //------------------------------------------------------------------------------
@@ -132,20 +149,44 @@ void ArrayTest<T,BTYPE,ALLOCATOR>::test_iterators()
     auto data = RandomDistribution::uniform<std::vector<T> >(a1.size());
 
     size_t index = 0;
+#ifdef NOFOREACH
+    for(auto iter = a1.begin(); iter!=a1.end();iter++)
+    {
+        typename factory::array_type::value_type &v = *iter;
+#else
     for(typename factory::array_type::value_type &v: a1)
+    {
+#endif
         v = data[index++];
+    }
     
     index = 0;
+#ifdef NOFOREACH
+    for(auto iter=a1.begin();iter!=a1.end();iter++)
+    {
+        const T &v = *iter;
+#else
     for(auto &v: a1)
+    {
+#endif
         check_equality(v,data[index++]);
+    }
 
 
     //-------------------check const iterator-----------------------------
     const typename factory::array_type &a = a1;
 
     index = 0;
+#ifdef NOFOREACH
+    for(auto iter = a.begin();iter!=a.end();iter++)
+    {
+        const T &v = *iter;
+#else
     for(auto v: a)
+    {
+#endif
         check_equality(v,data[index++]); 
+    }
 }
 
 //-----------------------------------------------------------------------------

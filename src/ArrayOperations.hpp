@@ -173,7 +173,7 @@ template<typename ARRAYT> void clip(ARRAYT &a,
 #ifdef NOFOREACH
     for(auto iter=a.begin();iter!=a.end();iter++)
     {
-        auto v = *iter;
+        typename ARRAYT::value_type &v = *iter;
 #else
     for(typename ARRAYT::value_type &v: a)
     {
@@ -214,7 +214,7 @@ template<typename ARRAYT> void clip(ARRAYT &a,
 #ifdef NOFOREACH
     for(auto iter=a.begin();iter!=a.end();iter++)
     {
-        auto v = *iter;
+        typename ARRAYT::value_type &v = *iter;
 #else
     for(typename ARRAYT::value_type &v: a)
     {
