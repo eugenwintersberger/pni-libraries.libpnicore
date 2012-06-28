@@ -325,7 +325,7 @@ namespace utils {
 #ifdef NOFOREACH
                 for(auto iter = (*this).begin();iter!=(*this).end();iter++)
                 {
-                    T &a = *this;
+                    T &a = *iter;
 #else
                 for(T &a: *this) 
                 {
