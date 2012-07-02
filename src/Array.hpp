@@ -854,7 +854,8 @@ namespace utils {
             //-----------------------------------------------------------------
             /*! \brief iterator to last element
 
-            Returns a non-const iterator to the last element in the array. 
+            Returns a non-const iterator to the last+1 element in the array. 
+            The iterator is thus invalid.
             \return iterator to last element
             */
             ARRAYTMP::iterator end()

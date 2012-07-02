@@ -349,7 +349,8 @@ namespace utils{
             //------------------------------------------------------------------
             /*! \brief get iterator to last element
 
-            Returns an iterator pointing to the last element of the buffer.
+            Returns an iterator pointing to the last+1 element of the buffer.
+            The iterator is thus invalid.
             \return iterator to last element
             */
             Buffer<T,Allocator>::iterator end()

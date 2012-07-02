@@ -294,7 +294,8 @@ namespace utils{
             //------------------------------------------------------------------
             /*! \brief get iterator to last element
 
-            Returns an iterator pointing to the last element of the buffer.
+            Returns an iterator pointing to the last+1 element of the buffer.
+            The iterator is thus invalid.
             \return iterator to last element
             */
             RBUFFTMP::iterator end()
@@ -316,7 +317,8 @@ namespace utils{
             //------------------------------------------------------------------
             /*! \brief get const iterator to last element
 
-            Returns an const iterator pointing to the last element of the buffer.
+            Returns an const iterator pointing to the last+1 element of the buffer.
+            The iterator is thus invalid.
             \return const iterator to last element
             */
             RBUFFTMP::const_iterator end() const
