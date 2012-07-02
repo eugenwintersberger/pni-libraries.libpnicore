@@ -21,8 +21,14 @@ template<typename CT> class UniformDistribution<CT,true,false>
             std::uniform_int_distribution<> 
                 dist(TypeInfo<value_type>::min(),TypeInfo<value_type>::max());
 
+#ifdef NOFOREACH
+            for(auto iter=container.begin();iter!=container.end();iter++)
+            {
+                value_type &v = *iter;
+#else
             for(value_type &v: container)
             {
+#endif
                 v = dist(engine);
             }
 
@@ -43,8 +49,14 @@ template<typename CT> class UniformDistribution<CT,false,false>
             std::uniform_real_distribution<> 
                 dist(TypeInfo<Float32>::min(),TypeInfo<Float32>::max());
 
+#ifdef NOFOREACH
+            for(auto iter=container.begin();iter!=container.end();iter++)
+            {
+                value_type &v = *iter;
+#else
             for(value_type &v: container)
             {
+#endif
                 v = dist(engine);
             }
 
@@ -67,8 +79,14 @@ template<typename CT> class UniformDistribution<CT,false,true>
                 dist(TypeInfo<Float32>::min(),
                      TypeInfo<Float32>::max());
 
+#ifdef NOFOREACH
+            for(auto iter = container.begin();iter!=container.end();iter++)
+            {
+                value_type &v = *iter;
+#else
             for(value_type &v: container)
             {
+#endif
                 v = value_type(dist(engine),dist(engine));
             }
 

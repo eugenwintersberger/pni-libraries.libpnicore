@@ -266,8 +266,14 @@ template<typename BTYPE> void BufferTest<BTYPE>::test_iterator()
    
     size_t index = 0;
     std::cout<<"writing data to buffer ..."<<std::endl;
+#ifdef NOFOREACH
+    for(auto iter = b1.begin();iter!=b1.end();iter++)
+    {
+        value_type &v = *iter;
+#else
     for(value_type &v: b1)
     {
+#endif
         v = data[index];
         index ++;
     }
@@ -275,8 +281,14 @@ template<typename BTYPE> void BufferTest<BTYPE>::test_iterator()
     //read data back
     index = 0;
     std::cout<<"reading data from buffer ..."<<std::endl;
+#ifdef NOFOREACH
+    for(auto iter=b1.begin();iter!=b1.end();iter++)
+    {
+        const value_type &v = *iter;
+#else
     for(auto v: b1)
     {
+#endif
         check_equality(v,data[index]);
         index ++;
     }
