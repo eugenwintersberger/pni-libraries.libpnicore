@@ -3,6 +3,12 @@
 namespace pni{
 namespace utils{
 
+    template<typename ...DIMS> class StrideType
+    {
+        public:
+            static const strides[sizeof...(DIMS)] = 
+    };
+
     /*!
     \brief static array shape type
 
@@ -23,30 +29,41 @@ namespace utils{
 
             //==============private member functions===========================
             template<typename ...ITYPES>
-            size_t _offset(size_t d,size_t i1,ITYPES ...indices)
+            size_t _offset(size_t d,size_t i1,ITYPES ...indices) const
             {
                 
-                return _dimstrides[d]::size*i1+_offset(d+1,indices...);
+                return _dimstrides[d]*i1+_offset(d+1,indices...);
             }
 
             //-----------------------------------------------------------------
-            size_t _offset(size_t d) { return 0; }
+            size_t _offset(size_t d) const { return 0; }
+
+            template<typename ...ITYPES> size_t _multiply(size_t i,ITYPES ...indices)
+            {
+                return i*_multiply(indices...);
+            }
+
+            size_t _multiply(size_t i) { return i; }
 
             //-----------------------------------------------------------------
             template<typename ...ITYPES>
-            void _compute_dimstrides(size_t d,size_t i1,ITYPES ...DIMS)
+            void _compute_dimstrides(size_t d,size_t i1,ITYPES ...dims)
             {
-                _dimstrides[d] = SizeType<DIMS...>::size;
-                _compute_dimstrides(d+1,DIMS...);
+                _dimstrides[d] = _multiply(dims...);
+                _compute_dimstrides(d+1,dims...);
             }
 
             //-----------------------------------------------------------------
-            void _compute_dimstrides(size_t d)
+            void _compute_dimstrides(size_t d,size_t i1)
             {
-                //do nothing here - just break the recursion.
+                _dimstrides[d] = 1;
             }
 
         public:
+            StaticShape()
+            {
+                _compute_dimstrides(0,DIMS...);
+            }
             
             //-----------------------------------------------------------------
 
@@ -56,10 +73,10 @@ namespace utils{
             size_t size() const { return SizeType<DIMS...>::size;}
 
             //-----------------------------------------------------------------
-            template<typename ...ITYPES 
+            template<typename ...ITYPES >
                 size_t offset(size_t i1,ITYPES ...indices) const
             {
-                static_assert(assert(sizeof...(DIMS) == sizeof...(indices),
+                static_assert((sizeof...(DIMS)) == (sizeof...(indices)+1),
                               "Number of indices does not match shape rank!");
 
                 return _dimstrides[0]*i1+_offset(1,indices...);
@@ -72,11 +89,12 @@ namespace utils{
                 {
                     //throw an exception here
                 }
+                return 0;
 
             }
 
             //-----------------------------------------------------------------
-            template<typename CTYPE> void index(size_t o,CTYPE &c) const
+            template<typename CTYPE> void index(size_t offset,CTYPE &c) const
             {
                 if(c.size() != this->rank())
                 {

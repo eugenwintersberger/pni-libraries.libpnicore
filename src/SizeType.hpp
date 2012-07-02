@@ -4,27 +4,31 @@
 namespace pni{
 namespace utils{
 
+    /*! 
+    \brief type computes the array size
 
+    The idea of this type is to compute the size of a static array or shape
+    object. Indeed it computes the product of all the template parameters.
+    */
+    template<size_t ...indices> class SizeType;
 
-    template<size_t ...NDIMS> class SizeType
+    /*! 
+    \brief specialization of SizeType
+
+    The first real specialization of the SizeType template. 
+    */
+    template<size_t i,size_t ...indices> class SizeType<i,indices...>
     {
-        private:
-            constexpr size_t _compute_size(size_t d)
-            {
-                return d;
-            }
-
-            template<typename ...INDICES> 
-                constexpr size_t _compute_size(size_t d,INDICES... is)
-            {
-                return d*compute_size(is...);
-            }
-
         public:
-            static const size_t size = compute_size(NDIMS...);
+            static const size_t size = i*SizeType<indices...>::size;
     };
 
-
+    //! type breaking the template recursion
+    template<> class SizeType<>
+    {
+        public:
+            static const size_t size = 1;
+    };
 
 
 //end of namespace

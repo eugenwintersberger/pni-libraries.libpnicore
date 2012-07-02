@@ -68,7 +68,7 @@ namespace utils{
         public:
             //================constructor and destructor===========================
             //! no default constructor
-            Iterator():_container(nullptr),_state(0);
+            Iterator():_container(nullptr),_state(0) {}
 
             //---------------------------------------------------------------------
             /*! \brief standard constructor
@@ -104,7 +104,7 @@ namespace utils{
             operator bool() const
             {
                 if(!this->_container) return false;
-                return !(this->_state >= this->_container->size());
+                return !(this->_state >= (ssize_t)(this->_container->size()));
             }
 
             //---------------------------------------------------------------------
