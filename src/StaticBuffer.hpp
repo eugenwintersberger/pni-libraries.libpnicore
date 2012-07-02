@@ -211,24 +211,6 @@ namespace utils{
             T *ptr() { return this->_data; }
 
             //-----------------------------------------------------------------
-            /*! \brief return a non-const pointer to the allocate memory
-
-            Returns a non-const pointer to the memory region belonging to a
-            Buffer<T> object.
-            \return return read/write pointer to data
-            */
-            void *void_ptr() { return this->_data; }
-
-            //-----------------------------------------------------------------
-            /*! \brief get const void pointer
-
-            Return a const void pointer to the first element of the buffers
-            data.
-            \return const void pointer
-            */
-            const void *void_ptr() const { return this->_data; }
-
-            //-----------------------------------------------------------------
             /*! \brief get value at index i
 
             Returns the data value at index i of the buffer. 
