@@ -423,7 +423,8 @@ namespace utils{
             //-----------------------------------------------------------------
             /*! \brief const iterator to last element
 
-            Return an const iterator to the last element of the array view.
+            Return an const iterator to the last+1 element of the array view.
+            The iterator is thus invalid.
             \return iterator to last element
             */
             ArrayView<ATYPE>::const_iterator end() const
