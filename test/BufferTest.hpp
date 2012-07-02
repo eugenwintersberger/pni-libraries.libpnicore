@@ -266,6 +266,7 @@ template<typename BTYPE> void BufferTest<BTYPE>::test_iterator()
    
     size_t index = 0;
     std::cout<<"writing data to buffer ..."<<std::endl;
+    CPPUNIT_ASSERT(!b1.end());
 #ifdef NOFOREACH
     for(auto iter = b1.begin();iter!=b1.end();iter++)
     {
