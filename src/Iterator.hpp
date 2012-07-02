@@ -45,17 +45,30 @@ namespace utils{
     /*! \ingroup util_classes   
     \brief iterator type
 
-    Generic iterator used for several classes within this library.
+    Generic iterator used for several classes within this library. The container
+    type that can be used with this iterator must provide the following
+    interface
+    \code
+    template<typename T> class ITERABLE<T>
+    {
+        public:
+            typedef T valuee_type;
+            size_t size() const;
+            T &operator[](size_t i);
+            T operator[](size_t i) const;
+    };
+    \endcode
+    This template implements a simple forward iterator. 
     */
     template<typename ITERABLE,int const_flag> class Iterator
     {
         private:
             typename IterTypes<ITERABLE,const_flag>::cont_ptr _container; //!< pointer to the container object
-            size_t _state;        //!< actual position state of the iterator
+            ssize_t _state;        //!< actual position state of the iterator
         public:
             //================constructor and destructor===========================
             //! no default constructor
-            Iterator() = delete;
+            Iterator():_container(nullptr),_state(0);
 
             //---------------------------------------------------------------------
             /*! \brief standard constructor
@@ -90,6 +103,7 @@ namespace utils{
             */
             operator bool() const
             {
+                if(!this->_container) return false;
                 return !(this->_state >= this->_container->size());
             }
 
@@ -159,8 +173,12 @@ namespace utils{
             //! comparsion operator - equality
             bool operator==(const Iterator<ITERABLE,const_flag> &a)
             {
+                //check if the iterators point to the same container
                 if(this->_container != a._container) return false;
+                //check if the iterators point to the same element
+                //within the container
                 if(this->_state != a._state) return false;
+
                 return true;
             }
 
