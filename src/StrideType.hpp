@@ -15,34 +15,6 @@ namespace utils{
     template<size_t ...STRIDES> const size_t
         StrideHolder<STRIDES...>::value[sizeof...(STRIDES)] = {STRIDES...};
 
-    //need a better stride computer
-
-    /*!
-    \brief class computing the stride for a particular type
-    
-    */
-    /*
-    template<size_t ...DIMS> class StrideComputer
-    {
-        private:
-            template<size_t N,typename ...ETYPE> 
-                static size_t _compute(size_t d,ETYPE ...dims)
-            {
-                return d*_compute(dims...);
-            }
-
-            static size_t _compute(size_t d)
-            {
-                return d;
-            }
-        public:
-            template<size_t N> static size_t compute()
-            {
-                return _compute(DIMS...);    
-            }
-
-    };
-    */
 
     template<size_t N,size_t CNT,bool DO,size_t ...DIMS> struct ComputeStride;
 
@@ -73,17 +45,6 @@ namespace utils{
         static const size_t value = 1;
     };
 
-    /*
-    template<size_t N,size_t CNT,size_t d,size_t ...DIMS> 
-        struct ComputeStride<N,CNT,false,d,DIMS...>
-    {
-        static const size_t value = 1*ComputeStride<N,CNT+1,((CNT+1)>N),DIMS...>::value;
-    };
-
-    template<size_t N,size_t CNT> struct ComputeStride<N,CNT,false>
-    {
-        static const size_t value = 1;
-    };*/
     
     template<size_t N,size_t ...DIMS> struct Stride
     {
