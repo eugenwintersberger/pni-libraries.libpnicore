@@ -47,6 +47,9 @@ void StaticShapeTest::testOffset()
     size_t offset = 0;
     CPPUNIT_ASSERT_NO_THROW(offset = s1.offset(2,1));
     CPPUNIT_ASSERT(offset == 9);
+    CPPUNIT_ASSERT_NO_THROW(offset = s1.offset(std::vector<size_t>{2,1}));
+    std::cout<<"offset: "<<offset<<std::endl;
+    CPPUNIT_ASSERT(offset == 9);
 
     StaticShape<2,3,5> s2;
     CPPUNIT_ASSERT(s2.offset(0,1,3) == 8);

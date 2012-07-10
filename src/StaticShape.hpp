@@ -4,6 +4,46 @@
 namespace pni{
 namespace utils{
 
+    template<size_t D,bool ITERATE,size_t ...DIMS> struct IndexCreator
+    {
+        template<typename CTYPE> static void index(size_t offset,CTYPE &c)
+        {
+                size_t t = offset%StrideCalc<DIMS...>::template value<D>();
+                c[D] = (offset-t)/StrideCalc<DIMS...>::template value<D>();
+                IndexCreator<D+1,((D+1)<((sizeof ...(DIMS))-1)),DIMS...>::template
+                    index(t,c);
+        }
+    };
+
+    template<size_t D,size_t ...DIMS> struct IndexCreator<D,false,DIMS...>
+    {
+        template<typename CTYPE> static void index(size_t offset,CTYPE &c)
+        {
+                size_t t = offset%StrideCalc<DIMS...>::template value<D>();
+                c[D] = (offset-t)/StrideCalc<DIMS...>::template value<D>();
+        }
+    };
+
+    template<size_t D,bool FINISHED,size_t ...DIMS> struct OffsetCalc
+    {
+        template<typename CTYPE> static size_t offset(const CTYPE &c)
+        {
+            std::cout<<"iteration : "<<D<<" index = "<<c[D]<<" stride = "<<StrideCalc<DIMS...>::template value<D>()<<std::endl;
+            return StrideCalc<DIMS...>::template value<D>()*c[D]+
+                   OffsetCalc<D+1,((D+1)>=(sizeof...(DIMS))),DIMS...>::offset(c);
+        }
+    };
+
+    template<size_t D,size_t ...DIMS> struct OffsetCalc<D,true,DIMS...>
+    {
+        template<typename CTYPE> static size_t offset(const CTYPE &c)
+        {
+           return 0;
+        }
+    };
+
+
+
 
     /*!
     \brief static array shape type
@@ -21,46 +61,28 @@ namespace utils{
     template<size_t ...DIMS> class StaticShape
     {
         private:
-            static const size_t _dims[sizeof ...(DIMS)];
-            size_t _dimstrides[sizeof...(DIMS)]; //!< array holding dimension strides
+            static const size_t _dims[sizeof ...(DIMS)];  // static buffer holding the data
 
             //==============private member functions===========================
-            template<typename ...ITYPES> 
-            size_t _offset( size_t d,size_t i1,ITYPES ...indices) const
+            template<size_t d,typename ...ITYPES> 
+            size_t _offset(size_t i1,ITYPES ...indices) const
             {
                 
-                return _dimstrides[d]*i1+_offset(d+1,indices...);
+                return StrideCalc<DIMS...>::template value<d>()*i1+
+                       _offset<d+1>(indices...);
             }
 
             //-----------------------------------------------------------------
-            size_t _offset(size_t d) const { return 0; }
-
-            template<typename ...ITYPES> size_t _multiply(size_t i,ITYPES ...indices)
-            {
-                return i*_multiply(indices...);
+            template<size_t d> size_t _offset(size_t i) const 
+            { 
+                return StrideCalc<DIMS...>::template value<d>()*i; 
             }
 
-            size_t _multiply(size_t i) { return i; }
 
-            //-----------------------------------------------------------------
-            template<typename ...ITYPES>
-            void _compute_dimstrides(size_t d,size_t i1,ITYPES ...dims)
-            {
-                _dimstrides[d] = _multiply(dims...);
-                _compute_dimstrides(d+1,dims...);
-            }
-
-            //-----------------------------------------------------------------
-            void _compute_dimstrides(size_t d,size_t i1)
-            {
-                _dimstrides[d] = 1;
-            }
 
         public:
-            StaticShape()
-            {
-                _compute_dimstrides(0,DIMS...);
-            }
+            //! default constructor
+            StaticShape() { }
             
             //-----------------------------------------------------------------
 
@@ -70,13 +92,26 @@ namespace utils{
             size_t size() const { return SizeType<DIMS...>::size;}
 
             //-----------------------------------------------------------------
+            template<typename CONTAINER> CONTAINER shape() const
+            {
+                CONTAINER c(this->rank());
+
+                size_t index = 0;
+                for(typename CONTAINER::value_type &v: c)
+                    v = this->dim[index];
+
+                return c;
+            }
+
+            //-----------------------------------------------------------------
             template<typename ...ITYPES >
                 size_t offset(size_t i1,ITYPES ...indices) const
             {
                 static_assert((sizeof...(DIMS)) == (sizeof...(indices)+1),
                               "Number of indices does not match shape rank!");
 
-                return _dimstrides[0]*i1+_offset(1,indices...);
+                return StrideCalc<DIMS...>::template value<0>()*i1+
+                       _offset<1>(indices...);
             }
 
             //-----------------------------------------------------------------
@@ -86,9 +121,10 @@ namespace utils{
                 {
                     //throw an exception here
                 }
-                return 0;
-
+                
+                return OffsetCalc<0,false,DIMS...>::offset(c);
             }
+
 
             //-----------------------------------------------------------------
             template<typename CTYPE> void index(size_t offset,CTYPE &c) const
@@ -98,14 +134,7 @@ namespace utils{
                     //throw an exception here
                 }
 
-                size_t o,t;
-                o = offset;
-                for(size_t d = 0;d<this->rank();d++)
-                {
-                    t = o%this->_dimstrides[d];
-                    c[d] = (o-t)/this->_dimstrides[d];
-                    o = t;
-                }
+                IndexCreator<0,true,DIMS...>::index(offset,c);
             }
 
             //-----------------------------------------------------------------
@@ -119,6 +148,7 @@ namespace utils{
 
     };
 
+    //ensure that the dimension data is loaded into the buffer
     template<size_t ...DIMS> 
         const size_t StaticShape<DIMS...>::_dims[sizeof...(DIMS)] = {DIMS...};
 
