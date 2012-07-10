@@ -1,0 +1,41 @@
+
+/*!
+\brief type holding stride values
+
+This is the type that finally will hold the strid evalues 
+*/
+/*
+template<size_t ...STRIDES> struct StrideHolder
+{
+    static const size_t value[sizeof...(STRIDES)];
+};
+
+//fill values in
+template<size_t ...STRIDES> const size_t
+    StrideHolder<STRIDES...>::value[sizeof...(STRIDES)] = {STRIDES...};
+*/
+    
+/*
+//now we need to fill in the computed strides into the template parameter
+//list of the StrideHolder type - this gonna be tricky 
+
+//now we need some recursion to fill the stride holder
+template<typename SC,size_t CNT,size_t ...DIMS> struct create_stride_recursion
+{
+    typedef typename create_stride_recursion<SC,CNT-1,SC::template value<CNT>(),DIMS...>::stride stride;
+};
+
+//break condition for the recursion
+template<typename SC,size_t ...DIMS> struct create_stride_recursion<SC,0,DIMS...>
+{
+    typedef StrideHolder<SC::template value<0>(),DIMS...> stride;
+};
+
+//final type that creates the stride type
+template<size_t ...DIMS> struct create_stride
+{
+    typedef typename create_stride_recursion<StrideCalc<DIMS...>,
+                                             sizeof...(DIMS)-2,
+                                             StrideCalc<DIMS...>::template value<sizeof...(DIMS)-1>()>::stride stride;
+};
+*/

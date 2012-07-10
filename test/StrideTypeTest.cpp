@@ -3,16 +3,6 @@
 
 CPPUNIT_TEST_SUITE_REGISTRATION(StrideTypeTest);
 
-void StrideTypeTest::test_holder()
-{
-    typedef StrideHolder<1,2,3> Holder;
-    size_t stride = Holder::value[0];
-    CPPUNIT_ASSERT( stride == 1);
-    stride = Holder::value[1];
-    CPPUNIT_ASSERT(stride == 2);
-    stride = Holder::value[2];
-    CPPUNIT_ASSERT( stride == 3);
-}
 
 void StrideTypeTest::test_computation()
 {
@@ -48,12 +38,3 @@ void StrideTypeTest::test_calc()
 
 }
 
-void StrideTypeTest::test_stride()
-{
-    typedef create_stride<5,7,3,9>::stride stride;
-
-    CPPUNIT_ASSERT(stride::value[0] == 7*3*9);
-    CPPUNIT_ASSERT(stride::value[1] == 3*9);
-    CPPUNIT_ASSERT(stride::value[2] == 9);
-    CPPUNIT_ASSERT(stride::value[3] == 1);
-}

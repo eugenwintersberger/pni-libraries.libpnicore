@@ -1,11 +1,37 @@
 
+#include <iostream>
+#include <sstream>
+
 #include "SizeType.hpp"
 #include "StrideType.hpp"
+#include "Exceptions.hpp"
+
 namespace pni{
 namespace utils{
 
+    //=========================================================================
+    /*! 
+    \ingroup util_classes
+    \brief create index container
+
+    Type for computing the indices belonging to a particular offset and returns
+    the index in a container. It must be ensured that the container is of
+    sufficient size. The class provides a static function template which is
+    called recursively to do the job. A specialized version of the type exists
+    implementing the break condition.
+    \tparam D index counter
+    \tparam ITERATE decide if continue iteration
+    \tparam DIMS elements along each dimensin
+    */
     template<size_t D,bool ITERATE,size_t ...DIMS> struct IndexCreator
     {
+        /*!
+        \brief compute index
+
+        \tparam CTYPE container type
+        \param offset linear offset for which the index should be calculated
+        \param c container type where to store indices
+        */
         template<typename CTYPE> static void index(size_t offset,CTYPE &c)
         {
                 size_t t = offset%StrideCalc<DIMS...>::template value<D>();
@@ -15,8 +41,26 @@ namespace utils{
         }
     };
 
+    //=========================================================================
+    /*! 
+    \ingroup util_classes
+    \brief specialization of IndexCreator
+
+    This specialization of IndexCreator acts as a break condition. The ITERATE
+    template parameter is set to false for this type.
+    \tparam D dimension counter
+    \tparam DIMS elements along each dimension
+    */
     template<size_t D,size_t ...DIMS> struct IndexCreator<D,false,DIMS...>
     {
+        /*!
+        \brief add last index to container
+
+        Add the last index to the container. 
+        \tparam CTYPE container type
+        \param offset linear offset for which the index should be calculated
+        \param c container type where to store the indices
+        */
         template<typename CTYPE> static void index(size_t offset,CTYPE &c)
         {
                 size_t t = offset%StrideCalc<DIMS...>::template value<D>();
@@ -24,8 +68,23 @@ namespace utils{
         }
     };
 
+    //=========================================================================
+    /*! 
+    \ingroup util_classes
+    \brief type computing offset
+
+    Type can be used to compute the offset from indices stored in a container
+    type. The class provides a static template method doing the job. 
+    \tparam D index counter
+    \tparam FINISHED set to true of the calculation is finished
+    \tparam DIMS elements along each dimension
+    */
     template<size_t D,bool FINISHED,size_t ...DIMS> struct OffsetCalc
     {
+        /*!
+        \brief compute offset
+
+        */
         template<typename CTYPE> static size_t offset(const CTYPE &c)
         {
             std::cout<<"iteration : "<<D<<" index = "<<c[D]<<" stride = "<<StrideCalc<DIMS...>::template value<D>()<<std::endl;
@@ -34,8 +93,22 @@ namespace utils{
         }
     };
 
+    //=========================================================================
+    /*! 
+    \ingroup util_classes
+    \brief specialized version of OffsetCalc
+
+    */
     template<size_t D,size_t ...DIMS> struct OffsetCalc<D,true,DIMS...>
     {
+        /*! 
+        \brief compute offset
+
+        Final version of the offset computation. Ends the template recursion.
+        \tparam CTYPE container type where to store the index
+        \param c container where to store the data
+        \return offset value
+        */
         template<typename CTYPE> static size_t offset(const CTYPE &c)
         {
            return 0;
@@ -43,9 +116,9 @@ namespace utils{
     };
 
 
-
-
+    //=========================================================================
     /*!
+    \ingroup util_classes
     \brief static array shape type
 
     This type can be used to represent a static array shape. The shape object is
@@ -57,13 +130,27 @@ namespace utils{
     As this type cannot be configured at runtime it is perfectly suited for
     static the creation of n-dimensional static array types like matrices or
     vectors. 
+    \tparam DIMS number of elements along each dimension
     */
     template<size_t ...DIMS> class StaticShape
     {
         private:
-            static const size_t _dims[sizeof ...(DIMS)];  // static buffer holding the data
+            //!< static buffer holding the data
+            static const size_t _dims[sizeof ...(DIMS)];  
 
             //==============private member functions===========================
+            /*! 
+            \brief compute offset 
+
+            Computes the memory offset to a multidimensional index which is
+            passed by the user as a variadic template. This private method is
+            called recursively until a break condition is reached.
+            \tparam d dimension counter
+            \tparam ITYPES index types
+            \param i1 actual index whose contribute to the offset is computed
+            \param indices the residual indices in the variadic argument list
+            \return memory offset
+            */
             template<size_t d,typename ...ITYPES> 
             size_t _offset(size_t i1,ITYPES ...indices) const
             {
@@ -73,25 +160,58 @@ namespace utils{
             }
 
             //-----------------------------------------------------------------
+            /*! 
+            \brief compute offset - break condition
+
+            The break condition for the recursive offset computation from an
+            index passed as a variadic argument list.
+            \tparam d index counter
+            \param i the last index to process
+            \return offset value
+            */
             template<size_t d> size_t _offset(size_t i) const 
             { 
                 return StrideCalc<DIMS...>::template value<d>()*i; 
             }
-
-
 
         public:
             //! default constructor
             StaticShape() { }
             
             //-----------------------------------------------------------------
+            /*! 
+            \brief get number of dimensions
 
+            Return the number of dimensions of the shape object.
+            \return number of dimensions
+            */
             size_t rank() const { return sizeof...(DIMS); }
 
             //-----------------------------------------------------------------
+            /*! 
+            \brief get number of elements
+
+            Return the total number of elements described by the shape object.
+            \return number of elements
+            */
             size_t size() const { return SizeType<DIMS...>::size;}
 
             //-----------------------------------------------------------------
+            /*! 
+            \brief get shape
+
+            Return the number of elements along each dimension in a container 
+            specified by the user. The container can be each STL or other type
+            that conforms to the STL forward iterator interface. 
+            This example shows how to use this 
+            \code
+            StaticShape<3,4,5,2> s;
+            auto s.shape<std::vector<size_t> >();
+            \endcode
+
+            \tparam CONTAINER  container type
+            \return container with elements along each dimension
+            */
             template<typename CONTAINER> CONTAINER shape() const
             {
                 CONTAINER c(this->rank());
@@ -104,6 +224,19 @@ namespace utils{
             }
 
             //-----------------------------------------------------------------
+            /*! 
+            \brief compute offset
+
+            Compute an offset from a multidimensional index passed as a variadic
+            argument list. This method is quite comfortable as this example
+            shows
+            \code
+            StaticShape<3,4,5> s;
+
+            size_t offset = s.offset(1,2,3);
+            \endcode
+            \return offset value
+            */
             template<typename ...ITYPES >
                 size_t offset(size_t i1,ITYPES ...indices) const
             {
@@ -115,29 +248,77 @@ namespace utils{
             }
 
             //-----------------------------------------------------------------
+            /*! 
+            \brief return offset 
+
+            Return the offset of a multidimensional index pass to the function
+            as a container. If the size of the index container is not equal to
+            the rank of the shape object a ShapeMissmatchError is thrown.
+            \code
+            StaticShape<3,4,5> s;
+            std::vector<size_t> index{1,2,3};
+            size_t offset = s.offset(index);
+            \endcode
+            \throws ShapeMissmatchError if rank and container size do not match
+            \param c container with indices
+            \return offset value
+            */
             template<typename CTYPE> size_t offset(const CTYPE &c) const
             {
                 if(c.size() != this->rank())
                 {
-                    //throw an exception here
+                    ShapeMissmatchError e;
+                    std::stringstream ss;
+                    ss<<"Size of container ("<<c.size()<<") does not match";
+                    ss<<" rank ("<<this->rank()<<")!";
+                    e.description(ss.str());
+                    e.issuer("template<typename CTYPE> size_t offset"
+                             "(const CTYPE &c) const");
+                    throw e;
                 }
                 
                 return OffsetCalc<0,false,DIMS...>::offset(c);
             }
 
-
             //-----------------------------------------------------------------
+            /*! 
+            \brief compute the index
+
+            Compute the index belonging to a particular linear memory offset.
+            The targeting container is passed as the second argument of the
+            method. It is assumed that the size of the container matches the
+            rank of the shape.
+            \throws ShapeMissmatchError if container size and shape rank do not
+            match
+            \param offset linear offset 
+            \param c target container
+            */
             template<typename CTYPE> void index(size_t offset,CTYPE &c) const
             {
                 if(c.size() != this->rank())
                 {
-                    //throw an exception here
+                    ShapeMissmatchError e;
+                    std::stringstream ss;
+                    ss<<"Size of container ("<<c.size()<<") does not match";
+                    ss<<" rank ("<<this->rank()<<")!";
+                    e.description(ss.str());
+                    e.issuer("template<typename CTYPE> void index(size_t "
+                             "offset,CTYPE &c) const");
+                    throw e;
                 }
 
                 IndexCreator<0,true,DIMS...>::index(offset,c);
             }
 
             //-----------------------------------------------------------------
+            /*! 
+            \brief compute the index from an offset
+
+            Compute the index from an offset and return it in a container. 
+            \tparam CTYPE container type
+            \param o offset value 
+            \return the container with the indices
+            */
             template<typename CTYPE> CTYPE index(size_t o) const
             {
                 CTYPE c(this->rank());
