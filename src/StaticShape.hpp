@@ -1,5 +1,6 @@
 
 #include "SizeType.hpp"
+#include "StrideType.hpp"
 namespace pni{
 namespace utils{
 
@@ -24,8 +25,8 @@ namespace utils{
             size_t _dimstrides[sizeof...(DIMS)]; //!< array holding dimension strides
 
             //==============private member functions===========================
-            template<typename ...ITYPES>
-            size_t _offset(size_t d,size_t i1,ITYPES ...indices) const
+            template<typename ...ITYPES> 
+            size_t _offset( size_t d,size_t i1,ITYPES ...indices) const
             {
                 
                 return _dimstrides[d]*i1+_offset(d+1,indices...);

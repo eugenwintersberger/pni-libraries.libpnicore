@@ -90,31 +90,39 @@ namespace utils{
         static const size_t value = ComputeStride<N,0,false,DIMS...>::value;
     };
 
+    template<size_t ...DIMS> struct StrideCalc
+    {
+        template<size_t N> static constexpr size_t value()
+        {
+            return Stride<N,DIMS...>::value;
+        }
+    };
+
 
 
 
     //now we need to fill in the computed strides into the template parameter
     //list of the StrideHolder type - this gonna be tricky 
 
-
     //now we need some recursion to fill the stride holder
-    /*
-    template<template<size_t> class ST,size_t d,size_t ...DIMS> struct create_stride_recursion
+    template<typename SC,size_t CNT,size_t ...DIMS> struct create_stride_recursion
     {
-        typedef typename create_stride_rec<ST,ST<DIMS...>::size,DIMS...>::result stride;
+        typedef typename create_stride_recursion<SC,CNT-1,SC::template value<CNT>(),DIMS...>::stride stride;
     };
 
     //break condition for the recursion
-    template<size_t s,size_t ...DIMS> struct create_stride_recursion<s,DIMS...>
+    template<typename SC,size_t ...DIMS> struct create_stride_recursion<SC,0,DIMS...>
     {
-        typename create_stride_recursion<DIMS...>
+        typedef StrideHolder<SC::template value<0>(),DIMS...> stride;
     };
 
     //final type that creates the stride type
     template<size_t ...DIMS> struct create_stride
     {
-        typedef typename create_stride_recursion<ComputeStride,DIMS...>::stride StrideType;
-        */
+        typedef typename create_stride_recursion<StrideCalc<DIMS...>,
+                                                 sizeof...(DIMS)-2,
+                                                 StrideCalc<DIMS...>::template value<sizeof...(DIMS)-1>()>::stride stride;
+    };
 
 //end of namespace
 }

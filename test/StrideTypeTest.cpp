@@ -30,3 +30,30 @@ void StrideTypeTest::test_computation()
     CPPUNIT_ASSERT(comp3::value == 9);
 
 }
+
+void StrideTypeTest::test_calc()
+{
+    typedef StrideCalc<5,7,1,3,9> calc;
+
+    size_t stride = calc::value<0>();
+    CPPUNIT_ASSERT(stride == (7*9*3));
+    stride = calc::value<1>();
+    CPPUNIT_ASSERT(stride == (3*9));
+    stride = calc::value<2>();
+    CPPUNIT_ASSERT(stride == (3*9));
+    stride = calc::value<3>();
+    CPPUNIT_ASSERT(stride == 9);
+    stride = calc::value<4>();
+    CPPUNIT_ASSERT(stride == 1);
+
+}
+
+void StrideTypeTest::test_stride()
+{
+    typedef create_stride<5,7,3,9>::stride stride;
+
+    CPPUNIT_ASSERT(stride::value[0] == 7*3*9);
+    CPPUNIT_ASSERT(stride::value[1] == 3*9);
+    CPPUNIT_ASSERT(stride::value[2] == 9);
+    CPPUNIT_ASSERT(stride::value[3] == 1);
+}
