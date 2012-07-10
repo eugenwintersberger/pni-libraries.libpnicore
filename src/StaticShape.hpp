@@ -3,11 +3,6 @@
 namespace pni{
 namespace utils{
 
-    template<typename ...DIMS> class StrideType
-    {
-        public:
-            static const strides[sizeof...(DIMS)] = 
-    };
 
     /*!
     \brief static array shape type
@@ -25,6 +20,7 @@ namespace utils{
     template<size_t ...DIMS> class StaticShape
     {
         private:
+            static const size_t _dims[sizeof ...(DIMS)];
             size_t _dimstrides[sizeof...(DIMS)]; //!< array holding dimension strides
 
             //==============private member functions===========================
@@ -121,6 +117,9 @@ namespace utils{
             }
 
     };
+
+    template<size_t ...DIMS> 
+        const size_t StaticShape<DIMS...>::_dims[sizeof...(DIMS)] = {DIMS...};
 
 //end of namespace
 }
