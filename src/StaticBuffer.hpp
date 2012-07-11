@@ -181,8 +181,9 @@ namespace utils{
             }
 
             //------------------------------------------------------------------
-            template<template<typename,typename...> class CONT,typename ...OPTS>
-            StaticBuffer<T,N> &operator=(const CONT<T,OPTS...> &container)
+            //! copy assignment operator
+            template<typename CTYPE> 
+                StaticBuffer<T,N> &operator=(const CTYPE &container)
             {
                 check_size_equal(*this,container);
                 size_t index = 0;

@@ -5,6 +5,7 @@ namespace pni{
 namespace utils{
 
     /*! 
+    \ingroup util_classes
     \brief type computes the array size
 
     The idea of this type is to compute the size of a static array or shape
@@ -13,6 +14,7 @@ namespace utils{
     template<size_t ...indices> class SizeType;
 
     /*! 
+    \ingroup util_classes
     \brief specialization of SizeType
 
     The first real specialization of the SizeType template. 
@@ -20,6 +22,7 @@ namespace utils{
     template<size_t i,size_t ...indices> class SizeType<i,indices...>
     {
         public:
+            //!< size
             static const size_t size = i*SizeType<indices...>::size;
     };
 
@@ -27,7 +30,7 @@ namespace utils{
     template<> class SizeType<>
     {
         public:
-            static const size_t size = 1;
+            static const size_t size = 1; //!< size
     };
 
 
