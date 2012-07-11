@@ -1,13 +1,13 @@
 //implementation for the Buffer test
 
-#include "BufferTest.hpp"
+#include "DynamicBufferTest.hpp"
 
 //register the test at the test suite
 //CPPUNIT_TEST_SUITE_REGISTRATION(  );
 //CPPUNIT_TEST_SUITE_REGISTRATION(BufferTest<Int8,Buffer,NewAllocator>);
 
 #define BUFFER_TEST_REGISTRATION(VTYPE,ALLOC)\
-static CPPUNIT_NS::AutoRegisterSuite< BufferTest<VTYPE,ALLOC> >  \
+static CPPUNIT_NS::AutoRegisterSuite< DynamicBufferTest<VTYPE,ALLOC> >  \
              CPPUNIT_MAKE_UNIQUE_NAME(autoRegisterRegistry__ );
 
 BUFFER_TEST_REGISTRATION(Int8,NewAllocator);
