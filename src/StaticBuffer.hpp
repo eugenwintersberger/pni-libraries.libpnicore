@@ -37,7 +37,6 @@
 #include "Exceptions.hpp"
 #include "Types.hpp"
 #include "TypeIDMap.hpp"
-#include "NewAllocator.hpp"
 #include "Iterator.hpp"
 #include "ExceptionUtils.hpp"
 
@@ -63,7 +62,6 @@ namespace utils{
             typedef Iterator<StaticBuffer<T,N>,1 > const_iterator; //!< const iterator type
 
             //=============public static variables=============================
-            static const size_t value_size = sizeof(T); //!< size of the element type
             static const TypeID type_id    = TypeIDMap<T>::type_id; //!< type ID of the element type
            
             //=================constructors and destructor=====================

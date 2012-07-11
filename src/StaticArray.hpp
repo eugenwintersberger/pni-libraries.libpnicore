@@ -30,6 +30,7 @@
 #include "StaticBuffer.hpp"
 #include "StaticShape.hpp"
 #include "Exceptions.hpp"
+#incldue "ArrayViewSelector.hpp"
 
 namespace pni{
 namespace utils{
@@ -74,35 +75,60 @@ namespace utils{
             typedef std::unique_ptr<StaticArray<T,N> > unique_ptr; //!< unique pointer to this type
             typedef StaticBuffer<T,N>::iterator iterator; //!< iterator
             typedef StaticBuffer<T,N>::const_iterator const_iterator; //!< const iterator
+            //===============public members====================================
+            static const TypeID type_id = TypeIDMap<T>::type_id;
                 
             //=================constructors and destructor=====================
-            //! copy constructor from a different array
-            template<typename T,typename ATYPE> StaticArray(const ATYPE &a)
+            //! copy constructor from a container type
+            template<typename CTYPE> explicit StaticArray(const CTYPE &a)
             {
-                if(a.size() != this->size())
-                {
-                    ShapeMissmatchError e;
-                    e.issuer("template<typename T,typename ATYPE> "
-                             "StaticArray(const ATYPE &a)");
-                    std::stringstream ss;
-                    ss<<"Size of source array ("<<a.size()<<") does not match";
-                    ss<<" the static array size ("<<this->size()<<")!";
-                    e.description(ss.str());
-                    throw e;
-                }
+                check_equal_size(*this,a,"template<typename CTYPE> explicit "
+                                         "StaticArray(const CTYPE &a)");
 
                 //copy data
                 size_t cnt = 0;
-                for(T &v: *this) v = a[cnt++];
+                for(auto v: a) (*this)[cnt++] = v;
+            }
+
+            //-----------------------------------------------------------------
+            //! construct from a scalar value
+            template<typename U> explicit StaticArray(const U &v)
+            {
+                *this = v;
             }
 
             //==============assignment operators===============================
             //! assignment operator of a constant
-            template<typename T>
-            StaticArray<T,DIMS...> &operator=(const &T value)
+            template<typename U>
+            StaticArray<T,DIMS...> &operator=(const &U value)
             {
                 for(T &v: *this) v = value;
             }
+
+            //-----------------------------------------------------------------
+            /*! 
+            \brief assignment from a container
+            
+            Assign data from a general container type to the array. 
+            \throws SizeMissmatchError if the container and the array size do
+            not match
+            \tparam CTYPE container type
+            \param c instance of type CTYPE
+            */
+            template<typename CTYPE>
+            StaticArray<T,DIMS...> &operator=(const CTYPE &c)
+            {
+                if(this == &c) return *this;
+                
+                check_equal_size(*this,c,"template<typename CTYPE> "
+                                 "StaticArray<T,DIMS...> &operator=(const "
+                                 "CTYPE &c)");
+
+                size_t i = 0;
+                for(auto v: c) (*this)[i++] = v;
+                return *this;
+            }
+
 
             //-----------------------------------------------------------------
             //!assignment operator for a StaticArray

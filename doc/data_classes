@@ -10,11 +10,30 @@ in the code has to satisfy the following implicit interface
 template<typename T,...> class Buffer
     public:
     //==========the following public types must be available===================
+    typedef ... shared_ptr;
+    typedef ... unique_ptr;
     typedef ... value_type;
     typedef ... iterator;
     typedef ... const_iterator;
     //================public members===========================================
     static const TypeID type_id    = TypeIDMap<T>::type_id;
+
+    //================constructors=============================================
+    Buffer(); //must posses a default constructor
+
+    //fill object at construction from a container type (which includes other
+    //buffers)
+    template<typename CTYPE> Buffer(const CTYPE &c);
+
+
+    //==================assignment operators===================================
+    Buffer &operator=(const Buffer &b); //must provide a copy constructor
+    Buffer &operator=(const T &v);      //assignment of a single scalar
+    template<typename CTYPE> 
+    Buffer &operator=(const CTYPE &c);  //assignment of data form a container
+
+
+    //=================methods for data access=================================
     
     const T *ptr() const;   //get access to the internal storage
 
@@ -35,6 +54,9 @@ template<typename T,...> class Buffer
 
 };
 \endcode
+In addition to the common interface buffer types should also share a common
+behavior in order to make them exchangeable. 
+
 
 \section Arrays
 
@@ -67,6 +89,7 @@ template<typename T,typename STORAGE,...> class Array
     template<typename ...ITYPES>
     typename ATypeSelector<ITYPES...>::type operator()(ITYPES ...indices);
     ArrayView operator()(const std::vector<Slice> &s);
+    T &operator(
     
     
     T &operator[](size_t i); 

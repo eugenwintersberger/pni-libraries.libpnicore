@@ -124,7 +124,10 @@ namespace utils{
             typedef std::unique_ptr<ArrayView<ATYPE> > unique_ptr; //!< unique pointer type
             typedef Iterator<ArrayView<ATYPE>,0> iterator; //!< iterator type
             typedef Iterator<ArrayView<ATYPE>,1> const_iterator; //!< const iterator type
+            //========================public members===========================
+            static const size_t type_id = ATYPE::type_id;
             //=============constructors and destructor=========================
+
             ArrayView() = delete;
 
             //-----------------------------------------------------------------
