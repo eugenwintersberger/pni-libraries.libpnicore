@@ -1,0 +1,122 @@
+/*! \defgroup data_classes Data classes
+These classes are responsible for storing and manipulating data in memory. 
+
+\section Buffers
+
+Buffers are the fundamental types for holding data. The \c Buffer here describes
+rather a concept than a concrete type. Every type that might be used as a buffer
+in the code has to satisfy the following implicit interface
+\code
+template<typename T,...> class Buffer
+    public:
+    //==========the following public types must be available===================
+    typedef ... value_type;
+    typedef ... iterator;
+    typedef ... const_iterator;
+    //================public members===========================================
+    static const TypeID type_id    = TypeIDMap<T>::type_id;
+    
+    const T *ptr() const;   //get access to the internal storage
+
+    
+    T &operator[](size_t i); 
+    T operator[](size_t i) const; 
+    T &at(size_t i);
+    T at(size_t i) const;
+    void insert(size_t pos,const T &v);
+
+    size_t size() const;       //return number of elements of type T
+
+    //===================iterator related methods==============================
+    iterator begin();
+    iterator end();
+    const_iterator begin() const;
+    const_iterator end() const;
+
+};
+\endcode
+
+\section Arrays
+
+Arrays are types representing multidimensional arrays of data. Basically each
+array consists of an object managing the multidimensional shape of the array and
+a storage object holding the data. Array data can be accessed in two ways
+    \li linearly where subsequent elements are traversed one after the other and
+    each element has a linear index
+    \li index-access where each element is determined by its multidimensional
+    index.
+
+Linear access to the data is granted via the method already known from the
+Buffer interface. Index access is provided by special methods. For
+multidimensional data access the result of a selection can be 
+The following implicit interface must be granted for arrays
+\code
+template<typename T,typename STORAGE,...> class Array
+{
+    public:
+    //==================public types===========================================
+    typedef ... value_type;
+    typedef ... iterator;
+    typedef ... const_iterator;
+    //================public members===========================================
+    static const TypeID type_id    = TypeIDMap<T>::type_id;
+
+    const STORAGE &storage() const; //reference to the storage object
+
+   
+    template<typename ...ITYPES>
+    typename ATypeSelector<ITYPES...>::type operator()(ITYPES ...indices);
+    ArrayView operator()(const std::vector<Slice> &s);
+    
+    
+    T &operator[](size_t i); 
+    T operator[](size_t i) const; 
+    T &at(size_t i);
+    T at(size_t i) const;
+    void insert(size_t pos,const T &v);
+
+    size_t size() const;       //return number of elements of type T
+
+    //===================iterator related methods==============================
+    iterator begin();
+    iterator end();
+    const_iterator begin() const;
+    const_iterator end() const;
+};
+\endcode
+
+The following types provided by this library implement the above Array-interface
+<table >
+    <tr>
+        <th> Type template </th>
+        <th> purpose </th>
+        <th> remarks </th>
+    </tr>
+    <tr> 
+        <td> DynamicArray </td> 
+        <td> Array type for runtime allocation </td> 
+        <td>
+        Use this template if an array is required whose shape can be adjusted at
+        runtime.
+        </td>
+    </tr>
+    <tr> 
+        <td> StaticArray </td> 
+        <td> fixed size at compile time </td> 
+        <td>
+        This template should be used for arrays whose size is already known at
+        compile time. The resulting type is very memory efficient. It basically
+        requires only space for the data stored in it.
+        </td>
+    </tr>
+    <tr>
+        <td> ArrayView </td>
+        <td> provides a particular view on an array type </td>
+        <td>
+        This type is used to provide a view on only a part of one of the
+        previous array types. It owns no memory but holds a reference to the
+        original array from which it was drawn. 
+        </td>
+    </tr>
+</table>
+*/

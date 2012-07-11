@@ -25,8 +25,8 @@
  *     Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
  */
 
-#ifndef __ARRAY_HPP__
-#define __ARRAY_HPP__
+#ifndef __DYNAMICARRAY_HPP__
+#define __DYNAMICARRAY_HPP__
 
 #include<iostream>
 #include<utility>
@@ -55,39 +55,18 @@
 namespace pni {
 namespace utils {
 
+    /*! 
+    \ingroup data_classes
+    \brief template for a multi-dimensional array class
 
-    //! \ingroup data_classes
-    //! \brief template for a multi-dimensional array class
-
-    //! This class represents a multidimensional array of data values. It consists of two
-    //! components: a pointer to an instance of type Buffer and a pointer to an instance
-    //! of type ArrayShape. From the point of object oriented programming such an array can
-    //! be considered as a special view on the linear data stream represented by the Buffer
-    //! object. The ArrayShape and Buffer object of the array are hold by smart pointers
-    //! which allows sharing of these objects between different arrays or other
-    //! program instances. How data is handled depends on which constructors are used
-    //! to create the array and which methods are used to modify data elements of an
-    //! instance of Array. Usually set and get methods as well as constructors come
-    //! in two flavors: one where constant references of native objects are passed to them
-    //! and one where smart pointers are used. In the former case the objects will be
-    //! recreated by the Array object and their content will be copied.
-    //! In the later case of the smart pointer versions only the pointers
-    //! will be changed which allows sharing of data between the Array and external
-    //! instances of the program using the array. The std::shared_ptr avoids
-    //! problems with object ownership and makes it quite simple to implement this
-    //! behavior.
-
-    //! The motivation for the reallocation and copy processes for the reference type
-    //! methods and constructors is quite simple: one cannot be sure that the
-    //! instance which created the object or a simple pointer will not destroy the
-    //! object while still being used in the array. Therefore the copy process is
-    //! absolutely necessary.
-
+    \tparam T data type of the array
+    \tparam STORAGE storage object to use to keep the data
+    */
     template<typename T,typename STORAGE=Buffer<T,NewAllocator> > class DynamicArray
     {
         private:
             Shape _shape;   //!< shape of the array holding thed ata
-            STORAGE _data; //!< Buffer object holding the data
+            STORAGE _data;  //!< instance of STORAGE
 
             //==================private methods================================
             /*! \brief setup view parameters from variadic template
@@ -160,7 +139,6 @@ namespace utils {
                 shape.push_back(pni::utils::size(s));
             }
 
-        protected:
         public:
             //================public types=====================================
             typedef T value_type;  //!< type of an array element
@@ -174,19 +152,7 @@ namespace utils {
             //==================public members=================================
             static const TypeID type_id = TypeIDMap<T>::type_id; //!< type ID of the element type
             static const size_t value_size = sizeof(T); //!< size of the element type
-            /*! \brief protected constructor
 
-            This protected constructor is used by the ArrayFactory templates. It
-            provides move semantics for the buffer passed to the array. Thus the
-            array takes ownership over the buffer object. The method assumes
-            that the size of the Buffer and the Shape object do match.
-            \param s shape of the array
-            \param buffer buffer object
-            */
-            DynamicArray(const Shape &s,STORAGE &&buffer):
-                _shape(s),
-                _data(std::move(buffer))
-            { }
 
             //=================constructors and destructor=====================
             /*! \brief default constructor
@@ -239,6 +205,15 @@ namespace utils {
                         "DynamicArray(const Shape &s, const BType<T,Allocator> &b))");
             }
 
+            /*! \brief protected constructor
+
+            \param s shape of the 
+            \param buffer buffer object
+            */
+            DynamicArray(const Shape &s,STORAGE &&buffer):
+                _shape(s),
+                _data(std::move(buffer))
+            { }
             //-----------------------------------------------------------------
             //! destructor
             ~DynamicArray() { _data.free(); }
