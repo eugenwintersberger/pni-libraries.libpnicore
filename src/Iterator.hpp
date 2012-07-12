@@ -93,8 +93,6 @@ namespace utils{
         private:
             //!< pointer to the container object
             typename IterTypes<ITERABLE,const_flag>::cont_ptr _container; 
-            //!< pointer to the actual item
-            typename IterTypes<ITERABLE,const_flag>::ptr_type _item;
             ssize_t _state;        //!< actual position state of the iterator
             
             //! set the item pointer
@@ -133,17 +131,14 @@ namespace utils{
             Iterator(typename IterTypes<ITERABLE,const_flag>::cont_ptr container
                      ,size_t state=0):
                 _container(container),
-                _item(nullptr),
                 _state(state)
             { 
-                this->_set_item(); 
             }
 
             //------------------------------------------------------------------
             //! copy constructor
             Iterator(const Iterator<ITERABLE,const_flag> &i):
                 _container(i._container),
-                _item(i._item),
                 _state(i._state)
             { }
 
@@ -151,11 +146,9 @@ namespace utils{
             //! move constructor
             Iterator(Iterator<ITERABLE,const_flag> &&i):
                 _container(i._container),
-                _item(i._item),
                 _state(i._state)
             {
                 i._container = nullptr;
-                i._item = nullptr;
                 i._state = 0;
             }
 
@@ -170,7 +163,6 @@ namespace utils{
             {
                 if(this == &i) return *this;
                 this->_container = i._container;
-                this->_item      = i._item;
                 this->_state     = i._state;
                 return *this;
             }
@@ -183,8 +175,6 @@ namespace utils{
                 if(this == &i) return *this;
                 this->_container = i._container;
                 i._container = nullptr;
-                this->_item = i._item;
-                i._item = nullptr;
                 this->_state = i._state;
                 i._state = 0;
                 return *this;
@@ -229,7 +219,7 @@ namespace utils{
                     EXCEPTION_THROW();
                 }
 
-                return *(this->_item);
+                return (*(this->_container))[this->_state];
             }
 
             //------------------------------------------------------------------
@@ -251,7 +241,7 @@ namespace utils{
                     EXCEPTION_THROW();
                 }
 
-                return this->_item;
+                return &(*this);
             }
 
             //------------------------------------------------------------------
@@ -259,7 +249,6 @@ namespace utils{
             Iterator<ITERABLE,const_flag> &operator++()
             {
                 this->_state++;
-                this->_set_item();
                 return *this;
             }
 
@@ -268,8 +257,7 @@ namespace utils{
             Iterator<ITERABLE,const_flag> operator++(int i)
             {
                 Iterator<ITERABLE,const_flag> temp = *this;
-                this->_state++;
-                this->_set_item();
+                ++(*this);
                 return temp;
             }
 
@@ -278,7 +266,6 @@ namespace utils{
             Iterator<ITERABLE,const_flag> &operator--()
             {
                 this->_state--;
-                this->_set_item();
                 return *this;
             }
 
@@ -287,8 +274,7 @@ namespace utils{
             Iterator<ITERABLE,const_flag> operator--(int i)
             {
                 Iterator<ITERABLE,const_flag> tmp = *this;
-                this->_state--;
-                this->_set_item();
+                --(*this);
                 return tmp;
             }
 
@@ -297,7 +283,6 @@ namespace utils{
             Iterator<ITERABLE,const_flag> &operator+=(ssize_t i)
             {
                 this->_state += i;
-                this->_set_item();
                 return *this;
             }
 
@@ -306,7 +291,6 @@ namespace utils{
             Iterator<ITERABLE,const_flag> &operator-=(ssize_t i)
             {
                 this->_state -= i;
-                this->_set_item();
                 return *this;
             }
             //------------------------------------------------------------------
