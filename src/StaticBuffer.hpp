@@ -125,12 +125,13 @@ namespace utils{
             \throws SizeMissmatchError list size does not match buffer size
             \param list reference to the initializer list
             */
-            StaticBuffer(const std::initializer_list<T> &list)
+            explicit StaticBuffer(const std::initializer_list<T> &list)
             {
-                check_size_equal(*this,list,
+                check_equal_size(*this,list,
                         "StaticBuffer(const std::initializer_list<T> &list)");
-
-                for(size_t i=0;i<N;i++) (*this)[i] = list[i];
+                
+                size_t i=0;
+                for(auto v: list) (*this)[i] = v;
             }
 
             //-----------------------------------------------------------------
@@ -143,6 +144,7 @@ namespace utils{
             \throws SizeMissmatchError if memory allocation fails
             \param container instance of a container type
             */
+            /*
             template<template<typename,typename ...> class CONT,
                      typename ...OPTS>
             explicit StaticBuffer(const CONT<T,OPTS...> &container)
@@ -152,6 +154,7 @@ namespace utils{
                 size_t index = 0;
                 for(auto v: container) (*this)[index++] = v;
             }
+            */
 
             //-----------------------------------------------------------------
             //! destructor
@@ -172,13 +175,16 @@ namespace utils{
             All values in the buffer will be set to v. 
             \param v value to set the buffer to
             */
+            /*
             StaticBuffer<T,N> &operator=(const T &v)
             {
                 for(T &b: *this) b = v;
                 return *this;
             }
+            */
 
             //------------------------------------------------------------------
+            /*
             //! copy assignment operator
             template<typename CTYPE> 
                 StaticBuffer<T,N> &operator=(const CTYPE &container)
@@ -190,6 +196,7 @@ namespace utils{
 
                 return *this;
             }
+            */
 
             //==============public methods for data access=====================
             /*! \brief return data pointer

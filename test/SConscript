@@ -30,9 +30,10 @@ sources_list.extend(["IteratorTest.cpp"])
 #sources_list.extend(["DynamicArrayTest.cpp"])
 
 pniutils_test = test_env.Program("pniutilstest",sources_list)
+iterbm = test_env.Program("iterbm","iteratorbm.cpp")
 #showtypes = test_env.Program("showPNITypes.cpp")
 #benchmark = test_env.Program("utbmark","bmark.cpp")
-test_targets = [pniutils_test]
+test_targets = [pniutils_test,iterbm]
 
     
 

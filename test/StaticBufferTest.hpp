@@ -11,6 +11,7 @@
 
 #include "RandomDistributions.hpp"
 #include "EqualityCheck.hpp"
+#include <algorithm>
 
 using namespace pni::utils;
 
@@ -60,6 +61,8 @@ template<typename T> void StaticBufferTest<T>::test_constructors()
     //using copy constructor
     StaticBuffer<T,N1> b2(b1);
     CPPUNIT_ASSERT(b1.size() == b2.size());
+
+    StaticBuffer<T,3> b3{1,2,3};
 }
 
 //------------------------------------------------------------------------------
@@ -68,9 +71,13 @@ template<typename T> void StaticBufferTest<T>::test_assignment()
 	//testing here the assignment of equally typed buffers
 	StaticBuffer<T,N1> buffer1;
 	StaticBuffer<T,N1> buffer2;
+   
     
-    buffer1 = T(100);
-    buffer2 = T(100);
+    std::fill(buffer1.begin(),buffer1.end(),T(100));
+    std::fill(buffer2.begin(),buffer2.end(),T(100));
+
+    for(auto v: buffer1) CPPUNIT_ASSERT(v == T(100));
+    for(auto v: buffer2) CPPUNIT_ASSERT(v == T(100));
 
     CPPUNIT_ASSERT(buffer1 == buffer2);
 
@@ -106,11 +113,11 @@ template<typename T> void StaticBufferTest<T>::test_comparison()
 	StaticBuffer<T,100> b1;
 	StaticBuffer<T,100> b2;
 
-	b1 = T(1);
-	b2 = T(2);
+    std::fill(b1.begin(),b1.end(),T(1));
+    std::fill(b2.begin(),b2.end(),T(2));
 
 	CPPUNIT_ASSERT(b1 != b2);
-	b2 = T(1);
+    std::fill(b2.begin(),b2.end(),T(1));
 	CPPUNIT_ASSERT(b1 == b2);
 }
 

@@ -20,7 +20,6 @@ template<typename T,...> class Buffer
 
     //================constructors=============================================
     Buffer(); //must posses a default constructor
-    Buffer(const initializer_list<T> &l); //support for initializer list
 
     //==================assignment operators===================================
     Buffer &operator=(const Buffer &b); //must provide a copy constructor
