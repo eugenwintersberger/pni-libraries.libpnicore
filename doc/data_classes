@@ -20,17 +20,10 @@ template<typename T,...> class Buffer
 
     //================constructors=============================================
     Buffer(); //must posses a default constructor
-
-    //fill object at construction from a container type (which includes other
-    //buffers)
-    template<typename CTYPE> Buffer(const CTYPE &c);
-
+    Buffer(const initializer_list<T> &l); //support for initializer list
 
     //==================assignment operators===================================
     Buffer &operator=(const Buffer &b); //must provide a copy constructor
-    Buffer &operator=(const T &v);      //assignment of a single scalar
-    template<typename CTYPE> 
-    Buffer &operator=(const CTYPE &c);  //assignment of data form a container
 
 
     //=================methods for data access=================================
@@ -54,8 +47,9 @@ template<typename T,...> class Buffer
 
 };
 \endcode
-In addition to the common interface buffer types should also share a common
-behavior in order to make them exchangeable. 
+The iterators provided by the Buffer types must be random access iterators in
+the sense of STL. Thus, all standard STL algorithms can be used with the Buffer
+types. 
 
 
 \section Arrays

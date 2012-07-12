@@ -2,19 +2,22 @@
 #define __ITERATOR_HPP__
 
 #include "Exceptions.hpp" 
+#include <iterator>
 
 namespace pni{
 namespace utils{
-    
+   
+    //=========================================================================
     /*! \ingroup util_classes
     \brief iterator return type map
 
-    Template whose specializations determine the return types for various
+    Template whose specializations determine the return types for various 
     iterator operators depending on the const_flag in the template parameter
     list.
     */
     template<typename ITERABLE,int const_flag> class IterTypes;
 
+    //=========================================================================
     /*! \ingroup util_classes
     \brief return types for non-const iterators
 
@@ -24,10 +27,15 @@ namespace utils{
     {
         public:
             typedef ITERABLE *cont_ptr; //!< container pointer
-            typedef typename ITERABLE::value_type& return_type; //!< reference type for dereferencing operator
-            typedef typename ITERABLE::value_type* ptr_type;    //!< pointer type for -> operator
+            //!< reference type for dereferencing operator
+            typedef typename ITERABLE::value_type& return_type;
+            //!< pointer type for -> operator
+            typedef typename ITERABLE::value_type* ptr_type;    
+            //!< reference type 
+            typedef typename ITERABLE::value_type& ref_type;
     };
 
+    //=========================================================================
     /*! \ingroup util_classes
     \brief return types for const iterators
 
@@ -37,9 +45,29 @@ namespace utils{
     {
         public:
             typedef const ITERABLE *cont_ptr; //!< container pointer
-            typedef typename ITERABLE::value_type return_type;     //!< value type for dereferencing operator
-            typedef const typename ITERABLE::value_type *ptr_type; //!< pointer type for -> operator
+            //!< value type for dereferencing operator
+            typedef typename ITERABLE::value_type return_type;    
+            //!< pointer type for -> operator
+            typedef const typename ITERABLE::value_type *ptr_type; 
+            //!< reference type
+            typedef const typename ITERABLE::value_type &ref_type;
     };
+
+    //=========================================================================
+    template<typename ITERABLE,int const_flag> class Iterator;
+
+    template<typename ITERABLE,int const_flag> Iterator<ITERABLE,const_flag> 
+        operator+(const Iterator<ITERABLE,const_flag> &a,
+                  ssize_t b);
+    template<typename ITERABLE,int const_flag> Iterator<ITERABLE,const_flag>
+        operator+(ssize_t a,
+                  const Iterator<ITERABLE,const_flag> &b);
+    template<typename ITERABLE,int const_flag> Iterator<ITERABLE,const_flag>
+        operator-(const Iterator<ITERABLE,const_flag> &a,
+                  ssize_t b);
+    template<typename ITERABLE,int const_flag> ssize_t
+        operator-(const Iterator<ITERABLE,const_flag> &a,
+                  const Iterator<ITERABLE,const_flag> &b);
 
 
     /*! \ingroup util_classes   
@@ -63,14 +91,21 @@ namespace utils{
     template<typename ITERABLE,int const_flag> class Iterator
     {
         private:
-            typename IterTypes<ITERABLE,const_flag>::cont_ptr _container; //!< pointer to the container object
+            //!< pointer to the container object
+            typename IterTypes<ITERABLE,const_flag>::cont_ptr _container; 
             ssize_t _state;        //!< actual position state of the iterator
         public:
-            //================constructor and destructor===========================
-            //! no default constructor
+            //====================public types==================================
+            typedef typename ITERABLE::value_type value_type;
+            typedef typename IterTypes<ITERABLE,const_flag>::ptr_type pointer;
+            typedef typename IterTypes<ITERABLE,const_flag>::ref_type reference;
+            typedef ssize_t difference_type;
+            typedef std::random_access_iterator_tag iterator_category;
+            //================constructor and destructor========================
+            //! default constructor
             Iterator():_container(nullptr),_state(0) {}
 
-            //---------------------------------------------------------------------
+            //------------------------------------------------------------------
             /*! \brief standard constructor
 
             This constructor takes a pointer to the container and an initial
@@ -78,36 +113,76 @@ namespace utils{
             \param container pointer to the container object
             \param state initial position of the iterator
             */
-            Iterator(typename IterTypes<ITERABLE,const_flag>::cont_ptr container,size_t state=0):
+            Iterator(typename IterTypes<ITERABLE,const_flag>::cont_ptr container
+                     ,size_t state=0):
                 _container(container),
                 _state(state)
             { }
 
-            //---------------------------------------------------------------------
+            //------------------------------------------------------------------
             //! copy constructor
             Iterator(const Iterator<ITERABLE,const_flag> &i):
                 _container(i._container),
                 _state(i._state)
             {}
 
-            //---------------------------------------------------------------------
+            //------------------------------------------------------------------
+            //! move constructor
+            Iterator(Iterator<ITERABLE,const_flag> &&i):
+                _container(i._container),
+                _state(i._state)
+            {
+                i._container = nullptr;
+                i._state = 0;
+            }
+
+            //------------------------------------------------------------------
             //! default constructor
             ~Iterator() {}
 
-            //====================public methods and operators=====================
+            //=================assignment operator==============================
+            //! copy assignment operator
+            Iterator<ITERABLE,const_flag> &
+                operator=(const Iterator<ITERABLE,const_flag> &i)
+            {
+                if(this == &i) return *this;
+                this->_container = i._container;
+                this->_state     = i._state;
+                return *this;
+            }
+
+            //------------------------------------------------------------------
+            //! move assignment operator
+            Iterator<ITERABLE,const_flag> &
+                operator=(Iterator<ITERABLE,const_flag> &&i)
+            {
+                if(this == &i) return *this;
+                this->_container = i._container;
+                i._container = nullptr;
+                this->_state = i._state;
+                i._state = 0;
+                return *this;
+            }
+
+            //====================public methods and operators==================
             /*! \brief conversion operator
 
             This operator allows the conversion of an iterator to bool. It will
             return true if the iterator is valid and false otherwise.
+            The iterator is consideres as invalid if its internal state is at
+            least one after the last element or smaller than 0. It is important
+            that this conversion operator is set \c explicit. Otherwise the
+            iterator would be implicitly convertible to integer (via bool).
             \return boolean value
             */
-            operator bool() const
+            explicit operator bool() const
             {
                 if(!this->_container) return false;
-                return !(this->_state >= (ssize_t)(this->_container->size()));
+                ssize_t size = (ssize_t)(this->_container->size());
+                return !((this->_state >= size)||(this->_state<0));
             }
 
-            //---------------------------------------------------------------------
+            //------------------------------------------------------------------
             /*! \brief dereferencing operator
 
             Returns a reference on the object the iterator is actually pointer
@@ -131,7 +206,7 @@ namespace utils{
                 return (*(this->_container))[this->_state];
             }
 
-            //---------------------------------------------------------------------
+            //------------------------------------------------------------------
             /*! \brief pointer access operator
 
             Returns a const or non-const pointer to the object the iterator
@@ -153,7 +228,7 @@ namespace utils{
                 return &((*this->_container)[this->_state]);
             }
 
-            //---------------------------------------------------------------------
+            //------------------------------------------------------------------
             //! increment iterator position
             Iterator<ITERABLE,const_flag> &operator++()
             {
@@ -161,7 +236,7 @@ namespace utils{
                 return *this;
             }
 
-            //---------------------------------------------------------------------
+            //------------------------------------------------------------------
             //! increment iterator position
             Iterator<ITERABLE,const_flag> &operator++(int i)
             {
@@ -169,7 +244,38 @@ namespace utils{
                 return *this;
             }
 
-            //---------------------------------------------------------------------
+            //------------------------------------------------------------------
+            //! decrement operators
+            Iterator<ITERABLE,const_flag> &operator--()
+            {
+                this->_state--;
+                return *this;
+            }
+
+            //------------------------------------------------------------------
+            //! decrement operators
+            Iterator<ITERABLE,const_flag> &operator--(int i)
+            {
+                this->_state--;
+                return *this;
+            }
+
+            //------------------------------------------------------------------
+            //! compound assignment with +=
+            Iterator<ITERABLE,const_flag> &operator+=(ssize_t i)
+            {
+                this->_state += i;
+                return *this;
+            }
+
+            //------------------------------------------------------------------
+            //! compound assignment with -=
+            Iterator<ITERABLE,const_flag> &operator-=(ssize_t i)
+            {
+                this->_state -= i;
+                return *this;
+            }
+            //------------------------------------------------------------------
             //! comparsion operator - equality
             bool operator==(const Iterator<ITERABLE,const_flag> &a)
             {
@@ -182,15 +288,87 @@ namespace utils{
                 return true;
             }
 
-            //---------------------------------------------------------------------
+            //------------------------------------------------------------------
             //! comparison operator - inequality
             bool operator!=(const Iterator<ITERABLE,const_flag> &a)
             {
                 if((*this)==a) return false;
                 return true;
             }
+
+            //===============comparison operators==============================
+            //! lesser than operator
+            bool operator<(const Iterator<ITERABLE,const_flag> &b)
+            {
+                return this->_state < b._state;
+            }
+
+            //-----------------------------------------------------------------
+            //! lesser than equal operator
+            bool operator<=(const Iterator<ITERABLE,const_flag> &b)
+            {
+                return this->_state <= b._state;
+            }
+
+            //-----------------------------------------------------------------
+            //! greater than operator
+            bool operator>(const Iterator<ITERABLE,const_flag> &b)
+            {
+                return this->_state > b._state;
+            }
+
+            //-----------------------------------------------------------------
+            //! greater equal than operator
+            bool operator>=(const Iterator<ITERABLE,const_flag> &b)
+            {
+                return this->_state >= b._state;
+            }
+
+            //=======friend declarations for binary arithmetic operators=======
+            
+            friend Iterator<ITERABLE,const_flag> 
+                operator + <> (const Iterator<ITERABLE,const_flag> &a, ssize_t b);
+            friend Iterator<ITERABLE,const_flag> 
+                operator + <> (ssize_t a,const Iterator<ITERABLE,const_flag> &b);
+            friend Iterator<ITERABLE,const_flag> 
+                operator - <> (const Iterator<ITERABLE,const_flag> &a,ssize_t b);
+            friend ssize_t
+                operator - <> (const Iterator<ITERABLE,const_flag> &a,
+                          const Iterator<ITERABLE,const_flag> &b);
     };
 
+//================binary arithmetic operators==================================
+template<typename ITERABLE,int const_flag> Iterator<ITERABLE,const_flag> 
+    operator+(const Iterator<ITERABLE,const_flag> &a, ssize_t b)
+{
+    Iterator<ITERABLE,const_flag> iter = a;
+    iter += b;
+    return iter;
+}
+
+//-----------------------------------------------------------------------------
+template<typename ITERABLE,int const_flag> Iterator<ITERABLE,const_flag>
+    operator+(ssize_t a, const Iterator<ITERABLE,const_flag> &b)
+{
+    return b+a;
+}
+
+//-----------------------------------------------------------------------------
+template<typename ITERABLE,int const_flag> Iterator<ITERABLE,const_flag>
+    operator-(const Iterator<ITERABLE,const_flag> &a, ssize_t b)
+{
+    Iterator<ITERABLE,const_flag> iter = a;
+    iter -= b;
+    return iter;
+}
+
+//-----------------------------------------------------------------------------
+template<typename ITERABLE,int const_flag> ssize_t
+    operator-(const Iterator<ITERABLE,const_flag> &a, 
+            const Iterator<ITERABLE,const_flag> &b)
+{
+    return a._state - b._state;
+}
 
 //end of namespace
 }
