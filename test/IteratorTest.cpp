@@ -205,5 +205,13 @@ void IteratorTest::test_increment()
     ++iter;
     CPPUNIT_ASSERT(*iter == 3);
     CPPUNIT_ASSERT(*iter++ == 3);
+    CPPUNIT_ASSERT(*iter == 4);
+
+    --iter;
+    CPPUNIT_ASSERT(*iter == 3);
+    CPPUNIT_ASSERT(*iter-- == 3);
+    CPPUNIT_ASSERT(*iter == 2);
+    iter--;
+    CPPUNIT_ASSERT(*iter == 1);
 }
 
