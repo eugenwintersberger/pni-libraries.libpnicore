@@ -72,7 +72,6 @@ namespace utils{
             typedef Iterator<RefBuffer<T>,1> const_iterator; //!< const iterator type
 
             //===================public static member variables================
-            static const size_t value_size = sizeof(T);  //!< size of element data type
             static const TypeID type_id    = TypeIDMap<T>::type_id; //!< ID of the element data teyp
 
             //=================constructors and destructors====================
@@ -115,7 +114,11 @@ namespace utils{
 
             //-----------------------------------------------------------------
             //! destructor
-            ~RefBuffer() { this->free(); }
+            ~RefBuffer() 
+            { 
+                this->_data = nullptr; 
+                this->_size = 0;
+            }
 
             //====================assignment operators=========================
             //! copy assignment operator
@@ -143,51 +146,6 @@ namespace utils{
                 return *this;
             }
 
-            //-----------------------------------------------------------------
-            /*! \brief copy from an other container
-
-            Copies the content of a container to the RefBuffer data.
-            \throws MemoryNotAllocatedError if buffer is not allocated
-            \throws SizeMissmatchBuffer if container size does not match
-            */
-            template<template<typename,typename...> class CONT,typename ...OPTS>
-            RefBuffer<T> &operator=(const CONT<T,OPTS...> &b)
-            {
-                check_allocation_state(*this,
-                                 "template<template<typename,typename...> "
-                                 "class CONT,typename ...OPTS> RefBuffer<T> "
-                                 "&operator=(const CONT<T,OPTS...> &b)");
-                check_equal_size(*this,b,
-                                 "template<template<typename,typename...> "
-                                 "class CONT,typename ...OPTS> RefBuffer<T> "
-                                 "&operator=(const CONT<T,OPTS...> &b)");
-                
-                size_t index = 0;
-                for(auto v: b)
-                    (*this)[index++] = v;
-
-                return *this;
-            }
-
-            //-----------------------------------------------------------------
-            /*! \brief single value assignment operator
-
-            This special form of the assignment operator can be used to assign
-            a single value to all elements of the buffer. Thus, it is quite useful
-            for initializing a buffer object.
-            \throws MemoryNotAllocatedError if buffer not allocated
-            \param v value which to assign to all buffer elements
-            */
-            RefBuffer<T> &operator=(const T &v)
-            {
-                check_allocation_state(*this,
-                        "RefBuffer<T> &operator=(const T &v)");
-                
-                for(size_t i=0;i<this->size();i++) (*this)[i] = v;
-
-                return *this;
-            }
-
             //====================data access methods==========================
             /*! \brief return data pointer
 
@@ -196,32 +154,6 @@ namespace utils{
             \return pointer to allocated memory
             */
             const T* ptr() const { return this->_data; }
-
-            //-----------------------------------------------------------------
-            /*! \brief return data pointer
-
-            Returns a typed pointer to the allocated memory. The pointer can be
-            used for altering the buffer content.
-            \return pointer to allocated memory
-            */
-            T *ptr() { return this->_data; }
-
-            //-----------------------------------------------------------------
-            /*! \brief get void pointer
-
-            Return a void pointer to the first element of the memory block.
-            \return void pointer
-            */
-            void *void_ptr() { return (void *)this->_data;}
-
-            //-----------------------------------------------------------------
-            /*! \brief get a const void pointer
-
-            Returns a const void pointer to the first element of the memory
-            block.
-            \return const void pointer
-            */
-            const void *void_ptr() const { return (const void *)this->_data; }
 
             //-----------------------------------------------------------------
             /*! \brief return value at index i
@@ -285,32 +217,25 @@ namespace utils{
             */
             T operator[](size_t n) const { return this->_data[n]; }
 
-            //! allocate memory - does nothing
-
-            //! For a RefBuffer this method has no effect.
-            void allocate(size_t size) {}
-            
-            //! free memory - does nothing
-
-            //! In the case of a RefBuffer this method does not free memory 
-            //! but resets the internal data pointer to nullptr.
-            void free() 
-            {
-                _data = nullptr;
-                _size = 0;
-            }
-
             //-----------------------------------------------------------------
-            /*! \brief amount of memory occupied
+            /*! 
+            \brief insert a value
 
-            Returns the total amount of memory occupied by the buffers data in
-            byte.
-            \return memory consumption in byte.
+            Insert a value at a given position. Similiar to at() but can be used
+            in thread-safe wrappers.
+            \throws SizeMissmatchError if i exceeds buffer size
+            \param i index where to insert the value
+            \param v value to insert
             */
-            size_t mem_size() const 
+            void insert(size_t i,const T &v)
             {
-                return sizeof(T)*this->size();
+                check_allocation_state(*this,
+                                       "void insert(size_t i,const T &v)");
+                check_index(i,this->size(),"void insert(size_t i,const T &v)");
+
+                (*this)[i] = v;
             }
+
 
             //-----------------------------------------------------------------
             /*! \brief return number of elements 
