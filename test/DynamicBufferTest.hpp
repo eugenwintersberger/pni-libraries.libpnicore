@@ -70,20 +70,10 @@ void DynamicBufferTest<T,Allocator>::test_constructors()
     CPPUNIT_ASSERT(b2.size());
 
     //construct from a initializier list
-    DynamicBuffer<T,Allocator> ibuffer = {T(1),T(6),T(12)};
+    DynamicBuffer<T,Allocator> ibuffer{T(1),T(6),T(12)};
     CPPUNIT_ASSERT(ibuffer[0] == T(1));
     CPPUNIT_ASSERT(ibuffer[1] == T(6));
     CPPUNIT_ASSERT(ibuffer[2] == T(12));
-
-
-    //test constructor with vector
-    std::vector<T> vec = {3,9,1};
-    DynamicBuffer<T,Allocator> vbuffer(vec);
-    CPPUNIT_ASSERT(vbuffer.size());
-    CPPUNIT_ASSERT(vbuffer.size() == 3);
-    CPPUNIT_ASSERT(vbuffer[0] == T(3));
-    CPPUNIT_ASSERT(vbuffer[1] == T(9));
-    CPPUNIT_ASSERT(vbuffer[2] == T(1));
 
 
     //=====================copy and move constructor=============================
@@ -190,8 +180,16 @@ void DynamicBufferTest<T,Allocator>::test_access()
     for(size_t i=0;i<ibuffer.size();i++)
         CPPUNIT_ASSERT(ibuffer.at(i) == T(i));
 
+    DynamicBuffer<T,Allocator> jbuffer(4);
+    for(size_t i=0;i<jbuffer.size();i++)
+        CPPUNIT_ASSERT_NO_THROW(jbuffer.insert(i,T(i)));
+
+    for(size_t i=0;i<jbuffer.size();i++)
+        CPPUNIT_ASSERT(jbuffer[i] == T(i));
+
     //check for IndexError exception
     CPPUNIT_ASSERT_THROW(ibuffer.at(100),IndexError);
+    CPPUNIT_ASSERT_THROW(ibuffer.insert(100,1),IndexError);
 
 }
 
@@ -202,11 +200,11 @@ void DynamicBufferTest<T,Allocator>::test_comparison()
 	DynamicBuffer<T,Allocator> b1(100);
 	DynamicBuffer<T,Allocator> b2(100);
 
-	b1 = T(1);
-	b2 = T(2);
+    std::fill(b1.begin(),b1.end(),T(1));
+    std::fill(b2.begin(),b2.end(),T(2));
 
 	CPPUNIT_ASSERT(b1 != b2);
-	b2 = T(1);
+    std::fill(b2.begin(),b2.end(),T(1));
 	CPPUNIT_ASSERT(b1 == b2);
 }
 
@@ -219,14 +217,11 @@ void DynamicBufferTest<T,Allocator>::test_iterator()
     DynamicBuffer<T,Allocator> b1(1000);
 
     auto data = RandomDistribution::uniform<std::vector<T> >(1000);
-   
-    size_t index = 0;
-    std::cout<<"writing data to buffer ..."<<std::endl;
-    for(T &v: b1)
-        CPPUNIT_ASSERT_NO_THROW(v = data[index++]);
+
+    std::copy(data.begin(),data.end(),b1.begin());
 
     //read data back
-    index = 0;
+    size_t index = 0;
     std::cout<<"reading data from buffer ..."<<std::endl;
     for(auto v: b1)
         check_equality(v,data[index++]);

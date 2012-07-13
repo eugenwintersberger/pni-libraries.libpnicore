@@ -158,7 +158,7 @@ namespace utils{
             \param indices list of array indices
             \return reference to the array element
             */
-            template<typename ...ITYPES> T &operator(ITYPES ...indices)
+            template<typename ...ITYPES> T &operator()(ITYPES ...indices)
             {
                 return this->_data[this->_shape.offset(indices...)];
             }

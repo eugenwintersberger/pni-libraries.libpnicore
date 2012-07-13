@@ -32,6 +32,7 @@
 #include <string>
 #include <sstream>
 #include <vector>
+#include <algorithm>
 #include "Exceptions.hpp"
 #include "Types.hpp"
 #include "TypeIDMap.hpp"
@@ -169,36 +170,6 @@ namespace utils{
             {}
 
             //-----------------------------------------------------------------
-            /*! \brief constructor from raw pointer
-           
-            Construct a pointer from a size and a raw pointer to the data. 
-            The size must correspond to the number of elements stored in the
-            memory associated with the raw pointer - otherweise a segmentation
-            fault will take place.
-            The Buffer template allocates memory and copies the content of the
-            buffer to the newly allocate memory over which it posses ownership.
-            \code 
-            double *data = new double[1024];
-            ....
-            //data is copied to a buffer
-            Buffer<double> buffer(1024,data);
-
-            //you can savely free the original pointer
-            delte [] data;
-            \endcode
-            \throws MemoryAllocationError if allocation fails
-            \param n number of bytes to allocate
-            \param ptr pointer to raw data
-            */
-            explicit DynamicBuffer(size_t n,const T *ptr):
-                _data(Allocator::template allocate<T>(n)),
-                _size(n)
-            {
-                if(this->size())
-                    for(size_t i=0;i<this->size();i++) (*this)[i] = ptr[i];
-            }
-
-            //-----------------------------------------------------------------
             /*! \brief construct with initializer list
 
             This constructor allows the construction of DynamicBuffer<T> objects 
@@ -210,53 +181,14 @@ namespace utils{
             \throws MemoryAllocationError if memory allocation fails
             \param list reference to the initializer list
             */
-            DynamicBuffer(const std::initializer_list<T> &list):
+            explicit DynamicBuffer(const std::initializer_list<T> &list):
                 _data(Allocator::template allocate<T>(list.size())),
                 _size(list.size())
             
             {
-                size_t index = 0;
-#ifdef NOFOREACH
-                for(auto iter = list.begin();iter!=list.end();iter++){
-                    const T &value = *iter;
-#else        
-                for(const T &value: list){
-#endif
-                    _data[index] = value;
-                    index++;
-                }
+                std::copy(list.begin(),list.end(),this->begin());
             }
             
-            //-----------------------------------------------------------------
-            /*! \brief construct buffer from an iterable container
-           
-            Any iterable container can be used to construct a buffer. The data
-            will be copied from the container to the newly allocated buffer
-            object.
-            \throws MemoryAllocationError if memory allocation fails
-            \param container instance of a container type
-            */
-            template <
-                template<typename,typename ...> class CONT,
-                typename ...OPTS 
-            >
-            explicit DynamicBuffer(const CONT<T,OPTS...> &container):
-                _data(Allocator::template allocate<T>(container.size())),
-                _size(container.size())
-            {
-                size_t index = 0;
-                
-#ifdef NOFOREACH
-                for(auto iter = container.begin();iter!=container.end();iter++){
-                    const T &value = *iter;
-#else        
-                for(auto value: container){
-#endif
-                    _data[index] = value;
-                    index++;
-                }
-            }
-
             //-----------------------------------------------------------------
             //! destructor
             ~DynamicBuffer() { this->free(); }
@@ -305,34 +237,6 @@ namespace utils{
                 return *this;
             }
 
-            //-----------------------------------------------------------------
-            /*! single value assignment operator
-
-            This special form of the assignment operator can be used to 
-            assign a single value to all elements of the buffer. Thus, it is 
-            quite useful for initializing a buffer object.
-            \throws MemoryAccessError if buffer is not allocated
-            \param v value which to assign to all buffer elements
-            \return reference to a buffer object
-            */
-            DynamicBuffer<T,Allocator> &operator=(const T &v)
-            {
-                EXCEPTION_SETUP("Buffer<T,Allocator> &operator=(const T &v)");
-
-                if(!this->size())
-                {
-                    EXCEPTION_INIT(MemoryAccessError,
-                            "Cannot assign data to an unallocated buffer!");
-                    EXCEPTION_THROW();
-                }
-
-                //we do not need to check the size here because if the buffer is 
-                //allocated the size is necessarily not zero
-                for(size_t i=0;i<this->size();i++) (*this)[i] = v;
-
-                return *this;
-            }
-
             //==============public methods for data access=====================
             /*! \brief return data pointer
 
@@ -341,33 +245,6 @@ namespace utils{
             \return pointer to allocated memory
             */
             const T* ptr() const { return this->_data; }
-
-            //-----------------------------------------------------------------
-            /*! return data pointer
-
-            Returns a typed pointer to the allocated memory. The pointer can be
-            used for altering the buffer content.
-            \return pointer to allocated memory
-            */
-            T *ptr() { return this->_data; }
-
-            //-----------------------------------------------------------------
-            /*! \brief return a non-const pointer to the allocate memory
-
-            Returns a non-const pointer to the memory region belonging to a
-            DynamicBuffer<T> object.
-            \return return read/write pointer to data
-            */
-            void *void_ptr() { return this->_data; }
-
-            //-----------------------------------------------------------------
-            /*! \brief get const void pointer
-
-            Return a const void pointer to the first element of the buffers
-            data.
-            \return const void pointer
-            */
-            const void *void_ptr() const { return this->_data; }
 
             //-----------------------------------------------------------------
             /*! \brief get value at index i
@@ -498,9 +375,10 @@ namespace utils{
             Returns an const iterator pointing to the last element of the buffer.
             \return const iterator to last element
             */
-            const_iterator end() const {return const_iterator(this,this->size());
+            const_iterator end() const 
+            {
+                return const_iterator(this,this->size());
             }
-
 
     };
 
