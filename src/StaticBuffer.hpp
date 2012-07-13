@@ -47,7 +47,8 @@ namespace utils{
     \brief static buffer template
     
     This template implements a static buffer. Such objects occupy a fixed size
-    in memory which cannot be altered. 
+    in memory which cannot be altered. StaticBuffer behaves like a STL
+    container. Thus all the STL algorithm template functions can be used. 
     */
     template<typename T,size_t N >class StaticBuffer
     {
@@ -70,48 +71,12 @@ namespace utils{
 
             //-----------------------------------------------------------------
             //! \brief copy constructor
-            StaticBuffer(const StaticBuffer<T,N> &b)
+            explicit StaticBuffer(const StaticBuffer<T,N> &b)
             {
                 //copy data
                 for(size_t i=0;i<this->size();i++) (*this)[i] = b[i];
             }
 
-            //-----------------------------------------------------------------
-            /*! \brief constructor from raw pointer
-          
-            Fill the content of a fixed size buffer from a raw pointer. The user
-            is responsible that the pointer points to a sufficiently large
-            memory region. The data is copied to the buffer so the original
-            pointer can be deleted safely afterwards.
-            The constructor throws an exception if the pointer is a NULL
-            pointer.
-            \code 
-            double *data = new double[1024];
-            ....
-            //data is copied to a buffer
-            StaticBuffer<double,1024> buffer(data);
-
-            //you can savely free the original pointer
-            delte [] data;
-            \endcode
-            \throws MemoryNotAllocatedError if pointer is a nullptr
-            \param ptr pointer to raw data
-            */
-            explicit StaticBuffer(const T *ptr)
-            {
-                if(ptr)
-                {
-                    //copy data
-                    for(size_t i=0;i<this->size();i++) (*this)[i] = ptr[i];
-                }
-                else
-                {
-                    MemoryNotAllocatedError error;
-                    error.issuer("explicit StaticBuffer(const T *ptr)");
-                    error.description("Pointer is a nullptr!");
-                    throw error;
-                }
-            }
 
             //-----------------------------------------------------------------
             /*! \brief construct with initializer list
@@ -134,27 +99,6 @@ namespace utils{
                 for(auto v: list) (*this)[i] = v;
             }
 
-            //-----------------------------------------------------------------
-            /*! \brief construct buffer from an iterable container
-           
-            Any iterable container can be used to fill the a buffer. The data
-            will be copied from the container to the newly allocated buffer
-            object. An exception is thrown if the size of the container does not
-            match the size of the buffer.
-            \throws SizeMissmatchError if memory allocation fails
-            \param container instance of a container type
-            */
-            /*
-            template<template<typename,typename ...> class CONT,
-                     typename ...OPTS>
-            explicit StaticBuffer(const CONT<T,OPTS...> &container)
-            {
-                check_size_equal(*this,container);
-
-                size_t index = 0;
-                for(auto v: container) (*this)[index++] = v;
-            }
-            */
 
             //-----------------------------------------------------------------
             //! destructor
@@ -169,34 +113,6 @@ namespace utils{
                 return *this;
             }
 
-            //-----------------------------------------------------------------
-            /*! single value assignment operator
-
-            All values in the buffer will be set to v. 
-            \param v value to set the buffer to
-            */
-            /*
-            StaticBuffer<T,N> &operator=(const T &v)
-            {
-                for(T &b: *this) b = v;
-                return *this;
-            }
-            */
-
-            //------------------------------------------------------------------
-            /*
-            //! copy assignment operator
-            template<typename CTYPE> 
-                StaticBuffer<T,N> &operator=(const CTYPE &container)
-            {
-                check_size_equal(*this,container);
-                size_t index = 0;
-                for(auto v: container)
-                    (*this)[index++] = v;
-
-                return *this;
-            }
-            */
 
             //==============public methods for data access=====================
             /*! \brief return data pointer
@@ -268,13 +184,21 @@ namespace utils{
             T operator[](size_t n) const { return this->_data[n]; }
 
             //-----------------------------------------------------------------
-            /*! \brief total memory consumption
+            /*! 
+            \brief insert value
 
-            This method returns the total size of memory in Bytes allocated for
-            this buffer. 
-            \return total allocate memory in bytes.
+            This is quite similar to at(). However, unlike at() it can be used
+            in a thread-safe interface.
+            \throws IndexError if i exceeds buffer size
+            \throws MemoryAllocationError if buffer is not allocated
+            \param i index where to insert the value\
+            \param v value to insert
             */
-            size_t mem_size() const { return sizeof(T)*this->size(); }
+            void insert(size_t i,const T &v)
+            {
+                check_index(i,this->size(),"void insert(size_t i,const T &v)");
+                (*this)[i] = v;
+            }
 
             //-----------------------------------------------------------------
             /*! \brief get number of elements
