@@ -30,7 +30,6 @@
 #include "StaticBuffer.hpp"
 #include "StaticShape.hpp"
 #include "Exceptions.hpp"
-#incldue "ArrayViewSelector.hpp"
 
 namespace pni{
 namespace utils{
@@ -71,67 +70,43 @@ namespace utils{
         public:
             //================public types=====================================
             typedef T value_type; //!< data type of the elements stored in the array
-            typedef std::shared_ptr<StaticArray<T,N> > shared_ptr; //!< shared pointer to this type
-            typedef std::unique_ptr<StaticArray<T,N> > unique_ptr; //!< unique pointer to this type
-            typedef StaticBuffer<T,N>::iterator iterator; //!< iterator
-            typedef StaticBuffer<T,N>::const_iterator const_iterator; //!< const iterator
+            typedef std::shared_ptr<StaticArray<T,DIMS...> > shared_ptr; //!< shared pointer to this type
+            typedef std::unique_ptr<StaticArray<T,DIMS...> > unique_ptr; //!< unique pointer to this type
+            typedef typename StaticBuffer<T,SizeType<DIMS...>::size >::iterator iterator; //!< iterator
+            typedef typename StaticBuffer<T,SizeType<DIMS...>::size >::const_iterator const_iterator; //!< const iterator
             //===============public members====================================
             static const TypeID type_id = TypeIDMap<T>::type_id;
-                
-            //=================constructors and destructor=====================
-            //! copy constructor from a container type
-            template<typename CTYPE> explicit StaticArray(const CTYPE &a)
-            {
-                check_equal_size(*this,a,"template<typename CTYPE> explicit "
-                                         "StaticArray(const CTYPE &a)");
+            
 
-                //copy data
-                size_t cnt = 0;
-                for(auto v: a) (*this)[cnt++] = v;
+            //============================constructor and destructor===========
+            //! default constructor
+            StaticArray() {} 
+
+            //-----------------------------------------------------------------
+            //! copy constructor
+            explicit StaticArray(const StaticArray<T,DIMS...> &a):
+                _data(a._data)
+            {}
+
+            //-----------------------------------------------------------------
+            //! construction from an initializer list
+            explicit StaticArray(const std::initializer_list<size_t> &il)
+            {
+                check_equal_size(il,*this,
+                        "explicit StaticArray(const std::initializer_list"
+                        "<size_t> &il)");
+
+                size_t index = 0;
+                for(auto v: il) (*this)[index++] = v;
             }
 
             //-----------------------------------------------------------------
-            //! construct from a scalar value
-            template<typename U> explicit StaticArray(const U &v)
-            {
-                *this = v;
-            }
+            //! destructor
+            ~StaticArray() {}
+
 
             //==============assignment operators===============================
-            //! assignment operator of a constant
-            template<typename U>
-            StaticArray<T,DIMS...> &operator=(const &U value)
-            {
-                for(T &v: *this) v = value;
-            }
-
-            //-----------------------------------------------------------------
-            /*! 
-            \brief assignment from a container
-            
-            Assign data from a general container type to the array. 
-            \throws SizeMissmatchError if the container and the array size do
-            not match
-            \tparam CTYPE container type
-            \param c instance of type CTYPE
-            */
-            template<typename CTYPE>
-            StaticArray<T,DIMS...> &operator=(const CTYPE &c)
-            {
-                if(this == &c) return *this;
-                
-                check_equal_size(*this,c,"template<typename CTYPE> "
-                                 "StaticArray<T,DIMS...> &operator=(const "
-                                 "CTYPE &c)");
-
-                size_t i = 0;
-                for(auto v: c) (*this)[i++] = v;
-                return *this;
-            }
-
-
-            //-----------------------------------------------------------------
-            //!assignment operator for a StaticArray
+            //!copy assignment operator for a StaticArray
             StaticArray<T,DIMS...> &operator=(const StaticArray<T,DIMS...> &a)
             {
                 if(this == &a) return *this;
@@ -181,7 +156,7 @@ namespace utils{
             \param indices element index
             \return value of the array element
             */
-            template<typename ...ITYPES> T operator(ITYPES ...indices) const
+            template<typename ...ITYPES> T operator()(ITYPES ...indices) const
             {
                 return this->_data[this->_shape.offset(indices...)];
             }
@@ -200,7 +175,7 @@ namespace utils{
             \param c container with indices
             \return reference to the element
             */
-            template<typename CTYPE> T &operator(const CTYPE &c)
+            template<typename CTYPE> T &operator()(const CTYPE &c)
             {
                 return this->_data[this->_shape.offset(c)];
             }
@@ -219,7 +194,7 @@ namespace utils{
             \param c container with indices
             \return value of the array element
             */
-            template<typename CTYPE> T operator(const CTYPE &c) const
+            template<typename CTYPE> T operator()(const CTYPE &c) const
             {
                 return this->_data[this->_shape.offset(c)];
             }
@@ -247,6 +222,23 @@ namespace utils{
             T operator[](size_t i) const { return this->_data[i]; }
 
             //-----------------------------------------------------------------
+            T at(size_t i) const
+            {
+                check_index(i,this->size(),
+                        "T StaticArray<>::at(size_t i) const");
+
+                return (*this)[i];
+            }
+
+            T &at(size_t i) 
+            {
+                check_index(i,this->size(),
+                        "T StaticArray<>::at(size_t i) const");
+
+                return (*this)[i];
+            }
+
+            //-----------------------------------------------------------------
             //! get iterator to first element
             iterator begin() { return this->_data.begin(); } 
             
@@ -260,7 +252,7 @@ namespace utils{
 
             //-----------------------------------------------------------------
             //! get const iterator to last element
-            const_iterator end() const   { return this->_data.end(): }
+            const_iterator end() const   { return this->_data.end(); }
 
             //=======================inquery methods===========================
             //! get number of elements

@@ -87,7 +87,6 @@ namespace utils{
         */
         template<typename CTYPE> static size_t offset(const CTYPE &c)
         {
-            std::cout<<"iteration : "<<D<<" index = "<<c[D]<<" stride = "<<StrideCalc<DIMS...>::template value<D>()<<std::endl;
             return StrideCalc<DIMS...>::template value<D>()*c[D]+
                    OffsetCalc<D+1,((D+1)>=(sizeof...(DIMS))),DIMS...>::offset(c);
         }

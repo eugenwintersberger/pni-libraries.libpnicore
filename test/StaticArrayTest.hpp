@@ -7,11 +7,10 @@
 
 #include "RandomDistributions.hpp"
 #include "EqualityCheck.hpp"
-#include "BufferHelper.hpp"
 
 using namespace pni::utils;
 
-template<typename  >
+template<typename T>
 class StaticArrayTest : public CppUnit::TestFixture{
         CPPUNIT_TEST_SUITE(StaticArrayTest);
         CPPUNIT_TEST(test_construction);
@@ -28,6 +27,7 @@ class StaticArrayTest : public CppUnit::TestFixture{
         void test_iterators();
         void test_multiindex_access();
         void test_typeinfo();
+        void test_stl();
 };
 
 //------------------------------------------------------------------------------
@@ -39,50 +39,28 @@ template<typename T> void StaticArrayTest<T>::tearDown(){ }
 //------------------------------------------------------------------------------
 template<typename T> void StaticArrayTest<T>::test_construction()
 {
+    //testing the default constructor
     StaticArray<T,2,3> a1;
-    StaticArray<T,2,3,5> a2;
-    StaticArray<T,2,3> a3;
+    CPPUNIT_ASSERT(a1.rank() == 2);
+    CPPUNIT_ASSERT(a1.size() == 6);
 
+    //testing initializer list constructor
+    StaticArray<T,2,3> a2{1,2,3,4,5,6};
+    CPPUNIT_ASSERT(a2.rank() == 2);
+    CPPUNIT_ASSERT(a2.size() == 6);
 
-    //construction from a default array
-    auto a4 = factory::create(s1,T(17));
-#ifdef NOFOREACH
-    for(auto iter = a4.begin();iter!=a4.end();iter++)
-    {
-        const T &v = *iter;
-#else
-    for(auto v: a4)
-    {
-#endif
-        check_equality(v,T(17));
-    }
-
-    auto data = RandomDistribution::uniform<std::vector<T> >(s1.size());
-    auto a5 = factory::create(s1,data);
-
-    size_t index = 0;
-#ifdef NOFOREACH
-    for(auto iter = a5.begin(); iter!=a5.end();iter++)
-    {
-        const T &v = *iter;
-#else
-    for(auto v: a5)
-    {
-#endif
-        check_equality(v,data[index++]);
-    }
+    //testing copy constructor
+    StaticArray<T,2,3> a3(a2);
+    CPPUNIT_ASSERT(a3.rank() == a2.rank());
+    CPPUNIT_ASSERT(a3.size() == a2.size());
 }
 
-//------------------------------------------------------------------------------
-template<typename T,
-         template<typename,typename> class BTYPE,
-         typename ALLOCATOR
-        >
-void ArrayTest<T,BTYPE,ALLOCATOR>::test_linear_access()
+//------------------------------------------------------------------------------ 
+template<typename T> void StaticArrayTest<T>::test_linear_access()
 {
-    typedef ArrayFactory<T,BTYPE,ALLOCATOR> factory;
-	auto a1 = factory::create(s1);
-
+    StaticArray<T,2,3> a1{1,2,3,4,5,6};
+    std::vector<T> v1{1,2,3,4,5,6};
+   
     //--------------------check operators without index checking----------------
 	//access via [] operator
 	for(size_t i=0;i<a1.size();i++) 
@@ -101,36 +79,33 @@ void ArrayTest<T,BTYPE,ALLOCATOR>::test_linear_access()
 	for(size_t i=0;i<a1.size();i++) 
         check_equality(T(i),a1.at(i));
 
-    CPPUNIT_ASSERT_THROW(a1.at(s1.size()+10),IndexError);
+    CPPUNIT_ASSERT_THROW(a1.at(a1.size()+10),IndexError);
 
 }
 
 //------------------------------------------------------------------------------
-template<typename T,
-         template<typename,typename> class BTYPE,
-         typename ALLOCATOR
-        >
-void ArrayTest<T,BTYPE,ALLOCATOR>::test_iterators()
+template<typename T> void StaticArrayTest<T>::test_iterators()
 {
-    typedef ArrayFactory<T,BTYPE,ALLOCATOR> factory;
-	auto a1 = factory::create(s1);
+    StaticArray<T,2,3> a1;
 
     //--------------------check standard iterator----------------
 	//access via [] operator
     auto data = RandomDistribution::uniform<std::vector<T> >(a1.size());
 
+    //----------------------testing write data---------------------------------
     size_t index = 0;
 #ifdef NOFOREACH
     for(auto iter = a1.begin(); iter!=a1.end();iter++)
     {
-        typename factory::array_type::value_type &v = *iter;
+        T &v = *iter;
 #else
-    for(typename factory::array_type::value_type &v: a1)
+    for(T &v: a1)
     {
 #endif
         v = data[index++];
     }
-    
+   
+    //-----------------------test reading data---------------------------------
     index = 0;
 #ifdef NOFOREACH
     for(auto iter=a1.begin();iter!=a1.end();iter++)
@@ -145,7 +120,6 @@ void ArrayTest<T,BTYPE,ALLOCATOR>::test_iterators()
 
 
     //-------------------check const iterator-----------------------------
-    const typename factory::array_type &a = a1;
 
     index = 0;
 #ifdef NOFOREACH
@@ -153,7 +127,7 @@ void ArrayTest<T,BTYPE,ALLOCATOR>::test_iterators()
     {
         const T &v = *iter;
 #else
-    for(auto v: a)
+    for(auto v: a1)
     {
 #endif
         check_equality(v,data[index++]); 
@@ -161,53 +135,44 @@ void ArrayTest<T,BTYPE,ALLOCATOR>::test_iterators()
 }
 
 //-----------------------------------------------------------------------------
-template<typename T,
-         template<typename,typename> class BTYPE,
-         typename ALLOCATOR
-        >
-void ArrayTest<T,BTYPE,ALLOCATOR>::test_multiindex_access()
+template<typename T> void StaticArrayTest<T>::test_multiindex_access()
 {   
-    typedef ArrayFactory<T,BTYPE,ALLOCATOR> factory;
-
-    auto a1 = factory::create(s1);
+    StaticArray<T,2,3> a1;
+    
     auto data = RandomDistribution::uniform<std::vector<T> >(a1.size());
 
     //----------------use variadic tempaltes to access data--------------
-    for(size_t i=0;i<s1[0];i++)
-        for(size_t j=0;j<s1[1];j++)
-            a1(i,j) = data[a1.shape().offset(i,j)];
+    for(size_t i=0;i<2;i++)
+        for(size_t j=0;j<3;j++)
+            a1(i,j) = data[i*3+j];
 
-    for(size_t i=0;i<s1[0];i++)
-        for(size_t j=0;j<s1[1];j++)
-            check_equality(a1(i,j),data[a1.shape().offset(i,j)]);
+    for(size_t i=0;i<2;i++)
+        for(size_t j=0;j<3;j++)
+            check_equality(a1(i,j),data[i*3+j]);
 
     //----------using a container to hold the index----------------------
-    for(size_t i=0;i<s1[0];i++)
+    for(size_t i=0;i<2;i++)
     {
-        for(size_t j=0;j<s1[1];j++)
+        for(size_t j=0;j<3;j++)
         {
             std::vector<size_t> index{i,j};
-            a1(index) = data[a1.shape().offset(index)];
+            a1(index) = data[i*3+j];
         }
     }
 
-    for(size_t i=0;i<s1[0];i++)
+    for(size_t i=0;i<2;i++)
     {
-        for(size_t j=0;j<s1[1];j++)
+        for(size_t j=0;j<3;j++)
         {
             std::vector<size_t> index{i,j};
-            check_equality(a1(index),data[a1.shape().offset(index)]);
+            check_equality(a1(index),data[i*3+j]);
         }
     }
 }
 //------------------------------------------------------------------------------
-template<typename T,
-         template<typename,typename> class BTYPE,
-         typename ALLOCATOR
-        >
-void ArrayTest<T,BTYPE,ALLOCATOR>::test_typeinfo()
+template<typename T> void StaticArrayTest<T>::test_typeinfo()
 {
-    TypeID id1 = Array<T,BTYPE,ALLOCATOR>::type_id;
+    TypeID id1 = StaticArray<T,2,3>::type_id;
     TypeID id2 = TypeIDMap<T>::type_id;
     CPPUNIT_ASSERT(id1 == id2);
 }
