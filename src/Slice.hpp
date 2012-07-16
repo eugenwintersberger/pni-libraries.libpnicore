@@ -77,6 +77,7 @@ namespace utils{
             //! no default constructor
             Slice() = delete;
 
+            //-----------------------------------------------------------------
             /*! \brief standard constructor
 
             This is the default constructor for a Slice object. 
@@ -85,8 +86,9 @@ namespace utils{
             \param last index 
             \param stride steps between subsequent elements
             */
-            Slice(size_t first,size_t last,size_t stride=1);
+            explicit Slice(size_t first,size_t last,size_t stride=1);
 
+            //-----------------------------------------------------------------
             /*! \brief construction from a initializer list
 
             This can be used for implicit conversion which is sometimes quite
@@ -107,8 +109,19 @@ namespace utils{
             \throws RangeError if the first element is larger than the last
             \param l initializer list
             */
-            Slice(const std::initializer_list<size_t> &l);
+            explicit Slice(const std::initializer_list<size_t> &l);
 
+            //-----------------------------------------------------------------
+            /*! 
+            \brief construction from a single index
+
+            Constructor uses a single index. This constructor is equivalent to
+            use Slice(index,index+1,1). 
+            \param index single index from which to create the slice
+            */
+            explicit Slice(size_t index);
+
+            //-----------------------------------------------------------------
             //! destructor
             ~Slice(){}
 

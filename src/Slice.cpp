@@ -103,6 +103,16 @@ namespace utils{
                       "std::initializer_list<size_t> &l)");
     }
 
+    //-------------------------------------------------------------------------
+    Slice::Slice(size_t i):
+        _first(i),
+        _last(i+1),
+        _stride(1)
+    {
+        _check_start_stop("Slice::Slice(size_t i)");
+        _check_stride("Slice::Slice(size_t i)");
+    }
+
 
     //=============implementation of assignment operators======================
     Slice &Slice::operator=(const Slice &s)

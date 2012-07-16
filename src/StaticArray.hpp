@@ -30,6 +30,8 @@
 #include "StaticBuffer.hpp"
 #include "StaticShape.hpp"
 #include "Exceptions.hpp"
+#include "ArrayView.hpp"
+#include "ArrayViewSelector.hpp"
 
 namespace pni{
 namespace utils{
@@ -65,16 +67,40 @@ namespace utils{
     template<typename T,size_t ...DIMS> class StaticArray
     {
         private:
-            StaticBuffer<T,SizeType<DIMS...>::size > _data;     //!< static buffer holding the data
-            StaticShape<DIMS...> _shape; //!< static shape describing the arrays dimensionality
+            //!< static buffer holding the data
+            StaticBuffer<T,SizeType<DIMS...>::size > _data;    
+            //!< static shape describing the arrays dimensionality
+            StaticShape<DIMS...> _shape; 
+
+            //-----------------------------------------------------------------
+            template<typename ...ITYPES>
+            void _get_data(ArrayView &view,ITYPES ...indices)
+            {
+                
+            }
+
+            //----------------------------------------------------------------
+            template<typename ...ITYPES>
+            void _get_data(T &result,ITYPES ...indices)
+            {
+
+            }
         public:
             //================public types=====================================
-            typedef T value_type; //!< data type of the elements stored in the array
-            typedef std::shared_ptr<StaticArray<T,DIMS...> > shared_ptr; //!< shared pointer to this type
-            typedef std::unique_ptr<StaticArray<T,DIMS...> > unique_ptr; //!< unique pointer to this type
-            typedef typename StaticBuffer<T,SizeType<DIMS...>::size >::iterator iterator; //!< iterator
-            typedef typename StaticBuffer<T,SizeType<DIMS...>::size >::const_iterator const_iterator; //!< const iterator
+            //!< data type of the elements stored in the array
+            typedef T value_type; 
+            //!< shared pointer to this type
+            typedef std::shared_ptr<StaticArray<T,DIMS...> > shared_ptr;
+            //!< unique pointer to this type
+            typedef std::unique_ptr<StaticArray<T,DIMS...> > unique_ptr;
+            //!< iterator
+            typedef typename StaticBuffer<T,SizeType<DIMS...>::size >
+                             ::iterator iterator; 
+            //!< const iterator
+            typedef typename StaticBuffer<T,SizeType<DIMS...>::size >
+                             ::const_iterator const_iterator; 
             //===============public members====================================
+            //!< ID of the datatype stored in the array
             static const TypeID type_id = TypeIDMap<T>::type_id;
             
 
@@ -133,9 +159,18 @@ namespace utils{
             \param indices list of array indices
             \return reference to the array element
             */
-            template<typename ...ITYPES> T &operator()(ITYPES ...indices)
+            template<typename ...ITYPES>
+                ArrayViewSelector<StaticArray<T,DIMS...>, ITYPES...>
+                ::view_type operator()(ITYPES ...indices)
             {
-                return this->_data[this->_shape.offset(indices...)];
+                ArrayViewSelector<StaticArray<T,DIMS...>, ITEYPS...> view_type
+                    result;
+
+                _get_data(result,indices...);
+
+                return result;
+                
+                //return this->_data[this->_shape.offset(indices...)];
             }
 
             //-----------------------------------------------------------------
@@ -230,6 +265,7 @@ namespace utils{
                 return (*this)[i];
             }
 
+            //-----------------------------------------------------------------
             T &at(size_t i) 
             {
                 check_index(i,this->size(),
