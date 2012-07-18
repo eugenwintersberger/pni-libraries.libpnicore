@@ -32,23 +32,70 @@
 namespace pni {
 namespace utils {
 
-    template<typename ATYPE,typename ...ITYPES> struct ArrayViewSelector;
+    /*! 
+    \ingroup util_classes
+    \brief select return type of an array multiindex access
 
+    When accessing array data using the () operator with an an argument list the
+    return type can either be a single scalar value or an ArrayView object. 
+    The return type depends on whether or not the one of the arguments is an
+    instance of Slice type. 
+    \code
+
+    Array a ....;
+
+    //return a single value
+    auto value = a(1,2,3,4);
+
+    //return a view
+    auto view = a(1,2,Slice(1,2),Slice(2,4));
+
+    \endcode
+    This type decides on the return type depending on the argument types.
+    */
+    template<typename ATYPE,typename ...ITYPES> struct ArrayViewSelector
+    {}
+
+    //-------------------------------------------------------------------------
+    /*!
+    \ingroup util_classes
+    \brief specialization of the return type selection type
+
+    This is the default version of the ArrayViewSelector type. The selector type
+    is instantiated recursively.
+    */
     template<typename ATYPE,typename T,typename ...ITYPES> struct
         ArrayViewSelector<ATYPE,T,ITYPES...>
     {
+        //!< recursive instantiation of the selector type
         typedef typename ArrayViewSelector<ATYPE,ITYPES...>::viewtype viewtype;
     };
 
+    //-------------------------------------------------------------------------
+    /*! 
+    \ingroup util_classes
+    \brief return type iteration break condition 
+
+    Break condition for return type specialization if the return type is a view
+    type.
+    */
     template<typename ATYPE,typename ...ITYPES> struct
         ArrayViewSelector<ATYPE,Slice,ITYPES...>
     {
-        typedef ArrayView<ATYPE> viewtype;
+        typedef ArrayView<ATYPE> viewtype; //!< array view return type
     };
 
+    //-------------------------------------------------------------------------
+    /*!
+    \ingroup util_classes
+    \brief return type iterator break condition
+
+    Break condition for recursive template type instantiation for a scalar
+    return type. This will be chosen if all arguments are single index types.
+    */
     template<typename ATYPE> struct ArrayViewSelector<ATYPE>
     {
-        typedef typename ATYPE::value_type &viewtype;
+        typedef typename ATYPE::value_type &viewtype; //!< return type
     };
 
 //end of namespace
