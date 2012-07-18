@@ -34,19 +34,19 @@ namespace utils {
 
     template<typename ATYPE,typename ...ITYPES> struct ArrayViewSelector;
 
-    template<typename ATYPE,size_t i,typename ...ITYPES> struct
-        ArrayViewSelector<ATYPE,ITYPES...>
+    template<typename ATYPE,typename T,typename ...ITYPES> struct
+        ArrayViewSelector<ATYPE,T,ITYPES...>
     {
         typedef typename ArrayViewSelector<ATYPE,ITYPES...>::viewtype viewtype;
     };
 
-    template<typename ATYPE,Slice s,typename ...ITYPES> struct
-        ArrayViewSelector<ATYPE,ITYPES...>
+    template<typename ATYPE,typename ...ITYPES> struct
+        ArrayViewSelector<ATYPE,Slice,ITYPES...>
     {
         typedef ArrayView<ATYPE> viewtype;
     };
 
-    template<typename ATYPE,size_t i> struct ArrayViewSelector<ATYPE,i>
+    template<typename ATYPE> struct ArrayViewSelector<ATYPE>
     {
         typedef typename ATYPE::value_type &viewtype;
     };
