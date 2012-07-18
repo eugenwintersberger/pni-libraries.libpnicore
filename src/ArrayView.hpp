@@ -28,7 +28,10 @@
 #define __ARRAYVIEW_HPP__
 
 
+#include "CIndexMap.hpp"
+#include "DynamicBuffer.hpp"
 #include "Iterator.hpp"
+#include "ArraySelection.hpp"
 
 namespace pni{
 namespace utils{
@@ -43,79 +46,7 @@ namespace utils{
     {
         private:
             ATYPE &_parray; //!< parent array from which to draw data
-            Buffer<size_t> _shape;   //!< shape of the selection
-            Buffer<size_t> _offset; //!<offset of the view
-            Buffer<size_t> _stride; //!<stride of the view
-
-            mutable std::vector<size_t> _index;  //!<a index buffer used for index computation 
-            size_t _rank;            //!< rank of the view
-
-            //-----------------------------------------------------------------
-            /*! \brief compute the effective rank
-
-            Computes the effective rank of the view. This excludes all dimension
-            in the original array which have more than one element.
-            \param s buffer with the shape of the selection
-            */
-            size_t _get_effective_rank(const Buffer<size_t> &s);
-           
-            //-----------------------------------------------------------------
-            /*! \brief add index to a vector
-
-            Adds the first element of a variadic index template to a vector.
-            The method is called recursively until no more indices are left.
-            \param index vector where to add the index
-            \param i first index to ad
-            \param indices residual indices
-            */
-            template<typename ...ITypes> 
-                void _add_index(std::vector<size_t> &index,size_t i,ITypes
-                        ...indices)
-            {
-                index.push_back(i);
-                _add_index(index,indices...);
-            }
-
-            //-----------------------------------------------------------------
-            //! final _add_index method 
-            void _add_index(std::vector<size_t> &index) {}
-           
-            //-----------------------------------------------------------------
-            /*! \brief load internal index container
-
-            Loads the internal index container which has the full dimensionality
-            of the original array with the content of the index provided by as
-            an argument. This index has not necessarily the same rank as the
-            original array. 
-            \param index view index
-            */
-            template<template<typename,typename...> class CONT,
-                     typename IT,
-                     typename ...OPTS
-                    >
-                void _set_index(const CONT<IT,OPTS...> &index) const
-            {
-                //compute the index whith full dimensionality
-                size_t j=0;
-                for(size_t i=0;i<this->_shape.size();i++)
-                {
-                    if(this->_shape[i]!=1)
-                    {
-                        this->_index[i] = index[j];
-                        j++;
-                    }
-                    else
-                        this->_index[i] = 0;
-                }
-
-                //now we have to add the offset and multiply the stride
-                for(size_t i=0;i<this->_index.size();i++)
-                {
-                    this->_index[i] =
-                        this->_offset[i]+this->_stride[i]*this->_index[i];
-                }
-
-            }
+            ArraySelection _selection;
 
         public:
             //====================public types=================================
@@ -138,16 +69,16 @@ namespace utils{
             */
             ArrayView(ATYPE &a):
                 _parray(a),
-                _shape(a.shape()),
-                _offset(a.rank()),
-                _stride(a.rank()),
-                _index(a.rank()),
-                _rank(a.rank())
+                _selection()
             {
-                //initialize member variables
-                _offset = 0;
-                _stride = 1;
-                _index = 0;
+                std::vector<size_t> shape(a.shape<std::vector<size_t>());
+                std::vector<size_t> offset(a.rank());
+                std::vector<size_t> stride(a.rank());
+
+                std::fill(offset.begin(),offset.end(),0);
+                std::fill(stride.begin(),stride.end(),1);
+
+                this->_selection = ArraySelection(shape,offset,stride);
             }
 
             //-----------------------------------------------------------------
@@ -161,19 +92,12 @@ namespace utils{
             \param stride number of steps between each element along each
             dimension
             */
-            ArrayView(ATYPE &a,const std::vector<size_t> &shape,
-                      const std::vector<size_t> offset,
-                      const std::vector<size_t> stride):
+            ArrayView(ATYPE &a,const ArraySelection &s):
                 _parray(a),
-                _shape(shape),
-                _offset(offset),
-                _stride(stride),
-                _index(shape.size()),
-                _rank(_get_effective_rank(_shape))
+                _selection(s)
             { 
                 //wee need to check if all the lists and shapes do match the 
                 //rank of the array
-
             
             }
 
@@ -181,22 +105,14 @@ namespace utils{
             //! copy constructor
             ArrayView(const ArrayView<ATYPE> &o):
                 _parray(o._parray),
-                _shape(o._shape),
-                _offset(o._offset),
-                _stride(o._stride),
-                _index(o._index),
-                _rank(o._rank)
+                _selection(o._selection)
             {}
 
             //-----------------------------------------------------------------
             //! move constructor
             ArrayView(ArrayView<ATYPE> &&o):
                 _parray(o._parray),
-                _shape(std::move(o._shape)),
-                _offset(std::move(o._offset)),
-                _stride(std::move(o._stride)),
-                _index(std::move(o._index)),
-                _rank(std::move(o._rank))
+                _selection(std::move(o._selection))
             {}
             //====================assignment operators=========================
             //! copy assignment
@@ -204,11 +120,7 @@ namespace utils{
             {
                 if(this == &o) return *this;
                 this->_parray = o._parray;
-                this->_shape = o._shape;
-                this->_offset = o._offset;
-                this->_stride = o._stride;
-                this->_index = o._index;
-                this->_rank = o._rank;
+                this->_selection = o._selection;
                 return *this;
             }
 
@@ -218,11 +130,7 @@ namespace utils{
             {
                 if(this == &o) return *this;
                 this->_parray = o._parray;
-                this->_shape = std::move(o._shape);
-                this->_offset = std::move(o._offset);
-                this->_stride = std::move(o._stride);
-                this->_index = std::move(o._index);
-                this->_rank = std::move(o._rank);
+                this->_selection = std::move(o._selection);
                 return *this;
             }
 
@@ -236,20 +144,11 @@ namespace utils{
             \param index container with multidimensional index
             \return reference to value at index
             */
-            template<template<typename,typename...> class CONT,
-                     typename IT,
-                     typename ...OPTS 
-                    >
-                ArrayView<ATYPE>::value_type &operator()(const CONT<IT,OPTS...> &index)
+            template<typename CTYPE>
+                value_type &operator()(const CTYPE &index)
             {
-
-                //transform the local view index to a global index for the
-                //original array
-                this->_set_index(index);
-                //we can use now this new index to access the data from the 
-                //original array
-                return this->_parray(this->_index);
-
+                return this->_parray(this->_selection.template
+                        index<std::vector<size_t> >(index));
             }
 
             //-----------------------------------------------------------------
@@ -262,19 +161,11 @@ namespace utils{
             \param index container with multidimensional index
             \return value at index
             */
-            template<template<typename,typename...> class CONT,
-                     typename IT,
-                     typename ...OPTS
-                    >
-                ArrayView<ATYPE>::value_type operator()(const CONT<IT,OPTS...> &index) const
+            template<typename CTYPE>
+                value_type operator()(const CTYPE &index) const
             {
-                //transform the local view index to a global index for the
-                //original array
-                this->_set_index(index);
-                //we can use now this new index to access the data from the 
-                //original array
-                return this->_parray(this->_index);
-
+                return this->_parray(this->_selection.template
+                        index<std::vector<size_t> >(index));
             }
 
 
@@ -291,15 +182,10 @@ namespace utils{
             This works essentially the same as for the Array template.
             \return reference to the value at multidimensional index
              */
-            template<typename ...ITypes> 
-                ArrayView<ATYPE>::value_type &operator()(size_t &i,ITypes ...indices)
+            template<typename ...ITypes> value_type &
+                operator()(ITypes ...indices)
             {
-                //store the use provided indices in a vector
-                std::vector<size_t> index;
-                index.push_back(i);
-                _add_index(index,indices...);
-
-                return (*this)(index);
+                return (*this)(std::vector<size_t>{indices...});
             }
 
             //-----------------------------------------------------------------
@@ -315,15 +201,10 @@ namespace utils{
             This works essentially the same as for the Array template.
             \return value at multidimensional index
              */
-            template<typename ...ITypes> 
-                ArrayView<ATYPE>::value_type operator()(size_t &i,ITypes ...indices) const
+            template<typename ...ITypes> value_type 
+                operator()(ITypes ...indices) const
             {
-                std::vector<size_t> index;
-
-                index.push_back(i);
-                _add_index(index,indices...);
-
-                return (*this)(index);
+                return (*this)(std::vector<size_t>{indices...});
             }
 
 
@@ -336,13 +217,9 @@ namespace utils{
             array is not equal 1. 
             \return Shape object
             */
-            Shape shape() const
+            std::vector<size_t> shape() const
             {
-                std::vector<size_t> b;
-                for(size_t i=0;i<this->_shape.size();i++)
-                    if(this->_shape[i]!=1) b.push_back(this->_shape[i]);
-
-                return Shape(b);
+                return this->_selection.shape();
             }
 
             //-----------------------------------------------------------------
@@ -357,8 +234,8 @@ namespace utils{
             */
             ArrayView<ATYPE>::value_type &operator[](size_t i)
             {
-                Shape s = this->shape();
-                auto index = s.template index<std::vector<size_t> >(i);
+                auto index = CIndexMap::template index<std::vector<size_t>
+                    >(this->_selection.shape(),i);
                 return (*this)(index); 
             }
 
@@ -374,8 +251,8 @@ namespace utils{
             */
             ArrayView<ATYPE>::value_type operator[](size_t i) const
             {
-                Shape s = this->shape();
-                auto index = s.template index<std::vector<size_t> >(i);
+                auto index = CIndexMap::template index<std::vector<size_t>
+                    >(this->_selection.shape(),i);
                 return (*this)(index); 
             }
 
@@ -387,8 +264,10 @@ namespace utils{
             */
             size_t size() const
             {
-                return this->shape().size();
+                return this->_selection.size();
             }
+
+            size_t rank()  const { return this->_selection.rank(); }
 
             //-----------------------------------------------------------------
             /*! \brief iterator to first element
@@ -396,10 +275,7 @@ namespace utils{
             Return an interator to the first element of the array view. 
             \return iterator to the first element
             */
-            ArrayView<ATYPE>::iterator begin()
-            {
-                return ArrayView<ATYPE>::iterator(this,0);
-            }
+            iterator begin() { return iterator(this,0); }
 
             //-----------------------------------------------------------------
             /*! \brief iterator to last element
@@ -407,10 +283,7 @@ namespace utils{
             Return an iterator to the last element of the array view.
             \return iterator to last element
             */
-            ArrayView<ATYPE>::iterator end() 
-            {
-                return ArrayView<ATYPE>::iterator(this,this->size());
-            }
+            iterator end() { return iterator(this,this->size()); }
            
             //-----------------------------------------------------------------
             /*! \brief const iterator to first element
@@ -418,9 +291,9 @@ namespace utils{
             Return an const interator to the first element of the array view. 
             \return iterator to the first element
             */
-            ArrayView<ATYPE>::const_iterator begin() const
+            const_iterator begin() const
             {
-                return ArrayView<ATYPE>::const_iterator(this,0);
+                return const_iterator(this,0);
             }
 
             //-----------------------------------------------------------------
@@ -430,22 +303,12 @@ namespace utils{
             The iterator is thus invalid.
             \return iterator to last element
             */
-            ArrayView<ATYPE>::const_iterator end() const
+            const_iterator end() const
             {
-                return ArrayView<ATYPE>::const_iterator(this,this->size());
+                return const_iterator(this,this->size());
             }
     };
 
-    //============implementation of private member functions====================
-    template<typename ATYPE>
-    size_t ArrayView<ATYPE>::_get_effective_rank(const Buffer<size_t> &s)
-    {
-        size_t rank=0;
-        for(size_t i=0;i<s.size();i++)
-            if(s[i]!=1) rank++;
-
-        return rank;
-    }
 
 
 

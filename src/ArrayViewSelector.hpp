@@ -35,13 +35,13 @@ namespace utils {
     template<typename ATYPE,typename ...ITYPES> struct ArrayViewSelector;
 
     template<typename ATYPE,size_t i,typename ...ITYPES> struct
-        ArrayViewSlector<ATYPE,i,ITYPES...>
+        ArrayViewSelector<ATYPE,ITYPES...>
     {
         typedef typename ArrayViewSelector<ATYPE,ITYPES...>::viewtype viewtype;
     };
 
     template<typename ATYPE,Slice s,typename ...ITYPES> struct
-        ArrayViewSelector<ATYPE,s,ITYPES...>
+        ArrayViewSelector<ATYPE,ITYPES...>
     {
         typedef ArrayView<ATYPE> viewtype;
     };

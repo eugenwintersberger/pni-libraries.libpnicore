@@ -5,6 +5,7 @@
 #include <algorithm>
 
 #include "ExceptionUtils.hpp"
+#include "Slice.hpp"
 
 namespace pni{
 namespace utils{
@@ -87,11 +88,15 @@ namespace utils{
 
             //-----------------------------------------------------------------
             //! copy constructor
-            explicit ArraySelection(const ArraySelection &s);
+            ArraySelection(const ArraySelection &s);
 
             //-----------------------------------------------------------------
             //! move constructor
-            explicit ArraySelection(ArraySelection &&s);
+            ArraySelection(ArraySelection &&s);
+
+            //-----------------------------------------------------------------
+            //! static creation function
+            static ArraySelection create(const std::vector<Slice> &s);
 
             //=====================assignment operators========================
             //! copy assignment operator
@@ -110,6 +115,7 @@ namespace utils{
 
             //! get size
             size_t size() const { return _size; }
+
 
             //================get indices======================================
             //! compute original index
@@ -138,7 +144,17 @@ namespace utils{
                 }
 
             }
+
+            //-----------------------------------------------------------------
+            //! compute the original index
+            template<typename ITYPE> ITYPE index(const ITYPE &sindex) const
+            {
+                ITYPE oindex(_oshape.size());
+                this->index(sindex,oindex);
+                return oindex;
+            }
     };
+            
 
 //end of namespace
 }

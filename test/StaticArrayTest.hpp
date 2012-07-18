@@ -18,6 +18,7 @@ class StaticArrayTest : public CppUnit::TestFixture{
         CPPUNIT_TEST(test_iterators);
         CPPUNIT_TEST(test_multiindex_access);
         CPPUNIT_TEST(test_typeinfo);
+        CPPUNIT_TEST(test_view);
         CPPUNIT_TEST_SUITE_END();
     public:
         void setUp();
@@ -28,6 +29,7 @@ class StaticArrayTest : public CppUnit::TestFixture{
         void test_multiindex_access();
         void test_typeinfo();
         void test_stl();
+        void test_view();
 };
 
 //------------------------------------------------------------------------------
@@ -168,6 +170,28 @@ template<typename T> void StaticArrayTest<T>::test_multiindex_access()
             check_equality(a1(index),data[i*3+j]);
         }
     }
+}
+
+//------------------------------------------------------------------------------
+template<typename T> void StaticArrayTest<T>::test_view()
+{
+    StaticArray<T,10,3> v;
+    std::vector<Slice> s{Slice(0),Slice(0,3,1)};
+
+    for(size_t i=0;i<10;i++)
+    {
+        auto view = v(std::vector<Slice>{Slice(i),Slice(0,3,1)});
+        std::fill(view.begin(),view.end(),T(i));
+    }
+    
+    size_t index =0;
+    for(auto x: v)
+    {
+        std::cout<<x<<" ";
+        index++;
+        if(!(index % 3)) std::cout<<std::endl;
+    }
+   
 }
 //------------------------------------------------------------------------------
 template<typename T> void StaticArrayTest<T>::test_typeinfo()

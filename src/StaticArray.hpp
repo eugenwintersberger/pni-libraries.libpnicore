@@ -30,8 +30,9 @@
 #include "StaticBuffer.hpp"
 #include "StaticShape.hpp"
 #include "Exceptions.hpp"
+#include "Slice.hpp"
 #include "ArrayView.hpp"
-#include "ArrayViewSelector.hpp"
+//#include "ArrayViewSelector.hpp"
 
 namespace pni{
 namespace utils{
@@ -72,19 +73,6 @@ namespace utils{
             //!< static shape describing the arrays dimensionality
             StaticShape<DIMS...> _shape; 
 
-            //-----------------------------------------------------------------
-            template<typename ...ITYPES>
-            void _get_data(ArrayView &view,ITYPES ...indices)
-            {
-                
-            }
-
-            //----------------------------------------------------------------
-            template<typename ...ITYPES>
-            void _get_data(T &result,ITYPES ...indices)
-            {
-
-            }
         public:
             //================public types=====================================
             //!< data type of the elements stored in the array
@@ -99,6 +87,8 @@ namespace utils{
             //!< const iterator
             typedef typename StaticBuffer<T,SizeType<DIMS...>::size >
                              ::const_iterator const_iterator; 
+            //!< type of the arrya view
+            typedef ArrayView<StaticArray<T,DIMS...> > view_type;
             //===============public members====================================
             //!< ID of the datatype stored in the array
             static const TypeID type_id = TypeIDMap<T>::type_id;
@@ -159,18 +149,10 @@ namespace utils{
             \param indices list of array indices
             \return reference to the array element
             */
-            template<typename ...ITYPES>
-                ArrayViewSelector<StaticArray<T,DIMS...>, ITYPES...>
-                ::view_type operator()(ITYPES ...indices)
+            template<typename ...ITYPES> T &operator()(ITYPES ...indices)
             {
-                ArrayViewSelector<StaticArray<T,DIMS...>, ITEYPS...> view_type
-                    result;
 
-                _get_data(result,indices...);
-
-                return result;
-                
-                //return this->_data[this->_shape.offset(indices...)];
+                return this->_data[this->_shape.offset(indices...)];
             }
 
             //-----------------------------------------------------------------
@@ -232,6 +214,13 @@ namespace utils{
             template<typename CTYPE> T operator()(const CTYPE &c) const
             {
                 return this->_data[this->_shape.offset(c)];
+            }
+
+            //-----------------------------------------------------------------
+            //! create Array view from slices
+            view_type operator()(const std::vector<Slice> &s)
+            {
+                return view_type(*this,ArraySelection::create(s));   
             }
 
             //-----------------------------------------------------------------

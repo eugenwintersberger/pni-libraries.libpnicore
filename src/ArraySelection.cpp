@@ -58,6 +58,23 @@ ArraySelection &ArraySelection::operator=(ArraySelection &&s)
 
 //======================implementation of general purpose methods==============
 
+ArraySelection ArraySelection::create(const std::vector<Slice> &s)
+{
+    std::vector<size_t> shape(s.size());
+    std::vector<size_t> offset(s.size());
+    std::vector<size_t> stride(s.size());
+
+    size_t index = 0;
+    for(auto slice: s)
+    {
+        offset[index] = slice.first();
+        stride[index] = slice.stride();
+        shape[index] = pni::utils::size(slice);
+        index++;
+    }
+
+    return ArraySelection(shape,offset,stride);
+}
 //end of namespace
 }
 }

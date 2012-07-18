@@ -138,8 +138,10 @@ template<typename T,typename STORAGE,...> class Array
    
     template<typename ...ITYPES>
     typename ATypeSelector<ITYPES...>::type operator()(ITYPES ...indices);
-    ArrayView operator()(const std::vector<Slice> &s);
-    T &operator(
+    template<typename CTYPE> T &operator()(const CTYPE &index);
+    template<typename CTYPE> T operator()(const CTYPE &index) const;
+    template<template<typename> CTYPE> 
+    ArrayView<Array> operator()(const CTYPE<Slice> &slice) const;
     
     
     T &operator[](size_t i); 
