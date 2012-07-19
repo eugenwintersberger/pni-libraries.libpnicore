@@ -4,7 +4,7 @@
 #include <chrono>
 #include <ratio>
 #include "Iterator.hpp"
-#include "DynamicBuffer.hpp"
+#include "DBuffer.hpp"
 
 using namespace pni::utils;
 
@@ -37,7 +37,7 @@ int main(int argc,char **argv)
 
     if(ptr) delete [] ptr;
 
-    DynamicBuffer<double> b(N);
+    DBuffer<double> b(N);
     sum = 0;
     start = std::chrono::high_resolution_clock::now();
     for(auto v: b) sum += sin(v);

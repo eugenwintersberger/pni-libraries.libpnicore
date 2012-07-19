@@ -24,8 +24,8 @@
 
 
 
-#ifndef __DYNAMICBUFFER_HPP__
-#define __DYNAMICBUFFER_HPP__
+#ifndef __DBUFFER_HPP__
+#define __DBUFFER_HPP__
 
 #include <memory>
 #include <iostream>
@@ -64,7 +64,7 @@ namespace utils{
     mutex could easily be cancled by passing the pointer held by the object
     around to other routines.
     */
-    template<typename T,typename Allocator=NewAllocator >class DynamicBuffer
+    template<typename T,typename Allocator=NewAllocator >class DBuffer
     {
         private:
             T *_data; //!< pointer to the data block
@@ -78,52 +78,30 @@ namespace utils{
             */ 
             void _allocate();
            
-            /*! \brief check for data access
-
-            Check if a buffer with a particular index is ready for access.
-            \throws MemoryAccessError if try to access an unallocated buffer
-            \throws IndexError if the index is larger or equal the buffer size
-            */
-            void _check_access(size_t i,const String &issuer)
-            {
-                if(!this->size())
-                {
-                    MemoryAccessError error;
-                    error.issuer(issuer);
-                    error.description("DynamicBuffer not allocated!");
-                    throw error;
-                }
-                
-                if(i>=this->size())
-                {
-                    IndexError error;
-                    std::ostringstream sstr;
-                    sstr<<"Index ("<<i<<") must not be larger or equal the size ";
-                    sstr<<"("<<this->size()<<")of the buffer!";
-                    error.issuer(issuer);
-                    error.description(sstr.str());
-                    throw error;
-                }
-
-            }
         public:
             //============public types provided by the template================
-            typedef std::shared_ptr<DynamicBuffer<T,Allocator> > shared_ptr; //!< smart pointer to a typed buffer
-            typedef std::unique_ptr<DynamicBuffer<T,Allocator> > unique_ptr; //!< unique poitner type to a buffer
-            typedef T value_type;  //!< type stored in the buffer
-            typedef Allocator allocator_type; //!< allocator type
-            typedef Iterator<DynamicBuffer<T,Allocator>,0 > iterator;        //!< iterator type
-            typedef Iterator<DynamicBuffer<T,Allocator>,1 > const_iterator; //!< const iterator type
+            //! type stored in the buffer
+            typedef T value_type;
+            //! buffer type
+            typedef DBuffer<T,Allocator> buffer_type;
+            //! smart pointer to a typed buffer
+            typedef std::shared_ptr<buffer_type> shared_ptr;
+            //! unique poitner type to a buffer
+            typedef std::unique_ptr<buffer_type> unique_ptr;
+            //! allocator type
+            typedef Allocator allocator_type;
+            //! iterator type
+            typedef Iterator<buffer_type,0 > iterator;        
+            //! const iterator type
+            typedef Iterator<buffer_type,1 > const_iterator; 
 
             //=============public static variables=============================
-            static const TypeID type_id    = TypeIDMap<T>::type_id; //!< type ID of the element type
+            //! type ID of the element type
+            static const TypeID type_id    = TypeIDMap<value_type>::type_id; 
            
             //=================constructors and destructor=====================
             //! default constructor
-            explicit DynamicBuffer():
-                _data(nullptr),
-                _size(0)
-            {}
+            explicit DBuffer():_data(nullptr),_size(0) {}
 
             //-----------------------------------------------------------------
             /*! \brief copy constructor
@@ -131,14 +109,14 @@ namespace utils{
             This constructor initializes the new Buffer with the content of the
             old. New memory is allocated for the newly created Buffer<T> object.
             \throws MemoryAllocationError if allocation for the new buffer fails
+            \param b reference to the original buffer
             */
-            DynamicBuffer(const DynamicBuffer<T,Allocator> &b):
+            DBuffer(const buffer_type &b):
                 _data(Allocator::template allocate<T>(b.size())),
                 _size(b.size())
             {
                 //copy data
-                if(this->size())
-                    for(size_t i=0;i<this->size();i++) (*this)[i] = b[i];
+                std::copy(b.begin(),b.end(),(*this).begin());
             }
 
             //-----------------------------------------------------------------
@@ -148,9 +126,7 @@ namespace utils{
             construction of the lhs object. However, the rhs buffer will be
             freed. 
             */
-            DynamicBuffer(DynamicBuffer<T,Allocator> &&b):
-                _data(b._data),
-                _size(b._size)
+            DBuffer(buffer_type &&b):_data(b._data),_size(b._size) 
             {
                 b._data = nullptr;
                 b._size = 0;
@@ -164,8 +140,8 @@ namespace utils{
             \throws MemoryAllocationError if allocation on the heap fails
             \param n number of elements of type T in the buffer
             */
-            explicit DynamicBuffer(size_t n):
-                _data(Allocator::template allocate<T>(n)),
+            explicit DBuffer(size_t n):
+                _data(Allocator::template allocate<value_type>(n)),
                 _size(n)
             {}
 
@@ -173,16 +149,15 @@ namespace utils{
             /*! \brief construct with initializer list
 
             This constructor allows the construction of DynamicBuffer<T> objects 
-            using an initializer list
-            \code
-            DynamicBuffer<UInt32> buffer = {1,3,5,6,10};
+            using an initializer list \code
+            DBuffer<UInt32> buffer = {1,3,5,6,10};
             \endcode
             which in some cases simplifies the code sigificantly. 
             \throws MemoryAllocationError if memory allocation fails
             \param list reference to the initializer list
             */
-            explicit DynamicBuffer(const std::initializer_list<T> &list):
-                _data(Allocator::template allocate<T>(list.size())),
+            explicit DBuffer(const std::initializer_list<value_type> &list):
+                _data(Allocator::template allocate<value_type>(list.size())),
                 _size(list.size())
             
             {
@@ -191,7 +166,7 @@ namespace utils{
             
             //-----------------------------------------------------------------
             //! destructor
-            ~DynamicBuffer() { this->free(); }
+            ~DBuffer() { this->free(); }
 
             //===================assignment operators==========================
             /*! copy assignment operator
@@ -200,9 +175,9 @@ namespace utils{
             the rhs buffer object will be freed.
             \throws MemoryAccessError if something goes wring with memory allocation
             \param b Buffer whose content will be assigned to this buffer
-            \return reference to a DynamicBuffer<T> object
+            \return reference to a buffer_type object
             */
-            DynamicBuffer<T,Allocator> &operator=(const DynamicBuffer<T,Allocator> &b)
+            buffer_type &operator=(const buffer_type &b)
             {
                 if(this == &b) return *this;
                 
@@ -224,7 +199,7 @@ namespace utils{
 
             //-----------------------------------------------------------------
             //! move assignment operator
-            DynamicBuffer<T,Allocator> &operator=(DynamicBuffer<T,Allocator> &&b)
+            buffer_type &operator=(buffer_type &&b)
             {
                 if(this == &b) return *this;
 
@@ -244,20 +219,23 @@ namespace utils{
             must not be used to modify data values.
             \return pointer to allocated memory
             */
-            const T* ptr() const { return this->_data; }
+            const value_type* ptr() const { return this->_data; }
 
             //-----------------------------------------------------------------
             /*! \brief get value at index i
 
             Returns the data value at index i of the buffer. 
-            \throws MemoryAccessError if buffer is not allocated
+            \throws MemoryNotAllocatedError if buffer is not allocated
             \throws IndexError if i exceeds the size of the buffer
             \param i buffer index
             \return value at index i
             */
-            T at(size_t i) const
+            value_type at(size_t i) const
             {
-                this->_check_access(i,"T at(size_t i) const");
+                check_index(i,this->size(),"value_type at(size_t i) const");
+                check_allocation_state(*this,"value_type at(size_t i) const");
+                check_ptr_state(this->_data,"value_type at(size_t i) const");
+
                 return this->_data[i];
             }
 
@@ -265,21 +243,39 @@ namespace utils{
             /*! \brief get value at index i
 
             Returns a reference to the element in the buffer at index i.
-            \throws MemoryAccessError if buffer is not allocated
+            \throws MemoryNotAllocatedError if buffer is not allocated
             \throws IndexError if i exceeds the size of the buffer
             \param i buffer index
             \return reference to the element at index i
             */
-            T &at(size_t i)
+            value_type &at(size_t i)
             {
-                this->_check_access(i,"T &at(size_t i)");
+                check_index(i,this->size(),"value_type &at(size_t i) const");
+                check_allocation_state(*this,"value_type &at(size_t i) const");
+                check_ptr_state(this->_data,"value_type &at(size_t i) const");
+
                 return this->_data[i];
             }
 
             //-----------------------------------------------------------------
-            void insert(size_t i,const T &value)
+            /*! 
+            \brief insert value
+
+            Insert value at index i.
+            \throws MemoryNotAllocatedError if buffer not allocated
+            \throws IndexError if i exceeds the size of the buffer
+            \param i index where to insert data
+            \param value the value to insert
+            */
+            void insert(size_t i,const value_type &value)
             {
-                this->_check_access(i,"void insert(size_t i,const T &value)");
+                check_index(i,this->size(),"void insert(size_t i,const "
+                                           "value_type &value)");
+                check_allocation_state(*this,"void insert(size_t i,const "
+                                             "value_type &value)");
+                check_ptr_state(this->_data,"void insert(size_t i,const "
+                                                   "value_type &value)");
+
                 this->_data[i] = value;
             }
 
@@ -292,7 +288,7 @@ namespace utils{
             \param n index of element to fetch
             \return reference to the n-th element in the buffer
             */
-            T& operator[](size_t n) { return _data[n]; }
+            value_type& operator[](size_t n) { return _data[n]; }
 
             //-----------------------------------------------------------------
             /*! [] operator for read only access
@@ -303,7 +299,7 @@ namespace utils{
             \param n index of the element to fetch
             \return value of the buffer at position n
             */
-            T operator[](size_t n) const { return _data[n]; }
+            value_type operator[](size_t n) const { return _data[n]; }
 
             //-----------------------------------------------------------------
             /*! \brief allocates memory
@@ -385,7 +381,7 @@ namespace utils{
 
     //==============comparison operators========================================
     template<typename T,typename TAlloc,typename U,typename UAlloc>
-    bool operator==(const DynamicBuffer<T,TAlloc> &a,const DynamicBuffer<U,UAlloc> &b)
+    bool operator==(const DBuffer<T,TAlloc> &a,const DBuffer<U,UAlloc> &b)
     {
         if(a.size() != b.size()) return false;
 
@@ -400,7 +396,7 @@ namespace utils{
 
     //--------------------------------------------------------------------------
     template<typename T,typename Allocator> 
-        bool operator==(const DynamicBuffer<T,Allocator> &a,const DynamicBuffer<T,Allocator> &b)
+        bool operator==(const DBuffer<T,Allocator> &a,const DBuffer<T,Allocator> &b)
     {
         if(a.size() != b.size()) return false;
 
@@ -415,7 +411,7 @@ namespace utils{
 
     //--------------------------------------------------------------------------
     template<typename T,typename TAlloc,typename U,typename UAlloc>
-    bool operator!=(const DynamicBuffer<T,TAlloc> &a,const DynamicBuffer<U,UAlloc> &b)
+    bool operator!=(const DBuffer<T,TAlloc> &a,const DBuffer<U,UAlloc> &b)
     {
         if(a == b) return false;
         return true;
@@ -423,7 +419,7 @@ namespace utils{
 
     //--------------------------------------------------------------------------
     template<typename T,typename Alloc> 
-        bool operator!=(const DynamicBuffer<T,Alloc> &a,const DynamicBuffer<T,Alloc> &b)
+        bool operator!=(const DBuffer<T,Alloc> &a,const DBuffer<T,Alloc> &b)
     {
         if(a == b) return false;
         return true;

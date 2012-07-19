@@ -29,7 +29,7 @@
 
 
 #include "CIndexMap.hpp"
-#include "DynamicBuffer.hpp"
+#include "DBuffer.hpp"
 #include "Iterator.hpp"
 #include "ArraySelection.hpp"
 
@@ -218,9 +218,14 @@ namespace utils{
             array is not equal 1. 
             \return Shape object
             */
-            std::vector<size_t> shape() const
+            template<typename CTYPE>
+            CTYPE shape() const
             {
-                return this->_selection.shape();
+                CTYPE s(this->rank());
+                std::copy(this->_selection.shape().begin(),
+                          this->_selection.shape().end(),
+                          s.begin());
+                return s;
             }
 
             //-----------------------------------------------------------------
@@ -268,6 +273,7 @@ namespace utils{
                 return this->_selection.size();
             }
 
+            //-----------------------------------------------------------------
             size_t rank()  const { return this->_selection.rank(); }
 
             //-----------------------------------------------------------------

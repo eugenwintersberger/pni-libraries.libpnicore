@@ -1,13 +1,13 @@
 //unit test for the Buffer class
 
-#ifndef __DYNAMICBUFFERTEST_HPP
-#define __DYNAMICBUFFERTEST_HPP__
+#ifndef __DBUFFERTEST_HPP
+#define __DBUFFERTEST_HPP__
 
 
 #include<random>
 #include<cppunit/TestFixture.h>
 #include<cppunit/extensions/HelperMacros.h>
-#include "DynamicBuffer.hpp"
+#include "DBuffer.hpp"
 #include "NewAllocator.hpp"
 
 #include "RandomDistributions.hpp"
@@ -16,9 +16,9 @@
 using namespace pni::utils;
 
 template<typename T,typename Allocator> 
-class DynamicBufferTest:public CppUnit::TestFixture
+class DBufferTest:public CppUnit::TestFixture
 {
-    CPPUNIT_TEST_SUITE(DynamicBufferTest);
+    CPPUNIT_TEST_SUITE(DBufferTest);
     CPPUNIT_TEST(test_constructors);
     CPPUNIT_TEST(test_allocation);
     CPPUNIT_TEST(test_access);
@@ -45,7 +45,7 @@ public:
 
 //-----------------------------------------------------------------------------
 template<typename T,typename Allocator> 
-void DynamicBufferTest<T,Allocator>::setUp()
+void DBufferTest<T,Allocator>::setUp()
 {
     this->n1 = 1000;
     this->n2 = 2000;
@@ -53,24 +53,24 @@ void DynamicBufferTest<T,Allocator>::setUp()
 
 //-----------------------------------------------------------------------------
 template<typename T,typename Allocator> 
-void DynamicBufferTest<T,Allocator>::tearDown()
+void DBufferTest<T,Allocator>::tearDown()
 { }
 
 //------------------------------------------------------------------------------
 template<typename T,typename Allocator> 
-void DynamicBufferTest<T,Allocator>::test_constructors()
+void DBufferTest<T,Allocator>::test_constructors()
 {
     //create first buffer using the default constructor
-    DynamicBuffer<T,Allocator> b1; //default constructor
+    DBuffer<T,Allocator> b1; //default constructor
     CPPUNIT_ASSERT(!b1.size());
     
     //create the second constructor with the standard constructor
     //allocating memory
-    DynamicBuffer<T,Allocator> b2(this->n2);
+    DBuffer<T,Allocator> b2(this->n2);
     CPPUNIT_ASSERT(b2.size());
 
     //construct from a initializier list
-    DynamicBuffer<T,Allocator> ibuffer{T(1),T(6),T(12)};
+    DBuffer<T,Allocator> ibuffer{T(1),T(6),T(12)};
     CPPUNIT_ASSERT(ibuffer[0] == T(1));
     CPPUNIT_ASSERT(ibuffer[1] == T(6));
     CPPUNIT_ASSERT(ibuffer[2] == T(12));
@@ -78,13 +78,13 @@ void DynamicBufferTest<T,Allocator>::test_constructors()
 
     //=====================copy and move constructor=============================
     //using copy constructor
-    DynamicBuffer<T,Allocator> b3(b2);
+    DBuffer<T,Allocator> b3(b2);
     CPPUNIT_ASSERT(b2.size());
     CPPUNIT_ASSERT(b3.size());
     CPPUNIT_ASSERT(b3.size() == b2.size());
 
     //using the move constructor
-    DynamicBuffer<T,Allocator> b4 = std::move(b2);
+    DBuffer<T,Allocator> b4 = std::move(b2);
     CPPUNIT_ASSERT(b4.size());
     CPPUNIT_ASSERT(b4.size() == b3.size());
     CPPUNIT_ASSERT(!b2.size());
@@ -92,11 +92,11 @@ void DynamicBufferTest<T,Allocator>::test_constructors()
 
 //------------------------------------------------------------------------------
 template<typename T,typename Allocator> 
-void DynamicBufferTest<T,Allocator>::test_assignment()
+void DBufferTest<T,Allocator>::test_assignment()
 {
 	//testing here the assignment of equally typed buffers
-	DynamicBuffer<T,Allocator> buffer1;
-	DynamicBuffer<T,Allocator> buffer2;
+	DBuffer<T,Allocator> buffer1;
+	DBuffer<T,Allocator> buffer2;
 
 	//check first for some standard problems
 	//nothing happens - both are not allocated
@@ -118,7 +118,7 @@ void DynamicBufferTest<T,Allocator>::test_assignment()
 	CPPUNIT_ASSERT(buffer2.size());
     CPPUNIT_ASSERT(buffer1.size() == buffer2.size());
 
-	DynamicBuffer<T,Allocator> buffer3;
+	DBuffer<T,Allocator> buffer3;
 	CPPUNIT_ASSERT_NO_THROW(buffer3 = buffer1);
 	CPPUNIT_ASSERT(buffer3.size());
 	CPPUNIT_ASSERT(buffer1.size());
@@ -126,7 +126,7 @@ void DynamicBufferTest<T,Allocator>::test_assignment()
 
 	//checking move assignment - moveing an  allocated
     //buffer to an not allocated one
-	DynamicBuffer<T,Allocator> buffer4;
+	DBuffer<T,Allocator> buffer4;
 	CPPUNIT_ASSERT_NO_THROW(buffer4 = std::move(buffer3));
 	CPPUNIT_ASSERT(buffer4.size());
 	CPPUNIT_ASSERT(!buffer3.size());
@@ -144,15 +144,15 @@ void DynamicBufferTest<T,Allocator>::test_assignment()
 
 //------------------------------------------------------------------------------
 template<typename T,typename Allocator> 
-void DynamicBufferTest<T,Allocator>::test_allocation()
+void DBufferTest<T,Allocator>::test_allocation()
 {
-	DynamicBuffer<T,Allocator> dbuffer(this->n1);
+	DBuffer<T,Allocator> dbuffer(this->n1);
 	CPPUNIT_ASSERT(dbuffer.size() == this->n1);
 
 	CPPUNIT_ASSERT_NO_THROW(dbuffer.free());
 	CPPUNIT_ASSERT(dbuffer.size()==0);
 
-	DynamicBuffer<T,Allocator> dbuffer2;
+	DBuffer<T,Allocator> dbuffer2;
 	CPPUNIT_ASSERT(dbuffer2.size() == 0);
 
 	CPPUNIT_ASSERT_NO_THROW(dbuffer2.allocate(n2));
@@ -162,9 +162,9 @@ void DynamicBufferTest<T,Allocator>::test_allocation()
 
 //------------------------------------------------------------------------------
 template<typename T,typename Allocator> 
-void DynamicBufferTest<T,Allocator>::test_access()
+void DBufferTest<T,Allocator>::test_access()
 {
-	DynamicBuffer<T,Allocator> dbuffer(1000);
+	DBuffer<T,Allocator> dbuffer(1000);
 
 	for(size_t i=0;i<1000;i++) 
         CPPUNIT_ASSERT_NO_THROW(dbuffer[i] = T(i));
@@ -173,14 +173,14 @@ void DynamicBufferTest<T,Allocator>::test_access()
 		CPPUNIT_ASSERT(T(i)==dbuffer[i]);
 	}
 
-    DynamicBuffer<T,Allocator> ibuffer(4);
+    DBuffer<T,Allocator> ibuffer(4);
     for(size_t i=0;i<ibuffer.size();i++)
         CPPUNIT_ASSERT_NO_THROW(ibuffer.at(i) = T(i));
 
     for(size_t i=0;i<ibuffer.size();i++)
         CPPUNIT_ASSERT(ibuffer.at(i) == T(i));
 
-    DynamicBuffer<T,Allocator> jbuffer(4);
+    DBuffer<T,Allocator> jbuffer(4);
     for(size_t i=0;i<jbuffer.size();i++)
         CPPUNIT_ASSERT_NO_THROW(jbuffer.insert(i,T(i)));
 
@@ -195,10 +195,10 @@ void DynamicBufferTest<T,Allocator>::test_access()
 
 //------------------------------------------------------------------------------
 template<typename T,typename Allocator> 
-void DynamicBufferTest<T,Allocator>::test_comparison()
+void DBufferTest<T,Allocator>::test_comparison()
 {
-	DynamicBuffer<T,Allocator> b1(100);
-	DynamicBuffer<T,Allocator> b2(100);
+	DBuffer<T,Allocator> b1(100);
+	DBuffer<T,Allocator> b2(100);
 
     std::fill(b1.begin(),b1.end(),T(1));
     std::fill(b2.begin(),b2.end(),T(2));
@@ -210,11 +210,11 @@ void DynamicBufferTest<T,Allocator>::test_comparison()
 
 //-----------------------------------------------------------------------------
 template<typename T,typename Allocator> 
-void DynamicBufferTest<T,Allocator>::test_iterator()
+void DBufferTest<T,Allocator>::test_iterator()
 {
     std::cout<<"void BufferTest<BTYPE>::test_iterator()----------------------";
     std::cout<<std::endl;
-    DynamicBuffer<T,Allocator> b1(1000);
+    DBuffer<T,Allocator> b1(1000);
 
     auto data = RandomDistribution::uniform<std::vector<T> >(1000);
 

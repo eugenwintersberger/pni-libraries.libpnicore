@@ -145,6 +145,30 @@ namespace utils{
         }
     }
 
+    //-------------------------------------------------------------------------
+    /*! 
+    \ingroup error_classes
+    \brief check pointer state
+
+    Checks if a pointer is nullptr or not and throws an exception if it is.
+    \throws MemoryNotAllocatedError if pointer is a nullptr
+    \param ptr pointer to check
+    \param i issuer of the exception
+    */
+    template<typename T> 
+        void check_ptr_state(const T *ptr,const String &i)
+    {
+        if(!ptr)
+        {
+            std::stringstream ss;
+            ss<<"Pointer is nullptr!";
+            MemoryNotAllocatedError error;
+            error.issuer(i);
+            error.description(ss.str());
+            throw error;
+        }
+    }
+
 
 
 //end of namespace
