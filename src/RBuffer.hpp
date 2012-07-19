@@ -1,6 +1,4 @@
 /*
- * Declaration of the RefBuffer<T> template
- *
  * (c) Copyright 2011 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
  *
  * This file is part of libpniutils.
@@ -30,8 +28,8 @@
 
 
 
-#ifndef __REFBUFFER_HPP_
-#define __REFBUFFER_HPP_
+#ifndef __RBUFFER_HPP_
+#define __RBUFFER_HPP_
 
 #include <iostream>
 #include <string>
@@ -58,41 +56,44 @@ namespace utils{
     Such a reference buffer can either be initialized from a raw pointer, an
     instance of Buffer<T>, or from a different RefBuffer object.
     */
-    template<typename T> class RefBuffer
+    template<typename T> class RBuffer
     {
         private:
             T *_data; //!< pointer to the data block
             size_t _size; //!< number of elements allocated in the buffer
         public:
             //===================public types =================================
-            typedef std::unique_ptr<RefBuffer<T> > unique_ptr; //!< unique pointer type 
-            typedef std::shared_ptr<RefBuffer<T> > shared_ptr; //!< shared pointer type
-            typedef T value_type;             //!< type of data stored
-            typedef Iterator<RefBuffer<T>,0> iterator; //!< iterator type
-            typedef Iterator<RefBuffer<T>,1> const_iterator; //!< const iterator type
+            //! type of data stored
+            typedef T value_type;             
+            //! type of the buffer
+            typedef RBuffer<T> buffer_type;
+            //! unique pointer type 
+            typedef std::unique_ptr<buffer_type> unique_ptr;
+            //! shared pointer type
+            typedef std::shared_ptr<buffer_type> shared_ptr;
+            //! iterator type
+            typedef Iterator<buffer_type,0> iterator; 
+            //! const iterator type
+            typedef Iterator<buffer_type,1> const_iterator; 
 
             //===================public static member variables================
-            static const TypeID type_id    = TypeIDMap<T>::type_id; //!< ID of the element data teyp
+            //! ID of the element data type
+            static const TypeID type_id    = TypeIDMap<value_type>::type_id; 
 
             //=================constructors and destructors====================
             //! default constructor
-            explicit RefBuffer():
+            explicit RBuffer():
                 _data(nullptr),
                 _size(0)
             {}
 
             //-----------------------------------------------------------------
             //! copy constructor
-            RefBuffer(const RefBuffer<T> &b):
-                _data(b._data),
-                _size(b._size)
-            {}
+            RBuffer(const buffer_type &b):_data(b._data),_size(b._size) {}
 
             //-----------------------------------------------------------------
             //! move constructor
-            RefBuffer(RefBuffer<T> &&b):
-                _data(b._data),
-                _size(b._size)
+            RBuffer(buffer_type &&b):_data(b._data),_size(b._size)
             {
                 b._data = nullptr;
                 b._size = 0;
@@ -107,14 +108,14 @@ namespace utils{
             \param n number of elements of type T in the buffer
             \param data pointer to the allocated memory
             */
-            explicit RefBuffer(size_t n,T *data):
+            explicit RBuffer(size_t n,T *data):
                 _data(data),
                 _size(n)
             {}
 
             //-----------------------------------------------------------------
             //! destructor
-            ~RefBuffer() 
+            ~RBuffer() 
             { 
                 this->_data = nullptr; 
                 this->_size = 0;
@@ -122,7 +123,7 @@ namespace utils{
 
             //====================assignment operators=========================
             //! copy assignment operator
-            RefBuffer<T> &operator=(const RefBuffer<T> &b)
+            buffer_type &operator=(const buffer_type &b)
             {
                 if(&b != this){
                     _data = b._data;
@@ -134,7 +135,7 @@ namespace utils{
 
             //-----------------------------------------------------------------
             //! move assignment operator
-            RefBuffer<T> &operator=(RefBuffer<T> &&b)
+            buffer_type &operator=(buffer_type &&b)
             {
                 if(this != &b){
                     _data = b._data;
@@ -153,7 +154,7 @@ namespace utils{
             pointer must not be used to modify data values.
             \return pointer to allocated memory
             */
-            const T* ptr() const { return this->_data; }
+            const value_type* ptr() const { return this->_data; }
 
             //-----------------------------------------------------------------
             /*! \brief return value at index i
@@ -166,10 +167,11 @@ namespace utils{
             \param i buffer index
             \return value at index i
             */
-            T at(size_t i) const
+            value_type at(size_t i) const
             {
-                check_allocation_state(*this,"T at(size_t i) const");
-                check_index(i,this->size(),"T at(size_t i) const");
+                check_allocation_state(*this,"value_type at(size_t i) const");
+                check_ptr_state(this->_data,"value_type at(size_t i) const");
+                check_index(i,this->size(),"value_type at(size_t i) const");
 
                 return this->_data[i];
             }
@@ -185,10 +187,11 @@ namespace utils{
             \param i buffer index
             \return reference to element at i
             */
-            T &at(size_t i)
+            value_type &at(size_t i)
             {
-                check_allocation_state(*this,"T &at(size_t i)");
-                check_index(i,this->size(),"T &at(size_t i)");
+                check_allocation_state(*this,"value_type &at(size_t i)");
+                check_ptr_state(this->_data,"value_type &at(size_t i)");
+                check_index(i,this->size(),"value_type &at(size_t i)");
 
                 return this->_data[i];
             }
@@ -203,7 +206,7 @@ namespace utils{
             \return reference to the n-th element in the buffer
             \sa at()
             */
-            T& operator[](size_t n) { return this->_data[n];}
+            value_type& operator[](size_t n) { return this->_data[n];}
 
             //-----------------------------------------------------------------
             /*! \brief return the value of element i
@@ -215,7 +218,7 @@ namespace utils{
             \return value of the buffer at position n
             \sa at()
             */
-            T operator[](size_t n) const { return this->_data[n]; }
+            value_type operator[](size_t n) const { return this->_data[n]; }
 
             //-----------------------------------------------------------------
             /*! 
@@ -227,13 +230,9 @@ namespace utils{
             \param i index where to insert the value
             \param v value to insert
             */
-            void insert(size_t i,const T &v)
+            void insert(size_t i,const value_type &v)
             {
-                check_allocation_state(*this,
-                                       "void insert(size_t i,const T &v)");
-                check_index(i,this->size(),"void insert(size_t i,const T &v)");
-
-                (*this)[i] = v;
+                this->at(i) = v;
             }
 
 
@@ -251,10 +250,7 @@ namespace utils{
             Returns an iterator pointing on the first element of the buffer.
             \return iterator to first element
             */
-            RefBuffer<T>::iterator begin()
-            {
-                return iterator(this,0);
-            }
+            iterator begin() { return iterator(this,0); }
 
             //------------------------------------------------------------------
             /*! \brief get iterator to last element
@@ -263,10 +259,7 @@ namespace utils{
             The iterator is thus invalid.
             \return iterator to last element
             */
-            RefBuffer<T>::iterator end()
-            {
-                return iterator(this,this->size());
-            }
+            iterator end() { return iterator(this,this->size()); }
 
             //------------------------------------------------------------------
             /*! \brief get const iterator to first element
@@ -274,10 +267,7 @@ namespace utils{
             Returns an const iterator pointing on the first element of the buffer.
             \return const iterator to first element
             */
-            RefBuffer<T>::const_iterator begin() const
-            {
-                return const_iterator(this,0);
-            }
+            const_iterator begin() const { return const_iterator(this,0); }
 
             //------------------------------------------------------------------
             /*! \brief get const iterator to last element
@@ -286,16 +276,13 @@ namespace utils{
             The iterator is thus invalid.
             \return const iterator to last element
             */
-            RefBuffer<T>::const_iterator end() const
-            {
-                return const_iterator(this,this->size());
-            }
+            const_iterator end() const { return const_iterator(this,this->size());}
 
     };
 
     //==============comparison operators============================================
     template<typename T,typename U>
-    bool operator==(const RefBuffer<T> &a,const RefBuffer<U> &b){
+    bool operator==(const RBuffer<T> &a,const RBuffer<U> &b){
         if(a.size() != b.size()) return false;
 
         if((a.size()) && (b.size()))
@@ -309,7 +296,7 @@ namespace utils{
 
     //-----------------------------------------------------------------------------
     template<typename T,typename U>
-    bool operator!=(const RefBuffer<T> &a,const RefBuffer<U> &b){
+    bool operator!=(const RBuffer<T> &a,const RBuffer<U> &b){
         if(a == b) return false;
         return true;
     }

@@ -1,14 +1,14 @@
 //unit test for the Buffer class
 
-#ifndef __REFBUFFERTEST_HPP__
-#define __REFBUFFERTEST_HPP__
+#ifndef __RBUFFERTEST_HPP__
+#define __RBUFFERTEST_HPP__
 
 
 #include<random>
 #include<algorithm>
 #include<cppunit/TestFixture.h>
 #include<cppunit/extensions/HelperMacros.h>
-#include "RefBuffer.hpp"
+#include "RBuffer.hpp"
 #include "NewAllocator.hpp"
 
 #include "RandomDistributions.hpp"
@@ -17,9 +17,9 @@
 using namespace pni::utils;
 
 template<typename T> 
-class RefBufferTest:public CppUnit::TestFixture
+class RBufferTest:public CppUnit::TestFixture
 {
-    CPPUNIT_TEST_SUITE(RefBufferTest);
+    CPPUNIT_TEST_SUITE(RBufferTest);
     CPPUNIT_TEST(test_constructors);
     CPPUNIT_TEST(test_access);
     CPPUNIT_TEST(test_assignment);
@@ -45,7 +45,7 @@ public:
 };
 
 //-----------------------------------------------------------------------------
-template<typename T> void RefBufferTest<T>::setUp()
+template<typename T> void RBufferTest<T>::setUp()
 {
     this->n1 = 1000;
     this->n3 = 1000;
@@ -56,7 +56,7 @@ template<typename T> void RefBufferTest<T>::setUp()
 }
 
 //-----------------------------------------------------------------------------
-template<typename T> void RefBufferTest<T>::tearDown()
+template<typename T> void RBufferTest<T>::tearDown()
 { 
     if(this->ptr1) delete [] this->ptr1;
     if(this->ptr2) delete [] this->ptr2;
@@ -64,50 +64,50 @@ template<typename T> void RefBufferTest<T>::tearDown()
 }
 
 //------------------------------------------------------------------------------
-template<typename T> void RefBufferTest<T>::test_constructors()
+template<typename T> void RBufferTest<T>::test_constructors()
 {
     //create first buffer using the default constructor
-    RefBuffer<T> b1; //default constructor
+    RBuffer<T> b1; //default constructor
     CPPUNIT_ASSERT(!b1.size());
     
     //create the second constructor with the standard constructor
     //allocating memory
-    RefBuffer<T> b2(this->n2,this->ptr2);
+    RBuffer<T> b2(this->n2,this->ptr2);
     CPPUNIT_ASSERT(b2.size() == this->n2);
 
 
     //=====================copy and move constructor=============================
     //using copy constructor
-    RefBuffer<T> b3(b2);
+    RBuffer<T> b3(b2);
     CPPUNIT_ASSERT(b2.size());
     CPPUNIT_ASSERT(b3.size());
     CPPUNIT_ASSERT(b3.size() == b2.size());
 
     //using the move constructor
-    RefBuffer<T> b4 = std::move(b2);
+    RBuffer<T> b4 = std::move(b2);
     CPPUNIT_ASSERT(b4.size());
     CPPUNIT_ASSERT(b4.size() == b3.size());
     CPPUNIT_ASSERT(!b2.size());
 }
 
 //------------------------------------------------------------------------------
-template<typename T> void RefBufferTest<T>::test_assignment()
+template<typename T> void RBufferTest<T>::test_assignment()
 {
 	//testing here the assignment of equally typed buffers
-	RefBuffer<T> buffer1;
-	RefBuffer<T> buffer2;
+	RBuffer<T> buffer1;
+	RBuffer<T> buffer2;
 
     CPPUNIT_ASSERT(buffer1 == buffer2);
 
 	//now the lhs is not allocated and the rhs is
-    CPPUNIT_ASSERT_NO_THROW(buffer2 = RefBuffer<T>(this->n2,this->ptr2));
+    CPPUNIT_ASSERT_NO_THROW(buffer2 = RBuffer<T>(this->n2,this->ptr2));
     CPPUNIT_ASSERT_NO_THROW(buffer1 = buffer2);
     //now the rhs is not allocate dnad the lhs is
     CPPUNIT_ASSERT_NO_THROW(buffer2 = buffer1);
 
     //booth buffers are allocated
-	CPPUNIT_ASSERT_NO_THROW(buffer2 = RefBuffer<T>(this->n2,this->ptr2));
-	CPPUNIT_ASSERT_NO_THROW(buffer1 = RefBuffer<T>(this->n1,this->ptr1));
+	CPPUNIT_ASSERT_NO_THROW(buffer2 = RBuffer<T>(this->n2,this->ptr2));
+	CPPUNIT_ASSERT_NO_THROW(buffer1 = RBuffer<T>(this->n1,this->ptr1));
     CPPUNIT_ASSERT(buffer2.size() == this->n2);
     CPPUNIT_ASSERT(buffer1.size() == this->n1);
     CPPUNIT_ASSERT(buffer1.size() != buffer2.size());
@@ -120,8 +120,8 @@ template<typename T> void RefBufferTest<T>::test_assignment()
 
 	//checking move assignment - moveing an  allocated
     //buffer to an not allocated one
-    RefBuffer<T> buffer3 = buffer1;
-	RefBuffer<T> buffer4;
+    RBuffer<T> buffer3 = buffer1;
+	RBuffer<T> buffer4;
 	CPPUNIT_ASSERT_NO_THROW(buffer4 = std::move(buffer3));
 	CPPUNIT_ASSERT(buffer4.size());
 	CPPUNIT_ASSERT(!buffer3.size());
@@ -138,9 +138,9 @@ template<typename T> void RefBufferTest<T>::test_assignment()
 }
 
 //------------------------------------------------------------------------------
-template<typename T> void RefBufferTest<T>::test_access()
+template<typename T> void RBufferTest<T>::test_access()
 {
-	RefBuffer<T> dbuffer(this->n1,this->ptr1);
+	RBuffer<T> dbuffer(this->n1,this->ptr1);
 
 	for(size_t i=0;i<this->n1;i++) 
         CPPUNIT_ASSERT_NO_THROW(dbuffer[i] = T(i));
@@ -148,7 +148,7 @@ template<typename T> void RefBufferTest<T>::test_access()
 	for(size_t i=0;i<this->n1;i++)
 		CPPUNIT_ASSERT(T(i)==dbuffer[i]);
 
-    RefBuffer<T> ibuffer(this->n2,this->ptr2);
+    RBuffer<T> ibuffer(this->n2,this->ptr2);
     for(size_t i=0;i<ibuffer.size();i++)
         CPPUNIT_ASSERT_NO_THROW(ibuffer.at(i) = T(i));
 
@@ -157,13 +157,14 @@ template<typename T> void RefBufferTest<T>::test_access()
 
     //check for IndexError exception
     CPPUNIT_ASSERT_THROW(ibuffer.at(this->n2+2),IndexError);
+
 }
 
 //------------------------------------------------------------------------------
-template<typename T> void RefBufferTest<T>::test_comparison()
+template<typename T> void RBufferTest<T>::test_comparison()
 {
-	RefBuffer<T> b1(this->n1,this->ptr1);
-	RefBuffer<T> b2(this->n3,this->ptr3);
+	RBuffer<T> b1(this->n1,this->ptr1);
+	RBuffer<T> b2(this->n3,this->ptr3);
 
     std::fill(b1.begin(),b1.end(),T(1));
     std::fill(b2.begin(),b2.end(),T(2));
@@ -175,9 +176,9 @@ template<typename T> void RefBufferTest<T>::test_comparison()
 }
 
 //-----------------------------------------------------------------------------
-template<typename T> void RefBufferTest<T>::test_iterator()
+template<typename T> void RBufferTest<T>::test_iterator()
 {
-    RefBuffer<T> b1(this->n1,this->ptr1);
+    RBuffer<T> b1(this->n1,this->ptr1);
 
     auto data = RandomDistribution::uniform<std::vector<T> >(this->n1);
 
