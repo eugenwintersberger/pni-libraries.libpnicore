@@ -12,24 +12,18 @@ using namespace pni::utils;
 
 class StaticShapeTest: public CppUnit::TestFixture {
 	CPPUNIT_TEST_SUITE(StaticShapeTest);
-	CPPUNIT_TEST(testConstruction);
-	CPPUNIT_TEST(testAssignment);
-	CPPUNIT_TEST(testComparison);
-	CPPUNIT_TEST(testOffset);
-	CPPUNIT_TEST(testIndex);
-	CPPUNIT_TEST(testExceptions);
+	CPPUNIT_TEST(test_construction);
+	CPPUNIT_TEST(test_offset);
+	CPPUNIT_TEST(test_index);
 	CPPUNIT_TEST_SUITE_END();
 private:
 public:
 	void setUp();
 	void tearDown();
 
-	void testConstruction();
-	void testAssignment();
-	void testComparison();
-	void testOffset();
-	void testIndex();
-	void testExceptions();
+	void test_construction();
+	void test_offset();
+	void test_index();
 
 };
 

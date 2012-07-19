@@ -5,6 +5,7 @@
 #include "SizeType.hpp"
 #include "StrideType.hpp"
 #include "Exceptions.hpp"
+#include "ExceptionUtils.hpp"
 
 namespace pni{
 namespace utils{
@@ -32,12 +33,13 @@ namespace utils{
         \param offset linear offset for which the index should be calculated
         \param c container type where to store indices
         */
-        template<typename CTYPE> static void index(size_t offset,CTYPE &c)
+        template<typename CTYPE> 
+            static void index(size_t offset,typename CTYPE::iterator c)
         {
                 size_t t = offset%StrideCalc<DIMS...>::template value<D>();
-                c[D] = (offset-t)/StrideCalc<DIMS...>::template value<D>();
+                *c = (offset-t)/StrideCalc<DIMS...>::template value<D>();
                 IndexCreator<D+1,((D+1)<((sizeof ...(DIMS))-1)),DIMS...>::template
-                    index(t,c);
+                    index<CTYPE>(t,++c);
         }
     };
 
@@ -61,10 +63,11 @@ namespace utils{
         \param offset linear offset for which the index should be calculated
         \param c container type where to store the indices
         */
-        template<typename CTYPE> static void index(size_t offset,CTYPE &c)
+        template<typename CTYPE> 
+            static void index(size_t offset,typename CTYPE::iterator c)
         {
                 size_t t = offset%StrideCalc<DIMS...>::template value<D>();
-                c[D] = (offset-t)/StrideCalc<DIMS...>::template value<D>();
+                *c = (offset-t)/StrideCalc<DIMS...>::template value<D>();
         }
     };
 
@@ -85,10 +88,12 @@ namespace utils{
         \brief compute offset
 
         */
-        template<typename CTYPE> static size_t offset(const CTYPE &c)
+        template<typename CTYPE> 
+            static size_t offset(typename CTYPE::const_iterator c)
         {
-            return StrideCalc<DIMS...>::template value<D>()*c[D]+
-                   OffsetCalc<D+1,((D+1)>=(sizeof...(DIMS))),DIMS...>::offset(c);
+            return StrideCalc<DIMS...>::template value<D>()*(*c)+
+                   OffsetCalc<D+1,((D+1)>=(sizeof...(DIMS))),DIMS...>::
+                   template offset<CTYPE>(++c);
         }
     };
 
@@ -108,7 +113,8 @@ namespace utils{
         \param c container where to store the data
         \return offset value
         */
-        template<typename CTYPE> static size_t offset(const CTYPE &c)
+        template<typename CTYPE> 
+            static size_t offset(typename CTYPE::const_iterator c)
         {
            return 0;
         }
@@ -134,7 +140,7 @@ namespace utils{
     template<size_t ...DIMS> class StaticShape
     {
         private:
-            //!< static buffer holding the data
+            //! static buffer holding the data
             static const size_t _dims[sizeof ...(DIMS)];  
 
             //==============private member functions===========================
@@ -144,6 +150,8 @@ namespace utils{
             Computes the memory offset to a multidimensional index which is
             passed by the user as a variadic template. This private method is
             called recursively until a break condition is reached.
+            \throws IndexError if i1 exceeds the number of elements along
+            dimension d
             \tparam d dimension counter
             \tparam ITYPES index types
             \param i1 actual index whose contribute to the offset is computed
@@ -153,6 +161,9 @@ namespace utils{
             template<size_t d,typename ...ITYPES> 
             size_t _offset(size_t i1,ITYPES ...indices) const
             {
+                check_index(i1,_dims[d],
+                        "template<size_t d,typename ...ITYPES> size_t "
+                        "_offset(size_t i1,ITYPES ...indices) const");
                 
                 return StrideCalc<DIMS...>::template value<d>()*i1+
                        _offset<d+1>(indices...);
@@ -164,12 +175,17 @@ namespace utils{
 
             The break condition for the recursive offset computation from an
             index passed as a variadic argument list.
+            \throws IndexError if i exceeds the number of elements along
+            dimension d
             \tparam d index counter
             \param i the last index to process
             \return offset value
             */
             template<size_t d> size_t _offset(size_t i) const 
             { 
+                check_index(i,this->_dims[d],
+                        "template<size_t d> size_t _offset(size_t i) const");
+
                 return StrideCalc<DIMS...>::template value<d>()*i; 
             }
 
@@ -217,7 +233,7 @@ namespace utils{
 
                 size_t index = 0;
                 for(typename CONTAINER::value_type &v: c)
-                    v = this->dim[index];
+                    v = this->_dims[index];
 
                 return c;
             }
@@ -234,13 +250,27 @@ namespace utils{
 
             size_t offset = s.offset(1,2,3);
             \endcode
+            The method produces a compile time error if the number of indices
+            does not match the rank of the shape.
+
+            \throws IndexError if one of the indices exceeds the number of
+            elements along its corresponding dimension
+            \tparam ITYPES index types
+            \param indices the indices along each dimension
             \return offset value
             */
             template<typename ...ITYPES >
                 size_t offset(size_t i1,ITYPES ...indices) const
             {
+                //in cases where the number of arguments do not match the rank
+                //of the shape this will throw a compile time error
                 static_assert((sizeof...(DIMS)) == (sizeof...(indices)+1),
                               "Number of indices does not match shape rank!");
+
+                //check the index for the first dimension
+                check_index(i1,this->_dims[0],
+                        "template<typename ...ITYPES > size_t "
+                        "offset(size_t i1,ITYPES ...indices) const");
 
                 return StrideCalc<DIMS...>::template value<0>()*i1+
                        _offset<1>(indices...);
@@ -259,6 +289,8 @@ namespace utils{
             size_t offset = s.offset(index);
             \endcode
             \throws ShapeMissmatchError if rank and container size do not match
+            \throws IndexError if one of the indices exceeds the number of
+            elements along its dimensions
             \param c container with indices
             \return offset value
             */
@@ -275,8 +307,25 @@ namespace utils{
                              "(const CTYPE &c) const");
                     throw e;
                 }
+
+                size_t index = 0;
+                for(auto i: c)
+                {
+                    if(i>=this->_dims[index++])
+                    {
+                        std::stringstream ss;
+                        ss<<"Index "<<--index<<" is "<<i;
+                        ss<<" and exceeds its maximum value";
+                        ss<<"of "<<this->_dims[--index]<<"!";
+                        IndexError error;
+                        error.issuer("template<typename CTYPE> size_t "
+                                     "offset(const CTYPE &c) const");
+                        error.description(ss.str());
+                        throw error;
+                    }
+                }
                 
-                return OffsetCalc<0,false,DIMS...>::offset(c);
+                return OffsetCalc<0,false,DIMS...>::template offset<CTYPE>(c.begin());
             }
 
             //-----------------------------------------------------------------
@@ -289,6 +338,8 @@ namespace utils{
             rank of the shape.
             \throws ShapeMissmatchError if container size and shape rank do not
             match
+            \throws SizeMissmatchError if offset exceeds the total size of the
+            shape
             \param offset linear offset 
             \param c target container
             */
@@ -306,7 +357,20 @@ namespace utils{
                     throw e;
                 }
 
-                IndexCreator<0,true,DIMS...>::index(offset,c);
+                if(offset >= this->size())
+                {
+                    std::stringstream ss;
+                    ss<<"Offset "<<offset<<" exceeds shape size ";
+                    ss<<this->size()<<"!";
+
+                    SizeMissmatchError error;
+                    error.issuer("template<typename CTYPE> void "
+                                 "index(size_t offset,CTYPE &c) const");
+                    error.description(ss.str());
+                    throw error;
+                }
+
+                IndexCreator<0,true,DIMS...>::template index<CTYPE>(offset,c.begin());
             }
 
             //-----------------------------------------------------------------
