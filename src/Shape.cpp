@@ -38,9 +38,9 @@ namespace pni{
 namespace utils{
 
     //===========================private methods================================
-    Buffer<size_t> Shape::_compute_dimstrides(const Buffer<size_t> &s)
+    DBuffer<size_t> Shape::_compute_dimstrides(const DBuffer<size_t> &s)
     {
-        Buffer<size_t> ds(s.size());
+        DBuffer<size_t> ds(s.size());
 
         //compute the dimension  strides
         for(ssize_t i=ds.size()-1;i>=0;i--)
@@ -55,7 +55,7 @@ namespace utils{
     }
 
     //-------------------------------------------------------------------------
-    size_t Shape::_compute_size(const Buffer<size_t> &s){
+    size_t Shape::_compute_size(const DBuffer<size_t> &s){
         size_t size = 1;
         for(size_t i=0;i<s.size();i++) size *= s[i];
         return size;

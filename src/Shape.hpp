@@ -35,7 +35,7 @@
 
 #include "Exceptions.hpp"
 #include "Types.hpp"
-#include "Buffer.hpp"
+#include "DBuffer.hpp"
 
 
 namespace pni{
@@ -74,8 +74,8 @@ namespace utils{
     class Shape
     {
         private:
-            Buffer<size_t> _shape;    //!< the number of values along each dimension
-            Buffer<size_t> _dimstrides;  //!< the strides for the offset calculation
+            DBuffer<size_t> _shape;    //!< the number of values along each dimension
+            DBuffer<size_t> _dimstrides;  //!< the strides for the offset calculation
             size_t _size;             //!< the total number of elements in the array
            
             //-----------------------------------------------------------------
@@ -84,7 +84,7 @@ namespace utils{
             compute the stride for each dimension - used internally to recompute
             the stride for each dimension if the shape is changed.
             */
-            static Buffer<size_t> _compute_dimstrides(const Buffer<size_t> &s);
+            static DBuffer<size_t> _compute_dimstrides(const DBuffer<size_t> &s);
 
             //-----------------------------------------------------------------
             /*! compute total number of elements
@@ -92,7 +92,7 @@ namespace utils{
             used internally to recompute the number of elements in the array
             once the shape is changed in a way so that the size is changed.
             */
-            static size_t _compute_size(const Buffer<size_t> &s);
+            static size_t _compute_size(const DBuffer<size_t> &s);
             
             //-----------------------------------------------------------------
             /*! \brief private method computing the offset
@@ -184,15 +184,16 @@ namespace utils{
             \endcode
             \param c instance of container type CONT
             */
-            template<template<typename,typename> class CONT,
-                     typename T,
-                     typename A>
-            explicit
-            Shape(const CONT<T,A> &c):
-                _shape(c),
-                _dimstrides(_compute_dimstrides(_shape)),
-                _size(_compute_size(_shape))
-            { }
+            template<typename CTYPE> 
+                explicit Shape(const CTYPE &c):
+                _shape(c.size()),
+                _dimstrides(c.size()),
+                _size(0)
+            { 
+                std::copy(c.begin(),c.end(),_shape.begin());
+                _compute_dimstrides(_shape);
+                _compute_size(_shape);
+            }
 
             //-----------------------------------------------------------------
             //! destructor

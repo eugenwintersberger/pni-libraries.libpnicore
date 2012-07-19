@@ -5,15 +5,15 @@
 #include <iostream>
 #include <boost/shared_ptr.hpp>
 
-#include "DynamicArrayTest.hpp"
+#include "DArrayTest.hpp"
 
 using namespace pni::utils;
 
 #define DYNAMICARRAY_TEST_REGISTRATION(T,BT,ALLOC)\
-static CPPUNIT_NS::AutoRegisterSuite< DynamicArrayTest<T,BT<T,ALLOC> > >  \
+static CPPUNIT_NS::AutoRegisterSuite< DArrayTest<T,BT<T,ALLOC> > >  \
              CPPUNIT_MAKE_UNIQUE_NAME(autoRegisterRegistry__ );
 
-DYNAMICARRAY_TEST_REGISTRATION(UInt8,DynamciBuffer,NewAllocator);
+DYNAMICARRAY_TEST_REGISTRATION(UInt8,DBuffer,NewAllocator);
 /*
 DYNAMICARRAY_TEST_REGISTRATION(Int8,Buffer,NewAllocator);
 DYNAMICARRAY_TEST_REGISTRATION(UInt16,Buffer,NewAllocator);

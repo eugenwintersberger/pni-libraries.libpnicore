@@ -3,7 +3,7 @@
 #include<cppunit/TestFixture.h>
 #include<cppunit/extensions/HelperMacros.h>
 
-#include "DynamicArray.hpp"
+#include "DArray.hpp"
 
 #include "RandomDistributions.hpp"
 #include "EqualityCheck.hpp"
@@ -12,15 +12,13 @@
 using namespace pni::utils;
 
 template<typename T,typename STORAGE>
-class DynamicArrayTest : public CppUnit::TestFixture{
-        CPPUNIT_TEST_SUITE(DynamicArrayTest);
+class DArrayTest : public CppUnit::TestFixture{
+        CPPUNIT_TEST_SUITE(DArrayTest);
         CPPUNIT_TEST(test_construction);
         CPPUNIT_TEST(test_linear_access);
         CPPUNIT_TEST(test_iterators);
         CPPUNIT_TEST(test_multiindex_access);
         CPPUNIT_TEST(test_typeinfo);
-        CPPUNIT_TEST(test_unary_addition);
-        CPPUNIT_TEST(test_unary_subtraction);
         CPPUNIT_TEST_SUITE_END();
     private:
         Shape s1,s2;
@@ -41,20 +39,20 @@ class DynamicArrayTest : public CppUnit::TestFixture{
 
 //------------------------------------------------------------------------------
 template<typename T,typename STORAGE>
-void DynamicArrayTest<T,STORAGE>::setUp(){
+void DArrayTest<T,STORAGE>::setUp(){
     s1 = {3,4};
     s2 = {2,3,5};
 }
 
 //------------------------------------------------------------------------------
 template<typename T,typename STORAGE>
-void DynamicArrayTest<T,STORAGE>::tearDown(){ }
+void DArrayTest<T,STORAGE>::tearDown(){ }
 
 //------------------------------------------------------------------------------
 template<typename T,typename STORAGE>
-void DynamicArrayTest<T,STORAGE>::test_construction()
+void DArrayTest<T,STORAGE>::test_construction()
 {
-    DynamicArray<T,STORAGE> a1(s1,STORAGE(s1.size())),
+    DArray<T,STORAGE> a1(s1,STORAGE(s1.size())),
                             a2(s2,STORAGE(s2.size()));
 
     /*
@@ -78,9 +76,9 @@ void DynamicArrayTest<T,STORAGE>::test_construction()
 
 //------------------------------------------------------------------------------
 template<typename T,typename STORAGE>
-void DynamicArrayTest<T,STORAGE>::test_linear_access()
+void DArrayTest<T,STORAGE>::test_linear_access()
 {
-    DynamicArray<T,STORAGE> a1(s1,STORAGE(s1.size()));
+    DArray<T,STORAGE> a1(s1,STORAGE(s1.size()));
 
     //--------------------check operators without index checking----------------
 	//access via [] operator
@@ -106,9 +104,9 @@ void DynamicArrayTest<T,STORAGE>::test_linear_access()
 
 //------------------------------------------------------------------------------
 template<typename T,typename STORAGE>
-void DynamicArrayTest<T,STORAGE>::test_iterators()
+void DArrayTest<T,STORAGE>::test_iterators()
 {
-    DynamicArray<T,STORAGE> a1(s1,STORAGE(s1.size()));
+    DArray<T,STORAGE> a1(s1,STORAGE(s1.size()));
 
     //--------------------check standard iterator----------------
 	//access via [] operator
@@ -124,7 +122,7 @@ void DynamicArrayTest<T,STORAGE>::test_iterators()
 
 
     //-------------------check const iterator-----------------------------
-    const DynamicArray<T,STORAGE> &a = a1;
+    const DArray<T,STORAGE> &a = a1;
 
     index = 0;
     for(auto v: a)
@@ -133,10 +131,10 @@ void DynamicArrayTest<T,STORAGE>::test_iterators()
 
 //-----------------------------------------------------------------------------
 template<typename T,typename STORAGE>
-void DynamicArrayTest<T,STORAGE>::test_multiindex_access()
+void DArrayTest<T,STORAGE>::test_multiindex_access()
 {   
 
-    DynamicArray<T,STORAGE> a1(s1,STORAGE(s1.size()));
+    DArray<T,STORAGE> a1(s1,STORAGE(s1.size()));
     auto data = RandomDistribution::uniform<std::vector<T> >(a1.size());
 
     //----------------use variadic tempaltes to access data--------------
@@ -170,55 +168,9 @@ void DynamicArrayTest<T,STORAGE>::test_multiindex_access()
 
 //------------------------------------------------------------------------------
 template<typename T,typename STORAGE>
-void DynamicArrayTest<T,STORAGE>::test_unary_addition()
+void DArrayTest<T,STORAGE>::test_typeinfo()
 {
-    std::cout<<"void DynamicArrayTest<T,STORAGE>::test_unary_addition()";
-    std::cout<<std::endl;
-    DynamicArray<T,STORAGE> a1(s1,STORAGE(s1.size())),
-                            a2(s1,STORAGE(s1.size()));
-
-    a1 = 1;
-    a2 = 4;
-    //checking scalar add
-    a1 += 3;
-    CPPUNIT_ASSERT(a1 == a2);
-    //checking array add
-    a1 = 1;
-    a2 = 5;
-    a1 += a2;
-    a2 = 6;
-    CPPUNIT_ASSERT( a1 == a2);
-
-
-}
-//------------------------------------------------------------------------------
-template<typename T,typename STORAGE>
-void DynamicArrayTest<T,STORAGE>::test_unary_subtraction()
-{
-    std::cout<<"void DynamicArrayTest<T,STORAGE>::test_unary_subtraction()";
-    std::cout<<std::endl;
-    DynamicArray<T,STORAGE> a1(s1,STORAGE(s1.size())),
-                            a2(s1,STORAGE(s1.size()));
-
-    a1 = 4;
-    a2 = 1;
-    //checking scalar subtraction
-    a1 -= 3;
-    CPPUNIT_ASSERT(a1 == a2);
-    //checking array subtraction
-    a1 = 4;
-    a2 = 3;
-    a1 -= a2;
-    a2 = 1;
-    CPPUNIT_ASSERT( a1 == a2);
-
-
-}
-//------------------------------------------------------------------------------
-template<typename T,typename STORAGE>
-void DynamicArrayTest<T,STORAGE>::test_typeinfo()
-{
-    TypeID id1 = DynamicArray<T,STORAGE>::type_id;
+    TypeID id1 = DArray<T,STORAGE>::type_id;
     TypeID id2 = TypeIDMap<T>::type_id;
     CPPUNIT_ASSERT(id1 == id2);
 }
