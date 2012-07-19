@@ -10,9 +10,10 @@ in the code has to satisfy the following implicit interface
 template<typename T,...> class Buffer
     public:
     //==========the following public types must be available===================
+    typedef ... value_type;
+    typedef ... buffer_type;
     typedef ... shared_ptr;
     typedef ... unique_ptr;
-    typedef ... value_type;
     typedef ... iterator;
     typedef ... const_iterator;
     //================public members===========================================
@@ -113,17 +114,20 @@ Buffer interface. Index access is provided by special methods. For
 multidimensional data access the result of a selection can be 
 The following implicit interface must be granted for arrays
 \code
-template<typename T,typename STORAGE,...> class Array
+template<typename T> class Array
 {
     public:
     //==================public types===========================================
-    typedef ... value_type;
-    typedef ... shared_ptr;
-    typedef ... unique_ptr;
-    typedef ... iterator;
-    typedef ... const_iterator;
+    typedef ... value_type;     // type of the elements stored in the array
+    typedef ... shared_ptr;     // a shared pointer to the array
+    typedef ... unique_ptr;     // a unique pointer to the array
+    typedef ... iterator;       // iterator 
+    typedef ... const_iterator; // constant iterator
+    typedef ... array_type;     // array type
+    typedef ... storage_type;   // type of the storage 
+    typedef ... view_type;      // type of the view 
     //================public members===========================================
-    static const TypeID type_id    = TypeIDMap<T>::type_id;
+    static const TypeID type_id    = TypeIDMap<value_type>::type_id;
 
     //==================constructor and destructor=============================
     Array(); //need default constructor
@@ -131,26 +135,48 @@ template<typename T,typename STORAGE,...> class Array
     template<typename ATYPE> Array(const ATYPE &a); //other array type
 
     //=======================assignment operator===============================
-    Array &operator=(const Array &a); //copy assignment operator
+    array_type &operator=(const array_type &a); //copy assignment operator
 
-    const STORAGE &storage() const; //reference to the storage object
-
+    //======================methods for multiindex data access=================
    
+    //if all arguments are integer numbers return a reference to the 
     template<typename ...ITYPES>
-    typename ATypeSelector<ITYPES...>::type operator()(ITYPES ...indices);
+    typename ArrayViewSelector<ITYPES...>::reftype 
+    operator()(ITYPES ...indices);
+
+    template<typename ...ITYPES>
+    typename ArrayViewSelector<ITYPES...>::viewtype 
+    operator()(ITYPES ...indices);
+
     template<typename CTYPE> T &operator()(const CTYPE &index);
     template<typename CTYPE> T operator()(const CTYPE &index) const;
     template<template<typename> CTYPE> 
     ArrayView<Array> operator()(const CTYPE<Slice> &slice) const;
     
-    
-    T &operator[](size_t i); 
-    T operator[](size_t i) const; 
-    T &at(size_t i);
-    T at(size_t i) const;
-    void insert(size_t pos,const T &v);
+   
+    //================methods for linear data access===========================
 
+    //operators for linear data access - these operators are assumed not to
+    //throw any exception
+    value_type &operator[](size_t i); 
+    value_type operator[](size_t i) const; 
+
+    //methods for linear data access with index checking - these methods are
+    //assumed to throw IndexError if the index exceeds the size of the array
+    value_type &at(size_t i);
+    value_type at(size_t i) const;
+    void insert(size_t pos,const value_type &v);
+
+    //get a const. reference to the storage object
+    const storage_type &storage() const; 
+
+    //===============methods for array inquery==================================
     size_t size() const;       //return number of elements of type T
+    size_t rank() const;       //number of dimensions 
+
+    //return a container of type CTYPE with the number of elements along each
+    //dimension
+    template<typename CTYPE> shape() const; 
 
     //===================iterator related methods==============================
     iterator begin();

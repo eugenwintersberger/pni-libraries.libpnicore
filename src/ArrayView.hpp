@@ -50,12 +50,20 @@ namespace utils{
 
         public:
             //====================public types=================================
-            typedef typename ATYPE::value_type value_type; //!< type of the data values
-            typedef std::shared_ptr<ArrayView<ATYPE> > shared_ptr; //!< shared pointer type
-            typedef std::unique_ptr<ArrayView<ATYPE> > unique_ptr; //!< unique pointer type
-            typedef Iterator<ArrayView<ATYPE>,0> iterator; //!< iterator type
-            typedef Iterator<ArrayView<ATYPE>,1> const_iterator; //!< const iterator type
+            //! type of the data values
+            typedef typename ATYPE::value_type value_type;             
+            //! type of the view 
+            typedef ArrayView<ATYPE> view_type;
+            //! shared pointer type
+            typedef std::shared_ptr<view_type> shared_ptr;
+            //! unique pointer type
+            typedef std::unique_ptr<view_type> unique_ptr; 
+            //! iterator type
+            typedef Iterator<view_type,0> iterator;      
+            //! const iterator type
+            typedef Iterator<view_type,1> const_iterator; 
             //========================public members===========================
+            //! type id of the value_type
             static const size_t type_id = ATYPE::type_id;
             //=============constructors and destructor=========================
 
