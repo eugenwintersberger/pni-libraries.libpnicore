@@ -378,6 +378,7 @@ namespace utils{
             \brief compute the index from an offset
 
             Compute the index from an offset and return it in a container. 
+            \throws SizeMissmatchError if o exceeds the size of the shape
             \tparam CTYPE container type
             \param o offset value 
             \return the container with the indices
