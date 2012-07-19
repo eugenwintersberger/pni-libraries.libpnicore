@@ -23,8 +23,8 @@
  *     Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
  */
 
-#ifndef __STATICARRAY_HPP__
-#define __STATICARRAY_HPP__
+#ifndef __SARRAY_HPP__
+#define __SARRAY_HPP__
 
 #include "Types.hpp"
 #include "SBuffer.hpp"
@@ -52,7 +52,7 @@ namespace utils{
     \code
 
     //create a static array of shape 4x5x10 of type double
-    StaticArray<double,4,5,10> array;
+    SArray<double,4,5,10> array;
 
     //data access is as usuall with the () operator
     double v = array(1,4,8);
@@ -68,7 +68,7 @@ namespace utils{
     \tparam DIMS list of template parameters each representing the number of
     elements along a particular dimension.
     */
-    template<typename T,size_t ...DIMS> class StaticArray
+    template<typename T,size_t ...DIMS> class SArray
     {
         private:
             //! static buffer holding the data
@@ -86,15 +86,15 @@ namespace utils{
             \return array view
             */
             template<typename ...ITYPES> 
-                ArrayView<StaticArray<T,DIMS...> > 
-                 _get_data(ArrayView<StaticArray<T,DIMS...> > &view,
+                ArrayView<SArray<T,DIMS...> > 
+                 _get_data(ArrayView<SArray<T,DIMS...> > &view,
                                ITYPES ...indices)
             {
 
                 ArraySelection s =
                     ArraySelection::create(std::vector<Slice>{Slice(indices)...});
 
-                return ArrayView<StaticArray<T,DIMS...> >(*this,s);
+                return ArrayView<SArray<T,DIMS...> >(*this,s);
             }
 
             //-----------------------------------------------------------------
@@ -116,9 +116,9 @@ namespace utils{
             //! data type of the elements stored in the array
             typedef T value_type; 
             //! type of the array
-            typedef StaticArray<T,DIMS...> array_type;
+            typedef SArray<T,DIMS...> array_type;
             //! type of the arrya view
-            typedef ArrayView<StaticArray<T,DIMS...> > view_type;
+            typedef ArrayView<array_type> view_type;
             //! storage type
             typedef SBuffer<T,SizeType<DIMS...>::size > storage_type;
             //! shared pointer to this type
@@ -136,7 +136,7 @@ namespace utils{
 
             //============================constructor and destructor===========
             //! default constructor
-            StaticArray() {} 
+            SArray() {} 
 
             //-----------------------------------------------------------------
             /*!
@@ -147,13 +147,13 @@ namespace utils{
             \tparam ATYPE array type of the view
             \param view reference to the view object
             */
-            template<typename ATYPE> StaticArray(const ArrayView<ATYPE> &view)
+            template<typename ATYPE> SArray(const ArrayView<ATYPE> &view)
             {
                 check_equal_size(view,*this,
-                        "template<typename ATYPE> StaticArray(const "
+                        "template<typename ATYPE> SArray(const "
                         "ArrayView<ATYPE> &view)");
                 check_equal_shape(view,*this,
-                        "template<typename ATYPE> StaticArray(const "
+                        "template<typename ATYPE> SArray(const "
                         "ArrayView<ATYPE> &view)");
 
                 std::copy(view.begin(),view.end(),this->begin()); 
@@ -161,16 +161,16 @@ namespace utils{
 
             //-----------------------------------------------------------------
             //! copy constructor
-            explicit StaticArray(const StaticArray<T,DIMS...> &a):
+            explicit SArray(const array_type &a):
                 _data(a._data)
             {}
 
             //-----------------------------------------------------------------
             //! construction from an initializer list
-            explicit StaticArray(const std::initializer_list<size_t> &il)
+            explicit SArray(const std::initializer_list<size_t> &il)
             {
                 check_equal_size(il,*this,
-                        "explicit StaticArray(const std::initializer_list"
+                        "explicit SArray(const std::initializer_list"
                         "<size_t> &il)");
 
                 size_t index = 0;
@@ -179,12 +179,12 @@ namespace utils{
 
             //-----------------------------------------------------------------
             //! destructor
-            ~StaticArray() {}
+            ~SArray() {}
 
 
             //==============assignment operators===============================
             //!copy assignment operator for a StaticArray
-            StaticArray<T,DIMS...> &operator=(const StaticArray<T,DIMS...> &a)
+            array_type &operator=(const array_type &a)
             {
                 if(this == &a) return *this;
                 this->_data = a._data;

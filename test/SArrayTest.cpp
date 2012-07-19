@@ -5,12 +5,12 @@
 #include <iostream>
 #include <boost/shared_ptr.hpp>
 
-#include "StaticArrayTest.hpp"
+#include "SArrayTest.hpp"
 
 using namespace pni::utils;
 
 #define STATICARRAY_TEST_REGISTRATION(T)\
-static CPPUNIT_NS::AutoRegisterSuite< StaticArrayTest<T> >  \
+static CPPUNIT_NS::AutoRegisterSuite< SArrayTest<T> >  \
              CPPUNIT_MAKE_UNIQUE_NAME(autoRegisterRegistry__ );
 
 STATICARRAY_TEST_REGISTRATION(UInt8);

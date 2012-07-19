@@ -3,7 +3,7 @@
 #include<cppunit/TestFixture.h>
 #include<cppunit/extensions/HelperMacros.h>
 
-#include "StaticArray.hpp"
+#include "SArray.hpp"
 
 #include "RandomDistributions.hpp"
 #include "EqualityCheck.hpp"
@@ -11,8 +11,8 @@
 using namespace pni::utils;
 
 template<typename T>
-class StaticArrayTest : public CppUnit::TestFixture{
-        CPPUNIT_TEST_SUITE(StaticArrayTest);
+class SArrayTest : public CppUnit::TestFixture{
+        CPPUNIT_TEST_SUITE(SArrayTest);
         CPPUNIT_TEST(test_construction);
         CPPUNIT_TEST(test_linear_access);
         CPPUNIT_TEST(test_iterators);
@@ -33,34 +33,34 @@ class StaticArrayTest : public CppUnit::TestFixture{
 };
 
 //------------------------------------------------------------------------------
-template<typename T> void StaticArrayTest<T>::setUp(){ }
+template<typename T> void SArrayTest<T>::setUp(){ }
 
 //------------------------------------------------------------------------------
-template<typename T> void StaticArrayTest<T>::tearDown(){ }
+template<typename T> void SArrayTest<T>::tearDown(){ }
 
 //------------------------------------------------------------------------------
-template<typename T> void StaticArrayTest<T>::test_construction()
+template<typename T> void SArrayTest<T>::test_construction()
 {
     //testing the default constructor
-    StaticArray<T,2,3> a1;
+    SArray<T,2,3> a1;
     CPPUNIT_ASSERT(a1.rank() == 2);
     CPPUNIT_ASSERT(a1.size() == 6);
 
     //testing initializer list constructor
-    StaticArray<T,2,3> a2{1,2,3,4,5,6};
+    SArray<T,2,3> a2{1,2,3,4,5,6};
     CPPUNIT_ASSERT(a2.rank() == 2);
     CPPUNIT_ASSERT(a2.size() == 6);
 
     //testing copy constructor
-    StaticArray<T,2,3> a3(a2);
+    SArray<T,2,3> a3(a2);
     CPPUNIT_ASSERT(a3.rank() == a2.rank());
     CPPUNIT_ASSERT(a3.size() == a2.size());
 }
 
 //------------------------------------------------------------------------------ 
-template<typename T> void StaticArrayTest<T>::test_linear_access()
+template<typename T> void SArrayTest<T>::test_linear_access()
 {
-    StaticArray<T,2,3> a1{1,2,3,4,5,6};
+    SArray<T,2,3> a1{1,2,3,4,5,6};
     std::vector<T> v1{1,2,3,4,5,6};
    
     //--------------------check operators without index checking----------------
@@ -86,9 +86,9 @@ template<typename T> void StaticArrayTest<T>::test_linear_access()
 }
 
 //------------------------------------------------------------------------------
-template<typename T> void StaticArrayTest<T>::test_iterators()
+template<typename T> void SArrayTest<T>::test_iterators()
 {
-    StaticArray<T,2,3> a1;
+    SArray<T,2,3> a1;
 
     //--------------------check standard iterator----------------
 	//access via [] operator
@@ -137,9 +137,9 @@ template<typename T> void StaticArrayTest<T>::test_iterators()
 }
 
 //-----------------------------------------------------------------------------
-template<typename T> void StaticArrayTest<T>::test_multiindex_access()
+template<typename T> void SArrayTest<T>::test_multiindex_access()
 {   
-    StaticArray<T,2,3> a1;
+    SArray<T,2,3> a1;
     
     auto data = RandomDistribution::uniform<std::vector<T> >(a1.size());
 
@@ -173,9 +173,9 @@ template<typename T> void StaticArrayTest<T>::test_multiindex_access()
 }
 
 //------------------------------------------------------------------------------
-template<typename T> void StaticArrayTest<T>::test_view()
+template<typename T> void SArrayTest<T>::test_view()
 {
-    StaticArray<T,10,3> v;
+    SArray<T,10,3> v;
     std::vector<Slice> s{Slice(0),Slice(0,3,1)};
 
     for(size_t i=0;i<10;i++)
@@ -193,7 +193,7 @@ template<typename T> void StaticArrayTest<T>::test_view()
 
     //check construction of a static array from a view
     auto view = v(2,Slice(0,3));
-    StaticArray<T,3> c(view);
+    SArray<T,3> c(view);
 
     for(auto viter=view.begin(),citer=c.begin();viter!=view.end();
             ++viter,++citer)
@@ -204,9 +204,9 @@ template<typename T> void StaticArrayTest<T>::test_view()
    
 }
 //------------------------------------------------------------------------------
-template<typename T> void StaticArrayTest<T>::test_typeinfo()
+template<typename T> void SArrayTest<T>::test_typeinfo()
 {
-    TypeID id1 = StaticArray<T,2,3>::type_id;
+    TypeID id1 = SArray<T,2,3>::type_id;
     TypeID id2 = TypeIDMap<T>::type_id;
     CPPUNIT_ASSERT(id1 == id2);
 }
