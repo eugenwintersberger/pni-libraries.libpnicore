@@ -32,7 +32,7 @@
 #include "Exceptions.hpp"
 #include "Slice.hpp"
 #include "ArrayView.hpp"
-//#include "ArrayViewSelector.hpp"
+#include "ArrayViewSelector.hpp"
 
 namespace pni{
 namespace utils{
@@ -73,6 +73,25 @@ namespace utils{
             //!< static shape describing the arrays dimensionality
             StaticShape<DIMS...> _shape; 
 
+            //===================private methods===============================
+            template<typename ...ITYPES> 
+                ArrayView<StaticArray<T,DIMS...> > 
+                 _get_data(ArrayView<StaticArray<T,DIMS...> > &view,
+                               ITYPES ...indices)
+            {
+
+                ArraySelection s =
+                    ArraySelection::create(std::vector<Slice>{Slice(indices)...});
+
+                return ArrayView<StaticArray<T,DIMS...> >(*this,s);
+            }
+
+            //-----------------------------------------------------------------
+            template<typename ...ITYPES> T& _get_data(T v,ITYPES ...indices)
+            {
+                 return this->_data[this->_shape.offset(indices...)];   
+            }
+
         public:
             //================public types=====================================
             //!< data type of the elements stored in the array
@@ -89,6 +108,8 @@ namespace utils{
                              ::const_iterator const_iterator; 
             //!< type of the arrya view
             typedef ArrayView<StaticArray<T,DIMS...> > view_type;
+            //!< type of the array
+            typedef StaticArray<T,DIMS...> array_type;
             //===============public members====================================
             //!< ID of the datatype stored in the array
             static const TypeID type_id = TypeIDMap<T>::type_id;
@@ -97,6 +118,13 @@ namespace utils{
             //============================constructor and destructor===========
             //! default constructor
             StaticArray() {} 
+
+            //-----------------------------------------------------------------
+            //! constructo a static array from a view
+            template<typename ATYPE> StaticArray(const ArrayView<ATYPE> &view)
+            {
+                std::copy(view.begin(),view.end(),this->begin()); 
+            }
 
             //-----------------------------------------------------------------
             //! copy constructor
@@ -149,10 +177,18 @@ namespace utils{
             \param indices list of array indices
             \return reference to the array element
             */
-            template<typename ...ITYPES> T &operator()(ITYPES ...indices)
+            template<typename ...ITYPES>
+                typename ArrayViewSelector<array_type,ITYPES...>::reftype
+                operator()(ITYPES ...indices)
             {
+                typedef ArrayViewSelector<array_type,ITYPES...> selector;
+                typedef typename selector::viewtype viewtype;
+                typedef typename selector::reftype  viewref;
 
-                return this->_data[this->_shape.offset(indices...)];
+                viewtype r = viewtype();
+
+                return _get_data(r,indices...);
+                //return this->_data[this->_shape.offset(indices...)];
             }
 
             //-----------------------------------------------------------------
@@ -173,9 +209,17 @@ namespace utils{
             \param indices element index
             \return value of the array element
             */
-            template<typename ...ITYPES> T operator()(ITYPES ...indices) const
+            template<typename ...ITYPES> 
+                typename ArrayViewSelector<array_type, ITYPES...>::viewtype 
+                operator()(ITYPES ...indices) const
             {
-                return this->_data[this->_shape.offset(indices...)];
+                typedef typename ArrayViewSelector<array_type,ITYPES...>::viewtype
+                    result_type;
+
+                result_type result;
+
+                _get_data(result,indices...);
+                return result;
             }
 
             //-----------------------------------------------------------------

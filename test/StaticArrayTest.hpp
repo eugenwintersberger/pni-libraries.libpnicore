@@ -184,13 +184,23 @@ template<typename T> void StaticArrayTest<T>::test_view()
         std::fill(view.begin(),view.end(),T(i));
     }
     
-    size_t index =0;
-    for(auto x: v)
+    for(size_t i=0;i<10;i++)
     {
-        std::cout<<x<<" ";
-        index++;
-        if(!(index % 3)) std::cout<<std::endl;
+        //for reading we use a different construction here
+        auto view = v(i,Slice(0,3,1));
+        for(auto v: view) check_equality(v,T(i));
     }
+
+    //check construction of a static array from a view
+    auto view = v(2,Slice(0,3));
+    StaticArray<T,3> c(view);
+
+    for(auto viter=view.begin(),citer=c.begin();viter!=view.end();
+            ++viter,++citer)
+    {
+        check_equality(*viter,*citer);
+    }
+
    
 }
 //------------------------------------------------------------------------------

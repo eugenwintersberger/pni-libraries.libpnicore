@@ -54,7 +54,7 @@ namespace utils {
     This type decides on the return type depending on the argument types.
     */
     template<typename ATYPE,typename ...ITYPES> struct ArrayViewSelector
-    {}
+    {};
 
     //-------------------------------------------------------------------------
     /*!
@@ -69,6 +69,7 @@ namespace utils {
     {
         //!< recursive instantiation of the selector type
         typedef typename ArrayViewSelector<ATYPE,ITYPES...>::viewtype viewtype;
+        typedef typename ArrayViewSelector<ATYPE,ITYPES...>::reftype  reftype;
     };
 
     //-------------------------------------------------------------------------
@@ -83,6 +84,7 @@ namespace utils {
         ArrayViewSelector<ATYPE,Slice,ITYPES...>
     {
         typedef ArrayView<ATYPE> viewtype; //!< array view return type
+        typedef ArrayView<ATYPE> reftype; 
     };
 
     //-------------------------------------------------------------------------
@@ -95,7 +97,8 @@ namespace utils {
     */
     template<typename ATYPE> struct ArrayViewSelector<ATYPE>
     {
-        typedef typename ATYPE::value_type &viewtype; //!< return type
+        typedef typename ATYPE::value_type viewtype; //!< return type
+        typedef typename ATYPE::value_type &reftype;
     };
 
 //end of namespace

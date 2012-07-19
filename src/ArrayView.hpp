@@ -45,7 +45,7 @@ namespace utils{
     template<typename ATYPE> class ArrayView
     {
         private:
-            ATYPE &_parray; //!< parent array from which to draw data
+            ATYPE *_parray; //!< parent array from which to draw data
             ArraySelection _selection;
 
         public:
@@ -59,7 +59,7 @@ namespace utils{
             static const size_t type_id = ATYPE::type_id;
             //=============constructors and destructor=========================
 
-            ArrayView() = delete;
+            ArrayView():_parray(nullptr),_selection() {}
 
             //-----------------------------------------------------------------
             /*! \brief constructor
@@ -68,12 +68,12 @@ namespace utils{
             \param a reference to the original array
             */
             ArrayView(ATYPE &a):
-                _parray(a),
+                _parray(&a),
                 _selection()
             {
-                std::vector<size_t> shape(a.shape<std::vector<size_t>());
-                std::vector<size_t> offset(a.rank());
-                std::vector<size_t> stride(a.rank());
+                std::vector<size_t> shape(a->shape<std::vector<size_t>());
+                std::vector<size_t> offset(a->rank());
+                std::vector<size_t> stride(a->rank());
 
                 std::fill(offset.begin(),offset.end(),0);
                 std::fill(stride.begin(),stride.end(),1);
@@ -93,7 +93,7 @@ namespace utils{
             dimension
             */
             ArrayView(ATYPE &a,const ArraySelection &s):
-                _parray(a),
+                _parray(&a),
                 _selection(s)
             { 
                 //wee need to check if all the lists and shapes do match the 
@@ -131,6 +131,7 @@ namespace utils{
                 if(this == &o) return *this;
                 this->_parray = o._parray;
                 this->_selection = std::move(o._selection);
+                o._parray = nullptr;
                 return *this;
             }
 
@@ -147,7 +148,7 @@ namespace utils{
             template<typename CTYPE>
                 value_type &operator()(const CTYPE &index)
             {
-                return this->_parray(this->_selection.template
+                return (*(this->_parray))(this->_selection.template
                         index<std::vector<size_t> >(index));
             }
 
@@ -164,7 +165,7 @@ namespace utils{
             template<typename CTYPE>
                 value_type operator()(const CTYPE &index) const
             {
-                return this->_parray(this->_selection.template
+                return (*(this->_parray))(this->_selection.template
                         index<std::vector<size_t> >(index));
             }
 
