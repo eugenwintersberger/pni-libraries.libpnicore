@@ -27,7 +27,7 @@
 #define __STATICARRAY_HPP__
 
 #include "Types.hpp"
-#include "StaticBuffer.hpp"
+#include "SBuffer.hpp"
 #include "StaticShape.hpp"
 #include "Exceptions.hpp"
 #include "Slice.hpp"
@@ -64,16 +64,27 @@ namespace utils{
     
     \endcode
 
+    \tparam T data type to be stored in the array
+    \tparam DIMS list of template parameters each representing the number of
+    elements along a particular dimension.
     */
     template<typename T,size_t ...DIMS> class StaticArray
     {
         private:
-            //!< static buffer holding the data
-            StaticBuffer<T,SizeType<DIMS...>::size > _data;    
-            //!< static shape describing the arrays dimensionality
+            //! static buffer holding the data
+            SBuffer<T,SizeType<DIMS...>::size > _data;    
+            //! static shape describing the arrays dimensionality
             StaticShape<DIMS...> _shape; 
 
             //===================private methods===============================
+            /*!
+            \brief get view
+
+            Return a view of the array. 
+            \param view dummy variable 
+            \param indices the indices for the view
+            \return array view
+            */
             template<typename ...ITYPES> 
                 ArrayView<StaticArray<T,DIMS...> > 
                  _get_data(ArrayView<StaticArray<T,DIMS...> > &view,
@@ -87,6 +98,14 @@ namespace utils{
             }
 
             //-----------------------------------------------------------------
+            /*!
+            \brief get single data value
+
+            Return a reference to a single data value of the array.
+            \param v dummy argument
+            \param indices multidimensional index of the value
+            \return reference to that value
+            */
             template<typename ...ITYPES> T& _get_data(T v,ITYPES ...indices)
             {
                  return this->_data[this->_shape.offset(indices...)];   
@@ -94,25 +113,25 @@ namespace utils{
 
         public:
             //================public types=====================================
-            //!< data type of the elements stored in the array
+            //! data type of the elements stored in the array
             typedef T value_type; 
-            //!< shared pointer to this type
-            typedef std::shared_ptr<StaticArray<T,DIMS...> > shared_ptr;
-            //!< unique pointer to this type
-            typedef std::unique_ptr<StaticArray<T,DIMS...> > unique_ptr;
-            //!< iterator
-            typedef typename StaticBuffer<T,SizeType<DIMS...>::size >
-                             ::iterator iterator; 
-            //!< const iterator
-            typedef typename StaticBuffer<T,SizeType<DIMS...>::size >
-                             ::const_iterator const_iterator; 
-            //!< type of the arrya view
-            typedef ArrayView<StaticArray<T,DIMS...> > view_type;
-            //!< type of the array
+            //! type of the array
             typedef StaticArray<T,DIMS...> array_type;
+            //! type of the arrya view
+            typedef ArrayView<StaticArray<T,DIMS...> > view_type;
+            //! storage type
+            typedef SBuffer<T,SizeType<DIMS...>::size > storage_type;
+            //! shared pointer to this type
+            typedef std::shared_ptr<array_type> shared_ptr;
+            //! unique pointer to this type
+            typedef std::unique_ptr<array_type> unique_ptr;
+            //! iterator
+            typedef typename storage_type::iterator iterator; 
+            //! const iterator
+            typedef typename storage_type::const_iterator const_iterator; 
             //===============public members====================================
-            //!< ID of the datatype stored in the array
-            static const TypeID type_id = TypeIDMap<T>::type_id;
+            //! ID of the datatype stored in the array
+            static const TypeID type_id = TypeIDMap<value_type>::type_id;
             
 
             //============================constructor and destructor===========
@@ -120,9 +139,23 @@ namespace utils{
             StaticArray() {} 
 
             //-----------------------------------------------------------------
-            //! constructo a static array from a view
+            /*!
+            \brief construct from an ArrayView object
+
+            \throws SizeMissmatchError if sizes do not match
+            \throws ShapeMissmatchError if shapes do not match
+            \tparam ATYPE array type of the view
+            \param view reference to the view object
+            */
             template<typename ATYPE> StaticArray(const ArrayView<ATYPE> &view)
             {
+                check_equal_size(view,*this,
+                        "template<typename ATYPE> StaticArray(const "
+                        "ArrayView<ATYPE> &view)");
+                check_equal_shape(view,*this,
+                        "template<typename ATYPE> StaticArray(const "
+                        "ArrayView<ATYPE> &view)");
+
                 std::copy(view.begin(),view.end(),this->begin()); 
             }
 
@@ -172,8 +205,9 @@ namespace utils{
             Float64 value = array(1,3);
             array(1,3) = 3.4;
             \endcode
-            \throws ShapeMissmatchError if number of indices do not match the
-            array rank
+            This method template throws a compile time error if the number of
+            indices does not match the rank of the array.
+            \tparam ITYPES index types
             \param indices list of array indices
             \return reference to the array element
             */
@@ -181,6 +215,10 @@ namespace utils{
                 typename ArrayViewSelector<array_type,ITYPES...>::reftype
                 operator()(ITYPES ...indices)
             {
+
+                static_assert((sizeof...(indices))==(sizeof...(DIMS)),
+                        "Number of indices does not match array rank!");
+
                 typedef ArrayViewSelector<array_type,ITYPES...> selector;
                 typedef typename selector::viewtype viewtype;
                 typedef typename selector::reftype  viewref;
@@ -204,8 +242,9 @@ namespace utils{
             \endcode
             As the method returns the value of the element it cannot be used for
             write access.
-            \throws ShapeMissmatchError if the number of indices dos not match
-            the rank of the array.
+            This template method throws a compile time error if the number of
+            indices does not match the rank of the array.
+            \tparam ITYPES index types
             \param indices element index
             \return value of the array element
             */
@@ -213,6 +252,9 @@ namespace utils{
                 typename ArrayViewSelector<array_type, ITYPES...>::viewtype 
                 operator()(ITYPES ...indices) const
             {
+                static_assert((sizeof...(indices))==(sizeof...(DIMS)),
+                        "Number of indices does not match array rank!");
+
                 typedef typename ArrayViewSelector<array_type,ITYPES...>::viewtype
                     result_type;
 
@@ -236,8 +278,9 @@ namespace utils{
             \param c container with indices
             \return reference to the element
             */
-            template<typename CTYPE> T &operator()(const CTYPE &c)
+            template<typename CTYPE> value_type &operator()(const CTYPE &c)
             {
+                //rank and index checking is done by the shape object
                 return this->_data[this->_shape.offset(c)];
             }
 
@@ -255,7 +298,7 @@ namespace utils{
             \param c container with indices
             \return value of the array element
             */
-            template<typename CTYPE> T operator()(const CTYPE &c) const
+            template<typename CTYPE> value_type operator()(const CTYPE &c) const
             {
                 return this->_data[this->_shape.offset(c)];
             }
@@ -272,25 +315,36 @@ namespace utils{
             \brief reference to element
     
             Return a reference to an array element determined by its linear
-            index i. 
+            index i. This operator does not perform any index checking. Thus, if
+            the index exceeds the size of the array the program most probably
+            will produce a segmentation violation.
             \param i linear index of the element
             \return reference to element
             */
-            T &operator[](size_t i) { return this->_data[i]; }
+            value_type &operator[](size_t i) { return this->_data[i]; }
 
             //-----------------------------------------------------------------
             /*! 
             \brief element value
 
             Return the value of an array element determined by its linear index
-            i.
+            i. No index checking is performed.
             \param i linear index of the element
             \return element value
             */
-            T operator[](size_t i) const { return this->_data[i]; }
+            value_type operator[](size_t i) const { return this->_data[i]; }
 
             //-----------------------------------------------------------------
-            T at(size_t i) const
+            /*! 
+            \brief get element value
+
+            Get the value of the element with linear index i. An exception is
+            thrown if the index exceeds the size of the array.
+            \throws IndexError if i exceeds array size
+            \param i linear index of the value
+            \return value of array element
+            */
+            value_type at(size_t i) const
             {
                 check_index(i,this->size(),
                         "T StaticArray<>::at(size_t i) const");
@@ -299,12 +353,39 @@ namespace utils{
             }
 
             //-----------------------------------------------------------------
-            T &at(size_t i) 
+            /*! 
+            \brief get element reference
+
+            Return the reference to the element at linear index i. If i exceeds
+            the size of the array an exception will be thrown.
+            \throws IndexError if exceeds the size of the array
+            \param i linear index of the element
+            \return reference to the requested element
+            */
+            value_type &at(size_t i) 
             {
                 check_index(i,this->size(),
                         "T StaticArray<>::at(size_t i) const");
 
                 return (*this)[i];
+            }
+
+            //-----------------------------------------------------------------
+            /*! 
+            \brief insert value
+
+            Insert a data value at linear position i. Method throws an exception
+            if i exceeds the size of the array.
+            \throws IndexError if i exceeds the arrays size
+            \param i index where to insert the value
+            \param v value to insert
+            */
+            void insert(size_t i,const value_type &v)
+            {
+                check_index(i,this->size(),
+                        "void insert(size_t i,const value_type &v)");
+
+                (*this)[i] = v;
             }
 
             //-----------------------------------------------------------------
@@ -348,6 +429,18 @@ namespace utils{
             template<typename CTYPE> CTYPE shape() const
             {
                 return this->_shape.shape<CTYPE>();
+            }
+
+            //-----------------------------------------------------------------
+            /*!
+            \brief get reference to storage
+
+            Return a constant reference to the storage of the array. 
+            \return reference to static buffer
+            */
+            const storage_type &storage() const
+            {
+                return _data;
             }
 
     };

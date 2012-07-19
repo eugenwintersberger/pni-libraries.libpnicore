@@ -12,7 +12,7 @@ test_env.Append(CPPPATH=["../src/"])
 sources_list = ["pniutilstest.cpp"]
 sources_list.extend(["DynamicBufferTest.cpp"])
 sources_list.extend(["RefBufferTest.cpp"])
-sources_list.extend(["StaticBufferTest.cpp"])
+sources_list.extend(["SBufferTest.cpp"])
 sources_list.extend(["SizeTypeTest.cpp"])
 sources_list.extend(["StaticShapeTest.cpp"])
 sources_list.extend(["StrideTypeTest.cpp"])

@@ -26,8 +26,8 @@
 
 
 
-#ifndef __STATICBUFFER_HPP__
-#define __STATICBUFFER_HPP__
+#ifndef __SBUFFER_HPP__
+#define __SBUFFER_HPP__
 
 #include <memory>
 #include <iostream>
@@ -50,28 +50,36 @@ namespace utils{
     in memory which cannot be altered. StaticBuffer behaves like a STL
     container. Thus all the STL algorithm template functions can be used. 
     */
-    template<typename T,size_t N >class StaticBuffer
+    template<typename T,size_t N >class SBuffer
     {
         private:
             T _data[N]; //!< pointer to the data block
         public:
             //============public types provided by the template================
-            typedef std::shared_ptr<StaticBuffer<T,N> > shared_ptr; //!< smart pointer to a typed buffer
-            typedef std::unique_ptr<StaticBuffer<T,N> > unique_ptr; //!< unique poitner type to a buffer
-            typedef T value_type;  //!< type stored in the buffer
-            typedef Iterator<StaticBuffer<T,N>,0 > iterator;        //!< iterator type
-            typedef Iterator<StaticBuffer<T,N>,1 > const_iterator; //!< const iterator type
+            //! type stored in the buffer
+            typedef T value_type;  
+            //! buffer type
+            typedef SBuffer<T,N> buffer_type;
+            //! smart pointer to a typed buffer
+            typedef std::shared_ptr<buffer_type> shared_ptr;
+            //! unique poitner type to a buffer
+            typedef std::unique_ptr<buffer_type> unique_ptr;
+            //! iterator type
+            typedef Iterator<buffer_type,0 > iterator;      
+            //! const iterator type
+            typedef Iterator<buffer_type,1 > const_iterator; 
 
             //=============public static variables=============================
-            static const TypeID type_id    = TypeIDMap<T>::type_id; //!< type ID of the element type
+            //! type ID of the element type
+            static const TypeID type_id    = TypeIDMap<value_type>::type_id; 
            
             //=================constructors and destructor=====================
             //! default constructor
-            explicit StaticBuffer(){}
+            explicit SBuffer(){}
 
             //-----------------------------------------------------------------
             //! \brief copy constructor
-            explicit StaticBuffer(const StaticBuffer<T,N> &b)
+            explicit SBuffer(const buffer_type &b)
             {
                 //copy data
                 for(size_t i=0;i<this->size();i++) (*this)[i] = b[i];
@@ -90,7 +98,7 @@ namespace utils{
             \throws SizeMissmatchError list size does not match buffer size
             \param list reference to the initializer list
             */
-            explicit StaticBuffer(const std::initializer_list<T> &list)
+            explicit SBuffer(const std::initializer_list<value_type> &list)
             {
                 check_equal_size(*this,list,
                         "StaticBuffer(const std::initializer_list<T> &list)");
@@ -102,14 +110,14 @@ namespace utils{
 
             //-----------------------------------------------------------------
             //! destructor
-            ~StaticBuffer() {} 
+            ~SBuffer() {} 
 
             //===================assignment operators==========================
             //! copy assignment operator
-            StaticBuffer<T,N> &operator=(const StaticBuffer<T,N> &b)
+            buffer_type &operator=(const buffer_type &b)
             {
                 if(this == &b) return *this;
-                for(size_t i=0;i<N;i++) (*this)[i] = b[i];
+                std::copy(b.begin(),b.end(),(*this).begin());
                 return *this;
             }
 
@@ -121,7 +129,7 @@ namespace utils{
             must not be used to modify data values.
             \return pointer to allocated memory
             */
-            const T* ptr() const { return this->_data; }
+            const value_type* ptr() const { return this->_data; }
 
             //-----------------------------------------------------------------
             /*! return data pointer
@@ -130,7 +138,7 @@ namespace utils{
             used for altering the buffer content.
             \return pointer to allocated memory
             */
-            T *ptr() { return this->_data; }
+            value_type *ptr() { return this->_data; }
 
             //-----------------------------------------------------------------
             /*! \brief get value at index i
@@ -140,7 +148,7 @@ namespace utils{
             \param i buffer index
             \return value at index i
             */
-            T at(size_t i) const
+            value_type at(size_t i) const
             {
                 check_index(i,this->size(),"T at(size_t i) const");
                 return _data[i];
@@ -155,7 +163,7 @@ namespace utils{
             \param i buffer index
             \return reference to the element at index i
             */
-            T &at(size_t i)
+            value_type &at(size_t i)
             {
                 check_index(i,this->size(),"T &at(size_t i)");
                 return _data[i];
@@ -170,7 +178,7 @@ namespace utils{
             \param n index of element to fetch
             \return reference to the n-th element in the buffer
             */
-            T& operator[](size_t n) { return this->_data[n]; }
+            value_type& operator[](size_t n) { return this->_data[n]; }
 
             //-----------------------------------------------------------------
             /*! [] operator for read only access
@@ -181,7 +189,7 @@ namespace utils{
             \param n index of the element to fetch
             \return value of the buffer at position n
             */
-            T operator[](size_t n) const { return this->_data[n]; }
+            value_type operator[](size_t n) const { return this->_data[n]; }
 
             //-----------------------------------------------------------------
             /*! 
@@ -194,7 +202,7 @@ namespace utils{
             \param i index where to insert the value\
             \param v value to insert
             */
-            void insert(size_t i,const T &v)
+            void insert(size_t i,const value_type &v)
             {
                 check_index(i,this->size(),"void insert(size_t i,const T &v)");
                 (*this)[i] = v;
@@ -214,10 +222,7 @@ namespace utils{
             Returns an iterator pointing on the first element of the buffer.
             \return iterator to first element
             */
-            StaticBuffer<T,N>::iterator begin()
-            {
-                return StaticBuffer<T,N>::iterator(this,0);
-            }
+            iterator begin() { return iterator(this,0); }
 
             //------------------------------------------------------------------
             /*! \brief get iterator to last element
@@ -225,10 +230,7 @@ namespace utils{
             Returns an iterator pointing to the last element of the buffer.
             \return iterator to last element
             */
-            StaticBuffer<T,N>::iterator end()
-            {
-                return StaticBuffer<T,N>::iterator(this,this->size());
-            }
+            iterator end() { return iterator(this,this->size()); }
 
             //------------------------------------------------------------------
             /*! \brief get const iterator to first element
@@ -236,9 +238,9 @@ namespace utils{
             Returns an const iterator pointing on the first element of the buffer.
             \return const iterator to first element
             */
-            StaticBuffer<T,N>::const_iterator begin() const
+            const_iterator begin() const
             {
-                return StaticBuffer<T,N>::const_iterator(this,0);
+                return const_iterator(this,0);
             }
 
             //------------------------------------------------------------------
@@ -247,9 +249,9 @@ namespace utils{
             Returns an const iterator pointing to the last element of the buffer.
             \return const iterator to last element
             */
-            StaticBuffer<T,N>::const_iterator end() const
+            const_iterator end() const
             {
-                return StaticBuffer<T,N>::const_iterator(this,this->size());
+                return const_iterator(this,this->size());
             }
 
 
@@ -259,7 +261,7 @@ namespace utils{
 
     //==============comparison operators========================================
     template<typename T,typename U,size_t N>
-    bool operator==(const StaticBuffer<T,N> &a,const StaticBuffer<U,N> &b){
+    bool operator==(const SBuffer<T,N> &a,const SBuffer<U,N> &b){
 
         for(size_t i=0;i<a.size();i++)
             if(a[i] != b[i]) return false;
@@ -269,7 +271,7 @@ namespace utils{
 
     //--------------------------------------------------------------------------
     template<typename T,typename U,size_t N>
-    bool operator!=(const StaticBuffer<T,N> &a,const StaticBuffer<U,N> &b)
+    bool operator!=(const SBuffer<T,N> &a,const SBuffer<U,N> &b)
     {
         if(a == b) return false;
         return true;
