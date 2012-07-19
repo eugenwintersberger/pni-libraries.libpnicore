@@ -28,9 +28,9 @@
 
 #include <iostream>
 #include <typeinfo>
+#include <algorithm>
 
 #include "Exceptions.hpp"
-//#include "Shape.hpp"
 
 namespace pni{
 namespace utils{
@@ -88,12 +88,37 @@ namespace utils{
 
     Checks if two Shape objects are equal and throws an exception if they are
     not.
+    \tparam A container type for the first shape
+    \tparam B container type for the second shape
     \throws ShapeMissmatchError if shapes do not match
     \param a first shape
     \param b second shape
     \param i signature of the function or method where the check was performed
     */
-    //void check_equal_shape(const Shape &a,const Shape &b,const String &i);
+    template<typename A,typename B>
+    void check_equal_shape(const A &a,const B &b,const String &i)
+    {
+        auto sa = a.template shape<std::vector<size_t> >();
+        auto sb = b.template shape<std::vector<size_t> >();
+
+        if((sa.size()!=sb.size()) ||
+           (!std::equal(sa.begin(),sa.end(),sb.begin())))
+        {
+            //assemble error string
+            std::stringstream ss;
+            ss<<"Shapes ( ";
+            for(auto v: sa) std::cout<<v<<" ";
+            ss<<") and ( ";
+            for(auto v: sb) std::cout<<v<<" ";
+            ss<<") do not match";
+
+            //construct exception
+            ShapeMissmatchError error;
+            error.issuer(i);
+            error.description(ss.str());
+            throw error;
+        }
+    }
 
     //-------------------------------------------------------------------------
     /*! 

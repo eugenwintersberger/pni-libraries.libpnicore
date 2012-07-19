@@ -30,21 +30,6 @@ namespace pni{
 namespace utils{
 
     //=====================implementation of helper functions===================
-    /*
-    void check_equal_shape(const Shape &a,const Shape &b,const String &i)
-    {
-        if(a != b)
-        {
-            std::stringstream ss;
-            ss<<"Shape a ("<<a<<") and b ("<<b<<") do not match!";
-            ShapeMissmatchError error;
-            error.issuer(i);
-            error.description(ss.str());
-            throw error;
-        }
-
-    }
-    */
 
     //-------------------------------------------------------------------------
     void check_index(size_t index,size_t maxindex,const String &i)
