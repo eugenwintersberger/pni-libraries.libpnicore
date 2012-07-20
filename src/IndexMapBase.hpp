@@ -43,7 +43,7 @@ namespace utils {
 
             //-----------------------------------------------------------------
             //! initialization from a container
-            template<typename CTYPE> IndexMapBase(const CTYPE &c):
+            template<typename CTYPE> explicit IndexMapBase(const CTYPE &c):
                 _shape(c.size())
             {
                 std::copy(c.begin(),c.end(),_shape.begin());
@@ -51,11 +51,19 @@ namespace utils {
 
             //-----------------------------------------------------------------
             //! initialization from an initializer list
-            IndexMapBase(const std::initializer_list<size_t> &l):
+            explicit IndexMapBase(const std::initializer_list<size_t> &l):
                 _shape(l.size())
             {
                 std::copy(l.begin(),l.end(),_shape.begin());
             }
+
+            //-----------------------------------------------------------------
+            //! copy constructor
+            IndexMapBase(const IndexMapBase &m):_shape(m._shape) {}
+
+            //-----------------------------------------------------------------
+            //! move constructor
+            IndexMapBase(IndexMapBase &&m):_shape(std::move(m._shape)) {}
 
             //-----------------------------------------------------------------
             //! destructor
@@ -69,8 +77,27 @@ namespace utils {
             IndexMapBase &operator=(IndexMapBase &&m);
 
             //===================public methods================================
-            //! get size of the map
+            /*! 
+            \brief get size of the map
+
+            Return the total number of elements that can be addressed by the
+            map. If the map is not initialized as it would be the case when only
+            the default constructor is used the size is 0.
+            \return number of elements
+            */
             size_t size() const;
+
+            //-----------------------------------------------------------------
+            /*!
+            \brief get rank
+
+            Return the rank of the map - which is the number of dimensions
+            managed by the map. If the map is not initialized like it is the
+            case when the instance in use was created by calling the default
+            constructor the rank is 0.
+            \return number of dimensions
+            */
+            size_t rank() const;
 
             //-----------------------------------------------------------------
             /*!
@@ -90,10 +117,25 @@ namespace utils {
             */
             template<typename CTYPE> CTYPE shape() const
             {
-                CYTPE c(_shape.size());
+                CTYPE c(_shape.size());
                 std::copy(_shape.begin(),_shape.end(),c.begin());
                 return c;
             }
+
+            //-----------------------------------------------------------------
+            /*! 
+            \brief set shape
+
+            Set the shape of the index map from an arbitrary container. 
+            \tparam CTYPE type of the container passed to the method
+            \param c container with shape information
+            */
+            template<typename CTYPE> void shape(const CTYPE &c) 
+            {
+                _shape = DBuffer<size_t>(c.size());
+                std::copy(c.begin(),c.end(),_shape.begin());
+            }
+            
 
     };
 

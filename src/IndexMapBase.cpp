@@ -25,29 +25,43 @@
 
 #include "IndexMapBase.hpp"
 
+namespace pni{
+namespace utils{
+    //-------------------------------------------------------------------------
+    IndexMapBase &IndexMapBase::operator=(const IndexMapBase &m)
+    {
+        if(this == &m) return *this;
 
-//-----------------------------------------------------------------------------
-IndexMapBase &IndexMapBase::operator=(const IndexMapBase &m)
-{
-    if(this == &m) return *this;
+        _shape = m._shape;
+        return *this;
+    }
 
-    _shape = m._shape;
-    return *this;
+    //-------------------------------------------------------------------------
+    IndexMapBase &IndexMapBase::operator=(IndexMapBase &&m)
+    {
+        if(this == &m) return *this;
+        _shape = std::move(m._shape);
+        return *this;
+    }
+
+    //--------------------------------------------------------------------------
+    size_t IndexMapBase::size() const
+    {
+        //return 0 if the map is not initialized
+        if(_shape.size() == 0) return 0;
+
+        size_t s = 1;
+        for(auto v: _shape) s*=v;
+        return s;
+    }
+
+    //--------------------------------------------------------------------------
+    size_t IndexMapBase::rank() const
+    {
+        if(_shape.size() == 0) return 0;
+        return _shape.size();
+    }
+
+//end of namespace
 }
-
-//-----------------------------------------------------------------------------
-IndexMapBase &IndexMapBase::operator=(IndexMapBase &&m)
-{
-    if(this == &m) return *this;
-    _shape = std::move(m._shape);
-    return *this;
 }
-
-//-----------------------------------------------------------------------------
-size_t IndexMapBase::size() const
-{
-    size_t s = 1;
-    for(auto v: _shape) s*=v;
-    return s;
-}
-
