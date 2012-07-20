@@ -66,8 +66,10 @@ namespace utils {
     class DArray
     {
         private:
-            Shape _shape;   //!< shape of the array holding thed ata
-            STORAGE _data;  //!< instance of STORAGE
+            //! Index map of the array 
+            IMAP _imap;  
+            //! instance of STORAGE
+            STORAGE _data;  
 
             //==================private methods================================
             template<typename ...ITYPES>
@@ -84,7 +86,7 @@ namespace utils {
             //-----------------------------------------------------------------
             template<typename ...ITYPES> T &_get_data(T v,ITYPES ...indices)
             {
-                return this->_data[this->_shape.offset(indices...)];
+                return this->_data[this->_imap.offset(indices...)];
             }
 
         public:
@@ -120,7 +122,7 @@ namespace utils {
             is known at the time of definition but all other parameters
             are obtained later in the code.
             */
-            DArray():_shape(),_data() {}
+            DArray():_imap(),_data() {}
 
             //-----------------------------------------------------------------
             /*! \brief copy constructor
@@ -129,12 +131,12 @@ namespace utils {
             and the content of the original array is copied.
             \throws MemoryAllocationError if memory allocation fails
             */
-            DArray(const array_type &a):_shape(a._shape),_data(a._data) { }
+            DArray(const array_type &a):_imap(a._imap),_data(a._data) { }
 
             //-----------------------------------------------------------------
             //! move constructor
             DArray(array_type &&a):
-                _shape(std::move(a._shape)),
+                _imap(std::move(a._imap)),
                 _data(std::move(a._data))
             { }
 
@@ -150,12 +152,13 @@ namespace utils {
             \param s shape object
             \param b buffer object
             */
-            explicit DArray(const Shape &s, const STORAGE &b):
-                _shape(s),
+            template<typename CTYPE>
+            explicit DArray(const CTYPE &s, const STORAGE &b):
+                _imap(s),
                 _data(b)
             {
                 check_equal_size(s,b,
-                        "DynamicArray(const Shape &s, const BType<T,Allocator> &b))");
+                        "DArray(const Shape &s, const STORAGE &b))");
             }
 
             /*! \brief protected constructor
@@ -163,8 +166,9 @@ namespace utils {
             \param s shape of the 
             \param buffer buffer object
             */
-            explicit DArray(const Shape &s,STORAGE &&buffer):
-                _shape(s),
+            template<typename CTYPE>
+            explicit DArray(const CTYPE &s,STORAGE &&buffer):
+                _imap(s),
                 _data(std::move(buffer))
             { }
             //-----------------------------------------------------------------
@@ -178,7 +182,7 @@ namespace utils {
                 if(this == &a) return *this;
 
                 this->_data = a._data;
-                this->_shape = a._shape;
+                this->_imap = a._imap;
 
                 return *this;
             }
@@ -190,7 +194,7 @@ namespace utils {
                 if (this == &a) return *this;
                 
                 this->_data = std::move(a._data);
-                this->_shape = std::move(a._shape);
+                this->_imap = std::move(a._imap);
 
                 return *this;
             }
@@ -212,13 +216,13 @@ namespace utils {
             \throws MemoryNotAllocatedError if no memory is allocated
             \param s shape of the array
             */
-            void shape(const Shape &s)
+            template<typename CTYPE> void shape(const CTYPE &s)
             {
                 check_allocation_state(this->buffer(),
                         "void shape(const Shape &s)");
                 check_size_equal(this->buffer(),s,
                         "void shape(const Shape &s)");
-                this->_shape = s;
+                this->_imap = IMAP(s);
             }
 
             //-----------------------------------------------------------------
@@ -227,7 +231,20 @@ namespace utils {
             Return a constant reference to the array shape. 
             \return array shape const reference
             */
-            const Shape &shape() const { return _shape; }
+            const DBuffer<size_t> &shape() const 
+            { 
+                return this->_imap.shape(); 
+            }
+
+            template<typename CTYPE> CTYPE shape() const
+            {
+                CTYPE c(this->_imap.rank());
+                std::copy(this->_imap.shape().begin(),
+                          this->_imap.shape().end(),
+                          c.begin());
+                return c;
+            }
+
 
             //-----------------------------------------------------------------
             /*! \brief obtain buffer reference
@@ -243,7 +260,10 @@ namespace utils {
             Returns the total number of elements stored in the array.
             \return total number of elements
             */
-            size_t size() const { return this->_shape.size(); }
+            size_t size() const { return this->_imap.size(); }
+
+            //-----------------------------------------------------------------
+            size_t rank() const { return this->_imap.rank(); }
 
             //=============operators and methods to access array data==========
             /*! \brief get referece to element i
@@ -317,7 +337,7 @@ namespace utils {
             */
             template<typename CTYPE> value_type &operator()(const CTYPE &c)
             {
-                return this->_data[this->_shape.offset(c)];
+                return this->_data[this->_imap.offset(c)];
             }
 
             //-----------------------------------------------------------------
@@ -335,7 +355,7 @@ namespace utils {
             template<typename CTYPE>
                 value_type operator()(const CTYPE &c) const
             {
-                return this->_data[this->_shape.offset(c)];
+                return this->_data[this->_imap.offset(c)];
             }
 
             //-----------------------------------------------------------------

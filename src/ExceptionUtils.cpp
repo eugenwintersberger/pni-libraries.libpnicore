@@ -38,7 +38,7 @@ namespace utils{
         {
             IndexError error;
             std::stringstream ss;
-            ss<<"Index ("<<i<<") exceeds maximum value ("<<maxindex<<")!";
+            ss<<"Index ("<<index<<") exceeds maximum value ("<<maxindex<<")!";
             error.issuer(i);
             error.description(ss.str());
             throw error;

@@ -21,7 +21,7 @@ class DArrayTest : public CppUnit::TestFixture{
         CPPUNIT_TEST(test_typeinfo);
         CPPUNIT_TEST_SUITE_END();
     private:
-        Shape s1,s2;
+        std::vector<size_t> s1,s2;
         size_t r1,r2;
         
 
@@ -52,53 +52,55 @@ void DArrayTest<T,STORAGE>::tearDown(){ }
 template<typename T,typename STORAGE>
 void DArrayTest<T,STORAGE>::test_construction()
 {
-    DArray<T,STORAGE> a1(s1,STORAGE(s1.size())),
-                            a2(s2,STORAGE(s2.size()));
+    //test default construction
+    DArray<T,STORAGE> a1;
+    CPPUNIT_ASSERT(a1.size() == 0);
+    CPPUNIT_ASSERT(a1.rank() == 0);
 
-    /*
-    STORAGE buffer;
-    allocate_buffer(buffer,s1.size());
+    //default construction
+    DArray<T,STORAGE> a2(s1,STORAGE(12));
+    CPPUNIT_ASSERT(a2.size() == 12);
+    CPPUNIT_ASSERT(a2.rank() == 2);
 
-    auto a3 = factory::create(s1,buffer);
+    //copy construction
+    DArray<T,STORAGE> a3(a2);
+    CPPUNIT_ASSERT(a2.rank() == a3.rank());
+    CPPUNIT_ASSERT(a2.size() == a3.size());
 
-    //construction from a default array
-    auto a4 = factory::create(s1,T(17));
-    for(auto v: a4) check_equality(v,T(17));
+    //move construction
+    DArray<T,STORAGE> a4 = std::move(a2);
+    CPPUNIT_ASSERT(a2.size() == 0);
+    CPPUNIT_ASSERT(a2.rank() == 0);
+    CPPUNIT_ASSERT(a4.size() == a3.size());
+    CPPUNIT_ASSERT(a4.rank() == a3.rank());
 
-    auto data = RandomDistribution::uniform<std::vector<T> >(s1.size());
-    auto a5 = factory::create(s1,data);
-
-    size_t index = 0;
-    for(auto v: a5)
-        check_equality(v,data[index++]);
-        */
 }
 
 //------------------------------------------------------------------------------
 template<typename T,typename STORAGE>
 void DArrayTest<T,STORAGE>::test_linear_access()
 {
-    DArray<T,STORAGE> a1(s1,STORAGE(s1.size()));
+    DArray<T,STORAGE> a1(s1,STORAGE(12));
 
     //--------------------check operators without index checking----------------
 	//access via [] operator
 	for(size_t i=0;i<a1.size();i++) 
-        a1[i] = T(i);
+        CPPUNIT_ASSERT_NO_THROW(a1[i] = T(i));
 
 	//check if data values have been transfered correctly
 	for(size_t i=0;i<a1.size();i++) 
-        check_equality(T(i),a1[i]);
+        CPPUNIT_ASSERT_NO_THROW(check_equality(T(i),a1[i]));
 
     //-------------------check with index checking-----------------------------
 	//access via [] operator
 	for(size_t i=0;i<a1.size();i++) 
-        a1.at(i) = T(i);
+        CPPUNIT_ASSERT_NO_THROW(a1.at(i) = T(i));
 
 	//check if data values have been transfered correctly
 	for(size_t i=0;i<a1.size();i++) 
-        check_equality(T(i),a1.at(i));
+        CPPUNIT_ASSERT_NO_THROW(check_equality(T(i),a1.at(i)));
 
-    CPPUNIT_ASSERT_THROW(a1.at(s1.size()+10),IndexError);
+    CPPUNIT_ASSERT_THROW(a1.at(a1.size() + 100),IndexError);
 
 }
 
@@ -106,7 +108,7 @@ void DArrayTest<T,STORAGE>::test_linear_access()
 template<typename T,typename STORAGE>
 void DArrayTest<T,STORAGE>::test_iterators()
 {
-    DArray<T,STORAGE> a1(s1,STORAGE(s1.size()));
+    DArray<T,STORAGE> a1(s1,STORAGE(12));
 
     //--------------------check standard iterator----------------
 	//access via [] operator
@@ -133,18 +135,30 @@ void DArrayTest<T,STORAGE>::test_iterators()
 template<typename T,typename STORAGE>
 void DArrayTest<T,STORAGE>::test_multiindex_access()
 {   
+    std::cout<<"void DArrayTest<T,STORAGE>::test_multiindex_access()";
+    std::cout<<std::endl;
 
-    DArray<T,STORAGE> a1(s1,STORAGE(s1.size()));
+    DArray<T,STORAGE> a1(s1,STORAGE(12));
     auto data = RandomDistribution::uniform<std::vector<T> >(a1.size());
 
     //----------------use variadic tempaltes to access data--------------
     for(size_t i=0;i<s1[0];i++)
         for(size_t j=0;j<s1[1];j++)
-            a1(i,j) = data[a1.shape().offset(i,j)];
+        {
+            try
+            {
+                a1(i,j) = data[a1.shape()[0]*i+j];
+            }
+            catch(IndexError &error)
+            {
+                std::cout<<error<<std::endl;
+            }
+        }
+            
 
     for(size_t i=0;i<s1[0];i++)
         for(size_t j=0;j<s1[1];j++)
-            check_equality(a1(i,j),data[a1.shape().offset(i,j)]);
+            CPPUNIT_ASSERT_NO_THROW(check_equality(a1(i,j),data[a1.shape()[0]*i+j]));
 
     //----------using a container to hold the index----------------------
     for(size_t i=0;i<s1[0];i++)
@@ -152,7 +166,7 @@ void DArrayTest<T,STORAGE>::test_multiindex_access()
         for(size_t j=0;j<s1[1];j++)
         {
             std::vector<size_t> index{i,j};
-            a1(index) = data[a1.shape().offset(index)];
+            CPPUNIT_ASSERT_NO_THROW(a1(index) = data[a1.shape()[0]*i+j]);
         }
     }
 
@@ -161,7 +175,7 @@ void DArrayTest<T,STORAGE>::test_multiindex_access()
         for(size_t j=0;j<s1[1];j++)
         {
             std::vector<size_t> index{i,j};
-            check_equality(a1(index),data[a1.shape().offset(index)]);
+            CPPUNIT_ASSERT_NO_THROW(check_equality(a1(index),data[a1.shape()[0]*i+j]));
         }
     }
 }

@@ -236,7 +236,9 @@ namespace utils{
             auto miter = shape().begin();
             for(auto iiter=index.begin();iiter!=index.end();++iiter,++siter,++miter)
             {
-                check_index((*iiter),(*miter),"");
+                check_index((*iiter),(*miter),
+                        "template<typename CTYPE> size_t CIndexMap::offset("
+                         "const CTYPE &index) const");
                 offset += (*iiter)*(*siter);
             }
 

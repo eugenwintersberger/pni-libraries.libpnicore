@@ -51,6 +51,14 @@ template<typename CTYPE> void IndexMapTest<MTYPE>::test_offset()
     MTYPE map{2,3};
     CPPUNIT_ASSERT(map.offset(1,2)==5);
     CPPUNIT_ASSERT(map.offset(CTYPE{1,2}) == 5);
+    CPPUNIT_ASSERT_THROW(map.offset(2,2),IndexError);
+    CPPUNIT_ASSERT_THROW(map.offset(1,3),IndexError);
+    CPPUNIT_ASSERT_THROW(map.offset(4,2),IndexError);
+    CPPUNIT_ASSERT_THROW(map.offset(1,6),IndexError);
+    CPPUNIT_ASSERT_THROW(map.offset(CTYPE{2,2}),IndexError);
+    CPPUNIT_ASSERT_THROW(map.offset(CTYPE{1,3}),IndexError);
+    CPPUNIT_ASSERT_THROW(map.offset(CTYPE{4,2}),IndexError);
+    CPPUNIT_ASSERT_THROW(map.offset(CTYPE{1,6}),IndexError);
 
     map = MTYPE{5,4};
     CPPUNIT_ASSERT(map.offset(1,2) == 6);
