@@ -31,6 +31,13 @@
 namespace pni {
 namespace utils {
 
+    /*! 
+    \ingroup util_classes
+    \brief base class for dynamic index maps
+
+    This class can be used as a base class for dynamic (configurable at runtime)
+    index maps. 
+    */
     class IndexMapBase
     {
         private:
@@ -39,11 +46,21 @@ namespace utils {
         public:
             //================constructors and destructor======================
             //! default constructor
-            IndexMapBase():_shape() {}
+            IndexMapBase();
+            
+            //-----------------------------------------------------------------
+            //! copy constructor
+            IndexMapBase(const IndexMapBase &m);
+
+            //-----------------------------------------------------------------
+            //! move constructor
+            IndexMapBase(IndexMapBase &&m);
+
 
             //-----------------------------------------------------------------
             //! initialization from a container
-            template<typename CTYPE> explicit IndexMapBase(const CTYPE &c):
+            template<template<typename ...> class CTYPE,typename ...OTYPES> 
+                explicit IndexMapBase(const CTYPE<OTYPES...> &c):
                 _shape(c.size())
             {
                 std::copy(c.begin(),c.end(),_shape.begin());
@@ -56,14 +73,6 @@ namespace utils {
             {
                 std::copy(l.begin(),l.end(),_shape.begin());
             }
-
-            //-----------------------------------------------------------------
-            //! copy constructor
-            IndexMapBase(const IndexMapBase &m):_shape(m._shape) {}
-
-            //-----------------------------------------------------------------
-            //! move constructor
-            IndexMapBase(IndexMapBase &&m):_shape(std::move(m._shape)) {}
 
             //-----------------------------------------------------------------
             //! destructor

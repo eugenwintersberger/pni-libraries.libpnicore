@@ -45,8 +45,12 @@ namespace utils{
     template<typename ATYPE> class ArrayView
     {
         private:
-            ATYPE *_parray; //!< parent array from which to draw data
+            //! parent array from which to draw data
+            ATYPE *_parray; 
+            //! selection object for index transformation 
             ArraySelection _selection;
+            //! index map to produce the original selection index
+            CIndexMap _imap;
 
         public:
             //====================public types=================================
@@ -77,7 +81,8 @@ namespace utils{
             */
             ArrayView(ATYPE &a):
                 _parray(&a),
-                _selection()
+                _selection(),
+                _imap()
             {
                 std::vector<size_t> shape(a->shape<std::vector<size_t>());
                 std::vector<size_t> offset(a->rank());
@@ -87,6 +92,7 @@ namespace utils{
                 std::fill(stride.begin(),stride.end(),1);
 
                 this->_selection = ArraySelection(shape,offset,stride);
+                this->_imap = CIndexMap(this->_selection.shape());
             }
 
             //-----------------------------------------------------------------
@@ -102,7 +108,8 @@ namespace utils{
             */
             ArrayView(ATYPE &a,const ArraySelection &s):
                 _parray(&a),
-                _selection(s)
+                _selection(s),
+                _imap(_selection.shape())
             { 
                 //wee need to check if all the lists and shapes do match the 
                 //rank of the array
@@ -113,14 +120,16 @@ namespace utils{
             //! copy constructor
             ArrayView(const ArrayView<ATYPE> &o):
                 _parray(o._parray),
-                _selection(o._selection)
+                _selection(o._selection),
+                _imap(o._imap)
             {}
 
             //-----------------------------------------------------------------
             //! move constructor
             ArrayView(ArrayView<ATYPE> &&o):
                 _parray(o._parray),
-                _selection(std::move(o._selection))
+                _selection(std::move(o._selection)),
+                _imap(std::move(o._imap))
             {}
             //====================assignment operators=========================
             //! copy assignment
@@ -129,6 +138,7 @@ namespace utils{
                 if(this == &o) return *this;
                 this->_parray = o._parray;
                 this->_selection = o._selection;
+                this->_imap = o._imap;
                 return *this;
             }
 
@@ -139,6 +149,7 @@ namespace utils{
                 if(this == &o) return *this;
                 this->_parray = o._parray;
                 this->_selection = std::move(o._selection);
+                this->_imap = std::move(o._imap);
                 o._parray = nullptr;
                 return *this;
             }
@@ -248,8 +259,7 @@ namespace utils{
             */
             ArrayView<ATYPE>::value_type &operator[](size_t i)
             {
-                auto index = CIndexMap::template index<std::vector<size_t>
-                    >(this->_selection.shape(),i);
+                auto index = this->_imap.template index<std::vector<size_t> >(i);
                 return (*this)(index); 
             }
 
@@ -265,8 +275,7 @@ namespace utils{
             */
             ArrayView<ATYPE>::value_type operator[](size_t i) const
             {
-                auto index = CIndexMap::template index<std::vector<size_t>
-                    >(this->_selection.shape(),i);
+                auto index = this->_imap.template index<std::vector<size_t> >(i);
                 return (*this)(index); 
             }
 

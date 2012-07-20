@@ -5,7 +5,7 @@ Import("build_env")
 #----------------------Building object files------------------------------------
 source_list = []
 source_list.extend(["Exceptions.cpp","Types.cpp","Slice.cpp","ComplexUtils.cpp","ExceptionUtils.cpp",
-                    "ArraySelection.cpp","IndexMapBase.cpp"])
+                    "ArraySelection.cpp","IndexMapBase.cpp","CIndexMap.cpp"])
 #source_list.extend([ "Shape.cpp", "DataObject.cpp","NumericObject.cpp" ])
                
 #build static and shared objects               

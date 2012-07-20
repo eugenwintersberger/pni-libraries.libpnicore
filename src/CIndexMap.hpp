@@ -20,8 +20,10 @@
  *     Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
  */
 
-#ifndef __INDEXMAP_HPP__
-#define __INDEXMAP_HPP__
+#ifndef __CINDEXMAP_HPP__
+#define __CINDEXMAP_HPP__
+
+#include "IndexMapBase.hpp"
 
 namespace pni{
 namespace utils{
@@ -36,162 +38,234 @@ namespace utils{
     containers that supports reverse iterators. This includes all STL container
     types.
     */
-    struct CIndexMap
+    class CIndexMap : public IndexMapBase
     {
+        private:
+            //! buffer with strides between dimensions
+            DBuffer<size_t> _strides;         
+
+            //================private methods==================================
+            //! compute dimension strides
+            void _compute_strides();
         public:
-        /*!
-        \brief compute offset from argument list
+            //================constructors and destructor======================
+            //! default constructor
+            CIndexMap():IndexMapBase(),_strides() {}
 
-        Computes the linear offset of multidimensional data from a multi-index
-        passed as argument list ot the function.
-        \code
-        std::vector<size_t> shape{3,4,5,6};
-        size_t offset = CIndexMap::offset(shape,1,2,0,3);
-        \endcode
-        \tparam STYPE container type for the shape
-        \tparam ITYPES index types
-        \param s container with the shape
-        \param i first index 
-        \param indices other indices
-        \throws ShapeMissmatchError if number of indices and size of shape do
-        not match
-        \throws IndexError if one of the indices exceeds the number of elements
-        along its dimension
-        \return offset value
-        */
-        template<typename STYPE,typename ...ITYPES> 
-            static size_t offset(const STYPE &s,size_t i,ITYPES ...indices);
+            //-----------------------------------------------------------------
+            //!initializer list constructor
+            explicit CIndexMap(const std::initializer_list<size_t> &il):
+                IndexMapBase(il),
+                _strides(il.size())
+            {
+                _compute_strides();
+            }
 
-        /*!
-        \brief compute offset from a container
+            //-----------------------------------------------------------------
+            //! constrution from contianer
+            template<typename CTYPE> explicit CIndexMap(const CTYPE &c):
+                IndexMapBase(c),
+                _strides(c.size())
+            {
+                _compute_strides();
+            }
 
-        Computes the linear offset of multidimensional data from indices stored
-        in a container. 
-        \code
-        std::vector<size_t> shape{3,4,5,6};
-        std::vector<size_t> index{1,2,0,3};
-        size_t offset = CIndexMap::offset(shape,index);
-        \endcode
+            //-----------------------------------------------------------------
+            //! move constructor
+            CIndexMap(CIndexMap &&m):
+                IndexMapBase(std::move(m)),
+                _strides(std::move(m._strides))
+            {}
 
-        \throws ShapeMissmatchError if the size of the index and the shape
-        container do not match
-        \throws IndexError if one of the indices exceeds the number of elements
-        along its dimension
-        \tparam STYPE type of the shape container
-        \tparam CTYPE type of the index container
-        \param s container with shape data
-        \param c container with index data
-        \return linear offset
-        */
-        template<typename STYPE,typename CTYPE> 
-            static size_t offset(const STYPE &s,const CTYPE &c);
-        
-        /*!
-        \brief compute an index from a given offset
+            //-----------------------------------------------------------------
+            //! copy constructor
+            CIndexMap(const CIndexMap &m):
+                IndexMapBase(m),
+                _strides(m._strides)
+            {}
 
-        Compute the multidimensional index for a given offset and shape. 
-        \code
-        std::vector<size_t> shape{3,4,5,6};
-        auto index = CIndexMap::index<std::vector<size_t> >(shape,8);
-        \endcode
-        The container holding the index is allocated by the method so no
-        additional work must be done by the user. 
-        \tparam ITYPE container type for the index
-        \tparam STYPE container type for the shape
-        \param s container with shape data
-        \param offset linear offset
-        \return index for offset
-        */
-        template<typename ITYPE,typename STYPE> 
-            static ITYPE index(const STYPE &s,size_t offset);
+            //-----------------------------------------------------------------
+            //! destructor
+            ~CIndexMap() {}
 
-        /*!
-        \brief compute index from a given offset
+            //===================assignment operators==========================
+            //! copy assignment operator
+            CIndexMap &operator=(const CIndexMap &m)
+            {
+                if(this == &m) return *this;
+                IndexMapBase::operator=(m);
+                _strides = m._strides;
+                return *this;
+            }
 
-        Compute the mulditimensional index for a given offset value. 
-        This method takes the container for the index as a third argument thus
-        avoiding that it must be allocated every time the method is called. 
-        \code
-        std::vector<size_t> shape{3,4,5,6};
-        std::vector<size_t> index(4);
-        CIndexMap::index<std::vector<size_t> >(shape,8,index);
-        \endcode
-        \throws ShapeMissmatchError if the size of the index container is not
-        coinciding with that of the shape 
-        \throws SizeMissmatchError if the offset exceeds the total size of the
-        array represented by shape
-        \tparam STYPE container type for shape
-        \tparam ITYPE container type for index
-        \param s shape 
-        \param offset the linear offset
-        \param index container holding the resulting index
-        */
-        template<typename STYPE,typename ITYPE>
-            static void index(const STYPE &s,size_t offset,ITYPE &index);
-    };
+            //-----------------------------------------------------------------
+            //! move assignment operator
+            CIndexMap &operator=(CIndexMap &&m)
+            {
+                if(this == &m) return *this;
+                IndexMapBase::operator=(std::move(m));
+                _strides = std::move(m._strides);
+                return *this;
+            }
 
-    //-------------------------------------------------------------------------
-    template<typename STYPE,typename ...ITYPES>
-        size_t CIndexMap::offset(const STYPE &s,size_t i,ITYPES ...indices)
-    {
-        std::vector<size_t> index{i,size_t(indices)...};
+            //===============public methods====================================
+            /*!
+            \brief set new shape
 
-        return offset(s,index);
-    }
+            Sets a new shape or can be used if the object was constructed with
+            the default constructor.
+            \tparam CTYPE container type of the shape 
+            \param c container with new shape
+            */
+            template<typename CTYPE> void shape(const CTYPE &s)
+            {
+                IndexMapBase::shape(s);
+                _strides = DBuffer<size_t>(s.size());
+                _compute_strides();
+            }
 
-    //-------------------------------------------------------------------------
-    template<typename STYPE,typename CTYPE>
-        size_t CIndexMap::offset(const STYPE &shape,const CTYPE &index)
-    {
-        size_t dstride = 1,offset = 0;
-        for(auto siter=shape.rbegin(),iiter=index.rbegin();
-                siter!=shape.rend();
-                ++siter,++iiter)
+            //need this to prevent the compiler from hiding all the original
+            //functions from the base class.
+            using IndexMapBase::shape;
+
+            //-----------------------------------------------------------------
+            /*!
+            \brief compute offset from argument list
+
+            Computes the linear offset of multidimensional data from a 
+            multi-index passed as argument list ot the function.
+            \code
+            CIndexMap imap{3,4,5,8};
+            size_t offset = imap.offset(1,2,0,3);
+            \endcode
+            \tparam ITYPES index types
+            \param i first index 
+            \param indices other indices
+            \throws ShapeMissmatchError if number of indices and size of shape 
+            do not match
+            \throws IndexError if one of the indices exceeds the number of 
+            elements along its dimension
+            \return offset value
+            */
+            template<typename ...ITYPES> 
+                size_t offset(size_t i,ITYPES ...indices) const;
+
+            //-----------------------------------------------------------------
+            /*!
+            \brief compute offset from a container
+
+            Computes the linear offset of multidimensional data from indices 
+            stored in a container. 
+            \code
+            CIndexMap imap{3,4,5,8};
+            std::vector<size_t> index{1,2,0,3};
+            size_t offset = imap.offset(index);
+            \endcode
+
+            \throws ShapeMissmatchError if the size of the index and the shape
+            container do not match
+            \throws IndexError if one of the indices exceeds the number of 
+            elements along its dimension
+            \tparam CTYPE type of the index container
+            \param c container with index data
+            \return linear offset
+            */
+            template<typename CTYPE> size_t offset(const CTYPE &c) const;
+           
+            //-----------------------------------------------------------------
+            /*!
+            \brief compute an index from a given offset
+
+            Compute the multidimensional index for a given offset and shape. 
+            \code
+            CIndexMap imap{3,4,5,8};
+            auto index = imap.template index<std::vector<size_t> >(8);
+            \endcode
+            The container holding the index is allocated by the method so no
+            additional work must be done by the user. 
+            \tparam ITYPE container type for the index
+            \param offset linear offset
+            \return index for offset
+            */
+            template<typename ITYPE> ITYPE index(size_t offset) const;
+
+            //-----------------------------------------------------------------
+            /*!
+            \brief compute index from a given offset
+
+            Compute the mulditimensional index for a given offset value. 
+            This method takes the container for the index as a third argument thus
+            avoiding that it must be allocated every time the method is called. 
+            \code
+            CIndexMap imap{3,4,5,8};
+            std::vector<size_t> index(4);
+            imap.index(8,index);
+            \endcode
+            \throws ShapeMissmatchError if the size of the index container is not
+            coinciding with that of the shape 
+            \throws SizeMissmatchError if the offset exceeds the total size of the
+            array represented by shape
+            \tparam ITYPE container type for index
+            \param offset the linear offset
+            \param index container holding the resulting index
+            */
+            template<typename ITYPE> 
+                void index(size_t offset,ITYPE &index) const;
+        };
+
+        //-------------------------------------------------------------------------
+        template<typename ...ITYPES>
+            size_t CIndexMap::offset(size_t i,ITYPES ...indices) const
         {
-            offset += *iiter*dstride;
-            dstride *= *siter;
+            std::vector<size_t> index{i,size_t(indices)...};
+
+            return offset(index);
         }
 
-        return offset;
-    }
-
-    //-------------------------------------------------------------------------
-    template<typename ITYPE,typename STYPE>
-        ITYPE CIndexMap::index(const STYPE &shape,size_t offset)
-    {
-        ITYPE index(shape.size());
-        CIndexMap::index(shape,offset,index);
-        return index;
-    }
-
-    //-------------------------------------------------------------------------
-    template<typename STYPE,typename ITYPE>
-        void CIndexMap::index(const STYPE &s,size_t offset,ITYPE &index)
-    {
-        STYPE dstrides(s.size());
-        //compute dimension strides
-        STYPE &shape = const_cast<STYPE &>(s);
-        size_t ds = 1;
-        for(auto siter = shape.rbegin(),dsiter=dstrides.rbegin();
-                siter!=shape.rend();
-                ++siter,++dsiter)
+        //-------------------------------------------------------------------------
+        template<typename CTYPE> 
+            size_t CIndexMap::offset(const CTYPE &index) const
         {
-            *dsiter = ds;
-            ds *= *siter;
-        }
-      
-        //compute the 
-        size_t t;
-        for(auto iiter=index.begin(),diter=dstrides.begin();
-                iiter!=index.end();
-                ++iiter,++diter)
-        {
-            t = offset%(*diter);
-            *iiter = (offset-t)/(*diter);
-            offset = t;
+            
+            if(index.size() != rank())
+            {
+                //throw exception here
+            }
+            size_t offset = 0;
+            auto siter = _strides.begin();
+            auto miter = shape().begin();
+            for(auto iiter=index.begin();iiter!=index.end();++iiter,++siter,++miter)
+            {
+                check_index((*iiter),(*miter),"");
+                offset += (*iiter)*(*siter);
+            }
+
+            return offset;
         }
 
-    }
+        //-------------------------------------------------------------------------
+        template<typename ITYPE> ITYPE CIndexMap::index(size_t offset) const
+        {
+            ITYPE index(shape().size());
+            this->index(offset,index);
+            return index;
+        }
+
+
+        //-------------------------------------------------------------------------
+        template<typename ITYPE>
+            void CIndexMap::index(size_t offset,ITYPE &index) const
+        {
+            size_t t;
+            size_t i=0;
+            for(auto iiter=index.begin();iiter!=index.end();++iiter,i++)
+            {
+                t = offset%_strides[i];
+                *iiter = (offset-t)/_strides[i];
+                offset = t;
+            }
+
+        }
 
 
 //end of namespace

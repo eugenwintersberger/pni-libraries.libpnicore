@@ -84,16 +84,6 @@ void IndexMapBaseTest::test_access()
 
     //this is trivial
     CPPUNIT_ASSERT(std::equal(s.begin(),s.end(),im1.shape().begin()));
-    //try a copy
-    auto ls = im1.shape<std::list<size_t> >();
-    CPPUNIT_ASSERT(std::equal(s.begin(),s.end(),ls.begin()));
-
-    //in the end we reset the map with a new shape
-    std::list<size_t> ns{8,1,4};
-    CPPUNIT_ASSERT_NO_THROW(im1.shape(ns));
-    CPPUNIT_ASSERT(im1.rank() == 3);
-    CPPUNIT_ASSERT(im1.size() == 8*4);
-    CPPUNIT_ASSERT(std::equal(ns.begin(),ns.end(),im1.shape().begin()));
 
 
 }

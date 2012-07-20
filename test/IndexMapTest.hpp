@@ -48,13 +48,13 @@ template<typename CTYPE> void IndexMapTest<MTYPE>::test_offset()
     std::cout<<"IndexMaptest::test_offset()..........................";
     std::cout<<std::endl;
 
-    CTYPE s{2,3};
-    CPPUNIT_ASSERT(MTYPE::offset(s,1,2)==5);
-    CPPUNIT_ASSERT(MTYPE::offset(s,CTYPE{1,2}) == 5);
+    MTYPE map{2,3};
+    CPPUNIT_ASSERT(map.offset(1,2)==5);
+    CPPUNIT_ASSERT(map.offset(CTYPE{1,2}) == 5);
 
-    s = CTYPE{5,4};
-    CPPUNIT_ASSERT(MTYPE::offset(s,1,2) == 6);
-    CPPUNIT_ASSERT(MTYPE::offset(s,CTYPE{1,2}) == 6);
+    map = MTYPE{5,4};
+    CPPUNIT_ASSERT(map.offset(1,2) == 6);
+    CPPUNIT_ASSERT(map.offset(CTYPE{1,2}) == 6);
 
 }
 
@@ -63,9 +63,10 @@ template<typename CTYPE> void IndexMapTest<MTYPE>::test_index()
 {
     std::cout<<"IndexMaptest::test_index()...........................";
     std::cout<<std::endl;
-    
-    auto i = CIndexMap::template index<CTYPE>
-        (CTYPE{2,3},5);
+   
+    MTYPE map{2,3};
+    auto i = map.template index<CTYPE>(5);
+
     CTYPE ic{1,2};
     CPPUNIT_ASSERT(std::equal(ic.begin(),ic.end(),i.begin()));
 
