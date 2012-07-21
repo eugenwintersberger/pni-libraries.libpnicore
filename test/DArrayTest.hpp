@@ -145,14 +145,7 @@ void DArrayTest<T,STORAGE>::test_multiindex_access()
     for(size_t i=0;i<s1[0];i++)
         for(size_t j=0;j<s1[1];j++)
         {
-            try
-            {
-                a1(i,j) = data[a1.shape()[0]*i+j];
-            }
-            catch(IndexError &error)
-            {
-                std::cout<<error<<std::endl;
-            }
+            CPPUNIT_ASSERT_NO_THROW(a1(i,j) = data[a1.shape()[0]*i+j]);
         }
             
 

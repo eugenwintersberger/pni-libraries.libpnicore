@@ -234,7 +234,7 @@ namespace utils{
             size_t offset = 0;
             auto siter = _strides.begin();
             auto miter = shape().begin();
-            for(auto iiter=index.begin();iiter!=index.end();++iiter,++siter,++miter)
+            for(auto iiter=index.begin();iiter!=index.end();iiter++,siter++,miter++)
             {
                 check_index((*iiter),(*miter),
                         "template<typename CTYPE> size_t CIndexMap::offset("
@@ -260,7 +260,7 @@ namespace utils{
         {
             size_t t;
             size_t i=0;
-            for(auto iiter=index.begin();iiter!=index.end();++iiter,i++)
+            for(auto iiter=index.begin();iiter!=index.end();iiter++,i++)
             {
                 t = offset%_strides[i];
                 *iiter = (offset-t)/_strides[i];

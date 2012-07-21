@@ -379,7 +379,7 @@ namespace utils {
             */
             template<typename ...ITYPES>
                 typename ArrayViewSelector<array_type,ITYPES...>::reftype
-                operator()(size_t i,ITYPES ...indices) 
+                operator()(ITYPES ...indices) 
             {
                 typedef ArrayViewSelector<array_type,ITYPES...> selector;
                 typedef typename selector::viewtype viewtype;
@@ -404,7 +404,7 @@ namespace utils {
             */
             template<typename ...ITYPES> 
                 typename ArrayViewSelector<array_type,ITYPES...>::viewtype
-                operator()(size_t i,ITYPES ...indices) const
+                operator()(ITYPES ...indices) const
             {
                 typedef ArrayViewSelector<array_type,ITYPES...> sel;
                 typename sel::viewtype result;
