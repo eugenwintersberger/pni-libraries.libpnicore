@@ -23,19 +23,19 @@ template<typename T,...> class Buffer
     Buffer(); //must posses a default constructor
 
     //==================assignment operators===================================
-    Buffer &operator=(const Buffer &b); //must provide a copy constructor
+    buffer_type &operator=(const buffer_type &b); //must provide a copy constructor
 
 
     //=================methods for data access=================================
     
-    const T *ptr() const;   //get access to the internal storage
+    const value_type *ptr() const;   //get access to the internal storage
 
     
-    T &operator[](size_t i); 
-    T operator[](size_t i) const; 
-    T &at(size_t i);
-    T at(size_t i) const;
-    void insert(size_t pos,const T &v);
+    value_type &operator[](size_t i); 
+    value_type operator[](size_t i) const; 
+    value_type &at(size_t i);
+    value_type at(size_t i) const;
+    void insert(size_t pos,const value_type &v);
 
     size_t size() const;       //return number of elements of type T
 
@@ -148,8 +148,12 @@ template<typename T> class Array
     typename ArrayViewSelector<ITYPES...>::viewtype 
     operator()(ITYPES ...indices);
 
-    template<typename CTYPE> T &operator()(const CTYPE &index);
-    template<typename CTYPE> T operator()(const CTYPE &index) const;
+    template<template<typename ...> class CTYPE,typename ...OTS> 
+    value_type &operator()(const CTYPE<OTS...> &index);
+
+    template<template<typename ...> class CTYPE,typename ...OTS> 
+    value_type operator()(const CTYPE<OTS...> &index) const;
+
     template<template<typename> CTYPE> 
     ArrayView<Array> operator()(const CTYPE<Slice> &slice) const;
     

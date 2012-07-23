@@ -148,7 +148,7 @@ namespace utils{
             \return offset value
             */
             template<typename ...ITYPES> 
-                size_t offset(size_t i,ITYPES ...indices) const;
+                size_t offset(ITYPES ...indices) const;
 
             //-----------------------------------------------------------------
             /*!
@@ -170,7 +170,8 @@ namespace utils{
             \param c container with index data
             \return linear offset
             */
-            template<typename CTYPE> size_t offset(const CTYPE &c) const;
+            template<template<typename...> class CTYPE,typename ...OTYPES> 
+                size_t offset(const CTYPE<OTYPES...> &c) const;
            
             //-----------------------------------------------------------------
             /*!
@@ -215,22 +216,30 @@ namespace utils{
 
         //-------------------------------------------------------------------------
         template<typename ...ITYPES>
-            size_t CIndexMap::offset(size_t i,ITYPES ...indices) const
+            size_t CIndexMap::offset(ITYPES ...indices) const
         {
-            std::vector<size_t> index{i,size_t(indices)...};
+            std::vector<size_t> index{size_t(indices)...};
 
             return offset(index);
         }
 
         //-------------------------------------------------------------------------
-        template<typename CTYPE> 
-            size_t CIndexMap::offset(const CTYPE &index) const
+        template<template<typename...> class CTYPE,typename ...OTYPES> 
+            size_t CIndexMap::offset(const CTYPE<OTYPES...> &index) const
         {
             
             if(index.size() != rank())
             {
-                //throw exception here
+                ShapeMissmatchError error;
+                std::stringstream ss;
+                ss<<"Rank of index ("<<index.size()<<") does not match ";
+                ss<<"map rank ("<<rank()<<")!";
+                error.issuer("template<typename CTYPE> size_t CIndexMap::"
+                             "offset(const CTYPE &index) const");
+                error.description(ss.str());
+                throw error;
             }
+
             size_t offset = 0;
             auto siter = _strides.begin();
             auto miter = shape().begin();

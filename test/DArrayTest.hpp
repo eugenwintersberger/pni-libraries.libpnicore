@@ -29,6 +29,7 @@ class DArrayTest : public CppUnit::TestFixture{
         void setUp();
         void tearDown();
         void test_construction();
+        void test_assignment();
         void test_linear_access();
         void test_iterators();
         void test_multiindex_access();
@@ -78,6 +79,33 @@ void DArrayTest<T,STORAGE>::test_construction()
 
 //------------------------------------------------------------------------------
 template<typename T,typename STORAGE>
+void DArrayTest<T,STORAGE>::test_assignment()
+{
+    DArray<T,STORAGE> a1(s1,STORAGE(12));
+    size_t i;
+    for(T &a: a1) a = T(i);
+   
+    //copy assignment
+    DArray<T,STORAGE> a2;
+    a2 = a1;
+    CPPUNIT_ASSERT(a2.rank() == a1.rank());
+    CPPUNIT_ASSERT(a2.size() == a2.size());
+    CPPUNIT_ASSERT(std::equal(a1.begin(),a1.end(),a2.begin()));
+    
+    //move assignment operator
+    DArray<T,STORAGE> a3;
+    a3 = std::move(a1); 
+    CPPUNIT_ASSERT(a3.rank() == a2.rank());
+    CPPUNIT_ASSERT(a3.size() == a2.size());
+    CPPUNIT_ASSERT(a1.rank() == 0);
+    CPPUNIT_ASSERT(a1.size() == 0);
+
+    CPPUNIT_ASSERT(std::equal(a3.begin(),a3.end(),a2.begin()));
+
+}
+
+//------------------------------------------------------------------------------
+template<typename T,typename STORAGE>
 void DArrayTest<T,STORAGE>::test_linear_access()
 {
     DArray<T,STORAGE> a1(s1,STORAGE(12));
@@ -101,6 +129,7 @@ void DArrayTest<T,STORAGE>::test_linear_access()
         CPPUNIT_ASSERT_NO_THROW(check_equality(T(i),a1.at(i)));
 
     CPPUNIT_ASSERT_THROW(a1.at(a1.size() + 100),IndexError);
+    CPPUNIT_ASSERT_THROW(a1.insert(2*a1.size(),100),IndexError);
 
 }
 
@@ -171,6 +200,17 @@ void DArrayTest<T,STORAGE>::test_multiindex_access()
             CPPUNIT_ASSERT_NO_THROW(check_equality(a1(index),data[a1.shape()[0]*i+j]));
         }
     }
+
+    //check some exceptions 
+    CPPUNIT_ASSERT_THROW(a1(100,1),IndexError);
+    CPPUNIT_ASSERT_THROW(a1(1,100),IndexError);
+    CPPUNIT_ASSERT_THROW(a1(1),ShapeMissmatchError);
+    CPPUNIT_ASSERT_THROW(a1(1,2,4),ShapeMissmatchError);
+    CPPUNIT_ASSERT_THROW(a1(std::vector<size_t>{100,1}),IndexError);
+    CPPUNIT_ASSERT_THROW(a1(std::vector<size_t>{1,100}),IndexError);
+    CPPUNIT_ASSERT_THROW(a1(std::vector<size_t>{1}),ShapeMissmatchError);
+    CPPUNIT_ASSERT_THROW(a1(std::vector<size_t>{1,100,3}),ShapeMissmatchError);
+    
 }
 
 //------------------------------------------------------------------------------

@@ -335,7 +335,8 @@ namespace utils {
             \param c multidimensional index 
             \return reference to the element at position i
             */
-            template<typename CTYPE> value_type &operator()(const CTYPE &c)
+            template<template<typename ...> class CTYPE,typename ...OTYPES> 
+                value_type &operator()(const CTYPE<OTYPES...> &c)
             {
                 return this->_data[this->_imap.offset(c)];
             }
@@ -352,8 +353,8 @@ namespace utils {
             \param c multidimensional index 
             \return value of the element at position i
             */
-            template<typename CTYPE>
-                value_type operator()(const CTYPE &c) const
+            template<template<typename ...> class CTYPE,typename ...OTYPES>
+                value_type operator()(const CTYPE<OTYPES...> &c) const
             {
                 return this->_data[this->_imap.offset(c)];
             }
