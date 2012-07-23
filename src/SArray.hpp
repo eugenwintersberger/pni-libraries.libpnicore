@@ -111,6 +111,24 @@ namespace utils{
                  return this->_data[this->_shape.offset(indices...)];   
             }
 
+            //-----------------------------------------------------------------
+            template<template<typename ...> class CTYPE,typename ...OTS>
+            ArrayView<SArray<T,DIMS...> >
+            _get_data(ArrayView<SArray<T,DIMS...> > &view,const CTYPE<OTS...> &c)
+            {
+                ArraySelection s = ArraySelection::create(c);
+
+                return ArrayView<SArray<T,DIMS...> >(*this,s);
+
+            }
+
+            //----------------------------------------------------------------
+            template<template<typename ...> class CTYPE,typename ...OTS>
+            T &_get_data(T v,const CTYPE<OTS...> &c)
+            {
+                 return this->_data[this->_shape.offset(c)];   
+            }
+
         public:
             //================public types=====================================
             //! data type of the elements stored in the array
@@ -278,10 +296,17 @@ namespace utils{
             \param c container with indices
             \return reference to the element
             */
-            template<typename CTYPE> value_type &operator()(const CTYPE &c)
+            template<template<typename ...> class CTYPE,typename ...OTS>
+            typename ArrayViewSelector<array_type,typename CTYPE<OTS...>::value_type>::reftype
+            operator()(const CTYPE<OTS...> &c)
             {
-                //rank and index checking is done by the shape object
-                return this->_data[this->_shape.offset(c)];
+
+                typedef ArrayViewSelector<array_type,typename CTYPE<OTS...>::value_type> selector;
+                typedef typename selector::viewtype viewtype;
+                typedef typename selector::reftype  viewref;
+
+                viewtype r = viewtype();
+                return _get_data(r,c);
             }
 
             //-----------------------------------------------------------------
@@ -298,17 +323,17 @@ namespace utils{
             \param c container with indices
             \return value of the array element
             */
-            template<typename CTYPE> value_type operator()(const CTYPE &c) const
+            template<template<typename ...> class CTYPE,typename ...OTS>
+            typename ArrayViewSelector<array_type,typename CTYPE<OTS...>::value_type>::viewtype
+            operator()(const CTYPE<OTS...> &c) const
             {
-                return this->_data[this->_shape.offset(c)];
+                typedef ArrayViewSelector<array_type,typename CTYPE<OTS...>::value_type> sel;
+                typename sel::viewtype result;
+
+                return _get_data(result,c);
+                return result;
             }
 
-            //-----------------------------------------------------------------
-            //! create Array view from slices
-            view_type operator()(const std::vector<Slice> &s)
-            {
-                return view_type(*this,ArraySelection::create(s));   
-            }
 
             //-----------------------------------------------------------------
             /*!

@@ -89,6 +89,23 @@ namespace utils {
                 return this->_data[this->_imap.offset(indices...)];
             }
 
+            //-----------------------------------------------------------------
+            template<template<typename ...> class CTYPE,typename ...OTS>
+            ArrayView<DArray<T,STORAGE,IMAP> >
+            _get_data(ArrayView<DArray<T,STORAGE,IMAP> >&view,const CTYPE<OTS...> &c)
+            {
+                ArraySelection s = ArraySelection::create(c);
+
+                return ArrayView<DArray<T,STORAGE,IMAP> >(*this,s);
+            }
+
+            //-----------------------------------------------------------------
+            template<template<typename ...> class CTYPE,typename ...OTS>
+                T &_get_data(T v,const CTYPE<OTS...> &c)
+            {
+                return this->_data[this->_imap.offset(c)];
+            }
+
         public:
             //================public types=====================================
             //! arrays element type
@@ -335,10 +352,16 @@ namespace utils {
             \param c multidimensional index 
             \return reference to the element at position i
             */
-            template<template<typename ...> class CTYPE,typename ...OTYPES> 
-                value_type &operator()(const CTYPE<OTYPES...> &c)
+            template<template<typename ...> class CTYPE,typename ...OTS> 
+            typename ArrayViewSelector<array_type,typename CTYPE<OTS...>::value_type>::reftype
+            operator()(const CTYPE<OTS...> &c)
             {
-                return this->_data[this->_imap.offset(c)];
+                typedef ArrayViewSelector<array_type,typename CTYPE<OTS...>::value_type> selector;
+                typedef typename selector::viewtype viewtype;
+                typedef typename selector::reftype  viewref;
+
+                viewtype r = viewtype();
+                return _get_data(r,c);
             }
 
             //-----------------------------------------------------------------
@@ -353,16 +376,15 @@ namespace utils {
             \param c multidimensional index 
             \return value of the element at position i
             */
-            template<template<typename ...> class CTYPE,typename ...OTYPES>
-                value_type operator()(const CTYPE<OTYPES...> &c) const
+            template<template<typename ...> class CTYPE,typename ...OTS>
+            typename ArrayViewSelector<array_type,typename CTYPE<OTS...>::value_type>::viewtype
+            operator()(const CTYPE<OTS...> &c) const
             {
-                return this->_data[this->_imap.offset(c)];
-            }
+                typedef ArrayViewSelector<array_type,typename CTYPE<OTS...>::value_type> sel;
+                typename sel::viewtype result;
 
-            //-----------------------------------------------------------------
-            view_type operator()(const std::vector<Slice> &s)
-            {
-                return view_type(*this,ArraySelection::create(s));
+                return _get_data(result,c);
+                return result;
             }
 
             //----------------------------------------------------------------- 

@@ -141,23 +141,21 @@ template<typename T> class Array
    
     //if all arguments are integer numbers return a reference to the 
     template<typename ...ITYPES>
-    typename ArrayViewSelector<ITYPES...>::reftype 
+    typename ArrayViewSelector<array_type,ITYPES...>::reftype 
     operator()(ITYPES ...indices);
 
     template<typename ...ITYPES>
-    typename ArrayViewSelector<ITYPES...>::viewtype 
+    typename ArrayViewSelector<array_type,ITYPES...>::viewtype 
     operator()(ITYPES ...indices);
 
     template<template<typename ...> class CTYPE,typename ...OTS> 
-    value_type &operator()(const CTYPE<OTS...> &index);
+    typename ArrayViewSelector<array_type,typename CTYPE::value_type>::reftype
+    operator()(const CTYPE<OTS...> &index);
 
     template<template<typename ...> class CTYPE,typename ...OTS> 
-    value_type operator()(const CTYPE<OTS...> &index) const;
+    typename ArrayViewSelector<array_type,typename CTYPE::value_type>::viewtype
+    operator()(const CTYPE<OTS...> &index) const;
 
-    template<template<typename> CTYPE> 
-    ArrayView<Array> operator()(const CTYPE<Slice> &slice) const;
-    
-   
     //================methods for linear data access===========================
 
     //operators for linear data access - these operators are assumed not to
