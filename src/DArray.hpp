@@ -178,7 +178,22 @@ namespace utils {
                         "DArray(const Shape &s, const STORAGE &b))");
             }
 
-            /*! \brief protected constructor
+            //-----------------------------------------------------------------
+            /*! \brief construct from shape
+
+            Construct Array from a shape and let the constructor allocate
+            memory.
+            \throws MemoryAllocationError if memory allocation fails
+            \param s shape container
+            */
+            template<typename CTYPE> explicit DArray(const CTYPE &s):
+                _imap(s),
+                _data(STORAGE(_imap.size()))
+            { }
+
+
+            //-----------------------------------------------------------------
+            /*! \brief constructor for moving buffer
 
             \param s shape of the 
             \param buffer buffer object
