@@ -26,7 +26,6 @@
 #define __NUMARRAY_HPP__
 
 #include "Types.hpp"
-#include "Shape.hpp"
 #include "Iterator.hpp"
 #include "ArrayViewSelector.hpp"
 
@@ -58,19 +57,19 @@ namespace utils{
 
             //======================constructors and destructor================
             //! default constructor
-            Array() = delete;
+            NumArray() = delete;
 
             //-----------------------------------------------------------------
             //! construct from an arbitary array type
-            Array(ATYPE &a):_array(a) {}
+            NumArray(ATYPE &a):_array(a) {}
 
             //-----------------------------------------------------------------
             //! copy constructor
-            Array(const array_type &a):_array(a._array) {}
+            NumArray(const array_type &a):_array(a._array) {}
 
             //-----------------------------------------------------------------
             //! destructor
-            ~Array() {} 
+            ~NumArray() {} 
 
             //====================inquery methods=============================
             size_t size() const { return this->_array.size(); }
