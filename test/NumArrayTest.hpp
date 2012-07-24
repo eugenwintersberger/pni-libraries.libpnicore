@@ -21,6 +21,10 @@ class NumArrayTest : public CppUnit::TestFixture{
         CPPUNIT_TEST(test_iterators);
         CPPUNIT_TEST(test_multiindex_access);
         CPPUNIT_TEST(test_typeinfo);
+        CPPUNIT_TEST(test_unary_add);
+        CPPUNIT_TEST(test_unary_sub);
+        CPPUNIT_TEST(test_unary_mult);
+        CPPUNIT_TEST(test_unary_div);
         CPPUNIT_TEST_SUITE_END();
     private:
         template<typename T,typename ST,typename MT>
@@ -47,8 +51,10 @@ class NumArrayTest : public CppUnit::TestFixture{
         void test_iterators();
         void test_multiindex_access();
         void test_typeinfo();
-        void test_unary_addition();
-        void test_unary_subtraction();
+        void test_unary_add();
+        void test_unary_sub();
+        void test_unary_mult();
+        void test_unary_div();
 };
 
 //------------------------------------------------------------------------------
@@ -204,4 +210,113 @@ template<typename ATYPE> void NumArrayTest<ATYPE>::test_typeinfo()
     TypeID id1 = NumArray<ATYPE>::type_id;
     TypeID id2 = TypeIDMap<typename ATYPE::value_type>::type_id;
     CPPUNIT_ASSERT(id1 == id2);
+}
+
+//-------------------------------------------------------------------------------
+template<typename ATYPE> void NumArrayTest<ATYPE>::test_unary_add()
+{
+    typedef typename NumArray<ATYPE>::value_type value_type;
+    NumArray<ATYPE> a(create_array<ATYPE>());
+
+    //set initial value
+    std::fill(a.begin(),a.end(),value_type(1));
+
+    //add a scalar
+    a += value_type(1);
+    for(auto v: a) check_equality(v,value_type(2));
+
+    //add a array
+    NumArray<ATYPE> b(create_array<ATYPE>());
+    std::fill(b.begin(),b.end(),value_type(3));
+
+    a += b;
+    for(auto v: a) check_equality(v,value_type(5));
+
+    //try an arbitary container
+    std::vector<value_type> c(a.size());
+    std::fill(c.begin(),c.end(),value_type(10));
+    a += c;
+    for(auto v: a) check_equality(v,value_type(15));
+}
+
+//-----------------------------------------------------------------------------
+template<typename ATYPE> void NumArrayTest<ATYPE>::test_unary_sub()
+{
+    typedef typename NumArray<ATYPE>::value_type value_type;
+    NumArray<ATYPE> a(create_array<ATYPE>());
+
+    //set initial value
+    std::fill(a.begin(),a.end(),value_type(15));
+
+    //add a scalar
+    a -= value_type(1);
+    for(auto v: a) check_equality(v,value_type(14));
+
+    //add a array
+    NumArray<ATYPE> b(create_array<ATYPE>());
+    std::fill(b.begin(),b.end(),value_type(3));
+
+    a -= b;
+    for(auto v: a) check_equality(v,value_type(11));
+
+    //try an arbitary container
+    std::vector<value_type> c(a.size());
+    std::fill(c.begin(),c.end(),value_type(10));
+    a -= c;
+    for(auto v: a) check_equality(v,value_type(1));
+}
+
+//-----------------------------------------------------------------------------
+template<typename ATYPE> void NumArrayTest<ATYPE>::test_unary_mult()
+{
+    typedef typename NumArray<ATYPE>::value_type value_type;
+    NumArray<ATYPE> a(create_array<ATYPE>());
+
+    //set initial value
+    std::fill(a.begin(),a.end(),value_type(1));
+
+    //add a scalar
+    a *= value_type(2);
+    for(auto v: a) check_equality(v,value_type(2));
+
+    //add a array
+    NumArray<ATYPE> b(create_array<ATYPE>());
+    std::fill(b.begin(),b.end(),value_type(3));
+
+    a *= b;
+    for(auto v: a) check_equality(v,value_type(6));
+
+    //try an arbitary container
+    std::vector<value_type> c(a.size());
+    std::fill(c.begin(),c.end(),value_type(10));
+    a *= c;
+    for(auto v: a) check_equality(v,value_type(60));
+}
+
+//-----------------------------------------------------------------------------
+template<typename ATYPE> void NumArrayTest<ATYPE>::test_unary_div()
+{
+    typedef typename NumArray<ATYPE>::value_type value_type;
+    NumArray<ATYPE> a(create_array<ATYPE>());
+
+    //set initial value
+    std::fill(a.begin(),a.end(),value_type(12));
+
+    //add a scalar
+    a /= value_type(2);
+    for(auto v: a) check_equality(v,value_type(12/2));
+
+    //add a array
+    NumArray<ATYPE> b(create_array<ATYPE>());
+    std::fill(b.begin(),b.end(),value_type(2));
+
+    a /= b;
+    for(auto v: a) check_equality(v,value_type(12/2/2));
+
+    //try an arbitary container
+    std::vector<value_type> c(a.size());
+    std::fill(c.begin(),c.end(),value_type(2));
+    a /= c;
+    for(auto v: a) check_equality(v,value_type(value_type(12)/value_type(2)/
+                                  value_type(2)/value_type(2)));
 }

@@ -28,13 +28,15 @@
 #include "Types.hpp"
 #include "Iterator.hpp"
 #include "ArrayViewSelector.hpp"
+#include "InplaceArithmetics.hpp"
 
 namespace pni{
 namespace utils{
 
 
 
-    template<typename ATYPE> class NumArray
+    template<typename ATYPE,typename IPA=InplaceArithmetics<ATYPE> > 
+        class NumArray
     {
         //need to do here a compiletime check if types are equal
         private:
@@ -172,6 +174,94 @@ namespace utils{
             //-----------------------------------------------------------------
             const_iterator end() const { return this->_array.end(); }
 
+            //===================unary add=====================================
+            array_type &operator+=(value_type v)
+            {
+                IPA::add(this->_array,v);
+                return *this;
+            }
+
+            //-----------------------------------------------------------------
+            array_type &operator+=(const array_type &a)
+            {
+                IPA::add(this->_array,a._array);
+                return *this;
+            }
+
+            //-----------------------------------------------------------------
+            template<template<typename ...> class CTYPE,typename ...OTS>
+                array_type &operator+=(const CTYPE<OTS...> &c)
+            {
+                IPA::add(this->_array,c);
+                return *this;
+            }
+
+            //==================unary subtraction==============================
+            array_type &operator-=(value_type v)
+            {
+                IPA::sub(this->_array,v);
+                return *this;
+            }
+
+            //-----------------------------------------------------------------
+            array_type &operator-=(const array_type &a)
+            {
+                IPA::sub(this->_array,a._array);
+                return *this;
+            }
+
+            //----------------------------------------------------------------
+            template<template<typename ...> class CTYPE,typename ...OTS>
+                array_type &operator-=(const CTYPE<OTS...> &c)
+            {
+                IPA::sub(this->_array,c);
+                return *this;
+            }
+
+            //==================unary multiplication==========================
+            array_type &operator*=(value_type v)
+            {
+                IPA::mult(this->_array,v);
+                return *this;
+            }
+
+            //-----------------------------------------------------------------
+            array_type &operator*=(const array_type &a)
+            {
+                IPA::mult(this->_array,a._array);
+                return *this;
+            }
+
+            //----------------------------------------------------------------
+            template<template<typename ...> class CTYPE,typename ...OTS>
+                array_type &operator*=(const CTYPE<OTS...> &c)
+            {
+                IPA::mult(this->_array,c);
+                return *this;
+            }
+            
+            //==================unary division=================================
+            array_type &operator/=(value_type v)
+            {
+                IPA::div(this->_array,v);
+                return *this;
+            }
+
+            //-----------------------------------------------------------------
+            array_type &operator/=(const array_type &a)
+            {
+                IPA::div(this->_array,a._array);
+                return *this;
+            }
+
+            //----------------------------------------------------------------
+            template<template<typename ...> class CTYPE,typename ...OTS>
+                array_type &operator/=(const CTYPE<OTS...> &c)
+            {
+                IPA::div(this->_array,c);
+                return *this;
+            }
+            
     };
 
 

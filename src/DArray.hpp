@@ -47,7 +47,6 @@
 #include "TypeIDMap.hpp"
 #include "type_conversion.hpp"
 #include "Iterator.hpp"
-#include "policies/InplaceArithmetics.hpp"
 
 namespace pni {
 namespace utils {
