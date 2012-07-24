@@ -14,7 +14,8 @@
 using namespace pni::utils;
 
 template<typename ATYPE>
-class NumArrayTest : public CppUnit::TestFixture{
+class NumArrayTest : public CppUnit::TestFixture
+{
         CPPUNIT_TEST_SUITE(NumArrayTest);
         CPPUNIT_TEST(test_construction);
         CPPUNIT_TEST(test_linear_access);
@@ -294,7 +295,7 @@ template<typename ATYPE> void NumArrayTest<ATYPE>::test_unary_mult()
 }
 
 //-----------------------------------------------------------------------------
-template<typename ATYPE> void NumArrayTest<ATYPE>::test_unary_div()
+template<typename ATYPE> void NumArrayTest<ATYPE>::test_unary_div()/*{{{*//*{{{*/
 {
     typedef typename NumArray<ATYPE>::value_type value_type;
     NumArray<ATYPE> a(create_array<ATYPE>());
