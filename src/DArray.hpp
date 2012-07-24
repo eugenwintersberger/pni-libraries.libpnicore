@@ -268,6 +268,7 @@ namespace utils {
                 return this->_imap.shape(); 
             }
 
+            //! shape to container
             template<typename CTYPE> CTYPE shape() const
             {
                 CTYPE c(this->_imap.rank());

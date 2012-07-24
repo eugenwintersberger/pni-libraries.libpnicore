@@ -38,7 +38,7 @@ namespace utils{
     {
         //need to do here a compiletime check if types are equal
         private:
-            ATYPE &_array;
+            ATYPE _array;
         public:
             //====================public types=================================
 
@@ -53,7 +53,7 @@ namespace utils{
             typedef typename ATYPE::const_iterator const_iterator;
             
             //=====================public members==============================
-            static const type_id = TypeIDMap<value_type>::type_id;
+            static const TypeID type_id = TypeIDMap<value_type>::type_id;
 
             //======================constructors and destructor================
             //! default constructor
@@ -61,15 +61,35 @@ namespace utils{
 
             //-----------------------------------------------------------------
             //! construct from an arbitary array type
-            NumArray(ATYPE &a):_array(a) {}
+            NumArray(ATYPE &&a):_array(std::move(a)) {}
 
             //-----------------------------------------------------------------
             //! copy constructor
             NumArray(const array_type &a):_array(a._array) {}
 
+            //! move constructor
+            NumArray(array_type &&a):_array(std::move(a._array)) {}
+
             //-----------------------------------------------------------------
             //! destructor
             ~NumArray() {} 
+
+            //=================assignment operators===========================
+            //! copy assignment
+            array_type &operator=(const array_type &a)
+            {
+                if(this == &a) return *this;
+                this->_array = a._array;
+                return *this;
+            }
+
+            //! move assignment
+            array_type &operator=(array_type &&a)
+            {
+                if(this == &a) return *this;
+                this->_array = std::move(a._array);
+                return *this;
+            }
 
             //====================inquery methods=============================
             size_t size() const { return this->_array.size(); }
