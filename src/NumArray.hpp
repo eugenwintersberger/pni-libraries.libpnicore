@@ -34,7 +34,17 @@ namespace pni{
 namespace utils{
 
 
+    
+    /*! 
+    \ingroup data_classes
+    \brief numeric array facade
 
+    This template is a facade for other array types adding numerical
+    capabilities to the array. 
+    \tparam ATYPE representation of a multidimensional array
+    \tparam IPA inplace arithmetics type
+
+    */
     template<typename ATYPE,typename IPA=InplaceArithmetics<ATYPE> > 
         class NumArray
     {
@@ -46,7 +56,7 @@ namespace utils{
 
             typedef typename ATYPE::value_type value_type;
             typedef NumArray<ATYPE> array_type;
-            typedef typename ATYPE::storage_type storage_type;
+            typedef ATYPE storage_type;
             typedef ArrayView<array_type> view_type;
             typedef std::shared_ptr<array_type> shared_ptr;
             typedef std::unique_ptr<array_type> unique_ptr;
@@ -59,7 +69,7 @@ namespace utils{
 
             //======================constructors and destructor================
             //! default constructor
-            NumArray() = delete;
+            NumArray():_array() {}
 
             //-----------------------------------------------------------------
             //! construct from an arbitary array type
@@ -90,6 +100,14 @@ namespace utils{
             {
                 if(this == &a) return *this;
                 this->_array = std::move(a._array);
+                return *this;
+            }
+
+            //! container assignment
+            template<typename CTYPE>
+            array_type &operator=(const CTYPE &c)
+            {
+                std::copy(c.begin(),c.end(),this->begin());
                 return *this;
             }
 
@@ -125,9 +143,9 @@ namespace utils{
             }
 
             //-----------------------------------------------------------------
-            const storage_type &storage() const
+            const ATYPE &storage() const
             {
-                return this->_array.storage();
+                return this->_array;
             }
 
             //-----------------------------------------------------------------

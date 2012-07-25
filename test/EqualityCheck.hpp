@@ -1,6 +1,11 @@
 #ifndef __EQUALITYCHECK_HPP__
 #define __EQUALITYCHECK_HPP__
 
+
+#include "TypeInfo.hpp"
+
+using namespace pni::utils;
+
 template<typename T,bool is_int,bool is_complex> class EqualityCheck;
 
 template<typename T> class EqualityCheck<T,true,false>

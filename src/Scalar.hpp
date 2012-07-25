@@ -98,38 +98,31 @@ using namespace boost::numeric;
     are created and returned by value. However, since the scalar objects are pretty small
     this effort should not matter too much.
     */
-    template<typename T> class Scalar:public NumericObject
+    template<typename T> class Scalar
     {
         private:
             T _value; //!< object holding the value of the Scalar object
         public:
             //================public data types================================
+            typedef T value_type;
             typedef std::shared_ptr<Scalar<T> > shared_ptr; //!< shared pointer type
             typedef std::unique_ptr<Scalar<T> > unique_ptr; //!< unique pointer type
-            typedef T value_type; //!< type of the scalar object
             
             //===============public members====================================
             //! type ID of the data type held by the scalar
             static const TypeID type_id = TypeIDMap<T>::type_id;
-            //! memory size of the element type
-            static const size_t value_size = sizeof(T);
 
             //====================constructors and destructor==================
             //! default constructor
-            Scalar():NumericObject(),_value(0)
-            {}
+            Scalar():_value() {}
             
             //-----------------------------------------------------------------
             //! copy constructor
-            Scalar(const Scalar<T> &s):NumericObject(s),_value(s._value)
-            {}
+            explicit Scalar(const Scalar<T> &s):_value(s._value) {}
 
             //-----------------------------------------------------------------
             //! move constructor
-            Scalar(Scalar<T> &&s):
-                NumericObject(std::move(s)),
-                _value(std::move(s._value))
-            {}
+            explicit Scalar(Scalar<T> &&s): _value(std::move(s._value)) {}
 
             //-----------------------------------------------------------------
             /*! \brief copy conversion constructor
@@ -138,7 +131,6 @@ using namespace boost::numeric;
             \throws TypeError if conversion fails
             */
             template<typename U> Scalar(const Scalar<U> &o):
-                NumericObject(o),
 	            _value(convert_type<T>(o.value()))
             {}
                 
@@ -148,62 +140,10 @@ using namespace boost::numeric;
             Constructs Scalar instance from a single value of type T.
             \param v value of type T
             */
-            Scalar(const T &v):NumericObject(),_value(v)
-            {}
+            Scalar(const T &v):_value(v) {}
 
-            //-----------------------------------------------------------------
-            /*! \brief constructor
-
-            Constructor setting the value, name, and physical unit of the 
-            Scalar object.
-            \param v value of type T
-            \param n name of the object as String
-            \param u unit of the object as String
-            */
-            Scalar(const T &v, const String &n, const String &u):
-                NumericObject(n,u),
-                _value(v)
-            {}
-
-            //-----------------------------------------------------------------
-            /*! \brief constructor
-
-            Constructor setting the value, name, description, and physical 
-            unit of the Scalar object.
-            \param v value of type T
-            \param n name of the object as String
-            \param u unit of the object as String
-            \param d description of the object as String
-            */
-            Scalar(const T &v, const String &n, const String &u, 
-                   const String &d):
-                NumericObject(n,u,d),
-                _value(v)
-            {}
-
-            //-----------------------------------------------------------------
-            /*! \brief constructor
-
-            Constructor setting name and unit of the Scalar object.
-            \param n name of the object as String
-            \param u physical unit of the object as String
-            */
-            Scalar(const String &n, const String &u):
-                NumericObject(n,u),
-                _value(0)
-            {}
-
-            //-----------------------------------------------------------------
-            /*! \brief constructor
-
-            Constructor setting name, description, and unit of the Scalar object.
-            \param n name of the object as String
-            \param u physical unit of the object as String
-            \param d description of the object as String
-            */
-            Scalar(const String &n, const String &u, const String &d):
-                NumericObject(n,u,d),
-                _value(0)
+            template<typename U> Scalar(U v)
+                :_value(convert_type<T>(v))
             {}
 
             //-----------------------------------------------------------------
@@ -395,22 +335,6 @@ using namespace boost::numeric;
             template<typename U> Scalar<T> &operator*=(const Scalar<U> &v);
 
             //-----------------------------------------------------------------
-            /*! \brief get void pointer to data
-
-            Returns a void pointer to the data held by the object.
-            \return void pointer
-            */
-            void *void_ptr() { return (void *)(&_value); }
-
-            //-----------------------------------------------------------------
-            /*! \brief get const void pointer
-
-            Return a const void pointer to the data held by the object.
-            \return const void pointer
-            */
-            const void *void_ptr() const { return (const void *)(&_value); }
-
-            //-----------------------------------------------------------------
             /*! \brief get pointer to data
 
             Return a pointer to the data held by the scalar
@@ -426,6 +350,13 @@ using namespace boost::numeric;
             */
             const T *ptr() const { return (const T*)(&_value); }
 
+
+            //===================data access operators=========================
+            T &operator[](size_t i) { return this->_value; }
+
+            T operator[](size_t i) const { return this->_value; }
+
+            size_t size() const { return 0; }
 
     };
 
@@ -794,194 +725,6 @@ using namespace boost::numeric;
     }
 
 
-    //===================binary addition operators==============================
-
-    //! binary add operation
-    template<typename A,typename B>
-    Scalar<typename ResultTypeTrait<A,B>::AddResultType > 
-    operator+(const Scalar<A> &a,const Scalar<B> &b)
-    {
-        typedef typename ResultTypeTrait<A,B>::AddResultType ResultType;
-        Scalar<ResultType> o;
-
-        ResultType _a = convert_type<ResultType>(a.value());
-        ResultType _b = convert_type<ResultType>(b.value());
-
-        o.value(_a + _b);
-
-        return o;
-    }
-
-    //--------------------------------------------------------------------------
-    template<typename A,typename B>
-    Scalar<typename ResultTypeTrait<A,B>::AddResultType > 
-    operator+(const Scalar<A> &a,const B &b)
-    {
-        typedef typename ResultTypeTrait<A,B>::AddResultType ResultType;
-        Scalar<ResultType> o;
-
-        ResultType _a = convert_type<ResultType>(a.value());
-        ResultType _b = convert_type<ResultType>(b);
-
-        o.value(_a + _b);
-        return o;
-    }
-
-    //--------------------------------------------------------------------------
-    template<typename A,typename B>
-    Scalar<typename ResultTypeTrait<A,B>::AddResultType > 
-    operator+(const A &a,const Scalar<B> &b)
-    {
-        typedef typename ResultTypeTrait<A,B>::AddResultType ResultType;
-        Scalar<ResultType> o;
-
-        ResultType _a = convert_type<ResultType>(a);
-        ResultType _b = convert_type<ResultType>(b.value());
-
-        o.value(_a + _b);
-
-        return o;
-    }
-
-    //======================Binary subtraction operator=========================
-    //overloaded subtraction operator
-    template<typename A,typename B>
-    Scalar<typename ResultTypeTrait<A,B>::SubResultType > 
-    operator-(const Scalar<A> &a, const Scalar<B> &b) 
-    {
-        typedef typename ResultTypeTrait<A,B>::SubResultType ResultType;
-        Scalar<ResultType> tmp;
-
-        ResultType _a = convert_type<ResultType>(a.value());
-        ResultType _b = convert_type<ResultType>(b.value());
-
-        tmp.value(_a - _b);
-
-        return tmp;
-    }
-
-    //--------------------------------------------------------------------------
-    template<typename A,typename B>
-    Scalar<typename ResultTypeTrait<A,B>::SubResultType > 
-    operator-(const A& a, const Scalar<B> &b) 
-    {
-        typedef typename ResultTypeTrait<A,B>::SubResultType ResultType;
-        Scalar<ResultType> tmp;
-
-        ResultType _a = convert_type<ResultType>(a);
-        ResultType _b = convert_type<ResultType>(b.value());
-
-        tmp.value(_a - _b);
-
-        return tmp;
-    }
-
-    //--------------------------------------------------------------------------
-    template<typename A,typename B>
-    Scalar<typename ResultTypeTrait<A,B>::SubResultType > 
-    operator-(const Scalar<A> &a, const B &b) 
-    {
-        typedef typename ResultTypeTrait<A,B>::SubResultType ResultType;
-        Scalar<ResultType> tmp;
-
-        ResultType _a = convert_type<ResultType>(a.value());
-        ResultType _b = convert_type<ResultType>(b);
-
-        tmp.value(_a - _b);
-        return tmp;
-    }
-
-    //======================Binary multiplication operator======================
-    //overloading the multiplication operator
-    template<typename A,typename B>
-    Scalar<typename ResultTypeTrait<A,B>::MultResultType > 
-    operator*(const Scalar<A> &a, const Scalar<B> &b) 
-    {
-        typedef typename ResultTypeTrait<A,B>::MultResultType ResultType;
-        Scalar<ResultType> tmp;
-
-        ResultType _a = convert_type<ResultType>(a.value());
-        ResultType _b = convert_type<ResultType>(b.value());
-
-        tmp.value(_a * _b);
-        return tmp;
-    }
-
-    //--------------------------------------------------------------------------
-    template<typename A,typename B>
-    Scalar<typename ResultTypeTrait<A,B>::MultResultType > 
-    operator*(const A& a, const Scalar<B> &b) 
-    {
-        typedef typename ResultTypeTrait<A,B>::MultResultType ResultType;
-        Scalar<ResultType> tmp;
-
-        ResultType _a = convert_type<ResultType>(a);
-        ResultType _b = convert_type<ResultType>(b.value());
-
-        tmp.value(_a * _b);
-        return tmp;
-    }
-
-    //--------------------------------------------------------------------------
-    template<typename A,typename B>
-    Scalar<typename ResultTypeTrait<A,B>::MultResultType > 
-    operator*(const Scalar<A> &a, const B& b) 
-    {
-        typedef typename ResultTypeTrait<A,B>::MultResultType ResultType;
-        Scalar<ResultType> tmp;
-
-        ResultType _a = convert_type<ResultType>(a.value());
-        ResultType _b = convert_type<ResultType>(b);
-
-        tmp.value(_a * _b);
-        return tmp;
-    }
-
-    //===================Binary division operator===============================
-    //overloading the division operator
-    template<typename A,typename B>
-    Scalar<typename ResultTypeTrait<A,B>::DivResultType > 
-    operator/(const Scalar<A> &a, const Scalar<B> &b) 
-    {
-        typedef typename ResultTypeTrait<A,B>::DivResultType ResultType;
-        Scalar<ResultType> tmp;
-
-        ResultType _a = convert_type<ResultType>(a.value());
-        ResultType _b = convert_type<ResultType>(b.value());
-
-        tmp.value(_a / _b);
-        return tmp;
-    }
-
-    //--------------------------------------------------------------------------
-    template<typename A,typename B>
-    Scalar<typename ResultTypeTrait<A,B>::DivResultType > 
-    operator/(const A& a, const Scalar<B> &b) 
-    {
-        typedef typename ResultTypeTrait<A,B>::DivResultType ResultType;
-        Scalar<ResultType> tmp;
-
-        ResultType _a = convert_type<ResultType>(a);
-        ResultType _b = convert_type<ResultType>(b.value());
-
-        tmp.value(_a / _b);
-        return tmp;
-    }
-
-    //--------------------------------------------------------------------------
-    template<typename A,typename B>
-    Scalar<typename ResultTypeTrait<A,B>::DivResultType > 
-    operator/(const Scalar<A> &a, const B &b) 
-    {
-        typedef typename ResultTypeTrait<A,B>::DivResultType ResultType;
-        Scalar<ResultType> tmp;
-
-        ResultType _a = convert_type<ResultType>(a.value());
-        ResultType _b = convert_type<ResultType>(b);
-
-        tmp.value(_a / _b);
-        return tmp;
-    }
 
 //declare some useful default types
 typedef Scalar<Int8>   Int8Scalar;
