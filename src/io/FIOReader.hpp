@@ -32,8 +32,7 @@
 #include<map>
 #include<boost/regex.hpp>
 
-#include "../Array.hpp"
-#include "../ArrayFactory.hpp"
+#include "../DArray.hpp"
 #include "SpreadsheetReader.hpp"
 
 namespace pni{
@@ -229,13 +228,13 @@ namespace io{
 
 
     //-------------------------------------------------------------------------
-    template<typename ATYPE> ATYPE FIOReader::column(const String &n) const
+    template<typename CTYPE> CTYPE FIOReader::column(const String &n) const
     {
         EXCEPTION_SETUP("template<typename ATYPE> ATYPE FIOReader::"
                         "column(const String &n) const");
 
         //allocate a new array
-        Shape s({this->nrecords()});
+        std::vector<size_t> s{this->nrecords()};
         ATYPE array = ArrayFactory<typename ATYPE::value_type>::create(s);
 
         //determine the index of the column

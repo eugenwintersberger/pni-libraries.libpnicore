@@ -35,7 +35,6 @@
 #include<vector>
 
 #include "../Types.hpp"
-#include "../Array.hpp"
 #include "DataReader.hpp"
 #include "ImageInfo.hpp"
 
@@ -117,14 +116,14 @@ namespace io{
             \param c (default = 0) image channel to read
             \return instance of ArrayType holding the channel data
             */
-            template<typename ArrayType> ArrayType image(size_t i,size_t c=0) 
+            template<typename ATYPE> ATYPE image(size_t i,size_t c=0) 
             {
                 EXCEPTION_SETUP("template<typename T,typename BT> "
                                  "Array<T,BT> image(size_t i=0) const");
                 EXCEPTION_INIT(NotImplementedError,
                                "Method not implemented!");
                 EXCEPTION_THROW();
-                return ArrayType();
+                return ATYPE();
             }
            
             //-----------------------------------------------------------------
@@ -140,9 +139,8 @@ namespace io{
             \param i index of the image in the file
             \param c (default = 0) index of the channel from which to read data.
             */
-            template<typename T,template<typename,typename> class BT,typename
-                Allocator> 
-                void image(Array<T,BT,Allocator> &array,size_t i,size_t c=0) 
+            template<typename ATYPE> 
+                void image(ATYPE &array,size_t i,size_t c=0) 
             {
                 EXCEPTION_SETUP("template<typename T, template<typename> "
                         "class BT> void image(size_t i=0,Array<T,BT>"

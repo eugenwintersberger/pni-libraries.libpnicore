@@ -29,8 +29,7 @@
 
 
 #include "../Types.hpp"
-#include "../Shape.hpp"
-
+#include <vector>
 
 using namespace pni::utils;
 
@@ -50,7 +49,7 @@ namespace io{
         private:
             String _name; //!< name of the columne
             TypeID _tid;  //!< type ID of column type
-            Shape  _shape; //!< shape of column data
+            std::vector<size_t>  _shape; //!< shape of column data
         public:
             //====================constructors and destructor===================
             //! default constructor
@@ -63,7 +62,7 @@ namespace io{
             ColumnInfo(ColumnInfo &&ci);
 
             //! standard constructor
-            ColumnInfo(const String &n,TypeID tid,const Shape &s);
+            ColumnInfo(const String &n,TypeID tid,const std::vector<size_t> &s);
 
             //! destructor
             ~ColumnInfo();
@@ -81,7 +80,7 @@ namespace io{
             Returns the shape object from a column.
             \return shape object.
             */
-            Shape shape() const { return _shape;}
+            const std::vector<size_t> &shape() const { return _shape;}
 
             /*! \brief get cells type ID
 

@@ -33,7 +33,6 @@
 
 #include "../Types.hpp"
 #include "../Exceptions.hpp"
-#include "../Shape.hpp"
 #include "ImageChannelInfo.hpp"
 
 using namespace pni::utils;
@@ -178,7 +177,7 @@ namespace io{
         EXCEPTION_SETUP("template<typename ATYPE> ATYPE ImageInfo::"
                         "create_array(const ImageInfo &info)");
 
-        Shape s({info.nx(),info.ny()});
+        std::vector<size_t> s{info.nx(),info.ny()};
         ATYPE array(s);
         return array;
     }
@@ -199,18 +198,18 @@ namespace io{
         }
 
         //check the shape of the array
-        Shape s(array.shape());
+        auto s = array.template shape<std::vector<size_t> >();
 
-        if(s.rank() != 2)
+        if(s.size() != 2)
         {
             EXCEPTION_INIT(ShapeMissmatchError,"Array is not of rank 2!");
             EXCEPTION_THROW();
         }
 
-        if((s.dim(0)!=info.ny()) || (s.dim(1) != info.nx()))
+        if((s[0]!=info.ny()) || (s[1] != info.nx()))
         {
             std::stringstream ss;
-            ss<<"Array shape ("<<s.dim(1)<<","<<s.dim(0)<<") does not match ";
+            ss<<"Array shape ("<<s[1]<<","<<s[0]<<") does not match ";
             ss<<"image size ("<<info.nx()<<","<<info.ny()<<")!";
             EXCEPTION_INIT(ShapeMissmatchError,ss.str());
             EXCEPTION_THROW();

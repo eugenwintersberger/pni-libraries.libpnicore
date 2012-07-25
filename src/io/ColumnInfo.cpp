@@ -56,7 +56,7 @@ namespace io{
 
     //-------------------------------------------------------------------------
     //implementation of the standard constructor
-    ColumnInfo::ColumnInfo(const String &n,TypeID tid,const Shape &s):
+    ColumnInfo::ColumnInfo(const String &n,TypeID tid,const std::vector<size_t> &s):
         _name(n),
         _tid(tid),
         _shape(s)
@@ -94,8 +94,10 @@ namespace io{
     //=================implementation of non-member operators==================
     std::ostream &operator<<(std::ostream &o,const ColumnInfo &ci)
     {
-        o<<"Column ["<<ci.name()<<"] of type ["<<ci.type_id()<<"] and element shape [";
-        o<<ci.shape()<<"]";
+        o<<"Column ["<<ci.name()<<"] of type ["<<ci.type_id();
+        o<<"] and element shape [ ";
+        for(auto v: ci.shape()) o<<v<<" ";
+        o<<"]";
         return o;
     }
 
