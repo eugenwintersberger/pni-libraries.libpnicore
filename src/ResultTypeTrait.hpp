@@ -28,57 +28,82 @@
  */
 
 
-#ifndef RESULTTYPETRAIT_HPP_
-#define RESULTTYPETRAIT_HPP_
+#ifndef __RESULTTYPETRAIT_HPP__
+#define __RESULTTYPETRAIT_HPP__
 
 namespace pni{
 namespace utils{
 
-//! \ingroup type_classes
-//! \brief arithmetic result type trait
 
-//! Template representing an arithmetic result type trait. Basically the
-//! result type of an arithmetic operation is determined from its argument
-//! argument types.
-template<typename A,typename B>
-class ResultTypeTrait{
-public:
-};
+    /*! 
+    \ingroup type_classes
+    \brief arithmetic result type trait
 
-//! \ingroup type_classes
-//! \brief single type trait macro
+    This trait determines the return type for a binary arithmetic operation. The
+    type is choosen in a way so that no overflows can occur.
+    Lets have a look on the following example
+    \code
+    UInt8 a=100,b=100,result=0;
 
-//! This macro is used to specialize a result type trait for the case that
-//! the two arguments of the arithmetic operation are of equal type.
+    result = a+b;
+    \endcode
+    As the result of the operation would exceed the range of UInt8 the result
+    would be truncated. In order to avoid this one can use the ResulTypeTrait to
+    determine an appropriate result type for an arithmetic operation. 
+    This type can be used like this:
+    \code
+    UInt8 a=100,b=100;
+    ResulTypeTrait<UInt8,UInt8>::add_type result;
+
+    result = a+b;
+    \endcode
+    Similar problems appear for instance when you try to divide two integer
+    numbers. 
+
+    This template must be specialized for every combination of types and
+    operation. To reduce typing work several macros are defined for this purpose.
+    */
+    template<typename A,typename B> class ResultTypeTrait; 
+
+    /*!
+    \ingroup type_classes
+    \brief macro for single type operations
+
+    This macro defines a specialization of the ResultTypeTrait for the case of a
+    single type operation. These are operations where the two types involved on
+    each side of the operator are of equal type. 
+    */
 #define ARITHMETICS_RESULT_TYPES_SINGLE(TA,ART,SRT,MRT,DRT)\
 	template<> class ResultTypeTrait<TA,TA>{\
 	public:\
-	typedef ART AddResultType;\
-	typedef SRT SubResultType;\
-	typedef MRT MultResultType;\
-	typedef DRT DivResultType;\
+	typedef ART add_type;\
+	typedef SRT sub_type;\
+	typedef MRT mult_type;\
+	typedef DRT div_type;\
 };
 
-//! \ingroup type_classes
-//! \brief multiple type trait macro
+    /*!
+    \ingroup type_classes
+    \brief macro for two type operations
 
-//! This macro can be used to specialize a result type trait for arithmetic
-//! operations where the operands are of different type.
+    This macro creates the specialization for the ResultTypeTrait template for
+    cases where the two arguments to an operator are of different type. 
+    */
 #define ARITHMETICS_RESULT_TYPES(TA,TB,ART,SRT,MRT,DRT)\
 	template<> class ResultTypeTrait<TA,TB>{ \
 	public: \
-	typedef ART AddResultType; \
-	typedef SRT SubResultType; \
-	typedef MRT MultResultType; \
-	typedef DRT DivResultType;\
+	typedef ART add_type; \
+	typedef SRT sub_type; \
+	typedef MRT mult_type; \
+	typedef DRT div_type;\
 }; \
 	\
 	template<> class ResultTypeTrait<TB,TA>{\
 	public:\
-	typedef ART AddResultType;\
-	typedef SRT SubResultType;\
-	typedef MRT MultResultType;\
-	typedef DRT DivResultType;\
+	typedef ART add_type;\
+	typedef SRT sub_type;\
+	typedef MRT mult_type;\
+	typedef DRT div_type;\
 };
 
 //! \cond no_doc
