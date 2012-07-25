@@ -36,7 +36,6 @@
 #include <limits>
 
 #include "Types.hpp"
-#include "NumericObject.hpp"
 #include "TypeInfo.hpp"
 #include "Exceptions.hpp"
 #include "ResultTypeTrait.hpp"
@@ -186,7 +185,6 @@ using namespace boost::numeric;
             Scalar<T> &operator=(const Scalar<T> &v)
             {
                 if(this == &v) return *this;
-                NumericObject::operator=(v);
                 this->_value = v._value;
                 return *this;
             }
@@ -204,7 +202,6 @@ using namespace boost::numeric;
             */
             template <typename U> Scalar<T> &operator=(const Scalar<U> &v)
             {
-                NumericObject::operator=(v);
                 this->_value = convert_type<T>(v.value());
                 return *this;
             }
