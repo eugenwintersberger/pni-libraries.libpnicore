@@ -33,7 +33,6 @@
 #include<cstdio>
 #include<typeinfo>
 
-#include "Shape.hpp"
 #include "Exceptions.hpp"
 #include "ExceptionUtils.hpp"
 #include "Types.hpp"
