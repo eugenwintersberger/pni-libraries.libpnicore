@@ -40,8 +40,6 @@
 #include<boost/regex.hpp>
 
 #include "../Types.hpp"
-#include "../DataObject.hpp"
-#include "../ArrayFactory.hpp"
 
 #include "ImageReader.hpp"
 #include "cbf/DectrisReader.hpp"
@@ -73,12 +71,18 @@ namespace io{
     */
     class CBFReader: public ImageReader {
         private:
-            cbf::VendorID _detector_vendor;   //!< string holding the detector vendor ID
-            std::vector<ImageInfo> _image_info;   //!< info structure for data
-            std::streampos _data_offset;          //!< store data offset 
-            cbf::CompressionID _compression_type; //!< compression type
+            //! string holding the detector vendor ID
+            cbf::VendorID _detector_vendor;  
+            //! info structure for data
+            std::vector<ImageInfo> _image_info;  
+            //! store data offset 
+            std::streampos _data_offset;         
+            //! compression type
+            cbf::CompressionID _compression_type; 
 
-            /*! \brief parse the file
+            //-----------------------------------------------------------------
+            /*! 
+            \brief parse the file
 
             Parse the file and setup member variables of the class.
             */
@@ -88,14 +92,24 @@ namespace io{
             //=================constructors and destructor==================
             //! default constructor
             CBFReader();
-            //! standard constructor
 
-            //! The name of the CBFFile is passed as a String object.
+            //-----------------------------------------------------------------
+            /*! 
+            \brief construct reader object
+
+            The name of the CBFFile is passed as a String object. During
+            instantiation of class the file is parsed. Throws an exception if
+            the flavor of the CBF file cannot be deduced from the header.
+            \throw FileError if the CBF flavor cannot be deduced
+            \param fname name of the file
+            */
             CBFReader(const String &fname);
+
+            //-----------------------------------------------------------------
             //! destructor
             virtual ~CBFReader();
 
-            //---------------------------------------------------------------
+            //-----------------------------------------------------------------
             //! the copy constructor is deleted
             CBFReader(const CBFReader &r) = delete;
 
@@ -106,6 +120,7 @@ namespace io{
             //! the copy assignment operator is deleted
             CBFReader &operator=(const CBFReader &r) = delete;
 
+            //----------------------------------------------------------------
             virtual void close()
             {
                 //close the stream
@@ -116,81 +131,127 @@ namespace io{
                 _image_info.clear();
             }
 
+            //-----------------------------------------------------------------
             virtual void open()
             {
                 close();
                 DataReader::open();
                 _parse_file();
             }
-            
+           
+            //-----------------------------------------------------------------
             virtual size_t nimages() const 
             { 
                 return _image_info.size(); 
             }
-            
+           
+            //-----------------------------------------------------------------
             virtual ImageInfo info(size_t i) const 
             {
                 return _image_info[i];
             }
 
             //-------------------------------------------------------------
-            template<typename ArrayType> ArrayType image(size_t i,size_t c=0);
+            /*!
+            \brief read image
+
+            \tparam CTYPE container type for storing data
+            \throw MemoryAllocationError if container allocation failes
+            \throw FileError in case of IO errors
+            \param i image number to read
+            \param c channel to read (default = 0)
+            \return instance of CTYPE with image data
+            */
+            template<typename CTYPE> CTYPE image(size_t i,size_t c=0);
            
             //-------------------------------------------------------------
-            template<typename T,template<typename,typename> class BT,typename
-                Allocator> 
-                void image(Array<T,BT,Allocator> &array,size_t i,size_t c=0);
+            /*!
+            \brief read data from detector file
+
+            Reads a single image from a detector file and stores it in an
+            container of type CTYPE. Ths me
+            \throws FileError if case of IO errors
+            \tparam CTYPE container type holding the image data
+            \tparam SizeMissmatchError if container and image size do not match
+
+            */
+            template<typename CTYPE> 
+                void image(CTYPE &array,size_t i,size_t c=0);
 
     };
 
     //---------------------------------------------------------------------
-    template<typename ArrayType> 
-        ArrayType CBFReader::image(size_t i,size_t c) 
+    template<typename CTYPE> CTYPE CBFReader::image(size_t i,size_t c) 
     {
-        EXCEPTION_SETUP("template<typename ArrayType> "
-                         "ArrayType image(size_t i=0) const");
-
         ImageInfo info = _image_info[i];
-        Shape shape = {info.nx(),info.ny()};
+        CTYPE data;
+        try
+        {
+            data=CTYPE(info.npixels());
+        }
+        catch(...)
+        {
+            throw MemoryAllocationError(BOOST_CURRENT_FUNCTION,
+                    "Allocation of container for image data failed!");
+        }
 
-        ArrayType array = ArrayFactory<typename ArrayType::value_type,
-                                       Buffer,typename ArrayType::allocator_type>::create(shape);
-        
-        image(array,i,c);
+        try
+        {
+            image(data,i,c);
+        }
+        catch(FileError &error)
+        {
+            //propagate exception
+            error.append_issuer(BOOST_CURRENT_FUNCTION);
+            throw error;
+        }
 
-        return array;
+        return data;
     }
 
     //---------------------------------------------------------------------
-    template<typename T,template<typename,typename> class BT,typename Allocator> 
-        void CBFReader::image(Array<T,BT,Allocator> &array,size_t i,size_t c) 
+    template<typename CTYPE> 
+        void CBFReader::image(CTYPE &data,size_t i,size_t c) 
     {
-        EXCEPTION_SETUP("template<typename T, template<typename> "
-                "class BT> void image(size_t i=0,Array<T,BT>"
-                "&array) const");
-        
+        //load image information and throw exception if image and container size
+        //to not match
         ImageInfo inf = _image_info[i];
+        if(data.size()!= inf.npixels())
+        {
+            SizeMissmatchError error;
+            error.issuer(BOOST_CURRENT_FUNCTION);
+            std::stringstream ss;
+            ss<<"Container size ("<<data.size()<<") does not match image ";
+            ss<<"size ("<<inf.npixels()<<")!";
+            error.description(ss.str());
+            throw error;
+        }
+
+        //load the channel information
         ImageChannelInfo channel = inf.get_channel(c);
 
         if(_detector_vendor == cbf::VendorID::DECTRIS)
         {
             if(channel.type_id() == TypeID::INT16)
+                //read 16Bit signed data
                 cbf::DectrisReader::read_data_byte_offset<Int16>(
-                        _get_stream(),inf,array);
+                        _get_stream(),inf,data);
             if(channel.type_id() == TypeID::INT32)
+                //read 32Bit signed data
                 cbf::DectrisReader::read_data_byte_offset<Int32>(
-                    _get_stream(),inf,array);
+                    _get_stream(),inf,data);
             else
             {
-                EXCEPTION_INIT(FileError,"No data reader for "
-                        "this data type!");
+                FileError error(BOOST_CURRENT_FUNCTION,
+                        "No data reader for this data type!");
+                throw error;
             }
 
         }
         else
         {
-            EXCEPTION_INIT(FileError,"Unknown detector vendor!");
-            EXCEPTION_THROW();
+            FileError error(BOOST_CURRENT_FUNCTION,"Unknown detector vendor!");
+            throw error;
         }
 
     }

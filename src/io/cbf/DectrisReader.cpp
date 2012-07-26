@@ -43,7 +43,7 @@ namespace cbf{
 
         UInt8 byte;
         String linebuffer;
-        size_t nx,ny,bits_per_pixel;
+        size_t nx=0,ny=0,bits_per_pixel;
         TypeID tid;
         
         //define some useful regular expressions
@@ -161,6 +161,8 @@ namespace cbf{
             }
 
         }
+
+        return 0; //just to make the compiler happy
 
     }
 

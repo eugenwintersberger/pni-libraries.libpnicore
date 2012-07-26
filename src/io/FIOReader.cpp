@@ -191,7 +191,7 @@ namespace io{
         std::stringstream ss(line);
         ss>>cname>>cindex>>cname>>ctype;
         
-        return ColumnInfo(cname,_typestr2id(ctype),Shape());
+        return ColumnInfo(cname,_typestr2id(ctype),std::vector<size_t>());
     }
 
     //-------------------------------------------------------------------------

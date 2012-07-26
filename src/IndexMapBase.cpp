@@ -27,6 +27,7 @@
 
 namespace pni{
 namespace utils{
+
     IndexMapBase::IndexMapBase():_shape() {}
 
     IndexMapBase::IndexMapBase(const IndexMapBase &m):

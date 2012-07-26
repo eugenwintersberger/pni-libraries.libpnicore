@@ -28,6 +28,7 @@
 #define __SPREADSHEETREADER_HPP__
 
 #include <vector>
+#include <boost/current_function.hpp>
 #include "../Types.hpp"
 #include "../Exceptions.hpp"
 #include "DataReader.hpp"
@@ -41,7 +42,7 @@ namespace io{
 
     This class is the basement for all readers dealing with spreadsheet like
     data files. Most of the ASCII formats written following this storage
-    convention.
+    convention. 
     */
     class SpreadsheetReader:public DataReader
     {
@@ -191,6 +192,26 @@ namespace io{
             \return const iterator
             */
             const_iterator end() const { return _columns_info.end(); }
+
+            /*! 
+            \brief checks if a particular column exists
+
+            Returns true if the spreadsheet contains a column of the requested
+            name and false otherwise.
+            \param name of the column
+            \return true if column exists, false otherwise
+            */
+            bool has_column(const String &name) const;
+
+            /*! 
+            \brief get column index 
+
+            Get the index of a particular column.
+            \throws KeyError if the column does not exist
+            \param name name of the column
+            \return numeric index 
+            */
+            size_t column_index(const String &name) const;
 
     };
 

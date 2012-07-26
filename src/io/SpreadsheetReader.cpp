@@ -68,5 +68,32 @@ namespace io{
         return *this;
     }
 
+    //=====================public methods implementation=======================
+    bool SpreadsheetReader::has_column(const String &name) const
+    {
+        for(auto ci: *this)
+        {
+            if(ci.name() == name) return true;
+        }
+
+        return false;
+    }
+
+    //-------------------------------------------------------------------------
+    size_t SpreadsheetReader::column_index(const String &name) const
+    {
+        size_t index = 0;
+        for(auto ci: *this)
+            if(ci.name() == name) return index++;
+
+        //throw exception if the column name does not exist
+        KeyError error;
+        error.issuer(BOOST_CURRENT_FUNCTION);
+        error.description("Column with name ["+name+"] does not exist!");
+        throw error;
+
+        return 0; //make the compiler happy - a value is returned.
+    }
+
 //end of namespace
 }}

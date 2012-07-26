@@ -31,7 +31,6 @@
 #include<fstream>
 #include<vector>
 
-#include "../../Array.hpp"
 #include "../ImageInfo.hpp"
 #include "Types.hpp"
 
@@ -41,7 +40,8 @@ namespace pni{
 namespace io{
 namespace cbf{
     
-    /*! \ingroup io_classes
+    /*! 
+    \ingroup io_classes
     \brief reader for DECTRIS detector data
 
     This type provides static method to read data from CBF files written by
@@ -68,69 +68,85 @@ namespace cbf{
 
             Static method to read byte offset compressed data from DECTRIS CBF
             files. 
+            \tparam CBFT type used for data in the file
+            \tparam CTYPE container type where to store the data
             \param is input stream
             \param info instance of ImageInfo for the image to read
             \param array array where to store the data
             */
-            template<typename CBFT,typename T,template<typename,typename> class
-                BT,typename Allocator>
+            template<typename CBFT,typename CTYPE>
                 static void read_data_byte_offset(
                         std::ifstream &is,
                         const pni::io::ImageInfo &info,
-                        Array<T,BT,Allocator> &array);
+                        CTYPE &data);
 
 
     };
 
     //-------------------------------------------------------------------------
-    template<typename CBFT,typename T,template<typename,typename> class
-        BT,typename Allocator>
+    template<typename CBFT,typename CTYPE>
         void DectrisReader::read_data_byte_offset( std::ifstream &is,
-                const pni::io::ImageInfo &info, Array<T,BT,Allocator> &array)
+                const pni::io::ImageInfo &info, CTYPE &data)
     {
 
         //unsigned long i;
         size_t ecnt = 0; // element counter
-        CBFT buffer = 0;
+        CBFT buffer = 0; // single element buffer
 
-        array = 0;
+        //initializing the container with 0
+        std::fill(data.begin(),data.end(),0);
+        typename CTYPE::iterator iter = data.begin();
 
-        //std::cout << "start with reading binary data ..." << std::endl;
-        while ((!is.eof()) && (ecnt != info.npixels())) {
+        for(typename CTYPE::value_type v: data)
+        {
+            buffer = 0; //reset the read buffer
+            //read one byte from the stream an throw an exception in case of an
+            //error
+            try { is.read((char *)(&buffer),1); }
+            catch(...)
+            {
+                throw FileError(BOOST_CURRENT_FUNCTION,
+                        "Error reading 1Byte from the CBF stream!");
+            }
 
-            is.read((char *) (&buffer), 1);
-            if (((unsigned char) buffer) != 0x80){
+            if (((unsigned char) buffer) != 0x80)
+            {
                 //this byte is a valid offset
-                array[ecnt] += (char) buffer;
-                //now we have to increment the element counter
-                ecnt++;
-                if (ecnt >= info.npixels()) break;
-                array[ecnt] = array[ecnt - 1];
-                //reset the buffer so that all bits are set to 0
-                buffer = 0;
-                continue;
+                *iter += (char) buffer;
+                ++iter;             //increment pixel iterator
+                *iter = *(iter-1);  //set new pixel to previous value
+                continue;           //continue with the loop
+            }
+          
+            //read two byte from the stream and throw an exception in case of an
+            //error
+            try { is.read((char *) (&buffer), 2); }
+            catch(...)
+            {
+                throw FileError(BOOST_CURRENT_FUNCTION,
+                        "Error reading 2Byte from the CBF stream!");
             }
 
-            is.read((char *) (&buffer), 2);
             if (((unsigned short) buffer) != 0x8000) {
-                array[ecnt] += (short) buffer;
-                //increase the element counter
-                ecnt++;
-                if (ecnt >= info.npixels()) break;
-                array[ecnt] = array[ecnt - 1];
-                //reset the buffer so that all bits are set to 0
-                buffer = 0;
+                *iter += (short) buffer;
+                ++iter;
+                *iter = *(iter-1);
                 continue;
             }
 
-            is.read((char*) (&buffer), 4);
+            //read 4 byte from the stream and throw an exception in the case of
+            //an error
+            try { is.read((char*) (&buffer), 4); }
+            catch(...)
+            {
+                throw FileError(BOOST_CURRENT_FUNCTION,
+                        "Error reading 4byte from the CBF stream!");
+            }
+
             if (((unsigned int) buffer) != 0x800000) {
-                array[ecnt] += (int) buffer;
-                //increase the element counter
-                ecnt++;
-                if (ecnt >= info.npixels()) break;
-                array[ecnt] = array[ecnt - 1];
-                buffer = 0;
+                *iter += (int) buffer;
+                ++iter;
+                *iter = *(iter-1);
                 continue;
             }
 

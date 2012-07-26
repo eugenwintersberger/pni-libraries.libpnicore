@@ -30,7 +30,6 @@
 #include "CBFReader.hpp"
 #include "strutils.hpp"
 #include "../Exceptions.hpp"
-#include "../Array.hpp"
 #include "../Types.hpp"
 
 //need to use regular expressions from boost
@@ -72,8 +71,6 @@ namespace io{
 
     //===============implemenetation of private methods====================
     void CBFReader::_parse_file(){
-        EXCEPTION_SETUP("void CBFReader::_parse_file()");
-
         char linebuffer[1024];
         std::ifstream &_istream = _get_stream();
 
@@ -99,8 +96,8 @@ namespace io{
                     return;
                 }else{
                     //should raise an exception here
-                    EXCEPTION_INIT(FileError,"Unknown CBF style!");
-                    EXCEPTION_THROW();
+                    throw FileError(BOOST_CURRENT_FUNCTION,
+                                    "Unknown CBF style!");
                 }
             }
         }
