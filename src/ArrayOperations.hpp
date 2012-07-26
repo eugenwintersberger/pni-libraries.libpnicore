@@ -26,7 +26,6 @@
 #ifndef __ARRAYOPERATIONS_HPP__
 #define __ARRAYOPERATIONS_HPP__
 
-#include "Array.hpp"
 
 namespace pni{
 namespace utils{

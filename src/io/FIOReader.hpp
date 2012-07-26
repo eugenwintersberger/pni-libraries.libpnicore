@@ -303,7 +303,7 @@ namespace io{
         //create the container 
         //allocate a new array
         std::vector<size_t> s{this->nrecords()};
-        CTYPE data(this->nrecords);
+        CTYPE data(this->nrecords());
 
         this->column(n,data);
 
