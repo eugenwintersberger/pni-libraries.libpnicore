@@ -34,6 +34,7 @@
 #include<string>
 #include<exception>
 #include<typeinfo>
+#include<list>
 
 //#include "Exceptions.hpp"
 #include "Types.hpp"
@@ -78,93 +79,131 @@ namespace utils{
 	throw __error;
 
 
-//========================Exception classes=====================================
-//! \ingroup error_classes
-//! \brief Exceptions base class
+    //========================Exception classes==================================
+    /*!
+    \ingroup error_classes
+    \brief Exceptions base class
 
-//! The base class for all exceptions in the library. Constructors are design
-//! to take either const char * values or const std::string references as
-//! valid input arguments. This should provide maximum flexibility in exception
-//! creation.
-class Exception:public std::exception{
-private:
-	String _name; //!< name of the exception
-	String _issuer; //!< issuer of the exception
-	String _description; //!< description of the error occured
-protected:
-    /*! \brief ouptut method
-
-    Protected method to be used by derived classes for implementing exception
-    printing to std::out.
-    \param o reference to the ouptput stream
+    The base class for all exceptions in the library. Constructors are design
+    to take either const char * values or const std::string references as
+    valid input arguments. This should provide maximum flexibility in exception
+    creation.
     */
-	std::ostream &print(std::ostream &o) const;
-public:
-	//! default constructor
-	Exception():std::exception() {
-	}
-	//! constructor with name as string
+    class Exception:public std::exception{
+        private:
+            //! name of the exception
+            String _name;
+            //! issuer of the exception
+            String _issuer;
+            //! list of issuers of a particular exception 
+            std::list<String> _issuers;
+            //! description of the error occured
+            String _description; 
+        protected:
+            /*! \brief ouptut method
 
-	//! \param n name of the exception
-	Exception(const String &n);
-	//! constructor with name and source as string objects
+            Protected method to be used by derived classes for implementing 
+            exception printing to std::out.
+            \param o reference to the ouptput stream
+            */
+            std::ostream &print(std::ostream &o) const;
+    public:
+        //===================constructors and destructor=======================
+        //! default constructor
+        Exception():std::exception() { }
 
-	//! \param n name of the exception
-	//! \param i name or ID or the exceptions issuer
-	Exception(const String &n, const String &i);
-	//! constructor with name, source, and description as string
+        //---------------------------------------------------------------------
+        /*!
+        \brief constructor with name as string
 
-	//! \param n name of the exception
-	//! \param w name or ID of the exceptions issuer
-	//! \param d description of the exception
-	Exception(const String &n, const String &w, const String &d);
-	//! virtual destructor
-	virtual ~Exception() throw() {
-	}
+        \param n name of the exception
+        */
+        Exception(const String &n);
 
-	//! set the exception name
+        //---------------------------------------------------------------------
+        /*! 
+        \brief  constructor with name and source as string objects
 
-	//! \param name exception name
-	void name(const std::string &name) {
-		_name = name;
-	}
-	//! get the exceptions name
+        \param n name of the exception
+        \param i name or ID or the exceptions issuer
+        */
+        Exception(const String &n, const String &i);
 
-	//! \return reference to the string object holding the name
-	const String &name() const {
-		return _name;
-	}
+        //---------------------------------------------------------------------
+        /*!
+        \brief constructor with name, source, and description as string
 
-	//! set the exception issuer
+        \param n name of the exception
+        \param w name or ID of the exceptions issuer
+        \param d description of the exception
+        */
+        Exception(const String &n, const String &w, const String &d);
 
-	//! \param i name or some ID of the issuer
-	void issuer(const String &i) {
-		_issuer = i;
-	}
-	//! get the exceptions issuer
+        //---------------------------------------------------------------------
+        //! virtual destructor
+        virtual ~Exception() throw() { }
 
-	//! \return reference to the string object with the exceptions ID or name
-	const String &issuer() const {
-		return _issuer;
-	}
+        //===================public member functions===========================
+        /*! 
+        \brief set the exception name
+        \param name exception name
+        */
+        void name(const std::string &name) { _name = name; }
 
-	//! set exception desccription
+        //---------------------------------------------------------------------
+        /*!
+        \brief get the exceptions name
 
-	//! \param desc description of the exception
-	void description(const std::string &desc) {
-		_description = desc;
-	}
-	//! get the exceptions description
+        \return reference to the string object holding the name
+        */
+        const String &name() const { return _name; }
 
-	//! \return reference to the string object with the exceptions description
-	const String &description() const {
-		return _description;
-	}
+        //---------------------------------------------------------------------
+        /*!
+        \brief set the exception issuer
 
-	//! output operator for exceptions
-	friend std::ostream &operator<<(std::ostream &, const Exception &);
-        
-};
+        \param i name or some ID of the issuer
+        */
+        void issuer(const String &i) { _issuer = i; }
+      
+        //---------------------------------------------------------------------
+        /*!
+        \brief get the exceptions issuer
+
+        \return reference to the string object with the exceptions ID or name
+        */
+        const String &issuer() const { return _issuer; }
+
+        /*!
+        \brief add a new issuer
+
+        Use this method to add a new issuer in the case that the exception 
+        is re-thrown by an other function or class method.
+        \param i new issuer
+        */
+        void append_issuer(const String &n) { _issuers.push_back(n); }
+
+        //---------------------------------------------------------------------
+        /*!
+        \brief set exception desccription
+
+        \param desc description of the exception
+        */
+        void description(const std::string &desc) { _description = desc; }
+
+        //---------------------------------------------------------------------
+        /*!
+        \brief get the exceptions description
+
+        \return reference to the string object with the exceptions description
+        */
+        const String &description() const { return _description; }
+
+        //---------------------------------------------------------------------
+        //! output operator for exceptions
+        friend std::ostream &operator<<(std::ostream &, const Exception &);
+            
+    };
 
 
 //------------------------------------------------------------------------------

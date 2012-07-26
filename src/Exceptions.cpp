@@ -34,32 +34,45 @@
 namespace pni{
 namespace utils{
 
-//============Implementation of constructors and destructor=====================
-Exception::Exception(const String &n){
-    _name = n;
-}
-     
-//------------------------------------------------------------------------------
-Exception::Exception(const String &n,const String &i){
-    _name = n;
-    _issuer = i;
-}
+    //============Implementation of constructors and destructor=================
+    Exception::Exception(const String &n):_name(n) {}
 
-//------------------------------------------------------------------------------
-Exception::Exception(const String &n,const String &i,const String &d)
-{
-    _name = n;
-    _issuer = i;
-    _description = d;
-}
+    //--------------------------------------------------------------------------
+    Exception::Exception(const String &n,const String &i):
+        _name(n),
+        _issuer(i),
+        _issuers(),
+        _description()
+    { 
+        _issuers.push_back(i); 
+    }
 
-//==========Implementation of output methods and operator=======================
-std::ostream &Exception::print(std::ostream &o) const {
-	o<<this->name()<<" by:  "<<this->issuer()<<std::endl;
-	o<<this->description()<<std::endl;
+    //--------------------------------------------------------------------------
+    Exception::Exception(const String &n,const String &i,const String &d):
+        _name(n),
+        _issuer(i),
+        _issuers(),
+        _description(d)
 
-	return o;
-}
+    {
+        _issuers.push_back(i);
+    }
+
+    //==========Implementation of output methods and operator===================
+    std::ostream &Exception::print(std::ostream &o) const 
+    {
+        o<<this->name()<<" originally thrown by:  "<<std::endl<<std::endl;
+        o<<this->issuer()<<std::endl<<std::endl;
+        o<<"Additional issuers of this exception:"<<std::endl;
+        size_t index = 0;
+        for(auto i: this->_issuers)
+            o<<index++<<"\t"<<i<<std::endl;
+
+        o<<std::endl<<"Description:"<<std::endl;
+        o<<this->description()<<std::endl;
+
+        return o;
+    }
 
 //------------------------------------------------------------------------------
 std::ostream &operator<<(std::ostream &ostr,const Exception &ex){
