@@ -29,6 +29,7 @@
 
 #include<iostream>
 #include<vector>
+#include<boost/current_function.hpp>
 
 #include "ImageReader.hpp"
 #include "ImageInfo.hpp"
@@ -150,9 +151,8 @@ namespace io{
             
 
             */
-            template<typename T,template<typename,typename> class BTYPE,typename
-                Allocator> 
-                void _read_data(size_t i,size_t c,Array<T,BTYPE,Allocator> &array);
+            template<typename CTYPE> 
+                void _read_data(size_t i,size_t c,CTYPE &data);
         public:
             //==========constructors and destructor========================
             //! default constructor
@@ -209,14 +209,20 @@ namespace io{
             \param c index of the image channel to read
             \return instance of an array template
             */
-            template<typename ATYPE> ATYPE image(size_t i,size_t c=0) 
+            template<typename CTYPE> CTYPE image(size_t i,size_t c=0) 
             {
                 ImageInfo info = this->info(i);
-                auto array = ImageInfo::create_array<ATYPE>(info);
-                
+                CTYPE data;
+                try { data = CTYPE(info.npixels()); }
+                catch(...)
+                {
+                    throw MemoryAllocationError(BOOST_CURRENT_FUNCTION,
+                            "Allocation of image data container failed!");
+                }
+
                 //here we read the data
-                this->_read_data(i,c,array);
-                return array;
+                this->_read_data(i,c,data);
+                return data;
             }
 
             //----------------------------------------------------------------- 
@@ -228,24 +234,28 @@ namespace io{
             method is that memory allocation must be done only once before this
             method is called. This increases performance dramatically in
             particular if many images of equal size should be read.
-            \throws MemoryAccessError if array is not allocated
-            \throws ShapeMissmatchError if the shape of the array does not match
-            the image shape
-            \param array instance of Array<T,BT> where to store the data
+            \throws SizeMissmatchError if the size of the container does not
+            match the number of pixels stored in the image
+            \param data instance of CTYPE where data will be stored
             \param i index of the image in the file
             \param c index of the image channel to read
             */
-            template<typename T,template<typename,typename> class BT,typename
-                Allocator> 
-                void image(Array<T,BT,Allocator> &array,size_t i,size_t c=0) 
+            template<typename CTYPE> 
+                void image(CTYPE &data,size_t i,size_t c=0) 
             {
                 ImageInfo info = this->info(i);
-
-                //check if the array fits our needs
-                ImageInfo::check_array(array,info);
+                if(data.size() != info.npixels())
+                {
+                    SizeMissmatchError error;
+                    error.issuer(BOOST_CURRENT_FUNCTION);
+                    std::stringstream ss;
+                    ss<<"Container size ("<<data.size()<<") does not match";
+                    ss<<"number of pixels ("<<info.npixels()<<")!";
+                    error.description(ss.str());
+                }
 
                 //read data
-                _read_data(i,c,array);
+                _read_data(i,c,data);
             }
            
             //! output operator of an TIFFReader object
@@ -254,9 +264,8 @@ namespace io{
 
     };
 
-    template<typename T,template<typename,typename> class BTYPE,typename
-        Allocator> 
-        void TIFFReader::_read_data(size_t i,size_t c,Array<T,BTYPE,Allocator> &array)
+    template<typename CTYPE> 
+        void TIFFReader::_read_data(size_t i,size_t c,CTYPE &data)
     {
         //obtain the proper IFD
         tiff::IFD &ifd = this->_ifds.at(i);
@@ -266,7 +275,7 @@ namespace io{
         tiff::StripReader reader(tiff::StripReader::create(stream,ifd,this->info(i)));
         std::cout<<reader<<std::endl;
 
-        reader.read(c,stream,array);
+        reader.read(c,stream,data);
         
     }
 //end of namespace

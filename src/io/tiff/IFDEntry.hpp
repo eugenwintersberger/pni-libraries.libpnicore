@@ -34,8 +34,10 @@
 #include <iostream>
 #include <fstream>
 #include <map>
+#include <boost/current_function.hpp>
 
 #include "../../Types.hpp"
+#include "../../Exceptions.hpp"
 #include "Rational.hpp"
 #include "IFDEntryReader.hpp"
 
@@ -173,9 +175,6 @@ namespace tiff{
     //==============implementation of public template methods===================
     template<typename T> std::vector<T> IFDEntry::value(std::ifstream &stream)
     {
-        EXCEPTION_SETUP("template<typename T> std::vector<T> IFDEntry::"
-                        "value(std::ifstream &stream)");
-
         //create a vector of appropriate length
         std::vector<T> result(this->size());
         //save the original stream position
@@ -197,6 +196,7 @@ namespace tiff{
         }
         catch(TypeError &e)
         {
+            e.append_issuer(BOOST_CURRENT_FUNCTION);
             //reset the stream to its original position
             stream.seekg(orig_stream_pos,std::ios::beg);
             throw e;

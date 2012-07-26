@@ -35,7 +35,6 @@
 #include <iostream>
 
 #include "../../Types.hpp"
-#include "../../Array.hpp"
 
 #include "IFDEntry.hpp"
 

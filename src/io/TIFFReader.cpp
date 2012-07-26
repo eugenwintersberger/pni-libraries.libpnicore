@@ -27,9 +27,7 @@
 #include <numeric>
 
 #include "../Exceptions.hpp"
-#include "../Array.hpp"
 #include "../Types.hpp"
-#include "../Buffer.hpp"
 #include "TIFFReader.hpp"
 
 namespace pni{
@@ -70,13 +68,9 @@ namespace io{
             
         //reset stream position
         stream.seekg(orig_pos,std::ios::beg);
-        if(magic!=42){
-            FileError e;
-            e.issuer("void TIFFReader::_check_if_tiff(std::ifstream &stream)");
-            e.description("Not a TIFF file!");
-            throw e;
-        }
-
+        if(magic!=42)
+            throw FileError(BOOST_CURRENT_FUNCTION,"Not a TIFF file!");
+        
     }
     
     //--------------------------------------------------------------------------
@@ -188,9 +182,6 @@ namespace io{
     //---------------------------------------------------------------------
     TypeID TIFFReader::_get_type_id(size_t bps,size_t sf) 
     {
-        EXCEPTION_SETUP("TypeID TIFFReader::_get_type_id(size_t bps,"
-                        "size_t sf) const");
-
         switch(sf)
         {
             case 1:
@@ -202,9 +193,8 @@ namespace io{
                     case 32: return TypeID::UINT32;
                     case 64: return TypeID::UINT64;
                     default:
-                         EXCEPTION_INIT(TypeError,
-                                 "Invalid unsiged integer type!");
-                         EXCEPTION_THROW();
+                         throw TypeError(BOOST_CURRENT_FUNCTION,
+                               "Invalid unsiged integer type!");
                 }
                 break;
             case 2:
@@ -216,9 +206,8 @@ namespace io{
                     case 32: return TypeID::INT32;
                     case 64: return TypeID::INT64;
                     default:
-                         EXCEPTION_INIT(TypeError,
-                                 "Invalid siged integer type!");
-                         EXCEPTION_THROW();
+                        throw TypeError(BOOST_CURRENT_FUNCTION,
+                              "Invalid siged integer type!");
                 }
                 break;
             case 3: 
@@ -228,16 +217,15 @@ namespace io{
                     case 32: return TypeID::FLOAT32;
                     case 64: return TypeID::FLOAT64;
                     default:
-                         EXCEPTION_INIT(TypeError,
-                                 "Invalid floating point type!");
-                         EXCEPTION_THROW();
+                        throw TypeError(BOOST_CURRENT_FUNCTION,
+                              "Invalid floating point type!");
                 }
                 break;
 
             default:
                 //throw an exception here
-                EXCEPTION_INIT(TypeError,"Cannot derive type id!");
-                EXCEPTION_THROW();
+                throw TypeError(BOOST_CURRENT_FUNCTION,
+                                "Cannot derive type id!");
 
         }
     }
