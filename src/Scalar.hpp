@@ -96,6 +96,7 @@ using namespace boost::numeric;
     It is clear that for the binary versions of the arithmetic operators temporary objects
     are created and returned by value. However, since the scalar objects are pretty small
     this effort should not matter too much.
+    \tparam T scalar type of the data stored.
     */
     template<typename T> class Scalar
     {
@@ -103,9 +104,12 @@ using namespace boost::numeric;
             T _value; //!< object holding the value of the Scalar object
         public:
             //================public data types================================
+            //! native data type of the scalar
             typedef T value_type;
-            typedef std::shared_ptr<Scalar<T> > shared_ptr; //!< shared pointer type
-            typedef std::unique_ptr<Scalar<T> > unique_ptr; //!< unique pointer type
+            //! shared pointer typ
+            typedef std::shared_ptr<Scalar<T> > shared_ptr;
+            //! unique pointer type
+            typedef std::unique_ptr<Scalar<T> > unique_ptr; 
             
             //===============public members====================================
             //! type ID of the data type held by the scalar
@@ -141,6 +145,12 @@ using namespace boost::numeric;
             */
             Scalar(const T &v):_value(v) {}
 
+            /*! 
+            \brief construction from a different native type
+
+            Constructs a scalar object from POD of a different type. 
+            \param v data value
+            */
             template<typename U> Scalar(U v)
                 :_value(convert_type<T>(v))
             {}
@@ -349,10 +359,20 @@ using namespace boost::numeric;
 
 
             //===================data access operators=========================
-            T &operator[](size_t i) { return this->_value; }
+            /*!
+            \brief get data
 
+            Return the single data value independent of what value of i is
+            given.
+            \return value of the scalar
+            */
             T operator[](size_t i) const { return this->_value; }
 
+            /*!
+            \brief get size
+
+            For a scalar object this method always returns 1. 
+            */
             size_t size() const { return 0; }
 
     };

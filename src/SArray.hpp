@@ -112,6 +112,16 @@ namespace utils{
             }
 
             //-----------------------------------------------------------------
+            /*!
+            \brief get array selection
+
+            Template member function returning an array selection. 
+            \tparam CTYPE primary container template
+            \tparam OTS optional arguments to the array template
+            \param view array template 
+            \param c container with indices
+            \return array view object`
+            */
             template<template<typename ...> class CTYPE,typename ...OTS>
             ArrayView<SArray<T,DIMS...> >
             _get_data(ArrayView<SArray<T,DIMS...> > &view,const CTYPE<OTS...> &c)
@@ -123,6 +133,16 @@ namespace utils{
             }
 
             //----------------------------------------------------------------
+            /*! 
+            \brief get data element
+
+            Return a reference to a particular data element of the array. 
+            \tparam CTYPE primary container template
+            \tparam OTS optional template arguments
+            \param v dummy argument to determine the return type
+            \param c container with indices
+            \return reference to the element
+            */
             template<template<typename ...> class CTYPE,typename ...OTS>
             T &_get_data(T v,const CTYPE<OTS...> &c)
             {

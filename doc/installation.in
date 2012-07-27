@@ -17,6 +17,28 @@ the package installation system takes care about it.
 
 \subsection install_binary_linux Binary package installation on Linux 
 
+\subsubsection install_binary_debian Installation on Debian and Ubuntu systems
+
+For Ubuntu 10.04 and 12.04 binary packages are available via PPA on launchpad.
+Using the PPA the installation reduces to the following three steps on the
+command line
+\code
+$>sudo apt-add-repository ppa:eugenwintersberger/pni
+$>sudo apt-get update
+$>sudo apt-get install libpniutils-dev
+\endcode
+The first two lines integrate the PPA into your sources list for \c apt and
+updates the package list. Finally, the last line installs the development files
+of \c libpniutils.
+
+On Debian Systems the installation is a bit more complicated as Debian provides
+no remote repository.
+
+\subsubsection install_binary_rpm Installation on RPM based distributions
+
+For distributions using the RPM package system (like SuSe, RedHat, CentOS,
+Scientific Linux, etc.) 
+
 \subsection install_binary_windows Binary package installation on Windows
 
 NOT SUPPORTED YET

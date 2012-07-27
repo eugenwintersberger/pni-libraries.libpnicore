@@ -49,7 +49,10 @@ template<typename T,...> class Buffer
 \endcode
 The iterators provided by the Buffer types must be random access iterators in
 the sense of STL. Thus, all standard STL algorithms can be used with the Buffer
-types. 
+types. A buffer should be considered as a guard object for a raw buffer. Buffers
+are first class objects. Unlike raw pointers they got destroyed when they loose
+their scope. Thus, using a buffer object takes away the danger to produce a
+memory leak.
 
 \section shape_section Shape objects and index mapping
 

@@ -256,6 +256,7 @@ namespace utils{
             \throws IndexError if one of the indices exceeds the number of
             elements along its corresponding dimension
             \tparam ITYPES index types
+            \param i1 parameter treated in this incarnation of this function
             \param indices the indices along each dimension
             \return offset value
             */
