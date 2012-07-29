@@ -27,11 +27,11 @@ namespace utils{
     {
         public:
             typedef ITERABLE *cont_ptr; //!< container pointer
-            //!< reference type for dereferencing operator
+            //! reference type for dereferencing operator
             typedef typename ITERABLE::value_type& return_type;
-            //!< pointer type for -> operator
+            //! pointer type for -> operator
             typedef typename ITERABLE::value_type* ptr_type;    
-            //!< reference type 
+            //! reference type 
             typedef typename ITERABLE::value_type& ref_type;
     };
 
@@ -45,15 +45,16 @@ namespace utils{
     {
         public:
             typedef const ITERABLE *cont_ptr; //!< container pointer
-            //!< value type for dereferencing operator
+            //! value type for dereferencing operator
             typedef typename ITERABLE::value_type return_type;    
-            //!< pointer type for -> operator
+            //! pointer type for -> operator
             typedef const typename ITERABLE::value_type *ptr_type; 
-            //!< reference type
+            //! reference type
             typedef const typename ITERABLE::value_type &ref_type;
     };
 
     //=========================================================================
+    //! \cond NO_DOC
     template<typename ITERABLE,int const_flag> class Iterator;
 
     template<typename ITERABLE,int const_flag> Iterator<ITERABLE,const_flag> 
@@ -68,6 +69,8 @@ namespace utils{
     template<typename ITERABLE,int const_flag> ssize_t
         operator-(const Iterator<ITERABLE,const_flag> &a,
                   const Iterator<ITERABLE,const_flag> &b);
+
+    //! \endcond 
 
 
     /*! \ingroup util_classes   
@@ -91,10 +94,12 @@ namespace utils{
     template<typename ITERABLE,int const_flag> class Iterator
     {
         private:
-            //!< pointer to the container object
+            //! pointer to the container object
             typename IterTypes<ITERABLE,const_flag>::cont_ptr _container; 
-            ssize_t _state;        //!< actual position state of the iterator
-            
+
+            //! actual position state of the iterator
+            ssize_t _state;                    
+
             //! set the item pointer
             void _set_item()
             {
@@ -106,16 +111,20 @@ namespace utils{
 
         public:
             //====================public types==================================
-            //!< value type of the container
+            //! value type of the container
             typedef typename ITERABLE::value_type value_type;
-            //!< pointer type the iterator provides
+            //! pointer type the iterator provides
             typedef typename IterTypes<ITERABLE,const_flag>::ptr_type pointer;
-            //!< reference type the iterator provides
+            //! reference type the iterator provides
             typedef typename IterTypes<ITERABLE,const_flag>::ref_type reference;
-            //!< difference type of the iterator
+            //! pointer type of the container
+            typedef typename IterTypes<ITERABLE,const_flag>::cont_ptr cptr_type;
+            //! difference type of the iterator
             typedef ssize_t difference_type;
-            //!< type of iterator
+            //! type of iterator
             typedef std::random_access_iterator_tag iterator_category;
+            //! iterator type
+            typedef Iterator<ITERABLE,const_flag> iterator_type;
             //================constructor and destructor========================
             //! default constructor
             Iterator():_container(nullptr),_state(0) {}
@@ -128,8 +137,7 @@ namespace utils{
             \param container pointer to the container object
             \param state initial position of the iterator
             */
-            Iterator(typename IterTypes<ITERABLE,const_flag>::cont_ptr container
-                     ,size_t state=0):
+            Iterator(cptr_type container,size_t state=0):
                 _container(container),
                 _state(state)
             { 
@@ -137,14 +145,14 @@ namespace utils{
 
             //------------------------------------------------------------------
             //! copy constructor
-            Iterator(const Iterator<ITERABLE,const_flag> &i):
+            Iterator(const iterator_type &i):
                 _container(i._container),
                 _state(i._state)
             { }
 
             //------------------------------------------------------------------
             //! move constructor
-            Iterator(Iterator<ITERABLE,const_flag> &&i):
+            Iterator(iterator_type &&i):
                 _container(i._container),
                 _state(i._state)
             {
@@ -158,8 +166,7 @@ namespace utils{
 
             //=================assignment operator==============================
             //! copy assignment operator
-            Iterator<ITERABLE,const_flag> &
-                operator=(const Iterator<ITERABLE,const_flag> &i)
+            iterator_type &operator=(const iterator_type &i)
             {
                 if(this == &i) return *this;
                 this->_container = i._container;
@@ -169,8 +176,7 @@ namespace utils{
 
             //------------------------------------------------------------------
             //! move assignment operator
-            Iterator<ITERABLE,const_flag> &
-                operator=(Iterator<ITERABLE,const_flag> &&i)
+            iterator_type &operator=(iterator_type &&i)
             {
                 if(this == &i) return *this;
                 this->_container = i._container;
@@ -230,7 +236,7 @@ namespace utils{
             \throws IteratorError if the iterator is invalid
             \return pointer to actual object
             */
-            typename IterTypes<ITERABLE,const_flag>::ptr_type operator->()
+            pointer operator->()
             {
                 EXCEPTION_SETUP("typename IterReturnType<typename ITERABLE::"
                                 "value_type,const_flag>::ptr_type"
@@ -246,7 +252,7 @@ namespace utils{
 
             //------------------------------------------------------------------
             //! increment iterator position
-            Iterator<ITERABLE,const_flag> &operator++()
+            iterator_type &operator++()
             {
                 this->_state++;
                 return *this;
@@ -254,7 +260,7 @@ namespace utils{
 
             //------------------------------------------------------------------
             //! increment iterator position
-            Iterator<ITERABLE,const_flag> operator++(int i)
+            iterator_type operator++(int i)
             {
                 Iterator<ITERABLE,const_flag> temp = *this;
                 ++(*this);
@@ -263,7 +269,7 @@ namespace utils{
 
             //------------------------------------------------------------------
             //! decrement operators
-            Iterator<ITERABLE,const_flag> &operator--()
+            iterator_type &operator--()
             {
                 this->_state--;
                 return *this;
@@ -271,7 +277,7 @@ namespace utils{
 
             //------------------------------------------------------------------
             //! decrement operators
-            Iterator<ITERABLE,const_flag> operator--(int i)
+            iterator_type operator--(int i)
             {
                 Iterator<ITERABLE,const_flag> tmp = *this;
                 --(*this);
@@ -280,7 +286,7 @@ namespace utils{
 
             //------------------------------------------------------------------
             //! compound assignment with +=
-            Iterator<ITERABLE,const_flag> &operator+=(ssize_t i)
+            iterator_type &operator+=(ssize_t i)
             {
                 this->_state += i;
                 return *this;
@@ -288,14 +294,14 @@ namespace utils{
 
             //------------------------------------------------------------------
             //! compound assignment with -=
-            Iterator<ITERABLE,const_flag> &operator-=(ssize_t i)
+            iterator_type &operator-=(ssize_t i)
             {
                 this->_state -= i;
                 return *this;
             }
             //------------------------------------------------------------------
             //! comparsion operator - equality
-            bool operator==(const Iterator<ITERABLE,const_flag> &a)
+            bool operator==(const iterator_type &a)
             {
                 //check if the iterators point to the same container
                 if(this->_container != a._container) return false;
@@ -308,7 +314,7 @@ namespace utils{
 
             //------------------------------------------------------------------
             //! comparison operator - inequality
-            bool operator!=(const Iterator<ITERABLE,const_flag> &a)
+            bool operator!=(const iterator_type &a)
             {
                 if((*this)==a) return false;
                 return true;
@@ -316,43 +322,80 @@ namespace utils{
 
             //===============comparison operators==============================
             //! lesser than operator
-            bool operator<(const Iterator<ITERABLE,const_flag> &b)
+            bool operator<(const iterator_type &b)
             {
                 return this->_state < b._state;
             }
 
             //-----------------------------------------------------------------
             //! lesser than equal operator
-            bool operator<=(const Iterator<ITERABLE,const_flag> &b)
+            bool operator<=(const iterator_type &b)
             {
                 return this->_state <= b._state;
             }
 
             //-----------------------------------------------------------------
             //! greater than operator
-            bool operator>(const Iterator<ITERABLE,const_flag> &b)
+            bool operator>(const iterator_type &b)
             {
                 return this->_state > b._state;
             }
 
             //-----------------------------------------------------------------
             //! greater equal than operator
-            bool operator>=(const Iterator<ITERABLE,const_flag> &b)
+            bool operator>=(const iterator_type &b)
             {
                 return this->_state >= b._state;
             }
 
             //=======friend declarations for binary arithmetic operators=======
+           
+            /*! 
+            \brief add scalar to iterator
+
+            Add an offset to the iterator.
+            \code
+            Iteartor<...> iter = ...'
+            Iteartor<...> iter2 = iter+2;
+            \endcode
+            \param a original iterator
+            \param b offset to add
+            \return new iterator 
+            */
+            friend iterator_type operator + <> (const iterator_type &a, ssize_t b);
+
+            /*!
+            \brief add offset to iterator
             
-            friend Iterator<ITERABLE,const_flag> 
-                operator + <> (const Iterator<ITERABLE,const_flag> &a, ssize_t b);
-            friend Iterator<ITERABLE,const_flag> 
-                operator + <> (ssize_t a,const Iterator<ITERABLE,const_flag> &b);
-            friend Iterator<ITERABLE,const_flag> 
-                operator - <> (const Iterator<ITERABLE,const_flag> &a,ssize_t b);
+            Add an offset to the iterator.
+            \param a offset to add
+            \param b original iterator
+            \return new iterator
+            */
+            friend iterator_type 
+                operator + <> (ssize_t a,const iterator_type &b);
+            /*!
+            \brief subtract offset from iterator
+
+            Subtract an integer offset from the iterator.
+            \param a original iterator
+            \param b offset
+            \return new iterator to new position
+            */
+            friend iterator_type 
+                operator - <> (const iterator_type &a,ssize_t b);
+            /*!
+            \brief subtract two iterators
+
+            Subtract to iterators and return the offset difference between this
+            two iterators.
+            \param a first iterator
+            \param b second iterator
+            \return offset difference
+            */
             friend ssize_t
-                operator - <> (const Iterator<ITERABLE,const_flag> &a,
-                          const Iterator<ITERABLE,const_flag> &b);
+                operator - <> (const iterator_type &a,
+                          const iterator_type &b);
     };
 
 //================binary arithmetic operators==================================
