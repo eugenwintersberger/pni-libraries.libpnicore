@@ -230,11 +230,10 @@ namespace utils{
             
             if(index.size() != rank())
             {
-                ExceptionRecord r(__FILE__,__LINE__,BOOST_CURRENT_FUNCTION);
                 std::stringstream ss;
                 ss<<"Rank of index ("<<index.size()<<") does not match ";
                 ss<<"map rank ("<<rank()<<")!";
-                throw ShapeMissmatchError(r,ss.str());
+                throw ShapeMissmatchError(EXCEPTION_RECORD,ss.str());
             }
 
             size_t offset = 0;
@@ -242,8 +241,7 @@ namespace utils{
             auto miter = shape().begin();
             for(auto iiter=index.begin();iiter!=index.end();iiter++,siter++,miter++)
             {
-                check_index((*iiter),(*miter),
-                ExceptionRecord(__FILE__,__LINE__,BOOST_CURRENT_FUNCTION));
+                check_index((*iiter),(*miter),EXCEPTION_RECORD);
                 offset += (*iiter)*(*siter);
             }
 

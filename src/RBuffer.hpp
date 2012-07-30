@@ -169,12 +169,9 @@ namespace utils{
             */
             value_type at(size_t i) const
             {
-                check_allocation_state(*this,
-                ExceptionRecord(__FILE__,__LINE__,BOOST_CURRENT_FUNCTION));
-                check_ptr_state(this->_data,
-                ExceptionRecord(__FILE__,__LINE__,BOOST_CURRENT_FUNCTION));
-                check_index(i,this->size(),
-                ExceptionRecord(__FILE__,__LINE__,BOOST_CURRENT_FUNCTION));
+                check_allocation_state(*this,EXCEPTION_RECORD);
+                check_ptr_state(this->_data,EXCEPTION_RECORD);
+                check_index(i,this->size(),EXCEPTION_RECORD);
 
                 return this->_data[i];
             }
@@ -192,12 +189,9 @@ namespace utils{
             */
             value_type &at(size_t i)
             {
-                check_allocation_state(*this,
-                ExceptionRecord(__FILE__,__LINE__,BOOST_CURRENT_FUNCTION));
-                check_ptr_state(this->_data,
-                ExceptionRecord(__FILE__,__LINE__,BOOST_CURRENT_FUNCTION));
-                check_index(i,this->size(),
-                ExceptionRecord(__FILE__,__LINE__,BOOST_CURRENT_FUNCTION));
+                check_allocation_state(*this,EXCEPTION_RECORD);
+                check_ptr_state(this->_data,EXCEPTION_RECORD);
+                check_index(i,this->size(),EXCEPTION_RECORD);
 
                 return this->_data[i];
             }

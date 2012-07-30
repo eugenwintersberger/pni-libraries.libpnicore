@@ -161,8 +161,7 @@ namespace utils{
             template<size_t d,typename ...ITYPES> 
             size_t _offset(size_t i1,ITYPES ...indices) const
             {
-                check_index(i1,_dims[d],
-                ExceptionRecord(__FILE__,__LINE__,BOOST_CURRENT_FUNCTION));
+                check_index(i1,_dims[d],EXCEPTION_RECORD);
                 
                 return StrideCalc<DIMS...>::template value<d>()*i1+
                        _offset<d+1>(indices...);
@@ -182,8 +181,7 @@ namespace utils{
             */
             template<size_t d> size_t _offset(size_t i) const 
             { 
-                check_index(i,this->_dims[d],
-                ExceptionRecord(__FILE__,__LINE__,BOOST_CURRENT_FUNCTION));
+                check_index(i,this->_dims[d],EXCEPTION_RECORD);
 
                 return StrideCalc<DIMS...>::template value<d>()*i; 
             }
@@ -268,8 +266,7 @@ namespace utils{
                               "Number of indices does not match shape rank!");
 
                 //check the index for the first dimension
-                check_index(i1,this->_dims[0],
-                ExceptionRecord(__FILE__,__LINE__,BOOST_CURRENT_FUNCTION));
+                check_index(i1,this->_dims[0],EXCEPTION_RECORD);
 
                 return StrideCalc<DIMS...>::template value<0>()*i1+
                        _offset<1>(indices...);
@@ -300,8 +297,7 @@ namespace utils{
                     std::stringstream ss;
                     ss<<"Size of container ("<<c.size()<<") does not match";
                     ss<<" rank ("<<this->rank()<<")!";
-                    ExceptionRecord r(__FILE__,__LINE__,BOOST_CURRENT_FUNCTION);
-                    throw ShapeMissmatchError(r,ss.str());
+                    throw ShapeMissmatchError(EXCEPTION_RECORD,ss.str());
                 }
 
                 size_t index = 0;
@@ -313,9 +309,7 @@ namespace utils{
                         ss<<"Index "<<--index<<" is "<<i;
                         ss<<" and exceeds its maximum value";
                         ss<<"of "<<this->_dims[--index]<<"!";
-                        ExceptionRecord r(__FILE__,__LINE__,
-                                          BOOST_CURRENT_FUNCTION);
-                        throw IndexError(r,ss.str());
+                        throw IndexError(EXCEPTION_RECORD,ss.str());
                     }
                 }
                 
@@ -344,8 +338,7 @@ namespace utils{
                     std::stringstream ss;
                     ss<<"Size of container ("<<c.size()<<") does not match";
                     ss<<" rank ("<<this->rank()<<")!";
-                    ExceptionRecord r(__FILE__,__LINE__,BOOST_CURRENT_FUNCTION);
-                    throw ShapeMissmatchError(r,ss.str());
+                    throw ShapeMissmatchError(EXCEPTION_RECORD,ss.str());
                 }
 
                 if(offset >= this->size())
@@ -353,8 +346,7 @@ namespace utils{
                     std::stringstream ss;
                     ss<<"Offset "<<offset<<" exceeds shape size ";
                     ss<<this->size()<<"!";
-                    ExceptionRecord r(__FILE__,__LINE__,BOOST_CURRENT_FUNCTION);
-                    throw SizeMissmatchError(r,ss.str());
+                    throw SizeMissmatchError(EXCEPTION_RECORD,ss.str());
                 }
 
                 IndexCreator<0,true,DIMS...>::template index<CTYPE>(offset,c.begin());

@@ -64,8 +64,7 @@ namespace utils{
                     std::stringstream ss;
                     ss<<"Allocation of "<<sizeof(T)*n<<" Bytes of memory";
                     ss<<" failed!";
-                    ExceptionRecord r(__FILE__,__LINE__,BOOST_CURRENT_FUNCTION);
-                    throw MemoryAllocationError(r,ss.str());
+                    throw MemoryAllocationError(EXCEPTION_RECORD,ss.str());
                 }
 
                 return ptr;

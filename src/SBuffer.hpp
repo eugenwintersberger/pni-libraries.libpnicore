@@ -122,8 +122,7 @@ namespace utils{
             */
             explicit SBuffer(const std::initializer_list<value_type> &list)
             {
-                check_equal_size(*this,list,
-                ExceptionRecord(__FILE__,__LINE__,BOOST_CURRENT_FUNCTION));
+                check_equal_size(*this,list,EXCEPTION_RECORD);
                 
                 size_t i=0;
                 for(auto v: list) (*this)[i] = v;
@@ -172,8 +171,7 @@ namespace utils{
             */
             value_type at(size_t i) const
             {
-                check_index(i,this->size(),
-                ExceptionRecord(__FILE__,__LINE__,BOOST_CURRENT_FUNCTION));
+                check_index(i,this->size(),EXCEPTION_RECORD);
                 return _data[i];
             }
 
@@ -187,8 +185,7 @@ namespace utils{
             */
             value_type &at(size_t i)
             {
-                check_index(i,this->size(),
-                ExceptionRecord(__FILE__,__LINE__,BOOST_CURRENT_FUNCTION));
+                check_index(i,this->size(),EXCEPTION_RECORD);
                 return _data[i];
             }
 
@@ -227,8 +224,7 @@ namespace utils{
             */
             void insert(size_t i,const value_type &v)
             {
-                check_index(i,this->size(),
-                ExceptionRecord(__FILE__,__LINE__,BOOST_CURRENT_FUNCTION));
+                check_index(i,this->size(),EXCEPTION_RECORD);
                 (*this)[i] = v;
             }
 

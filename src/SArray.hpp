@@ -187,10 +187,8 @@ namespace utils{
             */
             template<typename ATYPE> SArray(const ArrayView<ATYPE> &view)
             {
-                check_equal_size(view,*this,
-                ExceptionRecord(__FILE__,__LINE__,BOOST_CURRENT_FUNCTION));
-                check_equal_shape(view,*this,
-                ExceptionRecord(__FILE__,__LINE__,BOOST_CURRENT_FUNCTION));
+                check_equal_size(view,*this,EXCEPTION_RECORD);
+                check_equal_shape(view,*this,EXCEPTION_RECORD);
 
                 std::copy(view.begin(),view.end(),this->begin()); 
             }
@@ -205,8 +203,7 @@ namespace utils{
             //! construction from an initializer list
             explicit SArray(const std::initializer_list<size_t> &il)
             {
-                check_equal_size(il,*this,
-                ExceptionRecord(__FILE__,__LINE__,BOOST_CURRENT_FUNCTION));
+                check_equal_size(il,*this,EXCEPTION_RECORD);
 
                 size_t index = 0;
                 for(auto v: il) (*this)[index++] = v;
@@ -388,8 +385,7 @@ namespace utils{
             */
             value_type at(size_t i) const
             {
-                check_index(i,this->size(),
-                ExceptionRecord(__FILE__,__LINE__,BOOST_CURRENT_FUNCTION));
+                check_index(i,this->size(),EXCEPTION_RECORD);
 
                 return (*this)[i];
             }
@@ -406,8 +402,7 @@ namespace utils{
             */
             value_type &at(size_t i) 
             {
-                check_index(i,this->size(),
-                ExceptionRecord(__FILE__,__LINE__,BOOST_CURRENT_FUNCTION));
+                check_index(i,this->size(),EXCEPTION_RECORD);
 
                 return (*this)[i];
             }
@@ -424,8 +419,7 @@ namespace utils{
             */
             void insert(size_t i,const value_type &v)
             {
-                check_index(i,this->size(),
-                ExceptionRecord(__FILE__,__LINE__,BOOST_CURRENT_FUNCTION));
+                check_index(i,this->size(),EXCEPTION_RECORD);
 
                 (*this)[i] = v;
             }

@@ -59,8 +59,8 @@ namespace utils{
         _last(last),
         _stride(stride)
     {
-        _check_start_stop(ExceptionRecord(__FILE__,__LINE__,BOOST_CURRENT_FUNCTION));
-        _check_stride(ExceptionRecord(__FILE__,__LINE__,BOOST_CURRENT_FUNCTION));
+        _check_start_stop(EXCEPTION_RECORD);
+        _check_stride(EXCEPTION_RECORD);
     }
 
     //-------------------------------------------------------------------------
@@ -88,8 +88,8 @@ namespace utils{
             cnt++;
         }
 
-        _check_start_stop(ExceptionRecord(__FILE__,__LINE__,BOOST_CURRENT_FUNCTION));
-        _check_stride(ExceptionRecord(__FILE__,__LINE__,BOOST_CURRENT_FUNCTION));
+        _check_start_stop(EXCEPTION_RECORD);
+        _check_stride(EXCEPTION_RECORD);
     }
 
     //-------------------------------------------------------------------------
@@ -98,8 +98,8 @@ namespace utils{
         _last(i+1),
         _stride(1)
     {
-        _check_start_stop(ExceptionRecord(__FILE__,__LINE__,BOOST_CURRENT_FUNCTION));
-        _check_stride(ExceptionRecord(__FILE__,__LINE__,BOOST_CURRENT_FUNCTION));
+        _check_start_stop(EXCEPTION_RECORD);
+        _check_stride(EXCEPTION_RECORD);
     }
 
 

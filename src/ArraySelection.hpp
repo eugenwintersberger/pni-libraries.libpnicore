@@ -124,8 +124,7 @@ namespace utils{
                 void index(const ITYPE &sindex,ITYPE &oindex) const
             {
                 //check size
-                check_equal_size(_oshape,oindex,
-                ExceptionRecord(__FILE__,__LINE__,BOOST_CURRENT_FUNCTION));
+                check_equal_size(_oshape,oindex,EXCEPTION_RECORD);
 
                 typename ITYPE::iterator oiter = oindex.begin();
                 typename ITYPE::const_iterator siter = sindex.begin();
