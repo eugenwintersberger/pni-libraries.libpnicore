@@ -37,8 +37,15 @@ namespace utils{
     /*! \ingroup buffer_classes
     \brief allocator class using new
 
-    This allocator class uses the new operator to allocate new memory and the
-    delete operator for freeing memory.
+    This allocator class uses the new operator to allocate and the delete
+    operator to free memory. 
+    \code
+    //allocate memory for 100 Float64 values
+    Float64 *ptr = NewAllocator::allocate<Float64>(100);
+
+    //free the pointer
+    NewAllocator::free(ptr);
+    \endcode 
     */
     class NewAllocator
     {
@@ -48,6 +55,7 @@ namespace utils{
             Static template method to allocate memory for n elements of size T.
             An exception will be thrown if allocation fails.
             \throw MemoryAllocationError if allocation fails
+            \tparam T data type for which memory should be allocated 
             \param n number of elements for which memory should be allocated
             \return pointer to the allocated memory region
             */
@@ -74,6 +82,7 @@ namespace utils{
             /*! \brief free memory
 
             Free memory allocated by this allocator class. 
+            \tparam T base type of the pointer
             \param ptr pointer to the allocated memory
             */
             template<typename T> static void free(T *ptr)

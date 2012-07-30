@@ -304,7 +304,7 @@ namespace utils{
 
     //--------------------------------------------------------------------------
     /*!
-    \brief buffer_classes
+    \ingroup buffer_classes
     \brief in-equality operator for static buffers
 
     Return true if two static buffers are not equal. This will be the case when
