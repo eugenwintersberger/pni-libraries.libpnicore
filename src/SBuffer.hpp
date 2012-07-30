@@ -46,9 +46,11 @@ namespace utils{
     /*! \ingroup buffer_classes
     \brief static buffer template
     
-    This template implements a static buffer. Such objects occupy a fixed size
-    in memory which cannot be altered. StaticBuffer behaves like a STL
-    container. Thus all the STL algorithm template functions can be used. 
+    This template implements a static buffer. The amount of memory occupied by
+    the buffer is determined at compile time and cannot be altered during
+    runtime.
+    \tparam T type to be stored in the buffer
+    \tparam N number of element of T in the buffer
     */
     template<typename T,size_t N >class SBuffer
     {
@@ -257,12 +259,25 @@ namespace utils{
 
     };
 
-
-
     //==============comparison operators========================================
+    /*!
+    \ingroup buffer_classes
+    \brief comparison operator for static buffers
+
+    Compares two static buffers and returns true if they are equal. Two buffers
+    are considered as equal if they have the same size and if their elements
+    have the same value. The size does not need to be checked as it is part of
+    the buffer types definition.
+    \tparam T data type of the first buffer
+    \tparam U data type of the second buffer
+    \tparam N size of the buffers
+    \param a first buffer
+    \param b second buffer
+    \return true if buffers are equal, false otherwise
+    */
     template<typename T,typename U,size_t N>
     bool operator==(const SBuffer<T,N> &a,const SBuffer<U,N> &b){
-
+        
         for(size_t i=0;i<a.size();i++)
             if(a[i] != b[i]) return false;
 
@@ -270,6 +285,19 @@ namespace utils{
     }
 
     //--------------------------------------------------------------------------
+    /*!
+    \brief buffer_classes
+    \brief in-equality operator for static buffers
+
+    Return true if two static buffers are not equal. This will be the case when
+    the content of the two buffers does not share the same values.
+    \tparam T data type of the first buffer
+    \tparam U data type of the second buffer
+    \tparam N size of the two buffers
+    \param a first buffer
+    \param b second buffer
+    \return true if buffers are not equal, false otherwise
+    */
     template<typename T,typename U,size_t N>
     bool operator!=(const SBuffer<T,N> &a,const SBuffer<U,N> &b)
     {

@@ -1,4 +1,4 @@
-/*! \defgroup data_classes Data classes
+/*! \defgroup multidim_array_classes Multidimensional array classes
 These classes are responsible for storing and manipulating data in memory. 
 
 

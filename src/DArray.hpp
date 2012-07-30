@@ -51,7 +51,7 @@ namespace pni {
 namespace utils {
 
     /*! 
-    \ingroup data_classes
+    \ingroup multidim_array_classes
     \brief template for a multi-dimensional array class
 
     \tparam T data type of the array

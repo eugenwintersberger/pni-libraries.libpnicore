@@ -36,7 +36,7 @@
 namespace pni{
 namespace utils{
     
-    /*! \ingroup data_classes
+    /*! \ingroup multidim_array_classes
     \brief provides a view on a part of an array
 
     The ArrayView class provides a view on the part of an array. No new memory

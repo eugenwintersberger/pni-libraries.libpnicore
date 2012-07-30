@@ -11,7 +11,7 @@ namespace pni{
 namespace utils{
 
     /*! 
-    \ingroup util_classes
+    \ingroup multidim_array_classes
     \brief select data form a multidimensional array
 
     This type used to select data from a multidimensional array. Its primary

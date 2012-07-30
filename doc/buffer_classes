@@ -1,8 +1,11 @@
 /*! \defgroup buffer_classes Data buffer types
 
-Buffers are the fundamental types for holding data. The \c Buffer here describes
-rather a concept than a concrete type. Every type that might be used as a buffer
-in the code has to satisfy the following implicit interface
+The buffer templates provide types which store data in a contiguous region of
+memory. They are intended as a replacement for raw pointers. Indeed one can think 
+of a buffer template as a guard object around a raw pointer. The templates make 
+a pointer a first class object reducing thus the danger of memory leaks as the 
+memory allocated by a buffer is freed once the object is destroyed. 
+All buffer templates share the same interface as shown below
 \code
 template<typename T,...> class Buffer
     public:
@@ -27,11 +30,16 @@ template<typename T,...> class Buffer
     
     const value_type *ptr() const;   //get access to the internal storage
 
-    
+   
+    //linear access - must not throw
     value_type &operator[](size_t i); 
+    //linear access - must not throw
     value_type operator[](size_t i) const; 
+    //linear access - throws IndexError if i exceeds the buffer size
     value_type &at(size_t i);
+    //linear access - throws IndexError if i exceeds the buffer size
     value_type at(size_t i) const;
+    //linear access - throws IndexError if i exceeds the buffer size
     void insert(size_t pos,const value_type &v);
 
     size_t size() const;       //return number of elements of type T
@@ -44,11 +52,9 @@ template<typename T,...> class Buffer
 
 };
 \endcode
-The iterators provided by the Buffer types must be random access iterators in
-the sense of STL. Thus, all standard STL algorithms can be used with the Buffer
-types. A buffer should be considered as a guard object for a raw buffer. Buffers
-are first class objects. Unlike raw pointers they got destroyed when they loose
-their scope. Thus, using a buffer object takes away the danger to produce a
-memory leak.
-
+A buffer template behaves like a STL container. Thus it can be used with all STL
+functions defined in the C++ standard. However, unlike STL containers the buffer
+templates provided access to the allocated memory region by their ptr() method. 
+For this reason the region of memory referred to by a buffer template must be
+contiguous.
 */

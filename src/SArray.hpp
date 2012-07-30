@@ -38,7 +38,7 @@ namespace pni{
 namespace utils{
 
     /*! 
-    \ingroup data_classes
+    \ingroup multidim_array_classes
     \brief static array 
 
     Static arrays are multidimensional arrays which can be used to represent
