@@ -43,7 +43,7 @@
 namespace pni{
 namespace utils{
 
-    /*! \ingroup data_classes
+    /*! \ingroup buffer_classes
     \brief static buffer template
     
     This template implements a static buffer. Such objects occupy a fixed size

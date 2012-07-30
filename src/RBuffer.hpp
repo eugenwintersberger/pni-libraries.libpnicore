@@ -43,7 +43,7 @@
 namespace pni{
 namespace utils{
 
-    /*! \ingroup data_classes
+    /*! \ingroup buffer_classes
     \brief ref. buffer template
 
     This template is a concrete implementation of the BufferObject base class.

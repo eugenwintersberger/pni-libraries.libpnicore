@@ -34,7 +34,7 @@
 namespace pni{
 namespace utils{
 
-    /*! \ingroup data_classes
+    /*! \ingroup buffer_classes
     \brief allocator class using new
 
     This allocator class uses the new operator to allocate new memory and the

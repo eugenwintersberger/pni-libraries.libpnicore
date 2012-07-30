@@ -43,7 +43,7 @@
 namespace pni{
 namespace utils{
 
-    /*! \ingroup data_classes
+    /*! \ingroup buffer_classes
     \brief dynamic buffer template
 
     The Buffer template can be considered as a kind of guard object for
