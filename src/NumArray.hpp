@@ -32,8 +32,6 @@
 
 namespace pni{
 namespace utils{
-
-
     
     /*! 
     \ingroup data_classes
@@ -50,21 +48,29 @@ namespace utils{
     {
         //need to do here a compiletime check if types are equal
         private:
-            ATYPE _array;
+            ATYPE _array; //!< array with data
         public:
             //====================public types=================================
-
+            //! element type of the array
             typedef typename ATYPE::value_type value_type;
+            //! type of the array
             typedef NumArray<ATYPE> array_type;
+            //! type of array storage
             typedef ATYPE storage_type;
+            //! type of the view
             typedef ArrayView<array_type> view_type;
+            //! shared smart pointer type to the numeric array
             typedef std::shared_ptr<array_type> shared_ptr;
+            //! unique smart pointer type to the numeric array
             typedef std::unique_ptr<array_type> unique_ptr;
 
+            //! iterator type
             typedef typename ATYPE::iterator iterator;
+            //! const iterator type
             typedef typename ATYPE::const_iterator const_iterator;
             
             //=====================public members==============================
+            //! type id of the element type
             static const TypeID type_id = TypeIDMap<value_type>::type_id;
 
             //======================constructors and destructor================
@@ -112,43 +118,115 @@ namespace utils{
             }
 
             //====================inquery methods=============================
+            /*!
+            \brief return size
+
+            Returns the number of element stored in the array. 
+            \return number of elements
+            */
             size_t size() const { return this->_array.size(); }
 
             //----------------------------------------------------------------
+            /*!
+            \brief return number of dimensions
+
+            Return the number of dimensions of the arrya. 
+            \return number of dimensions
+            */
             size_t rank() const { return this->_array.rank(); }
 
             //-----------------------------------------------------------------
+            /*!
+            \brief get shape
+
+            Return a container with the number of elements along each dimension
+            of the array.
+            \return container with shape
+            */
             template<typename CTYPE> CTYPE shape() const 
             {
                 return this->_array.template shape<CTYPE>();
             }
 
             //==================accessing data=================================
-        
+            /*!
+            \brief get element at linear index i
+
+            Return the value of the element at linear index i of the array. This
+            operator does not perform any index checking. 
+            \param i index of the element
+            \return value of the element at linear index i
+            */
             value_type operator[](size_t i) const { return this->_array[i]; }
 
             //-----------------------------------------------------------------
+            /*!
+            \brief get reference to element at i
+
+            Return a reference to the element at linear index i. This operator
+            performs no index checking.
+            \param i linear index of the requested element
+            \return reference to the requested element
+            */
             value_type &operator[](size_t i) { return this->_array[i]; }
 
             //-----------------------------------------------------------------
+            /*!
+            \brief get reference to element
+
+            Get a reference to the element at linear index i. This method
+            performs index checking and throws an exception if i exceeds the
+            total size of the array.
+            \throws IndexError if i exceeds the total size of the array
+            \param i linear index of the element
+            \return reference to the element at linear index i
+            */
             value_type &at(size_t i) { return this->_array.at(i); }
 
             //-----------------------------------------------------------------
+            /*!
+            \brief get value of element
+
+            Return the value of an element at linear index i. 
+            \throws IndexError if i exceeds the total size of the array
+            \param i linear index of the element
+            \return value at linear index i
+            */
             value_type at(size_t i) const { return this->_array.at(i); }
 
             //-----------------------------------------------------------------
+            /*!
+            \brief insert element
+
+            Set the value of element at linaer index i to v. 
+            \throws IndexError if i exceeds the total size of the array
+            \param i linear index where to insert the value
+            \param v value to insert
+            */
             void insert(size_t i,const value_type &v)
             {
                 this->_array.insert(i,v);
             }
 
             //-----------------------------------------------------------------
+            /*!
+            \brief return storage reference
+
+            Return a const. reference to the storage reference.
+            \return reference to storage.
+            */
             const ATYPE &storage() const
             {
                 return this->_array;
             }
 
             //-----------------------------------------------------------------
+            /*! 
+            \brief return a selection or value
+
+            Returns a non-const reference or a selection. The return value
+            depends on the types of the arguments.
+            */
             template<typename ...ITYPES>
             typename ArrayViewSelector<array_type,ITYPES...>::reftype
             operator()(ITYPES ...indices)
@@ -157,6 +235,15 @@ namespace utils{
             }
 
             //-----------------------------------------------------------------
+            /*!
+            \brief retrieve data value
+
+            Retrieve data using a multidimensional index passed as argument list
+            to the method.
+            \tparam ITYPES index types
+            \param indices index list
+            \return single value or array view
+            */
             template<typename ...ITYPES>
             typename ArrayViewSelector<array_type,ITYPES...>::viewtype
             operator()(ITYPES ...indices) const
@@ -165,6 +252,14 @@ namespace utils{
             }
 
             //-----------------------------------------------------------------
+            /*!
+            \brief access data 
+            
+            \tparam CTYPE container type
+            \tparam OTS template arguments for the container
+            \param c container with indices
+            \return view or reference to a singel value
+            */
             template<template<typename ...> class CTYPE,typename ...OTS>
             typename ArrayViewSelector<array_type,typename CTYPE<OTS...>::value_type>::reftype
             operator()(const CTYPE<OTS...> &c)
@@ -173,6 +268,13 @@ namespace utils{
             }
 
             //-----------------------------------------------------------------
+            /*!
+            \brief get data
+
+            \tparam CTYPE container template
+            \tparam OTS template arguments
+            \param c container with indices
+            */
             template<template<typename ...> class CTYPE,typename ...OTS>
             typename ArrayViewSelector<array_type,typename CTYPE<OTS...>::value_type>::viewtype
             operator()(const CTYPE<OTS...> &c) const
@@ -181,18 +283,30 @@ namespace utils{
             }
 
             //===================iterators=====================================
+            //! get iterator to first element
             iterator begin() { return this->_array.begin(); }
 
             //-----------------------------------------------------------------
+            //! get iterator to list +1 element
             iterator end() { return this->_array.end(); }
 
             //-----------------------------------------------------------------
+            //! get const iterator to first element
             const_iterator begin() const { return this->_array.begin(); }
 
             //-----------------------------------------------------------------
+            //! get const iterator to last + 1 element
             const_iterator end() const { return this->_array.end(); }
 
             //===================unary add=====================================
+            /*! 
+            \brief unary add with scalar
+
+            Performs an inplace addition of each component of the array with the
+            value of v.
+            \param v scalar value to add
+            \return reference to the modified array
+            */
             array_type &operator+=(value_type v)
             {
                 IPA::add(this->_array,v);
@@ -200,6 +314,14 @@ namespace utils{
             }
 
             //-----------------------------------------------------------------
+            /*! 
+            \brief unary add with other array
+
+            Performs an element-wise addition of the arrays values with the
+            elements off a. 
+            \param a array to divide
+            \return reference to the modified array
+            */
             array_type &operator+=(const array_type &a)
             {
                 IPA::add(this->_array,a._array);
@@ -207,6 +329,16 @@ namespace utils{
             }
 
             //-----------------------------------------------------------------
+            /*! 
+            \brief unary add with a container type
+
+            Element wise unary addition of the array with the content of a
+            general container template CTYPE.
+            \tparam CTYPE container template
+            \tparam OTS optional template arguments of CTYPE
+            \param c instance of CTYPE
+            \return reference to the modified array 
+            */
             template<template<typename ...> class CTYPE,typename ...OTS>
                 array_type &operator+=(const CTYPE<OTS...> &c)
             {
@@ -215,6 +347,13 @@ namespace utils{
             }
 
             //==================unary subtraction==============================
+            /*! 
+            \brief unary subtraction with a scalar
+
+            Inplace subtraction of every element of the array with v.
+            \param v scalar value to subtract
+            \return reference to the modified array
+            */
             array_type &operator-=(value_type v)
             {
                 IPA::sub(this->_array,v);
@@ -222,6 +361,14 @@ namespace utils{
             }
 
             //-----------------------------------------------------------------
+            /*! 
+            \brief unary subtraction with another array
+
+            Inplace subtraction of every element of the array with the
+            corresponding element of a.
+            \param a instance of array on the rhs of the operator
+            \return reference to the modified array
+            */
             array_type &operator-=(const array_type &a)
             {
                 IPA::sub(this->_array,a._array);
@@ -229,6 +376,16 @@ namespace utils{
             }
 
             //----------------------------------------------------------------
+            /*! 
+            \brief unary subtraction with a container
+
+            Inplace subtraction of each element of the array with each element
+            of the container of type CTYPE. 
+            \tparam CTYPE container template
+            \tparam OTS optional template arguments to CTYPE
+            \param c container instance
+            \return reference to the modified array
+            */
             template<template<typename ...> class CTYPE,typename ...OTS>
                 array_type &operator-=(const CTYPE<OTS...> &c)
             {
@@ -237,6 +394,14 @@ namespace utils{
             }
 
             //==================unary multiplication==========================
+            /*! 
+            \brief unary multiplication with a scalar
+
+            Apply element-wise multiplication of each element of the array with
+            v. 
+            \param v value to multiply with
+            \return reference to the modified array
+            \*/
             array_type &operator*=(value_type v)
             {
                 IPA::mult(this->_array,v);
@@ -244,6 +409,14 @@ namespace utils{
             }
 
             //-----------------------------------------------------------------
+            /*! 
+            \brief unary multiplication with an array
+
+            Element wise multiplication of between this array and a on the rhs
+            of the operator.
+            \param a instance of array to multiply with
+            \return reference to the modified instance of the array
+            */
             array_type &operator*=(const array_type &a)
             {
                 IPA::mult(this->_array,a._array);
@@ -251,6 +424,14 @@ namespace utils{
             }
 
             //----------------------------------------------------------------
+            /*! 
+            \brief unary multiplication with a general container
+
+            \tparam CTYPE container template
+            \tparam OTS template arguments to CTYPE
+            \param c instance of CTYPE
+            \return reference to the modified version of the array
+            */
             template<template<typename ...> class CTYPE,typename ...OTS>
                 array_type &operator*=(const CTYPE<OTS...> &c)
             {
@@ -259,6 +440,13 @@ namespace utils{
             }
             
             //==================unary division=================================
+            /*! 
+            \brief unary division with a scalar
+
+            Performs a inplace division with a scalar.
+            \param v scalar left-hand operator
+            \return instance of the divided array
+            */
             array_type &operator/=(value_type v)
             {
                 IPA::div(this->_array,v);
@@ -266,6 +454,12 @@ namespace utils{
             }
 
             //-----------------------------------------------------------------
+            /*! 
+            \brief unary division with an array
+          
+            \param a array on the rhs of the operator
+            \return reference to the modified version of the array
+            */
             array_type &operator/=(const array_type &a)
             {
                 IPA::div(this->_array,a._array);
@@ -273,6 +467,14 @@ namespace utils{
             }
 
             //----------------------------------------------------------------
+            /*! 
+            \brief unary division with a general container
+
+            \tparam CTYPE container template
+            \tparam OTS template arguments to CTYPE
+            \param c instance of CTYPE
+            \return reference to the modified version of the array
+            */
             template<template<typename ...> class CTYPE,typename ...OTS>
                 array_type &operator/=(const CTYPE<OTS...> &c)
             {
