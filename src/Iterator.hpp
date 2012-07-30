@@ -8,26 +8,41 @@ namespace pni{
 namespace utils{
    
     //=========================================================================
-    /*! \ingroup util_classes
+    /*! 
+    \ingroup iterator_types
     \brief iterator return type map
 
-    Template whose specializations determine the return types for various 
-    iterator operators depending on the const_flag in the template parameter
-    list.
+    One of the difficult tasks in creating an iterator is to determine the
+    return type for the dereferencing-operator (*). In the case of a read/write
+    iterator the return type is a reference to the element the iterator actually
+    points to. For const iterators this should be the value_type of the
+    iterable (the const iterator returns by value to avoid modification of the
+    element). 
+    This is the default template without data members. Have a look on its
+    specializations to for a particular return type
+    \sa IterTypes<ITERABLE,0>
+    \sa IterTypes<ITERABLE,1>
+    \tparam ITERABLE container type over which to iterate
+    \tparam const_flag 1 if the iterator is a const iterator.
     */
-    template<typename ITERABLE,int const_flag> class IterTypes;
+    template<typename ITERABLE,int const_flag> class IterTypes
+    {};
 
     //=========================================================================
-    /*! \ingroup util_classes
+    /*! \ingroup iterator_types
     \brief return types for non-const iterators
 
-    Specialization of the IterReturnType template for non-const iterators.
+    Specialization of the IterTypes template for non-const iterators.
+    In this case the return_type member type is a reference to the value_type of
+    the ITERABLE.
+    \tparam ITERABLE container over which the iterator should run
+    \sa IterTypes<ITERABLE,const_flag>
     */
     template<typename ITERABLE> class IterTypes<ITERABLE,0>
     {
         public:
             typedef ITERABLE *cont_ptr; //!< container pointer
-            //! reference type for dereferencing operator
+            //! return type for the dereferencing operator
             typedef typename ITERABLE::value_type& return_type;
             //! pointer type for -> operator
             typedef typename ITERABLE::value_type* ptr_type;    
@@ -36,16 +51,19 @@ namespace utils{
     };
 
     //=========================================================================
-    /*! \ingroup util_classes
+    /*! \ingroup iterator_types
     \brief return types for const iterators
 
-    Specialization of the IterReturnType template for const iterators.
+    Specialization of the IterReturnType template for const iterators. Here the
+    return type of the dereferencing operator is just value_type. 
+    \tparam ITERABLE type over which the iterator should run
+    \sa IterTypes<ITERABLE,const_flag>
     */
     template<typename ITERABLE> class IterTypes<ITERABLE,1>
     {
         public:
             typedef const ITERABLE *cont_ptr; //!< container pointer
-            //! value type for dereferencing operator
+            //! return type for dereferencing operator
             typedef typename ITERABLE::value_type return_type;    
             //! pointer type for -> operator
             typedef const typename ITERABLE::value_type *ptr_type; 
@@ -54,42 +72,27 @@ namespace utils{
     };
 
     //=========================================================================
-    //! \cond NO_DOC
-    template<typename ITERABLE,int const_flag> class Iterator;
 
-    template<typename ITERABLE,int const_flag> Iterator<ITERABLE,const_flag> 
-        operator+(const Iterator<ITERABLE,const_flag> &a,
-                  ssize_t b);
-    template<typename ITERABLE,int const_flag> Iterator<ITERABLE,const_flag>
-        operator+(ssize_t a,
-                  const Iterator<ITERABLE,const_flag> &b);
-    template<typename ITERABLE,int const_flag> Iterator<ITERABLE,const_flag>
-        operator-(const Iterator<ITERABLE,const_flag> &a,
-                  ssize_t b);
-    template<typename ITERABLE,int const_flag> ssize_t
-        operator-(const Iterator<ITERABLE,const_flag> &a,
-                  const Iterator<ITERABLE,const_flag> &b);
-
-    //! \endcond 
-
-
-    /*! \ingroup util_classes   
+    /*! 
+    \ingroup iterator_types   
     \brief iterator type
 
-    Generic iterator used for several classes within this library. The container
-    type that can be used with this iterator must provide the following
-    interface
+    This is the most generic iterator provided by libpniutils. It can be used
+    with all container types provided by the library. A container that wants to
+    use this iterator must implement the following interface
     \code
     template<typename T> class ITERABLE<T>
     {
         public:
-            typedef T valuee_type;
+            typedef T value_type;
             size_t size() const;
             T &operator[](size_t i);
             T operator[](size_t i) const;
     };
     \endcode
-    This template implements a simple forward iterator. 
+    This template implements a simple forward iterator. It must be mentioned
+    that this iterator, unlike the standard C++ iterators, throws an exception
+    if one tries to dereference an invalid iterator.
     */
     template<typename ITERABLE,int const_flag> class Iterator
     {
@@ -335,88 +338,82 @@ namespace utils{
                 return this->_state >= b._state;
             }
 
-            //=======friend declarations for binary arithmetic operators=======
-           
-            /*! 
-            \brief add scalar to iterator
+            ssize_t state() const { return this->_state; }
 
-            Add an offset to the iterator.
-            \code
-            Iteartor<...> iter = ...'
-            Iteartor<...> iter2 = iter+2;
-            \endcode
-            \param a original iterator
-            \param b offset to add
-            \return new iterator 
-            */
-            friend iterator_type operator + <> (const iterator_type &a, ssize_t b);
-
-            /*!
-            \brief add offset to iterator
-            
-            Add an offset to the iterator.
-            \param a offset to add
-            \param b original iterator
-            \return new iterator
-            */
-            friend iterator_type 
-                operator + <> (ssize_t a,const iterator_type &b);
-            /*!
-            \brief subtract offset from iterator
-
-            Subtract an integer offset from the iterator.
-            \param a original iterator
-            \param b offset
-            \return new iterator to new position
-            */
-            friend iterator_type 
-                operator - <> (const iterator_type &a,ssize_t b);
-            /*!
-            \brief subtract two iterators
-
-            Subtract to iterators and return the offset difference between this
-            two iterators.
-            \param a first iterator
-            \param b second iterator
-            \return offset difference
-            */
-            friend ssize_t
-                operator - <> (const iterator_type &a,
-                          const iterator_type &b);
     };
 
-//================binary arithmetic operators==================================
-template<typename ITERABLE,int const_flag> Iterator<ITERABLE,const_flag> 
-    operator+(const Iterator<ITERABLE,const_flag> &a, ssize_t b)
-{
-    Iterator<ITERABLE,const_flag> iter = a;
-    iter += b;
-    return iter;
-}
+    //================binary arithmetic operators===============================
+    /*! 
+    \brief add scalar to iterator
 
-//-----------------------------------------------------------------------------
-template<typename ITERABLE,int const_flag> Iterator<ITERABLE,const_flag>
-    operator+(ssize_t a, const Iterator<ITERABLE,const_flag> &b)
-{
-    return b+a;
-}
+    Add an offset to the iterator and thus increment its internal state by this
+    offset.
+    \code
+    Iteartor<...> iter = ...'
+    Iteartor<...> iter2 = iter+2;
+    \endcode
+    \param a original iterator
+    \param b offset to add
+    \return new iterator 
+    */
+    template<typename ITERABLE,int const_flag> Iterator<ITERABLE,const_flag> 
+        operator+(const Iterator<ITERABLE,const_flag> &a, ssize_t b)
+    {
+        Iterator<ITERABLE,const_flag> iter = a;
+        iter += b;
+        return iter;
+    }
 
-//-----------------------------------------------------------------------------
-template<typename ITERABLE,int const_flag> Iterator<ITERABLE,const_flag>
-    operator-(const Iterator<ITERABLE,const_flag> &a, ssize_t b)
-{
-    Iterator<ITERABLE,const_flag> iter = a;
-    iter -= b;
-    return iter;
-}
+    //--------------------------------------------------------------------------
+    /*!
+    \brief add offset to iterator
+    
+    Add an offset to the iterator and thus increment its internal state by this
+    offset.
+    \param a offset to add
+    \param b original iterator
+    \return new iterator
+    */
+    template<typename ITERABLE,int const_flag> Iterator<ITERABLE,const_flag>
+        operator+(ssize_t a, const Iterator<ITERABLE,const_flag> &b)
+    {
+        return b+a;
+    }
 
-//-----------------------------------------------------------------------------
-template<typename ITERABLE,int const_flag> ssize_t
-    operator-(const Iterator<ITERABLE,const_flag> &a, 
-            const Iterator<ITERABLE,const_flag> &b)
-{
-    return a._state - b._state;
-}
+    //--------------------------------------------------------------------------
+    /*!
+    \brief subtract offset from iterator
+
+    Subtract an integer offset from the iterator and thus decrement the internal
+    state of the iterator by this value. 
+    \param a original iterator
+    \param b offset
+    \return new iterator to new position
+    */
+    template<typename ITERABLE,int const_flag> Iterator<ITERABLE,const_flag>
+        operator-(const Iterator<ITERABLE,const_flag> &a, ssize_t b)
+    {
+        Iterator<ITERABLE,const_flag> iter = a;
+        iter -= b;
+        return iter;
+    }
+
+    //--------------------------------------------------------------------------
+    /*!
+    \brief subtract two iterators
+
+    Subtract to iterators and return the offset difference between this
+    two iterators.
+    \param a first iterator
+    \param b second iterator
+    \return offset difference
+    */
+    template<typename ITERABLE,int const_flag> ssize_t
+        operator-(const Iterator<ITERABLE,const_flag> &a, 
+                const Iterator<ITERABLE,const_flag> &b)
+    {
+        return a.state() - b.state();
+    }
 
 //end of namespace
 }

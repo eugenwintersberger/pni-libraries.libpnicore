@@ -246,7 +246,7 @@ namespace utils{
             {
                 try { this->at(i) = v; } 
                 EXCEPTION_FORWARD(IndexError)
-                EXCEPTION_FORWARD(MemoryNotAllocatedError);
+                EXCEPTION_FORWARD(MemoryNotAllocatedError)
             }
 
 
