@@ -245,7 +245,7 @@ namespace utils{
             void insert(size_t i,const value_type &v)
             {
                 try { this->at(i) = v; } 
-                EXCEPTION_FORWARD(IndexError);
+                EXCEPTION_FORWARD(IndexError)
                 EXCEPTION_FORWARD(MemoryNotAllocatedError);
             }
 

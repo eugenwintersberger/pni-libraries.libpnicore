@@ -58,7 +58,13 @@ namespace utils{
 
 This macro can be used to forward an exception caught from another function. It
 appends the ExceptionRecord of the current function to the existing exception
-and throws the exception again.
+and throws the exception again. Consider the following examples
+\code
+try { value = buffer.at(index); }
+EXCEPTION_FORWARD(IndexError)
+EXCEPTION_FORWARD(MemoryNotAllocatedError)
+\endcode
+Please note that the MUST NOT BE a semicolon at the end of this macro.
 */
 #define EXCEPTION_FORWARD(ETYPE)\
     catch(ETYPE &error)\

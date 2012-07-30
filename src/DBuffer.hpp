@@ -43,26 +43,25 @@
 namespace pni{
 namespace utils{
 
-    /*! \ingroup buffer_classes
+    /*! 
+    \ingroup buffer_classes
     \brief dynamic buffer template
+    
+    The dynamic buffer template creates a buffer type that can be freed and
+    reallocated at runtime. This makes this template pretty flexible. 
+    \code
+    DBuffer<Float64> buffer(1024);
 
-    The Buffer template can be considered as a kind of guard object for
-    pointers. It manages a particular portion of allocated memory. Once the
-    object is destroyed (its destructor is called) the memory will be freed.
-    Thus, the Buffer template should help to avoid memory leaks. 
+    buffer.allocate(2048);
 
-    Although its interface looks a bit like a container class, the Buffer<T>
-    template is not. It is rather really a replacement for a pointer to a
-    portion of memory. It provides access to the pointer it holds via its ptr()
-    and void_ptr() methods. Although this violates the object oriented paradigm
-    of encapsulation, this is necessary in particular if one wants to use
-    libraries which need access to such low level pointers. However, the class
-    has still full controll over of the allocated memory.
-
-    Due to the fact that access to the stored pointer is granted, this template
-    is not thread safe. It would not make too much sense as the protection by a
-    mutex could easily be cancled by passing the pointer held by the object
-    around to other routines.
+    \endcode
+    The template has full ownership over the allocated memory. If an instance of
+    DBuffer is destroyed all the memory will be freed. The template uses an
+    allocator type to request and release memory from and to the system. 
+    This allows for different allocation strategies. 
+    \tparam T data type for which to allocate memory
+    \tparam Allocator allocator type responsible for memory allocation and
+    relieve
     */
     template<typename T,typename Allocator=NewAllocator >class DBuffer
     {
@@ -76,7 +75,7 @@ namespace utils{
             exception if allocation fails.
             \throws MemoryAllocationError if allocation fails.
             */ 
-            void _allocate();
+            //void _allocate();
            
         public:
             //============public types provided by the template================
@@ -269,11 +268,9 @@ namespace utils{
             */
             void insert(size_t i,const value_type &value)
             {
-                check_index(i,this->size(),EXCEPTION_RECORD);
-                check_allocation_state(*this,EXCEPTION_RECORD);
-                check_ptr_state(this->_data,EXCEPTION_RECORD);
-
-                this->_data[i] = value;
+                try{ this->at(i) = value; }
+                EXCEPTION_FORWARD(IndexError)
+                EXCEPTION_FORWARD(MemoryNotAllocatedError)
             }
 
             //-----------------------------------------------------------------
@@ -313,8 +310,9 @@ namespace utils{
                 if(this->size()) this->free();
                
                 //allocate new memory
-                _data = Allocator::template allocate<T>(size);
-
+                try{ _data = Allocator::template allocate<T>(size); }
+                EXCEPTION_FORWARD(MemoryAllocationError);
+                
                 //set the size member variable
                 _size = size;
             }
@@ -377,36 +375,43 @@ namespace utils{
 
 
     //==============comparison operators========================================
+    /*! 
+    \ingroup buffer_classes
+    \brief equality operator for DBuffer template
+
+    Return true if two instances of the DBuffer template are equal. Instances of
+    DBuffer are considered as equal if they have the same size and their values
+    coincide.
+    \tparam T type of first DBuffer template
+    \tparam TAlloc allocator type for first DBuffer template
+    \tparam U type of second DBuffer template
+    \tparam UAlloc allocator type for second DBuffer template
+    \param a first buffer - instance of DBuffer<T,TAlloc>
+    \param b second buffer - instance of DBuffer<U,UAlloc>
+    \return true if buffers are equal, false otherwise
+    */
     template<typename T,typename TAlloc,typename U,typename UAlloc>
     bool operator==(const DBuffer<T,TAlloc> &a,const DBuffer<U,UAlloc> &b)
     {
         if(a.size() != b.size()) return false;
 
-        if((a.size()) && (b.size()))
-        {
-            for(size_t i=0;i<a.size();i++)
-                if(a[i] != b[i]) return false;
-        }
-
-        return true;
+        return std::equal(a.begin(),a.end(),b.begin());
     }
 
     //--------------------------------------------------------------------------
-    template<typename T,typename Allocator> 
-        bool operator==(const DBuffer<T,Allocator> &a,const DBuffer<T,Allocator> &b)
-    {
-        if(a.size() != b.size()) return false;
+    /*!
+    \ingroup buffer_classes
+    \brief in-equality operator for DBuffer templates
 
-        if((a.size()) && (b.size()))
-        {
-            for(size_t i=0;i<a.size();i++)
-                if(a[i] != b[i]) return false;
-        }
-
-        return true;
-    }
-
-    //--------------------------------------------------------------------------
+    This operator returns the inverse of the == operator. 
+    \tparam T type of first DBuffer template
+    \tparam TAlloc allocator type for first DBuffer template
+    \tparam U type of second DBuffer template
+    \tparam UAlloc allocator type for second DBuffer template
+    \param a first buffer - instance of DBuffer<T,TAlloc>
+    \param b second buffer - instance of DBuffer<U,UAlloc>
+    \return true if buffers are not equal, false otherwise
+    */
     template<typename T,typename TAlloc,typename U,typename UAlloc>
     bool operator!=(const DBuffer<T,TAlloc> &a,const DBuffer<U,UAlloc> &b)
     {
@@ -414,16 +419,7 @@ namespace utils{
         return true;
     }
 
-    //--------------------------------------------------------------------------
-    template<typename T,typename Alloc> 
-        bool operator!=(const DBuffer<T,Alloc> &a,const DBuffer<T,Alloc> &b)
-    {
-        if(a == b) return false;
-        return true;
-    }
-
-
 //end of namespace
 }
 }
-#endif /* BUFFER_HPP_ */
+#endif 
