@@ -99,9 +99,6 @@ namespace io{
             */
             virtual ColumnInfo _get_column(const String &n) const
             {
-                EXCEPTION_SETUP("virtual ColumnInfo SpreadsheetReader::"
-                        "_get_column(const String &n) const");
-
                 size_t i=0;
 #ifdef NOFOREACH
                 for(auto iter = _columns_info.begin();iter!=_columns_info.end();iter++)
@@ -117,9 +114,9 @@ namespace io{
                     //increment column counter
                     i++;
                 }
-                
-                EXCEPTION_INIT(KeyError,"Column ["+n+"] not found!");
-                EXCEPTION_THROW();
+               
+                throw KeyError(EXCEPTION_RECORD,"Column ["+n+"] not found!");
+
                 return ColumnInfo(); //just to get rid of compiler warning
             }
 

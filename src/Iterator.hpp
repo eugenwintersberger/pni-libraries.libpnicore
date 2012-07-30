@@ -215,15 +215,8 @@ namespace utils{
             */
             typename IterTypes<ITERABLE,const_flag>::return_type operator*()
             {
-                EXCEPTION_SETUP("typename IterReturnType<typename ITERABLE::"
-                                "value_type,const_flag>::return_type"
-                                "operator*()");
-
                 if(!(*this))
-                {
-                    EXCEPTION_INIT(IteratorError,"Iterator invalid!");
-                    EXCEPTION_THROW();
-                }
+                    throw IteratorError(EXCEPTION_RECORD,"Iterator invalid!");
 
                 return (*(this->_container))[this->_state];
             }
@@ -238,14 +231,8 @@ namespace utils{
             */
             pointer operator->()
             {
-                EXCEPTION_SETUP("typename IterReturnType<typename ITERABLE::"
-                                "value_type,const_flag>::ptr_type"
-                                "operator->()");
                 if(!(*this))
-                {
-                    EXCEPTION_INIT(IteratorError,"Iterator invalid!");
-                    EXCEPTION_THROW();
-                }
+                    throw IteratorError(EXCEPTION_RECORD,"Iterator invalid!");
 
                 return &(*this);
             }

@@ -45,40 +45,6 @@ namespace utils{
 
 //================Macros related to exceptions==================================
 
-//! \ingroup error_classes
-//! \brief exception setup macro
-
-//! This macro is used to set to local variables within a method or function
-//! which will be used for exception management.
-//! \param issuer signature of the exception issuer
-#define EXCEPTION_SETUP(issuer) \
-	static String __ExIssuer = (issuer);\
-	String __ExDescription
-
-//! \ingroup error_classes
-//! \brief initialize an exception
-
-//! Initializes a particular exception of type extype along with a description
-//! exdesc.
-//! \param extype exception type
-//! \param exdesc string with the description of the exception
-#define EXCEPTION_INIT(extype,exdesc)\
-	extype __error;\
-	__ExDescription = (exdesc);\
-	__error.name(__ExIssuer);\
-	__error.description(__ExDescription);
-
-
-//! \ingroup error_classes
-//! \brief throw an exception
-
-//! After previous usage of EXCEPTION_SETUP and EXCEPTION_INIT this macro
-//! throws the last initialized exception.
-#define EXCEPTION_THROW()\
-	std::cerr<<__error<<std::endl;\
-	std::cerr<<"in line: "<<__LINE__<<" of file "<<__FILE__<<std::endl<<std::endl;\
-	throw __error;
-
 /*!
 \ingroup error_classes
 \brief macro creating an instance of ExceptionRecord

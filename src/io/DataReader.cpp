@@ -37,25 +37,15 @@ namespace io{
     std::unique_ptr<std::ifstream> DataReader::
         _open_stream(const String &fname) const
     {
-        EXCEPTION_SETUP("std::unique_ptr<std::ifstream> DataReader::"
-                "_open_stream(const String &fname,bool binary)");
-
         std::unique_ptr<std::ifstream> stream(new std::ifstream()); 
         if(!stream)
-        {
-            EXCEPTION_INIT(MemoryAllocationError,"Cannot allocate memory "
-                    "for stream object!");
-            EXCEPTION_THROW();
-        }
+            throw MemoryAllocationError(EXCEPTION_RECORD,
+            "Cannot allocate memory for stream object!");
 
         if(_is_binary)
-        {
             stream->open(fname);
-        }
         else
-        {
             stream->open(fname,std::ifstream::binary);
-        }
 
         return stream;
     }
@@ -70,14 +60,9 @@ namespace io{
         _is_binary(binary),
         _istream(_open_stream(fname))
     { 
-        EXCEPTION_SETUP("DataReader::DataReader(const String &fname,"
-                        "bool binary)");
-
         if(_istream->fail())
-        {
-            EXCEPTION_INIT(FileError,"Error opening file ["+fname+"]!");
-            EXCEPTION_THROW();
-        }
+            throw FileError(EXCEPTION_RECORD,
+                    "Error opening file ["+fname+"]!");
     }
 
     //implementation of the move constructor

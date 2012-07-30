@@ -174,11 +174,18 @@ namespace io{
     template<typename ATYPE> 
         ATYPE ImageInfo::create_array(const ImageInfo &info)
     {
-        EXCEPTION_SETUP("template<typename ATYPE> ATYPE ImageInfo::"
-                        "create_array(const ImageInfo &info)");
-
         std::vector<size_t> s{info.nx(),info.ny()};
-        ATYPE array(s);
+        ATYPE array;
+        try 
+        {  
+            array = ATYPE(s); 
+        }
+        catch(MemoryAllocationError &error)
+        {
+            error.append(EXCEPTION_RECORD);
+            throw error;
+        }
+
         return array;
     }
 
@@ -188,27 +195,20 @@ namespace io{
     {
         //check if the array is allocated
         if(!array.is_allocated())
-        {
-            ExceptionRecord r(__FILE__,__LINE__,BOOST_CURRENT_FUNCTION);
-            throw MemoryNotAllocatedError(r,"Array is  not allocated!");
-        }
+            throw MemoryNotAllocatedError(EXCEPTION_RECORD,"Array is  not allocated!");
 
         //check the shape of the array
         auto s = array.template shape<std::vector<size_t> >();
 
         if(s.size() != 2)
-        {
-            ExceptionRecord r(__FILE__,__LINE__,BOOST_CURRENT_FUNCTION);
-            throw ShapeMissmatchError(r,"Array is not of rank 2!");
-        }
+            throw ShapeMissmatchError(EXCEPTION_RECORD,"Array is not of rank 2!");
 
         if((s[0]!=info.ny()) || (s[1] != info.nx()))
         {
-            ExceptionRecord r(__FILE__,__LINE__,BOOST_CURRENT_FUNCTION);
             std::stringstream ss;
             ss<<"Array shape ("<<s[1]<<","<<s[0]<<") does not match ";
             ss<<"image size ("<<info.nx()<<","<<info.ny()<<")!";
-            throw ShapeMissmatchError(r,ss.str());
+            throw ShapeMissmatchError(EXCEPTION_RECORD,ss.str());
         }
 
     }

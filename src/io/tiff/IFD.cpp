@@ -90,7 +90,6 @@ namespace tiff{
 
     //------------------------------------------------------------------------------
     IFDEntry IFD::operator[](const String &n) const{
-        EXCEPTION_SETUP("IFDEntry IFD::operator[](const String &n) const");
 #ifdef NOFOREACH
         for(auto iter=(*this).begin();iter!=(*this).end();iter++)
         {
@@ -101,7 +100,7 @@ namespace tiff{
 #endif
             if(entry.name() == n) return entry;
         }
-    
+
         throw KeyError(EXCEPTION_RECORD,"IFD entry key ["+n+"] not found in IFD!");
     }
 

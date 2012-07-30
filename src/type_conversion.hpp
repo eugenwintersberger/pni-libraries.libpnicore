@@ -24,8 +24,8 @@
  *      Author: Eugen Wintersberger
  */
 
-#ifndef TYPE_CONVERSION_HPP_
-#define TYPE_CONVERSION_HPP_
+#ifndef __TYPE_CONVERSION_HPP__
+#define __TYPE_CONVERSION_HPP__
 
 #include <limits>
 #include <boost/static_assert.hpp>
@@ -48,6 +48,10 @@ namespace utils{
     in the case where one or both of the types are complex. The core of the
     convert method is the boost::numeric_cast template function for type
     conversion.
+    \tparam T target type
+    \tparam U source type
+    \tparam t_complex the target type is complex
+    \tparam u_complex the target type is complex
     \sa class ConversionStrategy<T,U,true,false>
     \sa class ConversionStrategy<T,U,true,true>
     */
@@ -64,25 +68,26 @@ namespace utils{
             \param u original value of type U
             \return converted value of type T
             */
-            static T convert(const U &u){
-                EXCEPTION_SETUP("T ConversionStrategy<u_complex,t_complex,T,U>"
-                                "::convert(const U &u)");
+            static T convert(const U &u)
+            {
                 T value;
 
-                try{
-                    value = boost::numeric_cast<T>(u);
-                }catch(negative_overflow &error){
-                    EXCEPTION_INIT(RangeError,
+                try{ value = boost::numeric_cast<T>(u); }
+                catch(negative_overflow &error)
+                {
+                    throw RangeError(EXCEPTION_RECORD,
                             "Cannot assign value doe to negative overflow!");
-                    EXCEPTION_THROW();
-                }catch(positive_overflow &error){
-                    EXCEPTION_INIT(RangeError,
-                            "Cannot assign value due to positive overflow!");
-                    EXCEPTION_THROW();
-                }catch(...){
-                    EXCEPTION_INIT(TypeError,"Something went wrong!");
-                    EXCEPTION_THROW();
                 }
+                catch(positive_overflow &error)
+                {
+                    throw RangeError(EXCEPTION_RECORD,
+                            "Cannot assign value due to positive overflow!");
+                }
+                catch(...)
+                {
+                    throw TypeError(EXCEPTION_RECORD,"Something went wrong!");
+                }
+
                 return value;
             }
     };
@@ -107,27 +112,28 @@ namespace utils{
             \param u original value of type U
             \return converted value of type T
             */
-            static T convert(const U &u){
-                EXCEPTION_SETUP("template<typename T,typename U> T "
-                                "ConversionStrategy<false,true,T,U>::"
-                                "convert(const U &u)");
-
+            static T convert(const U &u)
+            {
                 typedef typename TypeInfo<T>::BaseType TBaseType;
                 T value;
-                try{
+                try
+                {
                     value = std::complex<TBaseType>(
                             boost::numeric_cast<TBaseType>(u),0);
-                }catch(negative_overflow &error){
-                    EXCEPTION_INIT(RangeError,
+                }
+                catch(negative_overflow &error)
+                {
+                    throw RangeError(EXCEPTION_RECORD,
                             "Cannot convert type due to negative overflow!");
-                    EXCEPTION_THROW();
-                }catch(positive_overflow &error){
-                    EXCEPTION_INIT(RangeError,
+                }
+                catch(positive_overflow &error)
+                {
+                    throw RangeError(EXCEPTION_RECORD,
                             "Cannot convert type due to positive overflow!");
-                    EXCEPTION_THROW();
-                }catch(...){
-                    EXCEPTION_INIT(TypeError,"Type conversion failed!");
-                    EXCEPTION_THROW();
+                }
+                catch(...)
+                {
+                    throw TypeError(EXCEPTION_RECORD,"Type conversion failed!");
                 }
 
                 return value;
@@ -152,28 +158,29 @@ namespace utils{
             \param u original value of type U
             \return converted value of type T
             */
-            static T convert(const U &u){
-                EXCEPTION_SETUP("template<typename T,typename U> T "
-                                "ConversionStrategy<true,true,T,U>::"
-                                "convert(const U &u)");
-
+            static T convert(const U &u)
+            {
                 typedef typename TypeInfo<T>::BaseType TBaseType;
                 TBaseType real;
                 TBaseType imag;
-                try{
+                try
+                {
                     real = boost::numeric_cast<TBaseType>(u.real());
                     imag = boost::numeric_cast<TBaseType>(u.imag());
-                }catch(negative_overflow &error){
-                    EXCEPTION_INIT(RangeError,"Cannot convert type due to "
-                                              "negative overflow!");
-                    EXCEPTION_THROW();
-                }catch(positive_overflow &error){
-                    EXCEPTION_INIT(RangeError,"Cannot convert type due to "
-                                              "positive overflow!");
-                    EXCEPTION_THROW();
-                }catch(...){
-                    EXCEPTION_INIT(TypeError,"Type conversion failed!");
-                    EXCEPTION_THROW();
+                }
+                catch(negative_overflow &error)
+                {
+                    throw RangeError(EXCEPTION_RECORD,
+                    "Cannot convert type due to negative overflow!");
+                }
+                catch(positive_overflow &error)
+                {
+                    throw RangeError(EXCEPTION_RECORD,
+                    "Cannot convert type due to positive overflow!");
+                }
+                catch(...)
+                {
+                    throw TypeError(EXCEPTION_RECORD,"Type conversion failed!");
                 }
 
                 return std::complex<TBaseType>(real,imag);
@@ -192,10 +199,9 @@ namespace utils{
     \param u value of type U
     \return value of u converted to T
     */
-    template<typename T,typename U> T convert_type(const U &u){
-        EXCEPTION_SETUP("template<typename T,typename U> T "
-                        "convert_type(const U &u)");
-
+    template<typename T,typename U> T convert_type(const U &u)
+    {
+        
         //static assert of the source type is float and T is an integer type
         //this avoids conversion from float to integer as supported by the
         //C++ standard.
@@ -207,8 +213,22 @@ namespace utils{
         BOOST_STATIC_ASSERT(!((!TypeInfo<T>::is_complex)&&
                               (TypeInfo<U>::is_complex)));
 
-        T value = ConversionStrategy<T,U,TypeInfo<T>::is_complex,
+        T value;
+        try
+        {
+            value = ConversionStrategy<T,U,TypeInfo<T>::is_complex,
                                      TypeInfo<U>::is_complex >::convert(u);
+        }
+        catch(TypeError &e)
+        {
+            e.append(EXCEPTION_RECORD);
+            throw e;
+        }
+        catch(RangeError &e)
+        {
+            e.append(EXCEPTION_RECORD);
+            throw e;
+        }
 
         return value;
 

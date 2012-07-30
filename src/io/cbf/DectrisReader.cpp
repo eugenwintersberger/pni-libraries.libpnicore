@@ -38,9 +38,6 @@ namespace cbf{
     std::streampos DectrisReader::read_header(std::ifstream &is,
             std::vector<pni::io::ImageInfo> &info,CompressionID &ct)
     {
-        EXCEPTION_SETUP("std::streampos DectrisCBFReader::read_header("
-            "std::ifstream &is,std::vector<ImageInfo> &info)");
-
         UInt8 byte;
         String linebuffer;
         size_t nx=0,ny=0,bits_per_pixel;
@@ -86,22 +83,14 @@ namespace cbf{
                 if(boost::regex_match(linebuffer,conversion_regex))
                 {
                     if(!boost::regex_search(linebuffer,match,quoted_text))
-                    {
-                        EXCEPTION_INIT(FileError,"Cannot find conversion"
-                                " string!");
-                        EXCEPTION_THROW();
-                    }
+                        throw FileError(EXCEPTION_RECORD,
+                                "Cannot find conversion string!");
                     
                     if(match.str(0) == "\"x-CBF_BYTE_OFFSET\"")
-                    {
                         ct = CompressionID::CBF_BYTE_OFFSET;
-                    }
                     else
-                    {
-                        EXCEPTION_INIT(FileError,"Unknown compression"
-                                " algorithm!");
-                        EXCEPTION_THROW();
-                    }
+                        throw FileError(EXCEPTION_RECORD,
+                                "Unknown compression algorithm!");
 
                 }
 
@@ -109,11 +98,9 @@ namespace cbf{
                 if(boost::regex_match(linebuffer,type_regex))
                 {
                     if(!boost::regex_search(linebuffer,match,quoted_text))
-                    {
-                        EXCEPTION_INIT(FileError,"Cannot find data type"
-                                " string!");
-                        EXCEPTION_THROW();
-                    }
+                        throw FileError(EXCEPTION_RECORD,
+                        "Cannot find data type string!");
+
                     //set the data type id
                     if(match.str(0) == "\"signed 32-bit integer\"")
                     {
@@ -121,21 +108,16 @@ namespace cbf{
                         bits_per_pixel = 32;
                     }
                     else
-                    {
-                        EXCEPTION_INIT(FileError,"Unkown data type!");
-                        EXCEPTION_THROW();
-                    }
+                        throw FileError(EXCEPTION_RECORD,"Unkown data type!");
                 }
 
                 //---------get number of pixels in y-direction-------------
                 if(boost::regex_match(linebuffer,ny_regex))
                 {
                     if(!boost::regex_search(linebuffer,match,int_numbers))
-                    {
-                        EXCEPTION_INIT(FileError,"Cannot read number of "
-                                "pixels in y-direction!");
-                        EXCEPTION_THROW();
-                    }
+                        throw FileError(EXCEPTION_RECORD,
+                        "Cannot read number of pixels in y-direction!");
+
                     ny = std::atoi(match.str(0).c_str());
                 }
 
@@ -143,11 +125,9 @@ namespace cbf{
                 if(boost::regex_match(linebuffer,nx_regex))
                 {
                     if(!boost::regex_search(linebuffer,match,int_numbers))
-                    {
-                        EXCEPTION_INIT(FileError,"Cannot read number of "
-                                "pixels in x-direction!");
-                        EXCEPTION_THROW();
-                    }
+                        throw FileError(EXCEPTION_RECORD,
+                        "Cannot read number of pixels in x-direction!");
+
                     nx = std::atoi(match.str(0).c_str());
                 }
 

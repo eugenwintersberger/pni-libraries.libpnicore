@@ -118,12 +118,10 @@ namespace io{
             */
             template<typename ATYPE> ATYPE image(size_t i,size_t c=0) 
             {
-                EXCEPTION_SETUP("template<typename T,typename BT> "
-                                 "Array<T,BT> image(size_t i=0) const");
-                EXCEPTION_INIT(NotImplementedError,
-                               "Method not implemented!");
-                EXCEPTION_THROW();
-                return ATYPE();
+                throw NotImplementedError(EXCEPTION_RECORD,
+                        "Method not implemented!");
+
+                return ATYPE(); //just to make the compiler happy
             }
            
             //-----------------------------------------------------------------
@@ -142,13 +140,8 @@ namespace io{
             template<typename ATYPE> 
                 void image(ATYPE &array,size_t i,size_t c=0) 
             {
-                EXCEPTION_SETUP("template<typename T, template<typename> "
-                        "class BT> void image(size_t i=0,Array<T,BT>"
-                        "&array) const");
-
-                EXCEPTION_INIT(NotImplementedError,
-                               "Method not implemented!");
-                EXCEPTION_THROW();
+                throw NotImplementedError(EXCEPTION_RECORD,
+                        "Method not implemented!");
             }
 
     };
