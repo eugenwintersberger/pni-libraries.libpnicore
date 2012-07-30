@@ -34,7 +34,7 @@ namespace utils{
 
 
     /*! 
-    \ingroup data_classes
+    \ingroup numeric_array_classes
     \brief subtraction expression template
 
     Expression template for subtraction of array templates.

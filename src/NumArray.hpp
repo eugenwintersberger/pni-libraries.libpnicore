@@ -34,7 +34,7 @@ namespace pni{
 namespace utils{
     
     /*! 
-    \ingroup data_classes
+    \ingroup numeric_array_classes
     \brief numeric array facade
 
     This template is a facade for other array types adding numerical

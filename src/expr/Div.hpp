@@ -33,6 +33,11 @@ namespace pni{
 namespace utils{
 
 
+    /*! 
+    \ingroup numeric_array_classes
+    \brief Division expression template
+
+    */
     template<typename OP1T,typename OP2T> class Div
     {
         private:

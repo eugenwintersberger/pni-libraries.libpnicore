@@ -33,6 +33,11 @@ namespace pni{
 namespace utils{
 
 
+    /*!
+    \ingroup numeric_array_types
+    \brief Addition expression template
+
+    */
     template<typename OP1T,typename OP2T> class Add
     {
         private:

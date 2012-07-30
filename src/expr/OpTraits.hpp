@@ -5,12 +5,21 @@
 
 namespace pni{
 namespace utils{
+    
+    /*! 
+    \ingroup numeric_array_classes
+    \brief operator reference trait
 
+    */
     template<typename OT> struct OpTrait
     {
         typedef OT const& ref_type; 
     };
 
+    /*! 
+    \ingroup numeric_array_classes
+    \brief operator reference trait - specialization
+    */
     template<typename T> struct OpTrait<Scalar<T> >
     {
         typedef Scalar<T> ref_type;

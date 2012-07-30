@@ -1,0 +1,54 @@
+/*! \defgroup buffer_classes Data buffer types
+
+Buffers are the fundamental types for holding data. The \c Buffer here describes
+rather a concept than a concrete type. Every type that might be used as a buffer
+in the code has to satisfy the following implicit interface
+\code
+template<typename T,...> class Buffer
+    public:
+    //==========the following public types must be available===================
+    typedef ... value_type;
+    typedef ... buffer_type;
+    typedef ... shared_ptr;
+    typedef ... unique_ptr;
+    typedef ... iterator;
+    typedef ... const_iterator;
+    //================public members===========================================
+    static const TypeID type_id    = TypeIDMap<T>::type_id;
+
+    //================constructors=============================================
+    Buffer(); //must posses a default constructor
+
+    //==================assignment operators===================================
+    buffer_type &operator=(const buffer_type &b); //must provide a copy constructor
+
+
+    //=================methods for data access=================================
+    
+    const value_type *ptr() const;   //get access to the internal storage
+
+    
+    value_type &operator[](size_t i); 
+    value_type operator[](size_t i) const; 
+    value_type &at(size_t i);
+    value_type at(size_t i) const;
+    void insert(size_t pos,const value_type &v);
+
+    size_t size() const;       //return number of elements of type T
+
+    //===================iterator related methods==============================
+    iterator begin();
+    iterator end();
+    const_iterator begin() const;
+    const_iterator end() const;
+
+};
+\endcode
+The iterators provided by the Buffer types must be random access iterators in
+the sense of STL. Thus, all standard STL algorithms can be used with the Buffer
+types. A buffer should be considered as a guard object for a raw buffer. Buffers
+are first class objects. Unlike raw pointers they got destroyed when they loose
+their scope. Thus, using a buffer object takes away the danger to produce a
+memory leak.
+
+*/

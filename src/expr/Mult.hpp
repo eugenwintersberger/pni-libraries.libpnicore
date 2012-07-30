@@ -33,6 +33,11 @@ namespace pni{
 namespace utils{
 
 
+    /*!
+    \ingroup numeric_array_classes
+    \brief Multiplication expression template
+
+    */
     template<typename OP1T,typename OP2T> class Mult
     {
         private:
