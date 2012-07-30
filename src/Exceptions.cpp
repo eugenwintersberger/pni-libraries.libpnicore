@@ -33,43 +33,56 @@
 
 namespace pni{
 namespace utils{
+    std::ostream &operator<<(std::ostream &o,const ExceptionRecord &rec)
+    {
+        o<<rec.file()<<"\t"<<rec.line()<<"\t"<<rec.function()<<std::endl;
+        return o;
+    }
 
     //============Implementation of constructors and destructor=================
-    Exception::Exception(const String &n):_name(n) {}
+    Exception::Exception():
+        std::exception()
+    {}
 
     //--------------------------------------------------------------------------
-    Exception::Exception(const String &n,const String &i):
+    Exception::Exception(const String &n):
+        std::exception(),
         _name(n),
-        _issuer(i),
-        _issuers(),
-        _description()
+        _description(),
+        _records()
+    {}
+
+    //--------------------------------------------------------------------------
+    Exception::Exception(const String &n,const ExceptionRecord &i):
+        std::exception(),
+        _name(n),
+        _description(),
+        _records()
     { 
-        _issuers.push_back(i); 
+        _records.push_back(i); 
     }
 
     //--------------------------------------------------------------------------
-    Exception::Exception(const String &n,const String &i,const String &d):
+    Exception::Exception(const String &n,const ExceptionRecord &i,const String &d):
+        std::exception(),
         _name(n),
-        _issuer(i),
-        _issuers(),
-        _description(d)
-
+        _description(d),
+        _records()
     {
-        _issuers.push_back(i);
+        _records.push_back(i);
     }
 
     //==========Implementation of output methods and operator===================
     std::ostream &Exception::print(std::ostream &o) const 
     {
-        o<<this->name()<<" originally thrown by:  "<<std::endl<<std::endl;
-        o<<this->issuer()<<std::endl<<std::endl;
-        o<<"Additional issuers of this exception:"<<std::endl;
-        size_t index = 0;
-        for(auto i: this->_issuers)
-            o<<index++<<"\t"<<i<<std::endl;
-
+        o<<"Exception: "<<this->name()<<std::endl<<std::endl;
         o<<std::endl<<"Description:"<<std::endl;
-        o<<this->description()<<std::endl;
+        o<<this->description()<<std::endl<<std::endl;
+        o<<"Exception thrown by:"<<std::endl;
+        for(auto rec: *this)
+            o<<rec<<std::endl;
+    
+        o<<std::endl;
 
         return o;
     }
@@ -120,20 +133,6 @@ std::ostream &operator<<(std::ostream &o,const NotImplementedError &e){
 	return e.print(o);
 }
 
-//------------------------------------------------------------------------------
-std::ostream &operator<<(std::ostream &o,const MemoryAccessError &e){
-	return e.print(o);
-}
-
-//------------------------------------------------------------------------------
-std::ostream &operator<<(std::ostream &o,const ProcessingError &e){
-	return e.print(o);
-}
-
-//------------------------------------------------------------------------------
-std::ostream &operator<<(std::ostream &o,const AssignmentError &e){
-	return e.print(o);
-}
 
 //------------------------------------------------------------------------------
 std::ostream &operator<<(std::ostream &o,const IteratorError &e){

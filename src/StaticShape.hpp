@@ -162,8 +162,7 @@ namespace utils{
             size_t _offset(size_t i1,ITYPES ...indices) const
             {
                 check_index(i1,_dims[d],
-                        "template<size_t d,typename ...ITYPES> size_t "
-                        "_offset(size_t i1,ITYPES ...indices) const");
+                ExceptionRecord(__FILE__,__LINE__,BOOST_CURRENT_FUNCTION));
                 
                 return StrideCalc<DIMS...>::template value<d>()*i1+
                        _offset<d+1>(indices...);
@@ -184,7 +183,7 @@ namespace utils{
             template<size_t d> size_t _offset(size_t i) const 
             { 
                 check_index(i,this->_dims[d],
-                        "template<size_t d> size_t _offset(size_t i) const");
+                ExceptionRecord(__FILE__,__LINE__,BOOST_CURRENT_FUNCTION));
 
                 return StrideCalc<DIMS...>::template value<d>()*i; 
             }
@@ -270,8 +269,7 @@ namespace utils{
 
                 //check the index for the first dimension
                 check_index(i1,this->_dims[0],
-                        "template<typename ...ITYPES > size_t "
-                        "offset(size_t i1,ITYPES ...indices) const");
+                ExceptionRecord(__FILE__,__LINE__,BOOST_CURRENT_FUNCTION));
 
                 return StrideCalc<DIMS...>::template value<0>()*i1+
                        _offset<1>(indices...);
@@ -299,14 +297,11 @@ namespace utils{
             {
                 if(c.size() != this->rank())
                 {
-                    ShapeMissmatchError e;
                     std::stringstream ss;
                     ss<<"Size of container ("<<c.size()<<") does not match";
                     ss<<" rank ("<<this->rank()<<")!";
-                    e.description(ss.str());
-                    e.issuer("template<typename CTYPE> size_t offset"
-                             "(const CTYPE &c) const");
-                    throw e;
+                    ExceptionRecord r(__FILE__,__LINE__,BOOST_CURRENT_FUNCTION);
+                    throw ShapeMissmatchError(r,ss.str());
                 }
 
                 size_t index = 0;
@@ -318,11 +313,9 @@ namespace utils{
                         ss<<"Index "<<--index<<" is "<<i;
                         ss<<" and exceeds its maximum value";
                         ss<<"of "<<this->_dims[--index]<<"!";
-                        IndexError error;
-                        error.issuer("template<typename CTYPE> size_t "
-                                     "offset(const CTYPE &c) const");
-                        error.description(ss.str());
-                        throw error;
+                        ExceptionRecord r(__FILE__,__LINE__,
+                                          BOOST_CURRENT_FUNCTION);
+                        throw IndexError(r,ss.str());
                     }
                 }
                 
@@ -348,14 +341,11 @@ namespace utils{
             {
                 if(c.size() != this->rank())
                 {
-                    ShapeMissmatchError e;
                     std::stringstream ss;
                     ss<<"Size of container ("<<c.size()<<") does not match";
                     ss<<" rank ("<<this->rank()<<")!";
-                    e.description(ss.str());
-                    e.issuer("template<typename CTYPE> void index(size_t "
-                             "offset,CTYPE &c) const");
-                    throw e;
+                    ExceptionRecord r(__FILE__,__LINE__,BOOST_CURRENT_FUNCTION);
+                    throw ShapeMissmatchError(r,ss.str());
                 }
 
                 if(offset >= this->size())
@@ -363,12 +353,8 @@ namespace utils{
                     std::stringstream ss;
                     ss<<"Offset "<<offset<<" exceeds shape size ";
                     ss<<this->size()<<"!";
-
-                    SizeMissmatchError error;
-                    error.issuer("template<typename CTYPE> void "
-                                 "index(size_t offset,CTYPE &c) const");
-                    error.description(ss.str());
-                    throw error;
+                    ExceptionRecord r(__FILE__,__LINE__,BOOST_CURRENT_FUNCTION);
+                    throw SizeMissmatchError(r,ss.str());
                 }
 
                 IndexCreator<0,true,DIMS...>::template index<CTYPE>(offset,c.begin());

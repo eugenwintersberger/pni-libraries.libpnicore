@@ -69,7 +69,7 @@ namespace io{
         //reset stream position
         stream.seekg(orig_pos,std::ios::beg);
         if(magic!=42)
-            throw FileError(BOOST_CURRENT_FUNCTION,"Not a TIFF file!");
+            throw FileError(EXCEPTION_RECORD,"Not a TIFF file!");
         
     }
     
@@ -95,7 +95,6 @@ namespace io{
     //implementation of _read_image_info
     void TIFFReader::_read_ifds()
     {
-        EXCEPTION_SETUP("void TIFFReader::_read_ifds()");
         //obtain stream
         std::ifstream &stream = _get_stream();
 
@@ -112,11 +111,8 @@ namespace io{
         //no we need to read the IFD entries read the first IFD offset
         Int32 ifd_offset = _read_ifd_offset(stream);
         if(ifd_offset == 0)
-        {
-            EXCEPTION_INIT(FileError,"File "+filename()+" does not "
+            throw FileError(EXCEPTION_RECORD,"File "+filename()+" does not "
                     "contain an IDF entry!");
-            EXCEPTION_THROW();
-        }
 
         //read IFDs from the file
         do{
@@ -193,7 +189,7 @@ namespace io{
                     case 32: return TypeID::UINT32;
                     case 64: return TypeID::UINT64;
                     default:
-                         throw TypeError(BOOST_CURRENT_FUNCTION,
+                         throw TypeError(EXCEPTION_RECORD,
                                "Invalid unsiged integer type!");
                 }
                 break;
@@ -206,7 +202,7 @@ namespace io{
                     case 32: return TypeID::INT32;
                     case 64: return TypeID::INT64;
                     default:
-                        throw TypeError(BOOST_CURRENT_FUNCTION,
+                        throw TypeError(EXCEPTION_RECORD,
                               "Invalid siged integer type!");
                 }
                 break;
@@ -217,15 +213,14 @@ namespace io{
                     case 32: return TypeID::FLOAT32;
                     case 64: return TypeID::FLOAT64;
                     default:
-                        throw TypeError(BOOST_CURRENT_FUNCTION,
+                        throw TypeError(EXCEPTION_RECORD,
                               "Invalid floating point type!");
                 }
                 break;
 
             default:
                 //throw an exception here
-                throw TypeError(BOOST_CURRENT_FUNCTION,
-                                "Cannot derive type id!");
+                throw TypeError(EXCEPTION_RECORD,"Cannot derive type id!");
 
         }
     }

@@ -186,15 +186,11 @@ namespace io{
     template<typename ATYPE> 
         void ImageInfo::check_array(const ATYPE &array,const ImageInfo &info)
     {
-        EXCEPTION_SETUP("template<typename ATYPE> void ImageInfo::"
-                         "check_array(const ATYPE &array,const ImageInfo "
-                         "&info)");
-
         //check if the array is allocated
         if(!array.is_allocated())
         {
-            EXCEPTION_INIT(MemoryAccessError, "Array is not allocated!");
-            EXCEPTION_THROW();
+            ExceptionRecord r(__FILE__,__LINE__,BOOST_CURRENT_FUNCTION);
+            throw MemoryNotAllocatedError(r,"Array is  not allocated!");
         }
 
         //check the shape of the array
@@ -202,17 +198,17 @@ namespace io{
 
         if(s.size() != 2)
         {
-            EXCEPTION_INIT(ShapeMissmatchError,"Array is not of rank 2!");
-            EXCEPTION_THROW();
+            ExceptionRecord r(__FILE__,__LINE__,BOOST_CURRENT_FUNCTION);
+            throw ShapeMissmatchError(r,"Array is not of rank 2!");
         }
 
         if((s[0]!=info.ny()) || (s[1] != info.nx()))
         {
+            ExceptionRecord r(__FILE__,__LINE__,BOOST_CURRENT_FUNCTION);
             std::stringstream ss;
             ss<<"Array shape ("<<s[1]<<","<<s[0]<<") does not match ";
             ss<<"image size ("<<info.nx()<<","<<info.ny()<<")!";
-            EXCEPTION_INIT(ShapeMissmatchError,ss.str());
-            EXCEPTION_THROW();
+            throw ShapeMissmatchError(r,ss.str());
         }
 
     }

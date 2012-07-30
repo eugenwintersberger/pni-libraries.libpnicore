@@ -124,9 +124,8 @@ namespace utils{
                 void index(const ITYPE &sindex,ITYPE &oindex) const
             {
                 //check size
-                check_equal_size(_oshape,oindex,"template<typename ITYPE> "
-                        "void ArraySelection::index(const ITYPE &sindex,"
-                        "ITYPE &oindex)");
+                check_equal_size(_oshape,oindex,
+                ExceptionRecord(__FILE__,__LINE__,BOOST_CURRENT_FUNCTION));
 
                 typename ITYPE::iterator oiter = oindex.begin();
                 typename ITYPE::const_iterator siter = sindex.begin();

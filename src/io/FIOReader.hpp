@@ -281,7 +281,7 @@ namespace io{
         catch(KeyError &error)
         {
             //append a new issuer to the exception
-            error.append_issuer(BOOST_CURRENT_FUNCTION);
+            error.append(EXCEPTION_RECORD);
             throw error;
         }
 
@@ -291,7 +291,7 @@ namespace io{
         }
         catch(FileError &error)
         {
-            error.append_issuer(BOOST_CURRENT_FUNCTION);
+            error.append(EXCEPTION_RECORD);
             throw error;
         }
     }
@@ -332,9 +332,7 @@ namespace io{
                 //set file stream back to its original position
                 stream.seekg(orig_pos,std::ios::beg); 
                 //throw FileError if reading data form the file failed
-                FileError error;
-                error.issuer(BOOST_CURRENT_FUNCTION);
-                throw error;
+                throw FileError(EXCEPTION_RECORD); 
             }
             //split data line
             std::vector<String> string_data = this->_read_data_line(linebuffer);

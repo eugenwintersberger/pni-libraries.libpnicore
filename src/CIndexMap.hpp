@@ -230,14 +230,11 @@ namespace utils{
             
             if(index.size() != rank())
             {
-                ShapeMissmatchError error;
+                ExceptionRecord r(__FILE__,__LINE__,BOOST_CURRENT_FUNCTION);
                 std::stringstream ss;
                 ss<<"Rank of index ("<<index.size()<<") does not match ";
                 ss<<"map rank ("<<rank()<<")!";
-                error.issuer("template<typename CTYPE> size_t CIndexMap::"
-                             "offset(const CTYPE &index) const");
-                error.description(ss.str());
-                throw error;
+                throw ShapeMissmatchError(r,ss.str());
             }
 
             size_t offset = 0;
@@ -246,8 +243,7 @@ namespace utils{
             for(auto iiter=index.begin();iiter!=index.end();iiter++,siter++,miter++)
             {
                 check_index((*iiter),(*miter),
-                        "template<typename CTYPE> size_t CIndexMap::offset("
-                         "const CTYPE &index) const");
+                ExceptionRecord(__FILE__,__LINE__,BOOST_CURRENT_FUNCTION));
                 offset += (*iiter)*(*siter);
             }
 

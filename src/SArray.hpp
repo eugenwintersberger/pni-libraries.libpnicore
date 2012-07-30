@@ -188,11 +188,9 @@ namespace utils{
             template<typename ATYPE> SArray(const ArrayView<ATYPE> &view)
             {
                 check_equal_size(view,*this,
-                        "template<typename ATYPE> SArray(const "
-                        "ArrayView<ATYPE> &view)");
+                ExceptionRecord(__FILE__,__LINE__,BOOST_CURRENT_FUNCTION));
                 check_equal_shape(view,*this,
-                        "template<typename ATYPE> SArray(const "
-                        "ArrayView<ATYPE> &view)");
+                ExceptionRecord(__FILE__,__LINE__,BOOST_CURRENT_FUNCTION));
 
                 std::copy(view.begin(),view.end(),this->begin()); 
             }
@@ -208,8 +206,7 @@ namespace utils{
             explicit SArray(const std::initializer_list<size_t> &il)
             {
                 check_equal_size(il,*this,
-                        "explicit SArray(const std::initializer_list"
-                        "<size_t> &il)");
+                ExceptionRecord(__FILE__,__LINE__,BOOST_CURRENT_FUNCTION));
 
                 size_t index = 0;
                 for(auto v: il) (*this)[index++] = v;
@@ -392,7 +389,7 @@ namespace utils{
             value_type at(size_t i) const
             {
                 check_index(i,this->size(),
-                        "T StaticArray<>::at(size_t i) const");
+                ExceptionRecord(__FILE__,__LINE__,BOOST_CURRENT_FUNCTION));
 
                 return (*this)[i];
             }
@@ -410,7 +407,7 @@ namespace utils{
             value_type &at(size_t i) 
             {
                 check_index(i,this->size(),
-                        "T StaticArray<>::at(size_t i) const");
+                ExceptionRecord(__FILE__,__LINE__,BOOST_CURRENT_FUNCTION));
 
                 return (*this)[i];
             }
@@ -428,7 +425,7 @@ namespace utils{
             void insert(size_t i,const value_type &v)
             {
                 check_index(i,this->size(),
-                        "void insert(size_t i,const value_type &v)");
+                ExceptionRecord(__FILE__,__LINE__,BOOST_CURRENT_FUNCTION));
 
                 (*this)[i] = v;
             }

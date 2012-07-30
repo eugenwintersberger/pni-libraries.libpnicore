@@ -196,7 +196,7 @@ namespace tiff{
         }
         catch(TypeError &e)
         {
-            e.append_issuer(BOOST_CURRENT_FUNCTION);
+            e.append(EXCEPTION_RECORD);
             //reset the stream to its original position
             stream.seekg(orig_stream_pos,std::ios::beg);
             throw e;
@@ -213,9 +213,6 @@ namespace tiff{
     template<typename T> void IFDEntry:: 
         _read_entry_data(std::vector<T> &r,std::ifstream &stream)
     {
-        EXCEPTION_SETUP("template<typename T> void IFDEntry::_read_entry_data"
-                "(std::vector<T> &r,std::ifstream &stream)");
-
         if(this->_tid == IFDEntryTypeID::BYTE) 
             IFDEntryReader<T,UInt8>::read(r,stream);
         else if(this->_tid == IFDEntryTypeID::SHORT)
@@ -237,12 +234,9 @@ namespace tiff{
         else if(this->_tid == IFDEntryTypeID::DOUBLE)
             IFDEntryReader<T,Float64>::read(r,stream);
         else
-        {
             //reset stream position
-            EXCEPTION_INIT(TypeError,"IFD entry ["+this->name()+
+            throw TypeError(EXCEPTION_RECORD,"IFD entry ["+this->name()+
                     "] contains unknown data!");
-            EXCEPTION_THROW();
-        }
     }
 
 

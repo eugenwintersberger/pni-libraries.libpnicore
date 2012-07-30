@@ -62,7 +62,7 @@ namespace utils{
             \throws RangeError if first > last
             \param o signature of the origin where the error occured
             */
-            void _check_start_stop(const String &o) const;
+            void _check_start_stop(const ExceptionRecord &o) const;
 
             /*! \brief check stride
 
@@ -71,7 +71,7 @@ namespace utils{
             \throws RangeError if stride exceeds span
             \param o signature of the origin where the error occured 
             */
-            void _check_stride(const String &o) const;
+            void _check_stride(const ExceptionRecord &o) const;
         public:
             //==============constructors and destructor========================
             //! no default constructor

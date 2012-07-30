@@ -101,9 +101,8 @@ namespace tiff{
 #endif
             if(entry.name() == n) return entry;
         }
-
-        KeyError error(__ExIssuer,"IFD entry key ["+n+"] not found in IFD!");
-        throw error;
+    
+        throw KeyError(EXCEPTION_RECORD,"IFD entry key ["+n+"] not found in IFD!");
     }
 
     //==================implementation of friend operators=====================

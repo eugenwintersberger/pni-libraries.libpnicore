@@ -30,32 +30,25 @@ namespace pni{
 namespace utils{
 
     //============implementation of private methods============================
-    void Slice::_check_start_stop(const String &o) const
+    void Slice::_check_start_stop(const ExceptionRecord &o) const
     {
         if(_first >= _last)
         {
             std::stringstream ss;
             ss<<"Last index ("<<_last<<") is equal or exceeds first ("<<_first<<")!";
-
-            RangeError error;
-            error.issuer(o);
-            error.description(ss.str());
-            throw error;
+            throw RangeError(o,ss.str());
         }
     }
 
     //-------------------------------------------------------------------------
-    void Slice::_check_stride(const String &o) const
+    void Slice::_check_stride(const ExceptionRecord &o) const
     {
         if(span(*this)<_stride)
         {
             std::stringstream ss;
             ss<<"Stride ("<<_stride<<") is larger than span ("<<span(*this);
             ss<<")!";
-            RangeError error;
-            error.issuer(o);
-            error.description(ss.str());
-            throw error;
+            throw RangeError(o,ss.str());
         }
     }
     
@@ -66,10 +59,8 @@ namespace utils{
         _last(last),
         _stride(stride)
     {
-        _check_start_stop("Slice::Slice(size_t first,size_t last,"
-                          "size_t stride)");
-        _check_stride("Slice::Slice(size_t first,size_t last,"
-                      "size_t stride)");
+        _check_start_stop(ExceptionRecord(__FILE__,__LINE__,BOOST_CURRENT_FUNCTION));
+        _check_stride(ExceptionRecord(__FILE__,__LINE__,BOOST_CURRENT_FUNCTION));
     }
 
     //-------------------------------------------------------------------------
@@ -97,10 +88,8 @@ namespace utils{
             cnt++;
         }
 
-        _check_start_stop("Slice::Slice(const "
-                          "std::initializer_list<size_t> &l)");
-        _check_stride("Slice::Slice(const "
-                      "std::initializer_list<size_t> &l)");
+        _check_start_stop(ExceptionRecord(__FILE__,__LINE__,BOOST_CURRENT_FUNCTION));
+        _check_stride(ExceptionRecord(__FILE__,__LINE__,BOOST_CURRENT_FUNCTION));
     }
 
     //-------------------------------------------------------------------------
@@ -109,8 +98,8 @@ namespace utils{
         _last(i+1),
         _stride(1)
     {
-        _check_start_stop("Slice::Slice(size_t i)");
-        _check_stride("Slice::Slice(size_t i)");
+        _check_start_stop(ExceptionRecord(__FILE__,__LINE__,BOOST_CURRENT_FUNCTION));
+        _check_stride(ExceptionRecord(__FILE__,__LINE__,BOOST_CURRENT_FUNCTION));
     }
 
 

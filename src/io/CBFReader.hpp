@@ -191,7 +191,7 @@ namespace io{
         }
         catch(...)
         {
-            throw MemoryAllocationError(BOOST_CURRENT_FUNCTION,
+            throw MemoryAllocationError(EXCEPTION_RECORD,
                     "Allocation of container for image data failed!");
         }
 
@@ -202,7 +202,7 @@ namespace io{
         catch(FileError &error)
         {
             //propagate exception
-            error.append_issuer(BOOST_CURRENT_FUNCTION);
+            error.append(EXCEPTION_RECORD);
             throw error;
         }
 
@@ -218,13 +218,10 @@ namespace io{
         ImageInfo inf = _image_info[i];
         if(data.size()!= inf.npixels())
         {
-            SizeMissmatchError error;
-            error.issuer(BOOST_CURRENT_FUNCTION);
             std::stringstream ss;
             ss<<"Container size ("<<data.size()<<") does not match image ";
             ss<<"size ("<<inf.npixels()<<")!";
-            error.description(ss.str());
-            throw error;
+            throw SizeMissmatchError(EXCEPTION_RECORD,ss.str());
         }
 
         //load the channel information
@@ -242,7 +239,7 @@ namespace io{
                     _get_stream(),inf,data);
             else
             {
-                FileError error(BOOST_CURRENT_FUNCTION,
+                FileError error(EXCEPTION_RECORD,
                         "No data reader for this data type!");
                 throw error;
             }

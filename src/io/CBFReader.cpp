@@ -96,8 +96,7 @@ namespace io{
                     return;
                 }else{
                     //should raise an exception here
-                    throw FileError(BOOST_CURRENT_FUNCTION,
-                                    "Unknown CBF style!");
+                    throw FileError(EXCEPTION_RECORD,"Unknown CBF style!");
                 }
             }
         }

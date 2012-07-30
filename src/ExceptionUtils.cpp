@@ -32,16 +32,13 @@ namespace utils{
     //=====================implementation of helper functions===================
 
     //-------------------------------------------------------------------------
-    void check_index(size_t index,size_t maxindex,const String &i)
+    void check_index(size_t index,size_t maxindex,const ExceptionRecord &i)
     {
         if(index>=maxindex)
         {
-            IndexError error;
             std::stringstream ss;
             ss<<"Index ("<<index<<") exceeds maximum value ("<<maxindex<<")!";
-            error.issuer(i);
-            error.description(ss.str());
-            throw error;
+            throw IndexError(i,ss.str());
         }
     }
 

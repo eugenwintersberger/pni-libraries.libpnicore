@@ -232,9 +232,12 @@ namespace utils{
             */
             value_type at(size_t i) const
             {
-                check_index(i,this->size(),"value_type at(size_t i) const");
-                check_allocation_state(*this,"value_type at(size_t i) const");
-                check_ptr_state(this->_data,"value_type at(size_t i) const");
+                check_index(i,this->size(),
+                ExceptionRecord(__FILE__,__LINE__,BOOST_CURRENT_FUNCTION));
+                check_allocation_state(*this,
+                ExceptionRecord(__FILE__,__LINE__,BOOST_CURRENT_FUNCTION));
+                check_ptr_state(this->_data,
+                ExceptionRecord(__FILE__,__LINE__,BOOST_CURRENT_FUNCTION));
 
                 return this->_data[i];
             }
@@ -250,9 +253,12 @@ namespace utils{
             */
             value_type &at(size_t i)
             {
-                check_index(i,this->size(),"value_type &at(size_t i) const");
-                check_allocation_state(*this,"value_type &at(size_t i) const");
-                check_ptr_state(this->_data,"value_type &at(size_t i) const");
+                check_index(i,this->size(),
+                ExceptionRecord(__FILE__,__LINE__,BOOST_CURRENT_FUNCTION));
+                check_allocation_state(*this,
+                ExceptionRecord(__FILE__,__LINE__,BOOST_CURRENT_FUNCTION));
+                check_ptr_state(this->_data,
+                ExceptionRecord(__FILE__,__LINE__,BOOST_CURRENT_FUNCTION));
 
                 return this->_data[i];
             }
@@ -269,12 +275,12 @@ namespace utils{
             */
             void insert(size_t i,const value_type &value)
             {
-                check_index(i,this->size(),"void insert(size_t i,const "
-                                           "value_type &value)");
-                check_allocation_state(*this,"void insert(size_t i,const "
-                                             "value_type &value)");
-                check_ptr_state(this->_data,"void insert(size_t i,const "
-                                                   "value_type &value)");
+                check_index(i,this->size(),
+                ExceptionRecord(__FILE__,__LINE__,BOOST_CURRENT_FUNCTION));
+                check_allocation_state(*this,
+                ExceptionRecord(__FILE__,__LINE__,BOOST_CURRENT_FUNCTION));
+                check_ptr_state(this->_data,
+                ExceptionRecord(__FILE__,__LINE__,BOOST_CURRENT_FUNCTION));
 
                 this->_data[i] = value;
             }

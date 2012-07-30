@@ -53,9 +53,6 @@ namespace utils{
             */
             template<typename T> static T *allocate(size_t n)
             {
-                EXCEPTION_SETUP("template<typename T> static T *"
-                                "NewAllocator::allocate(size_t n)");
-
                 T *ptr = nullptr;
 
                 try
@@ -67,8 +64,8 @@ namespace utils{
                     std::stringstream ss;
                     ss<<"Allocation of "<<sizeof(T)*n<<" Bytes of memory";
                     ss<<" failed!";
-                    EXCEPTION_INIT(MemoryAllocationError,ss.str());
-                    EXCEPTION_THROW();
+                    ExceptionRecord r(__FILE__,__LINE__,BOOST_CURRENT_FUNCTION);
+                    throw MemoryAllocationError(r,ss.str());
                 }
 
                 return ptr;

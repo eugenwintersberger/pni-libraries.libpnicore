@@ -47,11 +47,11 @@ namespace utils{
     \throws SizeMissmatchError if sizes do not match
     \param a first object
     \param b second object
-    \param i signature of the function or method where the check has been
+    \param i ExceptionRecord for the location where to perform the check
     performed
     */
     template<typename A,typename B> 
-        void check_equal_size(const A &a,const B &b,const String &i)
+        void check_equal_size(const A &a,const B &b,const ExceptionRecord &i)
     {
         if(a.size() != b.size())
         {
@@ -59,10 +59,7 @@ namespace utils{
             ss<<"Size of "<<typeid(A).name()<<" ("<<a.size()<<") ";
             ss<<"does not match size of "<<typeid(B).name()<<" (";
             ss<<b.size()<<")!";
-            SizeMissmatchError error;
-            error.issuer(i);
-            error.description(ss.str());
-            throw error;
+            throw SizeMissmatchError(i,ss.str());
         }
     }
 
@@ -75,10 +72,10 @@ namespace utils{
     \throws IndexError if i exceeds imax
     \param index actual index
     \param maxindex maximum value
-    \param i signature of the function or method where the check has been
+    \param i ExceptionRecord for the location where to perform the check
     performed
     */
-    void check_index(size_t index,size_t maxindex,const String &i);
+    void check_index(size_t index,size_t maxindex,const ExceptionRecord &i);
 
 
     //-------------------------------------------------------------------------
@@ -93,10 +90,10 @@ namespace utils{
     \throws ShapeMissmatchError if shapes do not match
     \param a first shape
     \param b second shape
-    \param i signature of the function or method where the check was performed
+    \param i ExceptionRecord for the location where to perform the check
     */
     template<typename A,typename B>
-    void check_equal_shape(const A &a,const B &b,const String &i)
+    void check_equal_shape(const A &a,const B &b,const ExceptionRecord &i)
     {
         auto sa = a.template shape<std::vector<size_t> >();
         auto sb = b.template shape<std::vector<size_t> >();
@@ -113,10 +110,7 @@ namespace utils{
             ss<<") do not match";
 
             //construct exception
-            ShapeMissmatchError error;
-            error.issuer(i);
-            error.description(ss.str());
-            throw error;
+            throw ShapeMissmatchError(i,ss.str());
         }
     }
 
@@ -129,19 +123,17 @@ namespace utils{
     allocated an exception will be thrown.
     \throws MemoryNotAllocatedError if object not allocated
     \param o object to check
-    \param i signature of the function or method where the check was performed
+    \param i ExceptionRecord for the location where to perform the check
     */
     template<typename OTYPE> void
-        check_allocation_state(const OTYPE &o,const String &i)
+        check_allocation_state(const OTYPE &o,const ExceptionRecord &i)
     {
         if(!o.size())
         {
             std::stringstream ss;
             ss<<"Instance of "<<typeid(OTYPE).name()<<" not allocated!";
-            MemoryNotAllocatedError error;
-            error.issuer(i);
-            error.description(ss.str());
-            throw error;
+            ExceptionRecord r(__FILE__,__LINE__,BOOST_CURRENT_FUNCTION);
+            throw MemoryNotAllocatedError(r,ss.str());
         }
     }
 
@@ -153,19 +145,16 @@ namespace utils{
     Checks if a pointer is nullptr or not and throws an exception if it is.
     \throws MemoryNotAllocatedError if pointer is a nullptr
     \param ptr pointer to check
-    \param i issuer of the exception
+    \param i ExceptionRecord for the location where to perform the check
     */
     template<typename T> 
-        void check_ptr_state(const T *ptr,const String &i)
+        void check_ptr_state(const T *ptr,const ExceptionRecord &i)
     {
         if(!ptr)
         {
             std::stringstream ss;
             ss<<"Pointer is nullptr!";
-            MemoryNotAllocatedError error;
-            error.issuer(i);
-            error.description(ss.str());
-            throw error;
+            throw MemoryNotAllocatedError(i,ss.str());
         }
     }
 

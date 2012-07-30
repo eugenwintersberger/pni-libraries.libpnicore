@@ -246,12 +246,10 @@ namespace io{
                 ImageInfo info = this->info(i);
                 if(data.size() != info.npixels())
                 {
-                    SizeMissmatchError error;
-                    error.issuer(BOOST_CURRENT_FUNCTION);
                     std::stringstream ss;
                     ss<<"Container size ("<<data.size()<<") does not match";
                     ss<<"number of pixels ("<<info.npixels()<<")!";
-                    error.description(ss.str());
+                    throw SizeMissmatchError(EXCEPTION_RECORD,ss.str());
                 }
 
                 //read data

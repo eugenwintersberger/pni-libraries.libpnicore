@@ -87,10 +87,8 @@ namespace io{
             if(ci.name() == name) return index++;
 
         //throw exception if the column name does not exist
-        KeyError error;
-        error.issuer(BOOST_CURRENT_FUNCTION);
-        error.description("Column with name ["+name+"] does not exist!");
-        throw error;
+        ExceptionRecord r(__FILE__,__LINE__,BOOST_CURRENT_FUNCTION);
+        throw KeyError(r,"Column with name ["+name+"] does not exist!");
 
         return 0; //make the compiler happy - a value is returned.
     }
