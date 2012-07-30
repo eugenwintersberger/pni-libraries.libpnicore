@@ -34,6 +34,7 @@
 #include <string>
 #include <sstream>
 #include <vector>
+#include <boost/current_function.hpp>
 #include "Exceptions.hpp"
 #include "Types.hpp"
 #include "TypeIDMap.hpp"
@@ -49,6 +50,26 @@ namespace utils{
     This template implements a static buffer. The amount of memory occupied by
     the buffer is determined at compile time and cannot be altered during
     runtime.
+    The usage of this template is rather simple
+    \code
+    SBuffer<Float64,1024> buffer; //creates a buffer for 1024 Float64 values
+
+    //full STL compatible
+    for(auto v: buffer) std::cout<<v<<std::endl;
+
+    //linear access without index check
+    buffer[100] = 1234.23;
+
+    //linear access with index check
+    size_t index; 
+    std::cin>>index;
+    try{ buffer.at(index) = ...; }
+    catch(IndexError &e)
+    {
+        ...handle error ...
+    }
+
+    \endcode
     \tparam T type to be stored in the buffer
     \tparam N number of element of T in the buffer
     */
@@ -152,7 +173,7 @@ namespace utils{
             */
             value_type at(size_t i) const
             {
-                check_index(i,this->size(),"T at(size_t i) const");
+                check_index(i,this->size(),BOOST_CURRENT_FUNCTION);
                 return _data[i];
             }
 
@@ -160,14 +181,13 @@ namespace utils{
             /*! \brief get value at index i
 
             Returns a reference to the element in the buffer at index i.
-            \throws MemoryAccessError if buffer is not allocated
             \throws IndexError if i exceeds the size of the buffer
             \param i buffer index
             \return reference to the element at index i
             */
             value_type &at(size_t i)
             {
-                check_index(i,this->size(),"T &at(size_t i)");
+                check_index(i,this->size(),BOOST_CURRENT_FUNCTION);
                 return _data[i];
             }
 
@@ -206,7 +226,7 @@ namespace utils{
             */
             void insert(size_t i,const value_type &v)
             {
-                check_index(i,this->size(),"void insert(size_t i,const T &v)");
+                check_index(i,this->size(),BOOST_CURRENT_FUNCTION);
                 (*this)[i] = v;
             }
 
