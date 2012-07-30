@@ -52,6 +52,21 @@ namespace utils{
 #define EXCEPTION_RECORD\
     ExceptionRecord(__FILE__,__LINE__,BOOST_CURRENT_FUNCTION)
 
+/*! 
+\ingroup error_classes
+\brief forward an exception
+
+This macro can be used to forward an exception caught from another function. It
+appends the ExceptionRecord of the current function to the existing exception
+and throws the exception again.
+*/
+#define EXCEPTION_FORWARD(ETYPE)\
+    catch(ETYPE &error)\
+    {\
+        error.append(EXCEPTION_RECORD);\
+        throw error;\
+    }
+
     //========================Exception classes==================================
     /*!
     \ingroup error_classes
