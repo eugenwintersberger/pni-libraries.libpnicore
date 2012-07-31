@@ -3,6 +3,7 @@
 #include<cppunit/TestFixture.h>
 #include<cppunit/extensions/HelperMacros.h>
 
+#include<vector>
 #include "ArrayView.hpp"
 #include "RandomDistributions.hpp"
 
@@ -18,6 +19,7 @@ class ArrayViewTest : public CppUnit::TestFixture{
         CPPUNIT_TEST(test_operations);
         CPPUNIT_TEST_SUITE_END();
     private:
+        typedef std::vector<size_t> Shape;
         Shape s1,s2;
         size_t r1,r2;
     public:

@@ -2,6 +2,7 @@
 
 #include<cppunit/TestFixture.h>
 #include<cppunit/extensions/HelperMacros.h>
+#include<boost/current_function.hpp>
 
 #include "DArray.hpp"
 
@@ -39,20 +40,20 @@ class DArrayTest : public CppUnit::TestFixture{
 };
 
 //------------------------------------------------------------------------------
-template<typename T,typename STORAGE>
-void DArrayTest<T,STORAGE>::setUp(){
+template<typename T,typename STORAGE> void DArrayTest<T,STORAGE>::setUp()
+{
     s1 = {3,4};
     s2 = {2,3,5};
 }
 
 //------------------------------------------------------------------------------
-template<typename T,typename STORAGE>
-void DArrayTest<T,STORAGE>::tearDown(){ }
+template<typename T,typename STORAGE> void DArrayTest<T,STORAGE>::tearDown(){ }
 
 //------------------------------------------------------------------------------
 template<typename T,typename STORAGE>
 void DArrayTest<T,STORAGE>::test_construction()
 {
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
     //test default construction
     DArray<T,STORAGE> a1;
     CPPUNIT_ASSERT(a1.size() == 0);
@@ -81,6 +82,7 @@ void DArrayTest<T,STORAGE>::test_construction()
 template<typename T,typename STORAGE>
 void DArrayTest<T,STORAGE>::test_assignment()
 {
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
     DArray<T,STORAGE> a1(s1,STORAGE(12));
     size_t i;
     for(T &a: a1) a = T(i);
@@ -108,6 +110,7 @@ void DArrayTest<T,STORAGE>::test_assignment()
 template<typename T,typename STORAGE>
 void DArrayTest<T,STORAGE>::test_linear_access()
 {
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
     DArray<T,STORAGE> a1(s1,STORAGE(12));
 
     //--------------------check operators without index checking----------------
@@ -137,6 +140,7 @@ void DArrayTest<T,STORAGE>::test_linear_access()
 template<typename T,typename STORAGE>
 void DArrayTest<T,STORAGE>::test_iterators()
 {
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
     DArray<T,STORAGE> a1(s1,STORAGE(12));
 
     //--------------------check standard iterator----------------
@@ -164,8 +168,7 @@ void DArrayTest<T,STORAGE>::test_iterators()
 template<typename T,typename STORAGE>
 void DArrayTest<T,STORAGE>::test_multiindex_access()
 {   
-    std::cout<<"void DArrayTest<T,STORAGE>::test_multiindex_access()";
-    std::cout<<std::endl;
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
     DArray<T,STORAGE> a1(s1,STORAGE(12));
     auto data = RandomDistribution::uniform<std::vector<T> >(a1.size());
@@ -217,6 +220,7 @@ void DArrayTest<T,STORAGE>::test_multiindex_access()
 template<typename T,typename STORAGE>
 void DArrayTest<T,STORAGE>::test_typeinfo()
 {
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
     TypeID id1 = DArray<T,STORAGE>::type_id;
     TypeID id2 = TypeIDMap<T>::type_id;
     CPPUNIT_ASSERT(id1 == id2);

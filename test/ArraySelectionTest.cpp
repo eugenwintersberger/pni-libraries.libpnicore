@@ -1,6 +1,7 @@
 
 
 #include<cppunit/extensions/HelperMacros.h>
+#include<boost/current_function.hpp>
 
 #include <list>
 
@@ -22,6 +23,7 @@ void ArraySelectionTest::tearDown()
 //-----------------------------------------------------------------------------
 void ArraySelectionTest::test_construction()
 {
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
     typedef std::vector<size_t> itype;
     //testing default constructor
@@ -60,6 +62,7 @@ void ArraySelectionTest::test_construction()
 //-----------------------------------------------------------------------------
 void ArraySelectionTest::test_assignment()
 {
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
     ArraySelection sel(itype{100,1,200},itype{1,1,1},itype{1,1,2});
     CPPUNIT_ASSERT(sel.rank() == 2);
     itype s{99,99};
@@ -93,6 +96,7 @@ void ArraySelectionTest::test_assignment()
 //-----------------------------------------------------------------------------
 void ArraySelectionTest::test_index()
 {
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
     ArraySelection sel(itype{10,20},itype{1,2},itype{3,2});
     itype s{3,9};
     CPPUNIT_ASSERT(std::equal(s.begin(),s.end(),sel.shape().begin()));

@@ -6,6 +6,7 @@
 #include<cppunit/TestFixture.h>
 #include<cppunit/extensions/HelperMacros.h>
 #include<vector>
+#include<boost/current_function.hpp>
 #include "expr/Add.hpp"
 
 #include "EqualityCheck.hpp"
@@ -69,6 +70,7 @@ template<typename T> void AddOperatorTest<T>::tearDown()
 
 template<typename T> void AddOperatorTest<T>::test_construction()
 {
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
     Add<na_type,na_type> op(a1,a2);
     CPPUNIT_ASSERT(a1.size() == op.size());
    
@@ -83,6 +85,7 @@ template<typename T> void AddOperatorTest<T>::test_construction()
 
 template<typename T> void AddOperatorTest<T>::test_access()
 {
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
     Add<na_type,na_type> op1(a1,a2);
 
     for(size_t i=0;i<op1.size();i++)
@@ -97,6 +100,7 @@ template<typename T> void AddOperatorTest<T>::test_access()
 
 template<typename T> void AddOperatorTest<T>::test_iterator()
 {
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
     Add<na_type,na_type> op1(a1,a2);
     for(auto v: op1) check_equality(v,T(105));
 
@@ -107,6 +111,7 @@ template<typename T> void AddOperatorTest<T>::test_iterator()
 
 template<typename T> void AddOperatorTest<T>::test_operator()
 {
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
     na_type r = atype(shape);
     r = a1+a2;
     for(auto v: r) check_equality(v,T(105));

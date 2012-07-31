@@ -4,11 +4,10 @@
 
 #include <iostream>
 #include <boost/shared_ptr.hpp>
+#include <boost/current_function.hpp>
 
-#include "Array.hpp"
-#include "ArrayFactory.hpp"
-#include "Buffer.hpp"
-#include "Shape.hpp"
+#include "DArray.hpp"
+#include "DBuffer.hpp"
 #include "ArrayViewTest.hpp"
 #include "ArrayOperations.hpp"
 
@@ -28,8 +27,9 @@ void ArrayViewTest::tearDown()
 //-----------------------------------------------------------------------------
 void ArrayViewTest::testConstruction()
 {
+   std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
    Shape s{5,10};
-   auto a = ArrayFactory<Float32>::create(s);
+   DArray<Float32> a(s);
 
    auto v1 = a(Slice(1,3),Slice(3,7));
    CPPUNIT_ASSERT(v1.shape().rank() == 2);
@@ -44,11 +44,10 @@ void ArrayViewTest::testConstruction()
 
 //-----------------------------------------------------------------------------
 void ArrayViewTest::test_dataaccess()
-{
-    std::cout<<"void ArrayViewTest::test_dataaccess()......................";
-    std::cout<<std::endl;
+{ 
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
     Shape s{5,10};
-    auto a = ArrayFactory<Float32>::create(s);
+    DArray<Float32> a(s);
     a = 1.5;
 
     auto view = a(Slice(0,1),Slice(2,7));
@@ -76,11 +75,9 @@ void ArrayViewTest::test_dataaccess()
 //-----------------------------------------------------------------------------
 void ArrayViewTest::test_linearaccess()
 {
-    std::cout<<"void ArrayViewTest::test_linearaccess()-----------------------";
-    std::cout<<std::endl;
-
-    auto a = ArrayFactory<Float32>::create({100,200});
-    a = 1.24;
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+    DArray<Float32> a(Shape{100,200});
+    std::fill(a.begin(),a.end(),1.24);
 
     //create the view
     auto v = a(Slice(10,35,2),Slice(100,150,3));
@@ -111,14 +108,12 @@ void ArrayViewTest::test_linearaccess()
 //-----------------------------------------------------------------------------
 void ArrayViewTest::test_assignment()
 {
-    std::cout<<"void ArrayViewTest::test_assignment()------------------------";
-    std::cout<<std::endl;
-    
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl; 
     //create random data
     Shape frame_shape{1024,2048};
 
     auto data = RandomDistribution::uniform<std::vector<Float32> >(frame_shape.size());
-    auto frame = ArrayFactory<Float32>::create(frame_shape,data);
+    DArray<Float32> frame(frame_shape,data);
     auto roi = frame(Slice(512,732,2),Slice(1024,1077,3));
 
     CPPUNIT_ASSERT(roi.shape()[0] == 110);
@@ -130,7 +125,7 @@ void ArrayViewTest::test_assignment()
             CPPUNIT_ASSERT_DOUBLES_EQUAL(roi(i,j),frame(512+i*2,1024+j*3),1e-8);
 
     //create a new array holding the roi data
-    auto roi2 = ArrayFactory<Float32>::create(roi);
+    DArray<Float32> roi2(roi);
 
     size_t index = 0;
 #ifdef NOFOREACH
@@ -144,7 +139,7 @@ void ArrayViewTest::test_assignment()
         CPPUNIT_ASSERT_DOUBLES_EQUAL(v,roi[index++],1.e-8);
     }
    
-    auto roi3 = ArrayFactory<Float32>::create(roi.shape());
+    DArray<Float32> roi3(roi.shape());
     roi3 = roi;
     CPPUNIT_ASSERT(roi3.shape() == roi.shape());
     index = 0;
@@ -166,14 +161,16 @@ void ArrayViewTest::test_assignment()
 //-----------------------------------------------------------------------------
 void ArrayViewTest::test_operations()
 {
-    std::cout<<"void ArrayViewTest::test_operations()------------------------";
-    std::cout<<std::endl;
-    typedef ArrayFactory<Float32> factory;
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
     //create random data
     Shape frame_shape{10,10};
+    DArray<Float32> frame(frame_shape);
+    std::vector<Float32> data(frame.size());
+    std::fill(data.begin(),data.end(),a.begin());
 
-    std::vector<Float32> data(frame_shape.size());
+    auto roi = frame(Slice(1,10,2),Slice(2,9,3));
+
     size_t index=0;
 #ifdef NOFOREACH
     for(auto iter=data.begin();iter!=data.end();iter++)
@@ -187,8 +184,6 @@ void ArrayViewTest::test_operations()
     }
     CPPUNIT_ASSERT_DOUBLES_EQUAL(data[0],0,1.e-8);
 
-    auto frame = ArrayFactory<Float32>::create(frame_shape,data);
-    auto roi = frame(Slice(1,10,2),Slice(2,9,3));
 
 #ifdef NOFOREACH
     for(auto iter=roi.begin();iter!=roi.end();iter++)
@@ -208,8 +203,8 @@ void ArrayViewTest::test_operations()
     CPPUNIT_ASSERT_DOUBLES_EQUAL(min(roi),12.,1.e-8);
    
     //copy data to reuse it for several tests
-    auto test1 = factory::create(roi.shape());
-    auto test2 = factory::create(roi.shape());
+    auto test1(roi.shape<Shape>());
+    auto test2(roi.shape<Shape>());
     test2 = roi;
     test1 = roi;
     CPPUNIT_ASSERT(test1 == test2);
@@ -272,8 +267,4 @@ void ArrayViewTest::test_operations()
     CPPUNIT_ASSERT_DOUBLES_EQUAL(roi(mini),12.,1.e-8);
     CPPUNIT_ASSERT(mini[0] == eindex[0]);
     CPPUNIT_ASSERT(mini[1] == eindex[1]);
-
-    
-    
-
 }
