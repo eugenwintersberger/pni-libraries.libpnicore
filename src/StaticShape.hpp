@@ -12,7 +12,7 @@ namespace utils{
 
     //=========================================================================
     /*! 
-    \ingroup util_classes
+    \ingroup index_mapping_classes
     \brief create index container
 
     Type for computing the indices belonging to a particular offset and returns
@@ -45,7 +45,7 @@ namespace utils{
 
     //=========================================================================
     /*! 
-    \ingroup util_classes
+    \ingroup index_mapping_classes
     \brief specialization of IndexCreator
 
     This specialization of IndexCreator acts as a break condition. The ITERATE
@@ -73,7 +73,7 @@ namespace utils{
 
     //=========================================================================
     /*! 
-    \ingroup util_classes
+    \ingroup index_mapping_classes
     \brief type computing offset
 
     Type can be used to compute the offset from indices stored in a container
@@ -99,7 +99,7 @@ namespace utils{
 
     //=========================================================================
     /*! 
-    \ingroup util_classes
+    \ingroup index_mapping_classes
     \brief specialized version of OffsetCalc
 
     */
@@ -123,7 +123,7 @@ namespace utils{
 
     //=========================================================================
     /*!
-    \ingroup util_classes
+    \ingroup index_mapping_classes
     \brief static array shape type
 
     This type can be used to represent a static array shape. The shape object is

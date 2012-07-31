@@ -29,7 +29,7 @@ namespace pni{
 namespace utils{
 
     /*! 
-    \ingroup util_classes
+    \ingroup index_mapping_classes
     \brief C-order index map
 
     Maps multidimensional indices to linear offsets and vicer verse in C-order.

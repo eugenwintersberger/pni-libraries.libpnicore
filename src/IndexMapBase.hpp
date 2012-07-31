@@ -32,7 +32,7 @@ namespace pni {
 namespace utils {
 
     /*! 
-    \ingroup util_classes
+    \ingroup index_mapping_classes
     \brief base class for dynamic index maps
 
     This class can be used as a base class for dynamic (configurable at runtime)

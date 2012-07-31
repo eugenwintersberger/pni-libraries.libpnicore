@@ -28,7 +28,7 @@ namespace pni{
 namespace utils{
 
     /*!
-    \ingroup util_classes
+    \ingroup index_mapping_classes
     \brief recursive stride computing type
 
     This type is used to compute the stride of a particular dimension of a 
@@ -44,7 +44,7 @@ namespace utils{
 
     //=========================================================================
     /*!
-    \ingroup util_classes
+    \ingroup index_mapping_classes
     \brief partial specialization of ComputeStride
 
     This specialization does nothing else than multiplying the stride value with
@@ -62,7 +62,7 @@ namespace utils{
     };
 
     /*! 
-    \ingroup util_classes
+    \ingroup index_mapping_classes
     \brief partial specialization of ComputeStride 
 
     This specialization of ComputeStride contributes the size of the dimension
@@ -80,7 +80,7 @@ namespace utils{
     };
 
     /*! 
-    \ingroup util_classes
+    \ingroup index_mapping_classes
     \brief partial specialization of ComputeStride
 
     The break condition for the case that we want the stride for a dimension
@@ -95,7 +95,7 @@ namespace utils{
     };
  
     /*!
-    \ingroup util_classes
+    \ingroup index_mapping_classes
     \brief partial specialization of ComputeStride
 
     This is the case for the break condition if we want the stride for the 
@@ -114,7 +114,7 @@ namespace utils{
    
     //=========================================================================
     /*! 
-    \ingroup util_classes
+    \ingroup index_mapping_classes
     \brief type for a single stride
 
     Type representing the stride of dimension N of an array of dimension given
@@ -136,7 +136,7 @@ namespace utils{
 
     //=========================================================================
     /*! 
-    \ingroup util_classes
+    \ingroup index_mapping_classes
     \brief stride computing type
 
     This type can be used to compute the stride of a particular dimension in a
