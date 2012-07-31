@@ -74,7 +74,7 @@ namespace utils{
             //! static buffer holding the data
             SBuffer<T,SizeType<DIMS...>::size > _data;    
             //! static shape describing the arrays dimensionality
-            StaticShape<DIMS...> _shape; 
+            StaticCIndexMap<DIMS...> _shape; 
 
             //===================private methods===============================
             /*!

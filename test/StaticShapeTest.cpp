@@ -21,7 +21,7 @@ void StaticShapeTest::test_construction(){
 	std::cout<<"void ShapeTest::testConstruction()-----------------------";
 	std::cout<<std::endl;
 
-    StaticShape<3,4,5> s1;
+    StaticCIndexMap<3,4,5> s1;
     CPPUNIT_ASSERT(s1.size() == 3*4*5);
     CPPUNIT_ASSERT(s1.rank() == 3);
 
@@ -33,7 +33,7 @@ void StaticShapeTest::test_offset()
 	std::cout<<"void ShapeTest::testOffset()----------------------------------";
 	std::cout<<std::endl;
 
-    StaticShape<3,4> s1;
+    StaticCIndexMap<3,4> s1;
 
     size_t offset = 0;
     CPPUNIT_ASSERT_NO_THROW(offset = s1.offset(2,1));
@@ -49,7 +49,7 @@ void StaticShapeTest::test_offset()
     CPPUNIT_ASSERT_THROW(s1.offset(std::list<size_t>{10,1}),IndexError);
     CPPUNIT_ASSERT_THROW(s1.offset(std::list<size_t>{1,2,3,4}),ShapeMissmatchError);
 
-    StaticShape<2,3,5> s2;
+    StaticCIndexMap<2,3,5> s2;
     CPPUNIT_ASSERT(s2.offset(0,1,3) == 8);
     CPPUNIT_ASSERT(s2.offset(0,1,3) == 8);
 
@@ -65,8 +65,8 @@ void StaticShapeTest::test_index(){
 	std::cout<<"void ShapeTest::testIndex()-----------------------------------";
 	std::cout<<std::endl;
 
-    StaticShape<3,4> s1;
-    StaticShape<2,3,5> s2;
+    StaticCIndexMap<3,4> s1;
+    StaticCIndexMap<2,3,5> s2;
 
 	CPPUNIT_ASSERT(s1.offset(2,1)==9);
     auto index = s1.index<std::vector<size_t> >(9);
@@ -88,8 +88,5 @@ void StaticShapeTest::test_index(){
 
     CPPUNIT_ASSERT_THROW(s1.index(900,index1),SizeMissmatchError);
     CPPUNIT_ASSERT_THROW(s2.index(800,index2),SizeMissmatchError);
-    
-
-
 }
 

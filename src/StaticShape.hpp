@@ -137,7 +137,7 @@ namespace utils{
     vectors. 
     \tparam DIMS number of elements along each dimension
     */
-    template<size_t ...DIMS> class StaticShape
+    template<size_t ...DIMS> class StaticCIndexMap
     {
         private:
             //! static buffer holding the data
@@ -188,7 +188,7 @@ namespace utils{
 
         public:
             //! default constructor
-            StaticShape() { }
+            StaticCIndexMap() { }
             
             //-----------------------------------------------------------------
             /*! 
@@ -290,7 +290,8 @@ namespace utils{
             \param c container with indices
             \return offset value
             */
-            template<typename CTYPE> size_t offset(const CTYPE &c) const
+            template<template<typename...> class CTYPE,typename ...OTS> 
+                size_t offset(const CTYPE<OTS...> &c) const
             {
                 if(c.size() != this->rank())
                 {
@@ -313,7 +314,8 @@ namespace utils{
                     }
                 }
                 
-                return OffsetCalc<0,false,DIMS...>::template offset<CTYPE>(c.begin());
+                return OffsetCalc<0,false,DIMS...>::template
+                    offset<CTYPE<OTS...> >(c.begin());
             }
 
             //-----------------------------------------------------------------
@@ -331,7 +333,8 @@ namespace utils{
             \param offset linear offset 
             \param c target container
             */
-            template<typename CTYPE> void index(size_t offset,CTYPE &c) const
+            template<template<typename...> class CTYPE,typename ...OTS> 
+                void index(size_t offset,CTYPE<OTS...> &c) const
             {
                 if(c.size() != this->rank())
                 {
@@ -349,7 +352,7 @@ namespace utils{
                     throw SizeMissmatchError(EXCEPTION_RECORD,ss.str());
                 }
 
-                IndexCreator<0,true,DIMS...>::template index<CTYPE>(offset,c.begin());
+                IndexCreator<0,true,DIMS...>::template index<CTYPE<OTS...> >(offset,c.begin());
             }
 
             //-----------------------------------------------------------------
@@ -374,7 +377,7 @@ namespace utils{
 
     //ensure that the dimension data is loaded into the buffer
     template<size_t ...DIMS> 
-        const size_t StaticShape<DIMS...>::_dims[sizeof...(DIMS)] = {DIMS...};
+        const size_t StaticCIndexMap<DIMS...>::_dims[sizeof...(DIMS)] = {DIMS...};
 
 //end of namespace
 }

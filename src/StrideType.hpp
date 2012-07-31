@@ -27,89 +27,6 @@
 namespace pni{
 namespace utils{
 
-    /*!
-    \ingroup index_mapping_classes
-    \brief recursive stride computing type
-
-    This type is used to compute the stride of a particular dimension of a 
-    static array. This is just the basic definition of the class. All work is
-    done in its specializations. The template parameters have the  
-    \tparam N the index of the dimension 
-    \tparam CNT dimension counter
-    \tparam DO enable calculation
-    \tparam DIMS number of elements along each dimension
-    */
-    template<size_t N,size_t CNT,bool DO,size_t ...DIMS> struct ComputeStride
-    {};
-
-    //=========================================================================
-    /*!
-    \ingroup index_mapping_classes
-    \brief partial specialization of ComputeStride
-
-    This specialization does nothing else than multiplying the stride value with
-    one and proceeds to the next dimension. The DO template parameter of the
-    original template is set to false. 
-    \tparam N the index of the dimension 
-    \tparam CNT dimension counter
-    \tparam DIMS number of elements along each dimension
-    */
-    template<size_t N,size_t CNT,size_t d, size_t ...DIMS> 
-        struct ComputeStride<N,CNT,false,d,DIMS...>
-    {
-        //!< stride value
-        static const size_t value = 1*ComputeStride<N,CNT+1,((CNT+1)>N),DIMS...>::value; 
-    };
-
-    /*! 
-    \ingroup index_mapping_classes
-    \brief partial specialization of ComputeStride 
-
-    This specialization of ComputeStride contributes the size of the dimension
-    to the stride and moves on to the next dimension. The DO template parameter
-    of ComputeStride is here set to true. 
-    \tparam N the index of the dimension 
-    \tparam CNT dimension counter
-    \tparam DIMS number of elements along each dimension
-    */
-    template<size_t N,size_t CNT,size_t d,size_t ...DIMS> 
-        struct ComputeStride<N,CNT,true,d,DIMS...>
-    {
-        //!< stride value
-        static const size_t value = d*ComputeStride<N,CNT+1,((CNT+1)>N),DIMS...>::value;
-    };
-
-    /*! 
-    \ingroup index_mapping_classes
-    \brief partial specialization of ComputeStride
-
-    The break condition for the case that we want the stride for a dimension
-    being not the last dimension of the array
-    \tparam N index of the dimension
-    \tparam CNT dimension counter
-    \tparam D number of elements of the last dimension
-    */
-    template<size_t N,size_t CNT,size_t D> struct ComputeStride<N,CNT,true,D>
-    {
-        static const size_t value = D; //!< stride value
-    };
- 
-    /*!
-    \ingroup index_mapping_classes
-    \brief partial specialization of ComputeStride
-
-    This is the case for the break condition if we want the stride for the 
-    last dimension in the array. In this case CNT never reaches the condition
-    CNT+1>N because this would point to a location beyond the arrays bounds.
-    \tparam N index of the dimension
-    \tparam CNT dimension counter
-    \tparam D number of elements of the last dimension
-    */
-    template<size_t N,size_t CNT,size_t D> struct ComputeStride<N,CNT,false,D>
-    {
-        //!< stride value
-        static const size_t value = 1; 
-    };
 
    
     //=========================================================================
@@ -129,8 +46,91 @@ namespace utils{
     */
     template<size_t N,size_t ...DIMS> struct Stride
     {
+        /*!
+        \ingroup index_mapping_classes
+        \brief recursive stride computing type
+
+        This type is used to compute the stride of a particular dimension of a 
+        static array. This is just the basic definition of the class. All work is
+        done in its specializations. The template parameters have the  
+        \tparam N the index of the dimension 
+        \tparam CNT dimension counter
+        \tparam DO enable calculation
+        \tparam DIMS number of elements along each dimension
+        */
+        template<size_t NDIM,size_t CNT,bool DO,size_t ...DDIMS> 
+            struct Compute {};
+
+        //=========================================================================
+        /*!
+        \ingroup index_mapping_classes
+        \brief partial specialization of ComputeStride
+
+        This specialization does nothing else than multiplying the stride value with
+        one and proceeds to the next dimension. The DO template parameter of the
+        original template is set to false. 
+        \tparam N the index of the dimension 
+        \tparam CNT dimension counter
+        \tparam DIMS number of elements along each dimension
+        */
+        template<size_t NDIM,size_t CNT,size_t d, size_t ...DDIMS> 
+            struct Compute<NDIM,CNT,false,d,DDIMS...>
+        {
+            //!< stride value
+            static const size_t value = 1*Compute<NDIM,CNT+1,((CNT+1)>N),DDIMS...>::value; 
+        };
+
+        /*! 
+        \ingroup index_mapping_classes
+        \brief partial specialization of ComputeStride 
+
+        This specialization of ComputeStride contributes the size of the dimension
+        to the stride and moves on to the next dimension. The DO template parameter
+        of ComputeStride is here set to true. 
+        \tparam N the index of the dimension 
+        \tparam CNT dimension counter
+        \tparam DIMS number of elements along each dimension
+        */
+        template<size_t NDIM,size_t CNT,size_t d,size_t ...DDIMS> 
+            struct Compute<NDIM,CNT,true,d,DDIMS...>
+        {
+            //!< stride value
+            static const size_t value = d*Compute<NDIM,CNT+1,((CNT+1)>NDIM),DDIMS...>::value;
+        };
+
+        /*! 
+        \ingroup index_mapping_classes
+        \brief partial specialization of ComputeStride
+
+        The break condition for the case that we want the stride for a dimension
+        being not the last dimension of the array
+        \tparam N index of the dimension
+        \tparam CNT dimension counter
+        \tparam D number of elements of the last dimension
+        */
+        template<size_t NDIM,size_t CNT,size_t D> struct Compute<NDIM,CNT,true,D>
+        {
+            static const size_t value = D; //!< stride value
+        };
+ 
+        /*!
+        \ingroup index_mapping_classes
+        \brief partial specialization of ComputeStride
+
+        This is the case for the break condition if we want the stride for the 
+        last dimension in the array. In this case CNT never reaches the condition
+        CNT+1>N because this would point to a location beyond the arrays bounds.
+        \tparam N index of the dimension
+        \tparam CNT dimension counter
+        \tparam D number of elements of the last dimension
+        */
+        template<size_t NDIM,size_t CNT,size_t D> struct Compute<NDIM,CNT,false,D>
+        {
+            //!< stride value
+            static const size_t value = 1; 
+        };
         //! stride value 
-        static const size_t value = ComputeStride<N,0,false,DIMS...>::value; 
+        static const size_t value = Compute<N,0,false,DIMS...>::value; 
     };
 
 
