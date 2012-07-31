@@ -108,6 +108,16 @@ namespace utils {
             }
 
             //-----------------------------------------------------------------
+            /*!
+            \brief get array view 
+
+            Get an array view whose shape is determined by the container c.
+            \tparam CTYPE container template
+            \tparam OTS template arguments to CTYPE
+            \param view dummy variable to determine the function
+            \param c container with view parameters
+            \return array view
+            */
             template<template<typename ...> class CTYPE,typename ...OTS>
             ArrayView<DArray<T,STORAGE,IMAP> >
             _get_data(ArrayView<DArray<T,STORAGE,IMAP> >&view,const CTYPE<OTS...> &c)
@@ -118,6 +128,17 @@ namespace utils {
             }
 
             //-----------------------------------------------------------------
+            /*! 
+            \brief get array element
+
+            Returns a reference to an array element determined by the values in
+            a container.
+            \tparam CTYPE container template
+            \tparam OTS template arguments of CTYPE
+            \param v dummy argument to determine the function
+            \param c container with indices
+            \return element reference
+            */
             template<template<typename ...> class CTYPE,typename ...OTS>
                 T &_get_data(T v,const CTYPE<OTS...> &c)
             {
@@ -431,8 +452,7 @@ namespace utils {
             match the rank of the array
             \throws IndexError if one of the indices exceeds the number of
             elements along its dimension
-            \param i first index
-            \param indices residual indices
+            \param indices array indices
             \return reference to the element at position i
             */
             template<typename ...ITYPES>
@@ -456,7 +476,6 @@ namespace utils {
             match the rank of the array
             \throws IndexError if one of the indices exceeds the number of
             elements along its dimension
-            \param i first index
             \param indices residual indices
             \return value of the element at position i
             */

@@ -72,7 +72,7 @@ namespace cbf{
             \tparam CTYPE container type where to store the data
             \param is input stream
             \param info instance of ImageInfo for the image to read
-            \param array array where to store the data
+            \param data container instance where to store the data
             */
             template<typename CBFT,typename CTYPE>
                 static void read_data_byte_offset(

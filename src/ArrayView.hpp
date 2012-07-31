@@ -101,9 +101,7 @@ namespace utils{
             Constructs a new ArrayView from an existing array and some
             additional information.
             \param a reference to the original array
-            \param shape number of elements along each dimension 
-            \param offset index offset for the view
-            \param stride number of steps between each element along each
+            \param s selection object defining the description
             dimension
             */
             ArrayView(ATYPE &a,const ArraySelection &s):
@@ -291,6 +289,7 @@ namespace utils{
             }
 
             //-----------------------------------------------------------------
+            //! get rank of the view
             size_t rank()  const { return this->_selection.rank(); }
 
             //-----------------------------------------------------------------

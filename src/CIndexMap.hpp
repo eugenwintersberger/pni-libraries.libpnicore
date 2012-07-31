@@ -115,7 +115,7 @@ namespace utils{
             Sets a new shape or can be used if the object was constructed with
             the default constructor.
             \tparam CTYPE container type of the shape 
-            \param c container with new shape
+            \param s container with new shape
             */
             template<typename CTYPE> void shape(const CTYPE &s)
             {
@@ -139,8 +139,7 @@ namespace utils{
             size_t offset = imap.offset(1,2,0,3);
             \endcode
             \tparam ITYPES index types
-            \param i first index 
-            \param indices other indices
+            \param indices element indices
             \throws ShapeMissmatchError if number of indices and size of shape 
             do not match
             \throws IndexError if one of the indices exceeds the number of 

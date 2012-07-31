@@ -64,7 +64,7 @@ namespace tiff {
         \tparam CTYPE container type where the data shoule be stored
         \param c number of the channel to read
         \param stream input stream from which to read data
-        \param array target array where to store the data
+        \param data target container where to store the data
         */
         template<typename IT,typename CTYPE> 
             void _read_interlace(size_t c,std::ifstream &stream,
@@ -124,7 +124,7 @@ namespace tiff {
         \throws TypeError if the image data type is unkown
         \param c number of the channel to read
         \param stream input stream from which to read data
-        \param array reference to the array where to store the data
+        \param data reference to the container where to store the data
         */
         template<typename CTYPE> 
             void read(size_t c,std::ifstream &stream,CTYPE &data) 

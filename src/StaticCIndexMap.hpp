@@ -58,7 +58,7 @@ namespace utils{
             static const size_t _dims[sizeof ...(DIMS)];  
 
             //===================private classes===============================
-
+            //! \cond NO_API_DOC
             //-------------------internal type computing the stride------------
             //template to compute the stride for a particular dimension
             template<size_t N,size_t CNT,bool DO,size_t ...DDIMS> 
@@ -140,6 +140,7 @@ namespace utils{
                         *c = (offset-t)/Stride<D,0,false,NDIMS...>::value;
                 }
             };
+            //! \endcond
             //==============private member functions===========================
             /*! 
             \brief compute offset 

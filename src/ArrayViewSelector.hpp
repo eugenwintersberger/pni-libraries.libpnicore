@@ -67,8 +67,9 @@ namespace utils {
     template<typename ATYPE,typename T,typename ...ITYPES> struct
         ArrayViewSelector<ATYPE,T,ITYPES...>
     {
-        //!< recursive instantiation of the selector type
+        //! recursive instantiation of the selector type
         typedef typename ArrayViewSelector<ATYPE,ITYPES...>::viewtype viewtype;
+        //! reference type
         typedef typename ArrayViewSelector<ATYPE,ITYPES...>::reftype  reftype;
     };
 
@@ -83,7 +84,9 @@ namespace utils {
     template<typename ATYPE,typename ...ITYPES> struct
         ArrayViewSelector<ATYPE,Slice,ITYPES...>
     {
-        typedef ArrayView<ATYPE> viewtype; //!< array view return type
+        //! array view return type
+        typedef ArrayView<ATYPE> viewtype; 
+        //! array view reference type
         typedef ArrayView<ATYPE> reftype; 
     };
 
@@ -97,7 +100,9 @@ namespace utils {
     */
     template<typename ATYPE> struct ArrayViewSelector<ATYPE>
     {
-        typedef typename ATYPE::value_type viewtype; //!< return type
+        //! element type
+        typedef typename ATYPE::value_type viewtype; 
+        //! element type reference
         typedef typename ATYPE::value_type &reftype;
     };
 
