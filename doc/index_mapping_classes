@@ -39,7 +39,7 @@ A type that shall be used as shape must implement the following implicit
 interface
 
 \code
-class Shape
+class IndexMap
 {
     public:
     //=======================constructors and destructor=======================

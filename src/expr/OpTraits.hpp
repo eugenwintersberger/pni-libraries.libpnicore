@@ -13,6 +13,7 @@ namespace utils{
     */
     template<typename OT> struct OpTrait
     {
+        //! reference type for the operand
         typedef OT const& ref_type; 
     };
 
@@ -22,6 +23,7 @@ namespace utils{
     */
     template<typename T> struct OpTrait<Scalar<T> >
     {
+        //! reference type for a scalar operand
         typedef Scalar<T> ref_type;
     };
 //end of namespace

@@ -338,6 +338,7 @@ namespace utils{
                 return this->_state >= b._state;
             }
 
+            //! get state of the iterator
             ssize_t state() const { return this->_state; }
 
     };

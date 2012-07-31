@@ -37,45 +37,74 @@ namespace utils{
     \ingroup numeric_array_classes
     \brief Division expression template
 
+    \tparam OP1T type of the left operand
+    \tparam OP2T type of the right operand
     */
     template<typename OP1T,typename OP2T> class Div
     {
         private:
+            //! reference to the left operand
             typename OpTrait<OP1T>::ref_type _op1;
+            //! reference to the right operand
             typename OpTrait<OP2T>::ref_type _op2;
         public:
             //--------------------public types---------------------------------
+            //! result type of the operation
             typedef typename OP1T::value_type value_type;
+            //! type of the expression template
             typedef Div<OP1T,OP2T> array_type;
+            //! storage type
             typedef void storage_type;
+            //! non-const iterator - just for interface
             typedef Iterator<array_type,0> iterator;
+            //! const iterator type
             typedef Iterator<array_type,1> const_iterator;
 
             //===================constructors==================================
+            /*!
+            \brief constructor
+            \param o1 left operand
+            \param o2 right operand
+            */
             Div(const OP1T &o1,const OP2T &o2):
                 _op1(o1),
                 _op2(o2)
             {}
 
             //====================public methods===============================
+            /*!
+            \brief return result at i
+
+            Return the result of a[i]/b[i]. 
+            \param i index at which to perform operation
+            \return result of the operation
+            */
             value_type operator[](size_t i) const
             {
                 return this->_op1[i]/this->_op2[i];
             }
 
             //-----------------------------------------------------------------
+            /*! 
+            \brief get size
+
+            Return the maximum of a.size() and b.size(). 
+            \return size
+            */
             size_t size() const
             {
                 return _op1.size()>_op2.size() ? _op1.size() : _op2.size();
             }
 
             //=====================iterators===================================
+            //! get const iterator to first element
             const_iterator begin() const
             {
                 return const_iterator(this,0);
             }
 
             //-----------------------------------------------------------------
+            //! get const iterator to last+1 element
             const_iterator end() const
             {
                 return const_iterator(this,this->size());

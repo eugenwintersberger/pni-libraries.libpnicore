@@ -44,7 +44,7 @@ namespace utils{
     entirely determined at compile time by its template parameters. 
     For instance, the following code creates a static shape of size 4x10
     \code
-    StaticShape<4,10> shape;
+    StaticCIndexMap<4,10> im;
     \endcode
     As this type cannot be configured at runtime it is perfectly suited for
     static the creation of n-dimensional static array types like matrices or
@@ -60,27 +60,35 @@ namespace utils{
             //===================private classes===============================
 
             //-------------------internal type computing the stride------------
+            //template to compute the stride for a particular dimension
             template<size_t N,size_t CNT,bool DO,size_t ...DDIMS> 
                 struct Stride {};
 
+            //no computation - just continue with the next dimension value
             template<size_t N,size_t CNT,size_t d, size_t ...DDIMS> 
                 struct Stride<N,CNT,false,d,DDIMS...>
             {
-                //!< stride value
+                //stride value
                 static const size_t value = 1*Stride<N,CNT+1,((CNT+1)>N),DDIMS...>::value; 
             };
 
+            //perform computation
             template<size_t N,size_t CNT,size_t d,size_t ...DDIMS> 
                 struct Stride<N,CNT,true,d,DDIMS...>
             {
+                //stride value
                 static const size_t value = d*Stride<N,CNT+1,((CNT+1)>N),DDIMS...>::value;
             };
 
+            //break condition for the computation if only one dimension is left
+            //and a value should be computed
             template<size_t N,size_t CNT,size_t D> struct Stride<N,CNT,true,D>
             {
-                static const size_t value = D; //!< stride value
+                static const size_t value = D; // stride value
             };
-     
+    
+            //break condition for the computation if only one dimension is left
+            //and no value should be computed
             template<size_t N,size_t CNT,size_t D> struct Stride<N,CNT,false,D>
             {
                 //!< stride value
@@ -88,6 +96,7 @@ namespace utils{
             };
 
             //----------------internal type computing the offset---------------
+            //compute offset
             template<size_t D,bool FINISHED,size_t ...NDIMS> struct Offset
             {
                 template<typename CTYPE> 
@@ -99,6 +108,7 @@ namespace utils{
                 }
             };
 
+            //break condition for the recursion for offset computation
             template<size_t D,size_t ...NDIMS> struct Offset<D,true,NDIMS...>
             {
                 template<typename CTYPE> 
@@ -208,8 +218,8 @@ namespace utils{
             that conforms to the STL forward iterator interface. 
             This example shows how to use this 
             \code
-            StaticShape<3,4,5,2> s;
-            auto s.shape<std::vector<size_t> >();
+            StaticCIndexMap<3,4,5,2> map;
+            auto map.shape<std::vector<size_t> >();
             \endcode
 
             \tparam CONTAINER  container type
@@ -234,9 +244,9 @@ namespace utils{
             argument list. This method is quite comfortable as this example
             shows
             \code
-            StaticShape<3,4,5> s;
+            StaticCIndexMap<3,4,5> map;
 
-            size_t offset = s.offset(1,2,3);
+            size_t offset = map.offset(1,2,3);
             \endcode
             The method produces a compile time error if the number of indices
             does not match the rank of the shape.
@@ -275,9 +285,9 @@ namespace utils{
             as a container. If the size of the index container is not equal to
             the rank of the shape object a ShapeMissmatchError is thrown.
             \code
-            StaticShape<3,4,5> s;
+            StaticCIndexMap<3,4,5> map;
             std::vector<size_t> index{1,2,3};
-            size_t offset = s.offset(index);
+            size_t offset = map.offset(index);
             \endcode
             \throws ShapeMissmatchError if rank and container size do not match
             \throws IndexError if one of the indices exceeds the number of
