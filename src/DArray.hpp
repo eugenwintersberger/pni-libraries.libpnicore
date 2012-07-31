@@ -70,6 +70,16 @@ namespace utils {
             STORAGE _data;  
 
             //==================private methods================================
+            /*! 
+            \brief get array view
+
+            Returns an instance of ArrayView if one of the indices is a Slice
+            type. 
+            \param view dummy parameter with the view type to select the proper
+            private member function
+            \param indices list of indices from which to construct the view
+            \return array view object
+            */
             template<typename ...ITYPES>
             ArrayView<DArray<T,STORAGE,IMAP> >
                 _get_data(ArrayView<DArray<T,STORAGE,IMAP> > &view,ITYPES ...indices)
@@ -82,6 +92,16 @@ namespace utils {
             }
 
             //-----------------------------------------------------------------
+            /*!
+            \brief get element data
+
+            Returns a reference to the element determined by indices if this
+            list does not contain an instance of Slice. 
+            \param v dummy variable to select the proper function template
+            \param indices list of index values determining the element to
+            return
+            \return reference to the element
+            */
             template<typename ...ITYPES> T &_get_data(T v,ITYPES ...indices)
             {
                 return this->_data[this->_imap.offset(indices...)];
@@ -294,6 +314,7 @@ namespace utils {
             size_t size() const { return this->_imap.size(); }
 
             //-----------------------------------------------------------------
+            //! get number of dimensions of the array
             size_t rank() const { return this->_imap.rank(); }
 
             //=============operators and methods to access array data==========
