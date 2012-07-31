@@ -41,7 +41,6 @@
 #include "ArrayViewSelector.hpp"
 #include "CIndexMap.hpp"
 
-#include "ArrayTrait.hpp"
 #include "TypeInfo.hpp"
 #include "TypeIDMap.hpp"
 #include "type_conversion.hpp"
