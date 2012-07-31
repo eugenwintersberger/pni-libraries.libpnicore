@@ -25,7 +25,6 @@
 #include <sstream>
 
 #include "SizeType.hpp"
-#include "StrideType.hpp"
 #include "Exceptions.hpp"
 #include "ExceptionUtils.hpp"
 
@@ -34,116 +33,6 @@
 
 namespace pni{
 namespace utils{
-
-    //=========================================================================
-    /*! 
-    \ingroup index_mapping_classes
-    \brief create index container
-
-    Type for computing the indices belonging to a particular offset and returns
-    the index in a container. It must be ensured that the container is of
-    sufficient size. The class provides a static function template which is
-    called recursively to do the job. A specialized version of the type exists
-    implementing the break condition.
-    \tparam D index counter
-    \tparam ITERATE decide if continue iteration
-    \tparam DIMS elements along each dimensin
-    */
-    template<size_t D,bool ITERATE,size_t ...DIMS> struct IndexCreator
-    {
-        /*!
-        \brief compute index
-
-        \tparam CTYPE container type
-        \param offset linear offset for which the index should be calculated
-        \param c container type where to store indices
-        */
-        template<typename CTYPE> 
-            static void index(size_t offset,typename CTYPE::iterator c)
-        {
-                size_t t = offset%StrideCalc<DIMS...>::template value<D>();
-                *c = (offset-t)/StrideCalc<DIMS...>::template value<D>();
-                IndexCreator<D+1,((D+1)<((sizeof ...(DIMS))-1)),DIMS...>::template
-                    index<CTYPE>(t,++c);
-        }
-    };
-
-    //=========================================================================
-    /*! 
-    \ingroup index_mapping_classes
-    \brief specialization of IndexCreator
-
-    This specialization of IndexCreator acts as a break condition. The ITERATE
-    template parameter is set to false for this type.
-    \tparam D dimension counter
-    \tparam DIMS elements along each dimension
-    */
-    template<size_t D,size_t ...DIMS> struct IndexCreator<D,false,DIMS...>
-    {
-        /*!
-        \brief add last index to container
-
-        Add the last index to the container. 
-        \tparam CTYPE container type
-        \param offset linear offset for which the index should be calculated
-        \param c container type where to store the indices
-        */
-        template<typename CTYPE> 
-            static void index(size_t offset,typename CTYPE::iterator c)
-        {
-                size_t t = offset%StrideCalc<DIMS...>::template value<D>();
-                *c = (offset-t)/StrideCalc<DIMS...>::template value<D>();
-        }
-    };
-
-    //=========================================================================
-    /*! 
-    \ingroup index_mapping_classes
-    \brief type computing offset
-
-    Type can be used to compute the offset from indices stored in a container
-    type. The class provides a static template method doing the job. 
-    \tparam D index counter
-    \tparam FINISHED set to true of the calculation is finished
-    \tparam DIMS elements along each dimension
-    */
-    template<size_t D,bool FINISHED,size_t ...DIMS> struct OffsetCalc
-    {
-        /*!
-        \brief compute offset
-
-        */
-        template<typename CTYPE> 
-            static size_t offset(typename CTYPE::const_iterator c)
-        {
-            return StrideCalc<DIMS...>::template value<D>()*(*c)+
-                   OffsetCalc<D+1,((D+1)>=(sizeof...(DIMS))),DIMS...>::
-                   template offset<CTYPE>(++c);
-        }
-    };
-
-    //=========================================================================
-    /*! 
-    \ingroup index_mapping_classes
-    \brief specialized version of OffsetCalc
-
-    */
-    template<size_t D,size_t ...DIMS> struct OffsetCalc<D,true,DIMS...>
-    {
-        /*! 
-        \brief compute offset
-
-        Final version of the offset computation. Ends the template recursion.
-        \tparam CTYPE container type where to store the index
-        \param c container where to store the data
-        \return offset value
-        */
-        template<typename CTYPE> 
-            static size_t offset(typename CTYPE::const_iterator c)
-        {
-           return 0;
-        }
-    };
 
 
     //=========================================================================
@@ -169,7 +58,8 @@ namespace utils{
             static const size_t _dims[sizeof ...(DIMS)];  
 
             //===================private classes===============================
-            //compute stride
+
+            //-------------------internal type computing the stride------------
             template<size_t N,size_t CNT,bool DO,size_t ...DDIMS> 
                 struct Stride {};
 
@@ -197,6 +87,7 @@ namespace utils{
                 static const size_t value = 1; 
             };
 
+            //----------------internal type computing the offset---------------
             template<size_t D,bool FINISHED,size_t ...NDIMS> struct Offset
             {
                 template<typename CTYPE> 
@@ -217,7 +108,7 @@ namespace utils{
                 }
             };
 
-            //-----------------------------------------------------------------
+            //-----------------internal type for index computation-------------
             template<size_t D,bool ITERATE,size_t ...NDIMS> struct Index
             {
                 template<typename CTYPE> 
@@ -283,7 +174,7 @@ namespace utils{
             { 
                 check_index(i,this->_dims[d],EXCEPTION_RECORD);
 
-                return StrideCalc<DIMS...>::template value<d>()*i; 
+                return Stride<d,0,false,DIMS...>::value*i; 
             }
 
         public:
