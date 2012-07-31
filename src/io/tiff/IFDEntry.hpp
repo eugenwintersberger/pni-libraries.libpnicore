@@ -50,6 +50,12 @@ namespace tiff{
     enum class IFDEntryTypeID { BYTE, ASCII,SHORT,LONG,RATIONAL,SBYTE,UNDEFINED,
                                   SSHORT,SLONG,SRATIONAL,FLOAT,DOUBLE};
 
+    /*!
+    \ingroup io_classes
+    \brief class for IFD entries
+
+    This class can manage the content of a single IFDEntry. 
+    */
     class IFDEntry
     {
         private:

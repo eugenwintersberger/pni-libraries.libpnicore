@@ -137,7 +137,7 @@ template<> class TypeIDMap<Binary> {
     public:
         static const TypeID type_id = TypeID::BINARY;
 };
-
+//! \endcond
 
 //end of namespace
 }

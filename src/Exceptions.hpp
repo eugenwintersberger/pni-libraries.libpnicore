@@ -37,7 +37,6 @@
 #include<list>
 #include<boost/current_function.hpp>
 
-//#include "Exceptions.hpp"
 #include "Types.hpp"
 
 namespace pni{
@@ -178,7 +177,7 @@ Please note that the MUST NOT BE a semicolon at the end of this macro.
         occurrence  of the error
         \param d description of the exception
         */
-        Exception(const String &n, const ExceptionRecord &w, const String &d);
+        Exception(const String &n, const ExceptionRecord &rec, const String &d);
 
         //---------------------------------------------------------------------
         //! virtual destructor
