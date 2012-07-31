@@ -2,52 +2,6 @@
 These classes are responsible for storing and manipulating data in memory. 
 
 
-\section shape_section Shape objects and index mapping
-
-Shape objects are an important part of the code as they map multidimensional
-array indices to a linear memory offset and vice verse. It is clear that several
-implementations are needed to satisfy different needs of users. 
-A type that shall be used as shape must implement the following implicit
-interface
-
-\code
-class Shape
-{
-    public:
-    //=======================constructors and destructor=======================
-    Shape(); //default constructible
-
-    //========================assignment operators=============================
-    Shape &operator=(const Shape &s); //copy assignable 
-
-    //=====================index and offset related methods====================
-
-    //compute offset from an argument list
-    template<typename ...ITYPES> size_t offset(ITYPES ...indices);
-
-    //compute offset from a container type
-    template<CTYPE> size_t offset(const CTYPE &v);
-
-    //compute the multidimensional index for a particular offset value
-    //and return the result in an arbitrary container type
-    template<CTYPE> CTYPE index(size_t offset);
-
-    //compute the multidimensional index for a particular offset value and store
-    //the result in an already existing container
-    template<CTYPE> void index(size_t offset,CTYPE &c);
-
-    //=======================accessing shape parameters========================
-    size_t rank() const; number of dimensions
-    size_t size() const; number of elements covered by the shape
-
-    //return number of elements along each dimension of the shape
-    template<CONT> CONT shape() const;
-
-    size 
-
-
-};
-\endcode
 
 
 \section Arrays

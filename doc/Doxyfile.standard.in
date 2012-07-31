@@ -65,7 +65,8 @@ WARN_NO_PARAMDOC       = NO
 INPUT                  = ../src/ examples/ mainpage installation usage \
                          examples_description io_classes \
                          multidim_array_classes buffer_classes \
-                         numeric_array_types iterator_types
+                         numeric_array_types iterator_types \
+                         index_mapping_classes
 RECURSIVE              = YES
 EXCLUDE_SYMLINKS       = NO
 EXAMPLE_PATH           = examples
