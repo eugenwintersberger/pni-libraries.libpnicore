@@ -1,3 +1,11 @@
 /*! \defgroup iterator_types Iterators
+\c libpniutils provides a some iterator types used in various templates
+throughout the library. As a normal user you usually do not need to care about
+these iterator templates. Thus, this page is merely interesting for developers. 
+
+The iterators follow the iterator requirements of the C++ standard. 
+
+\li Iterator - most general template providing a input/output random access
+iterator
 
 */
