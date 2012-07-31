@@ -1,4 +1,26 @@
-
+/*
+ * (c) Copyright 2011 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
+ *
+ * This file is part of libpniutils.
+ *
+ * libpniutils is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * libpniutils is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with lipniutils.  If not, see <http://www.gnu.org/licenses/>.
+ *************************************************************************
+ *
+ * Created on: Jul 10, 2012
+ *     Author: Eugen Wintersberger
+ *
+ */
 #include <iostream>
 #include <sstream>
 
@@ -6,6 +28,9 @@
 #include "StrideType.hpp"
 #include "Exceptions.hpp"
 #include "ExceptionUtils.hpp"
+
+#ifndef __STATICCINDEXMAP_HPP__
+#define __STATICCINDEXMAP_HPP__
 
 namespace pni{
 namespace utils{
@@ -143,6 +168,77 @@ namespace utils{
             //! static buffer holding the data
             static const size_t _dims[sizeof ...(DIMS)];  
 
+            //===================private classes===============================
+            //compute stride
+            template<size_t N,size_t CNT,bool DO,size_t ...DDIMS> 
+                struct Stride {};
+
+            template<size_t N,size_t CNT,size_t d, size_t ...DDIMS> 
+                struct Stride<N,CNT,false,d,DDIMS...>
+            {
+                //!< stride value
+                static const size_t value = 1*Stride<N,CNT+1,((CNT+1)>N),DDIMS...>::value; 
+            };
+
+            template<size_t N,size_t CNT,size_t d,size_t ...DDIMS> 
+                struct Stride<N,CNT,true,d,DDIMS...>
+            {
+                static const size_t value = d*Stride<N,CNT+1,((CNT+1)>N),DDIMS...>::value;
+            };
+
+            template<size_t N,size_t CNT,size_t D> struct Stride<N,CNT,true,D>
+            {
+                static const size_t value = D; //!< stride value
+            };
+     
+            template<size_t N,size_t CNT,size_t D> struct Stride<N,CNT,false,D>
+            {
+                //!< stride value
+                static const size_t value = 1; 
+            };
+
+            template<size_t D,bool FINISHED,size_t ...NDIMS> struct Offset
+            {
+                template<typename CTYPE> 
+                    static size_t offset(typename CTYPE::const_iterator c)
+                {
+                    return Stride<D,0,false,DIMS...>::value*(*c)+
+                           Offset<D+1,((D+1)>=(sizeof...(NDIMS))),NDIMS...>::
+                           template offset<CTYPE>(++c);
+                }
+            };
+
+            template<size_t D,size_t ...NDIMS> struct Offset<D,true,NDIMS...>
+            {
+                template<typename CTYPE> 
+                    static size_t offset(typename CTYPE::const_iterator c)
+                {
+                   return 0;
+                }
+            };
+
+            //-----------------------------------------------------------------
+            template<size_t D,bool ITERATE,size_t ...NDIMS> struct Index
+            {
+                template<typename CTYPE> 
+                    static void index(size_t offset,typename CTYPE::iterator c)
+                {
+                        size_t t = offset%Stride<D,0,false,NDIMS...>::value;
+                        *c = (offset-t)/Stride<D,0,false,NDIMS...>::value;
+                        Index<D+1,((D+1)<((sizeof ...(NDIMS))-1)),NDIMS...>::template
+                            index<CTYPE>(t,++c);
+                }
+            };
+
+            template<size_t D,size_t ...NDIMS> struct Index<D,false,NDIMS...>
+            {
+                template<typename CTYPE> 
+                    static void index(size_t offset,typename CTYPE::iterator c)
+                {
+                        size_t t = offset%Stride<D,0,false,NDIMS...>::value;
+                        *c = (offset-t)/Stride<D,0,false,NDIMS...>::value;
+                }
+            };
             //==============private member functions===========================
             /*! 
             \brief compute offset 
@@ -162,8 +258,12 @@ namespace utils{
             size_t _offset(size_t i1,ITYPES ...indices) const
             {
                 check_index(i1,_dims[d],EXCEPTION_RECORD);
-                
+               
+                /*
                 return StrideCalc<DIMS...>::template value<d>()*i1+
+                       _offset<d+1>(indices...);
+                */
+                return Stride<d,0,false,DIMS...>::value *i1+
                        _offset<d+1>(indices...);
             }
 
@@ -268,7 +368,11 @@ namespace utils{
                 //check the index for the first dimension
                 check_index(i1,this->_dims[0],EXCEPTION_RECORD);
 
+                /*
                 return StrideCalc<DIMS...>::template value<0>()*i1+
+                       _offset<1>(indices...);
+                       */
+                return Stride<0,0,false,DIMS...>::value*i1+
                        _offset<1>(indices...);
             }
 
@@ -314,7 +418,7 @@ namespace utils{
                     }
                 }
                 
-                return OffsetCalc<0,false,DIMS...>::template
+                return Offset<0,false,DIMS...>::template
                     offset<CTYPE<OTS...> >(c.begin());
             }
 
@@ -352,7 +456,7 @@ namespace utils{
                     throw SizeMissmatchError(EXCEPTION_RECORD,ss.str());
                 }
 
-                IndexCreator<0,true,DIMS...>::template index<CTYPE<OTS...> >(offset,c.begin());
+                Index<0,true,DIMS...>::template index<CTYPE<OTS...> >(offset,c.begin());
             }
 
             //-----------------------------------------------------------------
@@ -382,3 +486,5 @@ namespace utils{
 //end of namespace
 }
 }
+
+#endif

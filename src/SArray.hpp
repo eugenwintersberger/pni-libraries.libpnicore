@@ -28,7 +28,7 @@
 
 #include "Types.hpp"
 #include "SBuffer.hpp"
-#include "StaticShape.hpp"
+#include "StaticCIndexMap.hpp"
 #include "Exceptions.hpp"
 #include "Slice.hpp"
 #include "ArrayView.hpp"

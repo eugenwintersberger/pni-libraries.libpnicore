@@ -3,21 +3,21 @@
 #include<cppunit/extensions/HelperMacros.h>
 
 #include "Types.hpp"
-#include "StaticShapeTest.hpp"
+#include "StaticCIndexMapTest.hpp"
 #include <list>
 
-CPPUNIT_TEST_SUITE_REGISTRATION(StaticShapeTest);
+CPPUNIT_TEST_SUITE_REGISTRATION(StaticCIndexMapTest);
 
 //------------------------------------------------------------------------------
-void StaticShapeTest::setUp(){
+void StaticCIndexMapTest::setUp(){
 }
 
 //------------------------------------------------------------------------------
-void StaticShapeTest::tearDown(){
+void StaticCIndexMapTest::tearDown(){
 }
 
 //------------------------------------------------------------------------------
-void StaticShapeTest::test_construction(){
+void StaticCIndexMapTest::test_construction(){
 	std::cout<<"void ShapeTest::testConstruction()-----------------------";
 	std::cout<<std::endl;
 
@@ -28,7 +28,7 @@ void StaticShapeTest::test_construction(){
 }
 
 //------------------------------------------------------------------------------
-void StaticShapeTest::test_offset()
+void StaticCIndexMapTest::test_offset()
 {
 	std::cout<<"void ShapeTest::testOffset()----------------------------------";
 	std::cout<<std::endl;
@@ -61,7 +61,7 @@ void StaticShapeTest::test_offset()
 }
 
 //------------------------------------------------------------------------------
-void StaticShapeTest::test_index(){
+void StaticCIndexMapTest::test_index(){
 	std::cout<<"void ShapeTest::testIndex()-----------------------------------";
 	std::cout<<std::endl;
 
