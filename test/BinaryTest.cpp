@@ -3,9 +3,12 @@
 #include<cppunit/extensions/HelperMacros.h>
 
 #include <iostream>
+#include <boost/current_function.hpp>
 
-#include "../src/Binary.hpp"
+#include "Types.hpp"
+#include "Binary.hpp"
 #include "BinaryTest.hpp"
+
 
 CPPUNIT_TEST_SUITE_REGISTRATION(BinaryTest);
 
@@ -19,7 +22,9 @@ void BinaryTest::tearDown(){
 
 }
 
-void BinaryTest::test_construction(){
+void BinaryTest::test_construction()
+{
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
     BinaryType<UInt8> bvalue;
     
     BinaryType<UInt8> bvalue2 = 8; 
@@ -27,7 +32,9 @@ void BinaryTest::test_construction(){
 
 }
 
-void BinaryTest::test_comparison(){
+void BinaryTest::test_comparison()
+{
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
     BinaryType<UInt8> v1 = 8;
     BinaryType<UInt8> v2 = 10;
     BinaryType<UInt8> v3 = 8;
@@ -37,7 +44,9 @@ void BinaryTest::test_comparison(){
 
 }
 
-void BinaryTest::test_assignment(){
+void BinaryTest::test_assignment()
+{
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
     BinaryType<UInt8> v1;
 
     v1 = 10;
@@ -46,7 +55,9 @@ void BinaryTest::test_assignment(){
     CPPUNIT_ASSERT(v1 == v2);
 }
 
-void BinaryTest::test_compatability(){
+void BinaryTest::test_compatability()
+{
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
     UInt8 rv;
     BinaryType<UInt8> bv = 10;
    
@@ -76,9 +87,9 @@ void BinaryTest::test_compatability(){
     delete [] bptr;
 }
 
-void BinaryTest::test_io_operator(){
-    std::cout<<"void BinaryTest::test_io_operator()---------------------------";
-    std::cout<<std::endl;
+void BinaryTest::test_io_operator()
+{
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
     BinaryType<UInt8>  b = 'a';
 
     CPPUNIT_ASSERT(b == 'a');
@@ -99,11 +110,9 @@ void BinaryTest::test_io_operator(){
 }
 
 void BinaryTest::test_io(){
-    std::cout<<"void BinaryTest::test_io()------------------------------------";
-    std::cout<<std::endl;
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
-    typedef
-        std::fstream fstream;
+    typedef std::fstream fstream;
 
     std::ifstream istream;
     std::ofstream ostream;
