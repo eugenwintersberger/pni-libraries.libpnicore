@@ -26,6 +26,9 @@
 #ifndef __ARRAYOPERATIONS_HPP__
 #define __ARRAYOPERATIONS_HPP__
 
+#include "Types.hpp"
+#include "ArrayTrait.hpp"
+
 
 namespace pni{
 namespace utils{

@@ -32,13 +32,13 @@ void ArrayViewTest::testConstruction()
    DArray<Float32> a(s);
 
    auto v1 = a(Slice(1,3),Slice(3,7));
-   CPPUNIT_ASSERT(v1.shape().rank() == 2);
-   CPPUNIT_ASSERT(v1.shape()[0] == 2);
-   CPPUNIT_ASSERT(v1.shape()[1] == 4);
+   CPPUNIT_ASSERT(v1.shape<Shape>().size() == 2);
+   CPPUNIT_ASSERT(v1.shape<Shape>()[0] == 2);
+   CPPUNIT_ASSERT(v1.shape<Shape>()[1] == 4);
 
    auto v2 = a(Slice(1,2),Slice(3,7));
-   CPPUNIT_ASSERT(v2.shape().rank() == 1);
-   CPPUNIT_ASSERT(v2.shape()[0] == 4);
+   CPPUNIT_ASSERT(v2.shape<Shape>().size() == 1);
+   CPPUNIT_ASSERT(v2.shape<Shape>()[0] == 4);
 
 }
 
@@ -48,12 +48,12 @@ void ArrayViewTest::test_dataaccess()
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
     Shape s{5,10};
     DArray<Float32> a(s);
-    a = 1.5;
+    std::fill(a.begin(),a.end(),1.5);
 
     auto view = a(Slice(0,1),Slice(2,7));
-    CPPUNIT_ASSERT(view.shape().rank() == 1);
-    CPPUNIT_ASSERT(view.shape()[0] == 5);
-    for(size_t i=0;i<view.shape()[0];i++)
+    CPPUNIT_ASSERT(view.shape<Shape>().size() == 1);
+    CPPUNIT_ASSERT(view.shape<Shape>()[0] == 5);
+    for(size_t i=0;i<view.shape<Shape>()[0];i++)
         CPPUNIT_ASSERT_NO_THROW(view(i) = Float32(i));
 
     for(size_t j=0;j<s[0];j++)
@@ -83,10 +83,9 @@ void ArrayViewTest::test_linearaccess()
     auto v = a(Slice(10,35,2),Slice(100,150,3));
 
     //check creation 
-    std::cout<<v.shape()<<std::endl;
-    CPPUNIT_ASSERT(v.shape().rank() == 2);
-    CPPUNIT_ASSERT(v.shape()[1] == 17);
-    CPPUNIT_ASSERT(v.shape()[0] == 13);
+    CPPUNIT_ASSERT(v.shape<Shape>().size() == 2);
+    CPPUNIT_ASSERT(v.shape<Shape>()[1] == 17);
+    CPPUNIT_ASSERT(v.shape<Shape>()[0] == 13);
 
     for(size_t i=0;i<v.size();i++)
         CPPUNIT_ASSERT_NO_THROW(v[i] = i);
@@ -95,9 +94,9 @@ void ArrayViewTest::test_linearaccess()
         CPPUNIT_ASSERT_DOUBLES_EQUAL(v[i],Float32(i),1.e-8);
 
     size_t cnt = 0;
-    for(size_t i=0;i<v.shape()[0];i++)
+    for(size_t i=0;i<v.shape<Shape>()[0];i++)
     {
-        for(size_t j=0;j<v.shape()[1];j++)
+        for(size_t j=0;j<v.shape<Shape>()[1];j++)
         {
             CPPUNIT_ASSERT_DOUBLES_EQUAL(v(i,j),Float32(cnt),1.e-8);
             cnt++;
@@ -112,16 +111,16 @@ void ArrayViewTest::test_assignment()
     //create random data
     Shape frame_shape{1024,2048};
 
-    auto data = RandomDistribution::uniform<std::vector<Float32> >(frame_shape.size());
+    auto data = RandomDistribution::uniform<DBuffer<Float32> >(frame_shape.size());
     DArray<Float32> frame(frame_shape,data);
     auto roi = frame(Slice(512,732,2),Slice(1024,1077,3));
 
-    CPPUNIT_ASSERT(roi.shape()[0] == 110);
-    CPPUNIT_ASSERT(roi.shape()[1] == 18);
+    CPPUNIT_ASSERT(roi.shape<Shape>()[0] == 110);
+    CPPUNIT_ASSERT(roi.shape<Shape>()[1] == 18);
 
     //check if selection worked
-    for(size_t i=0;i<roi.shape()[0];i++)
-        for(size_t j=0;j<roi.shape()[1];j++)
+    for(size_t i=0;i<roi.shape<Shape>()[0];i++)
+        for(size_t j=0;j<roi.shape<Shape>()[1];j++)
             CPPUNIT_ASSERT_DOUBLES_EQUAL(roi(i,j),frame(512+i*2,1024+j*3),1e-8);
 
     //create a new array holding the roi data
@@ -139,9 +138,10 @@ void ArrayViewTest::test_assignment()
         CPPUNIT_ASSERT_DOUBLES_EQUAL(v,roi[index++],1.e-8);
     }
    
-    DArray<Float32> roi3(roi.shape());
-    roi3 = roi;
-    CPPUNIT_ASSERT(roi3.shape() == roi.shape());
+    DArray<Float32> roi3(roi);
+    CPPUNIT_ASSERT(std::equal(roi3.shape<Shape>().begin(),
+                              roi3.shape<Shape>().end(),
+                              roi.shape<Shape>().begin()));
     index = 0;
 
 #ifdef NOFOREACH
@@ -167,7 +167,7 @@ void ArrayViewTest::test_operations()
     Shape frame_shape{10,10};
     DArray<Float32> frame(frame_shape);
     std::vector<Float32> data(frame.size());
-    std::fill(data.begin(),data.end(),a.begin());
+    std::fill(data.begin(),data.end(),frame.begin());
 
     auto roi = frame(Slice(1,10,2),Slice(2,9,3));
 
@@ -196,17 +196,14 @@ void ArrayViewTest::test_operations()
         std::cout<<v<<" ";
     }
     std::cout<<std::endl;
-    std::cout<<roi.shape()<<std::endl;
 
     CPPUNIT_ASSERT_DOUBLES_EQUAL(sum(roi),825,1.e-8);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(max(roi),98,1.e-8);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(min(roi),12.,1.e-8);
    
     //copy data to reuse it for several tests
-    auto test1(roi.shape<Shape>());
-    auto test2(roi.shape<Shape>());
-    test2 = roi;
-    test1 = roi;
+    DArray<Float32> test1(roi);
+    DArray<Float32> test2(roi);
     CPPUNIT_ASSERT(test1 == test2);
 
     //check clipping 
@@ -218,35 +215,35 @@ void ArrayViewTest::test_operations()
     CPPUNIT_ASSERT(test1 == test2);
 
     //testing clip with a particular value
-    test1 = roi;
-    test2 = roi;
+    std::copy(roi.begin(),roi.end(),test1.begin());
+    std::copy(roi.begin(),roi.end(),test2.begin());
     test2(0,0) = 666; test2(0,1) = 666; test2(0,2) = 666;
     test2(4,0) = 42; test2(4,1) = 42; test2(4,2) = 42;
     clip(test1,30,90,666,42);
     CPPUNIT_ASSERT(test1 == test2);
 
     //testing min clip
-    test1 = roi;
-    test2 = roi;
+    std::copy(roi.begin(),roi.end(),test1.begin());
+    std::copy(roi.begin(),roi.end(),test2.begin());
     test2(0,0) = 30; test2(0,1) = 30; test2(0,2) = 30;
     min_clip(test1,30);
     CPPUNIT_ASSERT(test1 == test2);
 
-    test1 = roi;
-    test2 = roi;
+    std::copy(roi.begin(),roi.end(),test1.begin());
+    std::copy(roi.begin(),roi.end(),test2.begin());
     test2(0,0) = 666; test2(0,1) = 666; test2(0,2) = 666;
     min_clip(test1,30,666);
     CPPUNIT_ASSERT(test1 == test2);
 
     //testing min clip
-    test1 = roi;
-    test2 = roi;
+    std::copy(roi.begin(),roi.end(),test1.begin());
+    std::copy(roi.begin(),roi.end(),test2.begin());
     test2(4,0) = 90; test2(4,1) = 90; test2(4,2) = 90;
     max_clip(test1,90);
     CPPUNIT_ASSERT(test1 == test2);
 
-    test1 = roi;
-    test2 = roi;
+    std::copy(roi.begin(),roi.end(),test1.begin());
+    std::copy(roi.begin(),roi.end(),test2.begin());
     test2(4,0) = 42; test2(4,1) = 42; test2(4,2) = 42;
     max_clip(test1,90,42);
     CPPUNIT_ASSERT(test1 == test2);
