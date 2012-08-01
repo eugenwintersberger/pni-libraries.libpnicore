@@ -74,7 +74,8 @@ namespace utils{
             //! static buffer holding the data
             SBuffer<T,SizeType<DIMS...>::size > _data;    
             //! static shape describing the arrays dimensionality
-            StaticCIndexMap<DIMS...> _shape; 
+            static const StaticCIndexMap<DIMS...> _shape; 
+
 
             //===================private methods===============================
             /*!
@@ -491,6 +492,8 @@ namespace utils{
 
     };
 
+    template<typename T,size_t ...DIMS> const
+        StaticCIndexMap<DIMS...> SArray<T,DIMS...>::_shape = StaticCIndexMap<DIMS...>();
 //end of namespace
 }
 }

@@ -36,9 +36,9 @@ sources_list.extend(["SliceTest.cpp"])
 
 pniutils_test = test_env.Program("pniutilstest",sources_list)
 iterbm = test_env.Program("iterbm","iteratorbm.cpp")
-#showtypes = test_env.Program("showPNITypes.cpp")
+showtypes = test_env.Program("showPNITypes.cpp")
 #benchmark = test_env.Program("utbmark","bmark.cpp")
-test_targets = [pniutils_test,iterbm]
+test_targets = [pniutils_test,iterbm,showtypes]
 
     
 

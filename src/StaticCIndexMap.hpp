@@ -190,7 +190,7 @@ namespace utils{
 
         public:
             //! default constructor
-            StaticCIndexMap() { }
+            constexpr StaticCIndexMap() { }
             
             //-----------------------------------------------------------------
             /*! 
