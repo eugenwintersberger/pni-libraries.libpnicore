@@ -11,12 +11,23 @@ namespace pni{
 namespace utils{
 
     /*! 
-    \ingroup multidim_array_classes
-    \brief select data form a multidimensional array
+    \ingroup index_mapping_classes
+    \brief selection from a multidimensional array
 
-    This type used to select data from a multidimensional array. Its primary
-    purpose is to compute new indices that fit to the original array from the
-    indices to the selection. 
+    This type represents the selection of elements from a multidimensional
+    array and is primarily used by the ArrayView template. 
+    Its primary purpose is to map selection indices to indices of the
+    original array. This is required as a selection might does not have the same
+    rank as the original array. Consider an array of shape (4,10,28) from which
+    we select (1,10,28). The effective rank of this selection is 2 while that of
+    the original array would be 3. Additionally, such a selection would have the
+    effective rank (10,28) as the first index can be omitted. This allows to
+    select data of a particular dimensionality from an array of arbitrary rank.
+    The only assumption that must be made is that the rank of the original array
+    is larger than that of the required selection. 
+    Clearly, one wants to use a two dimensional index (i,j) to address an
+    element in the selection. However, to get the data from the original array
+    this must be modified to (1,i,j) which is the major purpose of this type.
     */
     class ArraySelection
     {
@@ -122,7 +133,40 @@ namespace utils{
 
 
             //================get indices======================================
-            //! compute original index
+            /*! 
+            \brief compute original index
+
+            The functionality of this template method can be best explained
+            using an example. 
+            \code
+            typedef std::vector<size_t> itype;
+
+            //create a (1,25,128) selection from a 3D array at offset (1,1,1)
+            //and with stride (1,1,1)
+            ArraySelection s(itype{1,25,128},itype{1,1,1},itype{1,1,1});
+
+            //selection index
+            itype sindex{2,100};
+
+            //if we want to access data from the original array we need to
+            //convert this to a 3D index
+            itype oindex(3);
+            s.index(sindex,oindex);
+
+            //now the vector oindex holds the values {1,2,100} which can be used
+            //to obtain data form the original array.
+
+            \endcode
+            The method assumes that all index containers are of appropriate
+            size. If this is not the case an exception will be thrown
+
+            \throws SizeMissmatchError if sindex does not match the rank of the
+            selection or if oindex does not match the rank of the original array
+
+            \tparam ITYPE container type for the indices
+            \param sindex original index of the selection
+            \param oindex new index with the rank of the original array
+            */
             template<typename ITYPE> 
                 void index(const ITYPE &sindex,ITYPE &oindex) const
             {
@@ -150,7 +194,18 @@ namespace utils{
             }
 
             //-----------------------------------------------------------------
-            //! compute the original index
+            /*! 
+            \brief compute the original index
+
+            This is virtually the same as index(const ITYPE &sindex,const ITYPE
+            &oindex) except that one does not have to take care about allocating
+            the container for the original index.
+            \tparam ITYPE container type (determined by the argument)
+            \param sindex selection index
+            \return instance of ITYPE with the index in the original array
+            \sa template<typename ITYPE> index(const ITYPE &sindex,const ITYPE
+            &oindex) const
+            */
             template<typename ITYPE> ITYPE index(const ITYPE &sindex) const
             {
                 ITYPE oindex(_oshape.size());

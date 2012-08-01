@@ -43,7 +43,7 @@ class IndexMap
 {
     public:
     //=======================constructors and destructor=======================
-    Shape(); //default constructible
+    IndexMap(); //default constructible
 
     //========================assignment operators=============================
     Shape &operator=(const Shape &s); //copy assignable 
@@ -65,14 +65,13 @@ class IndexMap
     template<CTYPE> void index(size_t offset,CTYPE &c);
 
     //=======================accessing shape parameters========================
-    size_t rank() const; number of dimensions
-    size_t size() const; number of elements covered by the shape
+    //number of dimensions
+    size_t rank() const; 
+    //number of elements that can be addressed by this map
+    size_t size() const; 
 
     //return number of elements along each dimension of the shape
     template<CONT> CONT shape() const;
-
-    size 
-
 
 };
 \endcode
