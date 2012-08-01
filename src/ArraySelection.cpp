@@ -75,6 +75,22 @@ ArraySelection ArraySelection::create(const std::vector<Slice> &s)
 
     return ArraySelection(shape,offset,stride);
 }
+
+//-----------------------------------------------------------------------------
+std::ostream &operator<<(std::ostream &o,const ArraySelection &s)
+{
+    o<<"original data:"<<std::endl;
+    for(size_t i=0;i<s._oshape.size();i++)
+    {
+        o<<i<<":\t"<<s._oshape[i]<<"\t"<<s._offset[i]<<"\t"<<s._stride[i];
+        o<<std::endl;
+    }
+    o<<"effective shape: ( ";
+    for(auto v: s._shape) o<<v<<" ";
+    o<<")"<<std::endl;
+
+    return o;
+}
 //end of namespace
 }
 }

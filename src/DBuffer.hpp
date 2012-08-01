@@ -164,6 +164,23 @@ namespace utils{
             }
             
             //-----------------------------------------------------------------
+            /*!
+            \brief construction from container
+
+            Construct from a container class.
+            \tparam CTYPE container template
+            \tparam OTS template arguments
+            \param c container instance
+            */
+            template<template<typename ...> class CTYPE,typename ...OTS>
+            explicit DBuffer(const CTYPE<OTS...> &c):
+                _data(Allocator::template allocate<value_type>(c.size())),
+                _size(c.size())
+            {
+                std::copy(c.begin(),c.end(),this->begin());
+            }
+            
+            //-----------------------------------------------------------------
             //! destructor
             ~DBuffer() { this->free(); }
 

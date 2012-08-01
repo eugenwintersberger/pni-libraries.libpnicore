@@ -149,6 +149,9 @@ namespace utils{
             size_t stride() const { return _stride; }
     }; 
 
+    //! output operator
+    std::ostream &operator<<(std::ostream &o,const Slice &s);
+
     //-------------------------------------------------------------------------
     /*! 
     \ingroup util_classes   

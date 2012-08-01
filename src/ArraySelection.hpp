@@ -43,16 +43,18 @@ namespace utils{
                 _rank = 0;
                 _shape = std::vector<size_t>(0);
                 _size = 1;
-                for(auto ositer=_oshape.begin(),oiter=_offset.begin(),
+                for(auto ositer=_oshape.begin(),
+                         oiter=_offset.begin(),
                          siter=_stride.begin();
-                    ositer != _oshape.end();++ositer,++oiter,++siter)
+                    ositer != _oshape.end();
+                    ++ositer,++oiter,++siter)
                 {
                     if((*ositer)!=1)
                     {
                         _rank++;
                         
                         //need to determine the number of indices here
-                        size_t s = (*ositer-*oiter)/(*siter);
+                        size_t s = *ositer;
                         _shape.push_back(s);
                         _size *= s;
                     }
@@ -73,9 +75,10 @@ namespace utils{
 
             //------------------------------------------------------------------
             //! standard constructor
-            template<typename CTYPE>
-            explicit ArraySelection(const CTYPE &oshape,const CTYPE &ooffset,
-                           const CTYPE &ostride):
+            template<template<typename ...> class CTYPE,typename ...OTS>
+            explicit ArraySelection(const CTYPE<OTS...> &oshape,
+                                    const CTYPE<OTS...> &ooffset,
+                                    const CTYPE<OTS...> &ostride):
                 _oshape(oshape.size()),
                 _offset(ooffset.size()),
                 _stride(ostride.size())
@@ -125,19 +128,21 @@ namespace utils{
             {
                 //check size
                 check_equal_size(_oshape,oindex,EXCEPTION_RECORD);
+                check_equal_size(_shape,sindex,EXCEPTION_RECORD);
 
                 typename ITYPE::iterator oiter = oindex.begin();
                 typename ITYPE::const_iterator siter = sindex.begin();
 
-                for(auto osi=_oshape.begin(),oi=_offset.begin(),
-                         si=_stride.begin();
-                    osi != _oshape.end();
-                    ++osi,++oi,++si)
+                for(auto shape=_oshape.begin(), //iterator over original shape
+                         offset=_offset.begin(),  //iterator over offset
+                         stride=_stride.begin();  //iterator over stride
+                    shape != _oshape.end();
+                    ++shape,++offset,++stride)
                 {
                     //add offset
-                    *oiter = *oi;
-                    if(*osi != 1)
-                        *oiter += (*si)*(*siter++);
+                    *oiter = *offset;
+                    if(*shape != 1)
+                        *oiter += (*stride)*(*siter++);
 
                     ++oiter;
                 }
@@ -149,10 +154,16 @@ namespace utils{
             template<typename ITYPE> ITYPE index(const ITYPE &sindex) const
             {
                 ITYPE oindex(_oshape.size());
-                this->index(sindex,oindex);
+                try{ this->index(sindex,oindex); }
+                EXCEPTION_FORWARD(SizeMissmatchError);
+
                 return oindex;
             }
+            //! output operator
+            friend std::ostream &
+                operator<<(std::ostream &o,const ArraySelection &s);
     };
+
             
 
 //end of namespace

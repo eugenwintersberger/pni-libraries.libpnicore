@@ -84,8 +84,10 @@ namespace utils {
                 _get_data(ArrayView<DArray<T,STORAGE,IMAP> > &view,ITYPES ...indices)
             {
 
-                ArraySelection s = 
-                    ArraySelection::create(std::vector<Slice>{Slice(indices)...});
+                std::vector<Slice> slices{Slice(indices)...};
+                for(auto slice: slices) std::cout<<slice<<std::endl;
+                ArraySelection s = ArraySelection::create(slices);
+                std::cout<<s<<std::endl;
 
                 return ArrayView<DArray<T,STORAGE,IMAP> >(*this,s);
             }
@@ -162,6 +164,8 @@ namespace utils {
             typedef typename STORAGE::iterator iterator;
             //! const iterator type
             typedef typename STORAGE::const_iterator const_iterator; 
+            //! map type
+            typedef IMAP map_type;
             
             //==================public members=================================
             //! type ID of the element type
@@ -207,13 +211,12 @@ namespace utils {
             \param s shape object
             \param b buffer object
             */
-            template<typename CTYPE>
-            explicit DArray(const CTYPE &s, const STORAGE &b):
+            template<template<typename...> class CTYPE,typename ...OTS>
+            explicit DArray(const CTYPE<OTS...> &s, const STORAGE &b):
                 _imap(s),
                 _data(b)
             {
-                check_equal_size(s,b,
-                        "DArray(const Shape &s, const STORAGE &b))");
+                check_equal_size(this->_imap,this->_data,EXCEPTION_RECORD);
             }
 
             //-----------------------------------------------------------------
@@ -224,7 +227,8 @@ namespace utils {
             \throws MemoryAllocationError if memory allocation fails
             \param s shape container
             */
-            template<typename CTYPE> explicit DArray(const CTYPE &s):
+            template<template<typename...> class CTYPE,typename ...OTS> 
+                explicit DArray(const CTYPE<OTS...> &s):
                 _imap(s),
                 _data(STORAGE(_imap.size()))
             { }
@@ -236,8 +240,8 @@ namespace utils {
             \param s shape of the 
             \param buffer buffer object
             */
-            template<typename CTYPE>
-            explicit DArray(const CTYPE &s,STORAGE &&buffer):
+            template<template<typename...> class CTYPE,typename ...OTS>
+            explicit DArray(const CTYPE<OTS...> &s,STORAGE &&buffer):
                 _imap(s),
                 _data(std::move(buffer))
             { }
@@ -288,12 +292,18 @@ namespace utils {
             */
             template<typename CTYPE> void shape(const CTYPE &s)
             {
-                check_allocation_state(this->buffer(),
-                        "void shape(const Shape &s)");
-                check_size_equal(this->buffer(),s,
-                        "void shape(const Shape &s)");
-                this->_imap = IMAP(s);
+                check_allocation_state(this->buffer(),EXCEPTION_RECORD);
+                IMAP map(s);
+                check_size_equal(this->_imap,map,EXCEPTION_RECORD);
+                this->_imap = map;
             }
+
+            /*! \brief get index map
+
+            Returns a const reference to the index map of the array.
+            \return reference to index map
+            */
+            map_type map() const { return this->_imap; }
 
             //-----------------------------------------------------------------
             /*! \brief get array shape
@@ -486,7 +496,6 @@ namespace utils {
                 typename sel::viewtype result;
 
                 return _get_data(result,indices...);
-                return result;
             }
 
 

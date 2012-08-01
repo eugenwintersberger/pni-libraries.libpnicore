@@ -31,6 +31,7 @@ template<typename T> class Array
     typedef ... array_type;     // array type
     typedef ... storage_type;   // type of the storage 
     typedef ... view_type;      // type of the view 
+    typedef ... map_type;       // type of the index map
     //================public members===========================================
     static const TypeID type_id    = TypeIDMap<value_type>::type_id;
 
@@ -84,6 +85,8 @@ template<typename T> class Array
     //return a container of type CTYPE with the number of elements along each
     //dimension
     template<typename CTYPE> shape() const; 
+
+    const map_type &map() const; //return reference to the index map
 
     //===================iterator related methods==============================
     iterator begin();

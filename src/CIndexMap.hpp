@@ -63,7 +63,8 @@ namespace utils{
 
             //-----------------------------------------------------------------
             //! constrution from contianer
-            template<typename CTYPE> explicit CIndexMap(const CTYPE &c):
+            template<template<typename...> class CTYPE,typename ...OTS> 
+                explicit CIndexMap(const CTYPE<OTS...> &c):
                 IndexMapBase(c),
                 _strides(c.size())
             {
@@ -251,7 +252,9 @@ namespace utils{
         template<typename ITYPE> ITYPE CIndexMap::index(size_t offset) const
         {
             ITYPE index(shape().size());
-            this->index(offset,index);
+            try { this->index(offset,index);}
+            EXCEPTION_FORWARD(SizeMissmatchError);
+
             return index;
         }
 
@@ -260,6 +263,13 @@ namespace utils{
         template<typename ITYPE>
             void CIndexMap::index(size_t offset,ITYPE &index) const
         {
+            if(offset>=size())
+            {
+                std::stringstream ss;
+                ss<<"Offset ("<<offset<<") exceeds linear size ("<<size()<<")!";
+                throw SizeMissmatchError(EXCEPTION_RECORD,ss.str());
+            }
+
             size_t t;
             size_t i=0;
             for(auto iiter=index.begin();iiter!=index.end();iiter++,i++)

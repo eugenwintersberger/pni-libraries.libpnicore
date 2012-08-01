@@ -32,11 +32,13 @@ void ArrayViewTest::testConstruction()
    DArray<Float32> a(s);
 
    auto v1 = a(Slice(1,3),Slice(3,7));
+   for(auto v: v1.shape<Shape>()) std::cout<<v<<std::endl;
+
    CPPUNIT_ASSERT(v1.shape<Shape>().size() == 2);
    CPPUNIT_ASSERT(v1.shape<Shape>()[0] == 2);
    CPPUNIT_ASSERT(v1.shape<Shape>()[1] == 4);
 
-   auto v2 = a(Slice(1,2),Slice(3,7));
+   auto v2 = a(1,Slice(3,7));
    CPPUNIT_ASSERT(v2.shape<Shape>().size() == 1);
    CPPUNIT_ASSERT(v2.shape<Shape>()[0] == 4);
 
@@ -111,7 +113,7 @@ void ArrayViewTest::test_assignment()
     //create random data
     Shape frame_shape{1024,2048};
 
-    auto data = RandomDistribution::uniform<DBuffer<Float32> >(frame_shape.size());
+    auto data = RandomDistribution::uniform<DBuffer<Float32> >(1024*2048);
     DArray<Float32> frame(frame_shape,data);
     auto roi = frame(Slice(512,732,2),Slice(1024,1077,3));
 
@@ -121,7 +123,11 @@ void ArrayViewTest::test_assignment()
     //check if selection worked
     for(size_t i=0;i<roi.shape<Shape>()[0];i++)
         for(size_t j=0;j<roi.shape<Shape>()[1];j++)
-            CPPUNIT_ASSERT_DOUBLES_EQUAL(roi(i,j),frame(512+i*2,1024+j*3),1e-8);
+        {
+            Float32 v1 = frame(512+i*2,1024+j*3);
+            Float32 v2 = roi(i,j);
+            CPPUNIT_ASSERT_DOUBLES_EQUAL(v1,v2,1e-8);
+        }
 
     //create a new array holding the roi data
     DArray<Float32> roi2(roi);
@@ -137,11 +143,13 @@ void ArrayViewTest::test_assignment()
 #endif
         CPPUNIT_ASSERT_DOUBLES_EQUAL(v,roi[index++],1.e-8);
     }
-   
-    DArray<Float32> roi3(roi);
-    CPPUNIT_ASSERT(std::equal(roi3.shape<Shape>().begin(),
-                              roi3.shape<Shape>().end(),
-                              roi.shape<Shape>().begin()));
+
+
+    DArray<Float32> roi3(roi.shape<Shape>(),DBuffer<Float32>(roi));
+    auto rs1 = roi3.shape<Shape>();
+    auto rs2 = roi.shape<Shape>();
+    CPPUNIT_ASSERT(roi3.size() == roi.size());
+    CPPUNIT_ASSERT(std::equal(rs1.begin(),rs1.end(),rs2.begin()));
     index = 0;
 
 #ifdef NOFOREACH
@@ -165,11 +173,7 @@ void ArrayViewTest::test_operations()
 
     //create random data
     Shape frame_shape{10,10};
-    DArray<Float32> frame(frame_shape);
-    std::vector<Float32> data(frame.size());
-    std::fill(data.begin(),data.end(),frame.begin());
-
-    auto roi = frame(Slice(1,10,2),Slice(2,9,3));
+    std::vector<Float32> data(10*10);
 
     size_t index=0;
 #ifdef NOFOREACH
@@ -184,6 +188,8 @@ void ArrayViewTest::test_operations()
     }
     CPPUNIT_ASSERT_DOUBLES_EQUAL(data[0],0,1.e-8);
 
+    DArray<Float32> frame(frame_shape,DArray<Float32>::storage_type(data));
+    auto roi = frame(Slice(1,10,2),Slice(2,9,3));
 
 #ifdef NOFOREACH
     for(auto iter=roi.begin();iter!=roi.end();iter++)
@@ -202,8 +208,8 @@ void ArrayViewTest::test_operations()
     CPPUNIT_ASSERT_DOUBLES_EQUAL(min(roi),12.,1.e-8);
    
     //copy data to reuse it for several tests
-    DArray<Float32> test1(roi);
-    DArray<Float32> test2(roi);
+    DArray<Float32> test1(roi.shape<Shape>(),DArray<Float32>::storage_type(roi));
+    DArray<Float32> test2(roi.shape<Shape>(),DArray<Float32>::storage_type(roi));
     CPPUNIT_ASSERT(test1 == test2);
 
     //check clipping 

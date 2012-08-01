@@ -66,6 +66,8 @@ namespace utils{
             typedef Iterator<view_type,0> iterator;      
             //! const iterator type
             typedef Iterator<view_type,1> const_iterator; 
+            //! map type
+            typedef CIndexMap map_type;
             //========================public members===========================
             //! type id of the value_type
             static const size_t type_id = ATYPE::type_id;
@@ -162,8 +164,8 @@ namespace utils{
             \param index container with multidimensional index
             \return reference to value at index
             */
-            template<typename CTYPE>
-                value_type &operator()(const CTYPE &index)
+            template<template<typename...> class CTYPE,typename ...OTS>
+                value_type &operator()(const CTYPE<OTS...> &index)
             {
                 return (*(this->_parray))(this->_selection.template
                         index<std::vector<size_t> >(index));
@@ -179,8 +181,8 @@ namespace utils{
             \param index container with multidimensional index
             \return value at index
             */
-            template<typename CTYPE>
-                value_type operator()(const CTYPE &index) const
+            template<template<typename ...> class CTYPE,typename ...OTS>
+                value_type operator()(const CTYPE<OTS...> &index) const
             {
                 return (*(this->_parray))(this->_selection.template
                         index<std::vector<size_t> >(index));
@@ -235,8 +237,7 @@ namespace utils{
             array is not equal 1. 
             \return Shape object
             */
-            template<typename CTYPE>
-            CTYPE shape() const
+            template<typename CTYPE> CTYPE shape() const
             {
                 CTYPE s(this->rank());
                 std::copy(this->_selection.shape().begin(),
@@ -244,6 +245,14 @@ namespace utils{
                           s.begin());
                 return s;
             }
+
+            /*!
+            \brief get index map
+
+            Return a const reference to the index map used.
+            \return index map
+            */
+            const map_type &map() const { return this->_imap; }
 
             //-----------------------------------------------------------------
             /*! \brief linearzed access

@@ -167,6 +167,8 @@ namespace utils{
             typedef typename storage_type::iterator iterator; 
             //! const iterator
             typedef typename storage_type::const_iterator const_iterator; 
+            //! type of the index map
+            typedef StaticCIndexMap<DIMS...> map_type;
             //===============public members====================================
             //! ID of the datatype stored in the array
             static const TypeID type_id = TypeIDMap<value_type>::type_id;
@@ -466,6 +468,14 @@ namespace utils{
             {
                 return this->_shape.shape<CTYPE>();
             }
+
+            /*!
+            \brief get index map
+
+            Returns a const reference to the index map fo the array type.
+            \return index map
+            */
+            const map_type &map() const { return this->_shape; }
 
             //-----------------------------------------------------------------
             /*!

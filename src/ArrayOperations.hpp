@@ -380,7 +380,7 @@ Return the multidimensional index of the maximum value in the array.
 template<typename CONT,typename ARRAYT> CONT max_index(const ARRAYT &a)
 {
     size_t offset = max_offset(a);
-    return a.shape().template index<CONT>(offset);
+    return a.map().template index<CONT>(offset);
 }
 
 //-----------------------------------------------------------------------------
@@ -431,7 +431,7 @@ Return the multidimensional index of the minimum value in the array.
 template<typename CONT,typename ARRAYT> CONT min_index(const ARRAYT &a)
 {
     size_t offset = min_offset(a);
-    return a.shape().template index<CONT>(offset);
+    return a.map().template index<CONT>(offset);
 }
 
 

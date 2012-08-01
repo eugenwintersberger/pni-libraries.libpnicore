@@ -65,12 +65,12 @@ void ArraySelectionTest::test_assignment()
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
     ArraySelection sel(itype{100,1,200},itype{1,1,1},itype{1,1,2});
     CPPUNIT_ASSERT(sel.rank() == 2);
-    itype s{99,99};
+    itype s{100,200};
     for(auto v: sel.shape()) std::cout<<v<<" ";
     std::cout<<std::endl;
     CPPUNIT_ASSERT(std::equal(s.begin(),s.end(),sel.shape().begin()));
     std::cout<<sel.size()<<std::endl;
-    CPPUNIT_ASSERT(sel.size() == 99*99);
+    CPPUNIT_ASSERT(sel.size() == 100*200);
 
     ArraySelection s1;
 
@@ -98,10 +98,10 @@ void ArraySelectionTest::test_index()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
     ArraySelection sel(itype{10,20},itype{1,2},itype{3,2});
-    itype s{3,9};
+    itype s{10,20};
     CPPUNIT_ASSERT(std::equal(s.begin(),s.end(),sel.shape().begin()));
     CPPUNIT_ASSERT(sel.rank()==2);
-    CPPUNIT_ASSERT(sel.size() == 3*9);
+    CPPUNIT_ASSERT(sel.size() == 10*20);
         
     itype i(sel.rank());
     sel.index(itype{1,3},i);
