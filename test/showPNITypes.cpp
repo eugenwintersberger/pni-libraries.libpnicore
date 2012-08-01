@@ -57,8 +57,5 @@ int main(int argc,char **argv){
     std::cout<<typeid(Float32Array).name()<<":\t"<<sizeof(Float32Array)<<std::endl;
     std::cout<<typeid(SFloat32Array).name()<<":\t"<<sizeof(SFloat32Array)<<std::endl;
 
-
-
-
     return 0;
 }

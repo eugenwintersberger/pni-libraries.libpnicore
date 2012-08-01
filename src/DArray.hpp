@@ -219,6 +219,17 @@ namespace utils {
                 check_equal_size(this->_imap,this->_data,EXCEPTION_RECORD);
             }
 
+            /*! 
+            \brief construct an array from a view
+
+            Construct an array from an instance of ArrayView.
+            */
+            template<typename ATYPE> explicit DArray(const ArrayView<ATYPE> &a):
+                _imap(a.shape<std::vector<size_t> >()),
+                _data(a)
+            { }
+
+
             //-----------------------------------------------------------------
             /*! \brief construct from shape
 

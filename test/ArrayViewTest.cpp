@@ -145,7 +145,7 @@ void ArrayViewTest::test_assignment()
     }
 
 
-    DArray<Float32> roi3(roi.shape<Shape>(),DBuffer<Float32>(roi));
+    DArray<Float32> roi3(roi);
     auto rs1 = roi3.shape<Shape>();
     auto rs2 = roi.shape<Shape>();
     CPPUNIT_ASSERT(roi3.size() == roi.size());
@@ -208,8 +208,8 @@ void ArrayViewTest::test_operations()
     CPPUNIT_ASSERT_DOUBLES_EQUAL(min(roi),12.,1.e-8);
    
     //copy data to reuse it for several tests
-    DArray<Float32> test1(roi.shape<Shape>(),DArray<Float32>::storage_type(roi));
-    DArray<Float32> test2(roi.shape<Shape>(),DArray<Float32>::storage_type(roi));
+    DArray<Float32> test1(roi);
+    DArray<Float32> test2(roi);
     CPPUNIT_ASSERT(test1 == test2);
 
     //check clipping 
@@ -221,35 +221,35 @@ void ArrayViewTest::test_operations()
     CPPUNIT_ASSERT(test1 == test2);
 
     //testing clip with a particular value
-    std::copy(roi.begin(),roi.end(),test1.begin());
-    std::copy(roi.begin(),roi.end(),test2.begin());
+    test1 = DArray<Float32>(roi);
+    test2 = DArray<Float32>(roi);
     test2(0,0) = 666; test2(0,1) = 666; test2(0,2) = 666;
     test2(4,0) = 42; test2(4,1) = 42; test2(4,2) = 42;
     clip(test1,30,90,666,42);
     CPPUNIT_ASSERT(test1 == test2);
 
     //testing min clip
-    std::copy(roi.begin(),roi.end(),test1.begin());
-    std::copy(roi.begin(),roi.end(),test2.begin());
+    test1 = DArray<Float32>(roi);
+    test2 = DArray<Float32>(roi);
     test2(0,0) = 30; test2(0,1) = 30; test2(0,2) = 30;
     min_clip(test1,30);
     CPPUNIT_ASSERT(test1 == test2);
 
-    std::copy(roi.begin(),roi.end(),test1.begin());
-    std::copy(roi.begin(),roi.end(),test2.begin());
+    test1 = DArray<Float32>(roi);
+    test2 = DArray<Float32>(roi);
     test2(0,0) = 666; test2(0,1) = 666; test2(0,2) = 666;
     min_clip(test1,30,666);
     CPPUNIT_ASSERT(test1 == test2);
 
     //testing min clip
-    std::copy(roi.begin(),roi.end(),test1.begin());
-    std::copy(roi.begin(),roi.end(),test2.begin());
+    test1 = DArray<Float32>(roi);
+    test2 = DArray<Float32>(roi);
     test2(4,0) = 90; test2(4,1) = 90; test2(4,2) = 90;
     max_clip(test1,90);
     CPPUNIT_ASSERT(test1 == test2);
 
-    std::copy(roi.begin(),roi.end(),test1.begin());
-    std::copy(roi.begin(),roi.end(),test2.begin());
+    test1 = DArray<Float32>(roi);
+    test2 = DArray<Float32>(roi);
     test2(4,0) = 42; test2(4,1) = 42; test2(4,2) = 42;
     max_clip(test1,90,42);
     CPPUNIT_ASSERT(test1 == test2);

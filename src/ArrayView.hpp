@@ -41,6 +41,22 @@ namespace utils{
 
     The ArrayView class provides a view on the part of an array. No new memory
     is allocated. 
+    An array view can be obtained from an array using the () operator. 
+    \code
+    DArray<Float32> a(std::vector<size_t>{3,4,10});
+
+    //create a (4,10) view from the above array 
+    auto view = a(1,Slice{0,4},Slice{0,10});
+
+    //the view can now be used like any other array - however, no new memory is
+    //allocated.
+
+    //create an array from the view
+    DArray<Float32> roi(view.shape<std::vector<size_t> >(),
+                        DArray<Float32>::storage_type(view));
+    \endcode
+
+    
     */
     template<typename ATYPE> class ArrayView
     {
