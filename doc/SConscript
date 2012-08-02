@@ -34,7 +34,7 @@ Clean(doxygen_api_doc,"api-doc")
 
 build_env.Alias("doc",[doxygen_api_doc])
      
-api_html_doc_install = build_env.Install("${DOCDIR}/","api-doc/html")
+api_html_doc_install = build_env.Install("${DOCDIR}/","html")
 
 #build_env.Alias("all",[doxygen_api_doc])
 build_env.Alias("install",[api_html_doc_install])
