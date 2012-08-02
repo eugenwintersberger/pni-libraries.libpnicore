@@ -106,6 +106,7 @@ namespace utils{
                 return *this;
             }
 
+            //-----------------------------------------------------------------
             //! move assignment
             array_type &operator=(array_type &&a)
             {
@@ -114,9 +115,10 @@ namespace utils{
                 return *this;
             }
 
+            //-----------------------------------------------------------------
             //! container assignment
-            template<typename CTYPE>
-            array_type &operator=(const CTYPE &c)
+            template<template<typename ...> class CTYPE,typename ...OTS>
+            array_type &operator=(const CTYPE<OTS...> &c)
             {
                 std::copy(c.begin(),c.end(),this->begin());
                 return *this;
@@ -489,13 +491,30 @@ namespace utils{
             
     };
 
-    //========================implementation of operators======================
+    //===================Multiplication operator================================
     /*!
     \ingroup numeric_array_classes
     \brief multiplication operator
 
     Expression template operator for the multiplication of two instances of 
-    the NumArray template.
+    the NumArray template.For this operation to succeed the arrays must have
+    equal shape.
+    \code
+    typedef std::vector<size_t> shape_t;
+    shape_t shape{3,4,100};
+
+    NumArray<DArray<Float32> > a(DArray<Float32>(shape));
+    NumArray<DArray<Float32> > b(DArray<Float32>(shape));
+    NumArray<DArray<Float32> > c(DArray<Float32>(shape));
+
+    std::fill(a.begin(),a.end(),100);
+    std::fill(b.begin(),b.end(),200);
+
+    c = a * b;
+
+    \endcode
+
+    \throws ShapeMissmatchError if shapes do not match
     \tparam AT1 storage type of left operand
     \tparam AT2 storage type of right operand
     \param a left operand
@@ -507,6 +526,7 @@ namespace utils{
     operator*(const NumArray<AT1> &a,const NumArray<AT2> &b)
     {
         typedef Mult<NumArray<AT1>,NumArray<AT2> > op_type;
+        check_equal_shape(a,b,EXCEPTION_RECORD);
 
         return NumArray<op_type>(op_type(a,b));
     }
@@ -517,7 +537,19 @@ namespace utils{
     \brief multiplication operator
 
     Expression template operator for the multiplication of an instance of
-    NumArray with a scalar. 
+    NumArray with a scalar.  
+    \code
+    typedef std::vector<size_t> shape_t;
+    shape_t shape{3,4,100};
+
+    NumArray<DArray<Float32> > a(DArray<Float32>(shape));
+    NumArray<DArray<Float32> > c(DArray<Float32>(shape));
+    Float32 b = 200;
+
+    std::fill(a.begin(),a.end(),100);
+    c = a * b;
+
+    \endcode
     \tparam AT storage type of the NumArray instance
     \param a left operand (array type)
     \param b right operand (scalar)
@@ -539,7 +571,19 @@ namespace utils{
     \brief multiplication operator
 
     Expression template operator for the multiplication of an instance of
-    NumArray and a scalar.
+    NumArray and a scalar.    
+    \code
+    typedef std::vector<size_t> shape_t;
+    shape_t shape{3,4,100};
+
+    NumArray<DArray<Float32> > a(DArray<Float32>(shape));
+    NumArray<DArray<Float32> > c(DArray<Float32>(shape));
+    Float32 b = 200;
+
+    std::fill(a.begin(),a.end(),100);
+    c = b * a;
+
+    \endcode
     \tparam AT storage type for the NumArray instance
     \param a left operand (scalar value)
     \param b right operand (array type)
@@ -556,8 +600,37 @@ namespace utils{
     }
 
 
-    //-------------------------------------------------------------------------
-    //operator
+    //======================binary addition operator===========================
+    /*!
+    \ingroup numeric_array_classes
+    \brief addition operator 
+
+    Addition operator between two instances of NumArray using expression
+    templates to perform the operation.
+    Both arrays must be of same shape.
+    
+    \code
+    typedef std::vector<size_t> shape_t;
+    shape_t shape{3,4,100};
+
+    NumArray<DArray<Float32> > a(DArray<Float32>(shape));
+    NumArray<DArray<Float32> > b(DArray<Float32>(shape));
+    NumArray<DArray<Float32> > c(DArray<Float32>(shape));
+
+    std::fill(a.begin(),a.end(),100);
+    std::fill(b.begin(),b.end(),200);
+
+    c = a + b;
+
+    \endcode
+
+    \throws ShapeMissmatchError if array shapes do not coincide
+    \tparam AT1 storage type of the left NumArray
+    \tparam AT2 storage type of the right NumArray
+    \param a left operand
+    \param b right operand
+    \return instance of NumArray with an expression template as storage type
+    */
     template<typename AT1,typename AT2>
     NumArray<Add<NumArray<AT1>,NumArray<AT2> > >
     operator+(const NumArray<AT1> &a,const NumArray<AT2> &b)
@@ -567,6 +640,28 @@ namespace utils{
     }
 
     //-------------------------------------------------------------------------
+    /*! 
+    \ingroup numeric_array_classes
+    \brief addition operator
+
+    Addition operator between an instance of NumArray and a scalar value.
+    \code
+    typedef std::vector<size_t> shape_t;
+    shape_t shape{3,4,100};
+
+    NumArray<DArray<Float32> > a(DArray<Float32>(shape));
+    NumArray<DArray<Float32> > c(DArray<Float32>(shape));
+    Float32 b = 200;
+
+    std::fill(a.begin(),a.end(),100);
+    c = a + b;
+
+    \endcode
+    \tparam AT storage type of the NumArray on the left side
+    \param a left operand (NumArray)
+    \param b right operand (scalar)
+    \return NumArray instance with an expression template storage type
+    */
     template<typename AT>
     NumArray<Add<NumArray<AT>,Scalar<typename AT::value_type> > >
     operator+(const NumArray<AT> &a,typename AT::value_type const &b)
@@ -578,6 +673,28 @@ namespace utils{
     }
 
     //-------------------------------------------------------------------------
+    /*!
+    \ingroup numeric_array_classes
+    \brief addition operator
+
+    Addition operator between an instance of NumArray and 
+    \code
+    typedef std::vector<size_t> shape_t;
+    shape_t shape{3,4,100};
+
+    NumArray<DArray<Float32> > a(DArray<Float32>(shape));
+    NumArray<DArray<Float32> > c(DArray<Float32>(shape));
+    Float32 b = 200;
+
+    std::fill(a.begin(),a.end(),100);
+    c = b + a;
+
+    \endcode
+    \tparam AT storage type of the right operand (NumArray)
+    \param a scalar value
+    \param b instance of NumArray
+    \return instance of NumArray with an expression template
+    */
     template<typename AT>
     NumArray<Add<Scalar<typename AT::value_type>,NumArray<AT> > >
     operator+(typename AT::value_type const &a,const NumArray<AT> &b)
@@ -588,8 +705,37 @@ namespace utils{
         return NumArray<op_type>(op_type(stype(a),b));
     }
     
-    //-------------------------------------------------------------------------
-    //operator
+    //=================binary division operator================================
+    /*!
+    \ingroup numeric_array_classes
+    \brief binary division operator 
+
+    Division operator between two instances of NumArray using expression
+    templates to perform the operation.
+    Both arrays must be of same shape.
+    
+    \code
+    typedef std::vector<size_t> shape_t;
+    shape_t shape{3,4,100};
+
+    NumArray<DArray<Float32> > a(DArray<Float32>(shape));
+    NumArray<DArray<Float32> > b(DArray<Float32>(shape));
+    NumArray<DArray<Float32> > c(DArray<Float32>(shape));
+
+    std::fill(a.begin(),a.end(),100);
+    std::fill(b.begin(),b.end(),200);
+
+    c = a / b;
+
+    \endcode
+
+    \throws ShapeMissmatchError if array shapes do not coincide
+    \tparam AT1 storage type of the left NumArray
+    \tparam AT2 storage type of the right NumArray
+    \param a left operand
+    \param b right operand
+    \return instance of NumArray with an expression template as storage type
+    */
     template<typename AT1,typename AT2>
     NumArray<Div<NumArray<AT1>,NumArray<AT2> > >
     operator/(const NumArray<AT1> &a,const NumArray<AT2> &b)
@@ -599,6 +745,28 @@ namespace utils{
     }
 
     //-------------------------------------------------------------------------
+    /*! 
+    \ingroup numeric_array_classes
+    \brief binary division operator
+
+    Division operator between an instance of NumArray and a scalar value.
+    \code
+    typedef std::vector<size_t> shape_t;
+    shape_t shape{3,4,100};
+
+    NumArray<DArray<Float32> > a(DArray<Float32>(shape));
+    NumArray<DArray<Float32> > c(DArray<Float32>(shape));
+    Float32 b = 200;
+
+    std::fill(a.begin(),a.end(),100);
+    c = a / b;
+
+    \endcode
+    \tparam AT storage type of the NumArray on the left side
+    \param a left operand (NumArray)
+    \param b right operand (scalar)
+    \return NumArray instance with an expression template storage type
+    */
     template<typename AT>
     NumArray<Div<NumArray<AT>,Scalar<typename AT::value_type> > >
     operator/(const NumArray<AT> &a,typename AT::value_type const &b)
@@ -610,6 +778,28 @@ namespace utils{
     }
 
     //-------------------------------------------------------------------------
+    /*!
+    \ingroup numeric_array_classes
+    \brief binary division operator
+
+    Division operator between an instance of NumArray and 
+    \code
+    typedef std::vector<size_t> shape_t;
+    shape_t shape{3,4,100};
+
+    NumArray<DArray<Float32> > a(DArray<Float32>(shape));
+    NumArray<DArray<Float32> > c(DArray<Float32>(shape));
+    Float32 b = 200;
+
+    std::fill(a.begin(),a.end(),100);
+    c = b / a;
+
+    \endcode
+    \tparam AT storage type of the right operand (NumArray)
+    \param a scalar value
+    \param b instance of NumArray
+    \return instance of NumArray with an expression template
+    */
     template<typename AT>
     NumArray<Div<Scalar<typename AT::value_type>,NumArray<AT> > >
     operator/(typename AT::value_type const &a,const NumArray<AT> &b)
@@ -620,8 +810,37 @@ namespace utils{
         return NumArray<op_type>(op_type(stype(a),b));
     }
    
-    //-------------------------------------------------------------------------
-    //operator
+    //======================binary subtraction operator========================
+    /*!
+    \ingroup numeric_array_classes
+    \brief binary subtraction operator 
+
+    Subtraction operator between two instances of NumArray using expression
+    templates to perform the operation.
+    Both arrays must be of same shape.
+    
+    \code
+    typedef std::vector<size_t> shape_t;
+    shape_t shape{3,4,100};
+
+    NumArray<DArray<Float32> > a(DArray<Float32>(shape));
+    NumArray<DArray<Float32> > b(DArray<Float32>(shape));
+    NumArray<DArray<Float32> > c(DArray<Float32>(shape));
+
+    std::fill(a.begin(),a.end(),100);
+    std::fill(b.begin(),b.end(),200);
+
+    c = a - b;
+
+    \endcode
+
+    \throws ShapeMissmatchError if array shapes do not coincide
+    \tparam AT1 storage type of the left NumArray
+    \tparam AT2 storage type of the right NumArray
+    \param a left operand
+    \param b right operand
+    \return instance of NumArray with an expression template as storage type
+    */
     template<typename AT1,typename AT2>
     NumArray<Sub<NumArray<AT1>,NumArray<AT2> > >
     operator-(const NumArray<AT1> &a,const NumArray<AT2> &b)
@@ -631,6 +850,28 @@ namespace utils{
     }
 
     //-------------------------------------------------------------------------
+    /*! 
+    \ingroup numeric_array_classes
+    \brief binary subtraction operator
+
+    Subtraction operator between an instance of NumArray and a scalar value.
+    \code
+    typedef std::vector<size_t> shape_t;
+    shape_t shape{3,4,100};
+
+    NumArray<DArray<Float32> > a(DArray<Float32>(shape));
+    NumArray<DArray<Float32> > c(DArray<Float32>(shape));
+    Float32 b = 200;
+
+    std::fill(a.begin(),a.end(),100);
+    c = a - b;
+
+    \endcode
+    \tparam AT storage type of the NumArray on the left side
+    \param a left operand (NumArray)
+    \param b right operand (scalar)
+    \return NumArray instance with an expression template storage type
+    */
     template<typename AT>
     NumArray<Sub<NumArray<AT>,Scalar<typename AT::value_type> > >
     operator-(const NumArray<AT> &a,typename AT::value_type const &b)
@@ -642,6 +883,28 @@ namespace utils{
     }
 
     //-------------------------------------------------------------------------
+    /*!
+    \ingroup numeric_array_classes
+    \brief binary subtraction operator
+
+    Subtraction operator between an instance of NumArray and 
+    \code
+    typedef std::vector<size_t> shape_t;
+    shape_t shape{3,4,100};
+
+    NumArray<DArray<Float32> > a(DArray<Float32>(shape));
+    NumArray<DArray<Float32> > c(DArray<Float32>(shape));
+    Float32 b = 200;
+
+    std::fill(a.begin(),a.end(),100);
+    c = b - a;
+
+    \endcode
+    \tparam AT storage type of the right operand (NumArray)
+    \param a scalar value
+    \param b instance of NumArray
+    \return instance of NumArray with an expression template
+    */
     template<typename AT>
     NumArray<Sub<Scalar<typename AT::value_type>,NumArray<AT> > >
     operator-(typename AT::value_type const &a,const NumArray<AT> &b)

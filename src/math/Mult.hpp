@@ -94,6 +94,32 @@ namespace utils{
                 return _op1.size()>_op2.size() ? _op1.size() : _op2.size();
             }
 
+            //=======================inquery methods===========================
+            /*! 
+            \brief get the shape
+
+            Return the shape of the expression template. This both operands are
+            instances of NumArray we can return the shape of one of the arrys. 
+            If both are scalars we return the shape of the scalar. If one is
+            scalar and one is an array the array type wins.
+            \return shape of the operation
+            */
+            template<typename CTYPE> CTYPE shape() const
+            {
+
+                //_op1  is a scalar
+                if(_op1.rank()==0)
+                {
+                    //if _op2 is an array 
+                    if(_op2.rank() != 0) return _op2.template shape<CTYPE>();
+                }
+                //in all other cases we do not care what type _op2 is 
+                //we just return the shape of _op1
+                return  _op1.template shape<CTYPE>();
+            }
+
+                
+
             //=====================iterators===================================
             //! get iterator on first element
             const_iterator begin() const

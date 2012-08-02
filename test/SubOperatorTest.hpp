@@ -71,7 +71,7 @@ template<typename T> void SubOperatorTest<T>::test_construction()
     Sub<na_type,na_type> op(a1,a2);
     CPPUNIT_ASSERT(a1.size() == op.size());
    
-    s_type s = 10;
+    s_type s(10);
     Sub<na_type,s_type> op2(a1,s);
     CPPUNIT_ASSERT(op2.size() == a1.size());
 
@@ -87,7 +87,7 @@ template<typename T> void SubOperatorTest<T>::test_access()
     for(size_t i=0;i<op1.size();i++)
         check_equality(op1[i],T(95));
 
-    s_type s = 10;
+    s_type s(10);
     Sub<na_type,s_type> op2(a1,s);
 
     for(size_t i=0;i<op2.size();i++)
@@ -99,7 +99,7 @@ template<typename T> void SubOperatorTest<T>::test_iterator()
     Sub<na_type,na_type> op1(a1,a2);
     for(auto v: op1) check_equality(v,T(95));
 
-    s_type s = 10;
+    s_type s(10);
     Sub<na_type,s_type> op2(a1,s);
     for(auto v: op2) check_equality(v,T(90));
 }
