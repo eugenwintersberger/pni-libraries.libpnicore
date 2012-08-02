@@ -1,12 +1,11 @@
 //test case for the IndexMapBase base class
 
-#ifndef __ADDOPERATORTEST_HPP__
-#define __ADDOPERATORTEST_HPP__
+#ifndef __DIVOPERATORTEST_HPP__
+#define __DIVOPERATORTEST_HPP__
 
 #include<cppunit/TestFixture.h>
 #include<cppunit/extensions/HelperMacros.h>
 #include<vector>
-#include "expr/Div.hpp"
 
 #include "EqualityCheck.hpp"
 #include "NumArray.hpp"

@@ -29,6 +29,11 @@
 #include "Iterator.hpp"
 #include "ArrayViewSelector.hpp"
 #include "InplaceArithmetics.hpp"
+#include "Scalar.hpp"
+#include "math/Add.hpp"
+#include "math/Mult.hpp"
+#include "math/Sub.hpp"
+#include "math/Div.hpp"
 
 namespace pni{
 namespace utils{
@@ -484,6 +489,168 @@ namespace utils{
             
     };
 
+    //========================implementation of operators======================
+    /*!
+    \ingroup numeric_array_classes
+    \brief multiplication operator
+
+    Expression template operator for the multiplication of two instances of 
+    the NumArray template.
+    \tparam AT1 storage type of left operand
+    \tparam AT2 storage type of right operand
+    \param a left operand
+    \param b right operand
+    \return instance of NumArray with result
+    */
+    template<typename AT1,typename AT2>
+    NumArray<Mult<NumArray<AT1>,NumArray<AT2> > >
+    operator*(const NumArray<AT1> &a,const NumArray<AT2> &b)
+    {
+        typedef Mult<NumArray<AT1>,NumArray<AT2> > op_type;
+
+        return NumArray<op_type>(op_type(a,b));
+    }
+
+    //-------------------------------------------------------------------------
+    /*! 
+    \ingroup numeric_array_classes
+    \brief multiplication operator
+
+    Expression template operator for the multiplication of an instance of
+    NumArray with a scalar. 
+    \tparam AT storage type of the NumArray instance
+    \param a left operand (array type)
+    \param b right operand (scalar)
+    \return instance of NumArray with result
+    */
+    template<typename AT>
+    NumArray<Mult<NumArray<AT>,Scalar<typename AT::value_type> > >
+    operator*(const NumArray<AT> &a,typename AT::value_type const &b)
+    {
+        typedef NumArray<AT> atype;
+        typedef Scalar<typename AT::value_type> stype;
+        typedef Mult<atype,stype> op_type;
+        return NumArray<op_type>(op_type(a,stype(b)));
+    }
+
+    //-------------------------------------------------------------------------
+    /*! 
+    \ingroup numeric_array_classes
+    \brief multiplication operator
+
+    Expression template operator for the multiplication of an instance of
+    NumArray and a scalar.
+    \tparam AT storage type for the NumArray instance
+    \param a left operand (scalar value)
+    \param b right operand (array type)
+    \return NumArray instance representing the result
+    */
+    template<typename AT>
+    NumArray<Mult<Scalar<typename AT::value_type>,NumArray<AT> > >
+    operator*(typename AT::value_type const &a,const NumArray<AT> &b)
+    {
+        typedef NumArray<AT> atype;
+        typedef Scalar<typename AT::value_type> stype;
+        typedef Mult<stype,atype> op_type;
+        return NumArray<op_type>(op_type(stype(a),b));
+    }
+
+
+    //-------------------------------------------------------------------------
+    //operator
+    template<typename AT1,typename AT2>
+    NumArray<Add<NumArray<AT1>,NumArray<AT2> > >
+    operator+(const NumArray<AT1> &a,const NumArray<AT2> &b)
+    {
+        typedef Add<NumArray<AT1>,NumArray<AT2> > op_type;
+        return NumArray<op_type>(op_type(a,b));
+    }
+
+    //-------------------------------------------------------------------------
+    template<typename AT>
+    NumArray<Add<NumArray<AT>,Scalar<typename AT::value_type> > >
+    operator+(const NumArray<AT> &a,typename AT::value_type const &b)
+    {
+        typedef NumArray<AT> atype;
+        typedef Scalar<typename AT::value_type> stype;
+        typedef Add<atype,stype> op_type;
+        return NumArray<op_type>(op_type(a,stype(b)));
+    }
+
+    //-------------------------------------------------------------------------
+    template<typename AT>
+    NumArray<Add<Scalar<typename AT::value_type>,NumArray<AT> > >
+    operator+(typename AT::value_type const &a,const NumArray<AT> &b)
+    {
+        typedef NumArray<AT> atype;
+        typedef Scalar<typename AT::value_type> stype;
+        typedef Add<stype,atype> op_type;
+        return NumArray<op_type>(op_type(stype(a),b));
+    }
+    
+    //-------------------------------------------------------------------------
+    //operator
+    template<typename AT1,typename AT2>
+    NumArray<Div<NumArray<AT1>,NumArray<AT2> > >
+    operator/(const NumArray<AT1> &a,const NumArray<AT2> &b)
+    {
+        typedef Div<NumArray<AT1>,NumArray<AT2> > op_type;
+        return NumArray<op_type>(op_type(a,b));
+    }
+
+    //-------------------------------------------------------------------------
+    template<typename AT>
+    NumArray<Div<NumArray<AT>,Scalar<typename AT::value_type> > >
+    operator/(const NumArray<AT> &a,typename AT::value_type const &b)
+    {
+        typedef NumArray<AT> atype;
+        typedef Scalar<typename AT::value_type> stype;
+        typedef Div<atype,stype> op_type;
+        return NumArray<op_type>(op_type(a,stype(b)));
+    }
+
+    //-------------------------------------------------------------------------
+    template<typename AT>
+    NumArray<Div<Scalar<typename AT::value_type>,NumArray<AT> > >
+    operator/(typename AT::value_type const &a,const NumArray<AT> &b)
+    {
+        typedef NumArray<AT> atype;
+        typedef Scalar<typename AT::value_type> stype;
+        typedef Div<stype,atype> op_type;
+        return NumArray<op_type>(op_type(stype(a),b));
+    }
+   
+    //-------------------------------------------------------------------------
+    //operator
+    template<typename AT1,typename AT2>
+    NumArray<Sub<NumArray<AT1>,NumArray<AT2> > >
+    operator-(const NumArray<AT1> &a,const NumArray<AT2> &b)
+    {
+        typedef Sub<NumArray<AT1>,NumArray<AT2> > op_type;
+        return NumArray<op_type>(op_type(a,b));
+    }
+
+    //-------------------------------------------------------------------------
+    template<typename AT>
+    NumArray<Sub<NumArray<AT>,Scalar<typename AT::value_type> > >
+    operator-(const NumArray<AT> &a,typename AT::value_type const &b)
+    {
+        typedef NumArray<AT> atype;
+        typedef Scalar<typename AT::value_type> stype;
+        typedef Sub<atype,stype> op_type;
+        return NumArray<op_type>(op_type(a,stype(b)));
+    }
+
+    //-------------------------------------------------------------------------
+    template<typename AT>
+    NumArray<Sub<Scalar<typename AT::value_type>,NumArray<AT> > >
+    operator-(typename AT::value_type const &a,const NumArray<AT> &b)
+    {
+        typedef NumArray<AT> atype;
+        typedef Scalar<typename AT::value_type> stype;
+        typedef Sub<stype,atype> op_type;
+        return NumArray<op_type>(op_type(stype(a),b));
+    }
 
 
 //end of namespace

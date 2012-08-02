@@ -26,7 +26,6 @@
 #include "OpTraits.hpp"
 
 #include "../Iterator.hpp"
-#include "../NumArray.hpp"
 
 
 namespace pni{
@@ -112,38 +111,6 @@ namespace utils{
 
     };
 
-    //========================implementation of operators======================
-
-    //operator
-    template<typename AT1,typename AT2>
-    NumArray<Div<NumArray<AT1>,NumArray<AT2> > >
-    operator/(const NumArray<AT1> &a,const NumArray<AT2> &b)
-    {
-        typedef Div<NumArray<AT1>,NumArray<AT2> > op_type;
-        return NumArray<op_type>(op_type(a,b));
-    }
-
-    //-------------------------------------------------------------------------
-    template<typename AT>
-    NumArray<Div<NumArray<AT>,Scalar<typename AT::value_type> > >
-    operator/(const NumArray<AT> &a,typename AT::value_type const &b)
-    {
-        typedef NumArray<AT> atype;
-        typedef Scalar<typename AT::value_type> stype;
-        typedef Div<atype,stype> op_type;
-        return NumArray<op_type>(op_type(a,stype(b)));
-    }
-
-    //-------------------------------------------------------------------------
-    template<typename AT>
-    NumArray<Div<Scalar<typename AT::value_type>,NumArray<AT> > >
-    operator/(typename AT::value_type const &a,const NumArray<AT> &b)
-    {
-        typedef NumArray<AT> atype;
-        typedef Scalar<typename AT::value_type> stype;
-        typedef Div<stype,atype> op_type;
-        return NumArray<op_type>(op_type(stype(a),b));
-    }
 
 
 //end of namespace

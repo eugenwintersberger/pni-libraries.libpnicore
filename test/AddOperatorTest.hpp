@@ -7,7 +7,6 @@
 #include<cppunit/extensions/HelperMacros.h>
 #include<vector>
 #include<boost/current_function.hpp>
-#include "expr/Add.hpp"
 
 #include "EqualityCheck.hpp"
 #include "NumArray.hpp"
