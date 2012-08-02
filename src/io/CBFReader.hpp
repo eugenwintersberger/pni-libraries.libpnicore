@@ -246,10 +246,7 @@ namespace io{
 
         }
         else
-        {
-            FileError error(BOOST_CURRENT_FUNCTION,"Unknown detector vendor!");
-            throw error;
-        }
+            throw FileError(EXCEPTION_RECORD,"Unknown detector vendor!");
 
     }
 //end of namespace

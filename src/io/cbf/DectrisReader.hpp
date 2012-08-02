@@ -105,7 +105,7 @@ namespace cbf{
             try { is.read((char *)(&buffer),1); }
             catch(...)
             {
-                throw FileError(BOOST_CURRENT_FUNCTION,
+                throw FileError(EXCEPTION_RECORD,
                         "Error reading 1Byte from the CBF stream!");
             }
 
@@ -123,7 +123,7 @@ namespace cbf{
             try { is.read((char *) (&buffer), 2); }
             catch(...)
             {
-                throw FileError(BOOST_CURRENT_FUNCTION,
+                throw FileError(EXCEPTION_RECORD,
                         "Error reading 2Byte from the CBF stream!");
             }
 
@@ -139,7 +139,7 @@ namespace cbf{
             try { is.read((char*) (&buffer), 4); }
             catch(...)
             {
-                throw FileError(BOOST_CURRENT_FUNCTION,
+                throw FileError(EXCEPTION_RECORD,
                         "Error reading 4byte from the CBF stream!");
             }
 

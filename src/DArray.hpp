@@ -344,7 +344,7 @@ namespace utils {
             Return a const reference to the arrays buffer object.
             \return buffer reference
             */
-            const STORAGE &buffer() const { return this->_data; }
+            const STORAGE &storage() const { return this->_data; }
 
             //-----------------------------------------------------------------
             /*! \brief get size of array

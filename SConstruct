@@ -125,8 +125,6 @@ if GetOption("with_vtk"):
     env.AppendUnique(LIBPATH=[env["VTKLIBDIR"]])
     env.AppendUnique(CPPPATH=[env["VTKINCDIR"]])
 
-
-
 nullptr_test_code="""
 int main(int argc,char **argv){
     char *ptr=nullptr;
@@ -225,12 +223,18 @@ if not conf.CheckCXXHeader("boost/static_assert.hpp"):
 if not conf.CheckCXXHeader("boost/regex.hpp"):
     print "Boost regular expressions header file not found!"
     Exit(1)
+
+#check for boost current_function header
+if not conf.CheckCXXHeader("boost/current_function.hpp"):
+    print "BOOST current_function.hpp not found!"
+    Exit(1)
 	
 
 #check for boost regular expressions library
 if not conf.CheckLib("boost_regex",language="C++"):
     print "BOOST regular expression library not found"
     Exit(1)
+
 
 if GetOption("with_vtk"):
     if not conf.CheckLib("vtkFiltering",language="C++") or \
@@ -248,6 +252,7 @@ if GetOption("with_vtk"):
 
 #check for CPPUNIT headers and library if building tests
 print env["LIBS"]
+print env["CPPPATH"]
 	
 env = conf.Finish()
 

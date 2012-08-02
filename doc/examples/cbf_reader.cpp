@@ -20,11 +20,13 @@
 #include <vtkImageViewer2.h>
 
 #include <pni/utils/io/CBFReader.hpp>
-#include <pni/utils/Array.hpp>
-#include <pni/utils/Shape.hpp>
+#include <pni/utils/DArray.hpp>
 
 using namespace pni::utils;
 using namespace pni::io;
+
+typedef std::vector<size_t> shape_t;
+typedef DArray<Float32> Float32Array;
 
 
 void plot_image(const Float32Array &array)
@@ -35,10 +37,10 @@ void plot_image(const Float32Array &array)
     vtkImageViewer2 *viewer = vtkImageViewer2::New();
 
     vtkFloatArray *ia = vtkFloatArray::New();
-    ia->SetArray((float *)array.ptr(),array.size(),1);
+    ia->SetArray((float *)array.storage().ptr(),array.size(),1);
     vtkImageData *idata = vtkImageData::New();
     idata->GetPointData()->SetScalars(ia);
-    idata->SetDimensions(array.shape()[1],array.shape()[0],1);
+    idata->SetDimensions(array.shape<shape_t>()[1],array.shape<shape_t>()[0],1);
     idata->SetScalarType(VTK_FLOAT);
     idata->SetSpacing(1.0,1.0,1.0);
     idata->SetOrigin(0,0,0);
@@ -71,8 +73,9 @@ int main(int argc,char **argv){
     ImageInfo info = reader.info(0);
     std::cout<<info<<std::endl;
 
-    Float32Array array = reader.image<Float32Array>(0);
-    plot_image(array);
+    auto buffer = reader.image<Float32Array::storage_type>(0);
+    Float32Array a(shape_t{info.nx(),info.ny()},buffer);
+    plot_image(a);
 
     reader.close();
 
