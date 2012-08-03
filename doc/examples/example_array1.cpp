@@ -33,6 +33,17 @@ int main(int argc,char **argv)
         std::cout<<e<<std::endl;
         std::cout<<"Array size is not the same!"<<std::endl;
     }
+
+    //get basic information about an array
+    std::cout<<"type_id = "<<F32Array::type_id<<std::endl;
+    auto s = a.shape<shape_t>();
+    std::cout<<"rank = "<<a.rank()<<std::endl;
+    std::cout<<"shape = ( ";
+    for(auto v: s) std::cout<<v<<" ";
+    std::cout<<")"<<std::endl;
+
+    std::cout<<"total size = "<<a.size()<<std::endl;
+
     
 
     return 0;
