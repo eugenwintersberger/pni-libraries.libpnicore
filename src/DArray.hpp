@@ -169,7 +169,7 @@ namespace utils {
             
             //==================public members=================================
             //! type ID of the element type
-            static const TypeID type_id = TypeIDMap<value_type>::type_id; 
+            static const TypeID type_id; 
 
             //=================constructors and destructor=====================
             /*! \brief default constructor
@@ -545,6 +545,9 @@ namespace utils {
 
     };
 
+    //set data for static member attribute
+    template<typename T,typename STORAGE,typename IMAP>
+    const TypeID DArray<T,STORAGE,IMAP>::type_id = TypeIDMap<T>::type_id;
     //=====================non-member operators================================
 
     template<typename T,typename STORAGE>
