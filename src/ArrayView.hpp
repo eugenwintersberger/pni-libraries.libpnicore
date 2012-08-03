@@ -72,16 +72,20 @@ namespace utils{
             //====================public types=================================
             //! type of the data values
             typedef typename ATYPE::value_type value_type;             
+            //! storage type
+            typedef ATYPE storage_type;
             //! type of the view 
-            typedef ArrayView<ATYPE> view_type;
+            typedef ArrayView<storage_type> array_type;
             //! shared pointer type
-            typedef std::shared_ptr<view_type> shared_ptr;
+            typedef std::shared_ptr<array_type> shared_ptr;
             //! unique pointer type
-            typedef std::unique_ptr<view_type> unique_ptr; 
+            typedef std::unique_ptr<array_type> unique_ptr; 
             //! iterator type
-            typedef Iterator<view_type,0> iterator;      
+            typedef Iterator<array_type,0> iterator;      
             //! const iterator type
-            typedef Iterator<view_type,1> const_iterator; 
+            typedef Iterator<array_type,1> const_iterator; 
+            //! view type
+            typedef ArrayView<array_type> view_type;
             //! map type
             typedef CIndexMap map_type;
             //========================public members===========================
@@ -97,7 +101,7 @@ namespace utils{
             This constructor creates a view which includes the entire array.
             \param a reference to the original array
             */
-            ArrayView(ATYPE &a):
+            ArrayView(storage_type &a):
                 _parray(&a),
                 _selection(),
                 _imap()
@@ -122,7 +126,7 @@ namespace utils{
             \param s selection object defining the description
             dimension
             */
-            ArrayView(ATYPE &a,const ArraySelection &s):
+            ArrayView(storage_type &a,const ArraySelection &s):
                 _parray(&a),
                 _selection(s),
                 _imap(_selection.shape())
@@ -134,7 +138,7 @@ namespace utils{
 
             //-----------------------------------------------------------------
             //! copy constructor
-            ArrayView(const ArrayView<ATYPE> &o):
+            ArrayView(const array_type &o):
                 _parray(o._parray),
                 _selection(o._selection),
                 _imap(o._imap)
@@ -142,14 +146,14 @@ namespace utils{
 
             //-----------------------------------------------------------------
             //! move constructor
-            ArrayView(ArrayView<ATYPE> &&o):
+            ArrayView(array_type &&o):
                 _parray(o._parray),
                 _selection(std::move(o._selection)),
                 _imap(std::move(o._imap))
             {}
             //====================assignment operators=========================
             //! copy assignment
-            ArrayView<ATYPE> &operator=(const ArrayView<ATYPE> &o)
+            array_type &operator=(const array_type &o)
             {
                 if(this == &o) return *this;
                 this->_parray = o._parray;
@@ -160,7 +164,7 @@ namespace utils{
 
             //-----------------------------------------------------------------
             //! move assignment
-            ArrayView<ATYPE> &operator=(ArrayView<ATYPE> &&o)
+            array_type &operator=(array_type &&o)
             {
                 if(this == &o) return *this;
                 this->_parray = o._parray;
@@ -280,7 +284,7 @@ namespace utils{
             \param i linear index of the element
             \return reference to the value at index i 
             */
-            ArrayView<ATYPE>::value_type &operator[](size_t i)
+            value_type &operator[](size_t i)
             {
                 auto index = this->_imap.template index<std::vector<size_t> >(i);
                 return (*this)(index); 
@@ -296,7 +300,7 @@ namespace utils{
             \param i linear index of the element
             \return value at index i 
             */
-            ArrayView<ATYPE>::value_type operator[](size_t i) const
+            value_type operator[](size_t i) const
             {
                 auto index = this->_imap.template index<std::vector<size_t> >(i);
                 return (*this)(index); 

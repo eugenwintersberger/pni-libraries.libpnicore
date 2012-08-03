@@ -4,6 +4,7 @@ example_buffer3
 example_array1
 example_array2
 example_array3
+example_array4
 fio_reader
 cbf_reader
 tif_reader

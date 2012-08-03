@@ -26,6 +26,7 @@
 #include "OpTraits.hpp"
 
 #include "../Iterator.hpp"
+#include "../ArrayView.hpp"
 
 
 namespace pni{
@@ -59,6 +60,8 @@ namespace utils{
             typedef Iterator<array_type,0> iterator;
             //! const iterator type
             typedef Iterator<array_type,1> const_iterator;
+            //! view type
+            typedef ArrayView<array_type> view_type;
 
             //===================constructors==================================
             //! standard constructor

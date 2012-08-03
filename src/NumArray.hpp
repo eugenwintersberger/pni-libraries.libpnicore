@@ -28,6 +28,7 @@
 #include "Types.hpp"
 #include "Iterator.hpp"
 #include "ArrayViewSelector.hpp"
+#include "ArrayView.hpp"
 #include "InplaceArithmetics.hpp"
 #include "Scalar.hpp"
 #include "math/Add.hpp"
@@ -63,7 +64,7 @@ namespace utils{
             //! type of array storage
             typedef ATYPE storage_type;
             //! type of the view
-            typedef ArrayView<array_type> view_type;
+            typedef ArrayView<typename storage_type::view_type> view_type;
             //! shared smart pointer type to the numeric array
             typedef std::shared_ptr<array_type> shared_ptr;
             //! unique smart pointer type to the numeric array
@@ -82,9 +83,20 @@ namespace utils{
             //! default constructor
             NumArray():_array() {}
 
+            //! construction from an ArrayView
+            template<typename VIEWSTORAGE> 
+                NumArray(const ArrayView<VIEWSTORAGE> &v):
+                    _array(v)
+            {}
+
             //-----------------------------------------------------------------
             //! construct from an arbitary array type
-            NumArray(ATYPE &&a):_array(std::move(a)) {}
+            NumArray(storage_type &&a):_array(std::move(a)) {}
+
+            //! implicit constructor
+            template<typename ...ARGTYPES> NumArray(ARGTYPES ...args):
+                _array(storage_type(args...))
+            {}
 
             //-----------------------------------------------------------------
             //! copy constructor
@@ -235,10 +247,16 @@ namespace utils{
             depends on the types of the arguments.
             */
             template<typename ...ITYPES>
-            typename ArrayViewSelector<array_type,ITYPES...>::reftype
+            typename ArrayViewSelector<typename storage_type::view_type,ITYPES...>::reftype
             operator()(ITYPES ...indices)
             {
-                return this->_array(indices...);
+                typedef ArrayViewSelector<typename storage_type::view_type,ITYPES...> sel;
+                typedef typename sel::reftype result_t;
+                
+                result_t t(this->_array(indices...));
+                return t;
+
+                //return this->_array(indices...);
             }
 
             //-----------------------------------------------------------------
@@ -252,10 +270,16 @@ namespace utils{
             \return single value or array view
             */
             template<typename ...ITYPES>
-            typename ArrayViewSelector<array_type,ITYPES...>::viewtype
+            typename ArrayViewSelector<typename storage_type::view_type,ITYPES...>::viewtype
             operator()(ITYPES ...indices) const
             {
-                return this->_array(indices...);
+                typedef ArrayViewSelector<typename storage_type::view_type,ITYPES...> sel;
+                typedef typename sel::viewtype result_t;
+                
+                result_t t(this->_array(indices...));
+                return t;
+
+                //return this->_array(indices...);
             }
 
             //-----------------------------------------------------------------
