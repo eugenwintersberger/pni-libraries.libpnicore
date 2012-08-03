@@ -13,12 +13,14 @@
 
 
 #include <pni/utils/io/FIOReader.hpp>
-#include <pni/utils/Array.hpp>
-#include <pni/utils/Shape.hpp>
+#include <pni/utils/DArray.hpp>
 
 using namespace pni::utils;
 using namespace pni::io;
 
+
+typedef std::vector<size_t> shape_t;
+typedef DArray<Float32> Float32Array;
 
 int main(int argc,char **argv){
 
@@ -57,7 +59,8 @@ int main(int argc,char **argv){
     for(auto c: reader) std::cout<<c<<std::endl;
     std::cout<<"File contains: "<<reader.nrecords()<<std::endl;
 
-    auto array = reader.column<Float32Array>("TIO2_KRONOS_0001_ENERGIE_HHE1");
+    Float32Array array(shape_t{reader.nrecords()},
+                       reader.column<Float32Array::storage_type>("TIO2_KRONOS_0001_ENERGIE_HHE1"));
 
     reader.close();
 

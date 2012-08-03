@@ -1,1 +1,6 @@
 example_buffer1
+example_buffer2
+example_buffer3
+fio_reader
+cbf_reader
+tif_reader

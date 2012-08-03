@@ -34,6 +34,7 @@
 #include <iostream>
 #include <string>
 #include <sstream>
+#include <memory>
 #include "Exceptions.hpp"
 #include "ExceptionUtils.hpp"
 #include "Types.hpp"

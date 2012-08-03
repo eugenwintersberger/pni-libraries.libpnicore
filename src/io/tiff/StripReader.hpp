@@ -153,7 +153,7 @@ namespace tiff {
             else if(this->_channel_types[c] == TypeID::FLOAT64)
                 this->_read_interlace<Float64>(c,stream,data);
             else
-                throw TypeError(BOOST_CURRENT_FUNCTION,
+                throw TypeError(EXCEPTION_RECORD,
                       "StripReader cannot handle channel type!");
         }
 
@@ -192,7 +192,7 @@ namespace tiff {
                 //compute the number of pixels in the strip
                 size_t npix = (8*this->_byte_cnts[strip])/tot_bits_per_pix;
                 //loop over all pixels
-                char *ptr = strip_buffer.ptr();
+                char *ptr = const_cast<char *>(strip_buffer.ptr());
 
                 //loop over all pixels in the strip
                 for(size_t i=0;i<npix;i++)

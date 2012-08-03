@@ -332,7 +332,7 @@ namespace io{
                 //set file stream back to its original position
                 stream.seekg(orig_pos,std::ios::beg); 
                 //throw FileError if reading data form the file failed
-                throw FileError(EXCEPTION_RECORD); 
+                throw FileError(EXCEPTION_RECORD,"Error reading data from file!"); 
             }
             //split data line
             std::vector<String> string_data = this->_read_data_line(linebuffer);

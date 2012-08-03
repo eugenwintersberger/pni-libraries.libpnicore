@@ -73,7 +73,16 @@ int main(int argc,char **argv){
     ImageInfo info = reader.info(0);
     std::cout<<info<<std::endl;
 
-    auto buffer = reader.image<Float32Array::storage_type>(0);
+    Float32Array::storage_type buffer;
+    try
+    {
+        buffer = reader.image<Float32Array::storage_type>(0);
+    }
+    catch(IteratorError &error)
+    {
+        std::cout<<error<<std::endl;
+        return -1;
+    }
     Float32Array a(shape_t{info.nx(),info.ny()},buffer);
     plot_image(a);
 

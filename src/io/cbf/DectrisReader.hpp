@@ -96,9 +96,12 @@ namespace cbf{
         //initializing the container with 0
         std::fill(data.begin(),data.end(),0);
         typename CTYPE::iterator iter = data.begin();
+        typename CTYPE::value_type v_old = 0;
 
-        for(typename CTYPE::value_type v: data)
+        for(typename CTYPE::value_type &v: data)
         {
+            v = v_old; //set the new value to the previous
+
             buffer = 0; //reset the read buffer
             //read one byte from the stream an throw an exception in case of an
             //error
@@ -111,11 +114,9 @@ namespace cbf{
 
             if (((unsigned char) buffer) != 0x80)
             {
-                //this byte is a valid offset
-                *iter += (char) buffer;
-                ++iter;             //increment pixel iterator
-                *iter = *(iter-1);  //set new pixel to previous value
-                continue;           //continue with the loop
+                v += (char) buffer;
+                v_old = v;
+                continue;
             }
           
             //read two byte from the stream and throw an exception in case of an
@@ -127,10 +128,10 @@ namespace cbf{
                         "Error reading 2Byte from the CBF stream!");
             }
 
-            if (((unsigned short) buffer) != 0x8000) {
-                *iter += (short) buffer;
-                ++iter;
-                *iter = *(iter-1);
+            if (((unsigned short) buffer) != 0x8000) 
+            {
+                v += (short) buffer;
+                v_old = v;
                 continue;
             }
 
@@ -143,10 +144,10 @@ namespace cbf{
                         "Error reading 4byte from the CBF stream!");
             }
 
-            if (((unsigned int) buffer) != 0x800000) {
-                *iter += (int) buffer;
-                ++iter;
-                *iter = *(iter-1);
+            if (((unsigned int) buffer) != 0x800000) 
+            {
+                v += (int) buffer;
+                v_old = v;
                 continue;
             }
 

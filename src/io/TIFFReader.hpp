@@ -216,7 +216,7 @@ namespace io{
                 try { data = CTYPE(info.npixels()); }
                 catch(...)
                 {
-                    throw MemoryAllocationError(BOOST_CURRENT_FUNCTION,
+                    throw MemoryAllocationError(EXCEPTION_RECORD,
                             "Allocation of image data container failed!");
                 }
 

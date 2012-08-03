@@ -137,81 +137,11 @@ namespace io{
             ImageChannelInfo get_channel(size_t i) const;
 
 
-            //=============static member methods===============================
-            /*! 
-            \ingroup io_classes
-            \brief static array allocator
-
-            This template function allocates an array capable of holding the data for an
-            image as described by an ImageInfo object.
-            */
-            template<typename ATYPE> 
-                static ATYPE create_array(const ImageInfo &info);
-
-            //-----------------------------------------------------------------
-            /*!
-            \ingroup io_classes
-            \brief check array
-
-            Checks if an array is capable of holding the data for an image 
-            described by an Image info. The function throws exceptions if this 
-            is not the case.
-            \throws MemoryAccessError if the array is not allocated
-            \throws ShapeMissmatchError if the shape of the array does not fit 
-            \param a array to check
-            \param info the ImageInfo object for which to check the array
-            */
-            template<typename ATYPE>
-                static void check_array(const ATYPE &a,const ImageInfo
-                        &info);
 
     };
 
     //! output operator
     std::ostream &operator<<(std::ostream &o,const ImageInfo &i);
-
-    //==============implementation of static template methods==================
-    template<typename ATYPE> 
-        ATYPE ImageInfo::create_array(const ImageInfo &info)
-    {
-        std::vector<size_t> s{info.nx(),info.ny()};
-        ATYPE array;
-        try 
-        {  
-            array = ATYPE(s); 
-        }
-        catch(MemoryAllocationError &error)
-        {
-            error.append(EXCEPTION_RECORD);
-            throw error;
-        }
-
-        return array;
-    }
-
-    //-------------------------------------------------------------------------
-    template<typename ATYPE> 
-        void ImageInfo::check_array(const ATYPE &array,const ImageInfo &info)
-    {
-        //check if the array is allocated
-        if(!array.is_allocated())
-            throw MemoryNotAllocatedError(EXCEPTION_RECORD,"Array is  not allocated!");
-
-        //check the shape of the array
-        auto s = array.template shape<std::vector<size_t> >();
-
-        if(s.size() != 2)
-            throw ShapeMissmatchError(EXCEPTION_RECORD,"Array is not of rank 2!");
-
-        if((s[0]!=info.ny()) || (s[1] != info.nx()))
-        {
-            std::stringstream ss;
-            ss<<"Array shape ("<<s[1]<<","<<s[0]<<") does not match ";
-            ss<<"image size ("<<info.nx()<<","<<info.ny()<<")!";
-            throw ShapeMissmatchError(EXCEPTION_RECORD,ss.str());
-        }
-
-    }
 
 
 
