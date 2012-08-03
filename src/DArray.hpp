@@ -303,9 +303,9 @@ namespace utils {
             */
             template<typename CTYPE> void shape(const CTYPE &s)
             {
-                check_allocation_state(this->buffer(),EXCEPTION_RECORD);
+                check_allocation_state(this->storage(),EXCEPTION_RECORD);
                 IMAP map(s);
-                check_size_equal(this->_imap,map,EXCEPTION_RECORD);
+                check_equal_size(this->_imap,map,EXCEPTION_RECORD);
                 this->_imap = map;
             }
 

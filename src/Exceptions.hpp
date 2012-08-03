@@ -98,7 +98,7 @@ Please note that the MUST NOT BE a semicolon at the end of this macro.
             ExceptionRecord() = delete;
 
             //! constructor
-            ExceptionRecord(String file,size_t line,String func):
+            ExceptionRecord(const String &file,size_t line,const String &func):
                 _file(file),
                 _line(line),
                 _function(func)
@@ -366,7 +366,7 @@ Please note that the MUST NOT BE a semicolon at the end of this macro.
             \param d description of the exception
             */
             explicit SizeMissmatchError(const ExceptionRecord &i, const String &d) :
-                Exception("SizeMissmatchError", i, d) 
+                Exception("SizeMissmatchError", i,d) 
             { }
 
             //! destructor

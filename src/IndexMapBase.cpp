@@ -28,12 +28,15 @@
 namespace pni{
 namespace utils{
 
+    //-------------------------------------------------------------------------
     IndexMapBase::IndexMapBase():_shape() {}
 
+    //-------------------------------------------------------------------------
     IndexMapBase::IndexMapBase(const IndexMapBase &m):
         _shape(m._shape)
     {}
 
+    //-------------------------------------------------------------------------
     IndexMapBase::IndexMapBase(IndexMapBase &&m):
         _shape(std::move(m._shape))
     {}
