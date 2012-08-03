@@ -6,7 +6,8 @@ Import("build_env")
 source_list = []
 source_list.extend(["Exceptions.cpp","Types.cpp","Slice.cpp",
                     "ComplexUtils.cpp","ExceptionUtils.cpp",
-                    "ArraySelection.cpp","IndexMapBase.cpp","CIndexMap.cpp"])
+                    "ArraySelection.cpp","IndexMapBase.cpp","CIndexMap.cpp",
+                    "service.cpp"])
                
 #build static and shared objects               
 shared_objects = build_env.SharedObject(source_list)
