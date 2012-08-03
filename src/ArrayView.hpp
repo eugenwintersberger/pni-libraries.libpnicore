@@ -221,7 +221,7 @@ namespace utils{
             template<typename ...ITypes> value_type &
                 operator()(ITypes ...indices)
             {
-                return (*this)(std::vector<size_t>{indices...});
+                return (*this)(std::vector<size_t>{size_t(indices)...});
             }
 
             //-----------------------------------------------------------------
@@ -240,7 +240,7 @@ namespace utils{
             template<typename ...ITypes> value_type 
                 operator()(ITypes ...indices) const
             {
-                return (*this)(std::vector<size_t>{indices...});
+                return (*this)(std::vector<size_t>{size_t(indices)...});
             }
 
 

@@ -85,9 +85,7 @@ namespace utils {
             {
 
                 std::vector<Slice> slices{Slice(indices)...};
-                for(auto slice: slices) std::cout<<slice<<std::endl;
                 ArraySelection s = ArraySelection::create(slices);
-                std::cout<<s<<std::endl;
 
                 return ArrayView<DArray<T,STORAGE,IMAP> >(*this,s);
             }
@@ -104,6 +102,12 @@ namespace utils {
             \return reference to the element
             */
             template<typename ...ITYPES> T &_get_data(T v,ITYPES ...indices)
+            {
+                return this->_data[this->_imap.offset(indices...)];
+            }
+
+            template<typename ...ITYPES> T _get_data(T v,ITYPES ...indices)
+                const
             {
                 return this->_data[this->_imap.offset(indices...)];
             }
@@ -130,7 +134,7 @@ namespace utils {
 
             //-----------------------------------------------------------------
             /*! 
-            \brief get array element
+            \brief get reference to element
 
             Returns a reference to an array element determined by the values in
             a container.
@@ -563,7 +567,7 @@ namespace utils {
                     const DArray<T,STORAGE> &b2) 
     {
         if((b1.shape() == b2.shape()) &&
-           (b1.buffer() == b2.buffer())) return true;
+           (b1.storage() == b2.storage())) return true;
 
         return false;
     }
