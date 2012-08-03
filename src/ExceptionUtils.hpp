@@ -31,6 +31,7 @@
 #include <algorithm>
 
 #include "Exceptions.hpp"
+#include "service.hpp"
 
 namespace pni{
 namespace utils{
@@ -56,10 +57,10 @@ namespace utils{
         if(a.size() != b.size())
         {
             std::stringstream ss;
-            ss<<"Size of "<<typeid(A).name()<<" ("<<a.size()<<") ";
-            ss<<"does not match size of "<<typeid(B).name()<<" (";
+            ss<<"Size of "<<demangle_cpp_name(typeid(A).name())<<" ("<<a.size()<<") ";
+            ss<<"does not match size of "<<demangle_cpp_name(typeid(B).name())<<" (";
             ss<<b.size()<<")!";
-            throw SizeMissmatchError(i,ss.str());
+            throw SizeMissmatchError(i,String(ss.str()));
         }
     }
 
@@ -131,9 +132,8 @@ namespace utils{
         if(!o.size())
         {
             std::stringstream ss;
-            ss<<"Instance of "<<typeid(OTYPE).name()<<" not allocated!";
-            ExceptionRecord r(__FILE__,__LINE__,BOOST_CURRENT_FUNCTION);
-            throw MemoryNotAllocatedError(r,ss.str());
+            ss<<"Instance of "<<demangle_cpp_name(typeid(OTYPE).name())<<" not allocated!";
+            throw MemoryNotAllocatedError(i,ss.str());
         }
     }
 
