@@ -12,5 +12,5 @@ utbmark
 .sconf_temp
 /*.deb
 /*.changes
-Makefile
+./Makefile
 *.tif
