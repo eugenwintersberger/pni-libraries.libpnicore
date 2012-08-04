@@ -1,4 +1,3 @@
-
 CPPFLAGS=-O2 -std=c++11 $(shell pkg-config --cflags pniutils) 
 LDFLAGS=$(shell pkg-config --libs pniutils)
 

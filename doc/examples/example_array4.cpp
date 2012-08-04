@@ -54,25 +54,26 @@ int main(int argc,char **argv)
     Frame a(shape); 
 
     //initialize the array with 0
-    std::fill(a.begin(),a.end(),0);
+    std::fill(a.begin(),a.end(),1);
 
     //using a selection to set the values of each vector
     for(size_t i=0;i<shape[0];i++)
     {
-        Vector v(a(Slice(i),Slice(0,3)));
-        v +=
-            Vector(Vector::storage_type{Float32(i+0.1),Float32(i+0.2),Float32(i+0.3)});
+        //create a selection
+        auto view = a(i,Slice(0,3));
+        //as we cannot use a selection directly for computations we need to
+        //create a new numeric type
+        Vector v(view);
+        v += i+0.1*i;
+
+        //finally we have to copy back the data
+        std::copy(v.begin(),v.end(),view.begin());
     }
 
     //plotting some output
     std::cout<<a<<std::endl;
-
-    //do some conversion
     for(size_t i=0;i<shape[0];i++)
-    {
-        Vector v(Vector::storage_type(a(Slice(i),Slice(0,3))));
-        std::cout<<"vector = "<<v<<std::endl;
-    }        
+        std::cout<<"vector = "<<Vector(a(i,Slice(0,3)))<<std::endl;
 
 
     return 0;
