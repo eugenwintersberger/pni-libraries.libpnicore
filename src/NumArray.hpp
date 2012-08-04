@@ -55,6 +55,90 @@ namespace utils{
         //need to do here a compiletime check if types are equal
         private:
             ATYPE _array; //!< array with data
+
+            //----------------------private methods----------------------------
+            /*! 
+            \brief get array view
+
+            Returns an instance of ArrayView if one of the indices is a Slice
+            type. 
+            \param view dummy parameter with the view type to select the proper
+            private member function
+            \param indices list of indices from which to construct the view
+            \return array view object
+            */
+            template<typename ...ITYPES>
+            ArrayView<NumArray<ATYPE,IPA> >
+            _get_data(ArrayView<NumArray<ATYPE,IPA> > &view,ITYPES ...indices)
+            {
+
+                std::vector<Slice> slices{Slice(indices)...};
+                ArraySelection s = ArraySelection::create(slices);
+
+                return ArrayView<NumArray<ATYPE,IPA> >(*this,s);
+            }
+
+            //-----------------------------------------------------------------
+            /*!
+            \brief get element data
+
+            Returns a reference to the element determined by indices if this
+            list does not contain an instance of Slice. 
+            \param v dummy variable to select the proper function template
+            \param indices list of index values determining the element to
+            return
+            \return reference to the element
+            */
+            template<typename ...ITYPES> typename ATYPE::value_type 
+                &_get_data(typename ATYPE::value_type v,ITYPES ...indices)
+            {
+                return this->_array(indices...);
+            }
+
+            template<typename ...ITYPES> typename ATYPE::value_type 
+                _get_data(typename ATYPE::value_type v,ITYPES ...indices) const
+            {
+                return this->_array(indices...);
+            }
+
+            //-----------------------------------------------------------------
+            /*!
+            \brief get array view 
+
+            Get an array view whose shape is determined by the container c.
+            \tparam CTYPE container template
+            \tparam OTS template arguments to CTYPE
+            \param view dummy variable to determine the function
+            \param c container with view parameters
+            \return array view
+            */
+            template<template<typename ...> class CTYPE,typename ...OTS>
+            ArrayView<NumArray<ATYPE,IPA> >
+            _get_data(ArrayView<NumArray<ATYPE,IPA> >&view,const CTYPE<OTS...> &c)
+            {
+                ArraySelection s = ArraySelection::create(c);
+
+                return ArrayView<NumArray<ATYPE,IPA> >(*this,s);
+            }
+
+            //-----------------------------------------------------------------
+            /*! 
+            \brief get reference to element
+
+            Returns a reference to an array element determined by the values in
+            a container.
+            \tparam CTYPE container template
+            \tparam OTS template arguments of CTYPE
+            \param v dummy argument to determine the function
+            \param c container with indices
+            \return element reference
+            */
+            template<template<typename ...> class CTYPE,typename ...OTS>
+                typename ATYPE::value_type &
+                _get_data(typename ATYPE::value_type v,const CTYPE<OTS...> &c)
+            {
+                return this->_data[this->_imap.offset(c)];
+            }
         public:
             //====================public types=================================
             //! element type of the array
@@ -247,16 +331,15 @@ namespace utils{
             depends on the types of the arguments.
             */
             template<typename ...ITYPES>
-            typename ArrayViewSelector<typename storage_type::view_type,ITYPES...>::reftype
+            typename ArrayViewSelector<array_type,ITYPES...>::reftype
             operator()(ITYPES ...indices)
             {
-                typedef ArrayViewSelector<typename storage_type::view_type,ITYPES...> sel;
-                typedef typename sel::reftype result_t;
-                
-                result_t t(this->_array(indices...));
-                return t;
+                typedef ArrayViewSelector<array_type,ITYPES...> sel;
+                typedef typename sel::viewtype view_t;
 
-                //return this->_array(indices...);
+                view_t r = view_t();
+
+                return _get_data(r,indices...);
             }
 
             //-----------------------------------------------------------------
@@ -270,14 +353,15 @@ namespace utils{
             \return single value or array view
             */
             template<typename ...ITYPES>
-            typename ArrayViewSelector<typename storage_type::view_type,ITYPES...>::viewtype
+            typename ArrayViewSelector<array_type,ITYPES...>::viewtype
             operator()(ITYPES ...indices) const
             {
-                typedef ArrayViewSelector<typename storage_type::view_type,ITYPES...> sel;
+                typedef ArrayViewSelector<array_type,ITYPES...> sel;
                 typedef typename sel::viewtype result_t;
+
+                result_t r = result_t();
                 
-                result_t t(this->_array(indices...));
-                return t;
+                return _get_data(r,indices...);
 
                 //return this->_array(indices...);
             }

@@ -26,6 +26,7 @@ class NumArrayTest : public CppUnit::TestFixture
         CPPUNIT_TEST(test_unary_sub);
         CPPUNIT_TEST(test_unary_mult);
         CPPUNIT_TEST(test_unary_div);
+        CPPUNIT_TEST(test_view);
         CPPUNIT_TEST_SUITE_END();
     private:
         template<typename T,typename ST,typename MT>
@@ -56,6 +57,7 @@ class NumArrayTest : public CppUnit::TestFixture
         void test_unary_sub();
         void test_unary_mult();
         void test_unary_div();
+       void test_view();
 };
 
 //------------------------------------------------------------------------------
@@ -295,7 +297,7 @@ template<typename ATYPE> void NumArrayTest<ATYPE>::test_unary_mult()
 }
 
 //-----------------------------------------------------------------------------
-template<typename ATYPE> void NumArrayTest<ATYPE>::test_unary_div()/*{{{*//*{{{*/
+template<typename ATYPE> void NumArrayTest<ATYPE>::test_unary_div()
 {
     typedef typename NumArray<ATYPE>::value_type value_type;
     NumArray<ATYPE> a(create_array<ATYPE>());
@@ -320,4 +322,16 @@ template<typename ATYPE> void NumArrayTest<ATYPE>::test_unary_div()/*{{{*//*{{{*
     a /= c;
     for(auto v: a) check_equality(v,value_type(value_type(12)/value_type(2)/
                                   value_type(2)/value_type(2)));
+}
+
+//-----------------------------------------------------------------------------
+template<typename ATYPE> void NumArrayTest<ATYPE>::test_view()
+{
+    typedef typename NumArray<ATYPE>::value_type value_type;
+    NumArray<ATYPE> a(create_array<ATYPE>());
+
+    //set initial value
+    std::fill(a.begin(),a.end(),value_type(12));
+
+    auto view = a(size_t(0),Slice(0,4));
 }
