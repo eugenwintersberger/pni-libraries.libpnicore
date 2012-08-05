@@ -19,15 +19,14 @@
 #include <vtkPointData.h>
 #include <vtkImageViewer2.h>
 
-#include <pni/utils/DArray.hpp>
+#include <pni/utils/Array.hpp>
 #include <pni/utils/io/TIFFReader.hpp>
 
 using namespace pni::utils;
 
-typedef std::vector<size_t> shape_t;
-typedef DArray<Float32> Float32Array;
+typedef F32DArray Frame;
 
-void plot_image(const Float32Array &array)
+void plot_image(const Frame &array)
 {
     vtkRenderer *renderer = vtkRenderer::New();
     vtkRenderWindow *window = vtkRenderWindow::New();
@@ -74,8 +73,8 @@ int main(int argc,char **argv){
     std::cout<<reader.info(0)<<std::endl;
     
     
-    auto buffer = reader.image<Float32Array::storage_type>(0);
-    Float32Array array(shape_t{reader.info(0).nx(),reader.info(0).ny()},
+    auto buffer = reader.image<Frame::storage_type>(0);
+    Frame array(shape_t{reader.info(0).nx(),reader.info(0).ny()},
                        buffer);
     //close the reader object when we are done
     plot_image(array);

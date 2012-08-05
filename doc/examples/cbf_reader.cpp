@@ -20,16 +20,15 @@
 #include <vtkImageViewer2.h>
 
 #include <pni/utils/io/CBFReader.hpp>
-#include <pni/utils/DArray.hpp>
+#include <pni/utils/Array.hpp>
 
 using namespace pni::utils;
 using namespace pni::io;
 
-typedef std::vector<size_t> shape_t;
-typedef DArray<Float32> Float32Array;
+typedef F32DArray Frame;
 
 
-void plot_image(const Float32Array &array)
+void plot_image(const Frame &array)
 {
     vtkRenderer *renderer = vtkRenderer::New();
     vtkRenderWindow *window = vtkRenderWindow::New();
@@ -73,17 +72,17 @@ int main(int argc,char **argv){
     ImageInfo info = reader.info(0);
     std::cout<<info<<std::endl;
 
-    Float32Array::storage_type buffer;
+    Frame::storage_type buffer;
     try
     {
-        buffer = reader.image<Float32Array::storage_type>(0);
+        buffer = reader.image<Frame::storage_type>(0);
     }
     catch(IteratorError &error)
     {
         std::cout<<error<<std::endl;
         return -1;
     }
-    Float32Array a(shape_t{info.nx(),info.ny()},buffer);
+    Frame a(shape_t{info.nx(),info.ny()},buffer);
     plot_image(a);
 
     reader.close();
