@@ -3,7 +3,7 @@
 #include<cppunit/extensions/HelperMacros.h>
 
 #include <iostream>
-#include <boost/shared_ptr.hpp>
+#include <boost/current_function.hpp>
 
 #include "SliceTest.hpp"
 
@@ -36,8 +36,7 @@ void SliceTest::tearDown()
 //-----------------------------------------------------------------------------
 void SliceTest::test_construction()
 {
-    std::cout<<"void SliceTest::test_construction()--------------------------";
-    std::cout<<std::endl;
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
     CPPUNIT_ASSERT_THROW(_construct(1,0),RangeError);
     CPPUNIT_ASSERT_THROW(_construct(1,1),RangeError);
@@ -68,8 +67,7 @@ void SliceTest::test_construction()
 //-----------------------------------------------------------------------------
 void SliceTest::test_assignment()
 {
-    std::cout<<"void SliceTest::test_assignment()-----------------------------";
-    std::cout<<std::endl;
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
     size_t f=20,l=100,stride=13;
     Slice s(f,l,stride);
@@ -86,8 +84,7 @@ void SliceTest::test_assignment()
 //-----------------------------------------------------------------------------
 void SliceTest::test_functions()
 {
-    std::cout<<"void SliceTest::test_functions()------------------------------";
-    std::cout<<std::endl;
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
     size_t f=20,l=100,stride=13;
     Slice s(f,l,stride);

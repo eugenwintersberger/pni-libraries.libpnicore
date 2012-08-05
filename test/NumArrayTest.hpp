@@ -334,4 +334,7 @@ template<typename ATYPE> void NumArrayTest<ATYPE>::test_view()
     std::fill(a.begin(),a.end(),value_type(12));
 
     auto view = a(size_t(0),Slice(0,4));
+
+    view += value_type(1.32);
+
 }

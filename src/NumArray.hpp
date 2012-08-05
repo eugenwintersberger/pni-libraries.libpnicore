@@ -49,7 +49,7 @@ namespace utils{
     \tparam IPA inplace arithmetics type
 
     */
-    template<typename ATYPE,typename IPA=InplaceArithmetics<ATYPE> > 
+    template<typename ATYPE,template<typename> class IPA=InplaceArithmetics> 
         class NumArray
     {
         //need to do here a compiletime check if types are equal
@@ -68,14 +68,16 @@ namespace utils{
             \return array view object
             */
             template<typename ...ITYPES>
-            ArrayView<NumArray<ATYPE,IPA> >
-            _get_data(ArrayView<NumArray<ATYPE,IPA> > &view,ITYPES ...indices)
+            NumArray<ArrayView<NumArray<ATYPE,IPA> > ,IPA>
+            _get_data(NumArray<ArrayView<NumArray<ATYPE,IPA> >,IPA> &view,ITYPES ...indices)
             {
-
+                typedef ArrayView<NumArray<ATYPE,IPA> > view_t;
                 std::vector<Slice> slices{Slice(indices)...};
                 ArraySelection s = ArraySelection::create(slices);
 
-                return ArrayView<NumArray<ATYPE,IPA> >(*this,s);
+                view_t tmp(*this,s);
+
+                return NumArray<view_t,IPA>(tmp);
             }
 
             //-----------------------------------------------------------------
@@ -113,12 +115,14 @@ namespace utils{
             \return array view
             */
             template<template<typename ...> class CTYPE,typename ...OTS>
-            ArrayView<NumArray<ATYPE,IPA> >
-            _get_data(ArrayView<NumArray<ATYPE,IPA> >&view,const CTYPE<OTS...> &c)
+            NumArray<ArrayView<NumArray<ATYPE,IPA> >,IPA>
+            _get_data(NumArray<ArrayView<NumArray<ATYPE,IPA> >,IPA> &view,const CTYPE<OTS...> &c)
             {
+                typedef ArrayView<NumArray<ATYPE,IPA> > view_t;
+
                 ArraySelection s = ArraySelection::create(c);
 
-                return ArrayView<NumArray<ATYPE,IPA> >(*this,s);
+                return NumArray<view_t>(view_t(*this,s));
             }
 
             //-----------------------------------------------------------------
@@ -158,6 +162,8 @@ namespace utils{
             typedef typename ATYPE::iterator iterator;
             //! const iterator type
             typedef typename ATYPE::const_iterator const_iterator;
+            //! inplace arithmetic type
+            typedef IPA<ATYPE> inplace_t;
             
             //=====================public members==============================
             //! type id of the element type
@@ -181,6 +187,7 @@ namespace utils{
             template<typename ...ARGTYPES> NumArray(ARGTYPES ...args):
                 _array(storage_type(args...))
             {}
+
 
             //-----------------------------------------------------------------
             //! copy constructor
@@ -208,6 +215,14 @@ namespace utils{
             {
                 if(this == &a) return *this;
                 this->_array = std::move(a._array);
+                return *this;
+            }
+
+            //-----------------------------------------------------------------
+            //! assignment from a NumArray type
+            template<typename AT> array_type &operator=(const NumArray<AT> &a)
+            {
+                std::copy(a.begin(),a.end(),this->begin());
                 return *this;
             }
 
@@ -424,7 +439,7 @@ namespace utils{
             */
             array_type &operator+=(value_type v)
             {
-                IPA::add(this->_array,v);
+                IPA<ATYPE>::add(this->_array,v);
                 return *this;
             }
 
@@ -439,7 +454,7 @@ namespace utils{
             */
             array_type &operator+=(const array_type &a)
             {
-                IPA::add(this->_array,a._array);
+                IPA<ATYPE>::add(this->_array,a._array);
                 return *this;
             }
 
@@ -457,7 +472,7 @@ namespace utils{
             template<template<typename ...> class CTYPE,typename ...OTS>
                 array_type &operator+=(const CTYPE<OTS...> &c)
             {
-                IPA::add(this->_array,c);
+                IPA<ATYPE>::add(this->_array,c);
                 return *this;
             }
 
@@ -471,7 +486,7 @@ namespace utils{
             */
             array_type &operator-=(value_type v)
             {
-                IPA::sub(this->_array,v);
+                IPA<ATYPE>::sub(this->_array,v);
                 return *this;
             }
 
@@ -486,7 +501,7 @@ namespace utils{
             */
             array_type &operator-=(const array_type &a)
             {
-                IPA::sub(this->_array,a._array);
+                IPA<ATYPE>::sub(this->_array,a._array);
                 return *this;
             }
 
@@ -504,7 +519,7 @@ namespace utils{
             template<template<typename ...> class CTYPE,typename ...OTS>
                 array_type &operator-=(const CTYPE<OTS...> &c)
             {
-                IPA::sub(this->_array,c);
+                IPA<ATYPE>::sub(this->_array,c);
                 return *this;
             }
 
@@ -519,7 +534,7 @@ namespace utils{
             \*/
             array_type &operator*=(value_type v)
             {
-                IPA::mult(this->_array,v);
+                IPA<ATYPE>::mult(this->_array,v);
                 return *this;
             }
 
@@ -534,7 +549,7 @@ namespace utils{
             */
             array_type &operator*=(const array_type &a)
             {
-                IPA::mult(this->_array,a._array);
+                IPA<ATYPE>::mult(this->_array,a._array);
                 return *this;
             }
 
@@ -550,7 +565,7 @@ namespace utils{
             template<template<typename ...> class CTYPE,typename ...OTS>
                 array_type &operator*=(const CTYPE<OTS...> &c)
             {
-                IPA::mult(this->_array,c);
+                IPA<ATYPE>::mult(this->_array,c);
                 return *this;
             }
             
@@ -564,7 +579,7 @@ namespace utils{
             */
             array_type &operator/=(value_type v)
             {
-                IPA::div(this->_array,v);
+                IPA<ATYPE>::div(this->_array,v);
                 return *this;
             }
 
@@ -577,7 +592,7 @@ namespace utils{
             */
             array_type &operator/=(const array_type &a)
             {
-                IPA::div(this->_array,a._array);
+                IPA<ATYPE>::div(this->_array,a._array);
                 return *this;
             }
 
@@ -593,7 +608,7 @@ namespace utils{
             template<template<typename ...> class CTYPE,typename ...OTS>
                 array_type &operator/=(const CTYPE<OTS...> &c)
             {
-                IPA::div(this->_array,c);
+                IPA<ATYPE>::div(this->_array,c);
                 return *this;
             }
             

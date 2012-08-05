@@ -55,8 +55,8 @@ template<typename T> class AddOperatorTest: public CppUnit::TestFixture
 template<typename T> void AddOperatorTest<T>::setUp()
 {
     shape = std::vector<size_t>{2,3,4};
-    a1 = NumArray<atype>(atype(shape));
-    a2 = NumArray<atype>(atype(shape));
+    a1 = NumArray<atype>(shape);
+    a2 = NumArray<atype>(shape);
     
     std::fill(a1.begin(),a1.end(),T(100));
     std::fill(a2.begin(),a2.end(),T(5));

@@ -32,6 +32,8 @@
 namespace pni {
 namespace utils {
 
+    template<typename ATYPE,template<typename> class IPA> class NumArray;
+
     /*! 
     \ingroup util_classes
     \brief select return type of an array multiindex access
@@ -88,6 +90,23 @@ namespace utils {
         typedef ArrayView<ATYPE> viewtype; 
         //! array view reference type
         typedef ArrayView<ATYPE> reftype; 
+    };
+
+    //-------------------------------------------------------------------------
+    /*! 
+    \ingroup util_classes
+    \brief return a special type for numeric arrays
+
+    For numeric arrays we need to wrap the ArrayView template into a NumArray
+    class.
+    */
+    template<typename ATYPE,template<typename> class IPA,typename ...ITYPES> 
+        struct ArrayViewSelector<NumArray<ATYPE,IPA>,Slice,ITYPES...>
+    {
+        //! array view return type
+        typedef NumArray<ArrayView<NumArray<ATYPE,IPA> >,IPA > viewtype;
+        //! array view reference type
+        typedef NumArray<ArrayView<NumArray<ATYPE,IPA> >,IPA > reftype;
     };
 
     //-------------------------------------------------------------------------

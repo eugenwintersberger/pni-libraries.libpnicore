@@ -7,6 +7,7 @@
 #include "SArray.hpp"
 #include "ArrayViewSelectorTest.hpp"
 #include "ArrayView.hpp"
+#include "service.hpp"
 
 CPPUNIT_TEST_SUITE_REGISTRATION(ArrayViewSelectorTest);
 
@@ -30,8 +31,12 @@ void ArrayViewSelectorTest::test_selector()
     CPPUNIT_ASSERT(typeid(ArrayViewSelector<narray_type,size_t,size_t,size_t,size_t>::viewtype).name()
                    == typeid(Float64).name());
 
+    std::cout<<"---------------------------------------"<<std::endl;
+    std::cout<<"type: "<<demangle_cpp_name(typeid(ArrayViewSelector<narray_type,Slice,size_t,Slice,size_t>::viewtype).name())<<std::endl;
+    std::cout<<"type: "<<demangle_cpp_name(typeid(NumArray<ArrayView<narray_type> >).name())<<std::endl;
+    std::cout<<"---------------------------------------"<<std::endl;
     CPPUNIT_ASSERT(typeid(ArrayViewSelector<narray_type,Slice,size_t,Slice,size_t>::viewtype).name()
-                   == typeid(ArrayView<narray_type>).name());
+                   == typeid(NumArray<ArrayView<narray_type> >).name());
 
 }
 
