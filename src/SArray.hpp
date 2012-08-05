@@ -203,8 +203,30 @@ namespace utils{
             {}
 
             //-----------------------------------------------------------------
+            //! construct from a container type
+            template<template<typename ...> class CTYPE,typename ...OTS>
+                SArray(const CTYPE<OTS...> &c)
+            {
+                //can check here only for size
+                check_equal_size(c,*this,EXCEPTION_RECORD);
+
+                std::copy(c.begin(),c.end(),this->begin());
+            }
+
+            //-----------------------------------------------------------------
+            //! construct from a different array type
+            template<typename AT> SArray(const AT &a)
+            {
+                //can check here for size and shape
+                check_equal_size(a,*this,EXCEPTION_RECORD);
+                check_equal_shape(a,*this,EXCEPTION_RECORD);
+
+                std::copy(a.begin(),a.end(),this->begin());
+            }
+
+            //-----------------------------------------------------------------
             //! construction from an initializer list
-            explicit SArray(const std::initializer_list<size_t> &il)
+            SArray(const std::initializer_list<T> &il)
             {
                 check_equal_size(il,*this,EXCEPTION_RECORD);
 

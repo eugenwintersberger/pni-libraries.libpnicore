@@ -58,22 +58,23 @@ int main(int argc,char **argv)
 
     //using a selection to set the values of each vector
     for(size_t i=0;i<shape[0];i++)
-    {
-        //create a selection
-        auto view = a(i,Slice(0,3));
-        //as we cannot use a selection directly for computations we need to
-        //create a new numeric type
-        Vector v(view);
-        v += i+0.1*i;
-
-        //finally we have to copy back the data
-        std::copy(v.begin(),v.end(),view.begin());
-    }
+        a(i,Slice(0,3)) += i+0.1*i;
 
     //plotting some output
     std::cout<<a<<std::endl;
     for(size_t i=0;i<shape[0];i++)
-        std::cout<<"vector = "<<Vector(a(i,Slice(0,3)))<<std::endl;
+    {
+        Vector v(a(i,Slice(0,3)));
+        std::cout<<"vector = "<<v<<std::endl;
+    }
+
+    Vector v1{{1.,2.,3.}};
+    std::cout<<"v1 = "<<v1<<std::endl;
+    Vector v2{std::vector<Float32>{4,5,6}};
+    std::cout<<"v2 = "<<v2<<std::endl;
+
+    //Vector v{std::vector<Float32>{4,5,6}};
+
 
 
     return 0;

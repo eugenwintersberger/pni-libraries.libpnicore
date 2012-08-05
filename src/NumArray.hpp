@@ -183,6 +183,7 @@ namespace utils{
             //! construct from an arbitary array type
             NumArray(storage_type &&a):_array(std::move(a)) {}
 
+            //-----------------------------------------------------------------
             //! implicit constructor
             template<typename ...ARGTYPES> NumArray(ARGTYPES ...args):
                 _array(storage_type(args...))
