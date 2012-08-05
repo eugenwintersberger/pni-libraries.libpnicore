@@ -5,22 +5,12 @@ Using selections and numerics
 
 #include <iostream>
 #include <vector>
-#include <pni/utils/Types.hpp>
-#include <pni/utils/DArray.hpp>
-#include <pni/utils/SArray.hpp>
-#include <pni/utils/NumArray.hpp>
-#include <pni/utils/Slice.hpp>
+#include <pni/utils/Array.hpp>
 
 using namespace pni::utils;
 
-//some usefull type definitions
-typedef std::vector<size_t> shape_t; //container to describe array shapes
-typedef std::vector<size_t> index_t; //index type
-typedef DArray<Float32> F32Array;    //an array type for Float32 values
-typedef NumArray<F32Array> Frame;    //a numeric frame
-typedef SArray<Float32,3> F32Vector; //a static 3-vector type
-typedef NumArray<F32Vector> Vector;  //a numeric 3-vector
-
+typedef NF32DArray Frame;
+typedef NF32SArray<3> Vector;
 
 
 std::ostream &operator<<(std::ostream &o,const Frame &a)

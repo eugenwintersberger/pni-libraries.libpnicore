@@ -38,7 +38,7 @@ namespace utils{
 
     //define some dynamic arrays
     typedef DArray<UInt8> U8DArray;
-    typedef DArray<Int8>  I8Darray;
+    typedef DArray<Int8>  I8DArray;
     typedef DArray<UInt16> U16DArray;
     typedef DArray<Int16>  I16DArray;
     typedef DArray<UInt32> U32DArray;
@@ -102,7 +102,7 @@ namespace utils{
     template<size_t ...DIMS> using NI64SArray = NumArray<I64SArray<DIMS...> >;
 
     template<size_t ...DIMS> using NF32SArray = NumArray<F32SArray<DIMS...> >;
-    template<size_t ...DIMS> using NF64SArray = NumArray<F64SARray<DIMS...> >;
+    template<size_t ...DIMS> using NF64SArray = NumArray<F64SArray<DIMS...> >;
     template<size_t ...DIMS> using NF128SArray = NumArray<F128SArray<DIMS...> >;
 
     template<size_t ...DIMS> using NC32SArray = NumArray<C32SArray<DIMS...> >;
