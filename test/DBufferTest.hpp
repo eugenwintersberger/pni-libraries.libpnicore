@@ -223,8 +223,16 @@ void DBufferTest<T,Allocator>::test_iterator()
     //read data back
     size_t index = 0;
     std::cout<<"reading data from buffer ..."<<std::endl;
+#ifdef NOFOREACH
+    for(auto iter = b1.begin();iter!=b1.end();++iter)
+    {
+        auto v = *iter;
+#else
     for(auto v: b1)
+    {
+#endif
         check_equality(v,data[index++]);
+    }
 
 }
 

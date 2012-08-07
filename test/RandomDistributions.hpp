@@ -18,10 +18,12 @@ template<typename CT> class UniformDistribution<CT,true,false>
         {
             typedef typename CT::value_type value_type;
             CT container(n);
-            
+
+#ifndef NOCPPRAND
             std::mt19937_64 engine;
             std::uniform_int_distribution<> 
                 dist(TypeInfo<value_type>::min(),TypeInfo<value_type>::max());
+#endif
 
 #ifdef NOFOREACH
             for(auto iter=container.begin();iter!=container.end();iter++)
@@ -31,7 +33,11 @@ template<typename CT> class UniformDistribution<CT,true,false>
             for(value_type &v: container)
             {
 #endif
+#ifdef NOCPPRAND
+                v = value_type(1);
+#else
                 v = dist(engine);
+#endif
             }
 
             return container;
@@ -46,10 +52,11 @@ template<typename CT> class UniformDistribution<CT,false,false>
         {
             typedef typename CT::value_type value_type;
             CT container(n);
-            
+#ifndef NOCPPRAND       
             std::mt19937_64 engine;
             std::uniform_real_distribution<> 
                 dist(TypeInfo<Float32>::min(),TypeInfo<Float32>::max());
+#endif
 
 #ifdef NOFOREACH
             for(auto iter=container.begin();iter!=container.end();iter++)
@@ -59,7 +66,11 @@ template<typename CT> class UniformDistribution<CT,false,false>
             for(value_type &v: container)
             {
 #endif
+#ifdef NOCPPRAND
+                v = value_type(1);
+#else
                 v = dist(engine);
+#endif
             }
 
             return container;
@@ -75,11 +86,13 @@ template<typename CT> class UniformDistribution<CT,false,true>
             typedef typename CT::value_type value_type;
             typedef typename value_type::value_type base_type;
             CT container(n);
-            
+
+#ifndef NOCPPRAND       
             std::mt19937_64 engine;
             std::uniform_real_distribution<>
                 dist(TypeInfo<Float32>::min(),
                      TypeInfo<Float32>::max());
+#endif
 
 #ifdef NOFOREACH
             for(auto iter = container.begin();iter!=container.end();iter++)
@@ -89,7 +102,11 @@ template<typename CT> class UniformDistribution<CT,false,true>
             for(value_type &v: container)
             {
 #endif
+#ifdef NOCPPRAND
+                v = value_type(1,1);
+#else
                 v = value_type(dist(engine),dist(engine));
+#endif
             }
 
             return container;
