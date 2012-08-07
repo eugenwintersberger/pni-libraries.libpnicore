@@ -26,6 +26,7 @@
 #ifndef __EXCEPTIONUTILS_HPP__
 #define __EXCEPTIONUTILS_HPP__
 
+#include <vector>
 #include <iostream>
 #include <typeinfo>
 #include <algorithm>
@@ -105,9 +106,27 @@ namespace utils{
             //assemble error string
             std::stringstream ss;
             ss<<"Shapes ( ";
-            for(auto v: sa) std::cout<<v<<" ";
+#ifdef NOFOREACH
+            for(auto iter = sa.begin();iter!=sa.end();++iter)
+            {
+                auto v = *iter;
+#else
+            for(auto v: sa)
+            {
+#endif
+                std::cout<<v<<" ";
+            }
             ss<<") and ( ";
-            for(auto v: sb) std::cout<<v<<" ";
+#ifdef NOFOREACH
+            for(auto iter = sb.begin();iter!=sb.end();++iter)
+            {
+                auto v = *iter;
+#else
+            for(auto v: sb)
+            {
+#endif 
+                std::cout<<v<<" ";
+            }
             ss<<") do not match";
 
             //construct exception

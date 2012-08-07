@@ -64,7 +64,16 @@ namespace utils{
         if(_shape.size() == 0) return 0;
 
         size_t s = 1;
-        for(auto v: _shape) s*=v;
+#ifdef NOFOREACH
+        for(auto iter = _shape.begin();iter!=_shape.end();++iter)
+        {
+            auto v = *iter;
+#else
+        for(auto v: _shape)
+        {
+#endif
+            s*=v;
+        }
         return s;
     }
 

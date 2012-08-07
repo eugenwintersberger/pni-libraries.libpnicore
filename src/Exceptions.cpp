@@ -79,8 +79,15 @@ namespace utils{
         o<<std::endl<<"Description:"<<std::endl;
         o<<this->description()<<std::endl<<std::endl;
         o<<"Exception thrown by:"<<std::endl;
-        for(auto rec: *this)
+#ifdef NOFOREACH
+        for(auto iter = this->begin();iter != this->end(); iter++)
+        {
+            auto rec = *iter;
+#else
+        for(auto rec: *this){
+#endif
             o<<rec<<std::endl;
+        }
     
         o<<std::endl;
 

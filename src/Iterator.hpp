@@ -200,7 +200,11 @@ namespace utils{
             iterator would be implicitly convertible to integer (via bool).
             \return boolean value
             */
+#ifdef NOEXPLICITCONV
+            operator bool() const
+#else
             explicit operator bool() const
+#endif
             {
                 if(!this->_container) return false;
                 ssize_t size = (ssize_t)(this->_container->size());

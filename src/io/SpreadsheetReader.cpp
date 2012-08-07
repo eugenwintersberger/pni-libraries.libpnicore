@@ -71,8 +71,14 @@ namespace io{
     //=====================public methods implementation=======================
     bool SpreadsheetReader::has_column(const String &name) const
     {
+#ifdef NOFOREACH
+        for(auto iter = this->begin();iter!=this->end();++iter)
+        {
+            auto ci = *iter;
+#else
         for(auto ci: *this)
         {
+#endif
             if(ci.name() == name) return true;
         }
 
@@ -83,8 +89,16 @@ namespace io{
     size_t SpreadsheetReader::column_index(const String &name) const
     {
         size_t index = 0;
+#ifdef NOFOREACH
+        for(auto iter = this->begin();iter!=this->end();++iter)
+        {
+            auto ci = *iter;
+#else
         for(auto ci: *this)
+        {
+#endif
             if(ci.name() == name) return index++;
+        }
 
         //throw exception if the column name does not exist
         ExceptionRecord r(__FILE__,__LINE__,BOOST_CURRENT_FUNCTION);

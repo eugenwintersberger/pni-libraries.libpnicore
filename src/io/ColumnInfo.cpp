@@ -96,7 +96,16 @@ namespace io{
     {
         o<<"Column ["<<ci.name()<<"] of type ["<<ci.type_id();
         o<<"] and element shape [ ";
-        for(auto v: ci.shape()) o<<v<<" ";
+#ifdef NOFOREACH
+        for(auto iter=ci.shape().begin();iter!=ci.shape().end();++iter)
+        {
+            auto v = *iter;
+#else
+        for(auto v: ci.shape()) 
+        {
+#endif 
+            o<<v<<" ";
+        }
         o<<"]";
         return o;
     }

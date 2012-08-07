@@ -65,8 +65,14 @@ ArraySelection ArraySelection::create(const std::vector<Slice> &s)
     std::vector<size_t> stride(s.size());
 
     size_t index = 0;
+#ifdef NOFOREACH
+    for(auto iter = s.begin();iter!=s.end();++iter)
+    {
+        auto slice = *iter;
+#else
     for(auto slice: s)
     {
+#endif
         offset[index] = slice.first();
         stride[index] = slice.stride();
         shape[index] = pni::utils::size(slice);
@@ -86,7 +92,16 @@ std::ostream &operator<<(std::ostream &o,const ArraySelection &s)
         o<<std::endl;
     }
     o<<"effective shape: ( ";
-    for(auto v: s._shape) o<<v<<" ";
+#ifdef NOFOREACH
+    for(auto iter = s._shape.begin();iter!=s._shape.end();++iter)
+    {
+        auto v = *iter;
+#else
+    for(auto v: s._shape)
+    {
+#endif
+        o<<v<<" ";
+    }
     o<<")"<<std::endl;
 
     return o;

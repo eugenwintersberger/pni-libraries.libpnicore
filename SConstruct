@@ -116,7 +116,7 @@ if not env["DOCDIR"]:
 
 
 #set default compiler flags
-env.Append(CXXFLAGS = ["-Wall","-std=c++11"])
+env.Append(CXXFLAGS = ["-Wall","-std=c++0x"])
 env.Append(LIBS=["dl"])
 env.AppendUnique(LIBPATH=[env["BOOSTLIBDIR"],env["CPPULIBDIR"]])
 env.AppendUnique(CPPPATH=[env["BOOSTINCDIR"],env["CPPUINCDIR"]])
@@ -155,10 +155,35 @@ def CheckForEach(context):
     result = context.TryCompile(foreach_test_code,".cpp")
     context.Result(result)
     return result
+
+explicit_conversion_code="""
+#include<iostream>
+
+class test_t
+{
+    public:
+    explicit bool () const { return true; }
+};
+
+int main(int argc,char **argv)
+{
+    test_t test;
+    return 0;
+}
+"""
     
-#-------------------------------------------------------------------------------   
+def CheckForExplicitConversion(context):
+    context.Message("Check if compiler supports foreach loops ...")
+    result = context.TryCompile(explicit_conversion_code,".cpp")
+    context.Result(result)
+    return result
+#-------------------------------------------------------------------------------
+check_dict = {}
+check_dict["CheckNullPtr"] = CheckNullPtr
+check_dict["CheckForEach"] = CheckForEach
+check_dict["CheckExplicitConversion"] = CheckForExplicitConversion
 #start with configuration
-conf = Configure(env,custom_tests = {"CheckNullPtr":CheckNullPtr,"CheckForEach":CheckForEach})
+conf = Configure(env,custom_tests = check_dict)
 
 
 #checking compiler capabilities
@@ -169,6 +194,10 @@ if not conf.CheckNullPtr():
 if not conf.CheckForEach():
     print "foreach construction not supported - use workaround"
     env.Append(CXXFLAGS=["-DNOFOREACH"])
+
+if not conf.CheckExplicitConversion():
+    print "explicit conversion not supported by compiler!"
+    env.Append(CXXFLAGS=["-DNOEXPLICITCONV"])
 
 #check type sizes
 if not conf.CheckTypeSize('char',expect=1):

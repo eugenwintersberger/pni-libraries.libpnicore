@@ -320,8 +320,14 @@ namespace io{
         stream.seekg(_data_offset,std::ios::beg);
 
         String linebuffer;
+#ifdef NOFOREACH
+        for(auto iter = c.begin();iter!=c.end();++iter)
+        {
+            typename CTYPE::value_type &v = *iter;
+#else
         for(typename CTYPE::value_type &v: c)
         {
+#endif
             //read a single data line
             try
             {

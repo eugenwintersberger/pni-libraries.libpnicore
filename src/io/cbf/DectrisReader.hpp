@@ -98,8 +98,14 @@ namespace cbf{
         typename CTYPE::iterator iter = data.begin();
         typename CTYPE::value_type v_old = 0;
 
+#ifdef NOFOREACH
+        for(auto iter = data.begin();iter!=data.end();++iter)
+        {
+            typename CTYPE::value_type &v = *iter;
+#else
         for(typename CTYPE::value_type &v: data)
         {
+#endif
             v = v_old; //set the new value to the previous
 
             buffer = 0; //reset the read buffer
