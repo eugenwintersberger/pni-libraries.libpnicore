@@ -75,9 +75,27 @@ template<typename T> void SBufferTest<T>::test_assignment()
     
     std::fill(buffer1.begin(),buffer1.end(),T(100));
     std::fill(buffer2.begin(),buffer2.end(),T(100));
+#ifdef NOFOREACH
+    for(auto iter = buffer1.begin();iter!=buffer1.end();++iter)
+    {
+        auto v = *iter;
+#else
+    for(auto v: buffer1)
+    {
+#endif
+        CPPUNIT_ASSERT(v == T(100));
+    }
 
-    for(auto v: buffer1) CPPUNIT_ASSERT(v == T(100));
-    for(auto v: buffer2) CPPUNIT_ASSERT(v == T(100));
+#ifdef NOFOREACH
+    for(auto iter=buffer2.begin();iter!=buffer2.end();++iter)
+    {
+        auto v = *iter;
+#else
+    for(auto v: buffer2)
+    {
+#endif
+        CPPUNIT_ASSERT(v == T(100));
+    }
 
     CPPUNIT_ASSERT(buffer1 == buffer2);
 
@@ -130,14 +148,30 @@ template<typename T> void SBufferTest<T>::test_iterator()
    
     size_t index = 0;
     std::cout<<"writing data to buffer ..."<<std::endl;
+#ifdef NOFOREACH
+    for(auto iter = b1.begin();iter!=b1.end();++iter)
+    {
+        T &v = *iter;
+#else
     for(T &v: b1)
+    {
+#endif
         CPPUNIT_ASSERT_NO_THROW(v = data[index++]);
+    }
 
     //read data back
     index = 0;
     std::cout<<"reading data from buffer ..."<<std::endl;
+#ifdef NOFOREACH
+    for(auto iter=b1.begin();iter!=b1.end();++iter)
+    {
+        auto v = *iter;
+#else
     for(auto v: b1)
+    {
+#endif
         check_equality(v,data[index++]);
+    }
 
 }
 

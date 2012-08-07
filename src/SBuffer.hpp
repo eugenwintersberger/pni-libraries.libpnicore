@@ -125,7 +125,16 @@ namespace utils{
                 check_equal_size(*this,list,EXCEPTION_RECORD);
                 
                 size_t i=0;
-                for(auto v: list) (*this)[i] = v;
+#ifdef NOFOREACH
+                for(auto iter = list.begin();iter!=list.end();++iter)
+                {
+                    auto v = *iter;
+#else
+                for(auto v: list)
+                {
+#endif
+                    (*this)[i] = v;
+                }
             }
 
 
