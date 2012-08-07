@@ -173,15 +173,37 @@ int main(int argc,char **argv)
 """
     
 def CheckForExplicitConversion(context):
-    context.Message("Check if compiler supports foreach loops ...")
+    context.Message("Check if compiler supports explicit conversion operators ...")
     result = context.TryCompile(explicit_conversion_code,".cpp")
     context.Result(result)
     return result
+
+random_test_code = """
+#include<iostream>
+#include<random>
+
+int main(int argc,char **argv)
+{
+
+    std::mt19937_64 engine;
+    std::uniform_int_distribution<> dist(1,10);
+
+    return 0;
+}
+"""
+
+def CheckForCppRandom(context):
+    context.Message("Check for C++ pseudo random number facility ...")
+    result = context.TryCompile(random_test_code,".cpp")
+    context.Result(result)
+    return result
+
 #-------------------------------------------------------------------------------
 check_dict = {}
 check_dict["CheckNullPtr"] = CheckNullPtr
 check_dict["CheckForEach"] = CheckForEach
 check_dict["CheckExplicitConversion"] = CheckForExplicitConversion
+check_dict["CheckForCppRandom"] = CheckForCppRandom
 #start with configuration
 conf = Configure(env,custom_tests = check_dict)
 
@@ -198,6 +220,10 @@ if not conf.CheckForEach():
 if not conf.CheckExplicitConversion():
     print "explicit conversion not supported by compiler!"
     env.Append(CXXFLAGS=["-DNOEXPLICITCONV"])
+
+if not conf.CheckForCppRandom():
+    print "No C++11 random number generators!"
+    env.Append(CXXFLAGS=["-DNOCPPRAND"])
 
 #check type sizes
 if not conf.CheckTypeSize('char',expect=1):
