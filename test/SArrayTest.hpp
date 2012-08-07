@@ -125,7 +125,7 @@ template<typename T> void SArrayTest<T>::test_iterators()
 
     index = 0;
 #ifdef NOFOREACH
-    for(auto iter = a.begin();iter!=a.end();iter++)
+    for(auto iter = a1.begin();iter!=a1.end();iter++)
     {
         const T &v = *iter;
 #else
@@ -188,7 +188,16 @@ template<typename T> void SArrayTest<T>::test_view()
     {
         //for reading we use a different construction here
         auto view = v(i,Slice(0,3,1));
-        for(auto v: view) check_equality(v,T(i));
+#ifdef NOFOREACH
+        for(auto iter = view.begin();iter!=view.end();++iter)
+        {
+            auto v = *iter;
+#else
+        for(auto v: view)
+        {
+#endif
+            check_equality(v,T(i));
+        }
     }
 
     //check construction of a static array from a view

@@ -85,7 +85,16 @@ void DArrayTest<T,STORAGE>::test_assignment()
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
     DArray<T,STORAGE> a1(s1,STORAGE(12));
     size_t i;
-    for(T &a: a1) a = T(i);
+#ifdef NOFOREACH
+    for(auto iter = a1.begin();iter!=a1.end();++iter)
+    {
+        T &a = *iter;
+#else
+    for(T &a: a1)
+    {
+#endif 
+        a = T(i);
+    }
    
     //copy assignment
     DArray<T,STORAGE> a2;
@@ -148,20 +157,44 @@ void DArrayTest<T,STORAGE>::test_iterators()
     auto data = RandomDistribution::uniform<std::vector<T> >(a1.size());
 
     size_t index = 0;
+#ifdef NOFOREACH
+    for(auto iter = a1.begin();iter!=a1.end();++iter)
+    {
+        T &v = *iter;
+#else
     for(T &v: a1)
+    {
+#endif
         v = data[index++];
+    }
     
     index = 0;
+#ifdef NOFOREACH
+    for(auto iter = a1.begin();iter!=a1.end();++iter)
+    {
+        auto &v = *iter;
+#else
     for(auto &v: a1)
+    {
+#endif
         check_equality(v,data[index++]);
+    }
 
 
     //-------------------check const iterator-----------------------------
     const DArray<T,STORAGE> &a = a1;
 
     index = 0;
+#ifdef NOFOREACH
+    for(auto iter = a.begin();iter!=a.end();++iter)
+    {
+        auto v = *iter;
+#else
     for(auto v: a)
+    {
+#endif
         check_equality(v,data[index++]); 
+    }
 }
 
 //-----------------------------------------------------------------------------

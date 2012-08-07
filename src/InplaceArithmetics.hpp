@@ -33,47 +33,84 @@ namespace utils{
             //object with a scalar
             static void add(ATYPE &a,value_type b)
             {
-                for(value_type &v: a) v+= b;
-            }
-
-
-            //-----------------------------------------------------------------
-            //add with another array of same type
-            static void add(ATYPE &a,const ATYPE &b)
-            {
-                const_iterator iter = b.begin();
+#ifdef NOFOREACH
+                for(auto iter = a.begin();iter!=a.end();++iter)
+                {
+                    value_type &v = *iter;
+#else
                 for(value_type &v: a)
                 {
-                    v+=(*iter);
-                    ++iter;
+#endif
+                    v+= b;
                 }
             }
+
 
             //-----------------------------------------------------------------
             template<template<typename ...> class CTYPE,typename ...OTS>
             static void add(ATYPE &a,const CTYPE<OTS...> &b)
             {
                 typename CTYPE<OTS...>::const_iterator iter = b.begin();
+#ifdef NOFOREACH
+                for(auto viter = a.begin();viter!=a.end();++viter)
+                {
+                    value_type &v = *viter;
+#else
                 for(value_type &v: a)
                 {
+#endif
                     v += (*iter);
                     ++iter;
                 }
             }
 
+            //-----------------------------------------------------------------
+            //add with another array of same type
+            static void add(ATYPE &a,const ATYPE &b)
+            {
+                const_iterator iter = b.begin();
+#ifdef NOFOREACH
+                for(auto viter = a.begin();viter!=a.end();++viter)
+                {
+                    value_type &v = *viter;
+#else
+                for(value_type &v: a)
+                {
+#endif
+                    v+=(*iter);
+                    ++iter;
+                }
+            }
+
+
             //==================inplace subtraction===============================
             //object with a scalar
             static void sub(ATYPE &a,value_type b)
             {
-                for(value_type &v: a) v -= b;
+#ifdef NOFOREACH
+                for(auto iter = a.begin();iter!=a.end();++iter)
+                {
+                    value_type &v = *iter;
+#else
+                for(value_type &v: a)
+                {
+#endif
+                    v -= b;
+                }
             }
 
             //-----------------------------------------------------------------
             static void sub(ATYPE &a,const ATYPE &b)
             {
                 const_iterator iter = b.begin();
+#ifdef NOFOREACH
+                for(auto viter = a.begin();viter!=a.end();++viter)
+                {
+                    value_type &v = *viter;
+#else
                 for(value_type &v: a)
                 {
+#endif
                     v -= (*iter);
                     ++iter;
                 }
@@ -84,8 +121,14 @@ namespace utils{
             static void sub(ATYPE &a,const CTYPE<OTS...> &b)
             {
                 typename CTYPE<OTS...>::const_iterator iter = b.begin();
+#ifdef NOFOREACH
+                for(auto viter = a.begin();viter!=a.end();++viter)
+                {
+                    value_type &v = *viter;
+#else
                 for(value_type &v: a)
                 {
+#endif
                     v -= (*iter);
                     ++iter;
                 }
@@ -95,15 +138,30 @@ namespace utils{
             //object with a scalar
             static void mult(ATYPE &a,value_type b)
             {
-                for(value_type &v: a) v *= b;
+#ifdef NOFOREACH
+                for(auto iter = a.begin();iter!=a.end();++iter)
+                {
+                    value_type &v = *iter;
+#else
+                for(value_type &v: a)
+                {
+#endif
+                    v *= b;
+                }
             }
 
             //-----------------------------------------------------------------
             static void mult(ATYPE &a,const ATYPE &b)
             {
                 const_iterator iter = b.begin();
+#ifdef NOFOREACH
+                for(auto viter = a.begin();viter!=a.end();++viter)
+                {
+                    value_type &v = *viter;
+#else
                 for(value_type &v: a)
                 {
+#endif
                     v *= (*iter);
                     ++iter;
                 }
@@ -114,8 +172,14 @@ namespace utils{
             static void mult(ATYPE &a,const CTYPE<OTS...> &b)
             {
                 typename CTYPE<OTS...>::const_iterator iter = b.begin();
+#ifdef NOFOREACH
+                for(auto viter = a.begin();viter!=a.end();++viter)
+                {
+                    value_type &v = *viter;
+#else
                 for(value_type &v: a)
                 {
+#endif
                     v *= (*iter);
                     ++iter;
                 }
@@ -125,15 +189,30 @@ namespace utils{
             //object with a scalar
             static void div(ATYPE &a,value_type b)
             {
-                for(value_type &v: a) v /= b;
+#ifdef NOFOREACH
+                for(auto iter = a.begin();iter!=a.end();++iter)
+                {
+                    value_type &v = *iter;
+#else
+                for(value_type &v: a) 
+                {
+#endif
+                    v /= b;
+                }
             }
 
             //-----------------------------------------------------------------
             static void div(ATYPE &a,const ATYPE &b)
             {
                 const_iterator iter = b.begin();
+#ifdef NOFOREACH
+                for(auto viter = a.begin();viter!=a.end();++viter)
+                {
+                    value_type &v = *viter;
+#else
                 for(value_type &v: a)
                 {
+#endif
                     v /= (*iter);
                     ++iter;
                 }
@@ -144,8 +223,14 @@ namespace utils{
             static void div(ATYPE &a,const CTYPE<OTS...> &b)
             {
                 typename CTYPE<OTS...>::const_iterator iter = b.begin();
+#ifdef NOFOREACH
+                for(auto viter = a.begin();viter!=a.end();++viter)
+                {
+                    value_type &v = *viter;
+#else
                 for(value_type &v: a)
                 {
+#endif
                     v /= (*iter);
                     ++iter;
                 }

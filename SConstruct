@@ -116,7 +116,7 @@ if not env["DOCDIR"]:
 
 
 #set default compiler flags
-env.Append(CXXFLAGS = ["-Wall","-std=c++0x"])
+env.Append(CXXFLAGS = ["-Wall","-std=c++0x","-fno-deduce-init-list"])
 env.Append(LIBS=["dl"])
 env.AppendUnique(LIBPATH=[env["BOOSTLIBDIR"],env["CPPULIBDIR"]])
 env.AppendUnique(CPPPATH=[env["BOOSTINCDIR"],env["CPPUINCDIR"]])

@@ -84,7 +84,16 @@ template<typename ATYPE> void NumArrayTest<ATYPE>::test_assignment()
 {
     NumArray<ATYPE> a1(create_array<ATYPE>());
     size_t i;
-    for(typename ATYPE::value_type  &a: a1) a = typename ATYPE::value_type(i);
+#ifdef NOFOREACH
+    for(auto iter = a1.begin();iter!=a1.end();++iter)
+    {
+        typename ATYPE::value_type &a = *iter;
+#else
+    for(typename ATYPE::value_type  &a: a1) 
+    {
+#endif
+        a = typename ATYPE::value_type(i);
+    }
    
     //copy assignment
     NumArray<ATYPE> a2(create_array<ATYPE>());
@@ -135,17 +144,44 @@ template<typename ATYPE> void NumArrayTest<ATYPE>::test_iterators()
     auto data = RandomDistribution::uniform<std::vector<value_type> >(a1.size());
 
     size_t index = 0;
-    for(value_type &v: a1) v = data[index++];
+#ifdef NOFOREACH
+    for(auto iter = a1.begin();iter!=a1.end();++iter)
+    {
+        value_type &v = *iter;
+#else
+    for(value_type &v: a1)
+    {
+#endif 
+        v = data[index++];
+    }
     
     index = 0;
-    for(auto &v: a1) check_equality(v,data[index++]);
+#ifdef NOFOREACH
+    for(auto iter = a1.begin();iter!=a1.end();++iter)
+    {
+        auto &v = *iter;
+#else
+    for(auto &v: a1) 
+    {
+#endif
+        check_equality(v,data[index++]);
+    }
 
 
     //-------------------check const iterator-----------------------------
     const NumArray<ATYPE> &a = a1;
 
     index = 0;
-    for(auto v: a) check_equality(v,data[index++]); 
+#ifdef NOFOREACH
+    for(auto iter = a.begin();iter!=a.end();++iter)
+    {
+        auto v = *iter;
+#else
+    for(auto v: a) 
+    {
+#endif 
+        check_equality(v,data[index++]); 
+    }
 }
 
 //-----------------------------------------------------------------------------
@@ -226,20 +262,47 @@ template<typename ATYPE> void NumArrayTest<ATYPE>::test_unary_add()
 
     //add a scalar
     a += value_type(1);
-    for(auto v: a) check_equality(v,value_type(2));
+#ifdef NOFOREACH
+    for(auto iter = a.begin();iter!=a.end();++iter)
+    {
+        auto v = *iter;
+#else
+    for(auto v: a) 
+    {
+#endif
+        check_equality(v,value_type(2));
+    }
 
     //add a array
     NumArray<ATYPE> b(create_array<ATYPE>());
     std::fill(b.begin(),b.end(),value_type(3));
 
     a += b;
-    for(auto v: a) check_equality(v,value_type(5));
+#ifdef NOFOREACH
+    for(auto iter = a.begin();iter!=a.end();++iter)
+    {
+        auto v = *iter;
+#else
+    for(auto v: a) 
+    {
+#endif 
+        check_equality(v,value_type(5));
+    }
 
     //try an arbitary container
     std::vector<value_type> c(a.size());
     std::fill(c.begin(),c.end(),value_type(10));
     a += c;
-    for(auto v: a) check_equality(v,value_type(15));
+#ifdef NOFOREACH
+    for(auto iter = a.begin();iter!=a.end();++iter)
+    {
+        auto v = *iter;
+#else
+    for(auto v: a) 
+    {
+#endif 
+        check_equality(v,value_type(15));
+    }
 }
 
 //-----------------------------------------------------------------------------
@@ -253,20 +316,47 @@ template<typename ATYPE> void NumArrayTest<ATYPE>::test_unary_sub()
 
     //add a scalar
     a -= value_type(1);
-    for(auto v: a) check_equality(v,value_type(14));
+#ifdef NOFOREACH
+    for(auto iter = a.begin();iter!=a.end();++iter)
+    {
+        auto v = *iter;
+#else
+    for(auto v: a) 
+    {
+#endif 
+        check_equality(v,value_type(14));
+    }
 
     //add a array
     NumArray<ATYPE> b(create_array<ATYPE>());
     std::fill(b.begin(),b.end(),value_type(3));
 
     a -= b;
-    for(auto v: a) check_equality(v,value_type(11));
+#ifdef NOFOREACH
+    for(auto iter = a.begin();iter!=a.end();++iter)
+    {
+        auto v = *iter;
+#else
+    for(auto v: a) 
+    {
+#endif 
+        check_equality(v,value_type(11));
+    }
 
     //try an arbitary container
     std::vector<value_type> c(a.size());
     std::fill(c.begin(),c.end(),value_type(10));
     a -= c;
-    for(auto v: a) check_equality(v,value_type(1));
+#ifdef NOFOREACH
+    for(auto iter = a.begin();iter!=a.end();++iter)
+    {
+        auto v = *iter;
+#else
+    for(auto v: a) 
+    {
+#endif 
+        check_equality(v,value_type(1));
+    }
 }
 
 //-----------------------------------------------------------------------------
@@ -280,20 +370,47 @@ template<typename ATYPE> void NumArrayTest<ATYPE>::test_unary_mult()
 
     //add a scalar
     a *= value_type(2);
-    for(auto v: a) check_equality(v,value_type(2));
+#ifdef NOFOREACH
+    for(auto iter = a.begin();iter!=a.end();++iter)
+    {
+        auto v = *iter;
+#else
+    for(auto v: a) 
+    {
+#endif 
+        check_equality(v,value_type(2));
+    }
 
     //add a array
     NumArray<ATYPE> b(create_array<ATYPE>());
     std::fill(b.begin(),b.end(),value_type(3));
 
     a *= b;
-    for(auto v: a) check_equality(v,value_type(6));
+#ifdef NOFOREACH
+    for(auto iter = a.begin();iter!=a.end();++iter)
+    {
+        auto v = *iter;
+#else
+    for(auto v: a) 
+    {
+#endif 
+        check_equality(v,value_type(6));
+    }
 
     //try an arbitary container
     std::vector<value_type> c(a.size());
     std::fill(c.begin(),c.end(),value_type(10));
     a *= c;
-    for(auto v: a) check_equality(v,value_type(60));
+#ifdef NOFOREACH
+    for(auto iter = a.begin();iter!=a.end();++iter)
+    {
+        auto v = *iter;
+#else
+    for(auto v: a) 
+    {
+#endif 
+        check_equality(v,value_type(60));
+    }
 }
 
 //-----------------------------------------------------------------------------
@@ -307,21 +424,48 @@ template<typename ATYPE> void NumArrayTest<ATYPE>::test_unary_div()
 
     //add a scalar
     a /= value_type(2);
-    for(auto v: a) check_equality(v,value_type(12/2));
+#ifdef NOFOREACH
+    for(auto iter = a.begin();iter!=a.end();++iter)
+    {
+        auto v = *iter;
+#else
+    for(auto v: a) 
+    {
+#endif 
+        check_equality(v,value_type(12/2));
+    }
 
     //add a array
     NumArray<ATYPE> b(create_array<ATYPE>());
     std::fill(b.begin(),b.end(),value_type(2));
 
     a /= b;
-    for(auto v: a) check_equality(v,value_type(12/2/2));
+#ifdef NOFOREACH
+    for(auto iter = a.begin();iter!=a.end();++iter)
+    {
+        auto v = *iter;
+#else
+    for(auto v: a) 
+    {
+#endif 
+        check_equality(v,value_type(12/2/2));
+    }
 
     //try an arbitary container
     std::vector<value_type> c(a.size());
     std::fill(c.begin(),c.end(),value_type(2));
     a /= c;
-    for(auto v: a) check_equality(v,value_type(value_type(12)/value_type(2)/
+#ifdef NOFOREACH
+    for(auto iter = a.begin();iter!=a.end();++iter)
+    {
+        auto v = *iter;
+#else
+    for(auto v: a) 
+    {
+#endif 
+        check_equality(v,value_type(value_type(12)/value_type(2)/
                                   value_type(2)/value_type(2)));
+    }
 }
 
 //-----------------------------------------------------------------------------

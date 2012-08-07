@@ -101,11 +101,29 @@ template<typename T> void AddOperatorTest<T>::test_iterator()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
     Add<na_type,na_type> op1(a1,a2);
-    for(auto v: op1) check_equality(v,T(105));
+#ifdef NOFOREACH
+    for(auto iter = op1.begin();iter!=op1.end();++iter)
+    {
+        auto v = *iter;
+#else
+    for(auto v: op1) 
+    {
+#endif 
+        check_equality(v,T(105));
+    }
 
     s_type s(10);
     Add<na_type,s_type> op2(a1,s);
-    for(auto v: op2) check_equality(v,T(110));
+#ifdef NOFOREACH
+    for(auto iter = op2.begin();iter!=op2.end();++iter)
+    {
+        auto v = *iter;
+#else
+    for(auto v: op2) 
+    {
+#endif 
+        check_equality(v,T(110));
+    }
 }
 
 template<typename T> void AddOperatorTest<T>::test_operator()
@@ -113,18 +131,54 @@ template<typename T> void AddOperatorTest<T>::test_operator()
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
     na_type r = atype(shape);
     r = a1+a2;
-    for(auto v: r) check_equality(v,T(105));
+#ifdef NOFOREACH
+    for(auto iter = r.begin();iter!=r.end();++iter)
+    {
+        auto v = *iter;
+#else
+    for(auto v: r) 
+    {
+#endif 
+        check_equality(v,T(105));
+    }
 
     r = a1+10;
-    for(auto v: r) check_equality(v,T(110));
+#ifdef NOFOREACH
+    for(auto iter = r.begin();iter!=r.end();++iter)
+    {
+        auto v = *iter;
+#else
+    for(auto v: r) 
+    {
+#endif 
+        check_equality(v,T(110));
+    }
 
     r = 95 + a1;
-    for(auto v: r) check_equality(v,T(195));
+#ifdef NOFOREACH
+    for(auto iter = r.begin();iter!=r.end();++iter)
+    {
+        auto v = *iter;
+#else
+    for(auto v: r) 
+    {
+#endif 
+        check_equality(v,T(195));
+    }
 
     //put it all together
 
     r = a1 + 10 + a2;
-    for(auto v: r) check_equality(v,T(115));
+#ifdef NOFOREACH
+    for(auto iter = r.begin();iter!=r.end();++iter)
+    {
+        auto v = *iter;
+#else
+    for(auto v: r) 
+    {
+#endif 
+        check_equality(v,T(115));
+    }
 
 }
 #endif

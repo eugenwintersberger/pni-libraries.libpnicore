@@ -231,7 +231,16 @@ namespace utils{
                 check_equal_size(il,*this,EXCEPTION_RECORD);
 
                 size_t index = 0;
-                for(auto v: il) (*this)[index++] = v;
+#ifdef NOFOREACH
+                for(auto iter = il.begin(); iter!=il.end();++iter)
+                {
+                    auto v = *iter;
+#else
+                for(auto v: il)
+                {
+#endif 
+                    (*this)[index++] = v;
+                }
             }
 
             //-----------------------------------------------------------------
