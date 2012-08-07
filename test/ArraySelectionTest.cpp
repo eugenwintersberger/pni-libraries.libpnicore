@@ -33,7 +33,7 @@ void ArraySelectionTest::test_construction()
     CPPUNIT_ASSERT(sel1.size() == 0);
 
     //testing standard constructor
-    ArraySelection sel2(itype{1,100,100},itype{0,0,0},itype{1,1,1});
+    ArraySelection sel2(itype({1,100,100}),itype({0,0,0}),itype({1,1,1}));
     CPPUNIT_ASSERT(sel2.rank() == 2);
     CPPUNIT_ASSERT(sel2.size() == 100*100);
     itype s{100,100};
@@ -63,10 +63,20 @@ void ArraySelectionTest::test_construction()
 void ArraySelectionTest::test_assignment()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
-    ArraySelection sel(itype{100,1,200},itype{1,1,1},itype{1,1,2});
+    ArraySelection sel(itype({100,1,200}),itype({1,1,1}),itype({1,1,2}));
     CPPUNIT_ASSERT(sel.rank() == 2);
     itype s{100,200};
-    for(auto v: sel.shape()) std::cout<<v<<" ";
+#ifdef NOFOREACH
+    for(auto iter= sel.shape().begin();iter!=sel.shape().end();++iter)
+    {
+        auto v = *iter;
+#else
+    for(auto v: sel.shape()) 
+    {
+#endif
+        std::cout<<v<<" ";
+    }
+
     std::cout<<std::endl;
     CPPUNIT_ASSERT(std::equal(s.begin(),s.end(),sel.shape().begin()));
     std::cout<<sel.size()<<std::endl;
@@ -97,20 +107,20 @@ void ArraySelectionTest::test_assignment()
 void ArraySelectionTest::test_index()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
-    ArraySelection sel(itype{10,20},itype{1,2},itype{3,2});
+    ArraySelection sel(itype({10,20}),itype({1,2}),itype({3,2}));
     itype s{10,20};
     CPPUNIT_ASSERT(std::equal(s.begin(),s.end(),sel.shape().begin()));
     CPPUNIT_ASSERT(sel.rank()==2);
     CPPUNIT_ASSERT(sel.size() == 10*20);
         
     itype i(sel.rank());
-    sel.index(itype{1,3},i);
+    sel.index(itype({1,3}),i);
     itype r{4,8};
     CPPUNIT_ASSERT(std::equal(r.begin(),r.end(),i.begin()));
 
-    ArraySelection sel2(itype{10,1,20},itype{1,1,2},itype{3,1,2});
+    ArraySelection sel2(itype({10,1,20}),itype({1,1,2}),itype({3,1,2}));
     i = itype(3);
-    sel2.index(itype{1,3},i);
+    sel2.index(itype({1,3}),i);
     r = itype{4,1,8};
     CPPUNIT_ASSERT(std::equal(r.begin(),r.end(),i.begin()));
 
