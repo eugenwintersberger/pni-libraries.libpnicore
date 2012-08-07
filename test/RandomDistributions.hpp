@@ -1,6 +1,8 @@
 #ifndef __RANDOMDISTRIBUTIONS_HPP__
 #define __RANDOMDISTRIBUTIONS_HPP__
 
+#include <random>
+
 #include "TypeInfo.hpp"
 #include "Types.hpp"
 
