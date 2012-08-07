@@ -190,7 +190,11 @@ namespace utils{
 
         public:
             //! default constructor
+#ifdef NOCEXPR
+            StaticCIndexMap() {}
+#else
             constexpr StaticCIndexMap() { }
+#endif
             
             //-----------------------------------------------------------------
             /*! 
@@ -231,8 +235,16 @@ namespace utils{
                 CONTAINER c(this->rank());
 
                 size_t index = 0;
+#ifdef NOFOREACH
+                for(auto iter = c.begin();iter!=c.end();++iter)
+                {
+                    auto v = *iter;
+#else
                 for(typename CONTAINER::value_type &v: c)
+                {
+#endif
                     v = this->_dims[index];
+                }
 
                 return c;
             }
@@ -308,8 +320,14 @@ namespace utils{
                 }
 
                 size_t index = 0;
+#ifdef NOFOREACH
+                for(auto iter = c.begin();iter!=c.end();++iter)
+                {
+                    auto i = *iter;
+#else
                 for(auto i: c)
                 {
+#endif
                     if(i>=this->_dims[index++])
                     {
                         std::stringstream ss;

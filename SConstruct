@@ -198,12 +198,29 @@ def CheckForCppRandom(context):
     context.Result(result)
     return result
 
+constexpr_test_code="""
+#include<iostream>
+
+constexpr int value() { return 5; }
+
+int main(int argc,char **argv)
+{
+    return value();
+}
+"""
+
+def CheckForConstExpr(context):
+    context.Message("Check for C++11 constexpr ...")
+    result = context.TryCompile(constexpr_test_code,".cpp")
+    context.Result(result)
+    return result
 #-------------------------------------------------------------------------------
 check_dict = {}
 check_dict["CheckNullPtr"] = CheckNullPtr
 check_dict["CheckForEach"] = CheckForEach
 check_dict["CheckExplicitConversion"] = CheckForExplicitConversion
 check_dict["CheckForCppRandom"] = CheckForCppRandom
+check_dict["CheckForConstExpr"] = CheckForConstExpr
 #start with configuration
 conf = Configure(env,custom_tests = check_dict)
 
@@ -224,6 +241,10 @@ if not conf.CheckExplicitConversion():
 if not conf.CheckForCppRandom():
     print "No C++11 random number generators!"
     env.Append(CXXFLAGS=["-DNOCPPRAND"])
+
+if not conf.CheckForConstExpr():
+    print "Compiler does not support constexpr!"
+    env.Append(CXXFLAGS=["-DNOCEXPR"])
 
 #check type sizes
 if not conf.CheckTypeSize('char',expect=1):
