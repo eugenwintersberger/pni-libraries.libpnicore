@@ -90,6 +90,7 @@ enum class TypeID {NONE,   //!< no data type
 
 std::ostream &operator<<(std::ostream &o,const TypeID &tid);
 
+
 //! classes of data types provided by the PNI utility library
 enum class TypeClass { NONE,       //!< unspecified type
 	                INTEGER,    //!< integer type
@@ -100,6 +101,19 @@ enum class TypeClass { NONE,       //!< unspecified type
 				    };
 
 
+//if the compiler does not provide comparison operators for typed enumerations
+//we have to do this by ourselves
+#ifdef ENUMBUG
+bool operator<(TypeID a,TypeID b);
+bool operator>(TypeID a,TypeID b);
+bool operator<=(TypeID a,TypeID b);
+bool operator>=(TypeID a,TypeID b);
+
+bool operator<(TypeClass a,TypeClass b);
+bool operator>(TypeClass a,TypeClass b);
+bool operator<=(TypeClass a,TypeClass b);
+bool operator>=(TypeClass a,TypeClass b);
+#endif
 
 //! @}
 //end of namespace

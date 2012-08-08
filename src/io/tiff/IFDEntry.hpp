@@ -50,6 +50,13 @@ namespace tiff{
     enum class IFDEntryTypeID { BYTE, ASCII,SHORT,LONG,RATIONAL,SBYTE,UNDEFINED,
                                   SSHORT,SLONG,SRATIONAL,FLOAT,DOUBLE};
 
+#ifdef ENUMBUG
+    bool operator<(IFDEntryTypeID a,IFDEntryTypeID b);
+    bool operator>(IFDEntryTypeID a,IFDEntryTypeID b);
+    bool operator<=(IFDEntryTypeID a,IFDEntryTypeID b);
+    bool operator>=(IFDEntryTypeID a,IFDEntryTypeID b);
+#endif
+
     /*!
     \ingroup io_classes
     \brief class for IFD entries

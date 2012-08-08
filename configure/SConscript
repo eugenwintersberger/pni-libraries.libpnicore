@@ -47,13 +47,18 @@ def CheckForConstExpr(context):
     return result
 
 #=======================check for alias template support=======================
-
 def CheckForTemplateAlias(context):
     context.Message("Check for C++11 alias templates ...")
     result = context.TryCompile(open('src/template_alias_test.cpp').read(),".cpp")
     context.Result(result)
     return result
 
+#=======================check for enum class bug===============================
+def CheckForEnumBug(context):
+    context.Message("Check for enum bug ...")
+    result = context.TryCompile(open('src/enum_bug_test.cpp').read(),".cpp")
+    context.Result(result)
+    return result
 
 #-------------------------------------------------------------------------------
 
@@ -64,6 +69,7 @@ CustomChecks["CheckExplicitConversion"] = CheckForExplicitConversion
 CustomChecks["CheckForCppRandom"] = CheckForCppRandom
 CustomChecks["CheckForConstExpr"] = CheckForConstExpr
 CustomChecks["CheckForTemplateAlias"] = CheckForTemplateAlias
+CustomChecks["CheckForEnumBug"] = CheckForEnumBug
 
 Import('env')
 #start with configuration
@@ -94,6 +100,10 @@ if not conf.CheckForConstExpr():
 if not conf.CheckForTemplateAlias():
     print "Template aliases not supported!"
     env.Append(CPPDEFINES=['NOTMPALIAS'])
+
+if not conf.CheckForEnumBug():
+    print "Compiler provides no comparsion operators for class enum types!"
+    env.Append(CPPDEFINES=['ENUMBUG'])
 
 #check type sizes
 if not conf.CheckTypeSize('char',expect=1):

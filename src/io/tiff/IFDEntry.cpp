@@ -34,6 +34,31 @@
 namespace pni{
 namespace io{
 namespace tiff{
+    //================manage enum types if the compiler does not do it=========
+#ifdef ENUMBUG
+    bool operator<(IFDEntryTypeID a,IFDEntryTypeID b)
+    {
+        return int(a)<int(b);
+    }
+
+    //-------------------------------------------------------------------------
+    bool operator>(IFDEntryTypeID a,IFDEntryTypeID b)
+    {
+        return int(a)>int(b);
+    }
+
+    //-------------------------------------------------------------------------
+    bool operator<=(IFDEntryTypeID a,IFDEntryTypeID b)
+    {
+        return int(a)<=int(b);
+    }
+
+    //-------------------------------------------------------------------------
+    bool operator>=(IFDEntryTypeID a,IFDEntryTypeID b)
+    {
+        return int(a)>=int(b);
+    }
+#endif
 
     //map object associating TIFF type tags to IDFEntryTypeId enums
     std::map<UInt16,IFDEntryTypeID> 

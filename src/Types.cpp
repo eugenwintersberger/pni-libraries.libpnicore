@@ -54,6 +54,33 @@ namespace utils{
         //this is just to make the compiler happy - we should never come here.
         return o; 
     }
+
+    //handle missing comparison operators for class enum types for some
+    //compilers.
+#ifdef ENUMBUG
+    bool operator<(TypeID a,TypeID b) { return int(a)<int(b); }
+
+    //-------------------------------------------------------------------------
+    bool operator>(TypeID a,TypeID b) { return int(a)>int(b); }
+
+    //-------------------------------------------------------------------------
+    bool operator<=(TypeID a,TypeID b) { return int(a)<=int(b); }
+
+    //-------------------------------------------------------------------------
+    bool operator>=(TypeID a,TypeID b) { return int(a)>=int(b); }
+
+    //-------------------------------------------------------------------------
+    bool operator<(TypeClass a,TypeClass b) { return int(a)<int(b); }
+
+    //-------------------------------------------------------------------------
+    bool operator>(TypeClass a,TypeClass b) { return int(a)>int(b); }
+
+    //-------------------------------------------------------------------------
+    bool operator<=(TypeClass a,TypeClass b) { return int(a)<=int(b); }
+
+    //-------------------------------------------------------------------------
+    bool operator>=(TypeClass a,TypeClass b) { return int(a)>=int(b); }
+#endif
 //end of namespace 
 }
 }
