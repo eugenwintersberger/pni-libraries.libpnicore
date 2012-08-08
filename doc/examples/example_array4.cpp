@@ -10,7 +10,12 @@ Using selections and numerics
 using namespace pni::utils;
 
 typedef NF32DArray Frame;
+
+#ifdef NOTMPALIAS
+typedef NumArray<SArray<Float32,3> > Vector;
+#else
 typedef NF32SArray<3> Vector;
+#endif
 
 
 std::ostream &operator<<(std::ostream &o,const Frame &a)
@@ -29,7 +34,17 @@ std::ostream &operator<<(std::ostream &o,const Frame &a)
 std::ostream &operator<<(std::ostream &o,const Vector &v)
 {
     o<<"( ";
-    for(auto c: v) o<<c<<" ";
+#ifdef NOFOREACH
+    for(auto iter=v.begin();iter!=v.end();++iter)
+    {
+        auto c = *iter;
+#else
+    for(auto c: v) 
+    {
+#endif
+        o<<c<<" ";
+    }
+
     o<<")";
     return o;
 }
@@ -64,9 +79,6 @@ int main(int argc,char **argv)
     std::cout<<"v2 = "<<v2<<std::endl;
 
     //Vector v{std::vector<Float32>{4,5,6}};
-
-
-
     return 0;
 }
 

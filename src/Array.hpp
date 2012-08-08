@@ -55,6 +55,7 @@ namespace utils{
     typedef DArray<Complex128> C128DArray;
 
     //define some static arrays
+#ifndef NOTMPALIAS
     template<size_t ...DIMS> using U8SArray = SArray<UInt8,DIMS...>;
     template<size_t ...DIMS> using I8SArray = SArray<Int8,DIMS...>;
     template<size_t ...DIMS> using U16SArray = SArray<UInt16,DIMS...>;
@@ -71,6 +72,7 @@ namespace utils{
     template<size_t ...DIMS> using C32SArray = SArray<Complex32,DIMS...>;
     template<size_t ...DIMS> using C64SArray = SArray<Complex64,DIMS...>;
     template<size_t ...DIMS> using C128SArray = SArray<Complex128,DIMS...>;
+#endif
 
 
     //define some numeric arrays based on a dynamic array
@@ -92,6 +94,7 @@ namespace utils{
     typedef NumArray<C128DArray> NC128DArray;
 
     //define some numeric array templates based on static arrays
+#ifndef NOTMPALIAS
     template<size_t ...DIMS> using NU8SArray = NumArray<U8SArray<DIMS...> >;
     template<size_t ...DIMS> using NI8SArray = NumArray<I8SArray<DIMS...> >;
     template<size_t ...DIMS> using NU16SArray = NumArray<U16SArray<DIMS...> >;
@@ -108,6 +111,7 @@ namespace utils{
     template<size_t ...DIMS> using NC32SArray = NumArray<C32SArray<DIMS...> >;
     template<size_t ...DIMS> using NC64SArray = NumArray<C64SArray<DIMS...> >;
     template<size_t ...DIMS> using NC128SArray = NumArray<C128SArray<DIMS...> >;
+#endif
 
     //shape type
     typedef std::vector<size_t> shape_t;
