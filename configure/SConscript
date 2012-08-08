@@ -46,6 +46,14 @@ def CheckForConstExpr(context):
     context.Result(result)
     return result
 
+#=======================check for alias template support=======================
+
+def CheckForTemplateAlias(context):
+    context.Message("Check for C++11 alias templates ...")
+    result = context.TryCompile(open('src/template_alias_test.cpp').read(),".cpp")
+    context.Result(result)
+    return result
+
 
 #-------------------------------------------------------------------------------
 
@@ -55,6 +63,7 @@ CustomChecks["CheckForEach"] = CheckForEach
 CustomChecks["CheckExplicitConversion"] = CheckForExplicitConversion
 CustomChecks["CheckForCppRandom"] = CheckForCppRandom
 CustomChecks["CheckForConstExpr"] = CheckForConstExpr
+CustomChecks["CheckForTemplateAlias"] = CheckForTemplateAlias
 
 Import('env')
 #start with configuration
@@ -81,7 +90,10 @@ if not conf.CheckForCppRandom():
 if not conf.CheckForConstExpr():
     print "Compiler does not support constexpr!"
     env.Append(CPPDEFINES=['NOCEXPR'])
-    #env.Append(CXXFLAGS=["-DNOCEXPR"])
+
+if not conf.CheckForTemplateAlias():
+    print "Template aliases not supported!"
+    env.Append(CPPDEFINES=['NOTMPALIAS'])
 
 #check type sizes
 if not conf.CheckTypeSize('char',expect=1):
@@ -166,7 +178,10 @@ if GetOption("with_vtk"):
 #check for CPPUNIT headers and library if building tests
 print env["LIBS"]
 print env["CPPPATH"]
-print env["CPPDEFINES"]
+try:
+    print env["CPPDEFINES"]
+except:
+    pass
     
 env = conf.Finish()
 
