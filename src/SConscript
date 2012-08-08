@@ -40,6 +40,7 @@ pkg_config_file = build_env.Substfile(target="${LIBNAME}",source=["pkgconf.in"],
                   SUBST_DICT={"@PREFIX@":"${PREFIX}","@LIBNAME@":"${LIBNAME}",
                   "@INCDIR@":build_env["INCDIR"].replace("/pni/utils",""),
                   "@VERSION@":"${VERSION}","@INCPATH@":"${_CPPINCFLAGS}",
+                  "@DEFINES@":"${_CPPDEFFLAGS}",
                   "@LIBPATH@":"${_LIBDIRFLAGS}","@LIBS@":"${_LIBFLAGS}"},
                   SUBSTFILESUFFIX=".pc")
 

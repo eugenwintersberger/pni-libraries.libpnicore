@@ -1,4 +1,4 @@
-CPPFLAGS=-O2 -std=c++11 $(shell pkg-config --cflags pniutils) 
+CPPFLAGS=-O2 -std=c++0x $(shell pkg-config --cflags pniutils) 
 LDFLAGS=$(shell pkg-config --libs pniutils)
 
 all: cbf_reader tif_reader fio_reader example_buffer1 example_buffer2 example_buffer3 example_array1 example_array2 example_array3 example_array4

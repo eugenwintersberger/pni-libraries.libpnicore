@@ -1,0 +1,217 @@
+#python module manging the configuration of the sources.
+
+#======================check for nullptr=======================================
+#This test checks whether or not the compiler supports the nullptr idiom of
+#C++11
+
+def CheckNullPtr(context):
+    context.Message("Checking if compiler supports nullptr idiom ...")
+    result = context.TryCompile(open('src/nullptr_test.cpp').read(),".cpp")
+    context.Result(result)
+    return result
+
+#==================check for-each construction=================================
+#Test checking for for(auto v: container) construction support
+
+def CheckForEach(context):
+    context.Message("Check if compiler supports foreach loops ...")
+    result = context.TryCompile(open('src/foreach_test.cpp').read(),".cpp")
+    context.Result(result)
+    return result
+
+#==============================explicit conversion check========================
+#Check for explicit conversion operator support
+
+def CheckForExplicitConversion(context):
+    context.Message("Check if compiler supports explicit conversion operators ...")
+    result = context.TryCompile(open('src/explicit_conversion_test.cpp').read(),".cpp")
+    context.Result(result)
+    return result
+
+#========================check for C++11 random number facilities==============
+#check for random number availability
+
+def CheckForCppRandom(context):
+    context.Message("Check for C++ pseudo random number facility ...")
+    result = context.TryCompile(open('src/random_test.cpp').read(),".cpp")
+    context.Result(result)
+    return result
+
+#=======================check for constexpr support============================
+#test for constexpr support
+
+def CheckForConstExpr(context):
+    context.Message("Check for C++11 constexpr ...")
+    result = context.TryCompile(open('src/constexpr_test.cpp').read(),".cpp")
+    context.Result(result)
+    return result
+
+
+#-------------------------------------------------------------------------------
+
+CustomChecks = {}
+CustomChecks["CheckNullPtr"] = CheckNullPtr
+CustomChecks["CheckForEach"] = CheckForEach
+CustomChecks["CheckExplicitConversion"] = CheckForExplicitConversion
+CustomChecks["CheckForCppRandom"] = CheckForCppRandom
+CustomChecks["CheckForConstExpr"] = CheckForConstExpr
+
+Import('env')
+#start with configuration
+conf = Configure(env,custom_tests = CustomChecks)
+
+
+#checking compiler capabilities
+if not conf.CheckNullPtr():
+    print "nullptr not supported - use NULL"
+    env.Append(CPPDEFINES=[('nullptr','NULL')])
+
+if not conf.CheckForEach():
+    print "foreach construction not supported - use workaround"
+    env.Append(CPPDEFINES=['NOFOREACH'])
+
+if not conf.CheckExplicitConversion():
+    print "explicit conversion not supported by compiler!"
+    env.Append(CPPDEFINES=['NOEXPLICITCONV'])
+
+if not conf.CheckForCppRandom():
+    print "No C++11 random number generators!"
+    env.Append(CPPDEFINES=['NOCPPRAND'])
+
+if not conf.CheckForConstExpr():
+    print "Compiler does not support constexpr!"
+    env.Append(CPPDEFINES=['NOCEXPR'])
+    #env.Append(CXXFLAGS=["-DNOCEXPR"])
+
+#check type sizes
+if not conf.CheckTypeSize('char',expect=1):
+    pass
+
+if not conf.CheckTypeSize('unsigned char',expect=1):
+    pass
+
+if not conf.CheckTypeSize('short',expect=2):
+    pass
+
+if not conf.CheckTypeSize('unsigned short',expect=2):
+    pass
+
+if not conf.CheckTypeSize('int',expect=4):
+    pass
+
+if not conf.CheckTypeSize('unsigned int',expect=4):
+    pass
+
+if not conf.CheckTypeSize('long',expect=8):
+    pass
+
+if not conf.CheckTypeSize('unsigned long',expect=8):
+    pass
+
+if not conf.CheckTypeSize('float',expect=4):
+    pass
+
+if not conf.CheckTypeSize('double',expect=8):
+    pass
+
+if not conf.CheckTypeSize('long double',expect = 16):
+    #in this case we are on 32Bit PC platform
+    pass
+
+
+#check for mandatory header files
+if not conf.CheckCXXHeader("boost/numeric/conversion/cast.hpp"):
+    print "BOOST header file cast.hpp does not exist!"
+    Exit(1)
+    
+if not conf.CheckCXXHeader("boost/shared_ptr.hpp"):
+    print "BOOST header shared_ptr.hpp does not exist!"
+    Exit(1)
+    
+if not conf.CheckCXXHeader("boost/static_assert.hpp"):
+    print "BOOST header static_assert.hpp does not exist!"
+    Exit(1)
+    
+
+if not conf.CheckCXXHeader("boost/regex.hpp"):
+    print "Boost regular expressions header file not found!"
+    Exit(1)
+
+#check for boost current_function header
+if not conf.CheckCXXHeader("boost/current_function.hpp"):
+    print "BOOST current_function.hpp not found!"
+    Exit(1)
+    
+
+#check for boost regular expressions library
+if not conf.CheckLib("boost_regex",language="C++"):
+    print "BOOST regular expression library not found"
+    Exit(1)
+
+
+if GetOption("with_vtk"):
+    if not conf.CheckLib("vtkFiltering",language="C++") or \
+       not conf.CheckLib("vtkftgl",language="C++") or \
+       not conf.CheckLib("vtkGenericFiltering",language="C++") or \
+       not conf.CheckLib("vtkGraphics",language="C++") or \
+       not conf.CheckLib("vtkHybrid",language="C++") or \
+       not conf.CheckLib("vtkImaging",language="C++") or \
+       not conf.CheckLib("vtkInfovis",language="C++") or \
+       not conf.CheckLib("vtkCommon",language="C++") or \
+       not conf.CheckLib("vtkRendering",language="C++") or \
+       not conf.CheckLib("vtkIO",language="C++"):
+        print "VTK libraries are missing!"
+        Exit(1)
+
+#check for CPPUNIT headers and library if building tests
+print env["LIBS"]
+print env["CPPPATH"]
+print env["CPPDEFINES"]
+    
+env = conf.Finish()
+
+#create the build environments for the library and the test
+build_env = env.Clone()
+test_env  = env.Clone()
+
+#============================start configuration for tests=====================
+test_conf = Configure(test_env)
+
+if not test_conf.CheckCXXHeader("cppunit/TestFixture.h"):
+    print "CPPUNIT header TestFixture.h does not exist!"
+    Exit(1)
+    
+if not test_conf.CheckCXXHeader("cppunit/TestRunner.h"):
+    print "CPPUNIT header TestRunner.h does not exist!"
+    Exit(1)
+    
+if not test_conf.CheckCXXHeader("cppunit/extensions/HelperMacros.h"):
+    print "CPPUNIT header HelperMacros.h does not exist!"
+    Exit(1)
+    
+if not test_conf.CheckCXXHeader("cppunit/TestCaller.h"):
+    print "CPPUNIT header TestCaller.h does not exist!"
+    Exit(1)
+    
+if not test_conf.CheckCXXHeader(["string","cppunit/TestResult.h"]):
+    print "CPPUNIT header TestResult.h does not exist!"
+    Exit(1)
+    
+if not test_conf.CheckCXXHeader("cppunit/TextTestProgressListener.h"):
+    print "CPPUNIT header TextTestProgressListener.h does not exist!"
+    Exit(1)
+    
+if not test_conf.CheckCXXHeader("cppunit/ui/text/TextTestRunner.h"):
+    print "CPPUNIT header TextTestRunner.h does not exist!"
+    Exit(1)
+
+#check for mandatory libraries
+if not test_conf.CheckLib("cppunit",language="C++"):
+    print "CPPUNIT unit test libraray is not installed!"
+    Exit(1)
+
+
+test_env = test_conf.Finish()
+
+
+Return('build_env test_env')

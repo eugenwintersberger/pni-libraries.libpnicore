@@ -6,5 +6,5 @@ libdir = ${prefix}/lib
 Name: @LIBNAME@
 Description: PNI utility library
 Version: @VERSION@
-Cflags: -I${includedir} @INCPATH@
+Cflags: -I${includedir} @INCPATH@ @DEFINES@
 Libs: -L${libdir} -l@LIBNAME@ @LIBPATH@ @LIBS@
