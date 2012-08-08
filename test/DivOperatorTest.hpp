@@ -53,9 +53,10 @@ template<typename T> class DivOperatorTest: public CppUnit::TestFixture
 
 template<typename T> void DivOperatorTest<T>::setUp()
 {
-    shape = std::vector<size_t>{2,3,4};
-    a1 = NumArray<atype>(atype(shape));
-    a2 = NumArray<atype>(atype(shape));
+    shape = std::vector<size_t>(3);
+    shape[0] = 2; shape[1] = 3; shape[2] = 4;
+    a1 = na_type(shape);
+    a2 = na_type(shape);
     
     std::fill(a1.begin(),a1.end(),T(10));
     std::fill(a2.begin(),a2.end(),T(5));
@@ -97,29 +98,83 @@ template<typename T> void DivOperatorTest<T>::test_access()
 template<typename T> void DivOperatorTest<T>::test_iterator()
 {
     Div<na_type,na_type> op1(a1,a2);
-    for(auto v: op1) check_equality(v,T(2));
+#ifdef NOFOREACH
+    for(auto iter = op1.begin();iter!=op1.end();++iter)
+    {
+        auto v = *iter;
+#else
+    for(auto v: op1) 
+    {
+#endif
+        check_equality(v,T(2));
+    }
 
     s_type s(2);
     Div<na_type,s_type> op2(a1,s);
-    for(auto v: op2) check_equality(v,T(5));
+#ifdef NOFOREACH
+    for(auto iter = op2.begin();iter!=op2.end();++iter)
+    {
+        auto v = *iter;
+#else
+    for(auto v: op2) 
+    {
+#endif 
+        check_equality(v,T(5));
+    }
 }
 
 template<typename T> void DivOperatorTest<T>::test_operator()
 {
     na_type r = atype(shape);
     r = a1/a2;
-    for(auto v: r) check_equality(v,T(2));
+#ifdef NOFOREACH
+    for(auto iter = r.begin();iter!=r.end();++iter)
+    {
+        auto v = *iter;
+#else
+    for(auto v: r) 
+    {
+#endif 
+        check_equality(v,T(2));
+    }
 
     r = a1/T(2);
-    for(auto v: r) check_equality(v,T(5));
+#ifdef NOFOREACH
+    for(auto iter = r.begin();iter!=r.end();++iter)
+    {
+        auto v = *iter;
+#else
+    for(auto v: r) 
+    {
+#endif
+        check_equality(v,T(5));
+    }
 
     r = T(100)/a1;
-    for(auto v: r) check_equality(v,T(10));
+#ifdef NOFOREACH
+    for(auto iter = r.begin();iter!=r.end();++iter)
+    {
+        auto v = *iter;
+#else
+    for(auto v: r) 
+    {
+#endif
+        check_equality(v,T(10));
+    }
 
     //put it all together
 
     r = T(100)/a1/a2;
-    for(auto v: r) check_equality(v,T(2));
+#ifdef NOFOREACH
+    for(auto iter = r.begin();iter!=r.end();++iter)
+    {
+        auto v = *iter;
+#else
+    for(auto v: r) 
+    {
+#endif 
+        check_equality(v,T(2));
+    }
 
 }
 #endif

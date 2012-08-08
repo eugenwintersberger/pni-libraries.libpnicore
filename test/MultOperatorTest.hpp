@@ -33,6 +33,7 @@ template<typename T> class MultOperatorTest: public CppUnit::TestFixture
         typedef DArray<T> atype;
         typedef NumArray<atype> na_type;
         typedef Scalar<T> s_type;
+        typedef std::vector<size_t> shape_t;
 
 
         //===================private memebers==================================
@@ -53,9 +54,10 @@ template<typename T> class MultOperatorTest: public CppUnit::TestFixture
 
 template<typename T> void MultOperatorTest<T>::setUp()
 {
-    shape = std::vector<size_t>{2,3,4};
-    a1 = NumArray<atype>(atype(shape));
-    a2 = NumArray<atype>(atype(shape));
+    shape = shape_t(3);
+    shape[0] = 2; shape[1] = 3; shape[2] = 4;
+    a1 = na_type(shape);
+    a2 = na_type(shape);
     
     std::fill(a1.begin(),a1.end(),T(10));
     std::fill(a2.begin(),a2.end(),T(2));
@@ -97,29 +99,83 @@ template<typename T> void MultOperatorTest<T>::test_access()
 template<typename T> void MultOperatorTest<T>::test_iterator()
 {
     Mult<na_type,na_type> op1(a1,a2);
-    for(auto v: op1) check_equality(v,T(20));
+#ifdef NOFOREACH
+    for(auto iter = op1.begin();iter!=op1.end();++iter)
+    {
+        auto v = *iter;
+#else
+    for(auto v: op1) 
+    {
+#endif
+        check_equality(v,T(20));
+    }
 
     s_type s(10);
     Mult<na_type,s_type> op2(a1,s);
-    for(auto v: op2) check_equality(v,T(100));
+#ifdef NOFOREACH
+    for(auto iter = op2.begin();iter!=op2.end();++iter)
+    {
+        auto v = *iter;
+#else
+    for(auto v: op2) 
+    {
+#endif
+        check_equality(v,T(100));
+    }
 }
 
 template<typename T> void MultOperatorTest<T>::test_operator()
 {
     na_type r = atype(shape);
     r = a1*a2;
-    for(auto v: r) check_equality(v,T(20));
+#ifdef NOFOREACH
+    for(auto iter = r.begin();iter!=r.end();++iter)
+    {
+        auto v = *iter;
+#else
+    for(auto v: r) 
+    {
+#endif
+        check_equality(v,T(20));
+    }
 
     r = a1*10;
-    for(auto v: r) check_equality(v,T(100));
+#ifdef NOFOREACH
+    for(auto iter = r.begin();iter!=r.end();++iter)
+    {
+        auto v = *iter;
+#else
+    for(auto v: r) 
+    {
+#endif
+        check_equality(v,T(100));
+    }
 
     r = 5*a1;
-    for(auto v: r) check_equality(v,T(50));
+#ifdef NOFOREACH
+    for(auto iter = r.begin();iter!=r.end();++iter)
+    {
+        auto v = *iter;
+#else
+    for(auto v: r) 
+    {
+#endif
+        check_equality(v,T(50));
+    }
 
     //put it all together
 
     r = a1 * 2 * a2;
-    for(auto v: r) check_equality(v,T(40));
+#ifdef NOFOREACH
+    for(auto iter = r.begin();iter!=r.end();++iter)
+    {
+        auto v = *iter;
+#else
+    for(auto v: r) 
+    {
+#endif
+        check_equality(v,T(40));
+    }
 
 }
 #endif

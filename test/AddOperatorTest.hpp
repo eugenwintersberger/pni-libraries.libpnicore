@@ -34,12 +34,13 @@ template<typename T> class AddOperatorTest: public CppUnit::TestFixture
         typedef DArray<T> atype;
         typedef NumArray<atype> na_type;
         typedef Scalar<T> s_type;
+        typedef std::vector<size_t> shape_t;
 
 
         //===================private memebers==================================
         na_type a1;
         na_type a2;
-        std::vector<size_t> shape;
+        shape_t shape;
 
     public:
         void setUp();
@@ -54,9 +55,10 @@ template<typename T> class AddOperatorTest: public CppUnit::TestFixture
 
 template<typename T> void AddOperatorTest<T>::setUp()
 {
-    shape = std::vector<size_t>{2,3,4};
-    a1 = NumArray<atype>(shape);
-    a2 = NumArray<atype>(shape);
+    shape = shape_t(3);
+    shape[0] = 2; shape[1] = 3; shape[2] = 4;
+    a1 = std::move(na_type(shape));
+    a2 = std::move(na_type(shape));
     
     std::fill(a1.begin(),a1.end(),T(100));
     std::fill(a2.begin(),a2.end(),T(5));
