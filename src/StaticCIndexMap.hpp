@@ -238,7 +238,7 @@ namespace utils{
 #ifdef NOFOREACH
                 for(auto iter = c.begin();iter!=c.end();++iter)
                 {
-                    auto v = *iter;
+                    typename CONTAINER::value_type &v = *iter;
 #else
                 for(typename CONTAINER::value_type &v: c)
                 {

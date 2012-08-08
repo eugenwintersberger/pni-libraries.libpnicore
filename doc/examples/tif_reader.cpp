@@ -74,7 +74,7 @@ int main(int argc,char **argv){
     
     
     auto buffer = reader.image<Frame::storage_type>(0);
-    Frame array(shape_t{reader.info(0).nx(),reader.info(0).ny()},
+    Frame array(shape_t({reader.info(0).nx(),reader.info(0).ny()}),
                        buffer);
     //close the reader object when we are done
     plot_image(array);

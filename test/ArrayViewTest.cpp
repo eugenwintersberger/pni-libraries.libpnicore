@@ -32,7 +32,17 @@ void ArrayViewTest::testConstruction()
    DArray<Float32> a(s);
 
    auto v1 = a(Slice(1,3),Slice(3,7));
-   for(auto v: v1.shape<Shape>()) std::cout<<v<<std::endl;
+#ifdef NOFOREACH
+   auto shape = v1.shape<Shape>();
+   for(auto iter = shape.begin();iter!=shape.end();++iter)
+   {
+       auto v = *iter;
+#else
+   for(auto v: v1.shape<Shape>()) 
+   {
+#endif
+       std::cout<<v<<std::endl;
+   }
 
    CPPUNIT_ASSERT(v1.shape<Shape>().size() == 2);
    CPPUNIT_ASSERT(v1.shape<Shape>()[0] == 2);
@@ -78,7 +88,7 @@ void ArrayViewTest::test_dataaccess()
 void ArrayViewTest::test_linearaccess()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
-    DArray<Float32> a(Shape{100,200});
+    DArray<Float32> a(Shape({100,200}));
     std::fill(a.begin(),a.end(),1.24);
 
     //create the view

@@ -36,7 +36,16 @@ std::ostream &operator<<(std::ostream &o,const F32Array &a)
 std::ostream &operator<<(std::ostream &o,const F32Vector &v)
 {
     o<<"( ";
-    for(auto c: v) o<<c<<" ";
+#ifdef NOFOREACH
+    for(auto iter = v.begin();iter!=v.end();++iter)
+    {
+        auto c = *iter;
+#else
+    for(auto c: v) 
+    {
+#endif
+        o<<c<<" ";
+    }
     o<<")";
     return o;
 }
@@ -45,7 +54,7 @@ std::ostream &operator<<(std::ostream &o,const F32Vector &v)
 
 int main(int argc,char **argv)
 {
-    shape_t shape{10,3};
+    shape_t shape({10,3});
     //simpel construction from shape - memory allocation is done bye 
     //the array constructor
     F32Array a(shape); 

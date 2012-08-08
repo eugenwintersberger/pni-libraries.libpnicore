@@ -53,10 +53,19 @@ int main(int argc,char **argv){
     std::cout<<"SAMPLE    = "<<reader.parameter<String>("SAMPLE")<<std::endl;
     std::cout<<"SAMPLE_POS= "<<reader.parameter<Float32>("SAMPLE_POS")<<std::endl;
 
-    for(auto c: reader) std::cout<<c<<std::endl;
+#ifdef NOFOREACH
+    for(auto iter = reader.begin();iter!=reader.end();++iter)
+    {
+        auto c = *iter;
+#else
+    for(auto c: reader) 
+    {
+#endif 
+        std::cout<<c<<std::endl;
+    }
     std::cout<<"File contains: "<<reader.nrecords()<<std::endl;
 
-    F32DArray array(shape_t{reader.nrecords()},
+    F32DArray array(shape_t({reader.nrecords()}),
                      reader.column<F32DArray::storage_type>("TIO2_KRONOS_0001_ENERGIE_HHE1"));
 
     reader.close();

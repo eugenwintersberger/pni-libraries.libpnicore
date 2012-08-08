@@ -82,7 +82,7 @@ int main(int argc,char **argv){
         std::cout<<error<<std::endl;
         return -1;
     }
-    Frame a(shape_t{info.nx(),info.ny()},buffer);
+    Frame a(shape_t({info.nx(),info.ny()}),buffer);
     plot_image(a);
 
     reader.close();

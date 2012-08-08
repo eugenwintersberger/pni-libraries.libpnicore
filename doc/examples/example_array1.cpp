@@ -16,17 +16,17 @@ typedef DArray<Float32> F32Array;    //an array type for Float32 values
 
 int main(int argc,char **argv)
 {
-    shape_t shape{1024,2048};
+    shape_t shape({1024,2048});
     //simpel construction from shape - memory allocation is done bye 
     //the array constructor
     F32Array a(shape); 
 
     //reshaping works only if the new shape describes the same number of
     //elements
-    a.shape(shape_t{2048,1024});
+    a.shape(shape_t({2048,1024}));
     try
     {
-        a.shape(shape_t{1024,1024});
+        a.shape(shape_t({1024,1024}));
     }
     catch(SizeMissmatchError &e)
     {
@@ -39,7 +39,16 @@ int main(int argc,char **argv)
     auto s = a.shape<shape_t>();
     std::cout<<"rank = "<<a.rank()<<std::endl;
     std::cout<<"shape = ( ";
-    for(auto v: s) std::cout<<v<<" ";
+#ifdef NOFOREACH
+    for(auto iter = s.begin();iter!=s.end();++iter)
+    {
+        auto v = *iter;
+#else
+    for(auto v: s) 
+    {
+#endif
+        std::cout<<v<<" ";
+    }
     std::cout<<")"<<std::endl;
 
     std::cout<<"total size = "<<a.size()<<std::endl;

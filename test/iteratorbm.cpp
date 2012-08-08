@@ -40,7 +40,16 @@ int main(int argc,char **argv)
     DBuffer<double> b(N);
     sum = 0;
     start = std::chrono::high_resolution_clock::now();
-    for(auto v: b) sum += sin(v);
+#ifdef NOFOREACH
+    for(auto iter = b.begin();iter!=b.end();++iter)
+    {
+        auto v = *iter;
+#else
+    for(auto v: b) 
+    {
+#endif
+        sum += sin(v);
+    }
     stop = std::chrono::high_resolution_clock::now();
     double titer = museconds(stop-start).count();
     std::cout<<"Iterator data access: "<<std::scientific<<titer<<std::endl;

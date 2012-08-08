@@ -23,7 +23,7 @@ int main(int argc,char **argv)
     std::fill(bint32.begin(),bint32.end(),10);
 
     //at creation using an initializer list
-    DBuffer<Float32> bfloat32{1.2,-23.123,90934.123}; 
+    DBuffer<Float32> bfloat32({1.2,-23.123,90934.123}); 
 
     //-----------------------checking the state of a buffer--------------------
     //check if allocated
@@ -34,11 +34,28 @@ int main(int argc,char **argv)
 
     //---------STL compatability and iterators----------------------------------
     //read access
-    for(auto v: bint32) std::cout<<v<<std::endl;
+#ifdef NOFOREACH
+    for(auto iter = bint32.begin();iter!=bint32.end();++iter)
+    {
+        auto v = *iter;
+#else
+    for(auto v: bint32) 
+    {
+#endif
+        std::cout<<v<<std::endl;
+    }
 
     //write access
+#ifdef NOFOREACH
+    for(auto iter = bint32.begin();iter!=bint32.end();++iter)
+    {
+        DBuffer<Int32>::value_type &v = *iter;
+#else
     for(DBuffer<Int32>::value_type &v: bint32)
+    {
+#endif
         v = 1;
+    }
     
     return 0;
 }

@@ -53,7 +53,7 @@ std::ostream &operator<<(std::ostream &o,const Vector &v)
 
 int main(int argc,char **argv)
 {
-    shape_t shape{10,3};
+    shape_t shape({10,3});
     //simpel construction from shape - memory allocation is done bye 
     //the array constructor
     Frame a(shape); 
@@ -73,7 +73,7 @@ int main(int argc,char **argv)
         std::cout<<"vector = "<<v<<std::endl;
     }
 
-    Vector v1{{1.,2.,3.}};
+    Vector v1(std::vector<Float32>({1.,2.,3.}));
     std::cout<<"v1 = "<<v1<<std::endl;
     Vector v2{std::vector<Float32>{4,5,6}};
     std::cout<<"v2 = "<<v2<<std::endl;
