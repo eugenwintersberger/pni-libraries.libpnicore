@@ -54,7 +54,6 @@ int main(int argc,char **argv)
     double titer = museconds(stop-start).count();
     std::cout<<"Iterator data access: "<<std::scientific<<titer<<std::endl;
 
-
     return 0;
 }
 

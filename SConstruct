@@ -7,6 +7,7 @@ import os
 #add some command line options
 AddOption("--enable-vtk",dest="with_vtk",action="store_true",default=False)
 AddOption("--enable-tiff",dest="with_tiff",action="store_true",default=False)
+AddOption("--enable-gprof",dest="with_gprof",action="store_true",default=False)
 
 ###================================================================================
 #Function to assemble library filenames depending on the operating system for
@@ -129,6 +130,12 @@ if GetOption("with_vtk"):
 #==========================run configuration===================================
 Export('env')
 (build_env,test_env) = SConscript('configure/SConscript')
+
+if GetOption("with_gprof"):
+    build_env.Append(CXXFLAGS=["-g"])
+    test_env.Append(CXXFLAGS=["-g","-pg"])
+    test_env.Append(LINKFLAGS=["-pg"])
+
 
 #============================set debugging options=============================
 if debug:
