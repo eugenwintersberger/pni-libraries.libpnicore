@@ -243,7 +243,7 @@ namespace utils{
                 for(typename CONTAINER::value_type &v: c)
                 {
 #endif
-                    v = this->_dims[index];
+                    v = this->_dims[index++];
                 }
 
                 return c;

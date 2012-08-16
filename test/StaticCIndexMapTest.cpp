@@ -24,6 +24,11 @@ void StaticCIndexMapTest::test_construction(){
     StaticCIndexMap<3,4,5> s1;
     CPPUNIT_ASSERT(s1.size() == 3*4*5);
     CPPUNIT_ASSERT(s1.rank() == 3);
+    
+    auto shape = s1.shape<std::vector<size_t> >();
+    CPPUNIT_ASSERT(shape[0] == 3);
+    CPPUNIT_ASSERT(shape[1] == 4);
+    CPPUNIT_ASSERT(shape[2] == 5);
 
 }
 
