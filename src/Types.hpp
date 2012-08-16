@@ -85,7 +85,7 @@ enum class TypeID {NONE,   //!< no data type
 	            COMPLEX128, //!< 128Bit IEEE floating point complex
 	            STRING,      //!< String type
 	            BINARY,      //!< binary data
-	            BOOLEAN      //!< boolean data
+	            BOOL        //!< boolean data
 				};
 
 std::ostream &operator<<(std::ostream &o,const TypeID &tid);

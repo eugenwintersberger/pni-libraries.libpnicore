@@ -137,6 +137,12 @@ template<> class TypeIDMap<Binary> {
     public:
         static const TypeID type_id = TypeID::BINARY;
 };
+
+//------------------------------------------------------------------------------
+template<> class TypeIDMap<Bool> {
+    public:
+        static const TypeID type_id = TypeID::BOOL;
+};
 //! \endcond
 
 //end of namespace

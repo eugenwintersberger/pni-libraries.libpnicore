@@ -49,7 +49,7 @@ namespace utils{
 	    if(tid==TypeID::COMPLEX128) {o<<"COMPLEX128"; return o;}
 	    if(tid==TypeID::STRING) {o<<"STRING"; return o;}
 	    if(tid==TypeID::BINARY) {o<<"BINARY"; return o;}
-	    if(tid==TypeID::BOOLEAN) {o<<"BOOLEAN"; return o;}
+	    if(tid==TypeID::BOOL) {o<<"BOOL"; return o;}
 
         //this is just to make the compiler happy - we should never come here.
         return o; 

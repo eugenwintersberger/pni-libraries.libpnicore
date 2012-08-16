@@ -142,6 +142,12 @@ template<> class IDTypeMap<TypeID::BINARY>{
         typedef Binary type;
 };
 
+//------------------------------------------------------------------------------
+template<> class IDTypeMap<TypeID::BOOL>{
+    public:
+        typedef Bool type;
+};
+
 //! \endcond
 
 }
