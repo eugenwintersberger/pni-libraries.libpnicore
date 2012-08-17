@@ -74,8 +74,8 @@ namespace utils{
             void _check_stride(const ExceptionRecord &o) const;
         public:
             //==============constructors and destructor========================
-            //! no default constructor
-            Slice() = delete;
+            //! default constructor
+            Slice() {}
 
             //-----------------------------------------------------------------
             /*! \brief standard constructor
