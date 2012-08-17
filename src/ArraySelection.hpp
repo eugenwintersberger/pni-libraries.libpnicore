@@ -122,15 +122,122 @@ namespace utils{
             ArraySelection &operator=(ArraySelection &&s);
            
             //=================inquery methods=================================
-            //! get rank of the selection
+            /*! 
+            \brief get effective rank
+
+            Return the effective rank of the selection.
+            \return effective rank
+            */
             size_t rank() const { return _rank; }
 
-            //! get shape of the selection
+            //-----------------------------------------------------------------
+            /*! 
+            \brief get effective shape reference
+
+            Return a reference to the effective shape of the selection. 
+            \return reference to effective shape
+            */
             const std::vector<size_t> &shape() const { return _shape; }
 
-            //! get size
+            //-----------------------------------------------------------------
+            /*!
+            \brief get effective shape
+
+            Return the effective shape of the selection in an arbitary
+            container.
+            \tparam CTYPE container type
+            \return instance of CTYPE with effective shape
+            */
+            template<typename CTYPE> CTYPE shape() const
+            {
+                CTYPE c(_shape.size());
+                std::copy(_shape.begin(),_shape.end(),c.begin());
+                return c;
+            }
+
+            //----------------------------------------------------------------- 
+            /*! 
+            \brief get selection size
+
+            Get the number of elements stored in the selection.
+            \return number of elements
+            */
             size_t size() const { return _size; }
 
+            //=========methods to retrieve full selection information==========
+            /*!
+            \brief get full shape reference
+
+            Return a reference to the container holding the full shape of the
+            selection. 
+            \return reference to full shape
+            */
+            const std::vector<size_t> &full_shape() const { return _oshape; }
+
+            //-----------------------------------------------------------------
+            /*! 
+            \brief get full shape 
+
+            Return the full shape of the selection stored in an arbitrary
+            container type.
+            \tparam CTYPE container type
+            \return instance of CTYPE with the full shape
+            */
+            template<typename CTYPE> CTYPE full_shape() const 
+            {
+                CTYPE c(_oshape.size());
+                std::copy(_oshape.begin(),_oshape.end(),c.begin());
+                return c;
+            }
+
+            //-----------------------------------------------------------------
+            /*!
+            \brief get reference to offset
+
+            Return a reference to the offset container of the selection object.
+            \return reference to offsets
+            */
+            const std::vector<size_t> &offset() const { return _offset; }
+
+            //-----------------------------------------------------------------
+            /*! 
+            \brief get offset 
+
+            Return the offset values of the selection in an arbitary container.
+            \tparam CTYPE container type
+            \return instance of CTYPE with offset values
+            */
+            template<typename CTYPE> CTYPE offset() const
+            {
+                CTYPE c(_offset.size());
+                std::copy(_offset.begin(),_offset.end(),c.begin());
+                return c;
+            }
+
+            //-----------------------------------------------------------------
+            /*! 
+            \brief get reference to stride
+
+            Return a reference to the stride container of the selection.
+            \return stride reference
+            */
+            const std::vector<size_t> &stride() const { return _stride; }
+
+            //-----------------------------------------------------------------
+            /*! 
+            \brief get stride
+
+            Return the stride of the selection stored in an arbitrary STL
+            container type. 
+            \tparam CTYPE container type
+            \return instance of CTYPE with the stride values
+            */
+            template<typename CTYPE> CTYPE stride() const
+            {
+                CTYPE c(_stride.size());
+                std::copy(_stride.begin(),_stride.end(),c.begin());
+                return c;
+            }
 
             //================get indices======================================
             /*! 

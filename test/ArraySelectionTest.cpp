@@ -33,11 +33,30 @@ void ArraySelectionTest::test_construction()
     CPPUNIT_ASSERT(sel1.size() == 0);
 
     //testing standard constructor
-    ArraySelection sel2(itype({1,100,100}),itype({0,0,0}),itype({1,1,1}));
+    itype shape({1,100,100}); itype offset({0,0,0}); itype stride({1,1,1});
+    ArraySelection sel2(shape,offset,stride);
     CPPUNIT_ASSERT(sel2.rank() == 2);
     CPPUNIT_ASSERT(sel2.size() == 100*100);
     itype s{100,100};
     CPPUNIT_ASSERT(std::equal(s.begin(),s.end(),sel2.shape().begin()));
+
+    //check full parameters
+    CPPUNIT_ASSERT(std::equal(sel2.full_shape().begin(),
+                              sel2.full_shape().end(),
+                              shape.begin()));
+    CPPUNIT_ASSERT(std::equal(sel2.offset().begin(),
+                              sel2.offset().end(),
+                              offset.begin()));
+    CPPUNIT_ASSERT(std::equal(sel2.stride().begin(),
+                              sel2.stride().end(),
+                              stride.begin()));
+    typedef std::list<size_t> ltype;
+    auto lshape = sel2.full_shape<ltype>();
+    auto loffset = sel2.offset<ltype>();
+    auto lstride = sel2.stride<ltype>();
+    CPPUNIT_ASSERT(std::equal(shape.begin(),shape.end(),lshape.begin()));
+    CPPUNIT_ASSERT(std::equal(offset.begin(),offset.end(),loffset.begin()));
+    CPPUNIT_ASSERT(std::equal(stride.begin(),stride.end(),lstride.begin()));
 
     //! copy constructor
     ArraySelection sel3(sel2);
@@ -123,7 +142,5 @@ void ArraySelectionTest::test_index()
     sel2.index(itype({1,3}),i);
     r = itype{4,1,8};
     CPPUNIT_ASSERT(std::equal(r.begin(),r.end(),i.begin()));
-
-
 }
 
