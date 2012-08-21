@@ -170,6 +170,15 @@ if not conf.CheckLib("boost_regex",language="C++"):
     print "BOOST regular expression library not found"
     Exit(1)
 
+if GetOption("with_gperf"):
+    if not conf.CheckLib("profiler",language="C++"):
+        print "Google CPU profiling library not installed!"
+        Exit(1)
+
+    if not conf.CheckLib("tcmalloc",language="C++"):
+        print "Google HEAP profiler not installed!"
+        Exit(1)
+
 
 if GetOption("with_vtk"):
     if not conf.CheckLib("vtkFiltering",language="C++") or \
