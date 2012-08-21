@@ -79,31 +79,31 @@ conf = Configure(env,custom_tests = CustomChecks)
 #checking compiler capabilities
 if not conf.CheckNullPtr():
     print "nullptr not supported - use NULL"
-    env.Append(CPPDEFINES=[('nullptr','NULL')])
+    env.AppendUnique(CPPDEFINES=[('nullptr','NULL')])
 
 if not conf.CheckForEach():
     print "foreach construction not supported - use workaround"
-    env.Append(CPPDEFINES=['NOFOREACH'])
+    env.AppendUnique(CPPDEFINES=['NOFOREACH'])
 
 if not conf.CheckExplicitConversion():
     print "explicit conversion not supported by compiler!"
-    env.Append(CPPDEFINES=['NOEXPLICITCONV'])
+    env.AppendUnique(CPPDEFINES=['NOEXPLICITCONV'])
 
 if not conf.CheckForCppRandom():
     print "No C++11 random number generators!"
-    env.Append(CPPDEFINES=['NOCPPRAND'])
+    env.AppendUnique(CPPDEFINES=['NOCPPRAND'])
 
 if not conf.CheckForConstExpr():
     print "Compiler does not support constexpr!"
-    env.Append(CPPDEFINES=['NOCEXPR'])
+    env.AppendUnique(CPPDEFINES=['NOCEXPR'])
 
 if not conf.CheckForTemplateAlias():
     print "Template aliases not supported!"
-    env.Append(CPPDEFINES=['NOTMPALIAS'])
+    env.AppendUnique(CPPDEFINES=['NOTMPALIAS'])
 
 if not conf.CheckForEnumBug():
     print "Compiler provides no comparsion operators for class enum types!"
-    env.Append(CPPDEFINES=['ENUMBUG'])
+    env.AppendUnique(CPPDEFINES=['ENUMBUG'])
 
 #check type sizes
 if not conf.CheckTypeSize('char',expect=1):
@@ -185,14 +185,6 @@ if GetOption("with_vtk"):
         print "VTK libraries are missing!"
         Exit(1)
 
-#check for CPPUNIT headers and library if building tests
-print env["LIBS"]
-print env["CPPPATH"]
-try:
-    print env["CPPDEFINES"]
-except:
-    pass
-    
 env = conf.Finish()
 
 #create the build environments for the library and the test

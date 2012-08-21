@@ -36,6 +36,7 @@ static_library = build_env.StaticLibrary("${LIBNAME}",static_objects)
 
 #---------------------build the pkg-config file---------------------------------              
 #assemble linker path
+
 pkg_config_file = build_env.Substfile(target="${LIBNAME}",source=["pkgconf.in"],
                   SUBST_DICT={"@PREFIX@":"${PREFIX}","@LIBNAME@":"${LIBNAME}",
                   "@INCDIR@":build_env["INCDIR"].replace("/pni/utils",""),
@@ -43,6 +44,7 @@ pkg_config_file = build_env.Substfile(target="${LIBNAME}",source=["pkgconf.in"],
                   "@DEFINES@":"${_CPPDEFFLAGS}",
                   "@LIBPATH@":"${_LIBDIRFLAGS}","@LIBS@":"${_LIBFLAGS}"},
                   SUBSTFILESUFFIX=".pc")
+build_env.AlwaysBuild(pkg_config_file)
 
 #-------------------adding everyting to the "all" and "library" target----------
 build_env.Alias("all",[temp_shared_library,
