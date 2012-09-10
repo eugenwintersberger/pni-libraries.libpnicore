@@ -37,11 +37,18 @@
 namespace pni{
 namespace utils{
 
-#define DEPRECATION_WARNING(old_method,new_method) \
-	std::cerr<<"Method "+String(old_method)+"is deprecated and will be removed!"<<std::endl;\
-	std::cerr<<"use "+String(new_method)+" instead!"<<std::endl;
+#define DEPRECATION_WARNING(oldfunc,newfunc)\
+    std::cerr<<"DEPRECATION WARGING:"<<std::endl;\
+    std::cerr<<"Function: ";\
+    std::cerr<<oldfunc;\
+    std::cerr<<" is deprecated!"<<std::endl;\
+    std::cerr<<"Use instead: ";\
+    std::cerr<<newfunc;\
+    std::cerr<<std::endl;
 
-    String demangle_cpp_name(const char *n);
+
+
+String demangle_cpp_name(const char *n);
 
 
 
