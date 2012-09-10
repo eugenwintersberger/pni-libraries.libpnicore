@@ -103,6 +103,9 @@ namespace utils{
             //! actual position state of the iterator
             ssize_t _state;                    
 
+            //! maximum number of elements in the container
+            ssize_t _maxsize;
+
             //! set the item pointer
             void _set_item()
             {
@@ -130,7 +133,7 @@ namespace utils{
             typedef Iterator<ITERABLE,const_flag> iterator_type;
             //================constructor and destructor========================
             //! default constructor
-            Iterator():_container(nullptr),_state(0) {}
+            Iterator():_container(nullptr),_state(0),_maxsize(0) {}
 
             //------------------------------------------------------------------
             /*! \brief standard constructor
@@ -142,7 +145,8 @@ namespace utils{
             */
             Iterator(cptr_type container,size_t state=0):
                 _container(container),
-                _state(state)
+                _state(state),
+                _maxsize(container->size())
             { 
             }
 
@@ -150,17 +154,20 @@ namespace utils{
             //! copy constructor
             Iterator(const iterator_type &i):
                 _container(i._container),
-                _state(i._state)
+                _state(i._state),
+                _maxsize(i._maxsize)
             { }
 
             //------------------------------------------------------------------
             //! move constructor
             Iterator(iterator_type &&i):
                 _container(i._container),
-                _state(i._state)
+                _state(i._state),
+                _maxsize(i._maxsize)
             {
                 i._container = nullptr;
                 i._state = 0;
+                i._maxsize = 0;
             }
 
             //------------------------------------------------------------------
@@ -174,6 +181,7 @@ namespace utils{
                 if(this == &i) return *this;
                 this->_container = i._container;
                 this->_state     = i._state;
+                this->_maxsize   = i._maxsize;
                 return *this;
             }
 
@@ -186,6 +194,8 @@ namespace utils{
                 i._container = nullptr;
                 this->_state = i._state;
                 i._state = 0;
+                this->_maxsize = i._maxsize;
+                i._maxsize = 0;
                 return *this;
             }
 
@@ -206,9 +216,9 @@ namespace utils{
             explicit operator bool() const
 #endif
             {
-                if(!this->_container) return false;
-                ssize_t size = (ssize_t)(this->_container->size());
-                return !((this->_state >= size)||(this->_state<0));
+                //if(!this->_container) return false;
+                //ssize_t size = (ssize_t)(this->_container->size());
+                return !((!this->_container)||(this->_state >= this->_maxsize)||(this->_state<0));
             }
 
             //------------------------------------------------------------------

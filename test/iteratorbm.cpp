@@ -3,8 +3,10 @@
 #include <iostream>
 #include <chrono>
 #include <ratio>
+#include <ctime>
 #include "Iterator.hpp"
 #include "DBuffer.hpp"
+
 
 using namespace pni::utils;
 
@@ -19,40 +21,50 @@ int main(int argc,char **argv)
     size_t N = atoi(argv[1]);
     std::cout<<"allocating "<<N*sizeof(double)/1024/1024<<" MByte of memory!";
     std::cout<<std::endl;
-
-    std::chrono::time_point<std::chrono::high_resolution_clock> start,stop;
-    typedef std::chrono::duration<double,std::ratio<1,1000000000> > museconds;
+    clock_t start,stop;
+    double ptr_read,ptr_write,iter_read,iter_write;
 
     double *ptr = new double[N];
-    double sum = 0;
 
+    //writing to memory
+    start = clock();
     for(size_t i=0;i<N;i++) ptr[i] = double(i);
+    stop = clock();
+    ptr_write = ((double)(stop-start))/CLOCKS_PER_SEC;
+    std::cout<<"pointer write: "<<ptr_write<<std::endl;
 
-    start = std::chrono::high_resolution_clock::now();
-    for(size_t i=0;i<N;i++) sum += sin(ptr[i]);
-
-    stop = std::chrono::high_resolution_clock::now();
-    double tptr = museconds(stop-start).count();
-    std::cout<<"Pointer data access: "<<std::scientific<<tptr<<std::endl;
+    //reading from memory
+    double sum = 0;
+    start = clock();
+    for(size_t i=0;i<N;i++) sum += ptr[i];
+    stop = clock();
+    ptr_read = ((double)(stop-start))/CLOCKS_PER_SEC;
+    std::cout<<"pointer read: "<<ptr_read<<std::endl;
+    std::cout<<sum<<std::endl;
 
     if(ptr) delete [] ptr;
 
     DBuffer<double> b(N);
-    sum = 0;
-    start = std::chrono::high_resolution_clock::now();
-#ifdef NOFOREACH
-    for(auto iter = b.begin();iter!=b.end();++iter)
-    {
-        auto v = *iter;
-#else
-    for(auto v: b) 
-    {
-#endif
-        sum += sin(v);
-    }
-    stop = std::chrono::high_resolution_clock::now();
-    double titer = museconds(stop-start).count();
-    std::cout<<"Iterator data access: "<<std::scientific<<titer<<std::endl;
+    //writing to memory
+    start = clock();
+    size_t index = 0;
+    for(auto iter = b.begin();iter!=b.end();++iter) *iter = double(index++);
+    stop = clock();
+    iter_write = ((double)(stop-start))/CLOCKS_PER_SEC;
+    std::cout<<"iterator write: "<<iter_write<<std::endl;
+
+    //reading from memory
+    sum = 0; index = 0;
+    start = clock();
+    for(auto iter = b.begin();iter!=b.end();++iter) sum += *iter;
+    stop = clock();
+    iter_read = ((double)(stop-start))/CLOCKS_PER_SEC;
+    std::cout<<"iterator read: "<<iter_read<<std::endl;
+    std::cout<<sum<<std::endl;
+
+    //compute speedup
+    std::cout<<"iterator/pointer write: "<<iter_write/ptr_write<<std::endl;
+    std::cout<<"iterator/pointer read:  "<<iter_read/ptr_read<<std::endl;
 
     return 0;
 }

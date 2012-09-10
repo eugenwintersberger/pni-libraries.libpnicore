@@ -7,7 +7,8 @@ import os
 #add some command line options
 AddOption("--enable-vtk",dest="with_vtk",action="store_true",default=False)
 AddOption("--enable-tiff",dest="with_tiff",action="store_true",default=False)
-AddOption("--enable-gprof",dest="with_gprof",action="store_true",default=False)
+AddOption("--enable-gperf",dest="with_gperf",action="store_true",default=False)
+AddOption("--enable-callgrind",dest="with_callgrind",action="store_true",default=False)
 
 ###================================================================================
 #Function to assemble library filenames depending on the operating system for
@@ -92,6 +93,12 @@ if GetOption("with_vtk"):
 env = Environment(variables=var,ENV={'PATH':os.environ['PATH']},
 				  tools=['default','packaging','textfile'])
 
+if GetOption("with_gperf"):
+    env.Append(CXXFLAGS=["-g"])
+
+if GetOption("with_callgrind"):
+    env.Append(CXXFLAGS=["-g"])
+
 #set the proper compiler - this should be changed to something 
 #more general - independent of the underlying operating system
 env.Replace(CXX = env["CXX"])
@@ -118,7 +125,6 @@ if not env["DOCDIR"]:
 
 #set default compiler flags
 env.Append(CXXFLAGS = ["-Wall","-std=c++0x","-fno-deduce-init-list"])
-env.Append(LIBS=["dl"])
 env.AppendUnique(LIBPATH=[env["BOOSTLIBDIR"],env["CPPULIBDIR"]])
 env.AppendUnique(CPPPATH=[env["BOOSTINCDIR"],env["CPPUINCDIR"]])
 
@@ -130,12 +136,6 @@ if GetOption("with_vtk"):
 #==========================run configuration===================================
 Export('env')
 (build_env,test_env) = SConscript('configure/SConscript')
-
-if GetOption("with_gprof"):
-    build_env.Append(CXXFLAGS=["-g"])
-    test_env.Append(CXXFLAGS=["-g","-pg"])
-    test_env.Append(LINKFLAGS=["-pg"])
-
 
 #============================set debugging options=============================
 if debug:
