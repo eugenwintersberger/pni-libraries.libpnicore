@@ -20,6 +20,8 @@ OPTIMIZE_OUTPUT_FOR_C  = YES
 BUILTIN_STL_SUPPORT    = YES
 DISTRIBUTE_GROUP_DOC   = NO
 SUBGROUPING            = YES
+SHOW_FILES = YES
+SHOW_NAMESPACES = YES
          
 #---------------------------------------------------------------------------
 # Build related configuration options

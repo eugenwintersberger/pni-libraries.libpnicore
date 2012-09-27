@@ -30,7 +30,8 @@
 namespace pni{
 namespace utils{
 
-    /*! \ingroup  type_classes
+    /*! 
+    \ingroup  type_classes
     \brief Binary data type
 
     This class represents a binary data type. Typically binary data is
