@@ -35,122 +35,165 @@
 namespace pni{
 namespace utils{
 
-//! \addtogroup Data-objects
-//! @{
+    /*!
+    \ingroup type_classes
+    \brief template for Array operation return types
 
-//! \brief template for Array operation return types
+    This particular template is used to determine the return type of
+    accumulative array operations as a function of the array's element type.
+    This should handle the problem that for very "small" data types like 8Bit
+    integer values accumulative operations over large arrays most probably would
+    lead to overflows.  Several specializations of this template should avoid
+    this problem.  In the default case the return type of the accululative
+    operations is the same as that of the array's element.
+    */
+    template<typename T> class ArrayType
+    {
+        public:
+            //! data type for accumulative operations
+            typedef T Type; 
+    };
 
-//! This particular template is used to determine the return type of
-//! accumulative array operations as a function of the array's element
-//! type. This should handle the problem that for very "small" data types
-//! like 8Bit integer values accumulative operations over large arrays
-//! most probably would lead to overflows.
-//! Several specializations of this template should avoid this problem.
-//! In the default case the return type of the accululative operations
-//! is the same as that of the array's element.
-template<typename T> class ArrayType{
-public:
-	typedef T Type; //!< data type for accumulative operations
-};
+    //-------------------------------------------------------------------------
+    //! \cond NO_API_DOC
+    template<> class ArrayType<Int8>
+    {
+        public:
+            //! result type for Int8 array operations
+            typedef Int64 Type; 
+    };
+    //! \endcond NO_API_DOC
 
-//! \cond NO_API_DOC
-template<> class ArrayType<Int8>{
-public:
-	typedef Int64 Type; //!< result type for Int8 array operations
-};
-//! \endcond
+    //-------------------------------------------------------------------------
+    //! \cond NO_API_DOC
+    template<> class ArrayType<Int16>
+    {
+        public:
+            //! result type for Int16 array operations
+            typedef Int64 Type; 
+    };
+    //! \endcond NO_API_DOC
 
-//! \cond NO_API_DOC
-template<> class ArrayType<Int16>{
-public:
-	typedef Int64 Type; //!< result type for Int16 array operations
-};
-//! \endcond
+    //-------------------------------------------------------------------------
+    //! \cond NO_API_DOC
+    template<> class ArrayType<Int32>
+    {
+        public:
+            //! result type for Int32 array operations
+            typedef Int64 Type; 
+    };
+    //! \endcond NO_API_DOC
 
-//! \cond NO_API_DOC
-template<> class ArrayType<Int32>{
-public:
-	typedef Int64 Type; //!< result type for Int32 array operations
-};
-//! \endcond
+    //-------------------------------------------------------------------------
+    //! \cond NO_API_DOC
+    template<> class ArrayType<Int64>
+    {
+        public:
+            //! result type for Int64 array operations
+            typedef Int64 Type; 
+    };
+    //! \endcond NO_API_DOC
 
-//! \cond NO_API_DOC
-template<> class ArrayType<Int64>{
-public:
-	typedef Int64 Type; //!< result type for Int64 array operations
-};
-//! \endcond
+    //-------------------------------------------------------------------------
+    //! \cond NO_API_DOC
+    template<> class ArrayType<UInt8>
+    {
+        public:
+            //! result type for UInt8 array operations
+            typedef UInt64 Type; 
+    };
+    //! \endcond NO_API_DOC
 
-//! \cond NO_API_DOC
-template<> class ArrayType<UInt8>{
-public:
-	typedef UInt64 Type; //!< result type for UInt8 array operations
-};
-//! \endcond
+    //-------------------------------------------------------------------------
+    //! \cond NO_API_DOC
+    template<> class ArrayType<UInt16>
+    {
+        public:
+            //! result type for UInt16 array operations
+            typedef UInt64 Type; 
+    };
+    //! \endcond NO_API_DOC
 
-//! \cond NO_API_DOC
-template<> class ArrayType<UInt16>{
-public:
-	typedef UInt64 Type; //!< result type for UInt16 array operations
-};
-//! \endcond
+    //-------------------------------------------------------------------------
+    //! \cond NO_API_DOC
+    template<> class ArrayType<UInt32>
+    {
+        public:
+            //! result type for UInt32 array operations
+            typedef UInt64 Type; 
+    };
+    //! \endcond NO_API_DOC
 
-//! \cond NO_API_DOC
-template<> class ArrayType<UInt32>{
-public:
-	typedef UInt64 Type; //!< result type for UInt32 array operations
-};
-//! \endcond
+    //-------------------------------------------------------------------------
+    //! \cond NO_API_DOC
+    template<> class ArrayType<UInt64>
+    {
+        public:
+            //! result type for UInt64 array operations
+            typedef UInt64 Type; 
+    };
+    //! \endcond NO_API_DOC
 
-//! \cond NO_API_DOC
-template<> class ArrayType<UInt64>{
-public:
-	typedef UInt64 Type; //!< result type for UInt64 array operations
-};
-//! \endcond
+    //-------------------------------------------------------------------------
+    //! \cond NO_API_DOC
+    template<> class ArrayType<Float32>
+    {
+        public:
+            //! result type for Float32 array operations
+            typedef Float128 Type; 
+    };
+    //! \endcond NO_API_DOC
 
-//! \cond NO_API_DOC
-template<> class ArrayType<Float32>{
-public:
-	typedef Float128 Type; //!< result type for Float32 array operations
-};
-//! \endcond
+    //-------------------------------------------------------------------------
+    //! \cond NO_API_DOC
+    template<> class ArrayType<Float64>
+    {
+        public:
+            //! result type for Float64 array operations
+            typedef Float128 Type; 
+    };
+    //! \endcond NO_API_DOC
 
-//! \cond NO_API_DOC
-template<> class ArrayType<Float64>{
-public:
-	typedef Float128 Type; //!< result type for Float64 array operations
-};
-//! \endcond
+    //-------------------------------------------------------------------------
+    //! \cond NO_API_DOC
+    template<> class ArrayType<Float128>
+    {
+        public:
+            //! result type for Float128 point numbers
+            typedef Float128 Type; 
+    };
+    //! \endcond NO_API_DOC
 
-//! \cond NO_API_DOC
-template<> class ArrayType<Float128>{
-public:
-	typedef Float128 Type; //!< result type for Float128 point numbers
-};
-//! \endcond
+    //-------------------------------------------------------------------------
+    //! \cond NO_API_DOC
+    template<> class ArrayType<Complex32>
+    {
+        public:
+            //! result type for Complex32 array operations
+            typedef Complex128 Type; 
+    };
+    //! \endcond NO_API_DOC
 
-//! \cond NO_API_DOC
-template<> class ArrayType<Complex32>{
-public:
-	typedef Complex128 Type; //!< result type for Complex32 array operations
-};
-//! \endcond
+    //-------------------------------------------------------------------------
+    //! \cond NO_API_DOC
+    template<> class ArrayType<Complex64>
+    {
+        public:
+            //! result type for Complex64 array operations
+            typedef Complex128 Type; 
+    };
+    //! \endcond NO_API_DOC
 
-//! \cond NO_API_DOC
-template<> class ArrayType<Complex64>{
-public:
-	typedef Complex128 Type; //!< result type for Complex64 array operations
-};
-//! \endcond
+    //-------------------------------------------------------------------------
+    //! \cond NO_API_DOC
+    template<> class ArrayType<Complex128>
+    {
+        public:
+            //! result type for Complex128 array operations
+            typedef Complex128 Type; 
+    };
+    //! \endcond NO_API_DOC
 
-//! \cond NO_API_DOC
-template<> class ArrayType<Complex128>{
-public:
-	typedef Complex128 Type; //!< result type for Complex128 array operations
-};
-//! \endcond
-//! @}
 }
 }
 
