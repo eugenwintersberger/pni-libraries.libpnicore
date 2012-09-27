@@ -29,7 +29,7 @@
  */
 
 /*
- * ArrayElementType.hpp
+ * TypeInfo.hpp
  *
  *  Created on: Jun 9, 2011
  *      Author: Eugen Wintersberger
@@ -46,85 +46,106 @@
 namespace pni{
 namespace utils{
 
-    /*! \ingroup type_classes
+    /*! 
+    \ingroup type_classes
     \brief type information class
 
-    class that describes a PNI type as defined in PNITypes.hpp.
-    This template is used to obtain information about types in other
-    classes like arrays and scalars.
+    class that describes a PNI type as defined in PNITypes.hpp.  This template
+    is used to obtain information about types in other classes like arrays and
+    scalars.
     */
-    template<typename T> class TypeInfo{
-    public:
-        typedef T Type;        //!< the type of T
-        typedef T BaseType;    //!< the base type (only interesting for complex types)
+    template<typename T> class TypeInfo
+    {
+        public:
+            //==================public types===================================
+            //! the type of T
+            typedef T Type;        
+           
+            //! the base type (only interesting for complex types)
+            typedef T BaseType;    
+            
+            //=================static members==================================
+            //! size of the type in bytes
+            static const size_t size = sizeof(T); 
 
-        //! sign check
+            //! true if the type is an integer, false otherwise
+            static const bool is_integer = std::numeric_limits<T>::is_integer; 
 
-        //! Method returns true if value is negative, false otherwise.
-        //! \param value value for which to check the sign
-        //! \return true if value<0, false otherwise
-        static bool is_negative(T value){
-            if (value < 0) return true;
-            return false;
-        }
+            //! true if the type is signed, false otherwise
+            static const bool is_signed = std::numeric_limits<T>::is_signed; 
+            
+            //! true if the type represents a complex number, false otherwise
+            static const bool is_complex = false; 
 
-        static const size_t size = sizeof(T); //!< size of the type in bytes
-        static const bool is_integer = std::numeric_limits<T>::is_integer; //!< true if the type is an integer, false otherwise
-        static const bool is_signed = std::numeric_limits<T>::is_signed; //!< true if the type is signed, false otherwise
-        static const bool is_complex = false; //!< true if the type represents a complex number, false otherwise
+            //======================static member methods======================
 
-        //! minimum limit
+            /*! 
+            \brief sign check
 
-        //! returns the smallest value that can be represented by type T.
-        //! \return lower limit of T
-        static T min(){
-            //in the case of integers we can use min
-            if (std::numeric_limits<T>::is_integer){
-                return std::numeric_limits<T>::min();
-            }else{
-                //for floating point numbers this is a bit different
-                //min would yield here the value of the smallest possible number
-                return -std::numeric_limits<T>::max();
+            Method returns true if value is negative, false otherwise.
+            \param value value for which to check the sign
+            \return true if value<0, false otherwise
+            */
+            static bool is_negative(T value)
+            {
+                if (value < 0) return true;
+                return false;
             }
-        }
 
-        //! maximum limit
+            //-----------------------------------------------------------------
+            /*! 
+            \brief minimum limit
 
-        //! Returns the largest value that can be represented by T.
-        //! \return upper limit of T
-        static T max(){
-            return std::numeric_limits<T>::max();
-        }
+            returns the smallest value that can be represented by type T.
+            \return lower limit of T
+            */
+            static T min()
+            {
+                //in the case of integers we can use min
+                if (std::numeric_limits<T>::is_integer)
+                    return std::numeric_limits<T>::min();
+                else
+                    //for floating point numbers this is a bit different min
+                    //would yield here the value of the smallest possible number
+                    return -std::numeric_limits<T>::max();
+            }
+
+            //-----------------------------------------------------------------
+            /*! 
+            \brief maximum limit
+
+            Returns the largest value that can be represented by T.
+            \return upper limit of T
+            */
+            static T max() { return std::numeric_limits<T>::max(); }
 
     };
 
 
     //! \cond NO_API_DOC
-    template<> class TypeInfo<Complex32>{
-    public:
+    template<> class TypeInfo<Complex32>
+    {
+        public:
 
-        typedef Complex32 Type;
-        typedef Float32 BaseType;
+            typedef Complex32 Type;
+            typedef Float32 BaseType;
 
-        static const size_t size = sizeof(Complex32);
-        static const bool is_integer = std::numeric_limits<Float32>::is_integer;
-        static const bool is_signed = std::numeric_limits<Float32>::is_signed;
-        static const bool is_complex = true;
+            static const size_t size = sizeof(Complex32);
+            static const bool is_integer = std::numeric_limits<Float32>::is_integer;
+            static const bool is_signed = std::numeric_limits<Float32>::is_signed;
+            static const bool is_complex = true;
 
-        static bool is_negative(Complex32 value){
-            return false;
-        }
+            //---------------------------------------------------------------------
+            static bool is_negative(Complex32 value){ return false; }
 
 
-        //! return the minimum value of the Complex32 type
-        static Float32 min(){
-            return -std::numeric_limits<Float32>::max();
-        }
+            //---------------------------------------------------------------------
+            //! return the minimum value of the Complex32 type
+            static Float32 min() { return -std::numeric_limits<Float32>::max(); }
 
-        //! return the maximum value of the Complex32 type
-        static Float32 max(){
-            return std::numeric_limits<Float32>::max();
-        }
+            //---------------------------------------------------------------------
+            //! return the maximum value of the Complex32 type
+            static Float32 max() { return std::numeric_limits<Float32>::max(); }
 
     };
 
@@ -132,61 +153,54 @@ namespace utils{
 
     //! \ingroup Data-objects
     //! \brief PNITypes specialization for 64Bit IEEE floating point complex type
-    template<> class TypeInfo<Complex64>{
-    public:
+    template<> class TypeInfo<Complex64>
+    {
+        public:
 
-        typedef Complex64 Type;
-        typedef Float64 BaseType;
+            typedef Complex64 Type;
+            typedef Float64 BaseType;
 
-        static const size_t size = sizeof(Complex64);
-        static const bool is_integer = std::numeric_limits<Float64>::is_integer;
-        static const bool is_signed = std::numeric_limits<Float64>::is_signed;
-        static const bool is_complex = true;
+            static const size_t size = sizeof(Complex64);
+            static const bool is_integer = std::numeric_limits<Float64>::is_integer;
+            static const bool is_signed = std::numeric_limits<Float64>::is_signed;
+            static const bool is_complex = true;
 
+            //-----------------------------------------------------------------
+            static bool is_negative(Complex64 value){ return false; }
 
+            //-----------------------------------------------------------------
+            //! return the minimum value of the Complex64 type
+            static Float64 min() { return -std::numeric_limits<Float64>::max(); }
 
-        static bool is_negative(Complex64 value){
-            return false;
-        }
-
-        //! return the minimum value of the Complex64 type
-        static Float64 min(){
-            return -std::numeric_limits<Float64>::max();
-        }
-
-        //! return the maximum value of the Complex64 type
-        static Float64 max(){
-            return std::numeric_limits<Float64>::max();
-        }
+            //-----------------------------------------------------------------
+            //! return the maximum value of the Complex64 type
+            static Float64 max() { return std::numeric_limits<Float64>::max(); }
 
     };
 
     //! \ingroup Data-objects
     //! \brief PNITypes specialization for 128Bit IEEE floating point complex type
-    template<> class TypeInfo<Complex128>{
-    public:
-        typedef Complex128 Type;
-        typedef Float128 BaseType;
+    template<> class TypeInfo<Complex128>
+    {
+        public:
+            typedef Complex128 Type;
+            typedef Float128 BaseType;
 
-        static const size_t size = sizeof(Complex128);
-        static const bool is_integer = std::numeric_limits<Float128>::is_integer;
-        static const bool is_signed = std::numeric_limits<Float128>::is_signed;
-        static const bool is_complex = true;
+            static const size_t size = sizeof(Complex128);
+            static const bool is_integer = std::numeric_limits<Float128>::is_integer;
+            static const bool is_signed = std::numeric_limits<Float128>::is_signed;
+            static const bool is_complex = true;
 
+            //-----------------------------------------------------------------
+            static bool is_negative() { return false; }
 
-        static bool is_negative(){
-            return false;
-        }
+            //-----------------------------------------------------------------
+            //! return the minimum value of the Complex128 type
+            static Float128 min() { return -std::numeric_limits<Float128>::max(); }
 
-        //! return the minimum value of the Complex128 type
-        static Float128 min(){
-            return -std::numeric_limits<Float128>::max();
-        }
-
-        //! return the maximum value of the Complex128 type
-        static Float128 max(){
-            return std::numeric_limits<Float128>::max();
-        }
+            //-----------------------------------------------------------------
+            //! return the maximum value of the Complex128 type
+            static Float128 max() { return std::numeric_limits<Float128>::max(); }
     };
     //! \endcond
 
@@ -195,4 +209,4 @@ namespace utils{
 }
 
 
-#endif /* ARRAYELEMENTTYPE_HPP_ */
+#endif 
