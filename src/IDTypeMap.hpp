@@ -36,119 +36,50 @@
 namespace pni{
 namespace utils{
 
-//! \ingroup type_classes
-//! \brief map from TypeID to type
+/*!
+\ingroup type_classes
+\brief macro for ID to type map specialization
 
-//! This template implements a map from a TypeID to a specific data type.
-template<TypeID id> class IDTypeMap{
-    public:
-        typedef UInt8 type; //!< type identified by the template parameter
-};
+This macro is used to create a specialization of IDTypeMap.
+*/
+#define CREATE_ID_TYPE_MAP(tid,dtype)\
+    template<> class IDTypeMap<tid>\
+    {\
+        public:\
+            typedef dtype type;\
+    };
 
-//! \cond NO_API_DOC
-//------------------------------------------------------------------------------
-template<> class IDTypeMap<TypeID::UINT8>{
-    public:
-        typedef UInt8 type;
-};
+    /*! 
+    \ingroup type_classes
+    \brief map from TypeID to type
 
-//------------------------------------------------------------------------------
-template<> class IDTypeMap<TypeID::INT8>{
-    public:
-        typedef Int8 type;
-};
+    This template implements a map from a TypeID to a specific data type.
+    */
+    template<TypeID id> class IDTypeMap
+    {
+        public:
+            typedef UInt8 type; //!< type identified by the template parameter
+    };
 
-//------------------------------------------------------------------------------
-template<> class IDTypeMap<TypeID::UINT16>{
-    public:
-        typedef UInt16 type;
-};
-
-//------------------------------------------------------------------------------
-template<> class IDTypeMap<TypeID::INT16>{
-    public:
-        typedef Int16 type;
-};
-
-//------------------------------------------------------------------------------
-template<> class IDTypeMap<TypeID::INT32>{
-    public:
-        typedef Int32 type;
-};
-
-//------------------------------------------------------------------------------
-template<> class IDTypeMap<TypeID::UINT32>{
-    public:
-        typedef UInt32 type;
-};
-
-//------------------------------------------------------------------------------
-template<> class IDTypeMap<TypeID::INT64>{
-    public:
-        typedef Int64 type;
-};
-
-//------------------------------------------------------------------------------
-template<> class IDTypeMap<TypeID::UINT64>{
-    public:
-        typedef UInt64 type;
-};
-
-//------------------------------------------------------------------------------
-template<> class IDTypeMap<TypeID::FLOAT32>{
-    public:
-        typedef Float32 type;
-};
-
-//------------------------------------------------------------------------------
-template<> class IDTypeMap<TypeID::FLOAT64>{
-    public:
-        typedef Float64 type;
-};
-
-//------------------------------------------------------------------------------
-template<> class IDTypeMap<TypeID::FLOAT128>{
-    public:
-        typedef Float128 type;
-};
-
-//------------------------------------------------------------------------------
-template<> class IDTypeMap<TypeID::COMPLEX32>{
-    public:
-        typedef Complex32 type;
-};
-
-//------------------------------------------------------------------------------
-template<> class IDTypeMap<TypeID::COMPLEX64>{
-    public:
-        typedef Complex64 type;
-};
-
-//------------------------------------------------------------------------------
-template<> class IDTypeMap<TypeID::COMPLEX128>{
-    public:
-        typedef Complex128 type;
-};
-
-//------------------------------------------------------------------------------
-template<> class IDTypeMap<TypeID::STRING>{
-    public:
-        typedef String type;
-};
-
-//------------------------------------------------------------------------------
-template<> class IDTypeMap<TypeID::BINARY>{
-    public:
-        typedef Binary type;
-};
-
-//------------------------------------------------------------------------------
-template<> class IDTypeMap<TypeID::BOOL>{
-    public:
-        typedef Bool type;
-};
-
-//! \endcond
+    //! \cond NO_API_DOC
+    CREATE_ID_TYPE_MAP(TypeID::UINT8,UInt8);
+    CREATE_ID_TYPE_MAP(TypeID::INT8,Int8);
+    CREATE_ID_TYPE_MAP(TypeID::UINT16,UInt16);
+    CREATE_ID_TYPE_MAP(TypeID::INT16,Int16);
+    CREATE_ID_TYPE_MAP(TypeID::UINT32,UInt32);
+    CREATE_ID_TYPE_MAP(TypeID::INT32,Int32);
+    CREATE_ID_TYPE_MAP(TypeID::UINT64,UInt64);
+    CREATE_ID_TYPE_MAP(TypeID::INT64,Int64);
+    CREATE_ID_TYPE_MAP(TypeID::FLOAT32,Float32);
+    CREATE_ID_TYPE_MAP(TypeID::FLOAT64,Float64);
+    CREATE_ID_TYPE_MAP(TypeID::FLOAT128,Float128);
+    CREATE_ID_TYPE_MAP(TypeID::COMPLEX32,Complex32);
+    CREATE_ID_TYPE_MAP(TypeID::COMPLEX64,Complex64);
+    CREATE_ID_TYPE_MAP(TypeID::COMPLEX128,Complex128);
+    CREATE_ID_TYPE_MAP(TypeID::STRING,String);
+    CREATE_ID_TYPE_MAP(TypeID::BINARY,Binary);
+    CREATE_ID_TYPE_MAP(TypeID::BOOL,Bool);
+    //! \endcond NO_API_DOC
 
 }
 }

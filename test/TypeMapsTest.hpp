@@ -1,8 +1,7 @@
 #ifndef __TYPEMAPSTEST_HPP__
 #define __TYPEMAPSTEST_HPP__
 
-
-
+#include <boost/current_function.hpp>
 #include<cppunit/TestFixture.h>
 #include<cppunit/extensions/HelperMacros.h>
 

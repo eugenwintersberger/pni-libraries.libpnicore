@@ -8,15 +8,17 @@ CPPUNIT_TEST_SUITE_REGISTRATION(TypeMapsTest);
 
 using namespace pni::utils;
 
-void TypeMapsTest::setUp(){
+//-----------------------------------------------------------------------------
+void TypeMapsTest::setUp(){ }
 
-}
+//-----------------------------------------------------------------------------
+void TypeMapsTest::tearDown(){ }
 
-void TypeMapsTest::tearDown(){
+//-----------------------------------------------------------------------------
+void TypeMapsTest::test_type2id()
+{
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
-}
-
-void TypeMapsTest::test_type2id(){
     CPPUNIT_ASSERT(TypeIDMap<Int8>::type_id == TypeID::INT8);
     CPPUNIT_ASSERT(TypeIDMap<UInt8>::type_id == TypeID::UINT8);
     
@@ -41,7 +43,11 @@ void TypeMapsTest::test_type2id(){
     CPPUNIT_ASSERT(TypeIDMap<Binary>::type_id == TypeID::BINARY);
 }
 
-void TypeMapsTest::test_id2type(){
+//-----------------------------------------------------------------------------
+void TypeMapsTest::test_id2type()
+{
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+
     CPPUNIT_ASSERT(
             TypeIDMap<IDTypeMap<TypeID::INT8>::type >::type_id == TypeID::INT8);
     CPPUNIT_ASSERT(
