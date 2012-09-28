@@ -25,7 +25,7 @@
  */
 
 #ifndef __TYPECLASSMAP_HPP__
-#define __TYPECLASSMPA_HPP__
+#define __TYPECLASSMAP_HPP__
 
 #include "Types.hpp"
 
