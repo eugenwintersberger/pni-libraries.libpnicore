@@ -202,6 +202,27 @@ namespace utils{
             //! return the maximum value of the Complex128 type
             static Float128 max() { return std::numeric_limits<Float128>::max(); }
     };
+
+    //! \ingroup Data-objects
+    //! \brief type info for bool
+    template<> class TypeInfo<Bool>
+    {
+        public:
+            typedef Bool Type;
+            typedef Bool BaseType;
+
+            static const size_t size = sizeof(Bool);
+            static const bool is_integer = false;
+            static const bool is_signed = false;
+            static const bool is_complex = false;
+
+            static bool is_negative() { return false; }
+
+            static bool min() { return false; }
+
+            static bool max() { return true; }
+
+    };
     //! \endcond
 
 //end of namespace
