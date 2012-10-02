@@ -82,7 +82,7 @@ namespace utils{
 
             //-----------------------------------------------------------------
             /*!
-            \brief get element data
+            \brief get element reference
 
             Returns a reference to the element determined by indices if this
             list does not contain an instance of Slice. 
@@ -97,6 +97,17 @@ namespace utils{
                 return this->_array(indices...);
             }
 
+            //-----------------------------------------------------------------
+            /*!
+            \brief get element value
+
+            Return the value of the element determined by indices if this list
+            does not contain an instance of Slice.
+            \tparam ITYPES index types
+            \param v dummy variable to select the proper function template
+            \param indices list of indices identifiying the requrested element
+            \return value determined by the indices
+            */
             template<typename ...ITYPES> typename ATYPE::value_type 
                 _get_data(typename ATYPE::value_type v,ITYPES ...indices) const
             {
