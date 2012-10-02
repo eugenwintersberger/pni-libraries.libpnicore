@@ -140,6 +140,7 @@ Please note that the MUST NOT BE a semicolon at the end of this macro.
             Protected method to be used by derived classes for implementing 
             exception printing to std::out.
             \param o reference to the ouptput stream
+            \return output stream
             */
             std::ostream &print(std::ostream &o) const;
     public:
