@@ -206,6 +206,7 @@ namespace utils {
             This constructor is a full copy constructor. A new array is created
             and the content of the original array is copied.
             \throws MemoryAllocationError if memory allocation fails
+            \param a array from which to copy
             */
             DArray(const array_type &a):_imap(a._imap),_data(a._data) { }
 
@@ -236,10 +237,16 @@ namespace utils {
                 check_equal_size(this->_imap,this->_data,EXCEPTION_RECORD);
             }
 
+            //-----------------------------------------------------------------
             /*! 
             \brief construct an array from a view
 
-            Construct an array from an instance of ArrayView.
+            Construct an array from an instance of ArrayView. This is usefull as
+            the data represented by an ArrayView instance lies not necessarily
+            contiguous in memory. Clearly this constructor triggers a mem-copy
+            process.
+            \tparam ATYPE array type of the view
+            \param a reference to the array view
             */
             template<typename ATYPE> explicit DArray(const ArrayView<ATYPE> &a):
                 _imap(a.shape<std::vector<size_t> >()),
