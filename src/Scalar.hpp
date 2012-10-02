@@ -50,7 +50,8 @@ namespace utils {
 
 using namespace boost::numeric;
 
-    /*! \ingroup numeric_array_classes
+    /*! 
+    \ingroup numeric_array_classes
     \brief Scalar template for scalar values
 
     This template is used in expression tempaltes. Its purpose is to give scalar
@@ -91,20 +92,20 @@ using namespace boost::numeric;
             Scalar():_data() {}
 
             //-----------------------------------------------------------------
-            //! constructor from a scalar value
-            explicit Scalar(const value_type &r):_data({r}) {}
-            
-            //-----------------------------------------------------------------
             //! copy constructor
             explicit Scalar(const array_type &s):_data(s._data) {}
+            
+            //-----------------------------------------------------------------
+            //! constructor from a scalar value
+            explicit Scalar(const value_type &r):_data({r}) {}
 
             //-----------------------------------------------------------------
             //! destructor
             ~Scalar() {}
 
-
             //=================assignment operators============================
-            /*! \brief assignment from T value
+            /*! 
+            \brief assignment from T value
 
             Assigns a value of type T to the scalar.
             \param v value to assign
@@ -116,7 +117,8 @@ using namespace boost::numeric;
             }
 
             //-----------------------------------------------------------------
-            /*! \brief assignment from Scalar<T>
+            /*! 
+            \brief assignment from Scalar<T>
 
             This is the most trivial case. An object of type Scalar<T> is 
             assigned to an other object of type Scalar<T>.
@@ -200,6 +202,7 @@ using namespace boost::numeric;
 
             Returns the reference to the data value no matter how many or what
             indices are passed.
+            \tparam ITYPES index types
             \param indices multidimensional index
             \return reference to data
             */
@@ -214,6 +217,7 @@ using namespace boost::numeric;
 
             Return the value of the scalar. The number of indices or their type
             do not matter.
+            \tparam ITYPES index types
             \param indices multidimensional index
             \return data value
             */

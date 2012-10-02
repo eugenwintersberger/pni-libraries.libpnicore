@@ -62,7 +62,7 @@ namespace utils{
     typedef DArray<Complex64> C64DArray;
     //! 128Bit IEEE complex floating point dynamic array
     typedef DArray<Complex128> C128DArray;
-    /* @}*/
+    /*! @}*/
 
     //define some static arrays
 #ifndef NOTMPALIAS
@@ -118,7 +118,7 @@ namespace utils{
     typedef NumArray<C64DArray> NC64DArray;
     //! 128Bit IEEE complex floating point numeric array with a dynamic container type
     typedef NumArray<C128DArray> NC128DArray;
-    /* @} */
+    /*! @} */
 
     //define some numeric array templates based on static arrays
 #ifndef NOTMPALIAS

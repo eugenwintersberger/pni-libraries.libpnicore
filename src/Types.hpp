@@ -1,3 +1,4 @@
+/*! \file */
 /*
  * Definition of standard types
  *
@@ -39,13 +40,12 @@
 namespace pni{
 namespace utils{
 
+    /*! \addtogroup type_classes
+      @{
+     */
 
-    /*!
-    \typedef int8_t 
-
-    Signed 8Bit integer type.
-    */
-    typedef int8_t   Int8;   //!< 8Bit signed integer type
+    //! 8Bit signed integer type
+    typedef int8_t   Int8;   
     typedef uint8_t  UInt8;  //!< 8Bit unsigned integer type
     typedef int16_t  Int16;  //!< 16Bit signed integer type
     typedef uint16_t UInt16; //!< 16Bit unsigned integer type
@@ -68,6 +68,7 @@ namespace utils{
 
     typedef BinaryType<UInt8> Binary; //!< data type for binary data
     typedef bool Bool;    //!< data type for boolean expressions
+    /*! @} */
 
     /*!
     \ingroup type_classes
@@ -106,6 +107,11 @@ namespace utils{
     /*! 
     \ingroup type_classes
     \brief output operator for TypeID
+
+    Adds a string representation of a TypeID to the output stream.
+    \param o reference to output stream
+    \param tid reference to the TypID 
+    \return reference to output stream
     */
     std::ostream &operator<<(std::ostream &o,const TypeID &tid);
 
