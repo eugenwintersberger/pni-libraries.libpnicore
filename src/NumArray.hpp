@@ -356,6 +356,10 @@ namespace utils{
 
             Returns a non-const reference or a selection. The return value
             depends on the types of the arguments.
+            \tparam ITYPES index types
+            \param indices instances of ITYPES determining the multidimensional
+            index
+            \return array view or reference to the array value
             */
             template<typename ...ITYPES>
             typename ArrayViewSelector<array_type,ITYPES...>::reftype
@@ -413,9 +417,12 @@ namespace utils{
             /*!
             \brief get data
 
+            Returns an array view object or the value of the array element
+            addressed by a multidimensional index stored in the container.
             \tparam CTYPE container template
             \tparam OTS template arguments
             \param c container with indices
+            \return array view or element value
             */
             template<template<typename ...> class CTYPE,typename ...OTS>
             typename ArrayViewSelector<array_type,typename CTYPE<OTS...>::value_type>::viewtype
