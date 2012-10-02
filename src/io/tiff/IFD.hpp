@@ -66,27 +66,36 @@ namespace tiff{
         public:
             //===============public data types=================================
             //some data types that can be useful for IFDs
-            typedef std::vector<IFDEntry>::iterator       iterator;       //!< iterator over IDF entries in IDFList
-            typedef std::vector<IFDEntry>::const_iterator const_iterator; //!< const. iterator over IDF entries in IDF List
+            //! iterator over IDF entries in IDFList
+            typedef std::vector<IFDEntry>::iterator       iterator;       
+            //! const. iterator over IDF entries in IDF List
+            typedef std::vector<IFDEntry>::const_iterator const_iterator; 
 
             //==================constructors and destructor====================
             //! default constructor
             IFD();
+
+            //-----------------------------------------------------------------
             //! copy constructor
             IFD(const IFD &o);
 
+            //-----------------------------------------------------------------
             /*! \brief standard constructor
 
             This constructor assumes that the stream points to the first element
             of the IFD which must hold the number of entries. Once construction
-            is finished the stream will point to the offset of the next IFD. 
+            is finished the stream will point to the offset of the next IFD.
             The calling programm can immediately read the offset and proceed
             with the next IFD.
             \param size number of elements in the entry
             */
             explicit IFD(size_t size);
+
+            //-----------------------------------------------------------------
             //! move constructor
             IFD(IFD &&o);
+
+            //-----------------------------------------------------------------
             //! destructor
             ~IFD();
 
@@ -94,6 +103,7 @@ namespace tiff{
             //! copy assignment operator
             IFD &operator = (const IFD &o);
 
+            //-----------------------------------------------------------------
             //! move assignment operator
             IFD &operator = (IFD &&o);
 
@@ -105,6 +115,7 @@ namespace tiff{
             */
             size_t size() const { return _entries.size(); }
 
+            //-----------------------------------------------------------------
             /*! \brief operator to obtain an entry by index
 
             This woks for all entries stored in the IFD also for those
@@ -117,6 +128,7 @@ namespace tiff{
             */
             IFDEntry operator[](size_t i) const;
 
+            //-----------------------------------------------------------------
             /*! operator to obtain an entry by its name
 
             This operator works only for entries which are defined in the
@@ -128,6 +140,7 @@ namespace tiff{
             */
             IFDEntry operator[](const String &n) const;
 
+            //-----------------------------------------------------------------
             /*! \brief get first iterator
 
             Returns an iterator pointing on the first entry stored in the IFD.
@@ -135,6 +148,7 @@ namespace tiff{
             */
             iterator begin() { return _entries.begin(); }
 
+            //-----------------------------------------------------------------
             /*! \brief get last iterator
 
             Returns an iterator pointing on the last entry stored in the IFD.
@@ -142,6 +156,7 @@ namespace tiff{
             */
             iterator end()   { return _entries.end(); }
 
+            //-----------------------------------------------------------------
             /*! \brief get const first iterator
 
             Returns a const iterator to the first entry in the IFD.
@@ -149,6 +164,7 @@ namespace tiff{
             */
             const_iterator begin() const { return _entries.begin(); }
 
+            //-----------------------------------------------------------------
             /*! \brief get const last iterator
 
             Returns a const iterator to the last entry in the IFD.
@@ -156,9 +172,16 @@ namespace tiff{
             */
             const_iterator end() const { return _entries.end(); }
 
-            //! overloaded ostream operator for standard output
+            //-----------------------------------------------------------------
+            /*! 
+            \brief overloaded ostream operator for standard output
 
-            //! Thiss operator can be used to dump the content of an IFD to standard out.
+            Thiss operator can be used to dump the content of an IFD to standard
+            out.
+            \param o output stream
+            \param idf Image directory to print
+            \return output stream
+            */
             friend std::ostream &operator<<(std::ostream &o,const IFD &idf);
     };
 
