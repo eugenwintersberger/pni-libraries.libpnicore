@@ -66,6 +66,7 @@ namespace io{
             the position where it originally was.
             True is returned when the TIFF file contains little endian encoded
             data and false otherwise.
+            \param stream input stream from which to read data
             \return true file data is encoded as little endian
             */
             static bool _is_little_endian(std::ifstream &stream);
@@ -78,6 +79,7 @@ namespace io{
             the position of the stream. The methods adjusts the stream to the
             proper positions and resets it to its original position once
             finished.
+            \param stream input stream from which to read data
             \throw FileError if stream is not a TIFF file
             */
             static void _check_if_tiff(std::ifstream &stream);
@@ -87,6 +89,7 @@ namespace io{
 
             Method obtains the offset for an IFD from the actual stream
             position.
+            \param stream input stream from which to read data
             \return IFD offset
             */
             static Int32 _read_ifd_offset(std::ifstream &stream);
@@ -95,6 +98,7 @@ namespace io{
             /*! \brief read IFD size
 
             Reads the number of IFD entries from the actual stream position
+            \param stream input stream from which to read data
             \return number of IFD entries
             */
             static size_t _read_ifd_size(std::ifstream &stream);
@@ -147,32 +151,50 @@ namespace io{
             void _read_ifds(); 
 
             //----------------------------------------------------------------
-            /*! \brief read data from the file
-            
-
+            /*! 
+            \brief read data from the file
+           
+            Reads data form the file and stores it into a container of type
+            CTYPE.
+            \tparam CTYPE container type where to store the data 
+            \param i image number
+            \param c channel number of the selected image
+            \param data instance of CTYPE which will hold the data
             */
             template<typename CTYPE> 
                 void _read_data(size_t i,size_t c,CTYPE &data);
         public:
-            //==========constructors and destructor========================
+            //==============constructors and destructor========================
             //! default constructor
             TIFFReader();
 
-            //! move constructor
+            //-----------------------------------------------------------------
+            /*! 
+            \brief move constructor
+
+            \param r reader from which to move data to the new instance
+            */
             TIFFReader(TIFFReader &&r);
 
+            //-----------------------------------------------------------------
             //! standard constructor
             explicit TIFFReader(const String &fname);
 
+            //-----------------------------------------------------------------
             //! copy constructor is deleted 
             TIFFReader(const TIFFReader &) = delete;
+
+            //-----------------------------------------------------------------
             //! destructor
             ~TIFFReader();
 
-            //==================assignment operators=======================
-            //! move assignment operator
+            //======================assignment operators=======================
+            /*! 
+            \brief move assignment operator
+            */
             TIFFReader &operator=(TIFFReader &&r);
 
+            //--------------------------------------------------------------
             //! copy assignment operator is deleted
             TIFFReader &operator=(const TIFFReader &r) = delete;
 
@@ -188,14 +210,17 @@ namespace io{
             /*! \brief get ImageInfo 
 
             Return an instance of ImageInfo for image i stored in the file.
-            \return instance of ImageInfo
+            \param i index of the image
+            \return instance of ImageInfo for the requested image
             */
             virtual ImageInfo info(size_t i) const;
 
             //-----------------------------------------------------------------
+            //! open the file
             virtual void open();
 
             //-----------------------------------------------------------------
+            //! close the file
             virtual void close();
 
             //-----------------------------------------------------------------
