@@ -124,6 +124,7 @@ namespace utils{
             Unlike the copy constructor no new memory is allocated during the
             construction of the lhs object. However, the rhs buffer will be
             freed. 
+            \param b buffer to move
             */
             DBuffer(buffer_type &&b):_data(b._data),_size(b._size) 
             {
