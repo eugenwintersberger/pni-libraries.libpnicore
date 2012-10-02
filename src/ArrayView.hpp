@@ -220,6 +220,8 @@ namespace utils{
             std::cout<<view(3,34,10)<<std::endl;
             \endcode
             This works essentially the same as for the Array template.
+            \tparam ITypes index types
+            \param indices instances of ITypes determining the index
             \return reference to the value at multidimensional index
              */
             template<typename ...ITypes> value_type &
@@ -239,6 +241,9 @@ namespace utils{
             std::cout<<view(3,34,10)<<std::endl;
             \endcode
             This works essentially the same as for the Array template.
+            \tparam ITypes index types
+            \param indices instances of ITypes determining the multidimensional
+            index
             \return value at multidimensional index
              */
             template<typename ...ITypes> value_type 
