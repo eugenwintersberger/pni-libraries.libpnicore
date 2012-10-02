@@ -82,14 +82,19 @@ namespace io{
             */
             const std::vector<size_t> &shape() const { return _shape;}
 
-            /*! \brief get cells type ID
+            //-----------------------------------------------------------------
+            /*! 
+            \brief get cells type ID
 
             Return the TypeID of the column if available. This is only valid for
             systems where type information is stored in the file (like for FIO). 
+            \return type id of the column data
             */
             TypeID type_id() const { return _tid; }
 
-            /*! \brief get name
+            //-----------------------------------------------------------------
+            /*! 
+            \brief get name
 
             Return the name of the column.
             \return name 
