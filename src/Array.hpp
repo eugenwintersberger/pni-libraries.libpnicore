@@ -20,7 +20,7 @@
  * Created on: 5.08.2012
  *     Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
  */
-
+/* \file */
 
 #ifndef __ARRAY_HPP__
 #define __ARRAY_HPP__
@@ -36,23 +36,33 @@
 namespace pni{
 namespace utils{
 
-    //define some dynamic arrays
-    typedef DArray<UInt8> U8DArray;
-    typedef DArray<Int8>  I8DArray;
-    typedef DArray<UInt16> U16DArray;
-    typedef DArray<Int16>  I16DArray;
-    typedef DArray<UInt32> U32DArray;
-    typedef DArray<Int32>  I32DArray;
-    typedef DArray<UInt64> U64DArray;
-    typedef DArray<Int64>  I64DArray;
+    /*!
+    \addtogroup multidim_array_classes
+    @{
+    */
+    typedef DArray<UInt8> U8DArray; //!< 8Bit unsigned integer dynamic array
+    typedef DArray<Int8>  I8DArray; //!< 8Bit signed integer dynamic array
+    typedef DArray<UInt16> U16DArray; //!< 16Bit unsigned integer dynamic array
+    typedef DArray<Int16>  I16DArray; //!< 16Bit signed integer dynamic array
+    typedef DArray<UInt32> U32DArray; //!< 32Bit unsigned integer dynamic array
+    typedef DArray<Int32>  I32DArray; //!< 32Bit signed integer dynamic array
+    typedef DArray<UInt64> U64DArray; //!< 64Bit unsigned integer dynamic array
+    typedef DArray<Int64>  I64DArray; //!< 64Bit signed integer dynamic array
 
-    typedef DArray<Float32> F32DArray;
+    //! 32Bit IEEE floating point dynamic array
+    typedef DArray<Float32> F32DArray; 
+    //! 64Bit IEEE floating point dynamic array
     typedef DArray<Float64> F64DArray;
+    //! 128Bit IEEE floating point dynamic array
     typedef DArray<Float128> F128DArray;
 
+    //! 32Bit IEEE complex floating point dynamic array
     typedef DArray<Complex32> C32DArray;
+    //! 64Bit IEEE complex floating point dynamic array
     typedef DArray<Complex64> C64DArray;
+    //! 128Bit IEEE complex floating point dynamic array
     typedef DArray<Complex128> C128DArray;
+    /* @}*/
 
     //define some static arrays
 #ifndef NOTMPALIAS
@@ -74,24 +84,41 @@ namespace utils{
     template<size_t ...DIMS> using C128SArray = SArray<Complex128,DIMS...>;
 #endif
 
-
+    /*! \addtogroup numeric_array_classes
+      @{
+     */
     //define some numeric arrays based on a dynamic array
+    //! 8Bit unsinged integer numeric array with a dynamic container array
     typedef NumArray<U8DArray> NU8DArray;
+    //! 8Bit signed integer numeric array with a dynamic container array
     typedef NumArray<I8DArray> NI8DArray;
+    //! 16Bit unsigned integer numeric array with a dynamic container array
     typedef NumArray<U16DArray> NU16DArray;
+    //! 16Bit signed integer numeric array with a dynamic container array
     typedef NumArray<I16DArray> NI16DArray;
+    //! 32Bit unsigned integer numeric array with a dynamic container array
     typedef NumArray<U32DArray> NU32DArray;
+    //! 32Bit singed integer numeric array with a dynamic container array
     typedef NumArray<I32DArray> NI32DArray;
+    //! 64Bit unsigned integer numeric array with a dynamic container array
     typedef NumArray<U64DArray> NU64DArray;
+    //! 64Bit signed integer numeric array with a dynamic container array
     typedef NumArray<I64DArray> NI64DArray;
-    
+   
+    //! 32Bit IEEE floating point numeric array with a dynamic container type
     typedef NumArray<F32DArray> NF32DArray;
+    //! 64Bit IEEE floating point numeric array with a dynamic container type
     typedef NumArray<F64DArray> NF64DArray;
+    //! 128Bit IEEE floating point numeric array with a dynamic container type
     typedef NumArray<F128DArray> NF128DArray;
-    
+   
+    //! 32Bit IEEE complex floating point numeric array with a dynamic container type
     typedef NumArray<C32DArray> NC32DArray;
+    //! 64Bit IEEE complex floating point numeric array with a dynamic container type
     typedef NumArray<C64DArray> NC64DArray;
+    //! 128Bit IEEE complex floating point numeric array with a dynamic container type
     typedef NumArray<C128DArray> NC128DArray;
+    /* @} */
 
     //define some numeric array templates based on static arrays
 #ifndef NOTMPALIAS
@@ -113,7 +140,7 @@ namespace utils{
     template<size_t ...DIMS> using NC128SArray = NumArray<C128SArray<DIMS...> >;
 #endif
 
-    //shape type
+    //! standard type for array shapes
     typedef std::vector<size_t> shape_t;
 
 //end of namespace
