@@ -92,10 +92,11 @@ namespace utils {
 
             //-----------------------------------------------------------------
             /*!
-            \brief get element data
+            \brief get element reference
 
             Returns a reference to the element determined by indices if this
             list does not contain an instance of Slice. 
+            \tparam ITYPES index types
             \param v dummy variable to select the proper function template
             \param indices list of index values determining the element to
             return
@@ -106,6 +107,18 @@ namespace utils {
                 return this->_data[this->_imap.offset(indices...)];
             }
 
+            //-----------------------------------------------------------------
+            /*!
+            \brief get element value
+
+            Returns the value of the element determined by indices if this
+            list does not contain an instance of Slice. 
+            \tparam ITYPES index types
+            \param v dummy variable to select the proper function template
+            \param indices list of index values determining the element to
+            return
+            \return reference to the element
+            */
             template<typename ...ITYPES> T _get_data(T v,ITYPES ...indices)
                 const
             {
