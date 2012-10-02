@@ -151,7 +151,7 @@ namespace io{
                 return _image_info[i];
             }
 
-            //-------------------------------------------------------------
+            //-----------------------------------------------------------------
             /*!
             \brief read image
 
@@ -164,7 +164,7 @@ namespace io{
             */
             template<typename CTYPE> CTYPE image(size_t i,size_t c=0);
            
-            //-------------------------------------------------------------
+            //-----------------------------------------------------------------
             /*!
             \brief read data from detector file
 
@@ -173,14 +173,16 @@ namespace io{
             \throws FileError if case of IO errors
             \tparam CTYPE container type holding the image data
             \tparam SizeMissmatchError if container and image size do not match
-
+            \param array instance of CTYPE where data will be stored
+            \param i image number
+            \param c channel number
             */
             template<typename CTYPE> 
                 void image(CTYPE &array,size_t i,size_t c=0);
 
     };
 
-    //---------------------------------------------------------------------
+    //-------------------------------------------------------------------------
     template<typename CTYPE> CTYPE CBFReader::image(size_t i,size_t c) 
     {
         ImageInfo info = _image_info[i];
@@ -209,7 +211,7 @@ namespace io{
         return data;
     }
 
-    //---------------------------------------------------------------------
+    //-------------------------------------------------------------------------
     template<typename CTYPE> 
         void CBFReader::image(CTYPE &data,size_t i,size_t c) 
     {
