@@ -100,6 +100,7 @@ namespace io{
             Return an instance of ImageInfo with the information of image i 
             in the image stack. This is a virtual function which must be 
             implemented by the concrete reader classes.
+            \param i index of the image
             \return vector with ImageInfo objects
             */
             virtual ImageInfo info(size_t i) const = 0;
