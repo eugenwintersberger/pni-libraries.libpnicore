@@ -60,7 +60,8 @@ namespace utils{
             typedef ArrayView<array_type> view_type;
 
             //===================constructors==================================
-            /*! constructor
+            /*! 
+            \brief constructor
 
             Set up the operator class.
             \param o1 left operand

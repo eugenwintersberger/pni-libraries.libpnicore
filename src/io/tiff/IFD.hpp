@@ -129,7 +129,8 @@ namespace tiff{
             IFDEntry operator[](size_t i) const;
 
             //-----------------------------------------------------------------
-            /*! operator to obtain an entry by its name
+            /*! 
+            \brief operator to obtain an entry by its name
 
             This operator works only for entries which are defined in the
             TIFF specification. If the requested entry is not available

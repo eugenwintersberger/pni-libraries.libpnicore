@@ -74,7 +74,8 @@ namespace utils{
             {}
 
             //====================public methods===============================
-            /*! get result at i
+            /*!
+            \brief get result at i
 
             Return the result of a[i]+b[i]. 
             \param i index at which to perform the operation

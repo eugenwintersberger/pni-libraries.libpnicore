@@ -96,7 +96,8 @@ namespace io{
             DataReader();
 
             //-----------------------------------------------------------------
-            /*! standard constructor
+            /*! 
+            \brief standard constructor
 
             This constructor takes the name of the file from which to reads data
             as its only argument and opens the file. 

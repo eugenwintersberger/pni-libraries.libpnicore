@@ -70,14 +70,6 @@ namespace utils{
     typedef bool Bool;    //!< data type for boolean expressions
     /*! @} */
 
-    /*!
-    \ingroup type_classes
-    \brief test function
-
-    This is just a testing function.
-    */
-    void function();
-
 
     /*! 
     \ingroup type_classes

@@ -162,7 +162,8 @@ namespace utils{
             const value_type* ptr() const { return this->_data; }
 
             //-----------------------------------------------------------------
-            /*! return data pointer
+            /*! 
+            \brief return data pointer
 
             Returns a typed pointer to the allocated memory. The pointer can be
             used for altering the buffer content.
@@ -199,7 +200,8 @@ namespace utils{
             }
 
             //-----------------------------------------------------------------
-            /*! [] operator for read and write access
+            /*! 
+            \brief [] operator for read and write access
 
             Returns a reference to the element at index i of the buffer. Unlike
             at() this operator performs no checks for index overflows or on the
@@ -210,7 +212,8 @@ namespace utils{
             value_type& operator[](size_t n) { return this->_data[n]; }
 
             //-----------------------------------------------------------------
-            /*! [] operator for read only access
+            /*! 
+            \brief [] operator for read only access
 
             This operator will be used in expressions where read only access to 
             the data values in the buffer is required. No checks are performed

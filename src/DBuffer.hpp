@@ -186,7 +186,8 @@ namespace utils{
             ~DBuffer() { this->free(); }
 
             //===================assignment operators==========================
-            /*! copy assignment operator
+            /*! 
+            \brief copy assignment operator
 
             If the buffer on the rhs of the assignment operator is not allocated
             the rhs buffer object will be freed.
@@ -292,7 +293,8 @@ namespace utils{
             }
 
             //-----------------------------------------------------------------
-            /*! [] operator for read and write access
+            /*! 
+            \brief [] operator for read and write access
 
             Returns a reference to the element at index i of the buffer. Unlike
             at() this operator performs no checks for index overflows or on the
@@ -303,7 +305,8 @@ namespace utils{
             value_type& operator[](size_t n) { return _data[n]; }
 
             //-----------------------------------------------------------------
-            /*! [] operator for read only access
+            /*! 
+            \brief [] operator for read only access
 
             This operator will be used in expressions where read only access to 
             the data values in the buffer is required. No checks are performed
