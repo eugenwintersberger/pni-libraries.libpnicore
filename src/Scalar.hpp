@@ -28,8 +28,8 @@
  */
 
 
-#ifndef SCALAR_HPP_
-#define SCALAR_HPP_
+#ifndef __SCALAR_HPP__
+#define __SCALAR_HPP__
 
 #include <iostream>
 #include <complex>
@@ -251,6 +251,7 @@ using namespace boost::numeric;
             container. The number of indices or their value are ignored.
             \tparam CTYPE container template
             \tparam OTS template arguments of the container template
+
             \param c container with indices
             \return data value
             */
