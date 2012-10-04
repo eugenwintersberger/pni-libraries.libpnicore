@@ -204,6 +204,16 @@ Please note that the MUST NOT BE a semicolon at the end of this macro.
 
         Use this method to add a new issuer in the case that the exception 
         is re-thrown by an other function or class method.
+        \code
+        ...
+        catch(Exception &error)
+        {
+            error.append(EXCEPTION_RECORD);
+            throw error;
+        }
+        \endcode
+        With this a particular exception can be traced througout the entire
+        code.
         \param n ExceptionRecord to append 
         */
         void append(const ExceptionRecord &n) { _records.push_back(n); }
