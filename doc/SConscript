@@ -26,7 +26,7 @@ build_env.Depends(doxygen_api_doc,doxygen_install)
 build_env.Depends(doxygen_api_doc,doxygen_usage)
 build_env.Depends(doxygen_api_doc,doxygen_examples)
 
-Clean(doxygen_api_doc,"api-doc")
+Clean(doxygen_api_doc,"html")
 #admin_guide = SConscript("admin-guide/SConscript")
 #users_guide = SConscript("users-guide/SConscript")
 
