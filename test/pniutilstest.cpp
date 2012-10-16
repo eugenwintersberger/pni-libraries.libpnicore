@@ -1,6 +1,7 @@
 //libddf unit test system
 
 #include<iostream>
+#include<fstream>
 #include<string>
 #include<vector>
 
@@ -8,6 +9,7 @@
 #include<cppunit/TestCaller.h>
 #include<cppunit/TestResult.h>
 #include<cppunit/TestRunner.h>
+#include<cppunit/XmlOutputter.h>
 #include<cppunit/TextTestProgressListener.h>
 #include<cppunit/ui/text/TextTestRunner.h>
 #include<cppunit/extensions/TestFactoryRegistry.h>
@@ -23,9 +25,12 @@ int main(int argc,char **argv){
     
     runner.addTest(registry.makeTest());
     runner.eventManager().addListener(&progress);
-    
-    runner.run();
 
-    return 0;
+    std::ofstream os("unittest.xml");
+    runner.setOutputter(new CppUnit::XmlOutputter(&runner.result(),os));
+    
+    bool result = runner.run();
+
+    return result ? 0 : 1;
 }
 
