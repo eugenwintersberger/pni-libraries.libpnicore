@@ -36,8 +36,11 @@ sources_list.extend(["SliceTest.cpp"])
 sources_list.extend(["TypeClassTest.cpp"])
 sources_list.extend(["TypeInfoTest.cpp"])
 
+bm_sources = ["iteratorbm.cpp"]
+bm_sources.extend(["IOBenchmarkResult.cpp","IOBenchmark.cpp"])
+
 pniutils_test = test_env.Program("pniutilstest",sources_list)
-iterbm = test_env.Program("iterbm","iteratorbm.cpp")
+iterbm = test_env.Program("iterbm",bm_sources)
 test_targets = [pniutils_test,iterbm]
 
     
