@@ -233,8 +233,11 @@ if not test_conf.CheckCXXHeader("cppunit/ui/text/TextTestRunner.h"):
 
 #check for mandatory libraries
 if not test_conf.CheckLib("cppunit",language="C++"):
-    print "CPPUNIT unit test libraray is not installed!"
-    Exit(1)
+    #check if it is enough to add dl to the linker 
+    test_env.AppendUnique(LIBS=["dl"])
+    if not test_conf.CheckLib("cppunit",language="C++"):
+        print "CPPUNIT unit test libraray is not installed!"
+        Exit(1)
 
 
 test_env = test_conf.Finish()
