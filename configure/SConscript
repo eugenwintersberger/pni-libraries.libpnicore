@@ -138,15 +138,19 @@ if not conf.CheckTypeSize('uint64_t',"#include<cstdint>",language="C++",expect=8
     print "uint64_t size does not fit ..."
     Exit(1)
 
-if not conf.CheckTypeSize('float',expect=4):
-    pass
+if not conf.CheckTypeSize('float',language="C++",expect=4):
+    print "float size does not fit ..."
+    Exit(1)
 
-if not conf.CheckTypeSize('double',expect=8):
-    pass
+if not conf.CheckTypeSize('double',language="C++",expect=8):
+    print "double size does not fit ..."
+    Exit(1)
 
-if not conf.CheckTypeSize('long double',expect = 16):
+if not conf.CheckTypeSize('long double',language="C++",expect = 16):
     #in this case we are on 32Bit PC platform
-    pass
+    if not conf.CheckTypeSize('long double',language="C++",expect=12):
+        print "long double size does not fit ..."
+        Exit(1)
 
 
 #check for mandatory header files
