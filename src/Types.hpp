@@ -29,6 +29,7 @@
 
 #include <complex>
 #include <string>
+#include <cstdint>
 
 #include "Binary.hpp"
 
