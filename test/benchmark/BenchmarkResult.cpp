@@ -2,6 +2,6 @@
 
 std::ostream &operator<<(std::ostream &o,const BenchmarkResult &r)
 {
-    o<<r.time()<<"\t("<<r.unit()<<")"<<std::endl;
+    o<<r.time()<<"\t("<<r.unit()<<")";
     return o;
 }

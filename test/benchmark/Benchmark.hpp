@@ -39,6 +39,9 @@ class Benchmark
 
         //! get const iterator to last+1 element
         const_iterator end() const { return _results.end(); }
+
+        //! get size
+        size_t size() const { return _results.size(); }
 };
 
 template<typename TIMERT> void Benchmark::run(size_t n,function_t &func)
@@ -53,10 +56,22 @@ template<typename TIMERT> void Benchmark::run(size_t n,function_t &func)
         timer.stop();
 
         //getting the result
-        BenchmarkResult result(timer.time(),timer.unit(),timer.signature());
+        BenchmarkResult result(timer.duration(),timer.unit());
         _results.push_back(result);
     }
 
+}
+
+BenchmarkResult average(const Benchmark &bm)
+{
+    Float64 time = 0.;
+
+    for(auto result: bm)
+        time += result.time();
+
+    time /= Float64(bm.size());
+
+    return BenchmarkResult(time,bm.begin()->unit());
 }
 
 

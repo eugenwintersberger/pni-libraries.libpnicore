@@ -38,7 +38,7 @@ class BenchmarkResult
         \param time the time the function took to run
         \param unit the unit used to measure the time
         */
-        BenchmarkResult(Float64 time,const String &unit,const String sig):
+        BenchmarkResult(Float64 time,const String &unit):
             _time(time),
             _unit(unit)
         {}

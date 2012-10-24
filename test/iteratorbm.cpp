@@ -7,10 +7,66 @@
 #include "Iterator.hpp"
 #include "DBuffer.hpp"
 
-        
-
+#include "benchmark/Benchmark.hpp"
+#include "benchmark/BenchmarkResult.hpp"
+#include "benchmark/ChronoTimer.hpp"
 
 using namespace pni::utils;
+
+template<typename T> class PointerIO
+{
+    private:
+        size_t _size;
+        T *_ptr;
+        T _result;
+    public:
+        PointerIO(size_t n):
+            _size(n),
+            _ptr(new T[n]),
+            _result(0)
+        {}
+
+        void write_data()
+        {
+            for(size_t i=0;i<_size;i++) _ptr[i] = T(i);
+        }
+
+        void read_data()
+        {
+            _result = T(0);
+            for(size_t i=0;i<_size;i++) _result += _ptr[i];
+        }
+};
+
+template<typename BUFFERT> class BufferIterIO
+{
+    private:
+        BUFFERT _buffer;
+        typename BUFFERT::value_type _result;
+    public:
+        BufferIterIO(size_t size):_buffer(size) {}
+
+        void write_data()
+        {
+            typedef typename BUFFERT::value_type value_t;
+            value_t index = value_t(0);
+
+            for(auto iter = _buffer.begin();iter!=_buffer.end();++iter) 
+                *iter = index++;
+        }
+
+        void read_data()
+        {
+            _result = typename BUFFERT::value_type(0);
+
+            for(auto iter = _buffer.begin();iter!=_buffer.end();++iter) 
+                _result += *iter;
+        }
+            
+};
+
+
+typedef ChronoTimer<std::chrono::high_resolution_clock,std::chrono::nanoseconds> bmtimer_t;
 
 int main(int argc,char **argv)
 {
@@ -23,50 +79,46 @@ int main(int argc,char **argv)
     size_t N = atoi(argv[1]);
     std::cout<<"allocating "<<N*sizeof(double)/1024/1024<<" MByte of memory!";
     std::cout<<std::endl;
-    clock_t start,stop;
-    double ptr_read,ptr_write,iter_read,iter_write;
 
-    double *ptr = new double[N];
 
-    //writing to memory
-    start = clock();
-    for(size_t i=0;i<N;i++) ptr[i] = double(i);
-    stop = clock();
-    ptr_write = ((double)(stop-start))/CLOCKS_PER_SEC;
-    std::cout<<"pointer write: "<<ptr_write<<std::endl;
+    Benchmark::function_t bmfunction;
 
-    //reading from memory
-    double sum = 0;
-    start = clock();
-    for(size_t i=0;i<N;i++) sum += ptr[i];
-    stop = clock();
-    ptr_read = ((double)(stop-start))/CLOCKS_PER_SEC;
-    std::cout<<"pointer read: "<<ptr_read<<std::endl;
-    std::cout<<sum<<std::endl;
+    //=========================benchmark pointer IO=============================
+    PointerIO<double> ptr_bmark(N);
+    Benchmark bm_ptr_write,bm_ptr_read;
 
-    if(ptr) delete [] ptr;
+    //------------------------run pointer write benchmark-----------------------
+    bmfunction = std::bind(&PointerIO<double>::write_data,ptr_bmark);
+    bm_ptr_write.run<bmtimer_t>(1,bmfunction);
+    BenchmarkResult ptr_write_result = average(bm_ptr_write);
 
-    DBuffer<double> b(N);
-    //writing to memory
-    start = clock();
-    size_t index = 0;
-    for(auto iter = b.begin();iter!=b.end();++iter) *iter = double(index++);
-    stop = clock();
-    iter_write = ((double)(stop-start))/CLOCKS_PER_SEC;
-    std::cout<<"iterator write: "<<iter_write<<std::endl;
+    //------------------------run pointer read benchmark------------------------
+    bmfunction = std::bind(&PointerIO<double>::read_data,ptr_bmark);
+    bm_ptr_read.run<bmtimer_t>(1,bmfunction);
+    BenchmarkResult ptr_read_result = average(bm_ptr_read);
 
-    //reading from memory
-    sum = 0; index = 0;
-    start = clock();
-    for(auto iter = b.begin();iter!=b.end();++iter) sum += *iter;
-    stop = clock();
-    iter_read = ((double)(stop-start))/CLOCKS_PER_SEC;
-    std::cout<<"iterator read: "<<iter_read<<std::endl;
-    std::cout<<sum<<std::endl;
+    //===========================benchmark iterator IO=========================
+    BufferIterIO<DBuffer<double> > buffer_bmark(N);
+    Benchmark bm_iter_write,bm_iter_read;
 
-    //compute speedup
-    std::cout<<"iterator/pointer write: "<<iter_write/ptr_write<<std::endl;
-    std::cout<<"iterator/pointer read:  "<<iter_read/ptr_read<<std::endl;
+    //------------------------run iterator write benchmark---------------------
+    bmfunction = std::bind(&BufferIterIO<DBuffer<double> >::write_data,buffer_bmark);
+    bm_iter_write.run<bmtimer_t>(1,bmfunction);
+    BenchmarkResult iter_write_result = average(bm_iter_write);
+
+    //-------------------------run iterator read benchmark---------------------
+    bmfunction = std::bind(&BufferIterIO<DBuffer<double> >::read_data,buffer_bmark);
+    bm_iter_read.run<bmtimer_t>(1,bmfunction);
+    BenchmarkResult iter_read_result = average(bm_iter_read);
+
+    //===========================output results================================
+
+    std::cout<<"Pointer write result:  "<<ptr_write_result<<std::endl;
+    std::cout<<"Iterator write result: "<<iter_write_result<<std::endl;
+    std::cout<<std::endl;
+    std::cout<<"Pointer read result:   "<<ptr_read_result<<std::endl;
+    std::cout<<"Iterator read result:  "<<iter_read_result<<std::endl;
+
 
     return 0;
 }

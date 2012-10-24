@@ -1,7 +1,7 @@
 #ifndef __CHRONOTIMER_HPP__
 #define __CHRONOTIMER_HPP__
 
-#include<pni/utils/Types.hpp>
+#include "Types.hpp"
 
 #include<chrono>
 #include<iostream>
@@ -10,35 +10,47 @@ using namespace pni::utils;
 
 template<typename DTYPE> struct DurationUnitMap;
 
-template<> struct DurationUnitMap<std::nanoseconds>
+template<> struct DurationUnitMap<std::chrono::nanoseconds>
 {
-    static const char unit[]="ns";
+    static const String unit;
 };
 
-template<> struct DurationUnitMap<std::microseconds>
+const String DurationUnitMap<std::chrono::nanoseconds>::unit = String("ns");
+
+template<> struct DurationUnitMap<std::chrono::microseconds>
 {
-    static const char unit[]="us";
+    static const String unit;
 };
 
-template<> struct DurationUnitMap<std::milliseconds>
+const String DurationUnitMap<std::chrono::microseconds>::unit = String("us");
+
+template<> struct DurationUnitMap<std::chrono::milliseconds>
 {
-    static const char unit[]="ms";
+    static const String unit;
 };
 
-template<> struct DurationUnitMap<std::seconds>
+const String DurationUnitMap<std::chrono::milliseconds>::unit=String("ms");
+
+template<> struct DurationUnitMap<std::chrono::seconds>
 {
-    static const char unit[]="s";
+    static const String unit;
 };
 
-template<> struct DurationUnitMap<std::minutes>
+const String DurationUnitMap<std::chrono::seconds>::unit = String("s");
+
+template<> struct DurationUnitMap<std::chrono::minutes>
 {
-    static const char unit[]="min";
+    static const String unit;
 };
 
-template<> struct DurationUnitMap<std::hours>
+const String DurationUnitMap<std::chrono::minutes>::unit = String("min");
+
+template<> struct DurationUnitMap<std::chrono::hours>
 {
-    static const char unit[]="h";
+    static const String unit;
 };
+
+const String DurationUnitMap<std::chrono::hours>::unit = String("h");
 
 /*!
 \brief timer class using chrono
