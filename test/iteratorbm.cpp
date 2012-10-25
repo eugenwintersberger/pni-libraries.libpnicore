@@ -12,92 +12,47 @@
 #include "benchmark/ChronoTimer.hpp"
 #include "benchmark/ClockTimer.hpp"
 
+#include "benchmark/LinearIOPointerBenchmark.hpp"
+#include "benchmark/LinearIODBufferIterator.hpp"
+
 using namespace pni::utils;
 
-template<typename T> class PointerIO
-{
-    private:
-        size_t _size;
-        T *_ptr;
-        T _result;
-    public:
-        PointerIO(size_t n):
-            _size(n),
-            _ptr(new T[n]),
-            _result(0)
-        {}
 
-        void write_data()
-        {
-            T index(0);
-            for(size_t i=0;i<_size;i++) _ptr[i] = index++;
-        }
-
-        void read_data()
-        {
-            _result = T(0);
-            for(size_t i=0;i<_size;i++) _result += _ptr[i];
-        }
-};
-
-template<typename BUFFERT> class BufferIterIO
-{
-    private:
-        BUFFERT _buffer;
-        typename BUFFERT::value_type _result;
-    public:
-        BufferIterIO(size_t size):_buffer(size) {}
-
-        void write_data()
-        {
-            typedef typename BUFFERT::value_type value_t;
-            value_t index(0);
-
-            for(auto iter = _buffer.begin();iter!=_buffer.end();++iter) 
-                *iter = index++;
-        }
-
-        void read_data()
-        {
-            _result = typename BUFFERT::value_type(0);
-
-            for(auto iter = _buffer.begin();iter!=_buffer.end();++iter) 
-                _result += *iter;
-        }
-            
-};
 
 template<typename CLKT> void run_benchmark(size_t N,const String clock_name)
 {
+    typedef LinearIOPointerBenchmark<double> ptr_bmark_t;
+    typedef LinearIODBufferIterator<DBuffer<double> > dbuffer_bmark_t;
+    
     std::cout<<"Results for timer: "<<clock_name<<std::endl;
 
     Benchmark::function_t bmfunction;
 
     //=========================benchmark pointer IO=============================
-    PointerIO<double> ptr_bmark(N);
+    ptr_bmark_t ptr_bmark(N);
     Benchmark bm_ptr_write,bm_ptr_read;
 
     //------------------------run pointer write benchmark-----------------------
-    bmfunction = std::bind(&PointerIO<double>::write_data,ptr_bmark);
+    bmfunction = std::bind(&ptr_bmark_t::write_data,ptr_bmark);
     bm_ptr_write.run<CLKT>(1,bmfunction);
     BenchmarkResult ptr_write_result = average(bm_ptr_write);
 
     //------------------------run pointer read benchmark------------------------
-    bmfunction = std::bind(&PointerIO<double>::read_data,ptr_bmark);
+    bmfunction = std::bind(&ptr_bmark_t::read_data,ptr_bmark);
     bm_ptr_read.run<CLKT>(1,bmfunction);
     BenchmarkResult ptr_read_result = average(bm_ptr_read);
 
     //===========================benchmark iterator IO=========================
-    BufferIterIO<DBuffer<double> > buffer_bmark(N);
+    dbuffer_bmark_t buffer_bmark(N);
     Benchmark bm_iter_write,bm_iter_read;
 
     //------------------------run iterator write benchmark---------------------
-    bmfunction = std::bind(&BufferIterIO<DBuffer<double> >::write_data,buffer_bmark);
+    bmfunction = std::bind(&dbuffer_bmark_t::write_data,buffer_bmark);
     bm_iter_write.run<CLKT>(1,bmfunction);
     BenchmarkResult iter_write_result = average(bm_iter_write);
 
     //-------------------------run iterator read benchmark---------------------
-    bmfunction = std::bind(&BufferIterIO<DBuffer<double> >::read_data,buffer_bmark);
+    bmfunction = std::bind(&dbuffer_bmark_t::read_data,buffer_bmark);
     bm_iter_read.run<CLKT>(1,bmfunction);
     BenchmarkResult iter_read_result = average(bm_iter_read);
 
