@@ -86,6 +86,8 @@ template<typename CLKT,typename DTYPE> class ChronoTimer
         typename CLKT::time_point _stop;  //!< end time
 
     public:
+        //=====================static members==================================
+        static const String name;
         //=======================public types==================================
         //! default constructor
         ChronoTimer(): _start(),_stop() {}
@@ -112,5 +114,8 @@ template<typename CLKT,typename DTYPE> class ChronoTimer
             return String(DurationUnitMap<DTYPE>::unit);           
         }
 };
+
+template<typename CLKT,typename DTYPE>
+const String ChronoTimer<CLKT,DTYPE>::name = String("ChronoTimer");
 
 #endif

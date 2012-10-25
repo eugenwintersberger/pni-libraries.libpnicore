@@ -1,8 +1,12 @@
 #ifndef __CLOCKTIMER_HPP__
 #define __CLOCKTIMER_HPP__
 
+#include "../../src/Types.hpp"
+
 #include<iostream>
 #include<ctime>
+
+using namespace pni::utils;
 
 class ClockTimer
 {
@@ -11,6 +15,8 @@ class ClockTimer
         clock_t _stop;
 
     public:
+        //======================static members=================================
+        static const String name; 
         //=======================constructors==================================
         ClockTimer():_start(0),_stop(0) {}
 
@@ -30,6 +36,8 @@ class ClockTimer
             return String("s");
         }
 };
+
+const String ClockTimer::name = String("ClockTimer");
 
 
 #endif

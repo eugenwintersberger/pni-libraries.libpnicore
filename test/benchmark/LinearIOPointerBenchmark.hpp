@@ -1,6 +1,10 @@
 #ifndef __LINEARIOPOINTERBENCHMARK_HPP__
 #define __LINEARIOPOINTERBENCHMARK_HPP__
 
+#include "../../src/Types.hpp"
+
+using namespace pni::utils;
+
 template<typename T> class LinearIOPointerBenchmark
 {
     private:
@@ -27,6 +31,12 @@ template<typename T> class LinearIOPointerBenchmark
         {
             _result = T(0);
             for(size_t i=0;i<_size;i++) _result += _ptr[i];
+        }
+
+        //-----------------------------------------------------------------
+        String name() const
+        {
+            return "Linear IO Pointer benchmark";
         }
 };
 

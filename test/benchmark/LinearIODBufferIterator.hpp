@@ -1,6 +1,10 @@
 #ifndef __LINEARIODBUFFERITERATOR_HPP__
 #define __LINEARIODBUFFERITERATOR_HPP__
 
+#include "../src/Types.hpp"
+
+using namespace pni::utils;
+
 template<typename BUFFERT> class LinearIODBufferIterator
 {
     private:
@@ -28,7 +32,15 @@ template<typename BUFFERT> class LinearIODBufferIterator
             for(auto iter = _buffer.begin();iter!=_buffer.end();++iter) 
                 _result += *iter;
         }
+
+
+        //---------------------------------------------------------------------
+        String name() const
+        {
+            return String("Linear IO DBuffer template benchmark");
+        }
             
 };
+
 
 #endif
