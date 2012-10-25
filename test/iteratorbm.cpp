@@ -7,7 +7,7 @@
 #include "Iterator.hpp"
 #include "DBuffer.hpp"
 
-#include "benchmark/Benchmark.hpp"
+#include "benchmark/BenchmarkRunner.hpp"
 #include "benchmark/BenchmarkResult.hpp"
 #include "benchmark/ChronoTimer.hpp"
 #include "benchmark/ClockTimer.hpp"
@@ -24,11 +24,11 @@ void run_benchmark(size_t nruns,const BMARKT &bmark)
     std::cout<<"Timer: "<<CLKT::name<<std::endl;
 
     //create benchmark functions from the benchmark object
-    Benchmark::function_t write_func,read_func;
+    BenchmarkRunner::function_t write_func,read_func;
     write_func = std::bind(&BMARKT::write_data,bmark);
     read_func  = std::bind(&BMARKT::read_data,bmark);
 
-    Benchmark write_bm,read_bm;
+    BenchmarkRunner write_bm,read_bm;
     write_bm.run<CLKT>(nruns,write_func);
     read_bm.run<CLKT>(nruns,read_func);
 

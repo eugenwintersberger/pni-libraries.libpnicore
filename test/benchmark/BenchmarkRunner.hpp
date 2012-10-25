@@ -1,12 +1,12 @@
-#ifndef __BENCHMARK_HPP__
-#define __BENCHMARK_HPP__
+#ifndef __BENCHMARKRUNNER_HPP__
+#define __BENCHMARKRUNNER_HPP__
 
 
 #include "BenchmarkResult.hpp"
 #include<list>
 #include<functional>
 
-class Benchmark
+class BenchmarkRunner
 {
     private:
         //! list with benchmark results
@@ -20,10 +20,10 @@ class Benchmark
 
         //====================constructors and destructor=======================
         //! default constructor
-        Benchmark():_results(0) {}
+        BenchmarkRunner():_results(0) {}
 
         //! destructor
-        virtual ~Benchmark(){}
+        virtual ~BenchmarkRunner(){}
 
         //! perform all runs
         template<typename TIMERT> void run(size_t n,function_t &func);
@@ -44,7 +44,7 @@ class Benchmark
         size_t size() const { return _results.size(); }
 };
 
-template<typename TIMERT> void Benchmark::run(size_t n,function_t &func)
+template<typename TIMERT> void BenchmarkRunner::run(size_t n,function_t &func)
 {
     for(size_t i=0;i<n;i++)
     {
@@ -62,7 +62,7 @@ template<typename TIMERT> void Benchmark::run(size_t n,function_t &func)
 
 }
 
-BenchmarkResult average(const Benchmark &bm)
+BenchmarkResult average(const BenchmarkRunner &bm)
 {
     Float64 time = 0.;
 
