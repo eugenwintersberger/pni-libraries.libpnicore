@@ -13,6 +13,7 @@ sources_list = ["pniutilstest.cpp"]
 sources_list.extend(["DBufferTest.cpp"])
 sources_list.extend(["RBufferTest.cpp"])
 sources_list.extend(["SBufferTest.cpp"])
+sources_list.extend(["BufferTest.cpp"])
 sources_list.extend(["SizeTypeTest.cpp"])
 sources_list.extend(["StaticCIndexMapTest.cpp"])
 sources_list.extend(["IteratorTest.cpp"])

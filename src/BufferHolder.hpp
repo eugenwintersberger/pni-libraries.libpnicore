@@ -30,7 +30,7 @@ namespace utils{
             {}
 
             //-----------------------------------------------------------------
-            BufferHolder(const BTYPE buffer):
+            BufferHolder(const BTYPE &buffer):
                 AbstractBuffer(),
                 _buffer(buffer)
             {}
@@ -74,7 +74,7 @@ namespace utils{
 
             virtual TypeID type_id() const
             {
-                return _buffer.type_id();
+                return BTYPE::type_id;
             }
 
     };

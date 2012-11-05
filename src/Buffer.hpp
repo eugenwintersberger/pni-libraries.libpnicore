@@ -21,6 +21,14 @@ namespace utils{
             //======================constructor and destructor=================
             //! default constructor
             Buffer():_ptr(nullptr) {}
+            
+            //-----------------------------------------------------------------
+            //! move constructor
+            Buffer(Buffer &&buffer);
+
+            //-----------------------------------------------------------------
+            //! copy constructor
+            Buffer(const Buffer &buffer);
 
             //-----------------------------------------------------------------
             /*! 
@@ -32,7 +40,6 @@ namespace utils{
             \param buffer const. reference to an instance of BTYPE
             */
             template<typename BTYPE> Buffer(const BTYPE &buffer):
-                AbstractBuffer(),
                 _ptr(new BufferHolder<BTYPE>(buffer))
             {}
 
@@ -45,18 +52,12 @@ namespace utils{
             \tparam BTYPE buffer type
             \param buffer rvalue reference to an instance of BTYPE
             */
+            /*
             template<typename BTYPE> Buffer(BTYPE &&buffer):
-                AbstractBuffer(),
                 _ptr(new BufferHolder<BTYPE>(std::move(buffer)))
             {}
+            */
             
-            //-----------------------------------------------------------------
-            //! move constructor
-            Buffer(Buffer &&buffer);
-
-            //-----------------------------------------------------------------
-            //! copy constructor
-            Buffer(const Buffer &buffer);
 
             //=====================assignment operators========================
             //! copy assignment
