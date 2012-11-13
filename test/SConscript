@@ -39,3 +39,5 @@ iterbm = test_env.Program("iterbm",bm_sources)
 test_targets = [pniutils_test,iterbm]
 
 test_env.Alias("test",test_targets)
+test_install = test_env.Install("$PREFIX/bin",test_targets)
+test_env.Alias("test_install",test_install)
