@@ -3,10 +3,10 @@
 #ifndef __STATICCINDEXMAPTEST_HPP__
 #define __STATICCINDEXMAPTEST_HPP__
 
-#include<cppunit/TestFixture.h>
-#include<cppunit/extensions/HelperMacros.h>
-#include<vector>
-#include "StaticCIndexMap.hpp"
+#include <cppunit/TestFixture.h>
+#include <cppunit/extensions/HelperMacros.h>
+#include <vector>
+#include <pni/utils/StaticCIndexMap.hpp>
 
 using namespace pni::utils;
 

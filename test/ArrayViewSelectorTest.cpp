@@ -1,13 +1,14 @@
 #include<cppunit/extensions/HelperMacros.h>
 
 #include <typeinfo>
-#include "Types.hpp"
-#include "Slice.hpp"
-#include "NumArray.hpp"
-#include "SArray.hpp"
+#include <pni/utils/Types.hpp>
+#include <pni/utils/Slice.hpp>
+#include <pni/utils/NumArray.hpp>
+#include <pni/utils/SArray.hpp>
+#include <pni/utils/ArrayView.hpp>
+#include <pni/utils/service.hpp>
+
 #include "ArrayViewSelectorTest.hpp"
-#include "ArrayView.hpp"
-#include "service.hpp"
 
 CPPUNIT_TEST_SUITE_REGISTRATION(ArrayViewSelectorTest);
 

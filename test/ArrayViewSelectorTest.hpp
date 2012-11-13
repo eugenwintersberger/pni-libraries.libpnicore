@@ -4,7 +4,7 @@
 #include<cppunit/TestFixture.h>
 #include<cppunit/extensions/HelperMacros.h>
 
-#include "ArrayViewSelector.hpp"
+#include <pni/utils/ArrayViewSelector.hpp>
 
 using namespace pni::utils;
 

@@ -4,7 +4,7 @@
 #include<cppunit/extensions/HelperMacros.h>
 #include<boost/current_function.hpp>
 
-#include "DArray.hpp"
+#include <pni/utils/DArray.hpp>
 
 #include "RandomDistributions.hpp"
 #include "EqualityCheck.hpp"

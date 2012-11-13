@@ -4,8 +4,9 @@
 #include <vector>
 #include <list>
 
+#include <pni/utils/CIndexMap.hpp>
+
 #include "IndexMapTest.hpp"
-#include "CIndexMap.hpp"
 
 CPPUNIT_TEST_SUITE_REGISTRATION(IndexMapTest<CIndexMap>);
 

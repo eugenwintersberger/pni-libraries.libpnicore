@@ -5,7 +5,7 @@
 #include<cppunit/TestFixture.h>
 #include<cppunit/extensions/HelperMacros.h>
 
-#include "CIndexMap.hpp"
+#include <pni/utils/CIndexMap.hpp>
 
 #include<vector>
 #include<list>

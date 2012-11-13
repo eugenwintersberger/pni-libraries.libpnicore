@@ -1,9 +1,9 @@
 //Unit test for the array object
 
-#include<cppunit/TestFixture.h>
-#include<cppunit/extensions/HelperMacros.h>
+#include <cppunit/TestFixture.h>
+#include <cppunit/extensions/HelperMacros.h>
 
-#include "SArray.hpp"
+#include <pni/utils/SArray.hpp>
 
 #include "RandomDistributions.hpp"
 #include "EqualityCheck.hpp"

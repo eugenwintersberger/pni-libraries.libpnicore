@@ -3,9 +3,9 @@
 #include<cppunit/TestFixture.h>
 #include<cppunit/extensions/HelperMacros.h>
 
-#include "NumArray.hpp"
-#include "DArray.hpp"
-#include "SArray.hpp"
+#include <pni/utils/NumArray.hpp>
+#include <pni/utils/DArray.hpp>
+#include <pni/utils/SArray.hpp>
 
 #include "RandomDistributions.hpp"
 #include "EqualityCheck.hpp"

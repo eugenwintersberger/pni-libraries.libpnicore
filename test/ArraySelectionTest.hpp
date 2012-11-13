@@ -4,11 +4,12 @@
 #include<cppunit/TestFixture.h>
 #include<cppunit/extensions/HelperMacros.h>
 #include<vector>
-#include "ArraySelection.hpp"
+#include <pni/utils/ArraySelection.hpp>
 
 using namespace pni::utils;
 
-class ArraySelectionTest: public CppUnit::TestFixture {
+class ArraySelectionTest: public CppUnit::TestFixture 
+{
 	CPPUNIT_TEST_SUITE(ArraySelectionTest);
 	CPPUNIT_TEST(test_construction);
 	CPPUNIT_TEST(test_assignment);

@@ -4,11 +4,11 @@
 #define __DBUFFERTEST_HPP__
 
 
-#include<random>
-#include<cppunit/TestFixture.h>
-#include<cppunit/extensions/HelperMacros.h>
-#include "DBuffer.hpp"
-#include "NewAllocator.hpp"
+#include <random>
+#include <cppunit/TestFixture.h>
+#include <cppunit/extensions/HelperMacros.h>
+#include <pni/utils/DBuffer.hpp>
+#include <pni/utils/NewAllocator.hpp>
 
 #include "RandomDistributions.hpp"
 #include "EqualityCheck.hpp"

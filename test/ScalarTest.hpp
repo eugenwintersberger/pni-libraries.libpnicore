@@ -6,7 +6,7 @@
 #include<cppunit/TestFixture.h>
 #include<cppunit/extensions/HelperMacros.h>
 
-#include "Scalar.hpp"
+#include <pni/utils/Scalar.hpp>
 
 #define DOUBLE_PREC 1.e-3
 

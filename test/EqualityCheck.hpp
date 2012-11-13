@@ -2,7 +2,7 @@
 #define __EQUALITYCHECK_HPP__
 
 
-#include "TypeInfo.hpp"
+#include <pni/utils/TypeInfo.hpp>
 
 using namespace pni::utils;
 

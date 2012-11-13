@@ -5,8 +5,8 @@
 #include<cppunit/extensions/HelperMacros.h>
 #include<boost/current_function.hpp>
 
-#include "Types.hpp"
-#include "TypeClassMap.hpp"
+#include <pni/utils/Types.hpp>
+#include <pni/utils/TypeClassMap.hpp>
 
 using namespace pni::utils;
 

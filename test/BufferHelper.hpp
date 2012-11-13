@@ -1,9 +1,9 @@
 #ifndef __BUFFERHELPER_HPP__
 #define __BUFFERHELPER_HPP__
 
-#include "DBuffer.hpp"
-#include "RBuffer.hpp"
-#include "NewAllocator.hpp"
+#include <pni/utils/DBuffer.hpp>
+#include <pni/utils/RBuffer.hpp>
+#include <pni/utils/NewAllocator.hpp>
 
 using namespace pni::utils;
 

@@ -3,8 +3,8 @@
 
 #include <random>
 
-#include "TypeInfo.hpp"
-#include "Types.hpp"
+#include <pni/utils/TypeInfo.hpp>
+#include <pni/utils/Types.hpp>
 
 using namespace pni::utils;
 

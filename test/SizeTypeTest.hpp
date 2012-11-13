@@ -1,10 +1,10 @@
 #ifndef __SIZETYPETEST_HPP__
 #define __SIZETYPETEST_HPP__
 
-#include<random>
-#include<cppunit/TestFixture.h>
-#include<cppunit/extensions/HelperMacros.h>
-#include "SizeType.hpp"
+#include <random>
+#include <cppunit/TestFixture.h>
+#include <cppunit/extensions/HelperMacros.h>
+#include <pni/utils/SizeType.hpp>
 
 using namespace pni::utils;
 

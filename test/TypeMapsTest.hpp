@@ -2,12 +2,12 @@
 #define __TYPEMAPSTEST_HPP__
 
 #include <boost/current_function.hpp>
-#include<cppunit/TestFixture.h>
-#include<cppunit/extensions/HelperMacros.h>
+#include <cppunit/TestFixture.h>
+#include <cppunit/extensions/HelperMacros.h>
 
-#include "Types.hpp"
-#include "IDTypeMap.hpp"
-#include "TypeIDMap.hpp"
+#include <pni/utils/Types.hpp>
+#include <pni/utils/IDTypeMap.hpp>
+#include <pni/utils/TypeIDMap.hpp>
 
 using namespace pni::utils;
 
