@@ -1,7 +1,7 @@
 #ifndef __LINEARIODBUFFERITERATOR_HPP__
 #define __LINEARIODBUFFERITERATOR_HPP__
 
-#include "../src/Types.hpp"
+#include <pni/utils/Types.hpp>
 
 using namespace pni::utils;
 

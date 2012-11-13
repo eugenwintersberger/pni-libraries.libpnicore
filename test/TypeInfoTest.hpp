@@ -7,8 +7,8 @@
 #include<cppunit/extensions/HelperMacros.h>
 #include <limits>
 #include <climits>
-#include "Types.hpp"
-#include "TypeInfo.hpp"
+#include <pni/utils/Types.hpp>
+#include <pni/utils/TypeInfo.hpp>
 
 
 using namespace pni::utils;

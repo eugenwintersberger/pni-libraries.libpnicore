@@ -1,7 +1,7 @@
 #ifndef __CHRONOTIMER_HPP__
 #define __CHRONOTIMER_HPP__
 
-#include "Types.hpp"
+#include <pni/utils/Types.hpp>
 
 #include<chrono>
 #include<iostream>

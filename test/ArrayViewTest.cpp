@@ -8,9 +8,9 @@
 
 #include <pni/utils/DArray.hpp>
 #include <pni/utils/DBuffer.hpp>
-#include <pni/utils/ArrayViewTest.hpp>
 #include <pni/utils/ArrayOperations.hpp>
 
+#include "ArrayViewTest.hpp"
 
 CPPUNIT_TEST_SUITE_REGISTRATION(ArrayViewTest);
 
