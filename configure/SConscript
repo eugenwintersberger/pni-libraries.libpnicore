@@ -212,7 +212,7 @@ env = conf.Finish()
 build_env = env.Clone()
 test_env  = env.Clone()
 
-if 'test' or 'test_install' in COMMAND_LINE_TARGETS:
+if ('test' in COMMAND_LINE_TARGETS) or ('test_install' in COMMAND_LINE_TARGETS):
     test_env.ParseConfig('pkg-config --cflags --libs pniutils')
 
     #============================start configuration for tests=====================
