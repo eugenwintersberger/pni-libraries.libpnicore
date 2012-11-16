@@ -1,4 +1,5 @@
 #python module manging the configuration of the sources.
+import os
 
 #======================check for nullptr=======================================
 #This test checks whether or not the compiler supports the nullptr idiom of
@@ -213,6 +214,7 @@ build_env = env.Clone()
 test_env  = env.Clone()
 
 if ('test' in COMMAND_LINE_TARGETS) or ('test_install' in COMMAND_LINE_TARGETS):
+    test_env["ENV"]["PKG_CONFIG_PATH"] = os.environ["PKG_CONFIG_PATH"]
     test_env.ParseConfig('pkg-config --cflags --libs pniutils')
 
     #============================start configuration for tests=====================
