@@ -200,6 +200,11 @@ namespace utils{
                 _array(storage_type(args...))
             {}
 
+            //! list constructor
+            NumArray(const std::initializer_list<typename storage_type::value_type> &l):
+                _array(storage_type(l))
+            {}
+
 
             //-----------------------------------------------------------------
             //! copy constructor
