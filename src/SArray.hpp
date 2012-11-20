@@ -326,7 +326,7 @@ namespace utils{
 
                 result_type result;
 
-                _get_data(result,indices...);
+                result = _get_data(result,indices...);
                 return result;
             }
 
