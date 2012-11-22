@@ -236,6 +236,18 @@ namespace utils {
             {
                 check_equal_size(this->_imap,this->_data,EXCEPTION_RECORD);
             }
+            
+            //-----------------------------------------------------------------
+            /*! \brief constructor for moving buffer
+
+            \param s shape of the 
+            \param buffer buffer object
+            */
+            template<template<typename...> class CTYPE,typename ...OTS>
+            explicit DArray(const CTYPE<OTS...> &s,STORAGE &&buffer):
+                _imap(s),
+                _data(std::move(buffer))
+            { }
 
             //-----------------------------------------------------------------
             /*! 
@@ -269,17 +281,6 @@ namespace utils {
             { }
 
 
-            //-----------------------------------------------------------------
-            /*! \brief constructor for moving buffer
-
-            \param s shape of the 
-            \param buffer buffer object
-            */
-            template<template<typename...> class CTYPE,typename ...OTS>
-            explicit DArray(const CTYPE<OTS...> &s,STORAGE &&buffer):
-                _imap(s),
-                _data(std::move(buffer))
-            { }
             //-----------------------------------------------------------------
             //! destructor
             ~DArray() { }
@@ -481,7 +482,7 @@ namespace utils {
             operator()(const CTYPE<OTS...> &c) const
             {
                 typedef ArrayViewSelector<array_type,typename CTYPE<OTS...>::value_type> sel;
-                typename sel::viewtype result;
+                typename sel::viewtype result = typename sel::viewtype();
 
                 return _get_data(result,c);
                 return result;
@@ -528,7 +529,7 @@ namespace utils {
                 operator()(ITYPES ...indices) const
             {
                 typedef ArrayViewSelector<array_type,ITYPES...> sel;
-                typename sel::viewtype result;
+                typename sel::viewtype result = typename sel::viewtype();
 
                 return _get_data(result,indices...);
             }
