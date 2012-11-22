@@ -82,6 +82,7 @@ namespace utils{
             \brief get view
 
             Return a view of the array. 
+            \tparam ITYPES index types
             \param view dummy variable 
             \param indices the indices for the view
             \return array view
@@ -100,7 +101,7 @@ namespace utils{
 
             //-----------------------------------------------------------------
             /*!
-            \brief get single data value
+            \brief get data reference
 
             Return a reference to a single data value of the array.
             \param v dummy argument
@@ -110,6 +111,22 @@ namespace utils{
             template<typename ...ITYPES> T& _get_data(T v,ITYPES ...indices)
             {
                  return this->_data[this->_shape.offset(indices...)];   
+            }
+
+            //-----------------------------------------------------------------
+            /*!
+            \brief get data value
+
+            Return the value of a single array element determined by the index 
+            indices.
+            \tparam ITYPES index types
+            \param v dummy argument to determine the return type
+            \param indices indices determining the element
+            \return value of the element
+            */
+            template<typename ...ITYPES> T _get_data(T v,ITYPES ...indices) const
+            {
+                return this->_data[this->_shape.offset(indices...)];
             }
 
             //-----------------------------------------------------------------
@@ -148,6 +165,24 @@ namespace utils{
             T &_get_data(T v,const CTYPE<OTS...> &c)
             {
                  return this->_data[this->_shape.offset(c)];   
+            }
+
+            //---------------------------------------------------------------
+            /*!
+            \brief get data value
+
+            Reutrn the value of the data element indexed by the index container 
+            c. 
+            \tparam CTYPE container template
+            \tparam OTS optional template arguments
+            \param v dummy argument to determine the return type
+            \param c container with indices
+            \return value of the data element
+            */
+            template<template<typename ...> class CTYPE,typename ...OTS>
+            T _get_data(T v,const CTYPE<OTS...> &c) const
+            {
+                return this->_data[this->_shape.offset(c)];
             }
 
         public:
@@ -324,10 +359,8 @@ namespace utils{
                 typedef typename ArrayViewSelector<array_type,ITYPES...>::viewtype
                     result_type;
 
-                result_type result;
-
-                result = _get_data(result,indices...);
-                return result;
+                return _get_data(result_type(),indices...);
+                //return result;
             }
 
             //-----------------------------------------------------------------
