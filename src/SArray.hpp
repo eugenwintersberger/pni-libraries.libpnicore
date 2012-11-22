@@ -409,7 +409,7 @@ namespace utils{
             operator()(const CTYPE<OTS...> &c) const
             {
                 typedef ArrayViewSelector<array_type,typename CTYPE<OTS...>::value_type> sel;
-                typename sel::viewtype result;
+                typename sel::viewtype result = typename sel::viewtype();
 
                 return _get_data(result,c);
                 return result;

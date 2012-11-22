@@ -17,6 +17,7 @@ class SArrayTest : public CppUnit::TestFixture{
         CPPUNIT_TEST(test_linear_access);
         CPPUNIT_TEST(test_iterators);
         CPPUNIT_TEST(test_multiindex_access);
+        CPPUNIT_TEST(test_multiindex_access_const);
         CPPUNIT_TEST(test_typeinfo);
         CPPUNIT_TEST(test_view);
         CPPUNIT_TEST_SUITE_END();
@@ -27,6 +28,7 @@ class SArrayTest : public CppUnit::TestFixture{
         void test_linear_access();
         void test_iterators();
         void test_multiindex_access();
+        void test_multiindex_access_const();
         void test_typeinfo();
         void test_stl();
         void test_view();
@@ -171,6 +173,30 @@ template<typename T> void SArrayTest<T>::test_multiindex_access()
         }
     }
 }
+
+//-----------------------------------------------------------------------------
+template<typename T> void SArrayTest<T>::test_multiindex_access_const()
+{
+    auto data =RandomDistribution::uniform<std::vector<T> >(6);
+    const SArray<T,2,3> a1(data);
+    
+
+    //----------------use variadic tempaltes to access data--------------
+    for(size_t i=0;i<2;i++)
+        for(size_t j=0;j<3;j++)
+            check_equality(a1(i,j),data[i*3+j]);
+
+    //----------using a container to hold the index----------------------
+    for(size_t i=0;i<2;i++)
+    {
+        for(size_t j=0;j<3;j++)
+        {
+            std::vector<size_t> index{i,j};
+            check_equality(a1(index),data[i*3+j]);
+        }
+    }
+}
+
 
 //------------------------------------------------------------------------------
 template<typename T> void SArrayTest<T>::test_view()
