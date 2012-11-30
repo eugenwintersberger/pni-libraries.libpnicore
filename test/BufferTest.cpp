@@ -20,7 +20,12 @@ void BufferTest::test_construction()
     CPPUNIT_ASSERT(buffer2.size() == db64.size());
     CPPUNIT_ASSERT(buffer2.type_id() == DBuffer<Float64>::type_id);
 
-    Buffer buffer3(sb64);
+    Buffer buffer3(db64);
+    CPPUNIT_ASSERT(buffer3.size() == db64.size());
+
+    db64[0] = 100.;
+    std::cout<<db64[0]<<std::endl;
+
 
 
 }

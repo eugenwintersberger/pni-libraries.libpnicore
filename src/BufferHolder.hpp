@@ -18,13 +18,13 @@ namespace utils{
             {}
 
             //-----------------------------------------------------------------
-            BufferHolder(const BufferHolder &buffer):
+            BufferHolder(const BufferHolder<BTYPE> &buffer):
                 AbstractBuffer(),
                 _buffer(buffer._buffer)
             {}
 
             //-----------------------------------------------------------------
-            BufferHolder(BufferHolder &&buffer):
+            BufferHolder(BufferHolder<BTYPE> &&buffer):
                 AbstractBuffer(),
                 _buffer(std::move(buffer._buffer))
             {}
