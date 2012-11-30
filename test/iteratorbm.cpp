@@ -60,7 +60,10 @@ int main(int argc,char **argv)
     
     typedef LinearIOContainerIterator<DBuffer<double> > dbuffer_bm_t;
     typedef LinearIOContainerIterator<DArray<double,DBuffer<double> > > darray_bm_t;
-    //typedef LinearIOContainerIterator<NumArray<DArray<DBuffer<double> > > >  narray_bm_t;
+    typedef LinearIOContainerIterator<NumArray<
+                                               DArray<double,DBuffer<double> > 
+                                              > 
+                                     >  narray_bm_t;
     typedef LinearIOPointerBenchmark<double> ptr_bm_t;
    
 
@@ -69,6 +72,8 @@ int main(int argc,char **argv)
 
     run_benchmark<bmtimer_t>(1,dbuffer_bm_t(DBuffer<double>(N)));
     run_benchmark<bmtimer_t>(1,darray_bm_t(DArray<double,DBuffer<double> >(shape_t{2,N/2})));
+    run_benchmark<bmtimer_t>(1,narray_bm_t(
+                NumArray<DArray<double,DBuffer<double> > >(shape_t{2,N/2})));
     //run_benchmark<ClockTimer>(1,dbuffer_bm_t(DBuffer<double>(N)));
 
 
