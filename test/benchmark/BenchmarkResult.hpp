@@ -1,8 +1,8 @@
 #ifndef __BENCHMARKRESULT_HPP__
 #define __BENCHMARKRESULT_HPP__
 
-#include<iostream>
-#include "Types.hpp"
+#include <iostream>
+#include <pni/utils/Types.hpp>
 
 using namespace pni::utils;
 

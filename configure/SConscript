@@ -1,4 +1,5 @@
 #python module manging the configuration of the sources.
+import os
 
 #======================check for nullptr=======================================
 #This test checks whether or not the compiler supports the nullptr idiom of
@@ -212,47 +213,51 @@ env = conf.Finish()
 build_env = env.Clone()
 test_env  = env.Clone()
 
-#============================start configuration for tests=====================
-test_conf = Configure(test_env)
+if ('test' in COMMAND_LINE_TARGETS) or ('test_install' in COMMAND_LINE_TARGETS):
+    test_env["ENV"]["PKG_CONFIG_PATH"] = os.environ["PKG_CONFIG_PATH"]
+    test_env.ParseConfig('pkg-config --cflags --libs pniutils')
 
-if not test_conf.CheckCXXHeader("cppunit/TestFixture.h"):
-    print "CPPUNIT header TestFixture.h does not exist!"
-    Exit(1)
-    
-if not test_conf.CheckCXXHeader("cppunit/TestRunner.h"):
-    print "CPPUNIT header TestRunner.h does not exist!"
-    Exit(1)
-    
-if not test_conf.CheckCXXHeader("cppunit/extensions/HelperMacros.h"):
-    print "CPPUNIT header HelperMacros.h does not exist!"
-    Exit(1)
-    
-if not test_conf.CheckCXXHeader("cppunit/TestCaller.h"):
-    print "CPPUNIT header TestCaller.h does not exist!"
-    Exit(1)
-    
-if not test_conf.CheckCXXHeader(["string","cppunit/TestResult.h"]):
-    print "CPPUNIT header TestResult.h does not exist!"
-    Exit(1)
-    
-if not test_conf.CheckCXXHeader("cppunit/TextTestProgressListener.h"):
-    print "CPPUNIT header TextTestProgressListener.h does not exist!"
-    Exit(1)
-    
-if not test_conf.CheckCXXHeader("cppunit/ui/text/TextTestRunner.h"):
-    print "CPPUNIT header TextTestRunner.h does not exist!"
-    Exit(1)
+    #============================start configuration for tests=====================
+    test_conf = Configure(test_env)
 
-#check for mandatory libraries
-if not test_conf.CheckLib("cppunit",language="C++"):
-    #check if it is enough to add dl to the linker 
-    test_env.AppendUnique(LIBS=["dl"])
-    if not test_conf.CheckLib("cppunit",language="C++"):
-        print "CPPUNIT unit test libraray is not installed!"
+    if not test_conf.CheckCXXHeader("cppunit/TestFixture.h"):
+        print "CPPUNIT header TestFixture.h does not exist!"
+        Exit(1)
+        
+    if not test_conf.CheckCXXHeader("cppunit/TestRunner.h"):
+        print "CPPUNIT header TestRunner.h does not exist!"
+        Exit(1)
+        
+    if not test_conf.CheckCXXHeader("cppunit/extensions/HelperMacros.h"):
+        print "CPPUNIT header HelperMacros.h does not exist!"
+        Exit(1)
+        
+    if not test_conf.CheckCXXHeader("cppunit/TestCaller.h"):
+        print "CPPUNIT header TestCaller.h does not exist!"
+        Exit(1)
+        
+    if not test_conf.CheckCXXHeader(["string","cppunit/TestResult.h"]):
+        print "CPPUNIT header TestResult.h does not exist!"
+        Exit(1)
+        
+    if not test_conf.CheckCXXHeader("cppunit/TextTestProgressListener.h"):
+        print "CPPUNIT header TextTestProgressListener.h does not exist!"
+        Exit(1)
+        
+    if not test_conf.CheckCXXHeader("cppunit/ui/text/TextTestRunner.h"):
+        print "CPPUNIT header TextTestRunner.h does not exist!"
         Exit(1)
 
+    #check for mandatory libraries
+    if not test_conf.CheckLib("cppunit",language="C++"):
+        #check if it is enough to add dl to the linker 
+        test_env.AppendUnique(LIBS=["dl"])
+        if not test_conf.CheckLib("cppunit",language="C++"):
+            print "CPPUNIT unit test libraray is not installed!"
+            Exit(1)
 
-test_env = test_conf.Finish()
+
+    test_env = test_conf.Finish()
 
 
 Return('build_env test_env')

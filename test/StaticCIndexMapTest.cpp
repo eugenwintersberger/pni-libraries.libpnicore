@@ -2,9 +2,10 @@
 
 #include<cppunit/extensions/HelperMacros.h>
 
-#include "Types.hpp"
-#include "StaticCIndexMapTest.hpp"
+#include <pni/utils/Types.hpp>
 #include <list>
+
+#include "StaticCIndexMapTest.hpp"
 
 CPPUNIT_TEST_SUITE_REGISTRATION(StaticCIndexMapTest);
 

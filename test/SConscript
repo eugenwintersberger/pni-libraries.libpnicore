@@ -4,11 +4,6 @@ Import("test_env")
 
 
 #need to use here prepend in order to avoid triggering the istallation process
-test_env.Prepend(LIBPATH=["../src/"])
-test_env.Append(LIBS=["pniutils"])
-
-test_env.Append(CPPPATH=["../src/"])
-
 sources_list = ["pniutilstest.cpp"]
 sources_list.extend(["DBufferTest.cpp"])
 sources_list.extend(["RBufferTest.cpp"])
@@ -44,35 +39,6 @@ pniutils_test = test_env.Program("pniutilstest",sources_list)
 iterbm = test_env.Program("iterbm",bm_sources)
 test_targets = [pniutils_test,iterbm]
 
-    
-
-if 'testrun' in COMMAND_LINE_TARGETS:
-    def check_test_log(target,source,env):
-        end_of_test = re.compile(r"^Test Results:")
-        issue = re.compile(r"\d*\)")
-    
-        #open the log file
-        lfile = file(path.join("test",source[0].name))
-        #move to the results section
-        for line in lfile: 
-            if end_of_test.match(line): break
-
-        #show test results
-        error_flag = False
-        for line in lfile:
-            print line
-            if issue.match(line): 
-                error_flag = True
-
-        if error_flag: 
-            Exit(1)
-
-    print "Running unit tests ...."
-    #delete the original log file
-    test_run = test_env.Command("testrun.log",pniutils_test,
-                    ["export LD_LIBRARY_PATH=src; echo \"start test\"; $SOURCE > $TARGET"])
-    AlwaysBuild(test_run) 
-    test_check = test_env.Command("testrun.check",test_run,check_test_log)
-    test_env.Alias("testrun",[test_run,test_check])
-
 test_env.Alias("test",test_targets)
+test_install = test_env.Install("$PREFIX/bin",test_targets)
+test_env.Alias("test_install",test_install)

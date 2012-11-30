@@ -6,8 +6,8 @@
  */
 
 
-#include "Types.hpp"
-#include "Scalar.hpp"
+#include <pni/utils/Types.hpp>
+#include <pni/utils/Scalar.hpp>
 #include <cstdio>
 #include <ctime>
 

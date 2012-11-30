@@ -6,7 +6,7 @@
 #include<cppunit/TestFixture.h>
 #include<cppunit/extensions/HelperMacros.h>
 #include<vector>
-#include "IndexMapBase.hpp"
+#include <pni/utils/IndexMapBase.hpp>
 
 using namespace pni::utils;
 

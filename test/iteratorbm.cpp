@@ -4,8 +4,8 @@
 #include <chrono>
 #include <ratio>
 #include <ctime>
-#include "Iterator.hpp"
-#include "DBuffer.hpp"
+#include <pni/utils/Iterator.hpp>
+#include <pni/utils/DBuffer.hpp>
 
 #include "benchmark/BenchmarkRunner.hpp"
 #include "benchmark/BenchmarkResult.hpp"

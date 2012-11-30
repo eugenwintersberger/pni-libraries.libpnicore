@@ -188,6 +188,14 @@ namespace utils{
                 return Stride<d,0,false,DIMS...>::value*i; 
             }
 
+            /*!
+            \brief compute offset - break condition
+
+            This special break condition is called in cases where the index map
+            has to handle only a 1D array. 
+            */
+            template<size_t d> size_t _offset() const { return 0; }
+
         public:
             //! default constructor
 #ifdef NOCEXPR

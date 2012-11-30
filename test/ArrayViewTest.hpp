@@ -4,7 +4,7 @@
 #include<cppunit/extensions/HelperMacros.h>
 
 #include<vector>
-#include "ArrayView.hpp"
+#include <pni/utils/ArrayView.hpp>
 #include "RandomDistributions.hpp"
 
 using namespace pni::utils;

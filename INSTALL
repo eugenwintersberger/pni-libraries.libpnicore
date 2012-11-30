@@ -7,110 +7,76 @@ Minimum requirements:
 -> C++ Compiler g++ >= 4.4.1
 -> Boost library > 1.4
 -> SCons build system >= 2.0.0
+-> doxygen  (to build the documentation)
+-> cppunit  (to build unit tests)
 
-To build the documentation some additional software is required:
--> doxygen 
--> pygmented
--> pdflatex
-
-To build the documentation doxygen should be installed.
-To get the test code compiled the cppunit and plplot libraries are 
-required.
 
 2.) Build and installation
     ----------------------
 
-2.1.) Building the code on Linux
-      --------------------------
+2.1.) Building and installing the library on Linux
+      --------------------------------------------
+In the simplest case one only wants to install the library and the
+documentation. This can be done with
 
-If all the required programs and libraries are installed in their standard
-locations just type 
+$> scons all doc install 
 
-$> scons 
+By default the build system tries to install everything below /usr/local in the
+corresponding subdirectories (which requires root privileges). Another
+installation directory can be passed to scons via the PREFIX build variable
 
-on a terminal in the root directory of the source distribution. This is  
-synonymous to
+$> scons PREFIX=/opt/pni all doc install
 
-$> scons all
+in which case everything goes below /opt/pni. Before the build runs auto
+configuration takes place. Here we assume that you have all your libraries in
+default locations or at least pkg-config installed which points to the proper
+include directories and library directories. If you use non-standard locations
+and do not use pkg-config there are some build variables available which allow
+you to pass this information to the build process. These variables are namely 
 
-In this case the library along with the documentation and the unit tests 
-is built. The shared and static libraries as well as the header files can be
-found below "./src" in the source distribution. For building only the library use 
+BOOSTINCDIR - header path (up to the boost directory) for BOOST
+BOOSTLIBDIR - library installation directory for BOOST
+CPPUINCDIR - CPPUnit include directory
+CPPULIBDIR - CPPUnit library installation directory 
 
-> scons library 
+Additionally there are some command line switches that allow you to enable
+several features of the library not built by default. Actually there is only 
 
-to build only the documentation use
+--enable-tiff - enabling TIFF support
 
-> scons doc
+which enables TIFF support for data readers.
 
-The documentation resides below "./doc" in the source tree. To build unit tests
-only use 
+It is strongly recommended that you use pkg-config to obtain compiler and linker
+flags for libpniutils. The reason is that the library uses several C++11
+features that are maybe not all supported by your compiler. In this case some
+preprocessor directives are set during the configuration of the library enabling
+several workarounds. During installation the pniutils.pc file for pkg-config is
+installed below $PREFIX/lib/pkgconfig. If your installation prefix is a
+non-standard location it is strongly recommended that you add the path to the
+pkgconfig directory to the PKG_CONFIG_PATH environment variable of your system. 
+
+To check if everything worked well try
+
+$> pkg-config --cflags --libs pniutils
+
+You should then obtain some compiler flags like the path to the libraries header
+files and the linker flags required to link versus libpniutils. 
+
+
+2.2.) Building, installing and running unit tests and benchmarks on Linux
+      -------------------------------------------------------------------
+It is strongly recommended to run the unit-tests and benchmarks after installing
+the library. In order to build the tests use
 
 > scons test
 
-In all cases scons tries to do auto-configuration of the build. If all required
-libraries can be found by the linker there is nothing to do at all. However,
-there are situation where libraries are installed in places not known to the
-linker. For such situations the build system provdies command line variables to
-tell scons where to look for these libraries.
+which runs only the build. You will find tests afterwards in the ./test
+subdirectory. The test can run simply with
 
-If you have the Boost library on a custom site you can add the path 
-to the Boost installation prefix with
+$> ./pniutils 
 
-> scons BOOSTPREFIX=/opt/boost [all,library]
-
-It is assumed that the libraries can be found below BOOSTPREFIX/lib and the
-headers in BOOSTPREFIX/include.
-
-To cleanup the source tree after a build use 
-
-$> scons -c
-
-2.2.) Running tests
-      -------------
-The test program can be found below "./test". To run the test change to this
-directory and use 
-
-$> export LD_LIBRARY_PATH=../src:$LD_LIBRARY_PATH
-$> ./pniutilstest 
-
-The first line ensures that the test program uses the newly built library
-instead of an old one that might be already installed on your system. 
+from within the test directory. 
 
 
-
-2.2) Installation on Linux
-     ---------------------
-Installation is as easy as the build, just type
-
-$> scons install
-
-Which will install libpniutils below the default installation prefix which is
-"/usr". This implies that you need administrative permissions to install the 
-software (in other words, you have to be root). 
-
-To install below a different prefix use the PREFIX build variable
-
-> scons PREFIX=/opt/pniutils install 
-
-In this case the installation will run 
-
-It is in generally not a good idea to install software directly from the sources
-to a default system location. Rather build a package for your package management
-system and use this for installation (this allows painless removal of the
-software if you do not like it ;)). 
-
-For package maintainers it might be interesting to use the --install-sandbox
-provided by scons in connection with the DESTDIR environment variable 
-
-$> scons install --install-sandbox=$(DESTDIR)
-
-Some 64Bit distributions install libraries not below lib but below lib64. In
-such cases the LIBDIR variable can be used 
-
-$> scons install PREFIX=/usr LIBDIR=/usr/lib64 --install-sandbox=/opt/pniutils 
-
-With this command everything will be installed below the standard directories in 
-/opt/pniutils/usr but the libraries will go to /opt/pniutils/usr/lib64. 
 
 

@@ -4,7 +4,7 @@
 #include<cppunit/extensions/HelperMacros.h>
 #include<boost/current_function.hpp>
 
-#include "DArray.hpp"
+#include <pni/utils/DArray.hpp>
 
 #include "RandomDistributions.hpp"
 #include "EqualityCheck.hpp"
@@ -19,6 +19,7 @@ class DArrayTest : public CppUnit::TestFixture{
         CPPUNIT_TEST(test_linear_access);
         CPPUNIT_TEST(test_iterators);
         CPPUNIT_TEST(test_multiindex_access);
+        CPPUNIT_TEST(test_multiindex_access_const);
         CPPUNIT_TEST(test_typeinfo);
         CPPUNIT_TEST_SUITE_END();
     private:
@@ -34,6 +35,7 @@ class DArrayTest : public CppUnit::TestFixture{
         void test_linear_access();
         void test_iterators();
         void test_multiindex_access();
+        void test_multiindex_access_const();
         void test_typeinfo();
         void test_unary_addition();
         void test_unary_subtraction();
@@ -210,13 +212,13 @@ void DArrayTest<T,STORAGE>::test_multiindex_access()
     for(size_t i=0;i<s1[0];i++)
         for(size_t j=0;j<s1[1];j++)
         {
-            CPPUNIT_ASSERT_NO_THROW(a1(i,j) = data[a1.shape()[0]*i+j]);
+            CPPUNIT_ASSERT_NO_THROW(a1(i,j) = data[a1.shape()[1]*i+j]);
         }
             
 
     for(size_t i=0;i<s1[0];i++)
         for(size_t j=0;j<s1[1];j++)
-            CPPUNIT_ASSERT_NO_THROW(check_equality(a1(i,j),data[a1.shape()[0]*i+j]));
+            CPPUNIT_ASSERT_NO_THROW(check_equality(a1(i,j),data[a1.shape()[1]*i+j]));
 
     //----------using a container to hold the index----------------------
     for(size_t i=0;i<s1[0];i++)
@@ -224,7 +226,7 @@ void DArrayTest<T,STORAGE>::test_multiindex_access()
         for(size_t j=0;j<s1[1];j++)
         {
             std::vector<size_t> index{i,j};
-            CPPUNIT_ASSERT_NO_THROW(a1(index) = data[a1.shape()[0]*i+j]);
+            CPPUNIT_ASSERT_NO_THROW(a1(index) = data[a1.shape()[1]*i+j]);
         }
     }
 
@@ -233,7 +235,7 @@ void DArrayTest<T,STORAGE>::test_multiindex_access()
         for(size_t j=0;j<s1[1];j++)
         {
             std::vector<size_t> index{i,j};
-            CPPUNIT_ASSERT_NO_THROW(check_equality(a1(index),data[a1.shape()[0]*i+j]));
+            CPPUNIT_ASSERT_NO_THROW(check_equality(a1(index),data[a1.shape()[1]*i+j]));
         }
     }
 
@@ -249,6 +251,49 @@ void DArrayTest<T,STORAGE>::test_multiindex_access()
     
 }
 
+//-----------------------------------------------------------------------------
+template<typename T,typename STORAGE>
+void DArrayTest<T,STORAGE>::test_multiindex_access_const()
+{   
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+
+    //auto data = RandomDistribution::uniform<STORAGE>(12);
+    STORAGE data{1,2,3,4,5,6,7,8,9,10,11,12};
+    const DArray<T,STORAGE> a1(s1,data);
+    CPPUNIT_ASSERT(a1.shape()[0] == s1[0]);
+    CPPUNIT_ASSERT(a1.shape()[1] == s1[1]);
+
+    //----------------use variadic tempaltes to access data--------------
+    for(size_t i=0;i<s1[0];i++)
+    {
+        for(size_t j=0;j<s1[1];j++)
+        {
+            CPPUNIT_ASSERT_NO_THROW(check_equality(a1(i,j),data[a1.shape()[1]*i+j]));
+        }
+    }
+
+    //----------using a container to hold the index----------------------
+    for(size_t i=0;i<s1[0];i++)
+    {
+        for(size_t j=0;j<s1[1];j++)
+        {
+            std::vector<size_t> index{i,j};
+            CPPUNIT_ASSERT_NO_THROW(check_equality(a1(index),data[a1.shape()[1]*i+j]));
+        }
+
+    }
+    
+    //check some exceptions 
+    CPPUNIT_ASSERT_THROW(a1(100,1),IndexError);
+    CPPUNIT_ASSERT_THROW(a1(1,100),IndexError);
+    CPPUNIT_ASSERT_THROW(a1(1),ShapeMissmatchError);
+    CPPUNIT_ASSERT_THROW(a1(1,2,4),ShapeMissmatchError);
+    CPPUNIT_ASSERT_THROW(a1(std::vector<size_t>{100,1}),IndexError);
+    CPPUNIT_ASSERT_THROW(a1(std::vector<size_t>{1,100}),IndexError);
+    CPPUNIT_ASSERT_THROW(a1(std::vector<size_t>{1}),ShapeMissmatchError);
+    CPPUNIT_ASSERT_THROW(a1(std::vector<size_t>{1,100,3}),ShapeMissmatchError);
+    
+}
 //------------------------------------------------------------------------------
 template<typename T,typename STORAGE>
 void DArrayTest<T,STORAGE>::test_typeinfo()

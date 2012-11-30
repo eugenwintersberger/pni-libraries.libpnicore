@@ -3,7 +3,7 @@
 #include<cppunit/TestFixture.h>
 #include<cppunit/extensions/HelperMacros.h>
 
-#include "Slice.hpp"
+#include <pni/utils/Slice.hpp>
 
 using namespace pni::utils;
 

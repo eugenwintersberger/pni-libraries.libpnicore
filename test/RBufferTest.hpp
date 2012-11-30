@@ -4,12 +4,12 @@
 #define __RBUFFERTEST_HPP__
 
 
-#include<random>
-#include<algorithm>
-#include<cppunit/TestFixture.h>
-#include<cppunit/extensions/HelperMacros.h>
-#include "RBuffer.hpp"
-#include "NewAllocator.hpp"
+#include <random>
+#include <algorithm>
+#include <cppunit/TestFixture.h>
+#include <cppunit/extensions/HelperMacros.h>
+#include <pni/utils/RBuffer.hpp>
+#include <pni/utils/NewAllocator.hpp>
 
 #include "RandomDistributions.hpp"
 #include "EqualityCheck.hpp"

@@ -5,8 +5,9 @@
 #include <iostream>
 #include <boost/current_function.hpp>
 
-#include "Types.hpp"
-#include "Binary.hpp"
+#include <pni/utils/Types.hpp>
+#include <pni/utils/Binary.hpp>
+
 #include "BinaryTest.hpp"
 
 

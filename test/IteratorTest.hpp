@@ -6,7 +6,7 @@
 #include<cppunit/TestFixture.h>
 #include<cppunit/extensions/HelperMacros.h>
 #include<vector>
-#include "Iterator.hpp"
+#include <pni/utils/Iterator.hpp>
 
 using namespace pni::utils;
 

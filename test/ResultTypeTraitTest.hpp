@@ -3,8 +3,8 @@
 
 #include<cppunit/TestFixture.h>
 #include<cppunit/extensions/HelperMacros.h>
-#include "ResultTypeTrait.hpp"
-#include "type_conversion.hpp"
+#include <pni/utils/ResultTypeTrait.hpp>
+#include <pni/utils/type_conversion.hpp>
 #include "EqualityCheck.hpp"
 
 template<typename T>

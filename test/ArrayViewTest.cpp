@@ -6,11 +6,11 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/current_function.hpp>
 
-#include "DArray.hpp"
-#include "DBuffer.hpp"
-#include "ArrayViewTest.hpp"
-#include "ArrayOperations.hpp"
+#include <pni/utils/DArray.hpp>
+#include <pni/utils/DBuffer.hpp>
+#include <pni/utils/ArrayOperations.hpp>
 
+#include "ArrayViewTest.hpp"
 
 CPPUNIT_TEST_SUITE_REGISTRATION(ArrayViewTest);
 

@@ -3,15 +3,16 @@
 #ifndef __SUBOPERATORTEST_HPP__
 #define __SUBOPERATORTEST_HPP__
 
-#include<cppunit/TestFixture.h>
-#include<cppunit/extensions/HelperMacros.h>
-#include<vector>
+#include <cppunit/TestFixture.h>
+#include <cppunit/extensions/HelperMacros.h>
+#include <vector>
+#include <algorithm>
+
+#include <pni/utils/NumArray.hpp>
+#include <pni/utils/DArray.hpp>
+#include <pni/utils/Scalar.hpp>
 
 #include "EqualityCheck.hpp"
-#include "NumArray.hpp"
-#include "DArray.hpp"
-#include "Scalar.hpp"
-#include <algorithm>
 
 using namespace pni::utils;
 

@@ -4,14 +4,14 @@
 #define __SBUFFERTEST_HPP__
 
 
-#include<random>
-#include<cppunit/TestFixture.h>
-#include<cppunit/extensions/HelperMacros.h>
-#include "SBuffer.hpp"
+#include <random>
+#include <algorithm>
+#include <cppunit/TestFixture.h>
+#include <cppunit/extensions/HelperMacros.h>
+#include <pni/utils/SBuffer.hpp>
 
 #include "RandomDistributions.hpp"
 #include "EqualityCheck.hpp"
-#include <algorithm>
 
 using namespace pni::utils;
 
