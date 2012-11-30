@@ -1,7 +1,7 @@
 #include "BufferTest.hpp"
 
-#include "DBuffer.hpp"
-#include "SBuffer.hpp"
+#include <pni/utils/DBuffer.hpp>
+#include <pni/utils/SBuffer.hpp>
 
 //-----------------------------------------------------------------------------
 void BufferTest::setUp() { }
@@ -16,11 +16,11 @@ void BufferTest::test_construction()
     SBuffer<UInt64,20> sb64;
 
     Buffer buffer1;
-    Buffer buffer2(db64);
+    Buffer buffer2(std::move(db64));
     CPPUNIT_ASSERT(buffer2.size() == db64.size());
     CPPUNIT_ASSERT(buffer2.type_id() == DBuffer<Float64>::type_id);
 
-    Buffer buffer3 = sb64;
+    Buffer buffer3(sb64);
 
 
 }

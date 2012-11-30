@@ -39,7 +39,7 @@ namespace utils{
             \tparam BTYPE buffer type
             \param buffer const. reference to an instance of BTYPE
             */
-            template<typename BTYPE> Buffer(const BTYPE &buffer):
+            template<typename BTYPE> explicit Buffer(const BTYPE &buffer):
                 _ptr(new BufferHolder<BTYPE>(buffer))
             {}
 
@@ -52,7 +52,7 @@ namespace utils{
             \tparam BTYPE buffer type
             \param buffer rvalue reference to an instance of BTYPE
             */
-            template<typename BTYPE> Buffer(BTYPE &&buffer):
+            template<typename BTYPE> explicit Buffer(BTYPE &&buffer):
                 _ptr(new BufferHolder<BTYPE>(std::move(buffer)))
             {}
             
