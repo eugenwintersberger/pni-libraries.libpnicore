@@ -52,11 +52,9 @@ namespace utils{
             \tparam BTYPE buffer type
             \param buffer rvalue reference to an instance of BTYPE
             */
-            /*
             template<typename BTYPE> Buffer(BTYPE &&buffer):
                 _ptr(new BufferHolder<BTYPE>(std::move(buffer)))
             {}
-            */
             
 
             //=====================assignment operators========================
