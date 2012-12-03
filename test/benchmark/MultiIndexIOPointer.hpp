@@ -20,9 +20,58 @@ template<typename T> class MultiIndexIOPointer
             _ny(ny)
         { }
 
+        //---------------------------------------------------------------------
+        MultiIndexIOPointer(const MultiIndexIOPointer<T> &mip):
+            _ptr(new T[mip._nx*mip._ny]),
+            _nx(mip._nx),
+            _ny(mip._ny)
+        {
+            for(size_t i=0;i<_nx*_ny;++i) _ptr[i] = mip._ptr[i]; 
+        }
+
+        //---------------------------------------------------------------------
+        MultiIndexIOPointer(MultiIndexIOPointer<T> &&mip):
+            _ptr(mip._ptr),
+            _nx(mip._nx),
+            _ny(mip._ny)
+        {
+            mip._ptr = nullptr;
+            mip._nx = 0;
+            mip._ny = 0;
+        }
+
+        //---------------------------------------------------------------------
         ~MultiIndexIOPointer()
         {
             if(_ptr) delete [] _ptr;
+        }
+
+        //=====================assignment operators============================
+        MultiIndexIOPointer<T> &operator=(const MultiIndexIOPointer<T> &mip)
+        {
+            if(this == &mip) return *this;
+
+            if(_ptr) delete [] _ptr;
+
+            _nx = mip._nx;
+            _ny = mip._ny;
+            _ptr = new T[_nx*_ny];
+
+            return *this;
+        }
+
+        MultiIndexIOPointer<T> &operator=(MultiIndexIOPointer<T> &&mip)
+        {
+            if(this == &mip) return *this;
+
+            _ptr = mip._ptr;
+            mip._ptr = nullptr;
+            _nx  = mip._nx;
+            mip._nx = 0;
+            _ny  = mip._ny;
+            mip._ny = 0;
+
+            return *this;
         }
 
         //================public member functions==============================
