@@ -16,7 +16,7 @@ template<typename ATYPE> class MultiIndexIOArray
         //==================construtors========================================
         MultiIndexIOArray(ATYPE &&array):
             _array(std::move(array)),
-            _shape(array.template shape<shape_t>())
+            _shape(_array.template shape<shape_t>())
         { }
 
         //================public member functions==============================

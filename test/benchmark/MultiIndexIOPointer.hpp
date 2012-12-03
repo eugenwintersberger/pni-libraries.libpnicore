@@ -12,19 +12,22 @@ template<typename T> class MultiIndexIOPointer
         T *_ptr;
         size_t _nx;
         size_t _ny;
+        T _result;
     public:
         //==================construtors========================================
         MultiIndexIOPointer(size_t nx,size_t ny):
             _ptr(new T[nx*ny]),
             _nx(nx),
-            _ny(ny)
+            _ny(ny),
+            _result(0)
         { }
 
         //---------------------------------------------------------------------
         MultiIndexIOPointer(const MultiIndexIOPointer<T> &mip):
             _ptr(new T[mip._nx*mip._ny]),
             _nx(mip._nx),
-            _ny(mip._ny)
+            _ny(mip._ny),
+            _result(mip._result)
         {
             for(size_t i=0;i<_nx*_ny;++i) _ptr[i] = mip._ptr[i]; 
         }
@@ -33,7 +36,8 @@ template<typename T> class MultiIndexIOPointer
         MultiIndexIOPointer(MultiIndexIOPointer<T> &&mip):
             _ptr(mip._ptr),
             _nx(mip._nx),
-            _ny(mip._ny)
+            _ny(mip._ny),
+            _result(mip._result)
         {
             mip._ptr = nullptr;
             mip._nx = 0;
@@ -56,6 +60,7 @@ template<typename T> class MultiIndexIOPointer
             _nx = mip._nx;
             _ny = mip._ny;
             _ptr = new T[_nx*_ny];
+            _result = mip._result;
 
             return *this;
         }
@@ -70,6 +75,7 @@ template<typename T> class MultiIndexIOPointer
             mip._nx = 0;
             _ny  = mip._ny;
             mip._ny = 0;
+            _result = mip._result;
 
             return *this;
         }
@@ -88,11 +94,9 @@ template<typename T> class MultiIndexIOPointer
         //---------------------------------------------------------------------
         void read_data()
         {
-            T result(0);
-
             for(size_t i=0;i<_nx;++i)
                 for(size_t j=0;j<_ny;++j)
-                    result += _ptr[i*_ny+j];
+                    _result += _ptr[i*_ny+j];
         }
 
 
