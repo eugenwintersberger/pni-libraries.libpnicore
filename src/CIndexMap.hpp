@@ -241,7 +241,7 @@ namespace utils{
             auto miter = shape().begin();
             for(auto iiter=index.begin();iiter!=index.end();iiter++,siter++,miter++)
             {
-                check_index((*iiter),(*miter),EXCEPTION_RECORD);
+                //check_index((*iiter),(*miter),EXCEPTION_RECORD);
                 offset += (*iiter)*(*siter);
             }
 
