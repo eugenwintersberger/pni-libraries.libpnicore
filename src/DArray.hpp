@@ -492,11 +492,8 @@ namespace utils {
             /*! \brief access with variadic template
 
             Returns the data at a position described by the multidimensional
-            index represented by the argument list of this operator. 
-            \throws ShapeMissmatchError if the number of arguments  does not 
-            match the rank of the array
-            \throws IndexError if one of the indices exceeds the number of
-            elements along its dimension
+            index represented by the argument list of this operator. For
+            performance reasons no checking of the indices is done. 
             \param indices array indices
             \return reference to the element at position i
             */
@@ -517,10 +514,7 @@ namespace utils {
 
             Returns the data at a position described by the multidimensional
             index represented by the argument list of this operator. 
-            \throws ShapeMissmatchError if the number of arguments  does not 
-            match the rank of the array
-            \throws IndexError if one of the indices exceeds the number of
-            elements along its dimension
+            For performance reasons no checking of the indices is done. 
             \param indices residual indices
             \return value of the element at position i
             */

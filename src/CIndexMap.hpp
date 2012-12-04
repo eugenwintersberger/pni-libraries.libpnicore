@@ -47,6 +47,40 @@ namespace utils{
             //================private methods==================================
             //! compute dimension strides
             void _compute_strides();
+           
+            //-----------------------------------------------------------------
+            /*!
+            \brief compute offset
+
+            Compute the contribution of index d in the multindex to the total
+            linear offset of an element. This function is called recursively 
+            until no more indices are left.
+            \tparam ITYPES index types
+            \param d dimension of the index
+            \param i actual index
+            \param indices residual indices.
+            \return linear offset.
+            */
+            template<typename ...ITYPES>
+            size_t _get_offset(size_t d,size_t i,ITYPES ...indices) const
+            {
+                return i*_strides[d]+_get_offset(d+1,indices...); 
+            }
+
+            //-----------------------------------------------------------------
+            /*!
+            \brief compute offset
+
+            Break condition for the last index in a multiindex variadic offset
+            call. 
+            \param d last dimension
+            \param i last index
+            \return linear offset
+            */
+            size_t _get_offset(size_t d,size_t i) const
+            {
+                return i*_strides[d];
+            }
         public:
             //================constructors and destructor======================
             //! default constructor
@@ -139,16 +173,17 @@ namespace utils{
             CIndexMap imap{3,4,5,8};
             size_t offset = imap.offset(1,2,0,3);
             \endcode
+            This function does no index nor rank checking. This is simply due to
+            performance issues. 
             \tparam ITYPES index types
             \param indices element indices
-            \throws ShapeMissmatchError if number of indices and size of shape 
-            do not match
-            \throws IndexError if one of the indices exceeds the number of 
-            elements along its dimension
             \return offset value
             */
             template<typename ...ITYPES> 
-                size_t offset(ITYPES ...indices) const;
+                size_t offset(ITYPES ...indices) const
+            {
+                return _get_offset(0,indices...);
+            }
 
             //-----------------------------------------------------------------
             /*!
@@ -213,28 +248,8 @@ namespace utils{
             template<typename ITYPE> 
                 void index(size_t offset,ITYPE &index) const;
         
-            template<typename ...ITYPES>
-            size_t get_offset(size_t d,size_t i,ITYPES ...indices) const
-        {
-                return i*_strides[d]+get_offset(d+1,indices...); 
-        }
-
-        size_t get_offset(size_t d,size_t i) const
-        {
-            return i*_strides[d];
-        }
         };
 
-
-        //-------------------------------------------------------------------------
-        template<typename ...ITYPES>
-            size_t CIndexMap::offset(ITYPES ...indices) const
-        {
-            //std::vector<size_t> index{size_t(indices)...};
-
-            //return offset(index);
-            return get_offset(0,indices...);
-        }
 
         //-------------------------------------------------------------------------
         template<template<typename...> class CTYPE,typename ...OTYPES> 
@@ -254,7 +269,7 @@ namespace utils{
             auto miter = shape().begin();
             for(auto iiter=index.begin();iiter!=index.end();iiter++,siter++,miter++)
             {
-                //check_index((*iiter),(*miter),EXCEPTION_RECORD);
+                check_index((*iiter),(*miter),EXCEPTION_RECORD);
                 offset += (*iiter)*(*siter);
             }
 
