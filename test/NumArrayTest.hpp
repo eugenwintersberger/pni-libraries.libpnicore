@@ -232,15 +232,6 @@ template<typename ATYPE> void NumArrayTest<ATYPE>::test_multiindex_access()
     }
 
     //check some exceptions 
-    CPPUNIT_ASSERT_THROW(a1(100,1),IndexError);
-    CPPUNIT_ASSERT_THROW(a1(1,100),IndexError);
-    CPPUNIT_ASSERT_THROW(a1(1),ShapeMissmatchError);
-    CPPUNIT_ASSERT_THROW(a1(1,2,4),ShapeMissmatchError);
-    CPPUNIT_ASSERT_THROW(a1(std::vector<size_t>{100,1}),IndexError);
-    CPPUNIT_ASSERT_THROW(a1(std::vector<size_t>{1,100}),IndexError);
-    CPPUNIT_ASSERT_THROW(a1(std::vector<size_t>{1}),ShapeMissmatchError);
-    CPPUNIT_ASSERT_THROW(a1(std::vector<size_t>{1,100,3}),ShapeMissmatchError);
-    
 }
 
 //------------------------------------------------------------------------------
