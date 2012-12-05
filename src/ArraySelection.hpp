@@ -17,7 +17,7 @@
  * along with libpniutils.  If not, see <http://www.gnu.org/licenses/>.
  *************************************************************************
  *
- * Created on: Jun 1 2012
+ * Created on: Jun 1, 2012
  *     Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
  */
 #pragma once

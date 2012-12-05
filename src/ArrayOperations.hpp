@@ -19,7 +19,7 @@
  *
  * Header files with template functions for array opterations
  *
- * Created on: May 22 2012
+ * Created on: May 22, 2012
  *     Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
  */
 

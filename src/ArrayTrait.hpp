@@ -1,6 +1,4 @@
 /*
- * Declaration of the ArrayTrait<T> template
- *
  * (c) Copyright 2011 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
  *
  * This file is part of libpniutils.
