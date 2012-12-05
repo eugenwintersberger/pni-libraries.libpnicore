@@ -1,6 +1,27 @@
-//implementation of the arrayshape test
-
-#include<cppunit/extensions/HelperMacros.h>
+/*
+ * (c) Copyright 2012 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
+ *
+ * This file is part of libpniutils.
+ *
+ * libpniutils is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * libpniutils is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with libpniutils.  If not, see <http://www.gnu.org/licenses/>.
+ *************************************************************************
+ *
+ *  Created on: Jul 31, 2012
+ *      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
+ */
+#include <boost/current_function.hpp>
+#include <cppunit/extensions/HelperMacros.h>
 
 #include <pni/utils/Types.hpp>
 #include <list>
@@ -10,17 +31,15 @@
 CPPUNIT_TEST_SUITE_REGISTRATION(StaticCIndexMapTest);
 
 //------------------------------------------------------------------------------
-void StaticCIndexMapTest::setUp(){
-}
+void StaticCIndexMapTest::setUp(){ }
 
 //------------------------------------------------------------------------------
-void StaticCIndexMapTest::tearDown(){
-}
+void StaticCIndexMapTest::tearDown(){ }
 
 //------------------------------------------------------------------------------
-void StaticCIndexMapTest::test_construction(){
-	std::cout<<"void ShapeTest::testConstruction()-----------------------";
-	std::cout<<std::endl;
+void StaticCIndexMapTest::test_construction()
+{
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
     StaticCIndexMap<3,4,5> s1;
     CPPUNIT_ASSERT(s1.size() == 3*4*5);
@@ -36,8 +55,7 @@ void StaticCIndexMapTest::test_construction(){
 //------------------------------------------------------------------------------
 void StaticCIndexMapTest::test_offset()
 {
-	std::cout<<"void ShapeTest::testOffset()----------------------------------";
-	std::cout<<std::endl;
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
     StaticCIndexMap<3,4> s1;
 
@@ -59,9 +77,9 @@ void StaticCIndexMapTest::test_offset()
 }
 
 //------------------------------------------------------------------------------
-void StaticCIndexMapTest::test_index(){
-	std::cout<<"void ShapeTest::testIndex()-----------------------------------";
-	std::cout<<std::endl;
+void StaticCIndexMapTest::test_index()
+{
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
     StaticCIndexMap<3,4> s1;
     StaticCIndexMap<2,3,5> s2;

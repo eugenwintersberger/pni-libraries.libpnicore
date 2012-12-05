@@ -1,6 +1,29 @@
+/*
+ * (c) Copyright 2011 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
+ *
+ * This file is part of libpniutils.
+ *
+ * libpniutils is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * libpniutils is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with libpniutils.  If not, see <http://www.gnu.org/licenses/>.
+ *************************************************************************
+ *
+ *  Created on: Sep 02, 2011
+ *      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
+ */
 #include<iostream>
 #include<typeinfo>
 
+#include <boost/current_function.hpp>
 #include<cppunit/extensions/HelperMacros.h>
 
 #include "ScalarTest.hpp"
@@ -8,20 +31,17 @@
 CPPUNIT_TEST_SUITE_REGISTRATION(ScalarTest);
 
 
-void ScalarTest::setUp(){
-    
+//-----------------------------------------------------------------------------
+void ScalarTest::setUp(){ }
 
-}
-
-void ScalarTest::tearDown(){
-
-}
-
+//-----------------------------------------------------------------------------
+void ScalarTest::tearDown(){ }
 
 //------------------------------------------------------------------------------
-void ScalarTest::testConstructors(){
-	std::cout<<"void ScalarTest::testConstructors()---------------------------";
-	std::cout<<std::endl;
+void ScalarTest::testConstructors()
+{
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+
     Int32Scalar s;
 
     //test standard operator
@@ -55,9 +75,10 @@ void ScalarTest::testConstructors(){
 }
 
 //------------------------------------------------------------------------------
-void ScalarTest::testConversion(){
-	std::cout<<"void ScalarTest::testConversion()-----------------------------";
-	std::cout<<std::endl;
+void ScalarTest::testConversion()
+{
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+
 	Float64Scalar sf64;
 
 	//starting with integer conversions
@@ -98,9 +119,10 @@ void ScalarTest::testConversion(){
 }
 
 //------------------------------------------------------------------------------
-void ScalarTest::testSetGetValue(){
-	std::cout<<"void ScalarTest::testSetGetValue()----------------------------";
-	std::cout<<std::endl;
+void ScalarTest::testSetGetValue()
+{
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+
 	Complex128Scalar sc128;
 	Complex128 c128;
 	Complex64Scalar sc64;
@@ -216,9 +238,10 @@ void ScalarTest::testSetGetValue(){
 }
 
 //------------------------------------------------------------------------------
-void ScalarTest::testAssignment(){
-	std::cout<<"void ScalarTest::testAssignment()-----------------------------";
-	std::cout<<std::endl;
+void ScalarTest::testAssignment()
+{
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+
 	//we test here the assignment operator for
 	//functionality
 
@@ -301,9 +324,10 @@ void ScalarTest::testAssignment(){
 }
 
 //------------------------------------------------------------------------------
-void ScalarTest::testComparison(){
-	std::cout<<"void ScalarTest::testComparison()-----------------------------";
-	std::cout<<std::endl;
+void ScalarTest::testComparison()
+{
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+
 	Complex64Scalar sca,scb;
 	Complex64 ca,cb;
 	Complex128Scalar sc128;
@@ -327,9 +351,10 @@ void ScalarTest::testComparison(){
 }
 
 //------------------------------------------------------------------------------
-void ScalarTest::testBinaryAddOperation(){
-	std::cout<<"void ScalarTest::testBinaryAddOperation()---------------------";
-	std::cout<<std::endl;
+void ScalarTest::testBinaryAddOperation()
+{
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+
 	Int64Scalar sai64,sbi64,sci64;
 	Int64 ai64,bi64;
 	UInt32Scalar saui32,sbui32,scui32;
@@ -463,9 +488,10 @@ void ScalarTest::testBinaryAddOperation(){
 }
 
 //------------------------------------------------------------------------------
-void ScalarTest::testBinarySubtractionOperation(){
-	std::cout<<"void ScalarTest::testBinarySubtractionOperation()-------------";
-	std::cout<<std::endl;
+void ScalarTest::testBinarySubtractionOperation()
+{
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+
 	Int64Scalar sai64,sbi64,sci64;
 	Int64 ai64,bi64;
 	UInt32Scalar saui32,sbui32,scui32;
@@ -607,9 +633,10 @@ void ScalarTest::testBinarySubtractionOperation(){
 }
 
 //------------------------------------------------------------------------------
-void ScalarTest::testBinaryDivisionOperation(){
-	std::cout<<"void ScalarTest::testBinaryDivisionOperation()----------------";
-	std::cout<<std::endl;
+void ScalarTest::testBinaryDivisionOperation()
+{
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+
 	Int64Scalar sai64,sbi64,sci64;
 	Int64 ai64,bi64;
 	UInt32Scalar saui32,sbui32,scui32;
@@ -728,9 +755,10 @@ void ScalarTest::testBinaryDivisionOperation(){
 }
 
 //------------------------------------------------------------------------------
-void ScalarTest::testBinaryMultiplicationOperation(){
-	std::cout<<"void ScalarTest::testBinaryMultiplicationOperation()----------";
-	std::cout<<std::endl;
+void ScalarTest::testBinaryMultiplicationOperation()
+{
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+
 	Int64Scalar sai64,sbi64,sci64;
 	Int64 ai64,bi64;
 	UInt32Scalar saui32,sbui32,scui32;
@@ -853,9 +881,10 @@ void ScalarTest::testBinaryMultiplicationOperation(){
 }
 
 //------------------------------------------------------------------------------
-void ScalarTest::testUnaryAddOperation(){
-	std::cout<<"void ScalarTest::testUnaryAddOperation()----------------------";
-	std::cout<<std::endl;
+void ScalarTest::testUnaryAddOperation()
+{
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+
 	Float64Scalar saf64,sbf64;
 	Float64 bf64;
 	Float128Scalar sf128,saf128,sbf128;
@@ -971,9 +1000,10 @@ void ScalarTest::testUnaryAddOperation(){
 }
 
 //------------------------------------------------------------------------------
-void ScalarTest::testUnarySubOperation(){
-	std::cout<<"void ScalarTest::testUnarySubOperation()----------------------";
-	std::cout<<std::endl;
+void ScalarTest::testUnarySubOperation()
+{
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+
 	Float64Scalar saf64,sbf64;
 	Float64 bf64;
 	Complex64 c64;
@@ -1084,12 +1114,10 @@ void ScalarTest::testUnarySubOperation(){
 
 }
 
-void ScalarTest::testUnaryDivOperation(){
+//-----------------------------------------------------------------------------
+void ScalarTest::testUnaryDivOperation(){ }
 
-}
-
-void ScalarTest::testUnaryMultOperation(){
-
-}
+//-----------------------------------------------------------------------------
+void ScalarTest::testUnaryMultOperation(){ }
 
 

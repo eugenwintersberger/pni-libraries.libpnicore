@@ -1,5 +1,28 @@
-//Unit test for the array object
+/*
+ * (c) Copyright 2012 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
+ *
+ * This file is part of libpniutils.
+ *
+ * libpniutils is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * libpniutils is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with libpniutils.  If not, see <http://www.gnu.org/licenses/>.
+ *************************************************************************
+ *
+ *  Created on: Jul 19, 2012
+ *      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
+ */
 
+#pragma once
+#include <boost/current_function.hpp>
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
 
@@ -43,6 +66,8 @@ template<typename T> void SArrayTest<T>::tearDown(){ }
 //------------------------------------------------------------------------------
 template<typename T> void SArrayTest<T>::test_construction()
 {
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+
     //testing the default constructor
     SArray<T,2,3> a1;
     CPPUNIT_ASSERT(a1.rank() == 2);
@@ -62,6 +87,8 @@ template<typename T> void SArrayTest<T>::test_construction()
 //------------------------------------------------------------------------------ 
 template<typename T> void SArrayTest<T>::test_linear_access()
 {
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+
     SArray<T,2,3> a1{1,2,3,4,5,6};
     std::vector<T> v1{1,2,3,4,5,6};
    
@@ -90,6 +117,8 @@ template<typename T> void SArrayTest<T>::test_linear_access()
 //------------------------------------------------------------------------------
 template<typename T> void SArrayTest<T>::test_iterators()
 {
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+
     SArray<T,2,3> a1;
 
     //--------------------check standard iterator----------------
@@ -141,6 +170,8 @@ template<typename T> void SArrayTest<T>::test_iterators()
 //-----------------------------------------------------------------------------
 template<typename T> void SArrayTest<T>::test_multiindex_access()
 {   
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+
     SArray<T,2,3> a1;
     
     auto data = RandomDistribution::uniform<std::vector<T> >(a1.size());
@@ -177,6 +208,8 @@ template<typename T> void SArrayTest<T>::test_multiindex_access()
 //-----------------------------------------------------------------------------
 template<typename T> void SArrayTest<T>::test_multiindex_access_const()
 {
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+
     auto data =RandomDistribution::uniform<std::vector<T> >(6);
     const SArray<T,2,3> a1(data);
     
@@ -201,6 +234,8 @@ template<typename T> void SArrayTest<T>::test_multiindex_access_const()
 //------------------------------------------------------------------------------
 template<typename T> void SArrayTest<T>::test_view()
 {
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+
     SArray<T,10,3> v;
     std::vector<Slice> s{Slice(0),Slice(0,3,1)};
 
@@ -241,6 +276,8 @@ template<typename T> void SArrayTest<T>::test_view()
 //------------------------------------------------------------------------------
 template<typename T> void SArrayTest<T>::test_typeinfo()
 {
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+
     TypeID id1 = SArray<T,2,3>::type_id;
     TypeID id2 = TypeIDMap<T>::type_id;
     CPPUNIT_ASSERT(id1 == id2);

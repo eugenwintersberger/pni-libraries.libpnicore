@@ -1,7 +1,26 @@
-
-
-#ifndef __LIBDDFDATA_SCALAR_HPP__
-#define __LIBDDFDATA_SCALAR_HPP__
+/*
+ * (c) Copyright 2011 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
+ *
+ * This file is part of libpniutils.
+ *
+ * libpniutils is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * libpniutils is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with libpniutils.  If not, see <http://www.gnu.org/licenses/>.
+ *************************************************************************
+ *
+ *  Created on: Sep 02, 2011
+ *      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
+ */
+#pragma once
 
 #include<cppunit/TestFixture.h>
 #include<cppunit/extensions/HelperMacros.h>
@@ -12,23 +31,24 @@
 
 using namespace pni::utils;
 
-class ScalarTest : public CppUnit::TestFixture{
-    CPPUNIT_TEST_SUITE(ScalarTest);
-    CPPUNIT_TEST(testConstructors);
+class ScalarTest : public CppUnit::TestFixture
+{
+        CPPUNIT_TEST_SUITE(ScalarTest);
+        CPPUNIT_TEST(testConstructors);
 
-    CPPUNIT_TEST(testConversion);
-    CPPUNIT_TEST(testAssignment);
-    CPPUNIT_TEST(testSetGetValue);
-    CPPUNIT_TEST(testBinaryAddOperation);
-    CPPUNIT_TEST(testBinarySubtractionOperation);
-    CPPUNIT_TEST(testBinaryDivisionOperation);
-    CPPUNIT_TEST(testBinaryMultiplicationOperation);
-    CPPUNIT_TEST(testUnaryAddOperation);
-    CPPUNIT_TEST(testUnaryDivOperation);
-    CPPUNIT_TEST(testUnarySubOperation);
-    CPPUNIT_TEST(testUnaryMultOperation);
-    CPPUNIT_TEST(testComparison);
-    CPPUNIT_TEST_SUITE_END();
+        CPPUNIT_TEST(testConversion);
+        CPPUNIT_TEST(testAssignment);
+        CPPUNIT_TEST(testSetGetValue);
+        CPPUNIT_TEST(testBinaryAddOperation);
+        CPPUNIT_TEST(testBinarySubtractionOperation);
+        CPPUNIT_TEST(testBinaryDivisionOperation);
+        CPPUNIT_TEST(testBinaryMultiplicationOperation);
+        CPPUNIT_TEST(testUnaryAddOperation);
+        CPPUNIT_TEST(testUnaryDivOperation);
+        CPPUNIT_TEST(testUnarySubOperation);
+        CPPUNIT_TEST(testUnaryMultOperation);
+        CPPUNIT_TEST(testComparison);
+        CPPUNIT_TEST_SUITE_END();
     private:
     public:
         void tearDown();
@@ -57,5 +77,3 @@ class ScalarTest : public CppUnit::TestFixture{
         void testUnarySubOperation();
         void testConversion();
 };
-
-#endif
