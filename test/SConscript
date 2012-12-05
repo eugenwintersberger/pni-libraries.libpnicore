@@ -35,7 +35,7 @@ bm_sources = ["iteratorbm.cpp"]
 bm_sources.extend(["benchmark/BenchmarkResult.cpp"])
 
 pniutils_test = test_env.Program("pniutilstest",sources_list)
-iterbm = test_env.Program("iterbm",bm_sources)
+iterbm = test_env.Program("iteratorbm",bm_sources)
 multiindexbm = test_env.Program("multiindexbm",["multiindexbm.cpp","benchmark/BenchmarkResult.cpp"])
 test_targets = [pniutils_test,iterbm,multiindexbm]
 
