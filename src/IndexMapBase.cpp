@@ -17,8 +17,6 @@
  * along with libpniutils.  If not, see <http://www.gnu.org/licenses/>.
  *************************************************************************
  *
- * Definition of a dynamic array template.
- *
  * Created on: Jul 19, 2012
  *     Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
  */

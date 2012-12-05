@@ -17,7 +17,7 @@
  * along with libpniutils.  If not, see <http://www.gnu.org/licenses/>.
  *************************************************************************
  *
- * Definition of a dynamic array template.
+ * Base class for an index map.
  *
  * Created on: Jul 19, 2012
  *     Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
@@ -55,7 +55,6 @@ namespace utils {
             //! move constructor
             IndexMapBase(IndexMapBase &&m);
 
-
             //-----------------------------------------------------------------
             //! initialization from a container
             template<template<typename ...> class CTYPE,typename ...OTYPES> 
@@ -81,6 +80,7 @@ namespace utils {
             //! copy assignment operator
             IndexMapBase &operator=(const IndexMapBase &m);
 
+            //-----------------------------------------------------------------
             //! move assignment operator
             IndexMapBase &operator=(IndexMapBase &&m);
 
@@ -143,8 +143,6 @@ namespace utils {
                 _shape = DBuffer<size_t>(c.size());
                 std::copy(c.begin(),c.end(),_shape.begin());
             }
-            
-
     };
 
 //end of namespace
