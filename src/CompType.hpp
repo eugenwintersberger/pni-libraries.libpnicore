@@ -17,8 +17,7 @@
  * along with libpniutils.  If not, see <http://www.gnu.org/licenses/>.
  *************************************************************************
  *
- * Scalar<T> represents a scalar numeric value of a particular type along
- * with basic arithmetic operations.
+ * Trait to determine the comparison type for two numeric types.
  *
  * Created on: May 6, 2012
  *     Author: Eugen Wintersberger
@@ -32,7 +31,26 @@
 namespace pni{
 namespace utils{
 
-    
+    /*!
+    \ingroup type_classes
+    \brief comparison trait
+
+    This trait is used to determine the intermediate type to which two values of
+    types A and B are converted in order to compare them. 
+    In principle this looks like this
+    \code
+    Float64 a = 100.;
+    UInt16 b = 17;
+    typedef typename ComparisonTrait<Float64,UInt16>::CompType comp_t;
+    //do some comparison
+    if(comp_t(a) > comp_t(b))
+    {
+        //....code omitted ...
+    }
+    \endcode
+    Thus it can be ensured that only types that are comparable are used for the
+    comparison operation.
+    */
     template<typename A,typename B> class ComparisonTrait;
 
 #define COMPTYPETRAITSINGLE(A,CT)\
