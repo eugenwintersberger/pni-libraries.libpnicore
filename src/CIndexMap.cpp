@@ -25,20 +25,20 @@
 namespace pni{
 namespace utils{
 
-//----------------------------------------------------------------------
-void CIndexMap::_compute_strides()
-{
-    const DBuffer<size_t> &s = shape();
-
-    for(ssize_t i=_strides.size()-1;i>=0;i--)
+    //-------------------------------------------------------------------------
+    void CIndexMap::_compute_strides()
     {
-        if(i==(ssize_t)_strides.size()-1)
-            _strides[(size_t)i] = 1;
-        else
-            _strides[(size_t)i] = _strides[(size_t)i+1]*s[(size_t)i+1];
-    }
+        const DBuffer<size_t> &s = shape();
 
-}
+        for(ssize_t i=_strides.size()-1;i>=0;i--)
+        {
+            if(i==(ssize_t)_strides.size()-1)
+                _strides[(size_t)i] = 1;
+            else
+                _strides[(size_t)i] = _strides[(size_t)i+1]*s[(size_t)i+1];
+        }
+
+    }
 
 //end of namespace
 }
