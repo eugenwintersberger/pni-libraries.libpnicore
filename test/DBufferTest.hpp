@@ -1,9 +1,27 @@
-//unit test for the Buffer class
-
-#ifndef __DBUFFERTEST_HPP
-#define __DBUFFERTEST_HPP__
-
-
+/*
+ * (c) Copyright 2012 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
+ *
+ * This file is part of libpniutils.
+ *
+ * libpniutils is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * libpniutils is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with libpniutils.  If not, see <http://www.gnu.org/licenses/>.
+ *************************************************************************
+ *
+ *  Created on: Jul 19, 2012
+ *      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
+ */
+#pragma once
+#include <boost/current_function.hpp>
 #include <random>
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
@@ -18,28 +36,26 @@ using namespace pni::utils;
 template<typename T,typename Allocator> 
 class DBufferTest:public CppUnit::TestFixture
 {
-    CPPUNIT_TEST_SUITE(DBufferTest);
-    CPPUNIT_TEST(test_constructors);
-    CPPUNIT_TEST(test_allocation);
-    CPPUNIT_TEST(test_access);
-    CPPUNIT_TEST(test_assignment);
-    CPPUNIT_TEST(test_comparison);
-    CPPUNIT_TEST(test_iterator);
-    CPPUNIT_TEST_SUITE_END();
-private:
-    UInt64 n1,n2;
+        CPPUNIT_TEST_SUITE(DBufferTest);
+        CPPUNIT_TEST(test_constructors);
+        CPPUNIT_TEST(test_allocation);
+        CPPUNIT_TEST(test_access);
+        CPPUNIT_TEST(test_assignment);
+        CPPUNIT_TEST(test_comparison);
+        CPPUNIT_TEST(test_iterator);
+        CPPUNIT_TEST_SUITE_END();
+    private:
+        UInt64 n1,n2;
+    public:
+        void setUp();
+        void tearDown();
 
-
-public:
-    void setUp();
-    void tearDown();
-
-    void test_constructors();
-    void test_assignment();
-    void test_comparison();
-    void test_allocation();
-    void test_access();
-    void test_iterator();
+        void test_constructors();
+        void test_assignment();
+        void test_comparison();
+        void test_allocation();
+        void test_access();
+        void test_iterator();
 
 };
 
@@ -60,6 +76,7 @@ void DBufferTest<T,Allocator>::tearDown()
 template<typename T,typename Allocator> 
 void DBufferTest<T,Allocator>::test_constructors()
 {
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
     //create first buffer using the default constructor
     DBuffer<T,Allocator> b1; //default constructor
     CPPUNIT_ASSERT(!b1.size());
@@ -94,6 +111,7 @@ void DBufferTest<T,Allocator>::test_constructors()
 template<typename T,typename Allocator> 
 void DBufferTest<T,Allocator>::test_assignment()
 {
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 	//testing here the assignment of equally typed buffers
 	DBuffer<T,Allocator> buffer1;
 	DBuffer<T,Allocator> buffer2;
@@ -146,6 +164,7 @@ void DBufferTest<T,Allocator>::test_assignment()
 template<typename T,typename Allocator> 
 void DBufferTest<T,Allocator>::test_allocation()
 {
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 	DBuffer<T,Allocator> dbuffer(this->n1);
 	CPPUNIT_ASSERT(dbuffer.size() == this->n1);
 
@@ -164,6 +183,8 @@ void DBufferTest<T,Allocator>::test_allocation()
 template<typename T,typename Allocator> 
 void DBufferTest<T,Allocator>::test_access()
 {
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+
 	DBuffer<T,Allocator> dbuffer(1000);
 
 	for(size_t i=0;i<1000;i++) 
@@ -197,6 +218,8 @@ void DBufferTest<T,Allocator>::test_access()
 template<typename T,typename Allocator> 
 void DBufferTest<T,Allocator>::test_comparison()
 {
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+
 	DBuffer<T,Allocator> b1(100);
 	DBuffer<T,Allocator> b2(100);
 
@@ -212,8 +235,8 @@ void DBufferTest<T,Allocator>::test_comparison()
 template<typename T,typename Allocator> 
 void DBufferTest<T,Allocator>::test_iterator()
 {
-    std::cout<<"void BufferTest<BTYPE>::test_iterator()----------------------";
-    std::cout<<std::endl;
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+    
     DBuffer<T,Allocator> b1(1000);
 
     auto data = RandomDistribution::uniform<std::vector<T> >(1000);
@@ -233,7 +256,4 @@ void DBufferTest<T,Allocator>::test_iterator()
 #endif
         check_equality(v,data[index++]);
     }
-
 }
-
-#endif
