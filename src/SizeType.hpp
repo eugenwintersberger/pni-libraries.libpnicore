@@ -1,5 +1,4 @@
-#ifndef __SIZETYPE_HPP__
-#define __SIZETYPE_HPP__
+#pragma once
 
 namespace pni{
 namespace utils{
@@ -37,5 +36,3 @@ namespace utils{
 //end of namespace
 }
 }
-
-#endif

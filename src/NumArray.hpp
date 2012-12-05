@@ -22,8 +22,7 @@
  */
 
 
-#ifndef __NUMARRAY_HPP__
-#define __NUMARRAY_HPP__
+#pragma once
 
 #include "Types.hpp"
 #include "Iterator.hpp"
@@ -1064,5 +1063,3 @@ namespace utils{
 //end of namespace
 }
 }
-
-#endif

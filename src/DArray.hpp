@@ -23,8 +23,7 @@
  *     Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
  */
 
-#ifndef __DYARRAY_HPP__
-#define __DYARRAY_HPP__
+#pragma once
 
 #include<iostream>
 #include<utility>
@@ -602,5 +601,3 @@ namespace utils {
 
 }
 }
-
-#endif

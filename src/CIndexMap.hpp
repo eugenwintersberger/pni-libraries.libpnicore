@@ -20,8 +20,7 @@
  *     Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
  */
 
-#ifndef __CINDEXMAP_HPP__
-#define __CINDEXMAP_HPP__
+#pragma once
 
 #include "IndexMapBase.hpp"
 
@@ -313,5 +312,3 @@ namespace utils{
 //end of namespace
 }
 }
-
-#endif

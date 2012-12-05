@@ -21,15 +21,14 @@
  *     Author: Eugen Wintersberger
  *
  */
+#pragma once
+
 #include <iostream>
 #include <sstream>
 
 #include "SizeType.hpp"
 #include "Exceptions.hpp"
 #include "ExceptionUtils.hpp"
-
-#ifndef __STATICCINDEXMAP_HPP__
-#define __STATICCINDEXMAP_HPP__
 
 namespace pni{
 namespace utils{
@@ -401,5 +400,3 @@ namespace utils{
 //end of namespace
 }
 }
-
-#endif

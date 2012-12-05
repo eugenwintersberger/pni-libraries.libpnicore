@@ -23,8 +23,7 @@
  *     Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
  */
 
-#ifndef __ARRAYVIEWSELECTOR_HPP__
-#define __ARRAYVIEWSELECTOR_HPP__
+#pragma once
 
 #include "ArrayView.hpp"
 
@@ -128,5 +127,3 @@ namespace utils {
 //end of namespace
 }
 }
-
-#endif

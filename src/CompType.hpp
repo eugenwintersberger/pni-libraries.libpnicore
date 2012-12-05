@@ -25,8 +25,7 @@
  *
  */
 
-#ifndef __COMPTYPE_HPP__
-#define __COMPTYPE_HPP__
+#pragma once
 
 #include "Types.hpp"
 
@@ -143,5 +142,4 @@ namespace utils{
 //end off namespace
 }
 }
-#endif
 

@@ -1,5 +1,4 @@
-#ifndef __ARRAYSELECTION_HPP__
-#define __ARRAYSELECTION_HPP__
+#pragma once
 
 #include <vector>
 #include <algorithm>
@@ -331,5 +330,3 @@ namespace utils{
 //end of namespace
 }
 }
-
-#endif

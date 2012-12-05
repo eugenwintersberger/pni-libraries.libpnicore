@@ -23,8 +23,7 @@
  *     Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
  */
 
-#ifndef __ARRAYOPERATIONS_HPP__
-#define __ARRAYOPERATIONS_HPP__
+#pragma once
 
 #include "Types.hpp"
 #include "ArrayTrait.hpp"
@@ -439,5 +438,3 @@ template<typename CONT,typename ARRAYT> CONT min_index(const ARRAYT &a)
 }
 }
 
-
-#endif

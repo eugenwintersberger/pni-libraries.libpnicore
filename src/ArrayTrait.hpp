@@ -27,8 +27,7 @@
  */
 
 
-#ifndef ARRAYTRAIT_HPP_
-#define ARRAYTRAIT_HPP_
+#pragma once
 
 #include "Types.hpp"
 
@@ -196,6 +195,3 @@ namespace utils{
 
 }
 }
-
-
-#endif /* ARRAYTRAIT_HPP_ */

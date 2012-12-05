@@ -26,8 +26,7 @@
  *
  */
 
-#ifndef COMPLEXUTILS_HPP_
-#define COMPLEXUTILS_HPP_
+#pragma once
 
 #include "Types.hpp"
 #include "TypeInfo.hpp"
@@ -67,8 +66,3 @@ bool operator!=(const Complex128 &a,const Complex64 &b);
 //end of namespace
 }
 }
-
-
-
-
-#endif /* COMPLEXUTILS_HPP_ */

@@ -24,8 +24,7 @@
  */
 
 
-#ifndef __ARRAYVIEW_HPP__
-#define __ARRAYVIEW_HPP__
+#pragma once
 
 
 #include "CIndexMap.hpp"
@@ -372,5 +371,3 @@ namespace utils{
 //end of namespace
 }
 }
-
-#endif

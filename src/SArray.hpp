@@ -23,8 +23,7 @@
  *     Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
  */
 
-#ifndef __SARRAY_HPP__
-#define __SARRAY_HPP__
+#pragma once
 
 #include "Types.hpp"
 #include "SBuffer.hpp"
@@ -561,5 +560,3 @@ namespace utils{
 //end of namespace
 }
 }
-
-#endif

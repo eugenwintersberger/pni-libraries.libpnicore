@@ -5,8 +5,7 @@
  *      Author: eugen
  */
 
-#ifndef INPLACEARITHMETICS_HPP_
-#define INPLACEARITHMETICS_HPP_
+#pragma once
 
 #include <limits>
 #include <functional>
@@ -245,5 +244,3 @@ namespace utils{
 //end namespace
 }
 }
-
-#endif /* INPLACEARITHMETICS_HPP_ */

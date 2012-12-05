@@ -23,11 +23,7 @@
  *     Author: Eugen Wintersberger
  *
  */
-
-
-
-#ifndef __SBUFFER_HPP__
-#define __SBUFFER_HPP__
+#pragma once
 
 #include <memory>
 #include <iostream>
@@ -340,4 +336,3 @@ namespace utils{
 //end of namespace
 }
 }
-#endif 

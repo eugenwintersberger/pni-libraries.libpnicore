@@ -26,10 +26,7 @@
  *     Author: Eugen Wintersberger
  *
  */
-
-
-#ifndef __RESULTTYPETRAIT_HPP__
-#define __RESULTTYPETRAIT_HPP__
+#pragma once
 
 namespace pni{
 namespace utils{
@@ -247,7 +244,3 @@ ARITHMETICS_RESULT_TYPES(Complex128,UInt64,Complex128,Complex128,Complex128,Comp
 //end of namespace
 }
 }
-
-
-
-#endif /* ADDITIONRESULTTYPE_HPP_ */

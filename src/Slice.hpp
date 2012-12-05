@@ -22,9 +22,7 @@
  * Created on: May 14, 2012
  *     Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
  */
-
-#ifndef __SLICE_HPP__
-#define __SLICE_HPP__
+#pragma once
 
 #include <iostream>
 #include <utility>
@@ -184,6 +182,3 @@ namespace utils{
 //end of namespace
 }
 }
-
-
-#endif

@@ -26,10 +26,7 @@
  *     Author: Eugen Wintersberger
  *
  */
-
-
-#ifndef __SCALAR_HPP__
-#define __SCALAR_HPP__
+#pragma once
 
 #include <iostream>
 #include <complex>
@@ -301,5 +298,3 @@ using namespace boost::numeric;
 //end of namespace
 }
 }
-
-#endif /* SCALAR_HPP_ */

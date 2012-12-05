@@ -20,10 +20,7 @@
  * Created on: 5.08.2012
  *     Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
  */
-/* \file */
-
-#ifndef __ARRAY_HPP__
-#define __ARRAY_HPP__
+#pragma once
 
 #include <vector>
 #include "DArray.hpp"
@@ -146,6 +143,3 @@ namespace utils{
 //end of namespace
 }
 }
-
-
-#endif

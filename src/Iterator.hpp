@@ -1,5 +1,4 @@
-#ifndef __ITERATOR_HPP__
-#define __ITERATOR_HPP__
+#pragma once
 
 #include "Exceptions.hpp" 
 #include <iterator>
@@ -433,5 +432,3 @@ namespace utils{
 //end of namespace
 }
 }
-
-#endif

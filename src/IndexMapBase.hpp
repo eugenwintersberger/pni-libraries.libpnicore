@@ -23,8 +23,7 @@
  *     Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
  */
 
-#ifndef __INDEXMAPBASE_HPP__
-#define __INDEXMAPBASE_HPP__
+#pragma once
 
 #include "DBuffer.hpp"
 
@@ -151,5 +150,3 @@ namespace utils {
 //end of namespace
 }
 }
-
-#endif

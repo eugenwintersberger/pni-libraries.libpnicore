@@ -23,9 +23,7 @@
  *  Created on: Sep 27, 2012
  *      Author: Eugen Wintersberger
  */
-
-#ifndef __TYPECLASSMAP_HPP__
-#define __TYPECLASSMAP_HPP__
+#pragma once
 
 #include "Types.hpp"
 
@@ -86,5 +84,3 @@ This macro creates a type to type class map specialization.
 //end of namespace
 }
 }
-
-#endif

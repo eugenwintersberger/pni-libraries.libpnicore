@@ -23,8 +23,7 @@
  *     Author: Eugen Wintersberger
  *
  */
-#ifndef __EXCEPTIONUTILS_HPP__
-#define __EXCEPTIONUTILS_HPP__
+#pragma once
 
 #include <vector>
 #include <iostream>
@@ -182,4 +181,3 @@ namespace utils{
 //end of namespace
 }
 }
-#endif
