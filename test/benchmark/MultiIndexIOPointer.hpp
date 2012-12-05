@@ -22,20 +22,37 @@
  */
 #pragma once
 
+#include <typeinfo>
 #include <pni/utils/Types.hpp>
 #include <pni/utils/Array.hpp>
+#include <pni/utils/service.hpp>
 
 using namespace pni::utils;
 
+/*!
+\brief multiindex pointer benchmark
+
+Benchmark class for testing IO performance on a raw pointer useing a
+multi-dimensional access pattern. 
+\tparam T data type for which to allocate memory
+*/
 template<typename T> class MultiIndexIOPointer
 {
     private:
-        T *_ptr;
-        size_t _nx;
-        size_t _ny;
-        T _result;
+        T *_ptr;    //!< pointer to memory
+        size_t _nx; //!< number of elements along the first dimension
+        size_t _ny; //!< number of elements along the second dimension
+        T _result;  //!< result buffer 
     public:
         //==================construtors========================================
+        /*!
+        \brief constructor
+        
+        Creates an instance of this benchmark by allocating nx x ny elements on
+        the heap. 
+        \param nx number of points in the first dimension
+        \param ny number of points in the second dimension
+        */
         MultiIndexIOPointer(size_t nx,size_t ny):
             _ptr(new T[nx*ny]),
             _nx(nx),
@@ -44,6 +61,7 @@ template<typename T> class MultiIndexIOPointer
         { }
 
         //---------------------------------------------------------------------
+        //! copy constructor
         MultiIndexIOPointer(const MultiIndexIOPointer<T> &mip):
             _ptr(new T[mip._nx*mip._ny]),
             _nx(mip._nx),
@@ -54,6 +72,7 @@ template<typename T> class MultiIndexIOPointer
         }
 
         //---------------------------------------------------------------------
+        //! move constructor
         MultiIndexIOPointer(MultiIndexIOPointer<T> &&mip):
             _ptr(mip._ptr),
             _nx(mip._nx),
@@ -66,12 +85,15 @@ template<typename T> class MultiIndexIOPointer
         }
 
         //---------------------------------------------------------------------
+        //! destructor
         ~MultiIndexIOPointer()
         {
             if(_ptr) delete [] _ptr;
+            _ptr = nullptr;
         }
 
         //=====================assignment operators============================
+        //! copy assignment operator
         MultiIndexIOPointer<T> &operator=(const MultiIndexIOPointer<T> &mip)
         {
             if(this == &mip) return *this;
@@ -86,6 +108,8 @@ template<typename T> class MultiIndexIOPointer
             return *this;
         }
 
+        //---------------------------------------------------------------------
+        //! move assignment operator
         MultiIndexIOPointer<T> &operator=(MultiIndexIOPointer<T> &&mip)
         {
             if(this == &mip) return *this;
@@ -102,6 +126,12 @@ template<typename T> class MultiIndexIOPointer
         }
 
         //================public member functions==============================
+        /*!
+        \brief write benchmark
+
+        Testing raw pointer write performance using a multindex access pattern 
+        to address the element position and write data to it.
+        */
         void write_data()
         {
             T index(0);
@@ -113,6 +143,12 @@ template<typename T> class MultiIndexIOPointer
         }
 
         //---------------------------------------------------------------------
+        /*!
+        \brief read benchmark
+
+        Testing raw pointer read performance using a multiindex access pattern
+        to address the element position and read data from it.
+        */
         void read_data()
         {
             for(size_t i=0;i<_nx;++i)
@@ -122,9 +158,11 @@ template<typename T> class MultiIndexIOPointer
 
 
         //---------------------------------------------------------------------
+        //! get the benchmark name
         String name() const
         {
-            return String("Linear IO DBuffer template benchmark");
+            return String("Multi-index IO (Pointer) ")+
+                   demangle_cpp_name(typeid(T*).name());
         }
             
 };

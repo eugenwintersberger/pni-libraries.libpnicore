@@ -28,6 +28,13 @@
 
 using namespace pni::utils;
 
+/*!
+\brief linear IO pointer benchmark
+
+This benchmark tests the IO performance of plain pointer access. It is thus a
+good reference for other benchmarks using higher level data structures to store
+data.
+*/
 template<typename T> class LinearIOPointerBenchmark
 {
     private:
