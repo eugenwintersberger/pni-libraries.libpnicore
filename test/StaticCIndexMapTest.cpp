@@ -50,20 +50,12 @@ void StaticCIndexMapTest::test_offset()
     CPPUNIT_ASSERT(offset == 9);
 
     //test exceptions for offset computation
-    CPPUNIT_ASSERT_THROW(s1.offset(2,10),IndexError);
-    CPPUNIT_ASSERT_THROW(s1.offset(10,1),IndexError);
     CPPUNIT_ASSERT_THROW(s1.offset(std::list<size_t>{10,1}),IndexError);
     CPPUNIT_ASSERT_THROW(s1.offset(std::list<size_t>{1,2,3,4}),ShapeMissmatchError);
 
     StaticCIndexMap<2,3,5> s2;
     CPPUNIT_ASSERT(s2.offset(0,1,3) == 8);
     CPPUNIT_ASSERT(s2.offset(0,1,3) == 8);
-
-    CPPUNIT_ASSERT_THROW(s2.offset(10,1,3),IndexError);
-    CPPUNIT_ASSERT_THROW(s2.offset(0,10,3),IndexError);
-    CPPUNIT_ASSERT_THROW(s2.offset(0,1,10),IndexError);
-
-
 }
 
 //------------------------------------------------------------------------------

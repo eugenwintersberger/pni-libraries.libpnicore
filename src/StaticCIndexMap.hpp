@@ -159,7 +159,7 @@ namespace utils{
             template<size_t d,typename ...ITYPES> 
             size_t _offset(size_t i1,ITYPES ...indices) const
             {
-                check_index(i1,_dims[d],EXCEPTION_RECORD);
+                //check_index(i1,_dims[d],EXCEPTION_RECORD);
                
                 /*
                 return StrideCalc<DIMS...>::template value<d>()*i1+
@@ -183,7 +183,7 @@ namespace utils{
             */
             template<size_t d> size_t _offset(size_t i) const 
             { 
-                check_index(i,this->_dims[d],EXCEPTION_RECORD);
+                //check_index(i,this->_dims[d],EXCEPTION_RECORD);
 
                 return Stride<d,0,false,DIMS...>::value*i; 
             }
@@ -288,7 +288,7 @@ namespace utils{
                               "Number of indices does not match shape rank!");
 
                 //check the index for the first dimension
-                check_index(i1,this->_dims[0],EXCEPTION_RECORD);
+                //check_index(i1,this->_dims[0],EXCEPTION_RECORD);
 
                 /*
                 return StrideCalc<DIMS...>::template value<0>()*i1+
