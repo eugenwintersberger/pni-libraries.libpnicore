@@ -1,8 +1,9 @@
-#ifndef __MULTIINDEXIOARRAY_HPP__
-#define __MULTIINDEXIOARRAY_HPP__
+#pragma once                
 
+#include <typeinfo>
 #include <pni/utils/Types.hpp>
 #include <pni/utils/Array.hpp>
+#include <pni/utils/service.hpp>
 
 using namespace pni::utils;
 
@@ -46,10 +47,8 @@ template<typename ATYPE> class MultiIndexIOArray
         //---------------------------------------------------------------------
         String name() const
         {
-            return String("Linear IO DBuffer template benchmark");
+            return String("Multiindex (variadic) ")+demangle_cpp_name(typeid(ATYPE).name());
         }
             
 };
 
-
-#endif

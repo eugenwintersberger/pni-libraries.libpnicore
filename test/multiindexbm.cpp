@@ -17,14 +17,13 @@
 #include "benchmark/MultiIndexIOPointer.hpp"
 #include "benchmark/MultiIndexIOArray.hpp"
 
+#include <utility>
 using namespace pni::utils;
 
 template<typename CLKT,typename BMARKT> 
 void run_benchmark(size_t nruns,const BMARKT &bmark)
 {
-    std::cout<<"Benchmark: "<<bmark.name()<<std::endl;
-    std::cout<<"Timer: "<<CLKT::name<<std::endl;
-
+    std::cout<<bmark.name()<<std::endl;
     //create benchmark functions from the benchmark object
     BenchmarkRunner::function_t write_func,read_func;
     write_func = std::bind(&BMARKT::write_data,bmark);
@@ -34,12 +33,23 @@ void run_benchmark(size_t nruns,const BMARKT &bmark)
     write_bm.run<CLKT>(nruns,write_func);
     read_bm.run<CLKT>(nruns,read_func);
 
+    String write_unit = write_bm.begin()->unit();
+    String read_unit = read_bm.begin()->unit();
+    std::cout<<"write ("<<write_unit<<")\tread ("<<read_unit<<")"<<std::endl;
+    for(auto wit=write_bm.begin(),rit=read_bm.begin();
+        wit!=write_bm.end() && rit != read_bm.end();
+        ++wit,++rit)
+    {
+        std::cout<<wit->time()<<"\t"<<rit->time()<<std::endl;
+    }
+    std::cout<<std::endl;
+
     BenchmarkResult write_result = average(write_bm);
     BenchmarkResult read_result  = average(read_bm);
 
-    std::cout<<"Write result: "<<write_result<<std::endl;
-    std::cout<<"Read result:  "<<read_result<<std::endl;
-    std::cout<<std::endl;
+    std::cout<<"Average values: "<<std::endl;
+    std::cout<<write_result.time()<<"\t"<<read_result.time()<<std::endl;
+
 }
 
 
@@ -56,23 +66,28 @@ int main(int argc,char **argv)
     typedef MultiIndexIOPointer<double> ptr_bm_t;     //pointer muldiindex benchmark type
 
     //---------------read user arguments--------------------------------------
-    if(argc<3) 
+    if(argc<5) 
     {
-        std::cerr<<"Usage: multiindexbm <nx> <ny>"<<std::endl;
+        std::cerr<<"Usage: multiindexbm <type> <nruns> <nx> <ny>"<<std::endl;
         return 1;
     }
 
-    size_t nx = atoi(argv[1]);
-    size_t ny = atoi(argv[2]);
+    String type(argv[1]);
+    size_t nruns = atoi(argv[2]);
+    size_t nx = atoi(argv[3]);
+    size_t ny = atoi(argv[4]);
     std::cout<<"Array size: "<<nx<<" "<<ny<<std::endl;
     std::cout<<"allocating "<<nx*ny*sizeof(double)/1024/1024<<" MByte of memory!";
     std::cout<<std::endl;
 
     //-----------------------------run benchmarks------------------------------ 
-    run_benchmark<bmtimer_t>(1,ptr_bm_t(nx,ny));
-    run_benchmark<bmtimer_t>(1,darray_bm_t(darray_t(shape_t{nx,ny})));
-    run_benchmark<bmtimer_t>(1,narray_bm_t(ndarray_t(shape_t{nx,ny})));
+    if(type=="ptr") run_benchmark<bmtimer_t>(nruns,ptr_bm_t(nx,ny));
+    else if(type == "darray")
+        run_benchmark<bmtimer_t>(nruns,darray_bm_t(darray_t(shape_t{nx,ny})));
+    else if(type == "ndarray")
+        run_benchmark<bmtimer_t>(nruns,narray_bm_t(ndarray_t(shape_t{nx,ny})));
     //run_benchmark<bmtimer_t>(1,sarray_bm_t(sarray_t()));
+
 
     return 0;
 }
