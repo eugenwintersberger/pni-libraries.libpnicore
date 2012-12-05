@@ -58,7 +58,7 @@ typedef ChronoTimer<std::chrono::high_resolution_clock,std::chrono::nanoseconds>
 int main(int argc,char **argv)
 {
     typedef DArray<double,DBuffer<double> > darray_t; //DArray type
-    typedef SArray<double,1000,1000> sarray_t;
+    typedef SArray<double,100,100> sarray_t;
     typedef NumArray<darray_t> ndarray_t;             //numerical array type
     typedef MultiIndexIOArray<darray_t> darray_bm_t;  //darray multiindex benchmark type
     typedef MultiIndexIOArray<ndarray_t> narray_bm_t; //ndarray multiindex benchmark type
@@ -86,7 +86,10 @@ int main(int argc,char **argv)
         run_benchmark<bmtimer_t>(nruns,darray_bm_t(darray_t(shape_t{nx,ny})));
     else if(type == "ndarray")
         run_benchmark<bmtimer_t>(nruns,narray_bm_t(ndarray_t(shape_t{nx,ny})));
-    //run_benchmark<bmtimer_t>(1,sarray_bm_t(sarray_t()));
+    else if(type == "sarray")
+        run_benchmark<bmtimer_t>(nruns,sarray_bm_t(sarray_t()));
+    else
+        std::cerr<<"Unknown benchmark type"<<std::endl;
 
 
     return 0;
