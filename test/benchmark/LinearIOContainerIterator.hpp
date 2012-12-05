@@ -22,10 +22,20 @@
  */
 #pragma once
 
+#include <typeinfo>
 #include <pni/utils/Types.hpp>
+#include <pni/utils/service.hpp>
 
 using namespace pni::utils;
 
+/*!
+\brief IO bechmark for linear containers
+
+This benchmark class provides IO benchmarks for containers storing data in a
+linear sequence. Iterators which must be provided by the container types are
+used to access the data in the container.
+\tparam CTYPE container type used for benchmarking
+*/
 template<typename CTYPE> class LinearIOContainerIterator
 {
     private:
@@ -36,6 +46,13 @@ template<typename CTYPE> class LinearIOContainerIterator
         LinearIOContainerIterator(CTYPE &&cont):_container(std::move(cont)) {}
 
         //================public member functions==============================
+        /*!
+        \brief write benchmark
+
+        This benchmark can be used to obtain the write performance of the
+        iterator provided by the container. The function runs through all the
+        elements of the container and writes a number there.
+        */
         void write_data()
         {
             typedef typename CTYPE::value_type value_t;
@@ -46,6 +63,13 @@ template<typename CTYPE> class LinearIOContainerIterator
         }
 
         //---------------------------------------------------------------------
+        /*!
+        \brief read benchmark
+
+        Use this benchmark to obtain read performance of the containers
+        iterator. The function iterators over each element in the container and
+        adds the values to a result variable. 
+        */
         void read_data()
         {
             _result = typename CTYPE::value_type(0);
@@ -54,11 +78,10 @@ template<typename CTYPE> class LinearIOContainerIterator
                 _result += *iter;
         }
 
-
         //---------------------------------------------------------------------
+        //! get benchmark name
         String name() const
         {
-            return String("Linear IO DBuffer template benchmark");
+            return String("Linear IO (Iterator) ")+demangle_cpp_name(typeid(CTYPE).name());
         }
-            
 };
