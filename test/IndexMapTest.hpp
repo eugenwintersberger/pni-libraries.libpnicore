@@ -1,20 +1,41 @@
-#ifndef __INDEXMAPTEST_HPP__
-#define __INDEXMAPTEST_HPP__
-
-
-#include<cppunit/TestFixture.h>
-#include<cppunit/extensions/HelperMacros.h>
+/*
+ * (c) Copyright 2012 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
+ *
+ * This file is part of libpniutils.
+ *
+ * libpniutils is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * libpniutils is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with libpniutils.  If not, see <http://www.gnu.org/licenses/>.
+ *************************************************************************
+ *
+ *  Created on: Mar 11, 2012
+ *      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
+ */
+#pragma once
+#include <boost/current_function.hpp>
+#include <cppunit/TestFixture.h>
+#include <cppunit/extensions/HelperMacros.h>
 
 #include <pni/utils/CIndexMap.hpp>
 
-#include<vector>
-#include<list>
+#include <vector>
+#include <list>
 
 using namespace pni::utils;
 
 
 template<typename MTYPE>
-class IndexMapTest:public CppUnit::TestFixture{
+class IndexMapTest:public CppUnit::TestFixture
+{
         CPPUNIT_TEST_SUITE(IndexMapTest<MTYPE>);
         CPPUNIT_TEST(test_offset<std::vector<size_t> >);
         CPPUNIT_TEST(test_offset<std::vector<ssize_t> >);
@@ -41,12 +62,11 @@ class IndexMapTest:public CppUnit::TestFixture{
         template<typename CTYPE> void test_index();
 };
 
-
+//-----------------------------------------------------------------------------
 template<typename MTYPE> 
 template<typename CTYPE> void IndexMapTest<MTYPE>::test_offset()
 {
-    std::cout<<"IndexMaptest::test_offset()..........................";
-    std::cout<<std::endl;
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
     MTYPE map{2,3};
     CPPUNIT_ASSERT(map.offset(1,2)==5);
@@ -58,11 +78,11 @@ template<typename CTYPE> void IndexMapTest<MTYPE>::test_offset()
 
 }
 
+//-----------------------------------------------------------------------------
 template<typename MTYPE> 
 template<typename CTYPE> void IndexMapTest<MTYPE>::test_index()
 {
-    std::cout<<"IndexMaptest::test_index()...........................";
-    std::cout<<std::endl;
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
    
     MTYPE map{2,3};
     auto i = map.template index<CTYPE>(5);
@@ -71,4 +91,3 @@ template<typename CTYPE> void IndexMapTest<MTYPE>::test_index()
     CPPUNIT_ASSERT(std::equal(ic.begin(),ic.end(),i.begin()));
 
 }
-#endif
