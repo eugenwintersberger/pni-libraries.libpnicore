@@ -43,7 +43,6 @@ class BenchmarkResult
         Float64 _time;  
         //! unit of time
         String _unit;
-
     public:
         //====================constructors and destructor======================
         //! default constructor

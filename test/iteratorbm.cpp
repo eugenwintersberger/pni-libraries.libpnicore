@@ -35,7 +35,6 @@
 #include "benchmark/ClockTimer.hpp"
 
 #include "benchmark/LinearIOPointerBenchmark.hpp"
-#include "benchmark/LinearIODBufferIterator.hpp"
 #include "benchmark/LinearIOContainerIterator.hpp"
 
 using namespace pni::utils;
