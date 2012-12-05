@@ -146,4 +146,3 @@ class RandomDistribution
                                            ::create_data(n);
         }
 };
-#endif

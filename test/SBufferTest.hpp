@@ -203,5 +203,3 @@ template<typename T> void SBufferTest<T>::test_iterator()
     }
 
 }
-
-#endif
