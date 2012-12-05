@@ -19,7 +19,7 @@
  *
  * Definition of a dynamic array template.
  *
- * Created on: 24.05.2012
+ * Created on: May 24, 2012
  *     Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
  */
 
