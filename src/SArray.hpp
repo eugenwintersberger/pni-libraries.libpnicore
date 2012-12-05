@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2011 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
+ * (c) Copyright 2012 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
  *
  * This file is part of libpniutils.
  *
@@ -19,7 +19,7 @@
  *
  * Static array template.
  *
- * Created on: 24.05.2012
+ * Created on: May 24, 2012
  *     Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
  */
 

@@ -45,7 +45,16 @@ namespace utils{
 
 
 
-String demangle_cpp_name(const char *n);
+    //-------------------------------------------------------------------------
+    /*!
+    \brief demangle C++ names
+
+    When using a GNU compiler this function demangles a C++ name as, for
+    instance, returned by typeid(..).name(). 
+    \param n mangled name
+    \return demangled name of the type 
+    */
+    String demangle_cpp_name(const char *n);
 
 
 
