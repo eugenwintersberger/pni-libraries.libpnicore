@@ -148,8 +148,6 @@ namespace utils{
             Computes the memory offset to a multidimensional index which is
             passed by the user as a variadic template. This private method is
             called recursively until a break condition is reached.
-            \throws IndexError if i1 exceeds the number of elements along
-            dimension d
             \tparam d dimension counter
             \tparam ITYPES index types
             \param i1 actual index whose contribute to the offset is computed
@@ -175,8 +173,6 @@ namespace utils{
 
             The break condition for the recursive offset computation from an
             index passed as a variadic argument list.
-            \throws IndexError if i exceeds the number of elements along
-            dimension d
             \tparam d index counter
             \param i the last index to process
             \return offset value
@@ -272,8 +268,6 @@ namespace utils{
             The method produces a compile time error if the number of indices
             does not match the rank of the shape.
 
-            \throws IndexError if one of the indices exceeds the number of
-            elements along its corresponding dimension
             \tparam ITYPES index types
             \param i1 parameter treated in this incarnation of this function
             \param indices the indices along each dimension
@@ -287,13 +281,6 @@ namespace utils{
                 static_assert((sizeof...(DIMS)) == (sizeof...(indices)+1),
                               "Number of indices does not match shape rank!");
 
-                //check the index for the first dimension
-                //check_index(i1,this->_dims[0],EXCEPTION_RECORD);
-
-                /*
-                return StrideCalc<DIMS...>::template value<0>()*i1+
-                       _offset<1>(indices...);
-                       */
                 return Stride<0,0,false,DIMS...>::value*i1+
                        _offset<1>(indices...);
             }
