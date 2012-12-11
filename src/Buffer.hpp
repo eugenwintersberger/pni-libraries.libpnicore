@@ -55,8 +55,8 @@ namespace utils{
             template<typename BTYPE> explicit Buffer(BTYPE &&buffer):
                 _ptr(new BufferHolder<BTYPE>(std::move(buffer)))
             {}
-            
 
+            
             //=====================assignment operators========================
             //! copy assignment
             Buffer &operator=(const Buffer &buffer);
@@ -71,8 +71,6 @@ namespace utils{
             */
             template<typename BTYPE> Buffer &operator=(const BTYPE &buffer)
             {
-                if(this == &buffer) return *this;
-
                 if(_ptr) delete _ptr;
 
                 _ptr = new BufferHolder<BTYPE>(buffer);
@@ -83,8 +81,6 @@ namespace utils{
             //-----------------------------------------------------------------
             template<typename BTYPE> Buffer &operator=(BTYPE &&buffer)
             {
-                if(this == &buffer) return *this;
-
                 if(_ptr) delete _ptr;
 
                 _ptr = new BufferHolder<BTYPE>(std::move(buffer));
