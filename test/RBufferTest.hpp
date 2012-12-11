@@ -1,9 +1,29 @@
-//unit test for the Buffer class
+/*
+ * (c) Copyright 2012 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
+ *
+ * This file is part of libpniutils.
+ *
+ * libpniutils is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * libpniutils is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with libpniutils.  If not, see <http://www.gnu.org/licenses/>.
+ *************************************************************************
+ *
+ *  Created on: Jul 19, 2012
+ *      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
+ */
+#pragma once
 
-#ifndef __RBUFFERTEST_HPP__
-#define __RBUFFERTEST_HPP__
 
-
+#include <boost/current_function.hpp>
 #include <random>
 #include <algorithm>
 #include <cppunit/TestFixture.h>
@@ -16,32 +36,30 @@
 
 using namespace pni::utils;
 
-template<typename T> 
-class RBufferTest:public CppUnit::TestFixture
+template<typename T> class RBufferTest:public CppUnit::TestFixture
 {
-    CPPUNIT_TEST_SUITE(RBufferTest);
-    CPPUNIT_TEST(test_constructors);
-    CPPUNIT_TEST(test_access);
-    CPPUNIT_TEST(test_assignment);
-    CPPUNIT_TEST(test_comparison);
-    CPPUNIT_TEST(test_iterator);
-    CPPUNIT_TEST_SUITE_END();
-private:
-    UInt64 n1,n2,n3;
-    T *ptr1;
-    T *ptr2;
-    T *ptr3;
+        CPPUNIT_TEST_SUITE(RBufferTest);
+        CPPUNIT_TEST(test_constructors);
+        CPPUNIT_TEST(test_access);
+        CPPUNIT_TEST(test_assignment);
+        CPPUNIT_TEST(test_comparison);
+        CPPUNIT_TEST(test_iterator);
+        CPPUNIT_TEST_SUITE_END();
+    private:
+        UInt64 n1,n2,n3;
+        T *ptr1;
+        T *ptr2;
+        T *ptr3;
 
-public:
-    void setUp();
-    void tearDown();
+    public:
+        void setUp();
+        void tearDown();
 
-    void test_constructors();
-    void test_assignment();
-    void test_comparison();
-    void test_access();
-    void test_iterator();
-
+        void test_constructors();
+        void test_assignment();
+        void test_comparison();
+        void test_access();
+        void test_iterator();
 };
 
 //-----------------------------------------------------------------------------
@@ -66,6 +84,8 @@ template<typename T> void RBufferTest<T>::tearDown()
 //------------------------------------------------------------------------------
 template<typename T> void RBufferTest<T>::test_constructors()
 {
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+
     //create first buffer using the default constructor
     RBuffer<T> b1; //default constructor
     CPPUNIT_ASSERT(!b1.size());
@@ -93,6 +113,8 @@ template<typename T> void RBufferTest<T>::test_constructors()
 //------------------------------------------------------------------------------
 template<typename T> void RBufferTest<T>::test_assignment()
 {
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+
 	//testing here the assignment of equally typed buffers
 	RBuffer<T> buffer1;
 	RBuffer<T> buffer2;
@@ -140,6 +162,8 @@ template<typename T> void RBufferTest<T>::test_assignment()
 //------------------------------------------------------------------------------
 template<typename T> void RBufferTest<T>::test_access()
 {
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+
 	RBuffer<T> dbuffer(this->n1,this->ptr1);
 
 	for(size_t i=0;i<this->n1;i++) 
@@ -163,6 +187,8 @@ template<typename T> void RBufferTest<T>::test_access()
 //------------------------------------------------------------------------------
 template<typename T> void RBufferTest<T>::test_comparison()
 {
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+
 	RBuffer<T> b1(this->n1,this->ptr1);
 	RBuffer<T> b2(this->n3,this->ptr3);
 
@@ -178,6 +204,8 @@ template<typename T> void RBufferTest<T>::test_comparison()
 //-----------------------------------------------------------------------------
 template<typename T> void RBufferTest<T>::test_iterator()
 {
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+
     RBuffer<T> b1(this->n1,this->ptr1);
 
     auto data = RandomDistribution::uniform<std::vector<T> >(this->n1);
@@ -200,4 +228,3 @@ template<typename T> void RBufferTest<T>::test_iterator()
     }
 }
 
-#endif

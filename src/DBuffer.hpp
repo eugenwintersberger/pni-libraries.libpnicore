@@ -22,10 +22,7 @@
  *
  */
 
-
-
-#ifndef __DBUFFER_HPP__
-#define __DBUFFER_HPP__
+#pragma once
 
 #include <memory>
 #include <iostream>
@@ -443,4 +440,3 @@ namespace utils{
 //end of namespace
 }
 }
-#endif 

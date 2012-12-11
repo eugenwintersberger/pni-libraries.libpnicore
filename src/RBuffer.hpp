@@ -26,10 +26,7 @@
  *
  */
 
-
-
-#ifndef __RBUFFER_HPP_
-#define __RBUFFER_HPP_
+#pragma once
 
 #include <iostream>
 #include <string>
@@ -341,4 +338,3 @@ namespace utils{
 //end of namespace
 }
 }
-#endif /* BUFFER_HPP_ */

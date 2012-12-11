@@ -1,3 +1,26 @@
+/*
+ * (c) Copyright 2012 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
+ *
+ * This file is part of libpniutils.
+ *
+ * libpniutils is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * libpniutils is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with libpniutils.  If not, see <http://www.gnu.org/licenses/>.
+ *************************************************************************
+ *
+ *  Created on: Jul 12, 2012
+ *      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
+ */
+#include <boost/current_function.hpp>
 #include<cppunit/extensions/HelperMacros.h>
 
 #include "IteratorTest.hpp"
@@ -13,14 +36,12 @@ void IteratorTest::setUp()
 }
 
 //-----------------------------------------------------------------------------
-void IteratorTest::tearDown()
-{
-
-}
+void IteratorTest::tearDown() { }
 
 //-----------------------------------------------------------------------------
 void IteratorTest::test_construction()
 {
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
     //==================testing default construction===========================
     iterator iterator1;
     //after default construction the interator should be invalid
@@ -74,6 +95,8 @@ void IteratorTest::test_construction()
 //-----------------------------------------------------------------------------
 void IteratorTest::test_assignment()
 {
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+
     iterator iterator1(&vector,2);
     const_iterator const_iterator1(&vector,2);
     
@@ -104,6 +127,8 @@ void IteratorTest::test_assignment()
 //-----------------------------------------------------------------------------
 void IteratorTest::test_comparison()
 {
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+
     iterator iterator1(&vector,0);
     const_iterator const_iterator1(&vector,0);
 
@@ -143,6 +168,8 @@ void IteratorTest::test_comparison()
 //-----------------------------------------------------------------------------
 void IteratorTest::test_unary_arithmetics()
 {
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+
     iterator iterator1(&vector,0);
     const_iterator const_iterator1(&vector,0);
 
@@ -161,6 +188,8 @@ void IteratorTest::test_unary_arithmetics()
 //-----------------------------------------------------------------------------
 void IteratorTest::test_binary_arithmetics()
 {
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+
     iterator iterator1(&vector,0);
     const_iterator const_iterator1(&vector,0);
 
@@ -186,6 +215,8 @@ void IteratorTest::test_binary_arithmetics()
 //-----------------------------------------------------------------------------
 void IteratorTest::test_stl_algos()
 {
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+
     Iterable::iterator siter1 = vector.begin()+2;
     Iterable::iterator siter2 = vector.begin()+5;
     CPPUNIT_ASSERT(std::distance(siter1,siter2) == 3);
@@ -197,6 +228,8 @@ void IteratorTest::test_stl_algos()
 //-----------------------------------------------------------------------------
 void IteratorTest::test_increment()
 {
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+
     iterator iter(&vector,0);
 
     CPPUNIT_ASSERT(*iter == 1);

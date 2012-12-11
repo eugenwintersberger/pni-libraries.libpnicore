@@ -1,6 +1,4 @@
 /*
- * Declaration of template class TypeInfo
- *
  * (c) Copyright 2011 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
  *
  * This file is part of libpniutils.
@@ -27,16 +25,7 @@
  *     Author: Eugen Wintersberger
  *
  */
-
-/*
- * TypeInfo.hpp
- *
- *  Created on: Jun 9, 2011
- *      Author: Eugen Wintersberger
- */
-
-#ifndef __TYPEINFO_HPP__
-#define __TYPEINFO_HPP__
+#pragma once
 
 #include <limits>
 
@@ -228,6 +217,3 @@ namespace utils{
 //end of namespace
 }
 }
-
-
-#endif 

@@ -22,10 +22,7 @@
  * Created on: Dec 8, 2011
  *     Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
  */
-
-
-#ifndef __SERVICE_HPP__
-#define __SERVICE_HPP__
+#pragma once
 
 #if (__GNUC__ && __cplusplus && __GNUC__ >= 3)
 #include <cxxabi.h>
@@ -48,14 +45,18 @@ namespace utils{
 
 
 
-String demangle_cpp_name(const char *n);
+    //-------------------------------------------------------------------------
+    /*!
+    \brief demangle C++ names
+
+    When using a GNU compiler this function demangles a C++ name as, for
+    instance, returned by typeid(..).name(). 
+    \param n mangled name
+    \return demangled name of the type 
+    */
+    String demangle_cpp_name(const char *n);
 
 
 
 }
 }
-
-
-
-
-#endif /* SERVICE_HPP_ */

@@ -1,5 +1,26 @@
-#ifndef __CHRONOTIMER_HPP__
-#define __CHRONOTIMER_HPP__
+/*
+ * (c) Copyright 2012 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
+ *
+ * This file is part of libpniutils.
+ *
+ * libpniutils is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * libpniutils is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with libpniutils.  If not, see <http://www.gnu.org/licenses/>.
+ *************************************************************************
+ *
+ *  Created on: Oct 24, 2012
+ *      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
+ */
+#pragma once
 
 #include <pni/utils/Types.hpp>
 
@@ -8,49 +29,28 @@
 
 using namespace pni::utils;
 
+/*!
+\brief unit map
+
+This template maps the name type of a chrono clock representing a time unit on a
+string value.
+\tparam DTYPE chrono duration time
+*/
 template<typename DTYPE> struct DurationUnitMap;
 
-template<> struct DurationUnitMap<std::chrono::nanoseconds>
-{
-    static const String unit;
-};
+#define DURATIONUNITMAP(durationtype,unit_string)\
+    template<> struct DurationUnitMap<durationtype>\
+    {\
+        static const String unit;\
+    };\
+    const String DurationUnitMap<durationtype>::unit = String(unit_string);
 
-const String DurationUnitMap<std::chrono::nanoseconds>::unit = String("ns");
-
-template<> struct DurationUnitMap<std::chrono::microseconds>
-{
-    static const String unit;
-};
-
-const String DurationUnitMap<std::chrono::microseconds>::unit = String("us");
-
-template<> struct DurationUnitMap<std::chrono::milliseconds>
-{
-    static const String unit;
-};
-
-const String DurationUnitMap<std::chrono::milliseconds>::unit=String("ms");
-
-template<> struct DurationUnitMap<std::chrono::seconds>
-{
-    static const String unit;
-};
-
-const String DurationUnitMap<std::chrono::seconds>::unit = String("s");
-
-template<> struct DurationUnitMap<std::chrono::minutes>
-{
-    static const String unit;
-};
-
-const String DurationUnitMap<std::chrono::minutes>::unit = String("min");
-
-template<> struct DurationUnitMap<std::chrono::hours>
-{
-    static const String unit;
-};
-
-const String DurationUnitMap<std::chrono::hours>::unit = String("h");
+DURATIONUNITMAP(std::chrono::nanoseconds,"ns");
+DURATIONUNITMAP(std::chrono::microseconds,"us");
+DURATIONUNITMAP(std::chrono::milliseconds,"ms");
+DURATIONUNITMAP(std::chrono::seconds,"s");
+DURATIONUNITMAP(std::chrono::minutes,"min");
+DURATIONUNITMAP(std::chrono::hours,"h");
 
 /*!
 \brief timer class using chrono
@@ -115,7 +115,6 @@ template<typename CLKT,typename DTYPE> class ChronoTimer
         }
 };
 
+//setup the static name of the timer
 template<typename CLKT,typename DTYPE>
 const String ChronoTimer<CLKT,DTYPE>::name = String("ChronoTimer");
-
-#endif

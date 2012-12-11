@@ -1,12 +1,27 @@
 /*
- * SimpleArithmetics.hpp
+ * (c) Copyright 2012 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
  *
- *  Created on: Aug 31, 2011
- *      Author: eugen
+ * This file is part of libpniutils.
+ *
+ * libpniutils is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * libpniutils is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with libpniutils.  If not, see <http://www.gnu.org/licenses/>.
+ *************************************************************************
+ *
+ *  Created on: Jul 24, 2012
+ *      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
  */
 
-#ifndef INPLACEARITHMETICS_HPP_
-#define INPLACEARITHMETICS_HPP_
+#pragma once
 
 #include <limits>
 #include <functional>
@@ -18,19 +33,43 @@
 namespace pni{
 namespace utils{
 
-//! \cond no_doc
-//Inplace arithmetics of typed objects - the object can only be a left-value
-    template<typename ATYPE>
-    class InplaceArithmetics
+    /*! 
+    \ingroup numeric_array_classes
+    \brief single threaded inplace arithmetics
+
+    This class provides single threaded arithmetic operations for numeric
+    arrays. It is used for inplace arithmetic operators <Operator>=. 
+    All member functions provided are static. See the NumArray template for how
+    this class is used in inplace arithmetics. 
+    \tparam ATYPE array type
+    */
+    template<typename ATYPE> class InplaceArithmetics
     {
                  
         public:
             //===================public types==================================
+            //! value type of the array type
             typedef typename ATYPE::value_type value_type;
+            //! array type iterator type
             typedef typename ATYPE::iterator iterator;
+            //! array type const iterator type
             typedef typename ATYPE::const_iterator const_iterator;
             //==================inplace addition===============================
-            //object with a scalar
+            /*!
+            \brief add scalar to array
+
+            Adds a scalar value of the value_type of the array to the array. 
+            \code
+            ATYPE array(...);
+            typename ATYPE::value_type scalar(5);
+            
+            //performe something like array += scalar
+
+            InplaceArithmetics<ATYPE>::add(array,scalar);
+            \endcode
+            \param a array of type ATYPE
+            \param b scalar value of type ATYPE::value_type
+            */
             static void add(ATYPE &a,value_type b)
             {
 #ifdef NOFOREACH
@@ -45,8 +84,22 @@ namespace utils{
                 }
             }
 
-
             //-----------------------------------------------------------------
+            /*!
+            \brief add container to array
+            
+            Add a container to an array of type ATYPE.
+            \code
+            ATYPE array(...);
+            std::vector<typename ATYPE::value_type> v(array.size());
+
+            InplaceArithmetics<ATYPE>::add(array,v);
+            \endcode
+            \tparam CTYPE container template
+            \tparam OTS template parameters of the container template
+            \param a instance of ATYPE
+            \param b instance of CTYPE<OTS...>
+            */
             template<template<typename ...> class CTYPE,typename ...OTS>
             static void add(ATYPE &a,const CTYPE<OTS...> &b)
             {
@@ -65,6 +118,18 @@ namespace utils{
             }
 
             //-----------------------------------------------------------------
+            /*!
+            \brief add two arrays
+
+            Add array on the rhs to that on the lhs. 
+            \code 
+            ATYPE a(...);
+            ATYPE b(...);
+            InplaceArithmetics<ATYPE>::add(a,b);
+            \endcode
+            \param a instance of ATYPE
+            \param b instance of ATYPE
+            */
             //add with another array of same type
             static void add(ATYPE &a,const ATYPE &b)
             {
@@ -84,7 +149,18 @@ namespace utils{
 
 
             //==================inplace subtraction===============================
-            //object with a scalar
+            /*!
+            \brief subtract scalar from array
+
+            Subtract a scalar value from an array. 
+            \code
+            ATYPE array(...);
+            typename ATYPE::value_type scalar(5);
+            InplaceArithmetics<ATYPE>::sub(array,scalar);
+            \endcode
+            \param a instance of ATYPE
+            \param b scalar value
+            */
             static void sub(ATYPE &a,value_type b)
             {
 #ifdef NOFOREACH
@@ -100,6 +176,18 @@ namespace utils{
             }
 
             //-----------------------------------------------------------------
+            /*!
+            \brief subtract array from array
+
+            Subtract two arrays of type ATYPE from each other. 
+            \code
+            ATYPE a(...);
+            ATYPE b(...);
+            InplaceArithmetics<ATYPE>::sub(a,b);
+            \endcode
+            \param a instance of ATYPE
+            \param b instance of ATYPE
+            */
             static void sub(ATYPE &a,const ATYPE &b)
             {
                 const_iterator iter = b.begin();
@@ -117,6 +205,20 @@ namespace utils{
             }
 
             //-----------------------------------------------------------------
+            /*!
+            \brief subtract a container from an array
+
+            Subtract an arbitrary container from an array.
+            \code
+            ATYPE array(...);
+            std::vector<typename ATYPE::value_type> v(array.size());
+            InplaceArithmetics<ATYPE>::sub(array,v);
+            \endcode
+            \tparam CTYPE container template
+            \tparam OTS container templat parameters
+            \param a instance of ATYPE
+            \param b instance of CTYPE<OTS...>
+            */
             template<template<typename ...> class CTYPE,typename ...OTS>
             static void sub(ATYPE &a,const CTYPE<OTS...> &b)
             {
@@ -135,7 +237,17 @@ namespace utils{
             }
 
             //=====================inplace multiplication======================
-            //object with a scalar
+            /*!
+            \brief multiply array with scalar
+
+            \code
+            ATYPE array(...);
+            typename ATYPE::value_type scalar(5);
+            InplaceArithmetics<ATYPE>::mult(array,scalar);
+            \endcode
+            \param a instance of ATYPE
+            \param b scalar value
+            */
             static void mult(ATYPE &a,value_type b)
             {
 #ifdef NOFOREACH
@@ -151,6 +263,18 @@ namespace utils{
             }
 
             //-----------------------------------------------------------------
+            /*!
+            \brief multiply an array with an array
+
+            Multiplication between two arrays. 
+            \code
+            ATYPE a(...);
+            ATYPE b(...);
+            InplaceArithmetics<ATYPE>::mult(a,b);
+            \endcode
+            \param a instance of ATYPE
+            \param b instance of ATYPE
+            */
             static void mult(ATYPE &a,const ATYPE &b)
             {
                 const_iterator iter = b.begin();
@@ -168,6 +292,20 @@ namespace utils{
             }
 
             //-----------------------------------------------------------------
+            /*!
+            \brief multiply container with array
+
+            Multiply an arbitrary container with an array. 
+            \code
+            ATYPE array(...);
+            std::vector<typename ATYPE::value_type> v(array.size());
+            InplaceArithmetics<ATYPE>::mult(array,v);
+            \endcode
+            \tparam CTYPE container template
+            \tparam OTS CTYPE parameters
+            \param a instance of ATYPE
+            \param b instance of CTYPE<OTS...>
+            */
             template<template<typename ...> class CTYPE,typename ...OTS>
             static void mult(ATYPE &a,const CTYPE<OTS...> &b)
             {
@@ -186,7 +324,18 @@ namespace utils{
             }
             
             //=====================inplace division============================
-            //object with a scalar
+            /*!
+            \brief divide array with scalar
+
+            Divide each element of an array by a scalar value.
+            \code
+            ATYPE array(...);
+            typename ATYPE::value_type scalar(5);
+            InplaceArithmetics<ATYPE>::div(array,scalar);
+            \endcode
+            \param a instance of ATYPE
+            \parma b scalar value
+            */
             static void div(ATYPE &a,value_type b)
             {
 #ifdef NOFOREACH
@@ -202,6 +351,18 @@ namespace utils{
             }
 
             //-----------------------------------------------------------------
+            /*!
+            \brief divide two arrays
+
+            Divides each element of a by the corresponding element of b. 
+            \code
+            ATYPE a(...);
+            ATYPE b(...);
+            InplaceArithmetics<ATYPE>::div(a,b);
+            \endcode
+            \param a instance of ATYPE
+            \param b instance of ATYPE
+            */
             static void div(ATYPE &a,const ATYPE &b)
             {
                 const_iterator iter = b.begin();
@@ -219,6 +380,21 @@ namespace utils{
             }
 
             //-----------------------------------------------------------------
+            /*!
+            \brief divde array with container
+
+            Divides each element of an array by the corresponding element of a
+            container. 
+            \code
+            ATYPE array(...);
+            std::vector<typename ATYPE::value_type> v(array.size());
+            InplaceArithmetics<ATYPE>::div(array,v);
+            \endcode
+            \tparam CTYPE container template
+            \tparam OTS container template parameters
+            \param a instance of ATYPE
+            \param b instance of CTYPE<OTS..>
+            */
             template<template<typename ...> class CTYPE,typename ...OTS>
             static void div(ATYPE &a,const CTYPE<OTS...> &b)
             {
@@ -238,12 +414,6 @@ namespace utils{
             
     };
 
-// \endcond
-
-
-
 //end namespace
 }
 }
-
-#endif /* INPLACEARITHMETICS_HPP_ */

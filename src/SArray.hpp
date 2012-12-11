@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2011 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
+ * (c) Copyright 2012 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
  *
  * This file is part of libpniutils.
  *
@@ -19,12 +19,11 @@
  *
  * Static array template.
  *
- * Created on: 24.05.2012
+ * Created on: May 24, 2012
  *     Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
  */
 
-#ifndef __SARRAY_HPP__
-#define __SARRAY_HPP__
+#pragma once
 
 #include "Types.hpp"
 #include "SBuffer.hpp"
@@ -561,5 +560,3 @@ namespace utils{
 //end of namespace
 }
 }
-
-#endif

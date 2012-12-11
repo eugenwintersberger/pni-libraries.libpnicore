@@ -27,8 +27,7 @@
  *
  */
 
-#ifndef __EXCEPTIONS_HPP__
-#define __EXCEPTIONS_HPP__
+#pragma once
 
 #include<iostream>
 #include<string>
@@ -617,4 +616,3 @@ Please note that the MUST NOT BE a semicolon at the end of this macro.
 
 }
 }
-#endif

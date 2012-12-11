@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2011 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
+ * (c) Copyright 2012 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
  *
  * This file is part of libpniutils.
  *
@@ -23,11 +23,7 @@
  *     Author: Eugen Wintersberger
  *
  */
-
-
-
-#ifndef __SBUFFER_HPP__
-#define __SBUFFER_HPP__
+#pragma once
 
 #include <memory>
 #include <iostream>
@@ -340,4 +336,3 @@ namespace utils{
 //end of namespace
 }
 }
-#endif 

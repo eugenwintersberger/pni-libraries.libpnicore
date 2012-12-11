@@ -23,8 +23,7 @@
  *     Author: Eugen Wintersberger
  *
  */
-#ifndef __EXCEPTIONUTILS_HPP__
-#define __EXCEPTIONUTILS_HPP__
+#pragma once
 
 #include <vector>
 #include <iostream>
@@ -58,13 +57,15 @@ namespace utils{
         if(a.size() != b.size())
         {
             std::stringstream ss;
-            ss<<"Size of "<<demangle_cpp_name(typeid(A).name())<<" ("<<a.size()<<") ";
+            ss<<"Size of "<<demangle_cpp_name(typeid(A).name())<<" (";
+            ss<<a.size()<<") ";
             ss<<"does not match size of "<<demangle_cpp_name(typeid(B).name())<<" (";
             ss<<b.size()<<")!";
             throw SizeMissmatchError(i,String(ss.str()));
         }
     }
 
+    //-------------------------------------------------------------------------
     /*!
     \ingroup error_classes
     \brief check index 
@@ -151,7 +152,8 @@ namespace utils{
         if(!o.size())
         {
             std::stringstream ss;
-            ss<<"Instance of "<<demangle_cpp_name(typeid(OTYPE).name())<<" not allocated!";
+            ss<<"Instance of "<<demangle_cpp_name(typeid(OTYPE).name());
+            ss<<" not allocated!";
             throw MemoryNotAllocatedError(i,ss.str());
         }
     }
@@ -182,4 +184,3 @@ namespace utils{
 //end of namespace
 }
 }
-#endif

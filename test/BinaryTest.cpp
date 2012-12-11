@@ -1,5 +1,25 @@
-//implementation of the unit tests for Binary
-
+/*
+ * (c) Copyright 2012 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
+ *
+ * This file is part of libpniutils.
+ *
+ * libpniutils is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * libpniutils is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with libpniutils.  If not, see <http://www.gnu.org/licenses/>.
+ *************************************************************************
+ *
+ *  Created on: Feb 08, 2012
+ *      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
+ */
 #include<cppunit/extensions/HelperMacros.h>
 
 #include <iostream>
@@ -15,24 +35,22 @@ CPPUNIT_TEST_SUITE_REGISTRATION(BinaryTest);
 
 using namespace pni::utils;
 
-void BinaryTest::setUp(){
+//-----------------------------------------------------------------------------
+void BinaryTest::setUp(){ }
 
-}
+//-----------------------------------------------------------------------------
+void BinaryTest::tearDown(){ }
 
-void BinaryTest::tearDown(){
-
-}
-
+//-----------------------------------------------------------------------------
 void BinaryTest::test_construction()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
     BinaryType<UInt8> bvalue;
     
     BinaryType<UInt8> bvalue2 = 8; 
-     
-
 }
 
+//-----------------------------------------------------------------------------
 void BinaryTest::test_comparison()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
@@ -42,9 +60,9 @@ void BinaryTest::test_comparison()
 
     CPPUNIT_ASSERT(v1 != v2);
     CPPUNIT_ASSERT(v1 == v3);
-
 }
 
+//-----------------------------------------------------------------------------
 void BinaryTest::test_assignment()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
@@ -56,6 +74,7 @@ void BinaryTest::test_assignment()
     CPPUNIT_ASSERT(v1 == v2);
 }
 
+//-----------------------------------------------------------------------------
 void BinaryTest::test_compatability()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
@@ -88,6 +107,7 @@ void BinaryTest::test_compatability()
     delete [] bptr;
 }
 
+//-----------------------------------------------------------------------------
 void BinaryTest::test_io_operator()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
@@ -107,10 +127,11 @@ void BinaryTest::test_io_operator()
     Int8 ivalue = 'z';
     b = ivalue;
     std::cout<<"value = "<<b<<std::endl;
-
 }
 
-void BinaryTest::test_io(){
+//-----------------------------------------------------------------------------
+void BinaryTest::test_io()
+{
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
     typedef std::fstream fstream;
@@ -134,13 +155,13 @@ void BinaryTest::test_io(){
     //copy binary file
 
     BinaryType<UInt8> buffer;
-    while(istream.get(((char&)buffer))){
+    while(istream.get(((char&)buffer)))
+    {
         ostream.put(((char&)buffer));
     }
 
     istream.close();
     ostream.close();
-
 }
 
 

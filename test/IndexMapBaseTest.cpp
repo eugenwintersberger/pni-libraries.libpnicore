@@ -1,5 +1,26 @@
-//implementation of IndexMapBaseTest
-
+/*
+ * (c) Copyright 2012 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
+ *
+ * This file is part of libpniutils.
+ *
+ * libpniutils is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * libpniutils is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with libpniutils.  If not, see <http://www.gnu.org/licenses/>.
+ *************************************************************************
+ *
+ *  Created on: Jul 20, 2012
+ *      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
+ */
+#include <boost/current_function.hpp>
 #include<cppunit/extensions/HelperMacros.h>
 
 #include "IndexMapBaseTest.hpp"
@@ -9,16 +30,16 @@ CPPUNIT_TEST_SUITE_REGISTRATION(IndexMapBaseTest);
 
 
 //-----------------------------------------------------------------------------
-void IndexMapBaseTest::setUp()
-{}
+void IndexMapBaseTest::setUp() {}
 
 //-----------------------------------------------------------------------------
-void IndexMapBaseTest::tearDown()
-{}
+void IndexMapBaseTest::tearDown() {}
 
 //-----------------------------------------------------------------------------
 void IndexMapBaseTest::test_construction()
 {
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+
     //default construction
     IndexMapBase im1;
 
@@ -58,6 +79,7 @@ void IndexMapBaseTest::test_construction()
 //-----------------------------------------------------------------------------
 void IndexMapBaseTest::test_assignment()
 {
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
     IndexMapBase im1{2,3,4,5};
     IndexMapBase im2,im3;
 
@@ -79,6 +101,7 @@ void IndexMapBaseTest::test_assignment()
 //-----------------------------------------------------------------------------
 void IndexMapBaseTest::test_access()
 {
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
     std::vector<size_t> s{3,2,5,7};
     IndexMapBase im1(s);
 

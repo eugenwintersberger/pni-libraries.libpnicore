@@ -1,7 +1,5 @@
 /*
- * Map from PNI types to their type classes
- *
- * (c) Copyright 2011 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
+ * (c) Copyright 2012 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
  *
  * This file is part of libpniutils.
  *
@@ -23,9 +21,7 @@
  *  Created on: Sep 27, 2012
  *      Author: Eugen Wintersberger
  */
-
-#ifndef __TYPECLASSMAP_HPP__
-#define __TYPECLASSMAP_HPP__
+#pragma once
 
 #include "Types.hpp"
 
@@ -86,5 +82,3 @@ This macro creates a type to type class map specialization.
 //end of namespace
 }
 }
-
-#endif

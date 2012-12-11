@@ -23,9 +23,7 @@
  *  Created on: Dec 10, 2011
  *      Author: Eugen Wintersberger
  */
-
-#ifndef __TYPE_CONVERSION_HPP__
-#define __TYPE_CONVERSION_HPP__
+#pragma once
 
 #include <limits>
 #include <boost/static_assert.hpp>
@@ -238,8 +236,3 @@ namespace utils{
 //end of namespace
 }
 }
-
-
-
-
-#endif /* TYPE_CONVERSION_HPP_ */

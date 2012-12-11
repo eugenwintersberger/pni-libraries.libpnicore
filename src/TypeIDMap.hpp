@@ -1,6 +1,4 @@
 /*
- * Map from PNI types to IDs
- *
  * (c) Copyright 2011 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
  *
  * This file is part of libpniutils.
@@ -23,11 +21,9 @@
  *  Created on: Dec 13, 2011
  *      Author: Eugen Wintersberger
  */
+#pragma once
 
 #include "Types.hpp"
-
-#ifndef __TYPEIDMAP_HPP__
-#define __TYPEIDMAP_HPP__
 
 namespace pni{
 namespace utils{
@@ -80,6 +76,3 @@ This macro is used to create a specialization of the TypeIDMap type map.
 //end of namespace
 }
 }
-
-
-#endif /* TYPEIDMAP_HPP_ */

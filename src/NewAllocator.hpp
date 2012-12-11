@@ -24,8 +24,7 @@
  *
  */
 
-#ifndef __NEWALLOCATOR_HPP__
-#define __NEWALLOCATOR_HPP__
+#pragma once
 
 #include <iostream>
 #include <sstream>
@@ -94,5 +93,4 @@ namespace utils{
 //end of namespace
 }
 }
-#endif
 

@@ -1,7 +1,5 @@
 /*! \file */
 /*
- * Definition of standard types
- *
  * (c) Copyright 2011 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
  *
  * This file is part of libpniutils.
@@ -26,16 +24,13 @@
  *     Author: Eugen Wintersberger
  *
  */
+#pragma once
 
 #include <complex>
 #include <string>
 #include <cstdint>
 
 #include "Binary.hpp"
-
-#ifndef __TYPES_HPP__
-#define __TYPES_HPP__
-
 
 //define some standard types
 namespace pni{
@@ -148,5 +143,3 @@ namespace utils{
 //end of namespace
 }
 }
-
-#endif 

@@ -22,8 +22,7 @@
  */
 
 
-#ifndef __NUMARRAY_HPP__
-#define __NUMARRAY_HPP__
+#pragma once
 
 #include "Types.hpp"
 #include "Iterator.hpp"
@@ -393,11 +392,9 @@ namespace utils{
             operator()(ITYPES ...indices) const
             {
                 typedef ArrayViewSelector<array_type,ITYPES...> sel;
-                typedef typename sel::viewtype result_t;
+                typename sel::viewtype result = typename sel::viewtype();
 
-                result_t r = result_t();
-                
-                return _get_data(r,indices...);
+                return _get_data(result,indices...);
 
                 //return this->_array(indices...);
             }
@@ -1066,5 +1063,3 @@ namespace utils{
 //end of namespace
 }
 }
-
-#endif

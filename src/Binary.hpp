@@ -19,12 +19,11 @@
  *
  * Definition of a dynamic array template.
  *
- * Created on: Feb 8,2012
+ * Created on: Feb 8, 2012
  *     Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
  */
 
-#ifndef __BINARY_HPP__
-#define __BINARY_HPP__
+#pragma once
 
 
 namespace pni{
@@ -194,4 +193,3 @@ namespace utils{
 //end of namespace
 }
 }
-#endif

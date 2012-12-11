@@ -1,11 +1,33 @@
-//iterator benchmark
-
+/*
+ * (c) Copyright 2012 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
+ *
+ * This file is part of libpniutils.
+ *
+ * libpniutils is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * libpniutils is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with libpniutils.  If not, see <http://www.gnu.org/licenses/>.
+ *************************************************************************
+ *
+ *  Created on: Jul 12, 2012
+ *      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
+ */
 #include <iostream>
 #include <chrono>
 #include <ratio>
 #include <ctime>
 #include <pni/utils/Iterator.hpp>
 #include <pni/utils/DBuffer.hpp>
+#include <pni/utils/DArray.hpp>
+#include <pni/utils/Array.hpp>
 
 #include "benchmark/BenchmarkRunner.hpp"
 #include "benchmark/BenchmarkResult.hpp"
@@ -13,7 +35,7 @@
 #include "benchmark/ClockTimer.hpp"
 
 #include "benchmark/LinearIOPointerBenchmark.hpp"
-#include "benchmark/LinearIODBufferIterator.hpp"
+#include "benchmark/LinearIOContainerIterator.hpp"
 
 using namespace pni::utils;
 
@@ -55,15 +77,23 @@ int main(int argc,char **argv)
     std::cout<<"allocating "<<N*sizeof(double)/1024/1024<<" MByte of memory!";
     std::cout<<std::endl;
     
-    typedef LinearIODBufferIterator<DBuffer<double> > dbuffer_bm_t;
+    typedef LinearIOContainerIterator<DBuffer<double> > dbuffer_bm_t;
+    typedef LinearIOContainerIterator<DArray<double,DBuffer<double> > > darray_bm_t;
+    typedef LinearIOContainerIterator<NumArray<
+                                               DArray<double,DBuffer<double> > 
+                                              > 
+                                     >  narray_bm_t;
     typedef LinearIOPointerBenchmark<double> ptr_bm_t;
    
 
     run_benchmark<bmtimer_t>(1,ptr_bm_t(N));
-    run_benchmark<ClockTimer>(1,ptr_bm_t(N));
+    //run_benchmark<ClockTimer>(1,ptr_bm_t(N));
 
-    run_benchmark<bmtimer_t>(1,dbuffer_bm_t(N));
-    run_benchmark<ClockTimer>(1,dbuffer_bm_t(N));
+    run_benchmark<bmtimer_t>(1,dbuffer_bm_t(DBuffer<double>(N)));
+    run_benchmark<bmtimer_t>(1,darray_bm_t(DArray<double,DBuffer<double> >(shape_t{2,N/2})));
+    run_benchmark<bmtimer_t>(1,narray_bm_t(
+                NumArray<DArray<double,DBuffer<double> > >(shape_t{2,N/2})));
+    //run_benchmark<ClockTimer>(1,dbuffer_bm_t(DBuffer<double>(N)));
 
 
     return 0;

@@ -29,9 +29,7 @@
 
 #include "Types.hpp"
 
-#ifndef IDTYPEMAP_HPP_
-#define IDTYPEMAP_HPP_
-
+#pragma once
 
 namespace pni{
 namespace utils{
@@ -83,6 +81,3 @@ This macro is used to create a specialization of IDTypeMap.
 
 }
 }
-
-
-#endif /* IDTYPEMAP_HPP_ */

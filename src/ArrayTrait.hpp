@@ -1,6 +1,4 @@
 /*
- * Declaration of the ArrayTrait<T> template
- *
  * (c) Copyright 2011 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
  *
  * This file is part of libpniutils.
@@ -27,8 +25,7 @@
  */
 
 
-#ifndef ARRAYTRAIT_HPP_
-#define ARRAYTRAIT_HPP_
+#pragma once
 
 #include "Types.hpp"
 
@@ -196,6 +193,3 @@ namespace utils{
 
 }
 }
-
-
-#endif /* ARRAYTRAIT_HPP_ */

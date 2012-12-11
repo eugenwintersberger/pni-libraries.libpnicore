@@ -1,7 +1,26 @@
-//test case for the IndexMapBase base class
-
-#ifndef __ADDOPERATORTEST_HPP__
-#define __ADDOPERATORTEST_HPP__
+/*
+ * (c) Copyright 2012 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
+ *
+ * This file is part of libpniutils.
+ *
+ * libpniutils is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * libpniutils is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with libpniutils.  If not, see <http://www.gnu.org/licenses/>.
+ *************************************************************************
+ *
+ *  Created on: Jul 25, 2012
+ *      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
+ */
+#pragma once
 
 #include<cppunit/TestFixture.h>
 #include<cppunit/extensions/HelperMacros.h>
@@ -53,6 +72,7 @@ template<typename T> class AddOperatorTest: public CppUnit::TestFixture
 
 };
 
+//-----------------------------------------------------------------------------
 template<typename T> void AddOperatorTest<T>::setUp()
 {
     shape = shape_t(3);
@@ -64,11 +84,10 @@ template<typename T> void AddOperatorTest<T>::setUp()
     std::fill(a2.begin(),a2.end(),T(5));
 }
 
-template<typename T> void AddOperatorTest<T>::tearDown()
-{
-    
-}
+//-----------------------------------------------------------------------------
+template<typename T> void AddOperatorTest<T>::tearDown() { }
 
+//-----------------------------------------------------------------------------
 template<typename T> void AddOperatorTest<T>::test_construction()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
@@ -84,6 +103,7 @@ template<typename T> void AddOperatorTest<T>::test_construction()
 
 }
 
+//-----------------------------------------------------------------------------
 template<typename T> void AddOperatorTest<T>::test_access()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
@@ -99,6 +119,7 @@ template<typename T> void AddOperatorTest<T>::test_access()
         check_equality(op2[i],T(110));
 }
 
+//-----------------------------------------------------------------------------
 template<typename T> void AddOperatorTest<T>::test_iterator()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
@@ -128,6 +149,7 @@ template<typename T> void AddOperatorTest<T>::test_iterator()
     }
 }
 
+//-----------------------------------------------------------------------------
 template<typename T> void AddOperatorTest<T>::test_operator()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
@@ -183,4 +205,3 @@ template<typename T> void AddOperatorTest<T>::test_operator()
     }
 
 }
-#endif

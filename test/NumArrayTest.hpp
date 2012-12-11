@@ -1,5 +1,27 @@
-//Unit test for the array object
-
+/*
+ * (c) Copyright 2012 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
+ *
+ * This file is part of libpniutils.
+ *
+ * libpniutils is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * libpniutils is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with libpniutils.  If not, see <http://www.gnu.org/licenses/>.
+ *************************************************************************
+ *
+ *  Created on: Jul 23, 2012
+ *      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
+ */
+#pragma once
+#include <boost/current_function.hpp>
 #include<cppunit/TestFixture.h>
 #include<cppunit/extensions/HelperMacros.h>
 
@@ -29,20 +51,20 @@ class NumArrayTest : public CppUnit::TestFixture
         CPPUNIT_TEST(test_view);
         CPPUNIT_TEST_SUITE_END();
     private:
+        //---------------------------------------------------------------------
         template<typename T,typename ST,typename MT>
         void create_array(DArray<T,ST,MT> &a)
         {
             a = DArray<T,ST,MT>(std::vector<size_t>{3,4});
         }
 
+        //---------------------------------------------------------------------
         template<typename AT> AT create_array()
         {
             AT result;
             create_array(result);
             return result;
         }
-
-            
         
     public:
         void setUp();
@@ -68,6 +90,8 @@ template<typename ATYPE> void NumArrayTest<ATYPE>::tearDown(){ }
 //------------------------------------------------------------------------------
 template<typename ATYPE> void NumArrayTest<ATYPE>::test_construction()
 {
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+
     //default construction
     NumArray<ATYPE> a1(create_array<ATYPE>());
     CPPUNIT_ASSERT(a1.size() == 12);
@@ -82,6 +106,8 @@ template<typename ATYPE> void NumArrayTest<ATYPE>::test_construction()
 //------------------------------------------------------------------------------
 template<typename ATYPE> void NumArrayTest<ATYPE>::test_assignment()
 {
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+
     NumArray<ATYPE> a1(create_array<ATYPE>());
     size_t i;
 #ifdef NOFOREACH
@@ -106,6 +132,8 @@ template<typename ATYPE> void NumArrayTest<ATYPE>::test_assignment()
 //------------------------------------------------------------------------------
 template<typename ATYPE> void NumArrayTest<ATYPE>::test_linear_access()
 {
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+
     typedef typename NumArray<ATYPE>::value_type value_type;
     NumArray<ATYPE> a1(create_array<ATYPE>());
 
@@ -136,6 +164,8 @@ template<typename ATYPE> void NumArrayTest<ATYPE>::test_linear_access()
 //------------------------------------------------------------------------------
 template<typename ATYPE> void NumArrayTest<ATYPE>::test_iterators()
 {
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+
     typedef typename NumArray<ATYPE>::value_type value_type;
     NumArray<ATYPE> a1(create_array<ATYPE>());
 
@@ -187,6 +217,8 @@ template<typename ATYPE> void NumArrayTest<ATYPE>::test_iterators()
 //-----------------------------------------------------------------------------
 template<typename ATYPE> void NumArrayTest<ATYPE>::test_multiindex_access()
 {   
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+
     typedef typename NumArray<ATYPE>::value_type value_type;
     typedef std::vector<size_t> stype;
     std::cout<<"void NumArrayTest<T,STORAGE>::test_multiindex_access()";
@@ -232,20 +264,13 @@ template<typename ATYPE> void NumArrayTest<ATYPE>::test_multiindex_access()
     }
 
     //check some exceptions 
-    CPPUNIT_ASSERT_THROW(a1(100,1),IndexError);
-    CPPUNIT_ASSERT_THROW(a1(1,100),IndexError);
-    CPPUNIT_ASSERT_THROW(a1(1),ShapeMissmatchError);
-    CPPUNIT_ASSERT_THROW(a1(1,2,4),ShapeMissmatchError);
-    CPPUNIT_ASSERT_THROW(a1(std::vector<size_t>{100,1}),IndexError);
-    CPPUNIT_ASSERT_THROW(a1(std::vector<size_t>{1,100}),IndexError);
-    CPPUNIT_ASSERT_THROW(a1(std::vector<size_t>{1}),ShapeMissmatchError);
-    CPPUNIT_ASSERT_THROW(a1(std::vector<size_t>{1,100,3}),ShapeMissmatchError);
-    
 }
 
 //------------------------------------------------------------------------------
 template<typename ATYPE> void NumArrayTest<ATYPE>::test_typeinfo()
 {
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+
     TypeID id1 = NumArray<ATYPE>::type_id;
     TypeID id2 = TypeIDMap<typename ATYPE::value_type>::type_id;
     CPPUNIT_ASSERT(id1 == id2);
@@ -254,6 +279,8 @@ template<typename ATYPE> void NumArrayTest<ATYPE>::test_typeinfo()
 //-------------------------------------------------------------------------------
 template<typename ATYPE> void NumArrayTest<ATYPE>::test_unary_add()
 {
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+
     typedef typename NumArray<ATYPE>::value_type value_type;
     NumArray<ATYPE> a(create_array<ATYPE>());
 
@@ -308,6 +335,8 @@ template<typename ATYPE> void NumArrayTest<ATYPE>::test_unary_add()
 //-----------------------------------------------------------------------------
 template<typename ATYPE> void NumArrayTest<ATYPE>::test_unary_sub()
 {
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+
     typedef typename NumArray<ATYPE>::value_type value_type;
     NumArray<ATYPE> a(create_array<ATYPE>());
 
@@ -362,6 +391,8 @@ template<typename ATYPE> void NumArrayTest<ATYPE>::test_unary_sub()
 //-----------------------------------------------------------------------------
 template<typename ATYPE> void NumArrayTest<ATYPE>::test_unary_mult()
 {
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+
     typedef typename NumArray<ATYPE>::value_type value_type;
     NumArray<ATYPE> a(create_array<ATYPE>());
 
@@ -416,6 +447,8 @@ template<typename ATYPE> void NumArrayTest<ATYPE>::test_unary_mult()
 //-----------------------------------------------------------------------------
 template<typename ATYPE> void NumArrayTest<ATYPE>::test_unary_div()
 {
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+
     typedef typename NumArray<ATYPE>::value_type value_type;
     NumArray<ATYPE> a(create_array<ATYPE>());
 
@@ -471,6 +504,8 @@ template<typename ATYPE> void NumArrayTest<ATYPE>::test_unary_div()
 //-----------------------------------------------------------------------------
 template<typename ATYPE> void NumArrayTest<ATYPE>::test_view()
 {
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+
     typedef typename NumArray<ATYPE>::value_type value_type;
     NumArray<ATYPE> a(create_array<ATYPE>());
 

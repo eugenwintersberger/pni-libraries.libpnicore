@@ -20,8 +20,7 @@
  * Created on: Jul 25,2012
  *     Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
  */
-#ifndef __SUB_HPP__
-#define __SUB_HPP__
+#pragma once
 
 #include "OpTraits.hpp"
 
@@ -126,5 +125,3 @@ namespace utils{
 //end of namespace
 }
 }
-
-#endif
