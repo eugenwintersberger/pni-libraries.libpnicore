@@ -87,8 +87,16 @@ BenchmarkResult average(const BenchmarkRunner &bm)
 {
     Float64 time = 0.;
 
+#ifdef NOFOREACH
+    for(auto iter = bm.begin();iter!=bm.end();++iter)
+    {
+        auto &result = *iter;
+#else
     for(auto result: bm)
+    {
+#endif
         time += result.time();
+    }
 
     time /= Float64(bm.size());
 
