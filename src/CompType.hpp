@@ -58,7 +58,7 @@ namespace utils{
     {\
         public:\
                typedef CT CompType;\
-    };
+    }
 
 #define COMPTYPETRAIT(A,B,CT)\
     template<> class ComparisonTrait<A,B>\
@@ -70,7 +70,7 @@ namespace utils{
     {\
         public:\
                typedef CT CompType;\
-    };
+    }
 
     //! \cond no_doc
     COMPTYPETRAITSINGLE(UInt8,UInt8);

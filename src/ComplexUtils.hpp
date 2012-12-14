@@ -29,8 +29,6 @@
 #include "Types.hpp"
 #include "TypeInfo.hpp"
 
-using namespace pni::utils;
-
 namespace pni{
 namespace utils{
 
@@ -40,7 +38,7 @@ namespace utils{
         if(TypeInfo<O>::is_complex) return C(v.real(),v.imag());
 
         return C(v);
-    };
+    }
 
     //-------------------------------------------------------------------------
     /*!

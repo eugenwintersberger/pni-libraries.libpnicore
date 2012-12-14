@@ -77,7 +77,7 @@ namespace utils{
 	typedef SRT sub_type;\
 	typedef MRT mult_type;\
 	typedef DRT div_type;\
-};
+}
 
     /*!
     \ingroup type_classes
@@ -101,7 +101,7 @@ namespace utils{
 	typedef SRT sub_type;\
 	typedef MRT mult_type;\
 	typedef DRT div_type;\
-};
+}
 
 //! \cond no_doc
 //define results for integer integer operations

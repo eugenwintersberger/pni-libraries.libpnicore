@@ -25,7 +25,7 @@
 
 #define BUFFER_TEST_REGISTRATION(VTYPE,ALLOC)\
 static CPPUNIT_NS::AutoRegisterSuite< DBufferTest<VTYPE,ALLOC> >  \
-             CPPUNIT_MAKE_UNIQUE_NAME(autoRegisterRegistry__ );
+             CPPUNIT_MAKE_UNIQUE_NAME(autoRegisterRegistry__ )
 
 BUFFER_TEST_REGISTRATION(Int8,NewAllocator);
 BUFFER_TEST_REGISTRATION(UInt8,NewAllocator);

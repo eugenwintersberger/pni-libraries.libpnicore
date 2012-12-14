@@ -39,7 +39,7 @@ This macro is used to create a specialization of the TypeIDMap type map.
     {\
         public:\
             static const TypeID type_id = tid;\
-    };
+    }
 
     /*! 
     \ingroup type_classes
@@ -64,7 +64,7 @@ This macro is used to create a specialization of the TypeIDMap type map.
     CREATE_TYPE_ID_MAP(Int64,TypeID::INT64);
     CREATE_TYPE_ID_MAP(Float32,TypeID::FLOAT32);
     CREATE_TYPE_ID_MAP(Float64,TypeID::FLOAT64);
-    CREATE_TYPE_ID_MAP(Float128,TypeID::FLOAT128)
+    CREATE_TYPE_ID_MAP(Float128,TypeID::FLOAT128);
     CREATE_TYPE_ID_MAP(Complex32,TypeID::COMPLEX32);
     CREATE_TYPE_ID_MAP(Complex64,TypeID::COMPLEX64);
     CREATE_TYPE_ID_MAP(Complex128,TypeID::COMPLEX128);

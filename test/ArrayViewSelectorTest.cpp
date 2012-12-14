@@ -20,6 +20,7 @@
  *  Created on: Jul 18, 2012
  *      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
  */
+
 #include<cppunit/extensions/HelperMacros.h>
 
 #include <typeinfo>
@@ -32,8 +33,9 @@
 
 #include "ArrayViewSelectorTest.hpp"
 
-CPPUNIT_TEST_SUITE_REGISTRATION(ArrayViewSelectorTest);
+//CPPUNIT_TEST_SUITE_REGISTRATION(ArrayViewSelectorTest);
 
+/*
 void ArrayViewSelectorTest::test_selector()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
@@ -63,3 +65,4 @@ void ArrayViewSelectorTest::test_selector()
 
 }
 
+*/

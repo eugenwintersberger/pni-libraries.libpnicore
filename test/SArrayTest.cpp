@@ -32,7 +32,7 @@ using namespace pni::utils;
 
 #define STATICARRAY_TEST_REGISTRATION(T)\
 static CPPUNIT_NS::AutoRegisterSuite< SArrayTest<T> >  \
-             CPPUNIT_MAKE_UNIQUE_NAME(autoRegisterRegistry__ );
+             CPPUNIT_MAKE_UNIQUE_NAME(autoRegisterRegistry__ )
 
 STATICARRAY_TEST_REGISTRATION(UInt8);
 STATICARRAY_TEST_REGISTRATION(Int8);
