@@ -43,7 +43,7 @@ template<typename DTYPE> struct DurationUnitMap;
     {\
         static const String unit;\
     };\
-    const String DurationUnitMap<durationtype>::unit = String(unit_string);
+    const String DurationUnitMap<durationtype>::unit = String(unit_string)
 
 DURATIONUNITMAP(std::chrono::nanoseconds,"ns");
 DURATIONUNITMAP(std::chrono::microseconds,"us");

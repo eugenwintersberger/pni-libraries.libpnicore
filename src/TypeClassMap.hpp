@@ -39,7 +39,7 @@ This macro creates a type to type class map specialization.
     {\
         public:\
             static const TypeClass type_class = tclass;\
-    };
+    }
     
     /*!
     \ingroup type_classes

@@ -45,7 +45,7 @@ This macro is used to create a specialization of IDTypeMap.
     {\
         public:\
             typedef dtype type;\
-    };
+    }
 
     /*! 
     \ingroup type_classes

@@ -31,7 +31,7 @@ using namespace pni::utils;
 
 #define NUMARRAY_TEST_REGISTRATION(ATYPE,VTYPE)\
 static CPPUNIT_NS::AutoRegisterSuite< NumArrayTest<ATYPE<VTYPE> > >  \
-             CPPUNIT_MAKE_UNIQUE_NAME(autoRegisterRegistry__ );
+             CPPUNIT_MAKE_UNIQUE_NAME(autoRegisterRegistry__ )
 
 NUMARRAY_TEST_REGISTRATION(DArray,UInt8);
 NUMARRAY_TEST_REGISTRATION(DArray,Int8);
