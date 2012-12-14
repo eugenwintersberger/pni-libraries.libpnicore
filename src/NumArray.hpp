@@ -30,10 +30,10 @@
 #include "ArrayView.hpp"
 #include "InplaceArithmetics.hpp"
 #include "Scalar.hpp"
-#include "math/Add.hpp"
-#include "math/Mult.hpp"
 #include "math/Sub.hpp"
 #include "math/Div.hpp"
+#include "math/Mult.hpp"
+#include "math/Add.hpp"
 
 namespace pni{
 namespace utils{
