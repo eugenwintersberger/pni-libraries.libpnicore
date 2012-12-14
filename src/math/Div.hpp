@@ -25,11 +25,11 @@
 #include "OpTraits.hpp"
 
 #include "../Iterator.hpp"
-#include "../ArrayView.hpp"
 
 namespace pni{
 namespace utils{
-
+    
+    template<typename ATYPE> class ArrayView;
 
     /*! 
     \ingroup numeric_array_classes

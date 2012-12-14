@@ -22,16 +22,16 @@
  */
 #pragma once
 
-#include<cppunit/TestFixture.h>
-#include<cppunit/extensions/HelperMacros.h>
-#include<vector>
-#include<boost/current_function.hpp>
+#include <cppunit/TestFixture.h>
+#include <cppunit/extensions/HelperMacros.h>
+#include <vector>
+#include <algorithm>
+#include <boost/current_function.hpp>
 
 #include "EqualityCheck.hpp"
-#include <pni/utils/NumArray.hpp>
 #include <pni/utils/DArray.hpp>
 #include <pni/utils/Scalar.hpp>
-#include <algorithm>
+#include <pni/utils/NumArray.hpp>
 
 using namespace pni::utils;
 
