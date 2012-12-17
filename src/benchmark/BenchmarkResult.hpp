@@ -23,7 +23,7 @@
 #pragma once
 
 #include <iostream>
-#include <pni/utils/Types.hpp>
+#include "../Types.hpp"
 
 using namespace pni::utils;
 

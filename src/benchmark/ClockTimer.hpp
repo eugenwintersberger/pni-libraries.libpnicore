@@ -21,7 +21,7 @@
  *      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
  */
 #pragma once
-#include "../../src/Types.hpp"
+#include "../Types.hpp"
 
 #include<iostream>
 #include<ctime>

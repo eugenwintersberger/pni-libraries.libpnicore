@@ -29,10 +29,10 @@
 #include <pni/utils/DArray.hpp>
 #include <pni/utils/Array.hpp>
 
-#include "benchmark/BenchmarkRunner.hpp"
-#include "benchmark/BenchmarkResult.hpp"
-#include "benchmark/ChronoTimer.hpp"
-#include "benchmark/ClockTimer.hpp"
+#include <pni/utils/benchmark/BenchmarkRunner.hpp>
+#include <pni/utils/benchmark/BenchmarkResult.hpp>
+#include <pni/utils/benchmark/ChronoTimer.hpp>
+#include <pni/utils/benchmark/ClockTimer.hpp>
 
 #include "benchmark/LinearIOPointerBenchmark.hpp"
 #include "benchmark/LinearIOContainerIterator.hpp"
