@@ -72,7 +72,8 @@ shared_library_so_install = build_env.Command(inst_path+"/${LIBSONAME}",shared_l
 pkgc_inst = build_env.Install("${LIBDIR}/pkgconfig",[pkg_config_file])
 
 #install the header files
-incpniutils_inst = build_env.Install("${INCDIR}",[Glob("*.hpp"),"math"])
+incpniutils_inst =
+build_env.Install("${INCDIR}",[Glob("*.hpp"),"math","benchmark"])
 
 #add all installation targets to the global "install" target
 build_env.Alias("install",[shared_library_install,static_library_install,
