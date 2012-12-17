@@ -30,6 +30,10 @@ class BenchmarkRunner
     private:
         //! list with benchmark results
         std::list<BenchmarkResult> _results;
+        std::function<void()> _pre_run;
+        std::function<void()> _post_run;
+
+        void do_nothing() {}
 
     public:
         //======================public types===================================
@@ -39,7 +43,13 @@ class BenchmarkRunner
 
         //====================constructors and destructor=======================
         //! default constructor
-        BenchmarkRunner():_results(0) {}
+        BenchmarkRunner():_results(0)
+        {
+            _pre_run =
+                function_t(std::bind(&BenchmarkRunner::do_nothing,*this));
+            _post_run = 
+                function_t(std::bind(&BenchmarkRunner::do_nothing,*this));
+        }
 
         //! destructor
         virtual ~BenchmarkRunner(){}
@@ -61,6 +71,10 @@ class BenchmarkRunner
 
         //! get size
         size_t size() const { return _results.size(); }
+
+        void prerun(const function_t f) { _pre_run = f; }
+
+        void postrun(const function_t f) { _post_run = f; }
 };
 
 //-----------------------------------------------------------------------------
@@ -70,10 +84,14 @@ template<typename TIMERT> void BenchmarkRunner::run(size_t n,function_t &func)
     {
         TIMERT timer;
 
+        _pre_run(); //run function before benchmark
+
         //run the write cycle
         timer.start();
         func();
         timer.stop();
+
+        _post_run(); //run function after benchmark
 
         //getting the result
         BenchmarkResult result(timer.duration(),timer.unit());
