@@ -34,9 +34,8 @@ namespace utils{
     \param c reference to the configuration object
     \param argc number of command line arguments
     \param argv argument values
-    \return reference to the configuration
     */
-    configuration &parse(configuration &c,int argc,char **argv);
+    void parse(configuration &c,int argc,char **argv);
 
     //-------------------------------------------------------------------------
     /*!
@@ -45,9 +44,8 @@ namespace utils{
     Function to read configuration from a configuration file. 
     \param c reference to the configuration object
     \param fname name of the configuration file
-    \return reference to the configuration object
     */
-    configuration &parse(configuration &c,const String &fname);
+    void parse(configuration &c,const String &fname);
 
 //end of namespace
 }
