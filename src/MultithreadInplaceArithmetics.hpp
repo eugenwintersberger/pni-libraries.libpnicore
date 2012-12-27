@@ -17,7 +17,7 @@
  * along with libpniutils.  If not, see <http://www.gnu.org/licenses/>.
  *************************************************************************
  *
- *  Created on: Jul 24, 2012
+ *  Created on: Dec 27, 2012
  *      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
  */
 
@@ -40,12 +40,14 @@ namespace utils{
     This class provides single threaded arithmetic operations for numeric
     arrays. It is used for inplace arithmetic operators <Operator>=. 
     All member functions provided are static. See the NumArray template for how
-    this class is used in inplace arithmetics. This is the single threaded
-    version for inplace arithmetics.
+    this class is used in inplace arithmetics. This is the multithreaded version
+    of the library.
     \tparam ATYPE array type
     */
-    template<typename ATYPE> class InplaceArithmetics
+    template<typename ATYPE> class MultithreadInplaceArithmetics
     {
+        private:
+
                  
         public:
             //===================public types==================================
