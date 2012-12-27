@@ -101,10 +101,9 @@ namespace utils{
             \param a instance of ATYPE
             \param b instance of CTYPE<OTS...>
             */
-            template<template<typename ...> class CTYPE,typename ...OTS>
-            static void add(ATYPE &a,const CTYPE<OTS...> &b)
+            template<typename CTYPE> static void add(ATYPE &a,const CTYPE &b)
             {
-                typename CTYPE<OTS...>::const_iterator iter = b.begin();
+                typename CTYPE::const_iterator iter = b.begin();
 #ifdef NOFOREACH
                 for(auto viter = a.begin();viter!=a.end();++viter)
                 {
@@ -114,36 +113,6 @@ namespace utils{
                 {
 #endif
                     v += (*iter);
-                    ++iter;
-                }
-            }
-
-            //-----------------------------------------------------------------
-            /*!
-            \brief add two arrays
-
-            Add array on the rhs to that on the lhs. 
-            \code 
-            ATYPE a(...);
-            ATYPE b(...);
-            InplaceArithmetics<ATYPE>::add(a,b);
-            \endcode
-            \param a instance of ATYPE
-            \param b instance of ATYPE
-            */
-            //add with another array of same type
-            static void add(ATYPE &a,const ATYPE &b)
-            {
-                const_iterator iter = b.begin();
-#ifdef NOFOREACH
-                for(auto viter = a.begin();viter!=a.end();++viter)
-                {
-                    value_type &v = *viter;
-#else
-                for(value_type &v: a)
-                {
-#endif
-                    v+=(*iter);
                     ++iter;
                 }
             }
@@ -178,35 +147,6 @@ namespace utils{
 
             //-----------------------------------------------------------------
             /*!
-            \brief subtract array from array
-
-            Subtract two arrays of type ATYPE from each other. 
-            \code
-            ATYPE a(...);
-            ATYPE b(...);
-            InplaceArithmetics<ATYPE>::sub(a,b);
-            \endcode
-            \param a instance of ATYPE
-            \param b instance of ATYPE
-            */
-            static void sub(ATYPE &a,const ATYPE &b)
-            {
-                const_iterator iter = b.begin();
-#ifdef NOFOREACH
-                for(auto viter = a.begin();viter!=a.end();++viter)
-                {
-                    value_type &v = *viter;
-#else
-                for(value_type &v: a)
-                {
-#endif
-                    v -= (*iter);
-                    ++iter;
-                }
-            }
-
-            //-----------------------------------------------------------------
-            /*!
             \brief subtract a container from an array
 
             Subtract an arbitrary container from an array.
@@ -220,10 +160,9 @@ namespace utils{
             \param a instance of ATYPE
             \param b instance of CTYPE<OTS...>
             */
-            template<template<typename ...> class CTYPE,typename ...OTS>
-            static void sub(ATYPE &a,const CTYPE<OTS...> &b)
+            template<typename CTYPE> static void sub(ATYPE &a,const CTYPE &b)
             {
-                typename CTYPE<OTS...>::const_iterator iter = b.begin();
+                typename CTYPE::const_iterator iter = b.begin();
 #ifdef NOFOREACH
                 for(auto viter = a.begin();viter!=a.end();++viter)
                 {
@@ -265,35 +204,6 @@ namespace utils{
 
             //-----------------------------------------------------------------
             /*!
-            \brief multiply an array with an array
-
-            Multiplication between two arrays. 
-            \code
-            ATYPE a(...);
-            ATYPE b(...);
-            InplaceArithmetics<ATYPE>::mult(a,b);
-            \endcode
-            \param a instance of ATYPE
-            \param b instance of ATYPE
-            */
-            static void mult(ATYPE &a,const ATYPE &b)
-            {
-                const_iterator iter = b.begin();
-#ifdef NOFOREACH
-                for(auto viter = a.begin();viter!=a.end();++viter)
-                {
-                    value_type &v = *viter;
-#else
-                for(value_type &v: a)
-                {
-#endif
-                    v *= (*iter);
-                    ++iter;
-                }
-            }
-
-            //-----------------------------------------------------------------
-            /*!
             \brief multiply container with array
 
             Multiply an arbitrary container with an array. 
@@ -307,10 +217,9 @@ namespace utils{
             \param a instance of ATYPE
             \param b instance of CTYPE<OTS...>
             */
-            template<template<typename ...> class CTYPE,typename ...OTS>
-            static void mult(ATYPE &a,const CTYPE<OTS...> &b)
+            template<typename CTYPE> static void mult(ATYPE &a,const CTYPE &b)
             {
-                typename CTYPE<OTS...>::const_iterator iter = b.begin();
+                typename CTYPE::const_iterator iter = b.begin();
 #ifdef NOFOREACH
                 for(auto viter = a.begin();viter!=a.end();++viter)
                 {
@@ -353,35 +262,6 @@ namespace utils{
 
             //-----------------------------------------------------------------
             /*!
-            \brief divide two arrays
-
-            Divides each element of a by the corresponding element of b. 
-            \code
-            ATYPE a(...);
-            ATYPE b(...);
-            InplaceArithmetics<ATYPE>::div(a,b);
-            \endcode
-            \param a instance of ATYPE
-            \param b instance of ATYPE
-            */
-            static void div(ATYPE &a,const ATYPE &b)
-            {
-                const_iterator iter = b.begin();
-#ifdef NOFOREACH
-                for(auto viter = a.begin();viter!=a.end();++viter)
-                {
-                    value_type &v = *viter;
-#else
-                for(value_type &v: a)
-                {
-#endif
-                    v /= (*iter);
-                    ++iter;
-                }
-            }
-
-            //-----------------------------------------------------------------
-            /*!
             \brief divde array with container
 
             Divides each element of an array by the corresponding element of a
@@ -396,10 +276,9 @@ namespace utils{
             \param a instance of ATYPE
             \param b instance of CTYPE<OTS..>
             */
-            template<template<typename ...> class CTYPE,typename ...OTS>
-            static void div(ATYPE &a,const CTYPE<OTS...> &b)
+            template<typename CTYPE> static void div(ATYPE &a,const CTYPE &b)
             {
-                typename CTYPE<OTS...>::const_iterator iter = b.begin();
+                typename CTYPE::const_iterator iter = b.begin();
 #ifdef NOFOREACH
                 for(auto viter = a.begin();viter!=a.end();++viter)
                 {
