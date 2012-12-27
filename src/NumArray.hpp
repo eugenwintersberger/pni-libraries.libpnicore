@@ -28,7 +28,7 @@
 #include "Iterator.hpp"
 #include "ArrayViewSelector.hpp"
 #include "ArrayView.hpp"
-#include "InplaceArithmetics.hpp"
+#include "math/inplace_arithmetics.hpp"
 #include "Scalar.hpp"
 #include "math/Add.hpp"
 #include "math/Sub.hpp"
@@ -48,7 +48,7 @@ namespace utils{
     \tparam IPA inplace arithmetics type
 
     */
-    template<typename ATYPE,template<typename> class IPA=InplaceArithmetics> 
+    template<typename ATYPE,template<typename> class IPA=inplace_arithmetics> 
         class NumArray
     {
         //need to do here a compiletime check if types are equal

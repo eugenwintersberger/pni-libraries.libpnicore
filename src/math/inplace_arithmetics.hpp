@@ -26,9 +26,9 @@
 #include <limits>
 #include <functional>
 
-#include "Exceptions.hpp"
-#include "ExceptionUtils.hpp"
-#include "TypeInfo.hpp"
+#include "../Exceptions.hpp"
+#include "../ExceptionUtils.hpp"
+#include "../TypeInfo.hpp"
 
 namespace pni{
 namespace utils{
@@ -44,7 +44,7 @@ namespace utils{
     version for inplace arithmetics.
     \tparam ATYPE array type
     */
-    template<typename ATYPE> class InplaceArithmetics
+    template<typename ATYPE> class inplace_arithmetics
     {
                  
         public:
