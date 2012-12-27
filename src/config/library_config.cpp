@@ -21,45 +21,39 @@
  *     Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
  */
 
-#pragma once
-
-#include "../config.h"
-#include "../Types.hpp"
-#include "configuration.hpp"
-#include "config_parser.hpp"
+#include "library_config.hpp"
 
 namespace pni{
 namespace utils{
 
-
-    /*!
-    \brief configuration class for pniutils
-
-    Configuration class of the pniutils library. This library is used by all
-    other classes to obtain configuration information.
-    */
-    class library_config
+  
+    //-------------------------------------------------------------------------
+    void library_config::_setup_configuration()
     {
-        private:
-            configuration conf; //!< configuration objecct
+        conf.add_option(config_option<size_t>("nthreads","","number of threads"));
+    }
 
-            //create the configuration structure
-            void _setup_configuration();
-        public:
-            //! default constructor
-            library_config();
-            //! standard constructor
-            library_config(const String &fname);
-            //! destructor
-            ~library_config();
+    //-------------------------------------------------------------------------
+    library_config::library_config() {}
 
-            //! obtain number of threads for arithmetics
-            size_t n_arithmetic_threads() const;
+    //-------------------------------------------------------------------------
+    library_config::library_config(const String &fname)
+    {
+        _setup_configuration();
+        parse(conf,fname);
+    }
 
-    };
+    //-------------------------------------------------------------------------
+    library_config::~library_config(){}
 
-static const library_config pniutils_config(CONFIG_FILE_PATH);
+    //-------------------------------------------------------------------------
+    size_t library_config::n_arithmetic_threads() const
+    {
+        return conf.value<size_t>("nthreads");
+    }
 
 //end of namespace
 }
 }
+
+

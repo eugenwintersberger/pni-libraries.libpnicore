@@ -29,6 +29,7 @@
 
 #include <pni/utils/config/config_parser.hpp>
 #include <pni/utils/config/cli_args.hpp>
+#include <pni/utils/config/library_config.hpp>
 #include "configuration_test.hpp"
 
 CPPUNIT_TEST_SUITE_REGISTRATION(configuration_test);
@@ -72,4 +73,12 @@ void configuration_test::test_configcli()
 
     CPPUNIT_ASSERT(conf_cli.value<size_t>("nthreads")==4);
 
+}
+
+//-----------------------------------------------------------------------------
+void configuration_test::test_libconfig()
+{
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+
+    CPPUNIT_ASSERT(pniutils_config.n_arithmetic_threads() == 4);
 }

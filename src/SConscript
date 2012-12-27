@@ -48,6 +48,13 @@ pkg_config_file = build_env.Substfile(target="${LIBNAME}",source=["pkgconf.in"],
                   SUBSTFILESUFFIX=".pc")
 build_env.AlwaysBuild(pkg_config_file)
 
+#----------------------create configuration header------------------------------
+config_header = build_env.Substfile(target="config.h",source=["config.h.in"],
+                  SUBST_DICT={"@CONFIG_FILE_PATH@":"${PREFIX}/etc/pniutils.cfg"}
+                  )
+build_env.AlwaysBuild(config_header)
+build_env.Alias("install",build_env.Install("${INCDIR}",config_header))
+
 #-------------------adding everyting to the "all" and "library" target----------
 build_env.Alias("all",[temp_shared_library,
                        shared_library,shared_library_link,shared_library_so,
@@ -78,6 +85,9 @@ incpniutils_inst = build_env.Install("${INCDIR}",Glob("*.hpp"))
 build_env.Alias("install",build_env.Install("${INCDIR}/math",Glob("math/*.hpp")))
 build_env.Alias("install",build_env.Install("${INCDIR}/config",Glob("config/*.hpp")))
 build_env.Alias("install",build_env.Install("${INCDIR}/benchmark",Glob("benchmark/*.hpp")))
+
+#install configuration file
+build_env.Alias("install",build_env.Install("${PREFIX}/etc","pniutils.cfg"))
 
 
 #add all installation targets to the global "install" target
