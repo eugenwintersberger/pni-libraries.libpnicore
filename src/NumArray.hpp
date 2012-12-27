@@ -158,7 +158,7 @@ namespace utils{
             //! element type of the array
             typedef typename ATYPE::value_type value_type;
             //! type of the array
-            typedef NumArray<ATYPE> array_type;
+            typedef NumArray<ATYPE,IPA> array_type;
             //! type of array storage
             typedef ATYPE storage_type;
             //! type of the view

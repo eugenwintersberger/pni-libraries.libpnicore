@@ -35,7 +35,7 @@
 
 using namespace pni::utils;
 
-template<typename ATYPE>
+template<typename ATYPE,template<typename> class IPAT>
 class NumArrayTest : public CppUnit::TestFixture
 {
         CPPUNIT_TEST_SUITE(NumArrayTest);
@@ -83,32 +83,37 @@ class NumArrayTest : public CppUnit::TestFixture
 };
 
 //------------------------------------------------------------------------------
-template<typename ATYPE> void NumArrayTest<ATYPE>::setUp(){ }
+template<typename ATYPE,template<typename> class IPAT> 
+void NumArrayTest<ATYPE,IPAT>::setUp(){ }
 
 //------------------------------------------------------------------------------
-template<typename ATYPE> void NumArrayTest<ATYPE>::tearDown(){ } 
+template<typename ATYPE,template<typename> class IPAT> 
+void NumArrayTest<ATYPE,IPAT>::tearDown(){ } 
+
 //------------------------------------------------------------------------------
-template<typename ATYPE> void NumArrayTest<ATYPE>::test_construction()
+template<typename ATYPE,template<typename> class IPAT> 
+void NumArrayTest<ATYPE,IPAT>::test_construction()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
     //default construction
-    NumArray<ATYPE> a1(create_array<ATYPE>());
+    NumArray<ATYPE,IPAT> a1(create_array<ATYPE>());
     CPPUNIT_ASSERT(a1.size() == 12);
     CPPUNIT_ASSERT(a1.rank() == 2);
 
     //copy construction
-    NumArray<ATYPE> a2(a1);
+    NumArray<ATYPE,IPAT> a2(a1);
     CPPUNIT_ASSERT(a2.rank() == a1.rank());
     CPPUNIT_ASSERT(a2.size() == a1.size());
 }
 
 //------------------------------------------------------------------------------
-template<typename ATYPE> void NumArrayTest<ATYPE>::test_assignment()
+template<typename ATYPE,template<typename> class IPAT> 
+void NumArrayTest<ATYPE,IPAT>::test_assignment()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
-    NumArray<ATYPE> a1(create_array<ATYPE>());
+    NumArray<ATYPE,IPAT> a1(create_array<ATYPE>());
     size_t i;
 #ifdef NOFOREACH
     for(auto iter = a1.begin();iter!=a1.end();++iter)
@@ -122,7 +127,7 @@ template<typename ATYPE> void NumArrayTest<ATYPE>::test_assignment()
     }
    
     //copy assignment
-    NumArray<ATYPE> a2(create_array<ATYPE>());
+    NumArray<ATYPE,IPAT> a2(create_array<ATYPE>());
     a2 = a1;
     CPPUNIT_ASSERT(a2.rank() == a1.rank());
     CPPUNIT_ASSERT(a2.size() == a2.size());
@@ -130,12 +135,13 @@ template<typename ATYPE> void NumArrayTest<ATYPE>::test_assignment()
 }
 
 //------------------------------------------------------------------------------
-template<typename ATYPE> void NumArrayTest<ATYPE>::test_linear_access()
+template<typename ATYPE,template<typename> class IPAT> 
+void NumArrayTest<ATYPE,IPAT>::test_linear_access()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
     typedef typename NumArray<ATYPE>::value_type value_type;
-    NumArray<ATYPE> a1(create_array<ATYPE>());
+    NumArray<ATYPE,IPAT> a1(create_array<ATYPE>());
 
 
     //--------------------check operators without index checking----------------
@@ -162,12 +168,13 @@ template<typename ATYPE> void NumArrayTest<ATYPE>::test_linear_access()
 }
 
 //------------------------------------------------------------------------------
-template<typename ATYPE> void NumArrayTest<ATYPE>::test_iterators()
+template<typename ATYPE,template<typename> class IPAT> 
+void NumArrayTest<ATYPE,IPAT>::test_iterators()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
-    typedef typename NumArray<ATYPE>::value_type value_type;
-    NumArray<ATYPE> a1(create_array<ATYPE>());
+    typedef typename NumArray<ATYPE,IPAT>::value_type value_type;
+    NumArray<ATYPE,IPAT> a1(create_array<ATYPE>());
 
     //--------------------check standard iterator----------------
 	//access via [] operator
@@ -199,7 +206,7 @@ template<typename ATYPE> void NumArrayTest<ATYPE>::test_iterators()
 
 
     //-------------------check const iterator-----------------------------
-    const NumArray<ATYPE> &a = a1;
+    const NumArray<ATYPE,IPAT> &a = a1;
 
     index = 0;
 #ifdef NOFOREACH
@@ -215,16 +222,17 @@ template<typename ATYPE> void NumArrayTest<ATYPE>::test_iterators()
 }
 
 //-----------------------------------------------------------------------------
-template<typename ATYPE> void NumArrayTest<ATYPE>::test_multiindex_access()
+template<typename ATYPE,template<typename> class IPAT> 
+void NumArrayTest<ATYPE,IPAT>::test_multiindex_access()
 {   
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
-    typedef typename NumArray<ATYPE>::value_type value_type;
+    typedef typename NumArray<ATYPE,IPAT>::value_type value_type;
     typedef std::vector<size_t> stype;
     std::cout<<"void NumArrayTest<T,STORAGE>::test_multiindex_access()";
     std::cout<<std::endl;
 
-    NumArray<ATYPE> a1(create_array<ATYPE>());
+    NumArray<ATYPE,IPAT> a1(create_array<ATYPE>());
     auto s1 = a1.template shape<std::vector<size_t> >();
     auto data = RandomDistribution::uniform<std::vector<value_type> >(a1.size());
 
@@ -267,22 +275,24 @@ template<typename ATYPE> void NumArrayTest<ATYPE>::test_multiindex_access()
 }
 
 //------------------------------------------------------------------------------
-template<typename ATYPE> void NumArrayTest<ATYPE>::test_typeinfo()
+template<typename ATYPE,template<typename> class IPAT> 
+void NumArrayTest<ATYPE,IPAT>::test_typeinfo()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
-    TypeID id1 = NumArray<ATYPE>::type_id;
+    TypeID id1 = NumArray<ATYPE,IPAT>::type_id;
     TypeID id2 = TypeIDMap<typename ATYPE::value_type>::type_id;
     CPPUNIT_ASSERT(id1 == id2);
 }
 
 //-------------------------------------------------------------------------------
-template<typename ATYPE> void NumArrayTest<ATYPE>::test_unary_add()
+template<typename ATYPE,template<typename> class IPAT> 
+void NumArrayTest<ATYPE,IPAT>::test_unary_add()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
-    typedef typename NumArray<ATYPE>::value_type value_type;
-    NumArray<ATYPE> a(create_array<ATYPE>());
+    typedef typename NumArray<ATYPE,IPAT>::value_type value_type;
+    NumArray<ATYPE,IPAT> a(create_array<ATYPE>());
 
     //set initial value
     std::fill(a.begin(),a.end(),value_type(1));
@@ -301,7 +311,7 @@ template<typename ATYPE> void NumArrayTest<ATYPE>::test_unary_add()
     }
 
     //add a array
-    NumArray<ATYPE> b(create_array<ATYPE>());
+    NumArray<ATYPE,IPAT> b(create_array<ATYPE>());
     std::fill(b.begin(),b.end(),value_type(3));
 
     a += b;
@@ -333,12 +343,13 @@ template<typename ATYPE> void NumArrayTest<ATYPE>::test_unary_add()
 }
 
 //-----------------------------------------------------------------------------
-template<typename ATYPE> void NumArrayTest<ATYPE>::test_unary_sub()
+template<typename ATYPE,template<typename> class IPAT> 
+void NumArrayTest<ATYPE,IPAT>::test_unary_sub()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
-    typedef typename NumArray<ATYPE>::value_type value_type;
-    NumArray<ATYPE> a(create_array<ATYPE>());
+    typedef typename NumArray<ATYPE,IPAT>::value_type value_type;
+    NumArray<ATYPE,IPAT> a(create_array<ATYPE>());
 
     //set initial value
     std::fill(a.begin(),a.end(),value_type(15));
@@ -357,7 +368,7 @@ template<typename ATYPE> void NumArrayTest<ATYPE>::test_unary_sub()
     }
 
     //add a array
-    NumArray<ATYPE> b(create_array<ATYPE>());
+    NumArray<ATYPE,IPAT> b(create_array<ATYPE>());
     std::fill(b.begin(),b.end(),value_type(3));
 
     a -= b;
@@ -389,12 +400,13 @@ template<typename ATYPE> void NumArrayTest<ATYPE>::test_unary_sub()
 }
 
 //-----------------------------------------------------------------------------
-template<typename ATYPE> void NumArrayTest<ATYPE>::test_unary_mult()
+template<typename ATYPE,template<typename> class IPAT> 
+void NumArrayTest<ATYPE,IPAT>::test_unary_mult()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
-    typedef typename NumArray<ATYPE>::value_type value_type;
-    NumArray<ATYPE> a(create_array<ATYPE>());
+    typedef typename NumArray<ATYPE,IPAT>::value_type value_type;
+    NumArray<ATYPE,IPAT> a(create_array<ATYPE>());
 
     //set initial value
     std::fill(a.begin(),a.end(),value_type(1));
@@ -413,7 +425,7 @@ template<typename ATYPE> void NumArrayTest<ATYPE>::test_unary_mult()
     }
 
     //add a array
-    NumArray<ATYPE> b(create_array<ATYPE>());
+    NumArray<ATYPE,IPAT> b(create_array<ATYPE>());
     std::fill(b.begin(),b.end(),value_type(3));
 
     a *= b;
@@ -445,12 +457,13 @@ template<typename ATYPE> void NumArrayTest<ATYPE>::test_unary_mult()
 }
 
 //-----------------------------------------------------------------------------
-template<typename ATYPE> void NumArrayTest<ATYPE>::test_unary_div()
+template<typename ATYPE,template<typename> class IPAT> 
+void NumArrayTest<ATYPE,IPAT>::test_unary_div()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
-    typedef typename NumArray<ATYPE>::value_type value_type;
-    NumArray<ATYPE> a(create_array<ATYPE>());
+    typedef typename NumArray<ATYPE,IPAT>::value_type value_type;
+    NumArray<ATYPE,IPAT> a(create_array<ATYPE>());
 
     //set initial value
     std::fill(a.begin(),a.end(),value_type(12));
@@ -469,7 +482,7 @@ template<typename ATYPE> void NumArrayTest<ATYPE>::test_unary_div()
     }
 
     //add a array
-    NumArray<ATYPE> b(create_array<ATYPE>());
+    NumArray<ATYPE,IPAT> b(create_array<ATYPE>());
     std::fill(b.begin(),b.end(),value_type(2));
 
     a /= b;
@@ -502,12 +515,13 @@ template<typename ATYPE> void NumArrayTest<ATYPE>::test_unary_div()
 }
 
 //-----------------------------------------------------------------------------
-template<typename ATYPE> void NumArrayTest<ATYPE>::test_view()
+template<typename ATYPE,template<typename> class IPAT> 
+void NumArrayTest<ATYPE,IPAT>::test_view()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
-    typedef typename NumArray<ATYPE>::value_type value_type;
-    NumArray<ATYPE> a(create_array<ATYPE>());
+    typedef typename NumArray<ATYPE,IPAT>::value_type value_type;
+    NumArray<ATYPE,IPAT> a(create_array<ATYPE>());
 
     //set initial value
     std::fill(a.begin(),a.end(),value_type(12));

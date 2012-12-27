@@ -29,6 +29,7 @@
 #include "Exceptions.hpp"
 #include "ExceptionUtils.hpp"
 #include "TypeInfo.hpp"
+#include "config/library_config.hpp"
 
 namespace pni{
 namespace utils{
@@ -44,11 +45,27 @@ namespace utils{
     of the library.
     \tparam ATYPE array type
     */
-    template<typename ATYPE> class MultithreadInplaceArithmetics
+    template<typename ATYPE> class mth_inplace_arithmetics
     {
         private:
+            static
+            void _add(typename ATYPE::iterator start,
+                     typename ATYPE::iterator end,
+                     typename ATYPE::value_type s)
+            {
+                for(auto iter = start;iter!=end;++iter)
+                    *iter += s;
+            }
 
-                 
+
+            template<typename CTYPE>  static
+            void _add(typename ATYPE::iterator astart,
+                     typename ATYPE::iterator aend,
+                     typename CTYPE::const_iterator bstart)
+            {
+                for(auto iter = astart;iter!=aend;++iter,++bstart)
+                    *iter += *bstart;
+            }
         public:
             //===================public types==================================
             //! value type of the array type
@@ -75,16 +92,12 @@ namespace utils{
             */
             static void add(ATYPE &a,value_type b)
             {
-#ifdef NOFOREACH
-                for(auto iter = a.begin();iter!=a.end();++iter)
-                {
-                    value_type &v = *iter;
-#else
-                for(value_type &v: a)
-                {
-#endif
-                    v+= b;
-                }
+                size_t nth = pniutils_config.n_arithmetic_threads();
+                size_t nres = a.size()%nth;
+                size_t npth = (a.size()-nres)/nth;
+
+                _add(a.begin(),a.end(),b);
+                
             }
 
             //-----------------------------------------------------------------
@@ -103,51 +116,9 @@ namespace utils{
             \param a instance of ATYPE
             \param b instance of CTYPE<OTS...>
             */
-            template<template<typename ...> class CTYPE,typename ...OTS>
-            static void add(ATYPE &a,const CTYPE<OTS...> &b)
+            template<typename CTYPE> static void add(ATYPE &a,const CTYPE &b)
             {
-                typename CTYPE<OTS...>::const_iterator iter = b.begin();
-#ifdef NOFOREACH
-                for(auto viter = a.begin();viter!=a.end();++viter)
-                {
-                    value_type &v = *viter;
-#else
-                for(value_type &v: a)
-                {
-#endif
-                    v += (*iter);
-                    ++iter;
-                }
-            }
-
-            //-----------------------------------------------------------------
-            /*!
-            \brief add two arrays
-
-            Add array on the rhs to that on the lhs. 
-            \code 
-            ATYPE a(...);
-            ATYPE b(...);
-            InplaceArithmetics<ATYPE>::add(a,b);
-            \endcode
-            \param a instance of ATYPE
-            \param b instance of ATYPE
-            */
-            //add with another array of same type
-            static void add(ATYPE &a,const ATYPE &b)
-            {
-                const_iterator iter = b.begin();
-#ifdef NOFOREACH
-                for(auto viter = a.begin();viter!=a.end();++viter)
-                {
-                    value_type &v = *viter;
-#else
-                for(value_type &v: a)
-                {
-#endif
-                    v+=(*iter);
-                    ++iter;
-                }
+                _add(a.begin(),a.end(),b.begin());
             }
 
 

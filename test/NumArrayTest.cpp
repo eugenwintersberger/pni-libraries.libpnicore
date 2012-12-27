@@ -24,29 +24,32 @@
 
 #include <iostream>
 #include <boost/shared_ptr.hpp>
+#include <pni/utils/mth_inplace_arithmetics.hpp>
 
 #include "NumArrayTest.hpp"
 
 using namespace pni::utils;
 
-#define NUMARRAY_TEST_REGISTRATION(ATYPE,VTYPE)\
-static CPPUNIT_NS::AutoRegisterSuite< NumArrayTest<ATYPE<VTYPE> > >  \
+#define NUMARRAY_TEST_REGISTRATION(ATYPE,VTYPE,IPAT)\
+static CPPUNIT_NS::AutoRegisterSuite< NumArrayTest<ATYPE<VTYPE>,IPAT > >  \
              CPPUNIT_MAKE_UNIQUE_NAME(autoRegisterRegistry__ )
 
-NUMARRAY_TEST_REGISTRATION(DArray,UInt8);
-NUMARRAY_TEST_REGISTRATION(DArray,Int8);
-NUMARRAY_TEST_REGISTRATION(DArray,UInt16);
-NUMARRAY_TEST_REGISTRATION(DArray,Int16);
-NUMARRAY_TEST_REGISTRATION(DArray,UInt32);
-NUMARRAY_TEST_REGISTRATION(DArray,Int32);
-NUMARRAY_TEST_REGISTRATION(DArray,UInt64);
-NUMARRAY_TEST_REGISTRATION(DArray,Int64);
-NUMARRAY_TEST_REGISTRATION(DArray,Float32);
-NUMARRAY_TEST_REGISTRATION(DArray,Float64);
-NUMARRAY_TEST_REGISTRATION(DArray,Float128);
-NUMARRAY_TEST_REGISTRATION(DArray,Complex32);
-NUMARRAY_TEST_REGISTRATION(DArray,Complex64);
-NUMARRAY_TEST_REGISTRATION(DArray,Complex128);
+NUMARRAY_TEST_REGISTRATION(DArray,UInt8,InplaceArithmetics);
+NUMARRAY_TEST_REGISTRATION(DArray,Int8,InplaceArithmetics);
+NUMARRAY_TEST_REGISTRATION(DArray,UInt16,InplaceArithmetics);
+NUMARRAY_TEST_REGISTRATION(DArray,Int16,InplaceArithmetics);
+NUMARRAY_TEST_REGISTRATION(DArray,UInt32,InplaceArithmetics);
+NUMARRAY_TEST_REGISTRATION(DArray,Int32,InplaceArithmetics);
+NUMARRAY_TEST_REGISTRATION(DArray,UInt64,InplaceArithmetics);
+NUMARRAY_TEST_REGISTRATION(DArray,Int64,InplaceArithmetics);
+NUMARRAY_TEST_REGISTRATION(DArray,Float32,InplaceArithmetics);
+NUMARRAY_TEST_REGISTRATION(DArray,Float64,InplaceArithmetics);
+NUMARRAY_TEST_REGISTRATION(DArray,Float128,InplaceArithmetics);
+NUMARRAY_TEST_REGISTRATION(DArray,Complex32,InplaceArithmetics);
+NUMARRAY_TEST_REGISTRATION(DArray,Complex64,InplaceArithmetics);
+NUMARRAY_TEST_REGISTRATION(DArray,Complex128,InplaceArithmetics);
+
+NUMARRAY_TEST_REGISTRATION(DArray,UInt8,mth_inplace_arithmetics);
 /*
 ARRAY_TEST_REGISTRATION(UInt8,RefBuffer,NewAllocator);
 ARRAY_TEST_REGISTRATION(Int8,RefBuffer,NewAllocator);
