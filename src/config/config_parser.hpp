@@ -35,7 +35,7 @@ namespace utils{
     \param argc number of command line arguments
     \param argv argument values
     */
-    void parse(configuration &c,int argc,char **argv);
+    void parse(configuration &c,int argc,const char **argv);
 
     //-------------------------------------------------------------------------
     /*!

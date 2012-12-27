@@ -145,9 +145,12 @@ namespace utils{
             template<typename T> T value(const String &name) const
             {
                 if(has_option(name)) return _vmap[name].as<T>();
-                throw cli_option_error(EXCEPTION_RECORD,
-                        "Program option ["+name+"] not passed or "
-                        "inappropriate value!");
+                {
+                    cli_option_error error(EXCEPTION_RECORD,
+                            "Program option ["+name+"] not passed or "
+                            "inappropriate value!");
+                    throw error;
+                }
             }
 
             //------------------------------------------------------------------

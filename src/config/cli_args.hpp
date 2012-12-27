@@ -85,10 +85,12 @@ namespace utils{
 
     //--------------------------------------------------------------------------
     template<typename CTYPE> cli_args::cli_args(const CTYPE &str_cont):
-        _argc(str_cont.size()),
-        _argv(new char*[str_cont.size()])
+        _argc(str_cont.size()+1),
+        _argv(new char*[str_cont.size()+1])
     {
-        size_t index = 0;
+        size_t index = 1;
+        _argv[0] = new char;
+
         for(auto v: str_cont)
         {
             //allocate memory 

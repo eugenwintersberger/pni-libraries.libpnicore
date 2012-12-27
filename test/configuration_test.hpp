@@ -36,12 +36,15 @@ class configuration_test: public CppUnit::TestFixture
 {
         CPPUNIT_TEST_SUITE(configuration_test);
         CPPUNIT_TEST(test_configfile);
+        CPPUNIT_TEST(test_configcli);
         CPPUNIT_TEST_SUITE_END();
         configuration conf_file;
+        configuration conf_cli;
     public:
         void setUp();
         void tearDown();
 
         void test_configfile();
+        void test_configcli();
 
 };
