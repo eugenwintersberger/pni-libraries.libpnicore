@@ -176,11 +176,23 @@ if not conf.CheckCXXHeader("boost/regex.hpp"):
 if not conf.CheckCXXHeader("boost/current_function.hpp"):
     print "BOOST current_function.hpp not found!"
     Exit(1)
+
+if not conf.CheckCXXHeader("boost/program_options.hpp"):
+    print "BOOST program options headers not installed"
+    Exit(1)
     
 
 #check for boost regular expressions library
 if not conf.CheckLib("boost_regex",language="C++"):
     print "BOOST regular expression library not found"
+    Exit(1)
+
+if not conf.CheckLib("boost_program_options",language="C++"):
+    print "BOOST program options library not installed!"
+    Exit(1)
+
+if not conf.CheckLib("boost_system",language="C++"):
+    print "BOOST system library not installed!"
     Exit(1)
 
 if GetOption("with_gperf"):
