@@ -24,7 +24,7 @@
 
 #include <iostream>
 #include <boost/shared_ptr.hpp>
-#include <pni/utils/mth_inplace_arithmetics.hpp>
+#include <pni/utils/math/mt_inplace_arithmetics.hpp>
 
 #include "NumArrayTest.hpp"
 
@@ -49,7 +49,7 @@ NUMARRAY_TEST_REGISTRATION(DArray,Complex32,inplace_arithmetics);
 NUMARRAY_TEST_REGISTRATION(DArray,Complex64,inplace_arithmetics);
 NUMARRAY_TEST_REGISTRATION(DArray,Complex128,inplace_arithmetics);
 
-//NUMARRAY_TEST_REGISTRATION(DArray,UInt8,mth_inplace_arithmetics);
+NUMARRAY_TEST_REGISTRATION(DArray,UInt8,mt_inplace_arithmetics);
 /*
 ARRAY_TEST_REGISTRATION(UInt8,RefBuffer,NewAllocator);
 ARRAY_TEST_REGISTRATION(Int8,RefBuffer,NewAllocator);

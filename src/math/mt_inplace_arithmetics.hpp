@@ -25,14 +25,59 @@
 
 #include <limits>
 #include <functional>
+#include <thread>
+#include <vector>
+#include <utility>
 
-#include "Exceptions.hpp"
-#include "ExceptionUtils.hpp"
-#include "TypeInfo.hpp"
-#include "config/library_config.hpp"
+#include "../Exceptions.hpp"
+#include "../ExceptionUtils.hpp"
+#include "../TypeInfo.hpp"
+#include "../config/library_config.hpp"
 
 namespace pni{
 namespace utils{
+    class range_distributor
+    {
+        private:
+            std::vector<std::pair<size_t,size_t> > _ranges;
+        public:
+            typedef std::pair<size_t,size_t> value_type;
+            typedef std::vector<value_type>::iterator iterator;
+            typedef std::vector<value_type>::const_iterator const_iterator;
+
+
+            range_distributor(size_t nth,size_t s)
+                :_ranges(nth)
+            {
+                size_t nres = s%nth;
+                size_t npth = (s-nres)/nth;
+
+                size_t start=0,stop=0;
+               // std::cout<<a.size()<<std::endl;
+                for(size_t i = 0;i<nth;++i)
+                {
+                    if(i==0) start = 0;
+                    else start = stop;
+
+                    stop = start+npth;
+                    if(nres)
+                    {
+                        stop++;
+                        nres--;
+                    }
+                    std::cout<<start<<"\t"<<stop<<std::endl;
+                    _ranges[i] = {start,stop};
+                }
+                
+            }
+
+            iterator begin() { return _ranges.begin(); }
+            iterator end() { return _ranges.end(); }
+            const_iterator begin() const { return _ranges.begin(); }
+            const_iterator end() const { return _ranges.end(); }
+
+            
+    };
 
     /*! 
     \ingroup numeric_array_classes
@@ -45,27 +90,55 @@ namespace utils{
     of the library.
     \tparam ATYPE array type
     */
-    template<typename ATYPE> class mth_inplace_arithmetics
+    template<typename ATYPE> class mt_inplace_arithmetics
     {
         private:
-            static
-            void _add(typename ATYPE::iterator start,
-                     typename ATYPE::iterator end,
-                     typename ATYPE::value_type s)
+
+            /*!
+            \brief run threads
+
+            Distributs a working function on several threads
+            \tparam FTYPE function object type
+            \param a reference to the array
+            \param f rvalue reference to the function objecct
+            */
+            template<typename FTYPE>
+            static void _run_threads(ATYPE &a,FTYPE &&f)
             {
-                for(auto iter = start;iter!=end;++iter)
-                    *iter += s;
+                size_t nth = pniutils_config.n_arithmetic_threads();
+                range_distributor rd(nth,a.size());
+                std::vector<std::thread> threads(nth);
+
+                size_t index = 0;
+                for(auto r: rd)
+                {
+                    threads[index++] = std::thread(f,a.begin()+r.first,
+                                                     a.begin()+r.second);
+                }
+
+                //finally joind all threads and wait for execution end
+                for(size_t i=0;i<nth;++i) threads[i].join();
+            }
+           
+            template<typename FTYPE,typename ITYPE>
+            static void _run_threads(ATYPE &a,FTYPE &&f,ITYPE iter)
+            {
+                size_t nth = pniutils_config.n_arithmetic_threads();
+                range_distributor rd(nth,a.size());
+                std::vector<std::thread> threads(nth);
+
+                size_t index = 0;
+                for(auto r: rd)
+                {
+                    threads[index++] = std::thread(f,a.begin()+r.first,
+                                                     a.begin()+r.second,
+                                                     iter+r.first);
+                }
+
+                //finally joind all threads and wait for execution end
+                for(size_t i=0;i<nth;++i) threads[i].join();
             }
 
-
-            template<typename CTYPE>  static
-            void _add(typename ATYPE::iterator astart,
-                     typename ATYPE::iterator aend,
-                     typename CTYPE::const_iterator bstart)
-            {
-                for(auto iter = astart;iter!=aend;++iter,++bstart)
-                    *iter += *bstart;
-            }
         public:
             //===================public types==================================
             //! value type of the array type
@@ -90,13 +163,22 @@ namespace utils{
             \param a array of type ATYPE
             \param b scalar value of type ATYPE::value_type
             */
+
+
             static void add(ATYPE &a,value_type b)
             {
-                size_t nth = pniutils_config.n_arithmetic_threads();
-                size_t nres = a.size()%nth;
-                size_t npth = (a.size()-nres)/nth;
+                using namespace std::placeholders;
 
-                _add(a.begin(),a.end(),b);
+                auto f = [](typename ATYPE::iterator start,
+                            typename ATYPE::iterator stop,
+                            value_type b)
+                {
+                    for(auto iter = start;iter!=stop;++iter)
+                        *iter +=b;
+                };
+
+                _run_threads(a,std::bind(f,_1,_2,b));
+
                 
             }
 
@@ -118,11 +200,21 @@ namespace utils{
             */
             template<typename CTYPE> static void add(ATYPE &a,const CTYPE &b)
             {
-                _add(a.begin(),a.end(),b.begin());
+                using namespace std::placeholders;
+                auto f = [](typename ATYPE::iterator start,
+                            typename ATYPE::iterator end,
+                            typename CTYPE::const_iterator b)
+                {
+                    for(auto iter=start;iter!=end;++iter,++b)
+                        *iter += *b;
+                };
+
+                _run_threads(a,f,b.begin());
+
             }
 
 
-            //==================inplace subtraction===============================
+            //==================inplace subtraction=============================
             /*!
             \brief subtract scalar from array
 
