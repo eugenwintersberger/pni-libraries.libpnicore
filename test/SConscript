@@ -36,7 +36,8 @@ bm_sources = ["iteratorbm.cpp"]
 pniutils_test = test_env.Program("pniutilstest",sources_list)
 iterbm = test_env.Program("iteratorbm",bm_sources)
 multiindexbm = test_env.Program("multiindexbm",["multiindexbm.cpp"])
-test_targets = [pniutils_test,iterbm,multiindexbm]
+arithmeticbm = test_env.Program("arithmeticbm",["arithmeticbm.cpp"])
+test_targets = [pniutils_test,iterbm,multiindexbm,arithmeticbm]
 
 test_env.Alias("test",test_targets)
 test_install = test_env.Install("$PREFIX/bin",test_targets)

@@ -65,7 +65,6 @@ namespace utils{
                         stop++;
                         nres--;
                     }
-                    std::cout<<start<<"\t"<<stop<<std::endl;
                     _ranges[i] = {start,stop};
                 }
                 
@@ -178,8 +177,6 @@ namespace utils{
                 };
 
                 _run_threads(a,std::bind(f,_1,_2,b));
-
-                
             }
 
             //-----------------------------------------------------------------
@@ -200,7 +197,6 @@ namespace utils{
             */
             template<typename CTYPE> static void add(ATYPE &a,const CTYPE &b)
             {
-                using namespace std::placeholders;
                 auto f = [](typename ATYPE::iterator start,
                             typename ATYPE::iterator end,
                             typename CTYPE::const_iterator b)
@@ -210,7 +206,6 @@ namespace utils{
                 };
 
                 _run_threads(a,f,b.begin());
-
             }
 
 
@@ -229,45 +224,17 @@ namespace utils{
             */
             static void sub(ATYPE &a,value_type b)
             {
-#ifdef NOFOREACH
-                for(auto iter = a.begin();iter!=a.end();++iter)
-                {
-                    value_type &v = *iter;
-#else
-                for(value_type &v: a)
-                {
-#endif
-                    v -= b;
-                }
-            }
+                using namespace std::placeholders;
 
-            //-----------------------------------------------------------------
-            /*!
-            \brief subtract array from array
+                auto f = [](typename ATYPE::iterator start,
+                            typename ATYPE::iterator stop,
+                            value_type b)
+                {
+                    for(auto iter = start;iter!=stop;++iter)
+                        *iter -=b;
+                };
 
-            Subtract two arrays of type ATYPE from each other. 
-            \code
-            ATYPE a(...);
-            ATYPE b(...);
-            InplaceArithmetics<ATYPE>::sub(a,b);
-            \endcode
-            \param a instance of ATYPE
-            \param b instance of ATYPE
-            */
-            static void sub(ATYPE &a,const ATYPE &b)
-            {
-                const_iterator iter = b.begin();
-#ifdef NOFOREACH
-                for(auto viter = a.begin();viter!=a.end();++viter)
-                {
-                    value_type &v = *viter;
-#else
-                for(value_type &v: a)
-                {
-#endif
-                    v -= (*iter);
-                    ++iter;
-                }
+                _run_threads(a,std::bind(f,_1,_2,b));
             }
 
             //-----------------------------------------------------------------
@@ -285,21 +252,18 @@ namespace utils{
             \param a instance of ATYPE
             \param b instance of CTYPE<OTS...>
             */
-            template<template<typename ...> class CTYPE,typename ...OTS>
-            static void sub(ATYPE &a,const CTYPE<OTS...> &b)
+            template<typename CTYPE>
+            static void sub(ATYPE &a,const CTYPE &b)
             {
-                typename CTYPE<OTS...>::const_iterator iter = b.begin();
-#ifdef NOFOREACH
-                for(auto viter = a.begin();viter!=a.end();++viter)
+                auto f = [](typename ATYPE::iterator start,
+                            typename ATYPE::iterator end,
+                            typename CTYPE::const_iterator b)
                 {
-                    value_type &v = *viter;
-#else
-                for(value_type &v: a)
-                {
-#endif
-                    v -= (*iter);
-                    ++iter;
-                }
+                    for(auto iter=start;iter!=end;++iter,++b)
+                        *iter -= *b;
+                };
+
+                _run_threads(a,f,b.begin());
             }
 
             //=====================inplace multiplication======================
@@ -316,46 +280,18 @@ namespace utils{
             */
             static void mult(ATYPE &a,value_type b)
             {
-#ifdef NOFOREACH
-                for(auto iter = a.begin();iter!=a.end();++iter)
+                using namespace std::placeholders;
+
+                auto f = [](typename ATYPE::iterator start,
+                            typename ATYPE::iterator stop,
+                            value_type b)
                 {
-                    value_type &v = *iter;
-#else
-                for(value_type &v: a)
-                {
-#endif
-                    v *= b;
-                }
+                    for(auto iter = start;iter!=stop;++iter)
+                        *iter *=b;
+                };
+                _run_threads(a,std::bind(f,_1,_2,b));
             }
 
-            //-----------------------------------------------------------------
-            /*!
-            \brief multiply an array with an array
-
-            Multiplication between two arrays. 
-            \code
-            ATYPE a(...);
-            ATYPE b(...);
-            InplaceArithmetics<ATYPE>::mult(a,b);
-            \endcode
-            \param a instance of ATYPE
-            \param b instance of ATYPE
-            */
-            static void mult(ATYPE &a,const ATYPE &b)
-            {
-                const_iterator iter = b.begin();
-#ifdef NOFOREACH
-                for(auto viter = a.begin();viter!=a.end();++viter)
-                {
-                    value_type &v = *viter;
-#else
-                for(value_type &v: a)
-                {
-#endif
-                    v *= (*iter);
-                    ++iter;
-                }
-            }
 
             //-----------------------------------------------------------------
             /*!
@@ -372,21 +308,18 @@ namespace utils{
             \param a instance of ATYPE
             \param b instance of CTYPE<OTS...>
             */
-            template<template<typename ...> class CTYPE,typename ...OTS>
-            static void mult(ATYPE &a,const CTYPE<OTS...> &b)
+            template<typename CTYPE>
+            static void mult(ATYPE &a,const CTYPE &b)
             {
-                typename CTYPE<OTS...>::const_iterator iter = b.begin();
-#ifdef NOFOREACH
-                for(auto viter = a.begin();viter!=a.end();++viter)
+                auto f = [](typename ATYPE::iterator start,
+                            typename ATYPE::iterator end,
+                            typename CTYPE::const_iterator b)
                 {
-                    value_type &v = *viter;
-#else
-                for(value_type &v: a)
-                {
-#endif
-                    v *= (*iter);
-                    ++iter;
-                }
+                    for(auto iter=start;iter!=end;++iter,++b)
+                        *iter *= *b;
+                };
+
+                _run_threads(a,f,b.begin());
             }
             
             //=====================inplace division============================
@@ -404,46 +337,18 @@ namespace utils{
             */
             static void div(ATYPE &a,value_type b)
             {
-#ifdef NOFOREACH
-                for(auto iter = a.begin();iter!=a.end();++iter)
+                using namespace std::placeholders;
+
+                auto f = [](typename ATYPE::iterator start,
+                            typename ATYPE::iterator stop,
+                            value_type b)
                 {
-                    value_type &v = *iter;
-#else
-                for(value_type &v: a) 
-                {
-#endif
-                    v /= b;
-                }
+                    for(auto iter = start;iter!=stop;++iter)
+                        *iter /=b;
+                };
+                _run_threads(a,std::bind(f,_1,_2,b));
             }
 
-            //-----------------------------------------------------------------
-            /*!
-            \brief divide two arrays
-
-            Divides each element of a by the corresponding element of b. 
-            \code
-            ATYPE a(...);
-            ATYPE b(...);
-            InplaceArithmetics<ATYPE>::div(a,b);
-            \endcode
-            \param a instance of ATYPE
-            \param b instance of ATYPE
-            */
-            static void div(ATYPE &a,const ATYPE &b)
-            {
-                const_iterator iter = b.begin();
-#ifdef NOFOREACH
-                for(auto viter = a.begin();viter!=a.end();++viter)
-                {
-                    value_type &v = *viter;
-#else
-                for(value_type &v: a)
-                {
-#endif
-                    v /= (*iter);
-                    ++iter;
-                }
-            }
 
             //-----------------------------------------------------------------
             /*!
@@ -461,21 +366,18 @@ namespace utils{
             \param a instance of ATYPE
             \param b instance of CTYPE<OTS..>
             */
-            template<template<typename ...> class CTYPE,typename ...OTS>
-            static void div(ATYPE &a,const CTYPE<OTS...> &b)
+            template<typename CTYPE>
+            static void div(ATYPE &a,const CTYPE &b)
             {
-                typename CTYPE<OTS...>::const_iterator iter = b.begin();
-#ifdef NOFOREACH
-                for(auto viter = a.begin();viter!=a.end();++viter)
+                auto f = [](typename ATYPE::iterator start,
+                            typename ATYPE::iterator end,
+                            typename CTYPE::const_iterator b)
                 {
-                    value_type &v = *viter;
-#else
-                for(value_type &v: a)
-                {
-#endif
-                    v /= (*iter);
-                    ++iter;
-                }
+                    for(auto iter=start;iter!=end;++iter,++b)
+                        *iter /= *b;
+                };
+
+                _run_threads(a,f,b.begin());
             }
             
     };

@@ -33,7 +33,7 @@ namespace pni{
 namespace utils{
 
 
-    void parse(configuration &c,int argc,const char **argv)
+    void parse(configuration &c,int argc,char **argv)
     {
         //merging hidden and visible options to a single option description
         popts::options_description total_opts;
