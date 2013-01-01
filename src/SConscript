@@ -85,6 +85,7 @@ incpniutils_inst = build_env.Install("${INCDIR}",Glob("*.hpp"))
 build_env.Alias("install",build_env.Install("${INCDIR}/math",Glob("math/*.hpp")))
 build_env.Alias("install",build_env.Install("${INCDIR}/config",Glob("config/*.hpp")))
 build_env.Alias("install",build_env.Install("${INCDIR}/benchmark",Glob("benchmark/*.hpp")))
+build_env.Alias("install",build_env.Install("${INCDIR}/hardware",Glob("hardware/*.hpp")))
 
 #install configuration file
 build_env.Alias("install",build_env.Install("${PREFIX}/etc","pniutils.cfg"))
