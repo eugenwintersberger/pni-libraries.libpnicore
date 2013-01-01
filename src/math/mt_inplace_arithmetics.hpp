@@ -36,6 +36,7 @@
 
 namespace pni{
 namespace utils{
+
     class range_distributor
     {
         private:
@@ -102,41 +103,37 @@ namespace utils{
             \param f rvalue reference to the function objecct
             */
             template<typename FTYPE>
-            static void _run_threads(ATYPE &a,FTYPE &&f)
+            static void _run_threads(FTYPE &&f)
             {
                 size_t nth = pniutils_config.n_arithmetic_threads();
-                range_distributor rd(nth,a.size());
                 std::vector<std::thread> threads(nth);
 
                 size_t index = 0;
-                for(auto r: rd)
-                {
-                    threads[index++] = std::thread(f,a.begin()+r.first,
-                                                     a.begin()+r.second);
-                }
+                for(std::thread &thread: threads)
+                    thread = std::thread(f,index++,nth);
 
                 //finally joind all threads and wait for execution end
                 for(size_t i=0;i<nth;++i) threads[i].join();
             }
-           
+          
+            //-----------------------------------------------------------------
+            /*
             template<typename FTYPE,typename ITYPE>
             static void _run_threads(ATYPE &a,FTYPE &&f,ITYPE iter)
             {
                 size_t nth = pniutils_config.n_arithmetic_threads();
-                range_distributor rd(nth,a.size());
                 std::vector<std::thread> threads(nth);
 
                 size_t index = 0;
                 for(auto r: rd)
                 {
-                    threads[index++] = std::thread(f,a.begin()+r.first,
-                                                     a.begin()+r.second,
-                                                     iter+r.first);
+                    threads[index++] = std::thread(f,a.begin(),index++,nth,iter);
                 }
 
                 //finally joind all threads and wait for execution end
                 for(size_t i=0;i<nth;++i) threads[i].join();
             }
+            */
 
         public:
             //===================public types==================================
@@ -162,21 +159,24 @@ namespace utils{
             \param a array of type ATYPE
             \param b scalar value of type ATYPE::value_type
             */
-
-
             static void add(ATYPE &a,value_type b)
             {
                 using namespace std::placeholders;
 
                 auto f = [](typename ATYPE::iterator start,
-                            typename ATYPE::iterator stop,
+                            size_t offset,size_t nth,
                             value_type b)
                 {
-                    for(auto iter = start;iter!=stop;++iter)
-                        *iter +=b;
+                    auto iter = start+offset;
+                    while(iter)
+                    {
+                        *iter += b;
+                        iter += nth;
+                    }
+         
                 };
 
-                _run_threads(a,std::bind(f,_1,_2,b));
+                _run_threads(std::bind(f,a.begin(),_1,_2,b));
             }
 
             //-----------------------------------------------------------------
@@ -197,15 +197,22 @@ namespace utils{
             */
             template<typename CTYPE> static void add(ATYPE &a,const CTYPE &b)
             {
+                using namespace std::placeholders;
                 auto f = [](typename ATYPE::iterator start,
-                            typename ATYPE::iterator end,
+                            size_t offset,size_t nth,
                             typename CTYPE::const_iterator b)
                 {
-                    for(auto iter=start;iter!=end;++iter,++b)
+                    auto iter = start+offset;
+                    auto biter = b+offset;
+                    while(iter)
+                    {
                         *iter += *b;
+                        iter += nth;
+                        biter += nth;
+                    }
                 };
 
-                _run_threads(a,f,b.begin());
+                _run_threads(std::bind(f,a.begin(),_1,_2,b.begin()));
             }
 
 
@@ -227,14 +234,19 @@ namespace utils{
                 using namespace std::placeholders;
 
                 auto f = [](typename ATYPE::iterator start,
-                            typename ATYPE::iterator stop,
+                            size_t offset,size_t nth,
                             value_type b)
                 {
-                    for(auto iter = start;iter!=stop;++iter)
-                        *iter -=b;
+                    auto iter = start+offset;
+                    while(iter)
+                    {
+                        *iter -= b;
+                        iter += nth;
+                    }
+         
                 };
 
-                _run_threads(a,std::bind(f,_1,_2,b));
+                _run_threads(std::bind(f,a.begin(),_1,_2,b));
             }
 
             //-----------------------------------------------------------------
@@ -255,15 +267,22 @@ namespace utils{
             template<typename CTYPE>
             static void sub(ATYPE &a,const CTYPE &b)
             {
+                using namespace std::placeholders;
                 auto f = [](typename ATYPE::iterator start,
-                            typename ATYPE::iterator end,
+                            size_t offset,size_t nth,
                             typename CTYPE::const_iterator b)
                 {
-                    for(auto iter=start;iter!=end;++iter,++b)
+                    auto iter = start+offset;
+                    auto biter = b+offset;
+                    while(iter)
+                    {
                         *iter -= *b;
+                        iter += nth;
+                        biter += nth;
+                    }
                 };
 
-                _run_threads(a,f,b.begin());
+                _run_threads(std::bind(f,a.begin(),_1,_2,b.begin()));
             }
 
             //=====================inplace multiplication======================
@@ -281,15 +300,21 @@ namespace utils{
             static void mult(ATYPE &a,value_type b)
             {
                 using namespace std::placeholders;
-
+                
                 auto f = [](typename ATYPE::iterator start,
-                            typename ATYPE::iterator stop,
+                            size_t offset,size_t nth,
                             value_type b)
                 {
-                    for(auto iter = start;iter!=stop;++iter)
-                        *iter *=b;
+                    auto iter = start+offset;
+                    while(iter)
+                    {
+                        *iter *= b;
+                        iter += nth;
+                    }
+         
                 };
-                _run_threads(a,std::bind(f,_1,_2,b));
+
+                _run_threads(std::bind(f,a.begin(),_1,_2,b));
             }
 
 
@@ -311,15 +336,22 @@ namespace utils{
             template<typename CTYPE>
             static void mult(ATYPE &a,const CTYPE &b)
             {
+                using namespace std::placeholders;
                 auto f = [](typename ATYPE::iterator start,
-                            typename ATYPE::iterator end,
+                            size_t offset,size_t nth,
                             typename CTYPE::const_iterator b)
                 {
-                    for(auto iter=start;iter!=end;++iter,++b)
+                    auto iter = start+offset;
+                    auto biter = b+offset;
+                    while(iter)
+                    {
                         *iter *= *b;
+                        iter += nth;
+                        biter += nth;
+                    }
                 };
 
-                _run_threads(a,f,b.begin());
+                _run_threads(std::bind(f,a.begin(),_1,_2,b.begin()));
             }
             
             //=====================inplace division============================
@@ -338,15 +370,21 @@ namespace utils{
             static void div(ATYPE &a,value_type b)
             {
                 using namespace std::placeholders;
-
+                
                 auto f = [](typename ATYPE::iterator start,
-                            typename ATYPE::iterator stop,
+                            size_t offset,size_t nth,
                             value_type b)
                 {
-                    for(auto iter = start;iter!=stop;++iter)
-                        *iter /=b;
+                    auto iter = start+offset;
+                    while(iter)
+                    {
+                        *iter /= b;
+                        iter += nth;
+                    }
+         
                 };
-                _run_threads(a,std::bind(f,_1,_2,b));
+
+                _run_threads(std::bind(f,a.begin(),_1,_2,b));
             }
 
 
@@ -369,15 +407,22 @@ namespace utils{
             template<typename CTYPE>
             static void div(ATYPE &a,const CTYPE &b)
             {
+                using namespace std::placeholders;
                 auto f = [](typename ATYPE::iterator start,
-                            typename ATYPE::iterator end,
+                            size_t offset,size_t nth,
                             typename CTYPE::const_iterator b)
                 {
-                    for(auto iter=start;iter!=end;++iter,++b)
+                    auto iter = start+offset;
+                    auto biter = b+offset;
+                    while(iter)
+                    {
                         *iter /= *b;
+                        iter += nth;
+                        biter += nth;
+                    }
                 };
 
-                _run_threads(a,f,b.begin());
+                _run_threads(std::bind(f,a.begin(),_1,_2,b.begin()));
             }
             
     };

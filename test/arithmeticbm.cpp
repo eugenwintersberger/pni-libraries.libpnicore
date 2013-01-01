@@ -39,6 +39,7 @@ using namespace pni::utils;
 
 typedef ChronoTimer<std::chrono::high_resolution_clock,std::chrono::nanoseconds> bmtimer_t;
 
+//-----------------------------------------------------------------------------
 template<typename ATYPE> void run_inplace_benchmark(size_t nruns,ATYPE &&a)
 {
     //define benchmark type
@@ -74,6 +75,7 @@ template<typename ATYPE> void run_inplace_benchmark(size_t nruns,ATYPE &&a)
 
 }
 
+//-----------------------------------------------------------------------------
 int main(int argc,char **argv)
 {
     //program configuration 
@@ -92,11 +94,10 @@ int main(int argc,char **argv)
     typedef NumArray<DArray<Float64> > nf64array;
     typedef NumArray<DArray<Float64>,mt_inplace_arithmetics> nf64array_mt;
 
-
-    std::cout<<"Single threaded benchmark:"<<std::endl;
     {
         nf64array a_st{conf.value<size_t>("nx"),
                        conf.value<size_t>("ny")};
+        std::cout<<"Single threaded benchmark:"<<std::endl;
         run_inplace_benchmark(conf.value<size_t>("nruns"),std::move(a_st));
     }
 
@@ -107,8 +108,6 @@ int main(int argc,char **argv)
         std::cout<<"Multithreaded benchmark:"<<std::endl;
         run_inplace_benchmark(conf.value<size_t>("nruns"),std::move(a_mt));
     }
-
-    
 
     return 0;
 }
