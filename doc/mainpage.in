@@ -1,10 +1,10 @@
-/*! \mainpage libpniutils @VERSION@ documentation
+/*! \mainpage libpnicore @VERSION@ documentation
 
-Libpniutils is a utility library for a bunch of PNI related libraries. 
+Libpnicore is a utility library for a bunch of PNI related libraries. 
 It provides the basic data structures and type definitions as well as 
 type conversion facilities needed to write reliable code. 
 
-This is the API documentation for libpniutils. If you are interested in a more
+This is the API documentation for libpnicore. If you are interested in a more
 general discussion about the library and its components please read the 
 uses guide or the administrators guide.  
  

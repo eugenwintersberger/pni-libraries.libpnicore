@@ -4,10 +4,10 @@ Data access with DArray
 */
 
 #include <vector>
-#include <pni/utils/Types.hpp>
-#include <pni/utils/DArray.hpp>
+#include <pni/core/Types.hpp>
+#include <pni/core/DArray.hpp>
 
-using namespace pni::utils;
+using namespace pni::core;
 
 //some usefull type definitions
 typedef std::vector<size_t> shape_t; //container to describe array shapes

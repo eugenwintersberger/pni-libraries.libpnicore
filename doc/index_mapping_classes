@@ -1,7 +1,7 @@
 /*! \defgroup index_mapping_classes Index Mapping classes
 
 This page is only important for developers who want to contribute to \c
-libpniutils. It provides information about index mapping and the selection
+libpnicore. It provides information about index mapping and the selection
 mechanism used for multidimensional arrays.
 
 \section index_mapping_fundamentals Fundamentals - what is it all about?

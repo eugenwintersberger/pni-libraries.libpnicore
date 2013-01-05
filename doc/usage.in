@@ -1,49 +1,49 @@
-/*! \page usage Using libpniutils @VERSION@
+/*! \page usage Using libpnicore @VERSION@
 
 This page describes how to use the library along with your code. 
 
-\section usage_sec1 Using libpniutils the hard way
-As you may have recognized in the installation manual \c libpniutils links
+\section usage_sec1 Using libpnicore the hard way
+As you may have recognized in the installation manual \c libpnicore links
 against a whole bunch of libraries. This means that you have to add this
 libraries to your linker flags in order to link against the library. 
 Let us assume that we have a program in a file name \c main.cpp which we want
-to link against \c libpniutils. If we would do everything manually the compiler
+to link against \c libpnicore. If we would do everything manually the compiler
 command would look like this
 
-As \c libpniutils uses a lot of C++11 features it is absolutely important that
+As \c libpnicore uses a lot of C++11 features it is absolutely important that
 you do not forget to add the \b -std=c++0x flag to the compiler call.
 
 \code
-$> g++ -std=c++0x -o program main.cpp -llibpniutils -lboost_regex -lvtkFiltering -lvtkftgl -lvtkGenericFiltering -lvtkGraphics -lvtkHybrid -lvtkImaging -lvtkInfovis -lvtkCommon -lvtkRendering -lvtkIO
+$> g++ -std=c++0x -o program main.cpp -llibpnicore -lboost_regex -lvtkFiltering -lvtkftgl -lvtkGenericFiltering -lvtkGraphics -lvtkHybrid -lvtkImaging -lvtkInfovis -lvtkCommon -lvtkRendering -lvtkIO
 \endcode
 This is obviously not very comfortable. The better solution is to use \c
 pkg-config. 
 
-\section usage_sec2 Using libpniutils with pkg-config
+\section usage_sec2 Using libpnicore with pkg-config
 
-The \c libpniutils provides a \c pniutils.pc configuration file for
+The \c libpnicore provides a \c pnicore.pc configuration file for
 \c pkg-config. This file is usually installed under the same directory as the
 libraries binaries in a subdirectory called \c pkgconfig. On an Ubuntu system
-this would be for instance \c /usr/lib/pkgconfig/pniutils.pc. 
+this would be for instance \c /usr/lib/pkgconfig/pnicore.pc. 
 Since this directory is usually in the search path of \c pkg-config no
 additional work most be done and the above compiler command reduces to 
 \code
-$> g++ -std=c++0x -o program main.cpp $(pkg-config --libs --cflags pniutils)
+$> g++ -std=c++0x -o program main.cpp $(pkg-config --libs --cflags pnicore)
 \endcode
 If you have installed the libraries in some other directory, lets say under \c
-/opt/pniutils/lib you have to set the \c PKG_CONFIG_PATH to the appropriate
+/opt/pnicore/lib you have to set the \c PKG_CONFIG_PATH to the appropriate
 directory in advance of the previous compiler call. In this example here you
 have to use
 \code
 $> export PKG_CONFIG_PATH=/opt/pnitutils/lib/pkgconfig
 \endcode
 to tell \c pkg-config where to look for the configuration file for \c
-libpniutils.
+libpnicore.
 \c pkg-config can also be use from within a Makefile as shown in this example
 (the Makefile for the examples provided with the source distribution)
 \includelineno Makefile
 In lines 2 and 3 \c pkg-config is used to obtain all the flags required to build
-code using \c libpniutils.
+code using \c libpnicore.
 
 
 

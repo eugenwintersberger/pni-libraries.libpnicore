@@ -63,12 +63,12 @@ pointers you somehow need access to this.
 
 While \c Buffer<T,Allocator> is used to guard memory (managed by the \c
 Buffer<T,Allocator> template by itself)  and provide an interface
-from \c libpniutils to other 3rd party code relying on raw pointers, the
+from \c libpnicore to other 3rd party code relying on raw pointers, the
 intention of the \c RefBuffer<T,Allocator> template is exactly the other way
 around. It is used to use memory managed by 3rd-party code and provided as raw
 pointer. Thus, the \c RefBuffer<T,Allocator> does no memory management at all. 
 It can be considered as a kind of decorator for raw pointers which can be 
-used to make this memory available to classes and functions \c libpniutils 
+used to make this memory available to classes and functions \c libpnicore 
 provides. Obviously the \c Allocator type is not of importance for this 
 template as it does no memory management at all.
 
