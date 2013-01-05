@@ -30,7 +30,7 @@
 namespace popts = boost::program_options;
 
 namespace pni{
-namespace utils{
+namespace core{
 
 
     void parse(configuration &c,int argc,const char **argv)

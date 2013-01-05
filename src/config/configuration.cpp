@@ -29,7 +29,7 @@
 #include "configuration.hpp"
 
 namespace pni{
-namespace utils{
+namespace core{
 
     //--------------------------------------------------------------------------
     std::ostream &configuration::print(std::ostream &o) const

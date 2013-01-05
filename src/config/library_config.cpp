@@ -24,7 +24,7 @@
 #include "library_config.hpp"
 
 namespace pni{
-namespace utils{
+namespace core{
 
   
     //-------------------------------------------------------------------------

@@ -36,7 +36,7 @@
 namespace popts = boost::program_options;
 
 namespace pni{
-namespace utils{
+namespace core{
 
     /*!
     \brief configuration class
