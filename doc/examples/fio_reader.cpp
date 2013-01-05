@@ -12,10 +12,10 @@
 #include<cmath>
 
 
-#include <pni/utils/io/FIOReader.hpp>
-#include <pni/utils/Array.hpp>
+#include <pni/core/io/FIOReader.hpp>
+#include <pni/core/Array.hpp>
 
-using namespace pni::utils;
+using namespace pni::core;
 using namespace pni::io;
 
 

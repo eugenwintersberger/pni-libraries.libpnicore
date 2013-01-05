@@ -5,12 +5,12 @@ Using selections
 
 #include <iostream>
 #include <vector>
-#include <pni/utils/Types.hpp>
-#include <pni/utils/DArray.hpp>
-#include <pni/utils/SArray.hpp>
-#include <pni/utils/Slice.hpp>
+#include <pni/core/Types.hpp>
+#include <pni/core/DArray.hpp>
+#include <pni/core/SArray.hpp>
+#include <pni/core/Slice.hpp>
 
-using namespace pni::utils;
+using namespace pni::core;
 
 //some usefull type definitions
 typedef std::vector<size_t> shape_t; //container to describe array shapes

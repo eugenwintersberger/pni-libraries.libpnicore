@@ -19,10 +19,10 @@
 #include <vtkPointData.h>
 #include <vtkImageViewer2.h>
 
-#include <pni/utils/io/CBFReader.hpp>
-#include <pni/utils/Array.hpp>
+#include <pni/core/io/CBFReader.hpp>
+#include <pni/core/Array.hpp>
 
-using namespace pni::utils;
+using namespace pni::core;
 using namespace pni::io;
 
 typedef F32DArray Frame;
