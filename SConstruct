@@ -111,7 +111,7 @@ env.Append(LIBLINKNAME = libname.link_name(env))
 
 #create installation paths
 if not env["INCDIR"]:
-    env.Append(INCDIR = path.join(env["PREFIX"],"include/pni/utils"))
+    env.Append(INCDIR = path.join(env["PREFIX"],"include/pni/core"))
 
 if not env["LIBDIR"]:
     env.Append(LIBDIR = path.join(env["PREFIX"],"lib"))
