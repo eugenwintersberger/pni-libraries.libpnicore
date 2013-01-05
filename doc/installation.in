@@ -1,6 +1,6 @@
 /*! \page installation Installation instructions
 
-\c libpniutils can be either installed from source or from a binary package. The latter one is more
+\c libpnicore can be either installed from source or from a binary package. The latter one is more
 comfortable and requires not too much know how from the user, building from
 source gives you more control over what and how the library will be installed. 
 Thus installing binary packages is the recommended procedure for common users
@@ -10,7 +10,7 @@ while system administrators may want to build the package from source.
 
 \subsection install_binary_req Required additional software
 
-\c libpniutils links against several additional libraries which must be installed
+\c libpnicore links against several additional libraries which must be installed
 in order to make the software working. It depends on your operating systems
 whether or not this additional components must be explicitly installed by you or
 the package installation system takes care about it. 
@@ -25,11 +25,11 @@ command line
 \code
 $>sudo apt-add-repository ppa:eugenwintersberger/pni
 $>sudo apt-get update
-$>sudo apt-get install libpniutils-dev
+$>sudo apt-get install libpnicore-dev
 \endcode
 The first two lines integrate the PPA into your sources list for \c apt and
 updates the package list. Finally, the last line installs the development files
-of \c libpniutils.
+of \c libpnicore.
 
 On Debian Systems the installation is a bit more complicated as Debian provides
 no remote repository.
@@ -51,17 +51,18 @@ NOT SUPPORTED YET
 The following programs are required to build the entire source tree including
 the documentation
 
-\li <a href="http://www.scons.org"><tt>SCons</tt></a> the build system used for \c libpniutils
+\li <a href="http://www.scons.org"><tt>SCons</tt></a> the build system used for
+\c libpnicore
 \li <a href="http://www.doxygen.org"><tt>doxygen</tt></a> documentation generator
 
-Additionally \c libpniutils depends on a couple of libraries which must be installed on
+Additionally \c libpnicore depends on a couple of libraries which must be installed on
 the target system in order to build correctly:
 
 \li <a href="http://www.vtk.org"><tt>VTK</tt></a>  - the Visualization toolkit from Kitware
 \li \c cppunit  - a C++ unit-test framework
 \li <a href="http://www.boost.org"><tt>BOOST</tt></a> - C++ libraries 
 
-In addition \c libpniutils make use of a lot of new C++11 features. Thus a
+In addition \c libpnicore make use of a lot of new C++11 features. Thus a
 recent compiler should be installed on your system. For gcc version 4.6 and
 upwards are optimal. 
 On most of the large Linux distributions these components may can be easily
@@ -70,19 +71,19 @@ packages must be installed manually.
 
 \subsection obtaining_sources Obtaining the sources
 
-The next step is to obtain the source code of \c libpniutils. A release tarball
-can be downloaded from the <a href="http://sourceforge.net/projects/libpniutils/?source=directory">
+The next step is to obtain the source code of \c libpnicore. A release tarball
+can be downloaded from the <a href="http://sourceforge.net/projects/libpnicore/?source=directory">
 sourceforge site of the project</a>. Once you obtained the tarball with the
-actual release of \c libpniutils you can unpack it with
+actual release of \c libpnicore you can unpack it with
 \code
-$> tar xjf libpniutils*.tar.bz2 
+$> tar xjf libpnicore*.tar.bz2 
 \endcode
 Alternatively you can clone the \c git repository from the sourceforge site. 
 On Linux this can be done with
 \code
-$>git clone git://git.code.sf.net/p/libpniutils/code libpniutils
+$>git clone git://git.code.sf.net/p/libpnicore/code libpnicore
 \endcode
-Once the repository is cloned you will find the code in the \c libpniutils
+Once the repository is cloned you will find the code in the \c libpnicore
 directory below your current working directory. 
 
 \subsection build_install_linux Building and installing on Linux
@@ -117,7 +118,8 @@ the components of the library will be installed. These are
 \li \c PREFIX - installation prefix (default is \c /usr/local)
 \li \c LIBDIR - installation path for the library binaries (default is \c PREFIX/lib)
 \li \c INCDIR - installation path for the library headers (default is \c PREFIX/include)
-\li \c DOCDIR - installation path for the documentation (default is \c PREFIX/share/doc/libpniutils)
+\li \c DOCDIR - installation path for the documentation (default is \c
+PREFIX/share/doc/libpnicore)
 
 Usually the location where binaries, headers, and documentation files are
 installed are determined by the \c PREFIX build variable. However, \c LIBDIR, \c INCDIR, 
@@ -132,7 +134,8 @@ build variables for both calls. Let us for example show a build where the
 library should be installed below \c /opt but the documentation goes to a
 slightly different location
 \code
-$> scons VKTINCDIR=/usr/include/vtk-5.4 PREFIX=/opt/libpniutils DOCDIR=/opt/share/doc/libpniutils install
+$> scons VKTINCDIR=/usr/include/vtk-5.4 PREFIX=/opt/libpnicore
+DOCDIR=/opt/share/doc/libpnicore install
 \endcode
 
 \subsection build_install_windows Building and installing on Windows 

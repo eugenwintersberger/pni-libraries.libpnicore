@@ -111,7 +111,7 @@ env.Append(LIBLINKNAME = libname.link_name(env))
 
 #create installation paths
 if not env["INCDIR"]:
-    env.Append(INCDIR = path.join(env["PREFIX"],"include/pni/utils"))
+    env.Append(INCDIR = path.join(env["PREFIX"],"include/pni/core"))
 
 if not env["LIBDIR"]:
     env.Append(LIBDIR = path.join(env["PREFIX"],"lib"))
@@ -125,6 +125,7 @@ if not env["DOCDIR"]:
 
 #set default compiler flags
 env.Append(CXXFLAGS = ["-Wall","-std=c++0x","-fno-deduce-init-list"])
+env.AppendUnique(CXXFLAGS=["-Wunknown-pragmas","-pedantic"])
 env.AppendUnique(LIBPATH=[env["BOOSTLIBDIR"],env["CPPULIBDIR"]])
 env.AppendUnique(CPPPATH=[env["BOOSTINCDIR"],env["CPPUINCDIR"]])
 

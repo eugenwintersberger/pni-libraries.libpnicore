@@ -4,10 +4,10 @@ Using the RefBuffer template.
 */
 
 #include <iostream>
-#include <pni/utils/RBuffer.hpp>
-#include <pni/utils/Types.hpp>
+#include <pni/core/RBuffer.hpp>
+#include <pni/core/Types.hpp>
 
-using namespace pni::utils;
+using namespace pni::core;
 
 int main(int argc,char **argv)
 {

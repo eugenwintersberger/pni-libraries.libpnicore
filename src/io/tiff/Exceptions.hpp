@@ -3,20 +3,20 @@
  *
  * (c) Copyright 2011 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
  *
- * This file is part of libpniutils.
+ * This file is part of libpniio.
  *
- * libpniutils is free software: you can redistribute it and/or modify
+ * libpniio is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2 of the License, or
  * (at your option) any later version.
  *
- * libpniutils is distributed in the hope that it will be useful,
+ * libpniio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with libpniutils.  If not, see <http://www.gnu.org/licenses/>.
+ * along with libpniio.  If not, see <http://www.gnu.org/licenses/>.
  *************************************************************************
  *
  * Declaration of exceptions regarding the TIFF classes.
@@ -26,39 +26,38 @@
  *
  */
 
+#pragma once
 #include "../Exceptions.hpp"
 
-#ifndef TIFFEXCEPTIONS_HPP_
-#define TIFFEXCEPTIONS_HPP_
-
 namespace pni{
-namespace utils{
+namespace core{
 
-//! \ingroup error_classes
-//! \brief error during TIFF reading
+    /*! 
+    \ingroup error_classes
+    \brief error during TIFF reading
 
-//! This exception is thrown in cases where errors occur during reading
-//! TIFF files.
-class TIFFReadError:public Exception{
-public:
-	//! default constructor
-	TIFFReadError():Exception("TIFFReadError"){}
-	//! constructor
+    This exception is thrown in cases where errors occur during reading TIFF
+    files.
+    */
+    class TIFFReadError:public Exception
+    {
+        public:
+            //! default constructor
+            TIFFReadError():Exception("TIFFReadError"){}
+            //! constructor
 
-	//! \param i signature of the exception issuer
-	//! \param d description of the error
-	TIFFReadError(const String &i,const String &d):Exception("TIFFReadError",i,d){}
-	//! destructor
-	virtual ~TIFFReadError() throw() {}
+            //! \param i signature of the exception issuer
+            //! \param d description of the error
+            TIFFReadError(const String &i,const String &d):Exception("TIFFReadError",i,d){}
+            //! destructor
+            virtual ~TIFFReadError() throw() {}
 
-	//! output operator
-	friend std::ostream &operator<<(std::ostream &o,const TIFFReadError &e);
-};
+            //! output operator
+            friend std::ostream &operator<<(std::ostream &o,const TIFFReadError &e);
+    };
 
 //end of namespace
 }
 }
 
 
-
-#endif /* TIFFEXCEPTIONS_HPP_ */

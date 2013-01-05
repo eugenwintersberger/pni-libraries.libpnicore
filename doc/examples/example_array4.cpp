@@ -5,9 +5,9 @@ Using selections and numerics
 
 #include <iostream>
 #include <vector>
-#include <pni/utils/Array.hpp>
+#include <pni/core/Array.hpp>
 
-using namespace pni::utils;
+using namespace pni::core;
 
 typedef NF32DArray Frame;
 

@@ -5,9 +5,7 @@
  *      Author: eugen
  */
 
-#ifndef STRUTILS_HPP_
-#define STRUTILS_HPP_
-
+#pragma once
 //! strips a string
 
 //! function strips leading and trailing signs from a string object
@@ -26,4 +24,3 @@ std::string strip(std::string &s,const char *begrem="\n ",const char *endrem=" \
 //! \param value reference to the value portion of the original string
 int get_key_value(std::string &s,const char *del,std::string &key,std::string &value);
 
-#endif /* STRUTILS_HPP_ */

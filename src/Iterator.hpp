@@ -1,20 +1,20 @@
 /*
  * (c) Copyright 2012 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
  *
- * This file is part of libpniutils.
+ * This file is part of libpnicore.
  *
- * libpniutils is free software: you can redistribute it and/or modify
+ * libpnicore is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2 of the License, or
  * (at your option) any later version.
  *
- * libpniutils is distributed in the hope that it will be useful,
+ * libpnicore is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with libpniutils.  If not, see <http://www.gnu.org/licenses/>.
+ * along with libpnicore.  If not, see <http://www.gnu.org/licenses/>.
  *************************************************************************
  *
  * Created on: May 16, 2012
@@ -23,10 +23,9 @@
 #pragma once
 
 #include "Exceptions.hpp" 
-#include <iterator>
 
 namespace pni{
-namespace utils{
+namespace core{
    
     //=========================================================================
     /*! 
@@ -98,7 +97,7 @@ namespace utils{
     \ingroup iterator_types   
     \brief iterator type
 
-    This is the most generic iterator provided by libpniutils. It can be used
+    This is the most generic iterator provided by libpnicore. It can be used
     with all container types provided by the library. A container that wants to
     use this iterator must implement the following interface
     \code
@@ -135,6 +134,11 @@ namespace utils{
                 else
                     this->_item = nullptr;
             }
+
+#ifdef NOEXPLICITCONV 
+            typedef void (Iterator<ITERABLE,const_flag>::*bool_type)() const;
+            void bool_operator_function() const {}
+#endif
 
         public:
             //====================public types==================================
@@ -232,16 +236,18 @@ namespace utils{
             \return boolean value
             */
 #ifdef NOEXPLICITCONV
-            operator bool() const
+            operator bool_type() const
+            {
+                return  !((!this->_container)||(this->_state >= this->_maxsize)||(this->_state<0)) ? &iterator_type::bool_operator_function : 0;
+            }
 #else
             explicit operator bool() const
-#endif
             {
                 //if(!this->_container) return false;
                 //ssize_t size = (ssize_t)(this->_container->size());
                 return !((!this->_container)||(this->_state >= this->_maxsize)||(this->_state<0));
             }
-
+#endif
             //------------------------------------------------------------------
             /*! \brief dereferencing operator
 

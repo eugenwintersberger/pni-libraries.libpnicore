@@ -1,20 +1,20 @@
 /*
  * (c) Copyright 2012 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
  *
- * This file is part of libpniutils.
+ * This file is part of libpnicore.
  *
- * libpniutils is free software: you can redistribute it and/or modify
+ * libpnicore is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2 of the License, or
  * (at your option) any later version.
  *
- * libpniutils is distributed in the hope that it will be useful,
+ * libpnicore is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with libpniutils.  If not, see <http://www.gnu.org/licenses/>.
+ * along with libpnicore.  If not, see <http://www.gnu.org/licenses/>.
  *************************************************************************
  *
  *  Created on: Jul 19, 2012
@@ -28,13 +28,13 @@
 #include <algorithm>
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
-#include <pni/utils/RBuffer.hpp>
-#include <pni/utils/NewAllocator.hpp>
+#include <pni/core/RBuffer.hpp>
+#include <pni/core/NewAllocator.hpp>
 
 #include "RandomDistributions.hpp"
 #include "EqualityCheck.hpp"
 
-using namespace pni::utils;
+using namespace pni::core;
 
 template<typename T> class RBufferTest:public CppUnit::TestFixture
 {

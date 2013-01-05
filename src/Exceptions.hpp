@@ -3,20 +3,20 @@
  *
  * (c) Copyright 2011 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
  *
- * This file is part of libpniutils.
+ * This file is part of libpnicore.
  *
- * libpniutils is free software: you can redistribute it and/or modify
+ * libpnicore is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2 of the License, or
  * (at your option) any later version.
  *
- * libpniutils is distributed in the hope that it will be useful,
+ * libpnicore is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with libpniutils.  If not, see <http://www.gnu.org/licenses/>.
+ * along with libpnicore.  If not, see <http://www.gnu.org/licenses/>.
  *************************************************************************
  *
  * Declaration of the exception classes provided by the library along with
@@ -39,7 +39,7 @@
 #include "Types.hpp"
 
 namespace pni{
-namespace utils{
+namespace core{
 
 //================Macros related to exceptions==================================
 
@@ -614,5 +614,137 @@ Please note that the MUST NOT BE a semicolon at the end of this macro.
     };
     
 
+    //-------------------------------------------------------------------------
+    /*!
+    \brief command line argument error
+
+    Thrown in cases where a command line argument (do not confuse this with an
+    option has an inapropriate value or is missing).
+    */
+    class cli_argument_error:public Exception
+    {
+        public:
+            //------------------------------------------------------------------
+            //! default constructor
+            cli_argument_error():Exception("CLIArgumentError"){}
+
+            //------------------------------------------------------------------
+            /*! 
+            \brief constructor
+
+            \param r exception record
+            \param d description
+            */
+            cli_argument_error(const ExceptionRecord &r,const String &d):
+                Exception("CLIArgumentError",r,d)
+            {}
+            
+            //------------------------------------------------------------------
+            //! destructor
+            ~cli_argument_error() throw() {}
+
+            //------------------------------------------------------------------
+            //! output operator
+            friend std::ostream &operator<<(std::ostream &o,const cli_argument_error &e);
+    };
+
+    //--------------------------------------------------------------------------
+    /*! 
+    \brief command line option error
+
+    Exception thrown in cases where a command line option is missing or has an
+    inapropriate value.
+    */
+    class cli_option_error:public Exception
+    {
+        public:
+            //------------------------------------------------------------------
+            //! default constructor
+            cli_option_error():Exception("CLIOptionError"){}
+
+            //------------------------------------------------------------------
+            /*!
+            \brief constructor
+
+            \param r exception record
+            \param d description
+            */
+            cli_option_error(const ExceptionRecord &r,const String &d):
+                Exception("CLIOptionError",r,d)
+            {}
+
+            //------------------------------------------------------------------
+            ~cli_option_error() throw() {}
+
+            //------------------------------------------------------------------
+            //! output operator
+            friend std::ostream &operator<<(std::ostream &o,const cli_option_error &e);
+    };
+
+    //--------------------------------------------------------------------------
+    /*!
+    \brief general CLI error
+
+    Thrown in case of a general CLI error not related to arguments or options.
+    */
+    class cli_error:public Exception
+    {
+        public:
+            //------------------------------------------------------------------
+            //! default constructor
+            cli_error():Exception("CLIError"){}
+            
+            //------------------------------------------------------------------
+            /*!
+            \brief constructor
+
+            \param r exception record
+            \param d description
+            */
+            cli_error(const ExceptionRecord &r,const String &d):
+                Exception("CLIError",r,d)
+            {}
+
+            //------------------------------------------------------------------
+            //! destructor
+            ~cli_error() throw() {}
+
+            //------------------------------------------------------------------
+            //! output operator
+            friend std::ostream &operator<<(std::ostream &o,const cli_error &e);
+    };
+
+    //--------------------------------------------------------------------------
+    /*!
+    \brief help request
+
+    This is exception is not intended to manage an error at all. It is thrown in
+    the case that a user makes a help request from the CLI.
+    */
+    class cli_help_request:public Exception
+    {
+        public:
+            //------------------------------------------------------------------
+            //! default constructor
+            cli_help_request():Exception("CLIHelpRequest"){}
+            
+            //------------------------------------------------------------------
+            /*!
+            \brief constructor
+
+            \param r exception record
+            \param d description
+            */
+            cli_help_request(const ExceptionRecord &r,const String &d):
+                Exception("CLIHelpRequest",r,d)
+            {}
+
+            //------------------------------------------------------------------
+            //! destructor
+            ~cli_help_request() throw() {}
+
+            //! output operator
+            friend std::ostream &operator<<(std::ostream &o,const cli_help_request &e);
+    };
 }
 }

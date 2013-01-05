@@ -1,20 +1,20 @@
 /*
  * (c) Copyright 2011 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
  *
- * This file is part of libpniutils.
+ * This file is part of libpnicore.
  *
- * libpniutils is free software: you can redistribute it and/or modify
+ * libpnicore is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2 of the License, or
  * (at your option) any later version.
  *
- * libpniutils is distributed in the hope that it will be useful,
+ * libpnicore is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with libpniutils.  If not, see <http://www.gnu.org/licenses/>.
+ * along with libpnicore.  If not, see <http://www.gnu.org/licenses/>.
  *************************************************************************
  * TypeIDMap.hpp
  *
@@ -26,7 +26,7 @@
 #include "Types.hpp"
 
 namespace pni{
-namespace utils{
+namespace core{
 
 /*!
 \ingroup type_classes
@@ -39,7 +39,7 @@ This macro is used to create a specialization of the TypeIDMap type map.
     {\
         public:\
             static const TypeID type_id = tid;\
-    };
+    }
 
     /*! 
     \ingroup type_classes
@@ -64,7 +64,7 @@ This macro is used to create a specialization of the TypeIDMap type map.
     CREATE_TYPE_ID_MAP(Int64,TypeID::INT64);
     CREATE_TYPE_ID_MAP(Float32,TypeID::FLOAT32);
     CREATE_TYPE_ID_MAP(Float64,TypeID::FLOAT64);
-    CREATE_TYPE_ID_MAP(Float128,TypeID::FLOAT128)
+    CREATE_TYPE_ID_MAP(Float128,TypeID::FLOAT128);
     CREATE_TYPE_ID_MAP(Complex32,TypeID::COMPLEX32);
     CREATE_TYPE_ID_MAP(Complex64,TypeID::COMPLEX64);
     CREATE_TYPE_ID_MAP(Complex128,TypeID::COMPLEX128);

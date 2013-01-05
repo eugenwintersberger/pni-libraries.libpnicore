@@ -1,20 +1,20 @@
 /*
  * (c) Copyright 2012 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
  *
- * This file is part of libpniutils.
+ * This file is part of libpnicore.
  *
- * libpniutils is free software: you can redistribute it and/or modify
+ * libpnicore is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2 of the License, or
  * (at your option) any later version.
  *
- * libpniutils is distributed in the hope that it will be useful,
+ * libpnicore is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with libpniutils.  If not, see <http://www.gnu.org/licenses/>.
+ * along with libpnicore.  If not, see <http://www.gnu.org/licenses/>.
  *************************************************************************
  *
  *  Created on: Jul 12, 2012
@@ -24,20 +24,20 @@
 #include <chrono>
 #include <ratio>
 #include <ctime>
-#include <pni/utils/Iterator.hpp>
-#include <pni/utils/DBuffer.hpp>
-#include <pni/utils/DArray.hpp>
-#include <pni/utils/Array.hpp>
+#include <pni/core/Iterator.hpp>
+#include <pni/core/DBuffer.hpp>
+#include <pni/core/DArray.hpp>
+#include <pni/core/Array.hpp>
 
-#include "benchmark/BenchmarkRunner.hpp"
-#include "benchmark/BenchmarkResult.hpp"
-#include "benchmark/ChronoTimer.hpp"
-#include "benchmark/ClockTimer.hpp"
+#include <pni/core/benchmark/BenchmarkRunner.hpp>
+#include <pni/core/benchmark/BenchmarkResult.hpp>
+#include <pni/core/benchmark/ChronoTimer.hpp>
+#include <pni/core/benchmark/ClockTimer.hpp>
 
 #include "benchmark/LinearIOPointerBenchmark.hpp"
 #include "benchmark/LinearIOContainerIterator.hpp"
 
-using namespace pni::utils;
+using namespace pni::core;
 
 template<typename CLKT,typename BMARKT> 
 void run_benchmark(size_t nruns,const BMARKT &bmark)

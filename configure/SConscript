@@ -176,11 +176,23 @@ if not conf.CheckCXXHeader("boost/regex.hpp"):
 if not conf.CheckCXXHeader("boost/current_function.hpp"):
     print "BOOST current_function.hpp not found!"
     Exit(1)
+
+if not conf.CheckCXXHeader("boost/program_options.hpp"):
+    print "BOOST program options headers not installed"
+    Exit(1)
     
 
 #check for boost regular expressions library
 if not conf.CheckLib("boost_regex",language="C++"):
     print "BOOST regular expression library not found"
+    Exit(1)
+
+if not conf.CheckLib("boost_program_options",language="C++"):
+    print "BOOST program options library not installed!"
+    Exit(1)
+
+if not conf.CheckLib("boost_system",language="C++"):
+    print "BOOST system library not installed!"
     Exit(1)
 
 if GetOption("with_gperf"):
@@ -215,7 +227,7 @@ test_env  = env.Clone()
 
 if ('test' in COMMAND_LINE_TARGETS) or ('test_install' in COMMAND_LINE_TARGETS):
     test_env["ENV"]["PKG_CONFIG_PATH"] = os.environ["PKG_CONFIG_PATH"]
-    test_env.ParseConfig('pkg-config --cflags --libs pniutils')
+    test_env.ParseConfig('pkg-config --cflags --libs pnicore')
 
     #============================start configuration for tests=====================
     test_conf = Configure(test_env)
