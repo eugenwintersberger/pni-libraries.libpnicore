@@ -39,7 +39,7 @@
 #include "Iterator.hpp"
 
 namespace pni{
-namespace utils{
+namespace core{
 
     /*! \ingroup buffer_classes
     \brief reference buffer template

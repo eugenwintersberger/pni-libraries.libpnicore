@@ -25,7 +25,7 @@
 #include "service.hpp"
 
 namespace pni{
-namespace utils{
+namespace core{
 
     //-------------------------------------------------------------------------
     String demangle_cpp_name(const char *n)

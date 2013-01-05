@@ -24,7 +24,7 @@
 #include "ArraySelection.hpp"
 
 namespace pni{
-namespace utils{
+namespace core{
     //=====================implementation of constructors and destructor========
     ArraySelection::ArraySelection(const ArraySelection &s):
         _oshape(s._oshape),

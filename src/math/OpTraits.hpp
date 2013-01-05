@@ -20,13 +20,12 @@
  * Created on: Jul 25,2012
  *     Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
  */
-#ifndef __OPTRAITS_HPP__
-#define __OPTRAITS_HPP__
+#pragma once
 
 #include "../Scalar.hpp"
 
 namespace pni{
-namespace utils{
+namespace core{
     
     /*! 
     \ingroup numeric_array_classes
@@ -51,5 +50,3 @@ namespace utils{
 //end of namespace
 }
 }
-
-#endif

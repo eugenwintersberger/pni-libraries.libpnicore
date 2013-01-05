@@ -25,7 +25,7 @@
 #include "IndexMapBase.hpp"
 
 namespace pni{
-namespace utils{
+namespace core{
 
     /*! 
     \ingroup index_mapping_classes

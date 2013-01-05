@@ -33,7 +33,7 @@
 #include "Exceptions.hpp"
 
 namespace pni{
-namespace utils{
+namespace core{
 
     /*! 
     \ingroup type_classes

@@ -27,7 +27,7 @@
 #include <iostream>
 
 namespace pni{
-namespace utils{
+namespace core{
 
     //============implementation of private methods============================
     void Slice::_check_start_stop(const ExceptionRecord &o) const

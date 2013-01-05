@@ -39,7 +39,7 @@
 #include "Types.hpp"
 
 namespace pni{
-namespace utils{
+namespace core{
 
 //================Macros related to exceptions==================================
 

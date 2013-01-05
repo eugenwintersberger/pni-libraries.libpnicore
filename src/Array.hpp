@@ -31,7 +31,7 @@
 
 
 namespace pni{
-namespace utils{
+namespace core{
 
     /*!
     \addtogroup multidim_array_classes

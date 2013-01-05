@@ -43,7 +43,7 @@
 #include "SBuffer.hpp"
 
 namespace pni {
-namespace utils {
+namespace core {
 
 using namespace boost::numeric;
 

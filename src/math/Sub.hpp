@@ -27,7 +27,7 @@
 #include "../Iterator.hpp"
 
 namespace pni{
-namespace utils{
+namespace core{
     
     template<typename ATYPE> class ArrayView;
 

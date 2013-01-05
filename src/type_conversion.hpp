@@ -36,7 +36,7 @@ using namespace boost::numeric;
 
 
 namespace pni{
-namespace utils{
+namespace core{
 
     /*! \ingroup type_classes
     \brief general conversion strategy template

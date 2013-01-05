@@ -31,7 +31,7 @@
 #include "Exceptions.hpp"
 
 namespace pni{
-namespace utils{
+namespace core{
 
     /*! \ingroup buffer_classes
     \brief allocator class using new

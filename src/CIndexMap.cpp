@@ -23,7 +23,7 @@
 #include "CIndexMap.hpp"
 
 namespace pni{
-namespace utils{
+namespace core{
 
     //-------------------------------------------------------------------------
     void CIndexMap::_compute_strides()
