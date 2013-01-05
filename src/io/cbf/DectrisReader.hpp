@@ -24,8 +24,7 @@
  *
  */
 
-#ifndef __DECTRISREADER_HPP__
-#define __DECTRISREADER_HPP__
+#pragma once
 
 #include<iostream>
 #include<fstream>
@@ -34,7 +33,7 @@
 #include "../ImageInfo.hpp"
 #include "Types.hpp"
 
-using namespace pni::utils;
+using namespace pni::core;
 
 namespace pni{
 namespace io{
@@ -165,5 +164,3 @@ namespace cbf{
 }
 }
 }
-
-#endif

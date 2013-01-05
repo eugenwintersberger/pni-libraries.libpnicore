@@ -25,9 +25,9 @@
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
 #include <vector>
-#include <pni/utils/StaticCIndexMap.hpp>
+#include <pni/core/StaticCIndexMap.hpp>
 
-using namespace pni::utils;
+using namespace pni::core;
 
 class StaticCIndexMapTest: public CppUnit::TestFixture 
 {

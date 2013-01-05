@@ -29,7 +29,7 @@
 
 
 namespace pni {
-namespace utils {
+namespace core {
 
     template<typename ATYPE,template<typename> class IPA> class NumArray;
 

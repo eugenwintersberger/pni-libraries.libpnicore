@@ -34,7 +34,7 @@
 #include "ArrayViewSelector.hpp"
 
 namespace pni{
-namespace utils{
+namespace core{
 
     /*! 
     \ingroup multidim_array_classes

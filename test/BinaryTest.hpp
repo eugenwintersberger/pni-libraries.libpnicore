@@ -25,7 +25,7 @@
 #include<cppunit/extensions/HelperMacros.h>
 
 
-using namespace pni::utils;
+using namespace pni::core;
 
 class BinaryTest : public CppUnit::TestFixture
 {

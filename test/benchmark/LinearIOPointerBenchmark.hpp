@@ -23,10 +23,10 @@
 #pragma once
 
 #include <typeinfo>
-#include <pni/utils/service.hpp>
+#include <pni/core/service.hpp>
 #include "../../src/Types.hpp"
 
-using namespace pni::utils;
+using namespace pni::core;
 
 /*!
 \brief linear IO pointer benchmark

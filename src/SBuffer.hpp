@@ -37,7 +37,7 @@
 #include "ExceptionUtils.hpp"
 
 namespace pni{
-namespace utils{
+namespace core{
 
     /*! \ingroup buffer_classes
     \brief static buffer template

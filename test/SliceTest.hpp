@@ -24,9 +24,9 @@
 #include<cppunit/TestFixture.h>
 #include<cppunit/extensions/HelperMacros.h>
 
-#include <pni/utils/Slice.hpp>
+#include <pni/core/Slice.hpp>
 
-using namespace pni::utils;
+using namespace pni::core;
 
 class SliceTest : public CppUnit::TestFixture
 {

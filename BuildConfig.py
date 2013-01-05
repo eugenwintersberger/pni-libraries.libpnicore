@@ -5,7 +5,7 @@ VERSION="0.2.5" #library version - release version
 
 SOVERSION="3"   #library SOVERSION (needed for debian and RPM packages) - should
                 #be consistent for each release for all binary packages.
-LIBNAME="pniutils" #name of the shared library
+LIBNAME="pnicore" #name of the shared library
 
 
 #contact to the maintainer

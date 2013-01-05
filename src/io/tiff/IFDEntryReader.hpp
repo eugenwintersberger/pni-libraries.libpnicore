@@ -23,10 +23,7 @@
  *     Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
  *
  */
-
-
-#ifndef __TIFFIFDENTRYREADER_HPP__
-#define __TIFFIFDENTRYREADER_HPP__
+#pragma once
 
 #include<iostream>
 #include<fstream>
@@ -34,7 +31,7 @@
 
 #include "../../Types.hpp"
 
-using namespace pni::utils;
+using namespace pni::core;
 
 
 namespace pni{
@@ -118,10 +115,6 @@ namespace tiff{
 }
 }
 }
-
-
-
-#endif
 
 
 

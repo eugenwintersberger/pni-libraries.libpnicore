@@ -41,7 +41,7 @@ static_library = build_env.StaticLibrary("${LIBNAME}",static_objects)
 
 pkg_config_file = build_env.Substfile(target="${LIBNAME}",source=["pkgconf.in"],
                   SUBST_DICT={"@PREFIX@":"${PREFIX}","@LIBNAME@":"${LIBNAME}",
-                  "@INCDIR@":build_env["INCDIR"].replace("/pni/utils",""),
+                  "@INCDIR@":build_env["INCDIR"].replace("/pni/core",""),
                   "@VERSION@":"${VERSION}","@INCPATH@":"${_CPPINCFLAGS}",
                   "@DEFINES@":"${_CPPDEFFLAGS}",
                   "@LIBPATH@":"${_LIBDIRFLAGS}","@LIBS@":"${_LIBFLAGS}"},

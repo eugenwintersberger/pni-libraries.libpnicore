@@ -26,14 +26,13 @@
  *
  */
 
-#ifndef __TIFFRATIONAL_HPP_
-#define __TIFFRATIONAL_HPP_
+#pragma once
 
 #include <iostream>
 
 #include "../../Types.hpp"
 
-using namespace pni::utils;
+using namespace pni::core;
 
 namespace pni{
 namespace io{
@@ -136,6 +135,3 @@ namespace tiff{
 }
 }
 }
-
-
-#endif /* TIFFRATIONAL_HPP_ */

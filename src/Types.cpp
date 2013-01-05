@@ -27,7 +27,7 @@
 #include "Types.hpp"
 
 namespace pni{
-namespace utils{
+namespace core{
 
     //! output operator for TypeID
     std::ostream &operator<<(std::ostream &o,const TypeID &tid)

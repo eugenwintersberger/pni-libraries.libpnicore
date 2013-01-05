@@ -23,9 +23,7 @@
  *     Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
  *
  */
-
-#ifndef __FIOREADER_HPP__
-#define __FIOREADER_HPP__
+#pragma once
 
 #include<iostream>
 #include<sstream>
@@ -357,5 +355,3 @@ namespace io{
 //end of namespace
 }
 }
-
-#endif

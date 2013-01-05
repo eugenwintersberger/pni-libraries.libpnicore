@@ -5,7 +5,7 @@
 
 
 namespace pni{
-namespace utils{
+namespace core{
 
     /*!
     \brief class describing a program argument

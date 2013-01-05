@@ -24,7 +24,7 @@
 #pragma once
 
 namespace pni{
-namespace utils{
+namespace core{
 
     /*! 
     \ingroup util_classes

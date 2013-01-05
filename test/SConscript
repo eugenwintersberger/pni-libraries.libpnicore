@@ -4,7 +4,7 @@ Import("test_env")
 
 
 #need to use here prepend in order to avoid triggering the istallation process
-sources_list = ["pniutilstest.cpp"]
+sources_list = ["pnicoretest.cpp"]
 sources_list.extend(["DBufferTest.cpp"])
 sources_list.extend(["RBufferTest.cpp"])
 sources_list.extend(["SBufferTest.cpp"])
@@ -33,7 +33,7 @@ sources_list.extend(["configuration_test.cpp"])
 
 bm_sources = ["iteratorbm.cpp"]
 
-pniutils_test = test_env.Program("pniutilstest",sources_list)
+pnicore_test = test_env.Program("pnicoretest",sources_list)
 iterbm = test_env.Program("iteratorbm",bm_sources)
 multiindexbm = test_env.Program("multiindexbm",["multiindexbm.cpp"])
 arithmeticbm = test_env.Program("arithmeticbm",["arithmeticbm.cpp"])

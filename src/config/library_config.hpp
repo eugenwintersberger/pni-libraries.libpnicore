@@ -29,7 +29,7 @@
 #include "config_parser.hpp"
 
 namespace pni{
-namespace utils{
+namespace core{
 
 
     /*!

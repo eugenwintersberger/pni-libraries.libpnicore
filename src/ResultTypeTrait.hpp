@@ -29,7 +29,7 @@
 #pragma once
 
 namespace pni{
-namespace utils{
+namespace core{
 
 
     /*! 

@@ -32,7 +32,7 @@
 #include "ExceptionUtils.hpp"
 
 namespace pni{
-namespace utils{
+namespace core{
    
     /*! 
     \ingroup util_classes

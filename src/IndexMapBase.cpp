@@ -24,7 +24,7 @@
 #include "IndexMapBase.hpp"
 
 namespace pni{
-namespace utils{
+namespace core{
 
     //-------------------------------------------------------------------------
     IndexMapBase::IndexMapBase():_shape() {}

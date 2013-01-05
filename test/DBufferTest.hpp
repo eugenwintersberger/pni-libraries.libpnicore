@@ -25,13 +25,13 @@
 #include <random>
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
-#include <pni/utils/DBuffer.hpp>
-#include <pni/utils/NewAllocator.hpp>
+#include <pni/core/DBuffer.hpp>
+#include <pni/core/NewAllocator.hpp>
 
 #include "RandomDistributions.hpp"
 #include "EqualityCheck.hpp"
 
-using namespace pni::utils;
+using namespace pni::core;
 
 template<typename T,typename Allocator> 
 class DBufferTest:public CppUnit::TestFixture

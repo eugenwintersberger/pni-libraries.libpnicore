@@ -26,10 +26,10 @@
 #include<cppunit/extensions/HelperMacros.h>
 #include<boost/current_function.hpp>
 
-#include <pni/utils/Types.hpp>
-#include <pni/utils/TypeClassMap.hpp>
+#include <pni/core/Types.hpp>
+#include <pni/core/TypeClassMap.hpp>
 
-using namespace pni::utils;
+using namespace pni::core;
 
 class TypeClassTest : public CppUnit::TestFixture
 {

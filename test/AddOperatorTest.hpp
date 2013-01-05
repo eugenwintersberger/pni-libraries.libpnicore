@@ -29,11 +29,11 @@
 #include <boost/current_function.hpp>
 
 #include "EqualityCheck.hpp"
-#include <pni/utils/DArray.hpp>
-#include <pni/utils/Scalar.hpp>
-#include <pni/utils/NumArray.hpp>
+#include <pni/core/DArray.hpp>
+#include <pni/core/Scalar.hpp>
+#include <pni/core/NumArray.hpp>
 
-using namespace pni::utils;
+using namespace pni::core;
 
 /*!
  Do testing only for DArray - all array types provide the same interface and

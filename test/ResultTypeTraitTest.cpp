@@ -20,13 +20,13 @@
  *  Created on: Jul 25, 2012
  *      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
  */
-#include <pni/utils/Types.hpp>
+#include <pni/core/Types.hpp>
 
 #include "ResultTypeTraitTest.hpp"
 
 #include<cppunit/extensions/HelperMacros.h>
 
-using namespace pni::utils;
+using namespace pni::core;
 
 CPPUNIT_TEST_SUITE_REGISTRATION(ResultTypeTraitTest<Int16>);
 

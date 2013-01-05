@@ -31,7 +31,7 @@ extern "C"
 }
 
 namespace pni{
-namespace utils{
+namespace core{
 
 
     /*!

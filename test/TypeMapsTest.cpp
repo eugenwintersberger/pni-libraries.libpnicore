@@ -28,7 +28,7 @@
 
 CPPUNIT_TEST_SUITE_REGISTRATION(TypeMapsTest);
 
-using namespace pni::utils;
+using namespace pni::core;
 
 //-----------------------------------------------------------------------------
 void TypeMapsTest::setUp(){ }

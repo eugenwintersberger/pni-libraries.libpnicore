@@ -30,7 +30,7 @@
 
 CPPUNIT_TEST_SUITE_REGISTRATION(SliceTest);
 
-using namespace pni::utils;
+using namespace pni::core;
 
 //===========implementation of private test functions==========================
 void SliceTest::_construct(size_t start,size_t stop)

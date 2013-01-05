@@ -27,9 +27,9 @@
 #include <vector>
 #include <list>
 
-#include <pni/utils/config/config_parser.hpp>
-#include <pni/utils/config/cli_args.hpp>
-#include <pni/utils/config/library_config.hpp>
+#include <pni/core/config/config_parser.hpp>
+#include <pni/core/config/cli_args.hpp>
+#include <pni/core/config/library_config.hpp>
 #include "configuration_test.hpp"
 
 CPPUNIT_TEST_SUITE_REGISTRATION(configuration_test);

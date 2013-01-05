@@ -30,7 +30,7 @@
 #include "TypeInfo.hpp"
 
 namespace pni{
-namespace utils{
+namespace core{
 
     //-------------------------------------------------------------------------
     template<typename C,typename O> C __convert(const O &v)

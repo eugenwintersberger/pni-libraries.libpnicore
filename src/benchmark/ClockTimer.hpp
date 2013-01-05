@@ -26,64 +26,69 @@
 #include<iostream>
 #include<ctime>
 
-using namespace pni::utils;
+namespace pni{
+namespace core{
 
-/*!
-\brief clock() timer
+    /*!
+    \brief clock() timer
 
-This timer uses the standard clock() function provided by the C standard
-library. It should only be used if C++11 std::chrono services are not available.
-*/
-class ClockTimer
-{
-    private:
-        clock_t _start; //!< start time
-        clock_t _stop;  //!< stop time
+    This timer uses the standard clock() function provided by the C standard
+    library. It should only be used if C++11 std::chrono services are not available.
+    */
+    class ClockTimer
+    {
+        private:
+            clock_t _start; //!< start time
+            clock_t _stop;  //!< stop time
 
-    public:
-        //======================static members=================================
-        static const String name; 
-        //=======================constructors==================================
-        //! default constructor
-        ClockTimer():_start(0),_stop(0) {}
+        public:
+            //======================static members=================================
+            static const String name; 
+            //=======================constructors==================================
+            //! default constructor
+            ClockTimer():_start(0),_stop(0) {}
 
-        //========================public member functions======================
-        /*!
-        \brief set start value
+            //========================public member functions======================
+            /*!
+            \brief set start value
 
-        This member function calls clock() and thus sets the start value of the
-        timer. 
-        */
-        void start() { _start = clock(); }
+            This member function calls clock() and thus sets the start value of the
+            timer. 
+            */
+            void start() { _start = clock(); }
 
-        //---------------------------------------------------------------------
-        /*!
-        \brief set stop value
+            //---------------------------------------------------------------------
+            /*!
+            \brief set stop value
 
-        Member function calling clock() and setting the stop value of the timer.
-        */
-        void stop() { _stop = clock(); }
+            Member function calling clock() and setting the stop value of the timer.
+            */
+            void stop() { _stop = clock(); }
 
-        //---------------------------------------------------------------------
-        /*!
-        \brief get duration
+            //---------------------------------------------------------------------
+            /*!
+            \brief get duration
 
-        Returns the difference between the start and the stop time of the timer
-        in units of seconds. 
-        \return time duration
-        */
-        Float64 duration() const
-        {
-            return ((double)(_stop-_start))/CLOCKS_PER_SEC;
-        }
+            Returns the difference between the start and the stop time of the timer
+            in units of seconds. 
+            \return time duration
+            */
+            Float64 duration() const
+            {
+                return ((double)(_stop-_start))/CLOCKS_PER_SEC;
+            }
 
-        //---------------------------------------------------------------------
-        //! get time unit
-        String unit() const
-        {
-            return String("s");
-        }
-};
+            //---------------------------------------------------------------------
+            //! get time unit
+            String unit() const
+            {
+                return String("s");
+            }
+    };
 
-//setup the static name of the timer
-const String ClockTimer::name = String("ClockTimer");
+    //setup the static name of the timer
+    const String ClockTimer::name = String("ClockTimer");
+
+//end of namespace
+}
+}

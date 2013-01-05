@@ -32,7 +32,7 @@
 #include "Types.hpp"
 
 namespace pni{
-namespace utils{
+namespace core{
 
 #define DEPRECATION_WARNING(oldfunc,newfunc)\
     std::cerr<<"DEPRECATION WARGING:"<<std::endl;\

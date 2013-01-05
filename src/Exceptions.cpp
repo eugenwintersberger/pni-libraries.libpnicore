@@ -30,7 +30,7 @@
 #include "Exceptions.hpp"
 
 namespace pni{
-namespace utils{
+namespace core{
 
     //-------------------------------------------------------------------------
     std::ostream &operator<<(std::ostream &o,const ExceptionRecord &rec)

@@ -24,12 +24,12 @@
 #include<cppunit/extensions/HelperMacros.h>
 
 #include <typeinfo>
-#include <pni/utils/Types.hpp>
-#include <pni/utils/Slice.hpp>
-#include <pni/utils/NumArray.hpp>
-#include <pni/utils/SArray.hpp>
-#include <pni/utils/ArrayView.hpp>
-#include <pni/utils/service.hpp>
+#include <pni/core/Types.hpp>
+#include <pni/core/Slice.hpp>
+#include <pni/core/NumArray.hpp>
+#include <pni/core/SArray.hpp>
+#include <pni/core/ArrayView.hpp>
+#include <pni/core/service.hpp>
 
 #include "ArrayViewSelectorTest.hpp"
 

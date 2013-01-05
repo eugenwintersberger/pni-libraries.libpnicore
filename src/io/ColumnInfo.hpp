@@ -24,14 +24,13 @@
  *
  */
 
-#ifndef __COLUMNINFO_HPP__
-#define __COLUMNINFO_HPP__
+#pragma once
 
 
 #include "../Types.hpp"
 #include <vector>
 
-using namespace pni::utils;
+using namespace pni::core;
 
 namespace pni{
 namespace io{
@@ -110,4 +109,3 @@ namespace io{
 }
 }
 
-#endif

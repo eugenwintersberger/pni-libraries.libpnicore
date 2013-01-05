@@ -25,10 +25,10 @@
 #include<cppunit/extensions/HelperMacros.h>
 
 #include<vector>
-#include <pni/utils/ArrayView.hpp>
+#include <pni/core/ArrayView.hpp>
 #include "RandomDistributions.hpp"
 
-using namespace pni::utils;
+using namespace pni::core;
 
 
 class ArrayViewTest : public CppUnit::TestFixture{

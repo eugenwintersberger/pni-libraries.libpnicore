@@ -23,7 +23,7 @@
 #include "cli_args.hpp"
 
 namespace pni{
-namespace utils{
+namespace core{
 
 
     //--------------------------------------------------------------------------

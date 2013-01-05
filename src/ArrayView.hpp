@@ -33,7 +33,7 @@
 #include "ArraySelection.hpp"
 
 namespace pni{
-namespace utils{
+namespace core{
     
     /*! \ingroup multidim_array_classes
     \brief provides a view on a part of an array

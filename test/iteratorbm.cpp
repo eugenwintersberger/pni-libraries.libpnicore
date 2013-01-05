@@ -24,20 +24,20 @@
 #include <chrono>
 #include <ratio>
 #include <ctime>
-#include <pni/utils/Iterator.hpp>
-#include <pni/utils/DBuffer.hpp>
-#include <pni/utils/DArray.hpp>
-#include <pni/utils/Array.hpp>
+#include <pni/core/Iterator.hpp>
+#include <pni/core/DBuffer.hpp>
+#include <pni/core/DArray.hpp>
+#include <pni/core/Array.hpp>
 
-#include <pni/utils/benchmark/BenchmarkRunner.hpp>
-#include <pni/utils/benchmark/BenchmarkResult.hpp>
-#include <pni/utils/benchmark/ChronoTimer.hpp>
-#include <pni/utils/benchmark/ClockTimer.hpp>
+#include <pni/core/benchmark/BenchmarkRunner.hpp>
+#include <pni/core/benchmark/BenchmarkResult.hpp>
+#include <pni/core/benchmark/ChronoTimer.hpp>
+#include <pni/core/benchmark/ClockTimer.hpp>
 
 #include "benchmark/LinearIOPointerBenchmark.hpp"
 #include "benchmark/LinearIOContainerIterator.hpp"
 
-using namespace pni::utils;
+using namespace pni::core;
 
 template<typename CLKT,typename BMARKT> 
 void run_benchmark(size_t nruns,const BMARKT &bmark)

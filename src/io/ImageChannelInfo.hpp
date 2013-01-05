@@ -24,12 +24,11 @@
  *
  */
 
-#ifndef __IMAGECHANNELINFO_HPP__
-#define __IMAGECHANLELINFO_HPP__
+#pragma once
 
 #include "../Types.hpp"
 
-using namespace pni::utils;
+using namespace pni::core;
 
 namespace pni{
 namespace io{
@@ -78,5 +77,3 @@ namespace io{
 //end of namespace
 }
 }
-
-#endif

@@ -31,7 +31,7 @@
 #include "../TypeInfo.hpp"
 
 namespace pni{
-namespace utils{
+namespace core{
 
     /*! 
     \ingroup numeric_array_classes

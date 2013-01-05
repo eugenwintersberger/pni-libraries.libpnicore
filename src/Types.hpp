@@ -34,7 +34,7 @@
 
 //define some standard types
 namespace pni{
-namespace utils{
+namespace core{
 
     /*! \addtogroup type_classes
       @{

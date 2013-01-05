@@ -25,9 +25,9 @@
 #include<cppunit/TestFixture.h>
 #include<cppunit/extensions/HelperMacros.h>
 
-#include <pni/utils/ArrayViewSelector.hpp>
+#include <pni/core/ArrayViewSelector.hpp>
 
-using namespace pni::utils;
+using namespace pni::core;
 
 class ArrayViewSelectorTest:public CppUnit::TestFixture
 {

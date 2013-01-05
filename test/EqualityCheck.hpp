@@ -22,9 +22,9 @@
  */
 #pragma once
 
-#include <pni/utils/TypeInfo.hpp>
+#include <pni/core/TypeInfo.hpp>
 
-using namespace pni::utils;
+using namespace pni::core;
 
 /*!
 \brief class for equality check

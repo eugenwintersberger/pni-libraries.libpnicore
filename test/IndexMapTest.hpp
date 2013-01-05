@@ -25,12 +25,12 @@
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
 
-#include <pni/utils/CIndexMap.hpp>
+#include <pni/core/CIndexMap.hpp>
 
 #include <vector>
 #include <list>
 
-using namespace pni::utils;
+using namespace pni::core;
 
 
 template<typename MTYPE>

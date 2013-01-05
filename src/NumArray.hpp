@@ -36,7 +36,7 @@
 #include "math/Mult.hpp"
 
 namespace pni{
-namespace utils{
+namespace core{
     
     /*! 
     \ingroup numeric_array_classes

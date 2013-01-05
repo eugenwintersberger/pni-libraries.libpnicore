@@ -25,8 +25,8 @@
 #include <boost/current_function.hpp>
 #include<cppunit/TestFixture.h>
 #include<cppunit/extensions/HelperMacros.h>
-#include <pni/utils/ResultTypeTrait.hpp>
-#include <pni/utils/type_conversion.hpp>
+#include <pni/core/ResultTypeTrait.hpp>
+#include <pni/core/type_conversion.hpp>
 #include "EqualityCheck.hpp"
 
 template<typename T>

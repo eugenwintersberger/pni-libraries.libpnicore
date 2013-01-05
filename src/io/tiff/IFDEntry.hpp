@@ -25,11 +25,7 @@
  *     Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
  *
  */
-
-
-#ifndef __TIFFIFDENTRY_HPP__
-#define __TIFFIFDENTRY_HPP__
-
+#pragma once
 
 #include <iostream>
 #include <fstream>
@@ -41,7 +37,7 @@
 #include "Rational.hpp"
 #include "IFDEntryReader.hpp"
 
-using namespace pni::utils;
+using namespace pni::core;
 
 namespace pni{
 namespace io{
@@ -258,5 +254,3 @@ namespace tiff{
 }
 }
 
-
-#endif

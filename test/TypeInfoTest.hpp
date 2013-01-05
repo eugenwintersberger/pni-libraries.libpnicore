@@ -27,11 +27,11 @@
 #include<cppunit/extensions/HelperMacros.h>
 #include <limits>
 #include <climits>
-#include <pni/utils/Types.hpp>
-#include <pni/utils/TypeInfo.hpp>
+#include <pni/core/Types.hpp>
+#include <pni/core/TypeInfo.hpp>
 
 
-using namespace pni::utils;
+using namespace pni::core;
 
 class TypeInfoTest : public CppUnit::TestFixture
 {

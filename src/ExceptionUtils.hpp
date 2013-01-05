@@ -34,7 +34,7 @@
 #include "service.hpp"
 
 namespace pni{
-namespace utils{
+namespace core{
 
     //=====================Exception related helper functions==================
     /*!

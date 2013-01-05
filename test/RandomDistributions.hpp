@@ -24,10 +24,10 @@
 
 #include <random>
 
-#include <pni/utils/TypeInfo.hpp>
-#include <pni/utils/Types.hpp>
+#include <pni/core/TypeInfo.hpp>
+#include <pni/core/Types.hpp>
 
-using namespace pni::utils;
+using namespace pni::core;
 
 
 template<typename CT,bool is_int,bool is_complex> class UniformDistribution;

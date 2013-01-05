@@ -25,15 +25,15 @@
 #include<cppunit/TestFixture.h>
 #include<cppunit/extensions/HelperMacros.h>
 
-#include <pni/utils/NumArray.hpp>
-#include <pni/utils/DArray.hpp>
-#include <pni/utils/SArray.hpp>
+#include <pni/core/NumArray.hpp>
+#include <pni/core/DArray.hpp>
+#include <pni/core/SArray.hpp>
 
 #include "RandomDistributions.hpp"
 #include "EqualityCheck.hpp"
 #include "BufferHelper.hpp"
 
-using namespace pni::utils;
+using namespace pni::core;
 
 template<typename ATYPE,template<typename> class IPAT>
 class NumArrayTest : public CppUnit::TestFixture

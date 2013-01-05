@@ -27,10 +27,10 @@
 #include<cppunit/TestFixture.h>
 #include<cppunit/extensions/HelperMacros.h>
 
-#include<pni/utils/config/configuration.hpp>
+#include<pni/core/config/configuration.hpp>
 
 
-using namespace pni::utils;
+using namespace pni::core;
 
 class configuration_test: public CppUnit::TestFixture 
 {

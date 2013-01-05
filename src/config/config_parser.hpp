@@ -24,7 +24,7 @@
 
 #include "configuration.hpp"
 namespace pni{
-namespace utils{
+namespace core{
 
     /*!
     \brief read config from command line options

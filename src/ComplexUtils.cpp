@@ -27,7 +27,7 @@
 #include "ComplexUtils.hpp"
 
 namespace pni{
-namespace utils{
+namespace core{
 
     //-------------------------------------------------------------------------
     bool operator==(const Complex32 &a,const Complex64 &b)

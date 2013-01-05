@@ -26,39 +26,38 @@
  *
  */
 
+#pragma once
 #include "../Exceptions.hpp"
 
-#ifndef TIFFEXCEPTIONS_HPP_
-#define TIFFEXCEPTIONS_HPP_
-
 namespace pni{
-namespace utils{
+namespace core{
 
-//! \ingroup error_classes
-//! \brief error during TIFF reading
+    /*! 
+    \ingroup error_classes
+    \brief error during TIFF reading
 
-//! This exception is thrown in cases where errors occur during reading
-//! TIFF files.
-class TIFFReadError:public Exception{
-public:
-	//! default constructor
-	TIFFReadError():Exception("TIFFReadError"){}
-	//! constructor
+    This exception is thrown in cases where errors occur during reading TIFF
+    files.
+    */
+    class TIFFReadError:public Exception
+    {
+        public:
+            //! default constructor
+            TIFFReadError():Exception("TIFFReadError"){}
+            //! constructor
 
-	//! \param i signature of the exception issuer
-	//! \param d description of the error
-	TIFFReadError(const String &i,const String &d):Exception("TIFFReadError",i,d){}
-	//! destructor
-	virtual ~TIFFReadError() throw() {}
+            //! \param i signature of the exception issuer
+            //! \param d description of the error
+            TIFFReadError(const String &i,const String &d):Exception("TIFFReadError",i,d){}
+            //! destructor
+            virtual ~TIFFReadError() throw() {}
 
-	//! output operator
-	friend std::ostream &operator<<(std::ostream &o,const TIFFReadError &e);
-};
+            //! output operator
+            friend std::ostream &operator<<(std::ostream &o,const TIFFReadError &e);
+    };
 
 //end of namespace
 }
 }
 
 
-
-#endif /* TIFFEXCEPTIONS_HPP_ */

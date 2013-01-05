@@ -26,8 +26,7 @@
  *
  */
 
-#ifndef TIFFIFD_HPP_
-#define TIFFIFD_HPP_
+#pragma once
 
 #include <memory>
 #include <vector>
@@ -191,6 +190,3 @@ namespace tiff{
 }
 }
 }
-
-
-#endif /* TIFFIDF_HPP_ */

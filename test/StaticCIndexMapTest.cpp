@@ -23,7 +23,7 @@
 #include <boost/current_function.hpp>
 #include <cppunit/extensions/HelperMacros.h>
 
-#include <pni/utils/Types.hpp>
+#include <pni/core/Types.hpp>
 #include <list>
 
 #include "StaticCIndexMapTest.hpp"

@@ -26,7 +26,7 @@
 #include <vector>
 #include <list>
 
-#include <pni/utils/CIndexMap.hpp>
+#include <pni/core/CIndexMap.hpp>
 
 #include "IndexMapTest.hpp"
 
