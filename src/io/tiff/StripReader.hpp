@@ -26,8 +26,7 @@
  *
  */
 
-#ifndef TIFFSTRIPREADER_HPP_
-#define TIFFSTRIPREADER_HPP_
+#pragma once
 
 #include <iostream>
 #include <fstream>
@@ -39,7 +38,7 @@
 #include "../../Types.hpp"
 #include "../../DBuffer.hpp"
 
-using namespace pni::utils;
+using namespace pni::core;
 
 namespace pni {
 namespace io {
@@ -217,5 +216,3 @@ namespace tiff {
 }
 }
 }
-
-#endif /* TIFFSTRIPREADER_HPP_ */

@@ -23,17 +23,14 @@
  *     Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
  *
  */
-
-
-#ifndef __DATAREADER_HPP__
-#define __DATAREADER_HPP__
+#pragma once
 
 #include <memory>
 #include <iostream>
 #include <fstream>
 #include "../Types.hpp"
 
-using namespace pni::utils;
+using namespace pni::core;
 
 namespace pni{
 namespace io{
@@ -135,7 +132,7 @@ namespace io{
 
             \return name of the file from which to read data
             */
-            pni::utils::String filename() const;
+            pni::core::String filename() const;
 
             //-------------------------------------------------------------
             /*! \brief set filename
@@ -161,6 +158,3 @@ namespace io{
 //end of namespace
 }
 }
-
-
-#endif

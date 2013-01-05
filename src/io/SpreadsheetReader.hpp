@@ -23,9 +23,7 @@
  *     Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
  *
  */
-
-#ifndef __SPREADSHEETREADER_HPP__
-#define __SPREADSHEETREADER_HPP__
+#pragma once
 
 #include <vector>
 #include <boost/current_function.hpp>
@@ -216,6 +214,4 @@ namespace io{
 //end of namespace
 }
 }
-
-#endif
 

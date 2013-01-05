@@ -23,11 +23,11 @@
 #pragma once
 
 #include <typeinfo>
-#include <pni/utils/Types.hpp>
-#include <pni/utils/Array.hpp>
-#include <pni/utils/service.hpp>
+#include <pni/core/Types.hpp>
+#include <pni/core/Array.hpp>
+#include <pni/core/service.hpp>
 
-using namespace pni::utils;
+using namespace pni::core;
 
 /*!
 \brief multiindex pointer benchmark

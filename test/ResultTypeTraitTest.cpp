@@ -20,7 +20,7 @@
  *  Created on: Jul 25, 2012
  *      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
  */
-#include <pni/utils/Types.hpp>
+#include <pni/core/Types.hpp>
 
 #include "ResultTypeTraitTest.hpp"
 

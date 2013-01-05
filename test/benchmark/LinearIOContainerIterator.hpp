@@ -23,10 +23,10 @@
 #pragma once
 
 #include <typeinfo>
-#include <pni/utils/Types.hpp>
-#include <pni/utils/service.hpp>
+#include <pni/core/Types.hpp>
+#include <pni/core/service.hpp>
 
-using namespace pni::utils;
+using namespace pni::core;
 
 /*!
 \brief IO bechmark for linear containers

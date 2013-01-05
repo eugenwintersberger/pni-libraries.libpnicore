@@ -23,9 +23,7 @@
  *     Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
  *
  */
-
-#ifndef __IMAGEINFO_HPP__
-#define __IMAGEINFO_HPP__
+#pragma once
 
 #include<iostream>
 #include<vector>
@@ -35,7 +33,7 @@
 #include "../Exceptions.hpp"
 #include "ImageChannelInfo.hpp"
 
-using namespace pni::utils;
+using namespace pni::core;
 
 namespace pni{
 namespace io{
@@ -184,5 +182,3 @@ namespace io{
 //end of namespace
 }
 }
-
-#endif

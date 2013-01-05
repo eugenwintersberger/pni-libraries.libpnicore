@@ -24,8 +24,7 @@
  *
  */
 
-#ifndef __CBFTYPES_HPP__
-#define __CBFTYPES_HPP__
+#pragma once
 
 namespace pni{
 namespace io{ 
@@ -38,5 +37,3 @@ namespace cbf{
 }
 }
 }
-
-#endif

@@ -16,7 +16,7 @@ if GetOption("with_tiff"):
 sobjs = build_env.SharedObject(sources)
 aobjs = build_env.StaticObject(sources)
 
-hdr_inst_path = path.join(build_env["PREFIX"],"include/pni/utils/io")
+hdr_inst_path = path.join(build_env["PREFIX"],"include/pni/core/io")
 incpniutils_inst = build_env.Install(hdr_inst_path,Glob("*.hpp"))
 cbfhdr_inst = build_env.Install(path.join(hdr_inst_path,"cbf"),Glob("cbf/*.hpp"))
 tiffhdr_inst = build_env.Install(path.join(hdr_inst_path,"tiff"),Glob("tiff/*.hpp"))

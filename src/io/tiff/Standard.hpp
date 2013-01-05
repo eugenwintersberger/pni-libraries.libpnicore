@@ -26,14 +26,13 @@
  *
  */
 
-#ifndef __TIFFSTANDARD_HPP__
-#define __TIFFSTANDARD_HPP__
+#pragma once
 
 #include <map>
 #include "../../Types.hpp"
 
 namespace pni{
-    namespace utils{
+    namespace core{
 
         std::map<UInt16,String> TIFFTagNameMap = {
             {254,"NewSubfileType"},
@@ -125,10 +124,6 @@ namespace pni{
         };
 
     //end of namespace
-    }
+}
 }
 
-
-
-
-#endif /* __TIFFSTANDARD_HPP__ */

@@ -27,8 +27,7 @@
  *
  */
 
-#ifndef CBFREADER_HPP_
-#define CBFREADER_HPP_
+#pragma once
 
 #include<iostream>
 #include<fstream>
@@ -45,7 +44,7 @@
 #include "cbf/DectrisReader.hpp"
 #include "cbf/Types.hpp"
 
-using namespace pni::utils;
+using namespace pni::core;
 
 namespace pni{
 namespace io{
@@ -255,4 +254,3 @@ namespace io{
 }
 }
 
-#endif /* CBFREADER_HPP_ */
