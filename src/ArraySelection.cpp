@@ -98,7 +98,7 @@ namespace core{
 #endif
             offset[index] = slice.first();
             stride[index] = slice.stride();
-            shape[index] = pni::utils::size(slice);
+            shape[index] = pni::core::size(slice);
             index++;
         }
 
