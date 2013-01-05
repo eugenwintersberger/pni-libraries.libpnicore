@@ -1,5 +1,5 @@
 /*! \defgroup iterator_types Iterators
-\c libpniutils provides a some iterator types used in various templates
+\c libpnicore provides a some iterator types used in various templates
 throughout the library. As a normal user you usually do not need to care about
 these iterator templates. Thus, this page is merely interesting for developers. 
 
