@@ -25,9 +25,9 @@
 #include <random>
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
-#include <pni/utils/SizeType.hpp>
+#include <pni/core/SizeType.hpp>
 
-using namespace pni::utils;
+using namespace pni::core;
 
 class SizeTypeTest:public CppUnit::TestFixture
 {

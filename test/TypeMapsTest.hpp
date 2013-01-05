@@ -26,11 +26,11 @@
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
 
-#include <pni/utils/Types.hpp>
-#include <pni/utils/IDTypeMap.hpp>
-#include <pni/utils/TypeIDMap.hpp>
+#include <pni/core/Types.hpp>
+#include <pni/core/IDTypeMap.hpp>
+#include <pni/core/TypeIDMap.hpp>
 
-using namespace pni::utils;
+using namespace pni::core;
 
 class TypeMapsTest : public CppUnit::TestFixture
 {

@@ -25,15 +25,15 @@
 #include <iostream>
 #include <boost/current_function.hpp>
 
-#include <pni/utils/Types.hpp>
-#include <pni/utils/Binary.hpp>
+#include <pni/core/Types.hpp>
+#include <pni/core/Binary.hpp>
 
 #include "BinaryTest.hpp"
 
 
 CPPUNIT_TEST_SUITE_REGISTRATION(BinaryTest);
 
-using namespace pni::utils;
+using namespace pni::core;
 
 //-----------------------------------------------------------------------------
 void BinaryTest::setUp(){ }

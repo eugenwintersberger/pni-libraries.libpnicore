@@ -4,7 +4,7 @@ Import("test_env")
 
 
 #need to use here prepend in order to avoid triggering the istallation process
-sources_list = ["pniutilstest.cpp"]
+sources_list = ["pnicoretest.cpp"]
 sources_list.extend(["DBufferTest.cpp"])
 sources_list.extend(["RBufferTest.cpp"])
 sources_list.extend(["SBufferTest.cpp"])

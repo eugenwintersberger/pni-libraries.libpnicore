@@ -27,7 +27,7 @@
 
 #include "DArrayTest.hpp"
 
-using namespace pni::utils;
+using namespace pni::core;
 
 #define DYNAMICARRAY_TEST_REGISTRATION(T,BT,ALLOC)\
 static CPPUNIT_NS::AutoRegisterSuite< DArrayTest<T,BT<T,ALLOC> > >  \

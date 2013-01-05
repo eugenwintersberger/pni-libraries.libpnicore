@@ -22,11 +22,11 @@
  */
 #pragma once
 
-#include <pni/utils/DBuffer.hpp>
-#include <pni/utils/RBuffer.hpp>
-#include <pni/utils/NewAllocator.hpp>
+#include <pni/core/DBuffer.hpp>
+#include <pni/core/RBuffer.hpp>
+#include <pni/core/NewAllocator.hpp>
 
-using namespace pni::utils;
+using namespace pni::core;
 
 //-----------------------------------------------------------------------------
 template<typename T,typename Allocator>

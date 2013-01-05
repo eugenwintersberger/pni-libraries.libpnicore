@@ -27,13 +27,13 @@
 #include <vector>
 #include <algorithm>
 
-#include <pni/utils/NumArray.hpp>
-#include <pni/utils/DArray.hpp>
-#include <pni/utils/Scalar.hpp>
+#include <pni/core/NumArray.hpp>
+#include <pni/core/DArray.hpp>
+#include <pni/core/Scalar.hpp>
 
 #include "EqualityCheck.hpp"
 
-using namespace pni::utils;
+using namespace pni::core;
 
 /*!
  Do testing only for DArray - all array types provide the same interface and

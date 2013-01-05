@@ -26,7 +26,7 @@
 
 #include<cppunit/extensions/HelperMacros.h>
 
-using namespace pni::utils;
+using namespace pni::core;
 
 CPPUNIT_TEST_SUITE_REGISTRATION(ResultTypeTraitTest<Int16>);
 

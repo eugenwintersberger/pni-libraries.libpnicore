@@ -25,13 +25,13 @@
 #include<cppunit/extensions/HelperMacros.h>
 #include<boost/current_function.hpp>
 
-#include <pni/utils/DArray.hpp>
+#include <pni/core/DArray.hpp>
 
 #include "RandomDistributions.hpp"
 #include "EqualityCheck.hpp"
 #include "BufferHelper.hpp"
 
-using namespace pni::utils;
+using namespace pni::core;
 
 template<typename T,typename STORAGE>
 class DArrayTest : public CppUnit::TestFixture

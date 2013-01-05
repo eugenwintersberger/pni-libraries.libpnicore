@@ -27,7 +27,7 @@
 
 #include "NumArrayTest.hpp"
 
-using namespace pni::utils;
+using namespace pni::core;
 
 #define NUMARRAY_TEST_REGISTRATION(ATYPE,VTYPE)\
 static CPPUNIT_NS::AutoRegisterSuite< NumArrayTest<ATYPE<VTYPE> > >  \

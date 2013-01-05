@@ -28,7 +28,7 @@
 
 CPPUNIT_TEST_SUITE_REGISTRATION(TypeClassTest);
 
-using namespace pni::utils;
+using namespace pni::core;
 
 //-----------------------------------------------------------------------------
 void TypeClassTest::setUp(){ }

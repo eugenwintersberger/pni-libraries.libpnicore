@@ -25,11 +25,11 @@
 #include<cppunit/TestFixture.h>
 #include<cppunit/extensions/HelperMacros.h>
 
-#include <pni/utils/Scalar.hpp>
+#include <pni/core/Scalar.hpp>
 
 #define DOUBLE_PREC 1.e-3
 
-using namespace pni::utils;
+using namespace pni::core;
 
 class ScalarTest : public CppUnit::TestFixture
 {

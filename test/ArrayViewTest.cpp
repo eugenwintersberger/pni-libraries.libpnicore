@@ -26,15 +26,15 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/current_function.hpp>
 
-#include <pni/utils/DArray.hpp>
-#include <pni/utils/DBuffer.hpp>
-#include <pni/utils/ArrayOperations.hpp>
+#include <pni/core/DArray.hpp>
+#include <pni/core/DBuffer.hpp>
+#include <pni/core/ArrayOperations.hpp>
 
 #include "ArrayViewTest.hpp"
 
 CPPUNIT_TEST_SUITE_REGISTRATION(ArrayViewTest);
 
-using namespace pni::utils;
+using namespace pni::core;
 
 void ArrayViewTest::setUp()
 {

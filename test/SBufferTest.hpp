@@ -27,12 +27,12 @@
 #include <algorithm>
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
-#include <pni/utils/SBuffer.hpp>
+#include <pni/core/SBuffer.hpp>
 
 #include "RandomDistributions.hpp"
 #include "EqualityCheck.hpp"
 
-using namespace pni::utils;
+using namespace pni::core;
 
 template<typename T> 
 class SBufferTest:public CppUnit::TestFixture
