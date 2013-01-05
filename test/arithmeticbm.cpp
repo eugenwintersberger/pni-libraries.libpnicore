@@ -21,21 +21,21 @@
  *      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
  */
 
-#include <pni/utils/Types.hpp>
-#include <pni/utils/Array.hpp>
-#include <pni/utils/math/mt_inplace_arithmetics.hpp>
-#include <pni/utils/config/configuration.hpp>
-#include <pni/utils/config/config_parser.hpp>
+#include <pni/core/Types.hpp>
+#include <pni/core/Array.hpp>
+#include <pni/core/math/mt_inplace_arithmetics.hpp>
+#include <pni/core/config/configuration.hpp>
+#include <pni/core/config/config_parser.hpp>
 
 
-#include <pni/utils/benchmark/BenchmarkRunner.hpp>
-#include <pni/utils/benchmark/BenchmarkResult.hpp>
-#include <pni/utils/benchmark/ChronoTimer.hpp>
-#include <pni/utils/benchmark/ClockTimer.hpp>
+#include <pni/core/benchmark/BenchmarkRunner.hpp>
+#include <pni/core/benchmark/BenchmarkResult.hpp>
+#include <pni/core/benchmark/ChronoTimer.hpp>
+#include <pni/core/benchmark/ClockTimer.hpp>
 
 #include "benchmark/inplace_arithmetic_benchmark.hpp"
 
-using namespace pni::utils;
+using namespace pni::core;
 
 typedef ChronoTimer<std::chrono::high_resolution_clock,std::chrono::nanoseconds> bmtimer_t;
 

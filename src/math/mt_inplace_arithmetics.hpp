@@ -35,7 +35,7 @@
 #include "../config/library_config.hpp"
 
 namespace pni{
-namespace utils{
+namespace core{
 
     class range_distributor
     {

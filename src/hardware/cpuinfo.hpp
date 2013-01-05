@@ -24,7 +24,7 @@
 #pragma once
 
 namespace pni{
-namespace utils{
+namespace core{
    
     /*!
     \brief abstract class for cpu information

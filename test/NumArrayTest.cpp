@@ -24,7 +24,7 @@
 
 #include <iostream>
 #include <boost/shared_ptr.hpp>
-#include <pni/utils/math/mt_inplace_arithmetics.hpp>
+#include <pni/core/math/mt_inplace_arithmetics.hpp>
 
 #include "NumArrayTest.hpp"
 
