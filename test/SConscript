@@ -33,10 +33,10 @@ sources_list.extend(["configuration_test.cpp"])
 
 bm_sources = ["iteratorbm.cpp"]
 
-pniutils_test = test_env.Program("pniutilstest",sources_list)
+pnicore_test = test_env.Program("pnicoretest",sources_list)
 iterbm = test_env.Program("iteratorbm",bm_sources)
 multiindexbm = test_env.Program("multiindexbm",["multiindexbm.cpp"])
-test_targets = [pniutils_test,iterbm,multiindexbm]
+test_targets = [pnicore_test,iterbm,multiindexbm]
 
 test_env.Alias("test",test_targets)
 test_install = test_env.Install("$PREFIX/bin",test_targets)
