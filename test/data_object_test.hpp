@@ -28,6 +28,7 @@
 
 #include <pni/core/data_object.hpp>
 #include <functional>
+#include <sstream>
 
 using namespace pni::core;
 
@@ -38,9 +39,8 @@ template<typename ...DTYPES> void create_object(DArray<DTYPES...> &o)
 }
 
 //-----------------------------------------------------------------------------
-template<typename T,size_t ...SHAPE> void create_object(SArray<T,SHAPE...> &o)
+template<typename T,size_t ...DIMS> void create_object(SArray<T,DIMS...> &o)
 {
-    o = SArray<T,SHAPE...>();
 }
 
 //-----------------------------------------------------------------------------
@@ -52,7 +52,7 @@ template<typename T> void create_object(Scalar<T> &o)
 //-----------------------------------------------------------------------------
 template<typename ATYPE> void create_object(NumArray<ATYPE> &o)
 {
-
+    o = NumArray<ATYPE>(shape_t{3,2});
 }
 
 //-----------------------------------------------------------------------------
@@ -61,6 +61,7 @@ template<typename OT> class data_object_test : public CppUnit::TestFixture
         CPPUNIT_TEST_SUITE(data_object_test<OT>);
         CPPUNIT_TEST(test_construction);
         CPPUNIT_TEST(test_copy_and_move);
+        CPPUNIT_TEST(test_io);
         CPPUNIT_TEST_SUITE_END();
 
         OT _object1;
@@ -72,6 +73,7 @@ template<typename OT> class data_object_test : public CppUnit::TestFixture
 
         void test_construction();
         void test_copy_and_move();
+        void test_io();
 };
 
 //-----------------------------------------------------------------------------
@@ -95,9 +97,6 @@ template<typename OT> void data_object_test<OT>::test_construction()
     data_object o1(_object1);
     data_object o2(std::move(_object2));
 
-    CPPUNIT_ASSERT(_object1.size() == 6);
-    CPPUNIT_ASSERT(_object2.size() == 0);
-    
     CPPUNIT_ASSERT(o1.rank() == _object1.rank());
     CPPUNIT_ASSERT(o1.size() == _object1.size());
     CPPUNIT_ASSERT(o1.type_id() == OT::type_id);
@@ -129,6 +128,20 @@ template<typename OT> void data_object_test<OT>::test_copy_and_move()
 
     CPPUNIT_ASSERT_THROW(o3.rank(),MemoryNotAllocatedError);
     CPPUNIT_ASSERT_THROW(o3.size(),MemoryNotAllocatedError);
+
+}
+
+//-----------------------------------------------------------------------------
+template<typename OT> void data_object_test<OT>::test_io()
+{
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+
+    data_object o(_object1);
+    std::stringstream s("1 2 3 4 5 6");
+
+    s>>o;
+    std::cout<<o<<std::endl;
+
 
 }
 

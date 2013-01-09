@@ -27,6 +27,7 @@
 #include "Exceptions.hpp"
 #include "Types.hpp"
 #include "Array.hpp"
+#include "data_value.hpp"
 
 namespace pni{
 namespace core{
@@ -121,7 +122,41 @@ namespace core{
                     */
                     virtual std::istream &read(std::istream &is) = 0;
 
+                    //---------------------------------------------------------
+                    /*!
+                    \brief clone yourself
+
+                    This member function clones the wrapped object. This is
+                    particullary important when the resulting type earsure shall
+                    be copied.
+                    \return pointer to new interface instance
+                    */
                     virtual data_object_interface *clone() const = 0;
+
+
+                    //---------------------------------------------------------
+                    /*!
+                    \brief read value
+
+                    Function reads a value from the wrapped object and stores it
+                    to the memory address determined by *value. The function
+                    assumes that there is enough memory available
+                    \param i element index
+                    \param value pointer to memory location
+                    */
+                    virtual data_value get(size_t i) = 0;
+
+                    //---------------------------------------------------------
+                    /*!
+                    \brief write value
+
+                    Write a value from address *value to position i in the
+                    wrapped object. The data stored at *value will be casted to
+                    the internal data type of the wrapped object. 
+                    \param i element index
+                    \param value memory location from where to read data
+                    */
+                    virtual void set(size_t i,const data_value &value) = 0;
 
             };
 
@@ -174,9 +209,21 @@ namespace core{
                     virtual size_t size() const { return _object.size(); }
 
                     //---------------------------------------------------------
+                    virtual data_value get(size_t i)
+                    {
+                        return data_value(*(_object.begin()+i)); 
+                    }
+
+                    //---------------------------------------------------------
+                    virtual void set(size_t i,const data_value &value)
+                    {
+                        *(_object.begin()+i) = value.template as<typename OT::value_type>();
+                    }
+
+                    //---------------------------------------------------------
                     virtual std::ostream &write(std::ostream &os) const 
                     {
-
+                        os<<_object;
 
                         return os;
                     }
@@ -184,12 +231,18 @@ namespace core{
                     //---------------------------------------------------------
                     virtual std::istream &read(std::istream &is) 
                     {
-                        
+                        is>>_object; 
 
                         return is;
                     }
 
             };
+            
+            static void _throw_not_allocated_error(const ExceptionRecord &r)
+            {
+                throw MemoryNotAllocatedError(r,
+                        "Instance of data_object holds no data!");
+            }
 
             std::unique_ptr<data_object_interface> _ptr; //pointer to holder
         public:
@@ -214,10 +267,10 @@ namespace core{
             data_object(const T &o):
                 _ptr(new data_object_holder<T>(o))
             {
-                std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+                //std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
             }
 
-            //---------------------------------------------------------------------
+            //------------------------------------------------------------------
             /*!
             \brief move original object
 
@@ -239,83 +292,133 @@ namespace core{
                                 typename std::remove_reference<T>::type>::type>
                                 (std::forward<T>(o)))
             {
-                std::cout<<BOOST_CURRENT_FUNCTION<<std::endl; 
+                //std::cout<<BOOST_CURRENT_FUNCTION<<std::endl; 
             }
 
 
-            //---------------------------------------------------------------------
+            //------------------------------------------------------------------
             //copy constructor
             data_object(const data_object &e):_ptr(e._ptr->clone())
             {
-                std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+                //std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
             }
 
-            //---------------------------------------------------------------------
+            //------------------------------------------------------------------
             //move constructor
             data_object(data_object &&e):_ptr(std::move(e._ptr))
             {
-                std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+                //std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
             }
 
 
-            //===============public member functions===================
+            //=====================public member functions=====================
             TypeID type_id() const
             { 
                 if(_ptr)
                     return _ptr->type_id(); 
                 else
-                    throw MemoryNotAllocatedError(EXCEPTION_RECORD,
-                            "Instance of data_object holds no data!");
+                    data_object::_throw_not_allocated_error(EXCEPTION_RECORD);
+
+                return TypeID::NONE; //just to make the compiler happy
             }
             
-            //---------------------------------------------------------
+            //-----------------------------------------------------------------
             size_t rank() const 
             { 
                 if(_ptr)
                     return _ptr->rank(); 
                 else
-                    throw MemoryNotAllocatedError(EXCEPTION_RECORD,
-                            "Instance of data_object holds no data!");
+                    data_object::_throw_not_allocated_error(EXCEPTION_RECORD);
+
+                return 0; //just to make the compiler happy
             }
 
-            //---------------------------------------------------------
+            //-----------------------------------------------------------------
             shape_t shape() const 
             { 
                 if(_ptr)
                     return _ptr->shape(); 
                 else
-                    throw MemoryNotAllocatedError(EXCEPTION_RECORD,
-                            "Instance of data_object holds no data!");
+                    data_object::_throw_not_allocated_error(EXCEPTION_RECORD);
+
+                return shape_t(); //just to make the compiler happy
             }
 
-            //---------------------------------------------------------
+            //-----------------------------------------------------------------
             size_t size() const 
             { 
                 if(_ptr) 
                     return _ptr->size(); 
                 else
-                    throw MemoryNotAllocatedError(EXCEPTION_RECORD,
-                            "Instance of data_object holds no data!");
+                    data_object::_throw_not_allocated_error(EXCEPTION_RECORD);
+
+                return 0; //just to make the compiler happy
             }
 
-            //---------------------------------------------------------
+            //-----------------------------------------------------------------
             std::ostream &write(std::ostream &os) const 
             {
+                if(_ptr)
+                    return _ptr->write(os);
+                else
+                    data_object::_throw_not_allocated_error(EXCEPTION_RECORD);
 
-
-                return os;
+                return os; //just to make the compiler happy
             }
 
-            //---------------------------------------------------------
+            //-----------------------------------------------------------------
             std::istream &read(std::istream &is) 
             {
-                
+                if(_ptr)
+                    return _ptr->read(is);
+                else
+                    data_object::_throw_not_allocated_error(EXCEPTION_RECORD);
 
-                return is;
+                return is; //just to make the compiler happy
             }
 
+            //-----------------------------------------------------------------
+            data_value get(size_t i) const
+            {
+                if(_ptr)
+                    return _ptr->get(i);
+                else
+                    data_object::_throw_not_allocated_error(EXCEPTION_RECORD);
+            }
 
+            //-----------------------------------------------------------------
+            template<typename T> void set(size_t i,T v)
+            {
+                if(_ptr)
+                    _ptr->set(i,data_value(v));
+                else
+                    data_object::_throw_not_allocated_error(EXCEPTION_RECORD);
+            }
+
+            //-----------------------------------------------------------------
+            data_value operator[](size_t i) const
+            {
+                try
+                {
+                    return get(i);
+                }
+                catch(MemoryNotAllocatedError &error)
+                {
+                    error.append(EXCEPTION_RECORD);
+                    throw error;
+                }
+            }
     };
+
+    std::ostream &operator<<(std::ostream &os,const data_object &o)
+    {
+        return o.write(os);
+    }
+
+    std::istream &operator>>(std::istream &is,data_object &o)
+    {
+        return o.read(is);
+    }
 
 
 //end of namespace

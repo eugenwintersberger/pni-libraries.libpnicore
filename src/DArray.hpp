@@ -569,11 +569,39 @@ namespace core {
     const TypeID DArray<T,STORAGE,IMAP>::type_id = TypeIDMap<T>::type_id;
     //=====================non-member operators================================
 
+    /*!
+    \brief output operator
+
+    Writes content of a DArray to an output stream. 
+    \param o output stream
+    \param a array to output
+    \return output stream
+    */
     template<typename T,typename STORAGE>
     std::ostream &operator<<(std::ostream &o,const DArray<T,STORAGE> &a)
     {
-        o << "Dynamic Array of shape ("<<a.shape()<<")"<<std::endl;
+        for(auto v: a)
+            o<<v<<" ";
+
         return o;
+    }
+
+    //-------------------------------------------------------------------------
+    /*!
+    \brief input stream operator
+
+    Read data from an input stream. 
+    \param is input stream
+    \param a array where to store the data
+    \return reference to input stream
+    */
+    template<typename T,typename STORAGE>
+    std::istream &operator>>(std::istream &is,DArray<T,STORAGE> &a)
+    {
+        for(T &v: a)
+            is>>v;
+
+        return is;
     }
    
     //-------------------------------------------------------------------------
