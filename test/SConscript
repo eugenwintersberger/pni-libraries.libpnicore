@@ -8,7 +8,6 @@ sources_list = ["pnicoretest.cpp"]
 sources_list.extend(["DBufferTest.cpp"])
 sources_list.extend(["RBufferTest.cpp"])
 sources_list.extend(["SBufferTest.cpp"])
-sources_list.extend(["BufferTest.cpp"])
 sources_list.extend(["SizeTypeTest.cpp"])
 sources_list.extend(["StaticCIndexMapTest.cpp"])
 sources_list.extend(["IteratorTest.cpp"])
@@ -33,6 +32,7 @@ sources_list.extend(["TypeInfoTest.cpp"])
 sources_list.extend(["configuration_test.cpp"])
 sources_list.extend(["counter_test.cpp"])
 sources_list.extend(["index_iterator_test.cpp"])
+sources_list.extend(["data_object_test.cpp"])
 
 bm_sources = ["iteratorbm.cpp"]
 

@@ -24,6 +24,7 @@
 #include<iostream>
 #include<memory>
 
+#include "Exceptions.hpp"
 #include "Types.hpp"
 #include "Array.hpp"
 
@@ -65,7 +66,8 @@ namespace core{
                     the original object.
                     \return const pointer to void
                     */
-                    virtual const void *ptr() const = 0;
+                    //not yet implemented
+                    //virtual const void *ptr() const = 0;
 
                     //---------------------------------------------------------
                     /*!
@@ -107,7 +109,7 @@ namespace core{
                     \param os reference to output stream
                     \return reference to output stream
                     */
-                    std::ostream &write(std::ostream &os) const;
+                    virtual std::ostream &write(std::ostream &os) const = 0;
 
                     //---------------------------------------------------------
                     /*!
@@ -117,7 +119,9 @@ namespace core{
                     \param is reference to input stream
                     \return reference to input stream
                     */
-                    std::istream &read(std::istream &is);
+                    virtual std::istream &read(std::istream &is) = 0;
+
+                    virtual data_object_interface *clone() const = 0;
 
             };
 
@@ -127,55 +131,111 @@ namespace core{
             class data_object_holder:public data_object_interface
             {
                 public:
-                    OT _object;
+                    OT _object; //!< the original object 
                 public:
+                    //=============constructors and destructor=================
                     //construct by copying o
-                    Holder(const T &o):_object(o) {}
+                    data_object_holder(const OT &o):_object(o) {}
+
+                    //---------------------------------------------------------
                     //construct by moving o
-                    Holder(T &&o):_object(std::move(o)) {}
+                    data_object_holder(OT &&o):_object(std::move(o)) {}
+
+                    //---------------------------------------------------------
                     //copy constructor
-                    Holder(const Holder<T> &o):_object(o._object) {}
+                    data_object_holder(const data_object_holder<OT> &o):
+                        _object(o._object) 
+                    {}
+
+                    //---------------------------------------------------------
                     //move constructor
-                    Holder(Holder<T> &&o):_object(std::move(o._object)) {}
+                    data_object_holder(data_object_holder<OT> &&o):
+                        _object(std::move(o._object)) 
+                    {}
 
-                    //implements the virtual member function
-                    virtual double value() const
+                    virtual data_object_interface *clone() const 
                     {
-                        return double(_object.value());
+                        return new data_object_holder<OT>(_object);
                     }
 
-                    T clone() const
+                    //===============public member functions===================
+                    virtual TypeID type_id() const{ return OT::type_id; }
+                    
+                    //---------------------------------------------------------
+                    virtual size_t rank() const { return _object.rank(); }
+
+                    //---------------------------------------------------------
+                    virtual shape_t shape() const 
                     {
-                        return T(_object);
+                        return _object.template shape<shape_t>();
                     }
+
+                    //---------------------------------------------------------
+                    virtual size_t size() const { return _object.size(); }
+
+                    //---------------------------------------------------------
+                    virtual std::ostream &write(std::ostream &os) const 
+                    {
+
+
+                        return os;
+                    }
+
+                    //---------------------------------------------------------
+                    virtual std::istream &read(std::istream &is) 
+                    {
+                        
+
+                        return is;
+                    }
+
             };
 
-            std::unique_ptr<Interface> _ptr; //pointer to holder
+            std::unique_ptr<data_object_interface> _ptr; //pointer to holder
         public:
-            //---------------------------------------------------------------------
-            //construction by copying o
+            //===================constructors and destructor===================
+            /*!
+            \brief copy original object
+
+            This constructor creates a type erasure by copying the original data
+            to the internal object.
+            \tparam T type of the object. 
+            \param o const reference to the original object
+            */
             template<typename T,
+                     //this template expression is necessary to avoid that this
+                     //constructor is callend when data_object itself is to be
+                     //copied (see below for the correct copy constructor)
                      typename  = typename std::enable_if<
                                        !std::is_same<data_object,typename
                                        std::remove_reference<T>::type >::value 
                                        >::type
                     > 
             data_object(const T &o):
-                _ptr(new Holder<T>(o))
+                _ptr(new data_object_holder<T>(o))
             {
                 std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
             }
 
             //---------------------------------------------------------------------
-            //construction by moving o
+            /*!
+            \brief move original object
+
+            Constructor moves the original object.
+            \tparam T original type
+            \param o rvalue reference to the original object
+            */
             template<typename T,
+                     //this template expression is necessary to avoid that this
+                     //constructor is used when a data_object by itself is to be
+                     //moved (seel below for the correct move constructor)
                      typename = typename std::enable_if<
                                        !std::is_same<data_object,typename
                                        std::remove_reference<T>::type >::value 
                                        >::type
                     > 
             data_object(T &&o):
-                _ptr(new Holder<typename std::remove_cv<
+                _ptr(new data_object_holder<typename std::remove_cv<
                                 typename std::remove_reference<T>::type>::type>
                                 (std::forward<T>(o)))
             {
@@ -185,7 +245,7 @@ namespace core{
 
             //---------------------------------------------------------------------
             //copy constructor
-            data_object(const data_object &e):_ptr(e._ptr)
+            data_object(const data_object &e):_ptr(e._ptr->clone())
             {
                 std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
             }
@@ -198,16 +258,65 @@ namespace core{
             }
 
 
+            //===============public member functions===================
+            TypeID type_id() const
+            { 
+                if(_ptr)
+                    return _ptr->type_id(); 
+                else
+                    throw MemoryNotAllocatedError(EXCEPTION_RECORD,
+                            "Instance of data_object holds no data!");
+            }
+            
+            //---------------------------------------------------------
+            size_t rank() const 
+            { 
+                if(_ptr)
+                    return _ptr->rank(); 
+                else
+                    throw MemoryNotAllocatedError(EXCEPTION_RECORD,
+                            "Instance of data_object holds no data!");
+            }
 
-            //delegate
-            double value() const { return _ptr->value(); }
+            //---------------------------------------------------------
+            shape_t shape() const 
+            { 
+                if(_ptr)
+                    return _ptr->shape(); 
+                else
+                    throw MemoryNotAllocatedError(EXCEPTION_RECORD,
+                            "Instance of data_object holds no data!");
+            }
+
+            //---------------------------------------------------------
+            size_t size() const 
+            { 
+                if(_ptr) 
+                    return _ptr->size(); 
+                else
+                    throw MemoryNotAllocatedError(EXCEPTION_RECORD,
+                            "Instance of data_object holds no data!");
+            }
+
+            //---------------------------------------------------------
+            std::ostream &write(std::ostream &os) const 
+            {
+
+
+                return os;
+            }
+
+            //---------------------------------------------------------
+            std::istream &read(std::istream &is) 
+            {
+                
+
+                return is;
+            }
+
 
     };
 
-    std::ostream &operator<<(std::ostream &stream,const Erasure &e)
-    {
-        return stream<<e.value();
-    }
 
 //end of namespace
 }
