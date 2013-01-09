@@ -32,6 +32,7 @@ sources_list.extend(["TypeInfoTest.cpp"])
 sources_list.extend(["configuration_test.cpp"])
 sources_list.extend(["counter_test.cpp"])
 sources_list.extend(["index_iterator_test.cpp"])
+sources_list.extend(["data_value_test.cpp"])
 sources_list.extend(["data_object_test.cpp"])
 
 bm_sources = ["iteratorbm.cpp"]
