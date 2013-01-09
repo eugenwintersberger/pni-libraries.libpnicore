@@ -292,8 +292,73 @@ using namespace boost::numeric;
                 return CTYPE{1};
             }
 
+            //------------------------------------------------------------------
+            //! get iterator to first element
+            iterator begin() 
+            { 
+                return this->_data.begin(); 
+            }
+
+            //------------------------------------------------------------------
+            //! get iterator to last+1 element
+            iterator end() 
+            { 
+                return this->_data.end();
+            }
+
+            //------------------------------------------------------------------
+            //! get const iterator to first element
+            const_iterator begin() const 
+            { 
+                return this->_data.begin(); 
+            }
+
+            //------------------------------------------------------------------
+            //! get const iterator to last+1 element
+            const_iterator end() const 
+            { 
+                return this->_data.end();
+            }
+
+            
+
+
 
     };
+
+    /*!
+    \brief stream output operator
+
+    Write content to output stream.
+    \param os output stream
+    \param s scalar value
+    \return reference to output stream
+    */
+    template<typename T>
+    std::ostream &operator<<(std::ostream &os,const Scalar<T> &s)
+    {
+        T value = s[0]; 
+        os<<value;
+        return os;
+    }
+
+    //-------------------------------------------------------------------------
+    /*!
+    \brief input strema data
+
+    Read content from input stream
+    \param is input stream
+    \param s scalar 
+    \return reference to input stream
+    */
+    template<typename T>
+    std::istream &operator>>(std::istream &is,Scalar<T> &s)
+    {
+        T value;
+        is>>value;
+        s = value;
+        return is;
+    }
 
 //end of namespace
 }

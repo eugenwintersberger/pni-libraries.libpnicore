@@ -25,10 +25,13 @@
 #include<cppunit/extensions/HelperMacros.h>
 
 #include <pni/core/Array.hpp>
+#include <pni/core/Scalar.hpp>
 #include "data_object_test.hpp"
 typedef SArray<UInt32,4,5> sarray_t;
 typedef NumArray<DArray<Float64> > narray_t;
+typedef Scalar<Int64> scalar_t;
 
 CPPUNIT_TEST_SUITE_REGISTRATION(data_object_test<DArray<Float32> >);
 CPPUNIT_TEST_SUITE_REGISTRATION(data_object_test<sarray_t> );
 CPPUNIT_TEST_SUITE_REGISTRATION(data_object_test<narray_t> );
+CPPUNIT_TEST_SUITE_REGISTRATION(data_object_test<scalar_t>);
