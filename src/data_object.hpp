@@ -37,6 +37,24 @@ namespace core{
 
     This is a type erasure for virtually all objects in pnicore that hold data.
     It provides a very simple interface to access this data.
+    The construction is rather simple
+    \code 
+    data_object obj = DArray<Float32>(shape_t{104,200});
+    \endcode
+    In this example the object held by data_object will be constructed using
+    move operation as the right hand side of the assignment operator is a
+    temporary. Alternatively, the object can be copied using something like this
+    \code
+    DArray<Float32> array(shape_t{104,200});
+    data_object obj = array;
+    \endcode
+    in which case the copy constructor is used to copy the array's data. 
+
+    Another important question is how to get the original object back. Several
+    cast functions are defined for the data_object class. 
+    
+
+
     */
     class data_object //the type erasure
     {
@@ -158,6 +176,16 @@ namespace core{
                     */
                     virtual void set(size_t i,const data_value &value) = 0;
 
+                    //---------------------------------------------------------
+                    /*!
+                    \brief get type name 
+
+                    Return the mangled name of the original type wrapped by the
+                    type erasure.
+                    \return type name
+                    */
+                    virtual String type_name() const = 0;
+
             };
 
             //-----------------------------------------------------------------
@@ -236,13 +264,32 @@ namespace core{
                         return is;
                     }
 
+                    //---------------------------------------------------------
+                    virtual String type_name() const
+                    {
+                        return typeid(OT).name();
+                    }
+
             };
-            
+           
+            /*!
+            \brief throw exception
+
+            Static helper method that throws a MemoryNotAllcatedError if the
+            type erasure holds no data and data access is requested by the user.
+            \throw MemoryNotAllocatedError
+            \param r exception record where the error occured.
+            */
             static void _throw_not_allocated_error(const ExceptionRecord &r)
             {
                 throw MemoryNotAllocatedError(r,
                         "Instance of data_object holds no data!");
             }
+
+            template<typename VT> 
+                friend VT *data_object_cast(data_object *o);
+            template<typename VT> 
+                friend const VT *data_object_cast(const data_object *o);
 
             std::unique_ptr<data_object_interface> _ptr; //pointer to holder
         public:
@@ -298,93 +345,31 @@ namespace core{
 
             //------------------------------------------------------------------
             //copy constructor
-            data_object(const data_object &e):_ptr(e._ptr->clone())
-            {
-                //std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
-            }
-
+            data_object(const data_object &e);
             //------------------------------------------------------------------
             //move constructor
-            data_object(data_object &&e):_ptr(std::move(e._ptr))
-            {
-                //std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
-            }
-
+            data_object(data_object &&e);
 
             //=====================public member functions=====================
-            TypeID type_id() const
-            { 
-                if(_ptr)
-                    return _ptr->type_id(); 
-                else
-                    data_object::_throw_not_allocated_error(EXCEPTION_RECORD);
-
-                return TypeID::NONE; //just to make the compiler happy
-            }
+            TypeID type_id() const;
             
             //-----------------------------------------------------------------
-            size_t rank() const 
-            { 
-                if(_ptr)
-                    return _ptr->rank(); 
-                else
-                    data_object::_throw_not_allocated_error(EXCEPTION_RECORD);
-
-                return 0; //just to make the compiler happy
-            }
+            size_t rank() const;
 
             //-----------------------------------------------------------------
-            shape_t shape() const 
-            { 
-                if(_ptr)
-                    return _ptr->shape(); 
-                else
-                    data_object::_throw_not_allocated_error(EXCEPTION_RECORD);
-
-                return shape_t(); //just to make the compiler happy
-            }
+            shape_t shape() const;
 
             //-----------------------------------------------------------------
-            size_t size() const 
-            { 
-                if(_ptr) 
-                    return _ptr->size(); 
-                else
-                    data_object::_throw_not_allocated_error(EXCEPTION_RECORD);
-
-                return 0; //just to make the compiler happy
-            }
+            size_t size() const; 
 
             //-----------------------------------------------------------------
-            std::ostream &write(std::ostream &os) const 
-            {
-                if(_ptr)
-                    return _ptr->write(os);
-                else
-                    data_object::_throw_not_allocated_error(EXCEPTION_RECORD);
-
-                return os; //just to make the compiler happy
-            }
+            std::ostream &write(std::ostream &os) const;
 
             //-----------------------------------------------------------------
-            std::istream &read(std::istream &is) 
-            {
-                if(_ptr)
-                    return _ptr->read(is);
-                else
-                    data_object::_throw_not_allocated_error(EXCEPTION_RECORD);
-
-                return is; //just to make the compiler happy
-            }
+            std::istream &read(std::istream &is);
 
             //-----------------------------------------------------------------
-            data_value get(size_t i) const
-            {
-                if(_ptr)
-                    return _ptr->get(i);
-                else
-                    data_object::_throw_not_allocated_error(EXCEPTION_RECORD);
-            }
+            data_value get(size_t i) const;
 
             //-----------------------------------------------------------------
             template<typename T> void set(size_t i,T v)
@@ -396,28 +381,81 @@ namespace core{
             }
 
             //-----------------------------------------------------------------
-            data_value operator[](size_t i) const
-            {
-                try
-                {
-                    return get(i);
-                }
-                catch(MemoryNotAllocatedError &error)
-                {
-                    error.append(EXCEPTION_RECORD);
-                    throw error;
-                }
-            }
+            data_value operator[](size_t i) const;
+
+            //-----------------------------------------------------------------
+            String type_name() const;
     };
 
-    std::ostream &operator<<(std::ostream &os,const data_object &o)
+
+    /*!
+    \brief stream output
+
+    Writes the content of a data_object to an output stream.
+    \param os reference to output stream
+    \param o instance of data_object
+    \return reference to output stream
+    */
+    std::ostream &operator<<(std::ostream &os,const data_object &o);
+
+    //-------------------------------------------------------------------------
+    /*!
+    \brief stream input
+
+    Store data from stream to data_object.
+    \param is reference to input stream
+    \param o reference to data object
+    \return reference to input stream
+    */
+    std::istream &operator>>(std::istream &is,data_object &o);
+
+    //-------------------------------------------------------------------------
+    /*!
+    \brief cast pointer to data_object
+
+    Template function that casts an instance of data_object to its original
+    type. In this case a pointer to the original object is returned. 
+    
+    */
+    template<typename VT> VT *data_object_cast(data_object *o)
     {
-        return o.write(os);
+        if(o->type_name() == typeid(VT).name())
+        {
+            return &dynamic_cast<data_object::data_object_holder<VT>*>(o->_ptr.get())->_object;
+        }
+
+        return nullptr; 
     }
 
-    std::istream &operator>>(std::istream &is,data_object &o)
+    //-------------------------------------------------------------------------
+    /*!
+    \brief cast const pointer to data_object
+
+    */
+    template<typename VT> const VT *data_object_cast(const data_object *o)
     {
-        return o.read(is);
+        return data_object_cast<VT>(const_cast<data_object *>(o));
+        
+    }
+
+    //-------------------------------------------------------------------------
+    /*!
+    \brief cast data_object instance
+
+    */
+    template<typename VT> VT data_object_cast(data_object &o)
+    {
+        return *data_object_cast<VT>(&o);
+    }
+
+    //-------------------------------------------------------------------------
+    /*!
+    \brief cast const data_object
+
+    */
+    template<typename VT> VT data_object_cast(const data_object &o)
+    {
+        return data_object_cast<VT>(const_cast<data_object&>(o));
     }
 
 

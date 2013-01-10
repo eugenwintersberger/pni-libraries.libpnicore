@@ -90,11 +90,13 @@ using namespace boost::numeric;
 
             //-----------------------------------------------------------------
             //! copy constructor
-            explicit Scalar(const array_type &s):_data(s._data) {}
+            Scalar(const array_type &s):_data(s._data) {}
             
             //-----------------------------------------------------------------
             //! constructor from a scalar value
-            explicit Scalar(const value_type &r):_data({r}) {}
+            Scalar(const value_type &r):_data({r}) {}
+
+            //-----------------------------------------------------------------
 
             //-----------------------------------------------------------------
             //! destructor

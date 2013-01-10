@@ -62,6 +62,9 @@ template<typename OT> class data_object_test : public CppUnit::TestFixture
         CPPUNIT_TEST(test_construction);
         CPPUNIT_TEST(test_copy_and_move);
         CPPUNIT_TEST(test_io);
+        CPPUNIT_TEST(test_inquery);
+        CPPUNIT_TEST(test_pointer_cast);
+        CPPUNIT_TEST(test_cast);
         CPPUNIT_TEST_SUITE_END();
 
         OT _object1;
@@ -74,6 +77,9 @@ template<typename OT> class data_object_test : public CppUnit::TestFixture
         void test_construction();
         void test_copy_and_move();
         void test_io();
+        void test_inquery();
+        void test_pointer_cast();
+        void test_cast();
 };
 
 //-----------------------------------------------------------------------------
@@ -141,8 +147,47 @@ template<typename OT> void data_object_test<OT>::test_io()
 
     s>>o;
     std::cout<<o<<std::endl;
-
-
 }
 
+//-----------------------------------------------------------------------------
+template<typename OT> void data_object_test<OT>::test_inquery()
+{
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
+    data_object o(_object1);
+    CPPUNIT_ASSERT(o.type_name() == typeid(OT).name());
+}
+
+//-----------------------------------------------------------------------------
+template<typename OT> void data_object_test<OT>::test_pointer_cast()
+{
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+
+    data_object o(_object1);
+
+    OT *co = data_object_cast<OT>(&o);
+    CPPUNIT_ASSERT(co->size() == _object1.size());
+    CPPUNIT_ASSERT(co->rank() == _object1.rank());
+
+    const data_object *o2 = new data_object(_object2);
+    const OT *cp2 = data_object_cast<OT>(o2);
+
+    CPPUNIT_ASSERT(cp2->size() == _object2.size());
+    CPPUNIT_ASSERT(cp2->rank() == _object2.rank()); 
+}
+
+//-----------------------------------------------------------------------------
+template<typename OT> void data_object_test<OT>::test_cast()
+{
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+
+    data_object o(_object1);
+
+    OT co = data_object_cast<OT>(o);
+    CPPUNIT_ASSERT(co.size() == _object1.size());
+    CPPUNIT_ASSERT(co.rank() == _object1.rank());
+
+    const data_object &o2 = o;
+    OT co2 = data_object_cast<OT>(o2);
+
+}
