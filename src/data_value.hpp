@@ -32,6 +32,19 @@
 namespace pni{
 namespace core{
 
+    /*!
+    \brief type erasure for POD data
+
+    This is a very simple type erasure for POD data. Only those data types
+    defined in Types.hpp in the pni core library cane be used along with this
+    type erasure (a proper TypeID value must be available for a data types). 
+    No additional requirements are made on a data type.  
+    \code
+    Float64 value = 100.243;
+    data_value dv = value;
+    \encode
+
+    */
     class data_value
     {
         private:
