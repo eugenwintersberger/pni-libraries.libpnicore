@@ -85,9 +85,10 @@ namespace core{
 
 
             //===============public inerface implementation============
+            
             virtual TypeID type_id() const 
             {
-                return TypeIDMap<T>::type_id;
+                return TypeIDMap<typename get_reference_type<T>::value_type >::type_id;
             }
 
             //---------------------------------------------------------
@@ -97,7 +98,7 @@ namespace core{
             }
 
             //---------------------------------------------------------
-            T as() const { return get_reference(_value); } 
+            T as() const { return _value; } 
 
             //---------------------------------------------------------
             virtual std::ostream &write(std::ostream &stream) const
