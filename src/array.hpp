@@ -17,7 +17,7 @@
  * along with libpnicore.  If not, see <http://www.gnu.org/licenses/>.
  *************************************************************************
  *
- * Created on: 11 08, 2013
+ * Created on: Jan 11, 2013
  *     Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
  */
 #pragma once
@@ -27,7 +27,8 @@
 #include "Exceptions.hpp"
 #include "Types.hpp"
 #include "Array.hpp"
-#include "data_value.hpp"
+#include "array_holder.hpp"
+
 
 namespace pni{
 namespace core{
@@ -78,12 +79,7 @@ namespace core{
                         "Instance of data_object holds no data!");
             }
 
-            template<typename VT> 
-                friend VT *data_object_cast(data_object *o);
-            template<typename VT> 
-                friend const VT *data_object_cast(const data_object *o);
-
-            std::unique_ptr<data_object_interface> _ptr; //pointer to holder
+            std::unique_ptr<array_holder_interface> _ptr; //pointer to holder
         public:
             //===================constructors and destructor===================
             /*!
@@ -99,12 +95,11 @@ namespace core{
                      //constructor is callend when data_object itself is to be
                      //copied (see below for the correct copy constructor)
                      typename  = typename std::enable_if<
-                                       !std::is_same<data_object,typename
+                                       !std::is_same<array,typename
                                        std::remove_reference<T>::type >::value 
                                        >::type
                     > 
-            data_object(const T &o):
-                _ptr(new data_object_holder<T>(o))
+            array(const T &o):_ptr(new array_holder<T>(o))
             {
                 //std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
             }
@@ -122,12 +117,12 @@ namespace core{
                      //constructor is used when a data_object by itself is to be
                      //moved (seel below for the correct move constructor)
                      typename = typename std::enable_if<
-                                       !std::is_same<data_object,typename
+                                       !std::is_same<array,typename
                                        std::remove_reference<T>::type >::value 
                                        >::type
                     > 
-            data_object(T &&o):
-                _ptr(new data_object_holder<typename std::remove_cv<
+            array(T &&o):
+                _ptr(new array_holder<typename std::remove_cv<
                                 typename std::remove_reference<T>::type>::type>
                                 (std::forward<T>(o)))
             {
@@ -137,10 +132,10 @@ namespace core{
 
             //------------------------------------------------------------------
             //copy constructor
-            data_object(const data_object &e);
+            array(const array &e);
             //------------------------------------------------------------------
             //move constructor
-            data_object(data_object &&e);
+            array(array &&e);
 
             //=====================public member functions=====================
             /*!
@@ -173,22 +168,8 @@ namespace core{
             std::istream &read(std::istream &is);
 
             //-----------------------------------------------------------------
-            //! get value as data_value
-            data_value get(size_t i) const;
-
-            //-----------------------------------------------------------------
-            //! set value 
-            template<typename T> void set(size_t i,T v)
-            {
-                if(_ptr)
-                    _ptr->set(i,data_value(v));
-                else
-                    data_object::_throw_not_allocated_error(EXCEPTION_RECORD);
-            }
-
-            //-----------------------------------------------------------------
             //! get element at index i
-            data_value operator[](size_t i) const;
+            value operator[](size_t i) const;
 
             //-----------------------------------------------------------------
             //! return the type name
@@ -204,7 +185,7 @@ namespace core{
     \param o instance of data_object
     \return reference to output stream
     */
-    std::ostream &operator<<(std::ostream &os,const data_object &o);
+    std::ostream &operator<<(std::ostream &os,const array &o);
 
     //-------------------------------------------------------------------------
     /*!
@@ -215,56 +196,8 @@ namespace core{
     \param o reference to data object
     \return reference to input stream
     */
-    std::istream &operator>>(std::istream &is,data_object &o);
+    std::istream &operator>>(std::istream &is,array &o);
 
-    //-------------------------------------------------------------------------
-    /*!
-    \brief cast pointer to data_object
-
-    Template function that casts an instance of data_object to its original
-    type. In this case a pointer to the original object is returned. 
-    
-    */
-    template<typename VT> VT *data_object_cast(data_object *o)
-    {
-        if(o->type_name() == typeid(VT).name())
-        {
-            return &dynamic_cast<data_object::data_object_holder<VT>*>(o->_ptr.get())->_object;
-        }
-
-        return nullptr; 
-    }
-
-    //-------------------------------------------------------------------------
-    /*!
-    \brief cast const pointer to data_object
-
-    */
-    template<typename VT> const VT *data_object_cast(const data_object *o)
-    {
-        return data_object_cast<VT>(const_cast<data_object *>(o));
-        
-    }
-
-    //-------------------------------------------------------------------------
-    /*!
-    \brief cast data_object instance
-
-    */
-    template<typename VT> VT data_object_cast(data_object &o)
-    {
-        return *data_object_cast<VT>(&o);
-    }
-
-    //-------------------------------------------------------------------------
-    /*!
-    \brief cast const data_object
-
-    */
-    template<typename VT> VT data_object_cast(const data_object &o)
-    {
-        return data_object_cast<VT>(const_cast<data_object&>(o));
-    }
 
 
 //end of namespace

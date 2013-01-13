@@ -36,6 +36,7 @@ sources_list.extend(["data_value_test.cpp"])
 sources_list.extend(["data_object_test.cpp"])
 sources_list.extend(["value_test.cpp"])
 sources_list.extend(["value_ref_test.cpp"])
+sources_list.extend(["array_test.cpp"])
 
 bm_sources = ["iteratorbm.cpp"]
 

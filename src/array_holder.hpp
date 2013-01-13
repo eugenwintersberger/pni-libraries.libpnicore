@@ -32,21 +32,21 @@ namespace core{
         private:
             OT _object; //!< the original object 
         public:
-            //=============constructors and destructor=================
+            //==================constructors and destructor====================
             //construct by copying o
             array_holder(const OT &o):_object(o) {}
 
-            //---------------------------------------------------------
+            //-----------------------------------------------------------------
             //construct by moving o
             array_holder(OT &&o):_object(std::move(o)) {}
 
-            //---------------------------------------------------------
+            //-----------------------------------------------------------------
             //copy constructor
             array_holder(const array_holder<OT> &o):
                 _object(o._object) 
             {}
 
-            //---------------------------------------------------------
+            //-----------------------------------------------------------------
             //move constructor
             array_holder(array_holder<OT> &&o):
                 _object(std::move(o._object)) 
@@ -57,34 +57,46 @@ namespace core{
                 return new array_holder<OT>(_object);
             }
 
-            //===============public member functions===================
+            //====================public member functions======================
             virtual TypeID type_id() const{ return OT::type_id; }
             
-            //---------------------------------------------------------
+            //-----------------------------------------------------------------
             virtual size_t rank() const { return _object.rank(); }
 
-            //---------------------------------------------------------
+            //-----------------------------------------------------------------
             virtual shape_t shape() const 
             {
                 return _object.template shape<shape_t>();
             }
 
-            //---------------------------------------------------------
+            //-----------------------------------------------------------------
             virtual size_t size() const { return _object.size(); }
 
-            //---------------------------------------------------------
-            virtual data_value get(size_t i)
+            //-----------------------------------------------------------------
+            virtual value operator[](size_t i) const
             {
-                return data_value(*(_object.begin()+i)); 
+                return value(_object[i]);
             }
 
-            //---------------------------------------------------------
-            virtual void set(size_t i,const data_value &value)
+            //-----------------------------------------------------------------
+            virtual value_ref operator[](size_t i) 
             {
-                *(_object.begin()+i) = value.template as<typename OT::value_type>();
+                return value_ref(std::ref(_object[i]));
             }
 
-            //---------------------------------------------------------
+            //-----------------------------------------------------------------
+            virtual value at(size_t i) const 
+            {
+                return value(_object.at(i));
+            }
+
+            //-----------------------------------------------------------------
+            virtual value_ref at(size_t i) 
+            {
+                return value_ref(std::ref(_object.at(i)));
+            }
+
+            //-----------------------------------------------------------------
             virtual std::ostream &write(std::ostream &os) const 
             {
                 os<<_object;
@@ -92,7 +104,7 @@ namespace core{
                 return os;
             }
 
-            //---------------------------------------------------------
+            //-----------------------------------------------------------------
             virtual std::istream &read(std::istream &is) 
             {
                 is>>_object; 
@@ -100,7 +112,7 @@ namespace core{
                 return is;
             }
 
-            //---------------------------------------------------------
+            //-----------------------------------------------------------------
             virtual String type_name() const
             {
                 return typeid(OT).name();

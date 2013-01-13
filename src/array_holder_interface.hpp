@@ -24,6 +24,7 @@
 
 #include <iostream>
 #include "value.hpp"
+#include "value_ref.hpp"
 
 namespace pni{
 namespace core{
@@ -125,6 +126,18 @@ namespace core{
             \return type name
             */
             virtual String type_name() const = 0;
+
+            //-----------------------------------------------------------------
+            virtual value operator[](size_t i) const = 0;
+
+            //-----------------------------------------------------------------
+            virtual value_ref operator[](size_t i) = 0;
+
+            //-----------------------------------------------------------------
+            virtual value at(size_t i) const = 0;
+
+            //-----------------------------------------------------------------
+            virtual value_ref at(size_t i) = 0;
 
     };
 
