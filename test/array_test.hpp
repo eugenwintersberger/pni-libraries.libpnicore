@@ -65,6 +65,7 @@ template<typename OT> class array_test : public CppUnit::TestFixture
         CPPUNIT_TEST(test_inquery);
         CPPUNIT_TEST(test_element_access);
         CPPUNIT_TEST(test_at_access);
+        CPPUNIT_TEST(test_iterator);
         CPPUNIT_TEST_SUITE_END();
 
         OT _object1;
@@ -80,6 +81,7 @@ template<typename OT> class array_test : public CppUnit::TestFixture
         void test_inquery();
         void test_element_access();
         void test_at_access();
+        void test_iterator();
 };
 
 //-----------------------------------------------------------------------------
@@ -165,6 +167,25 @@ template<typename OT> void array_test<OT>::test_element_access()
         check_equality(typename OT::value_type(i),
                        o[i].as<typename OT::value_type>());
 
+}
+
+//-----------------------------------------------------------------------------
+template<typename OT> void array_test<OT>::test_iterator()
+{
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+
+    array o(_object1);
+   
+    typename OT::value_type v = typename OT::value_type(0);
+    for(array::iterator iter = o.begin();iter!=o.end();++iter)
+        CPPUNIT_ASSERT_NO_THROW(*iter = v++);
+
+    std::cout<<o<<std::endl;
+
+    v = typename OT::value_type(0);
+    for(auto iter = o.begin();iter!=o.end();++iter)
+        check_equality((*iter).as<typename OT::value_type>(),
+                       v++); 
 }
 
 //-----------------------------------------------------------------------------

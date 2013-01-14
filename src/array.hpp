@@ -28,10 +28,31 @@
 #include "Types.hpp"
 #include "Array.hpp"
 #include "array_holder.hpp"
+#include "Iterator.hpp"
 
 
 namespace pni{
 namespace core{
+    
+    class array;
+
+    template<> class IterTypes<array,0>
+    {
+        public:
+            typedef array *cont_ptr;
+            typedef value_ref return_type;
+            typedef value* ptr_type;
+            typedef value_ref ref_type;
+    };
+
+    template<> class IterTypes<array,1>
+    {
+        public:
+            typedef const array *cont_ptr;
+            typedef value return_type;
+            typedef const value* ptr_type;
+            typedef const value_ref ref_type;
+    };
 
     /*!
     \brief type erasure for data objects
@@ -62,8 +83,6 @@ namespace core{
     class array //the type erasure
     {
         private:
-
-
            
             /*!
             \brief throw exception
@@ -81,6 +100,10 @@ namespace core{
 
             std::unique_ptr<array_holder_interface> _ptr; //pointer to holder
         public:
+            //====================public types=================================
+            typedef value value_type;
+            typedef Iterator<array,0> iterator;
+            typedef Iterator<array,1> const_iterator;
             //===================constructors and destructor===================
             /*!
             \brief copy original object
@@ -183,6 +206,15 @@ namespace core{
             //-----------------------------------------------------------------
             //! return the type name
             String type_name() const;
+
+            //-----------------------------------------------------------------
+
+            iterator begin() { return iterator(this,0); }
+            iterator end() { return iterator(this,size()); }
+
+            const_iterator begin() const { return const_iterator(this,0); }
+            const_iterator end() const { return const_iterator(this,size()); }
+            
     };
 
 
