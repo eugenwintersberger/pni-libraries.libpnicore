@@ -184,7 +184,7 @@ template<typename OT> void array_test<OT>::test_iterator()
 
     v = typename OT::value_type(0);
     for(auto iter = o.begin();iter!=o.end();++iter)
-        check_equality((*iter).as<typename OT::value_type>(),
+        check_equality(iter->as<typename OT::value_type>(),
                        v++); 
 }
 
