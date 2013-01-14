@@ -99,11 +99,7 @@ namespace core{
             \throw MemoryNotAllocatedError
             \param r exception record where the error occured.
             */
-            static void _throw_not_allocated_error(const ExceptionRecord &r)
-            {
-                throw MemoryNotAllocatedError(r,
-                        "Instance of value holds no data!");
-            }
+            static void _throw_not_allocated_error(const ExceptionRecord &r);
 
             //! pointer holding the value stored
             std::unique_ptr<value_holder_interface> _ptr;
@@ -141,56 +137,19 @@ namespace core{
             \param v reference to the new value
             \return instance of value
             */
-            template<typename T> value_ref &operator=(const T &v)
-            {
-                typedef value_holder<std::reference_wrapper<T> > holder_t;
-
-                if(!_ptr)
-                {
-                    _throw_not_allocated_error(EXCEPTION_RECORD);
-                    return *this;
-                }
-
-
-                if(type_id() ==  TypeIDMap<T>::type_id)
-                {
-                    dynamic_cast<holder_t*>(_ptr.get())->as().get() = v;
-                    return *this;
-                }
-
-                throw TypeError(EXCEPTION_RECORD,
-                        "type does not match value_ref type");
-                return *this;
-            }
+            template<typename T> value_ref &operator=(const T &v);
 
             //-----------------------------------------------------------------
             template<typename T> 
-            value_ref &operator=(const std::reference_wrapper<T> &r)
-            {
-                _ptr = std::unique_ptr<value_holder_interface>(
-                        new value_holder<std::reference_wrapper<T> >(r));
-                return *this;
-            }
+            value_ref &operator=(const std::reference_wrapper<T> &r);
 
             //-----------------------------------------------------------------
             //! copy assignment
-            value_ref &operator=(const value_ref &o)
-            {
-                if(this == &o) return *this;
-                _ptr = std::unique_ptr<value_holder_interface>(
-                        o._ptr->clone());
-
-                return *this;
-            }
+            value_ref &operator=(const value_ref &o);
 
             //-----------------------------------------------------------------
             //! move assignment operator
-            value_ref &operator=(value_ref &&o)
-            {
-                if(this == &o) return *this;
-                _ptr = std::move(o._ptr);
-                return *this;
-            }
+            value_ref &operator=(value_ref &&o);
 
             //-----------------------------------------------------------------
             /*!
@@ -204,21 +163,7 @@ namespace core{
             \throws TypeError if T does not match the original data type
             \return value of type T 
             */
-            template<typename T> T as() const
-            {
-                typedef value_holder<std::reference_wrapper<T> > holder_t;
-               
-                if(!_ptr) _throw_not_allocated_error(EXCEPTION_RECORD);
-
-                if(type_id() == TypeIDMap<T>::type_id)
-                {
-                    return dynamic_cast<holder_t*>(_ptr.get())->as();
-                }
-                throw TypeError(EXCEPTION_RECORD,
-                        "incompatible type - cannot return value");
-
-                return T(0); //just to make the compiler happy
-            }
+            template<typename T> T as() const;
 
             //-----------------------------------------------------------------
             /*!
@@ -228,19 +173,60 @@ namespace core{
             \throws MemoryNotAllocatedError if value is not initialized
             \return type ID.
             */
-            TypeID type_id() const
-            {
-                if(_ptr)
-                    return _ptr->type_id();
-                else
-                    _throw_not_allocated_error(EXCEPTION_RECORD);
-
-                return TypeID::NONE; //just to make the compiler happy
-            }
+            TypeID type_id() const;
 
             friend std::ostream &operator<<(std::ostream &,const value_ref &);
             friend std::istream &operator>>(std::istream &,value_ref &);
     };
+
+    //======================implementation of template members=================
+    template<typename T> T value_ref::as() const
+    {
+        typedef value_holder<std::reference_wrapper<T> > holder_t;
+       
+        if(!_ptr) _throw_not_allocated_error(EXCEPTION_RECORD);
+
+        if(type_id() == TypeIDMap<T>::type_id)
+        {
+            return dynamic_cast<holder_t*>(_ptr.get())->as();
+        }
+        throw TypeError(EXCEPTION_RECORD,
+                "incompatible type - cannot return value");
+
+        return T(0); //just to make the compiler happy
+    }
+           
+    //-------------------------------------------------------------------------
+    template<typename T> 
+    value_ref &value_ref::operator=(const std::reference_wrapper<T> &r)
+    {
+        _ptr = std::unique_ptr<value_holder_interface>(
+                new value_holder<std::reference_wrapper<T> >(r));
+        return *this;
+    }
+    
+    //-------------------------------------------------------------------------
+    template<typename T> value_ref &value_ref::operator=(const T &v)
+    {
+        typedef value_holder<std::reference_wrapper<T> > holder_t;
+
+        if(!_ptr)
+        {
+            _throw_not_allocated_error(EXCEPTION_RECORD);
+            return *this;
+        }
+
+
+        if(type_id() ==  TypeIDMap<T>::type_id)
+        {
+            dynamic_cast<holder_t*>(_ptr.get())->as().get() = v;
+            return *this;
+        }
+
+        throw TypeError(EXCEPTION_RECORD,
+                "type does not match value_ref type");
+        return *this;
+    }
 
     //-------------------------------------------------------------------------
     /*!
@@ -253,15 +239,7 @@ namespace core{
     \param v reference to value
     \return reference to output stream
     */
-    std::ostream &operator<<(std::ostream &stream,const value_ref &v)
-    {
-        if(v._ptr)
-            return v._ptr->write(stream);
-        else 
-            v._throw_not_allocated_error(EXCEPTION_RECORD);
-
-        return stream;
-    }
+    std::ostream &operator<<(std::ostream &stream,const value_ref &v);
 
     //-------------------------------------------------------------------------
     /*!
@@ -279,18 +257,7 @@ namespace core{
     \param v value where to store data
     \return reference to input stream
     */
-    std::istream &operator>>(std::istream &stream,value_ref &v)
-    {
-        if(v._ptr)
-            return v._ptr->read(stream);
-        else
-            v._throw_not_allocated_error(EXCEPTION_RECORD);
-
-        return stream;
-    }
-
-    
-
+    std::istream &operator>>(std::istream &stream,value_ref &v);
 
 //end of namespace
 }

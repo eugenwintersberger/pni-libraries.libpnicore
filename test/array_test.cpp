@@ -27,6 +27,7 @@
 #include <pni/core/Array.hpp>
 #include <pni/core/Scalar.hpp>
 #include "array_test.hpp"
+
 typedef SArray<UInt32,4,5> sarray_t;
 typedef NumArray<DArray<Float64> > narray_t;
 typedef Scalar<Int64> scalar_t;

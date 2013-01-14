@@ -90,11 +90,7 @@ namespace core{
             \throw MemoryNotAllocatedError
             \param r exception record where the error occured.
             */
-            static void _throw_not_allocated_error(const ExceptionRecord &r)
-            {
-                throw MemoryNotAllocatedError(r,
-                        "Instance of value holds no data!");
-            }
+            static void _throw_not_allocated_error(const ExceptionRecord &r);
 
             //! pointer holding the value stored
             std::unique_ptr<value_holder_interface> _ptr;
@@ -130,10 +126,8 @@ namespace core{
             \tparam T type for which to create the value object
             \return instance of value for type T
             */
-            template<typename T> static value create()
-            {
-                return value(T());
-            }
+            template<typename T> static value create() { return value(T()); }
+
             //==================assignment operators===========================
             /*! 
             \brief copy assignment from value
@@ -149,33 +143,15 @@ namespace core{
             \param v reference to the new value
             \return instance of value
             */
-            template<typename VT> value &operator=(const VT &v)
-            {
-                _ptr = std::unique_ptr<value_holder_interface>(
-                        new value_holder<VT>(v));
-
-                return *this;
-            }
+            template<typename VT> value &operator=(const VT &v);
 
             //-----------------------------------------------------------------
             //! copy assignment
-            value &operator=(const value &o)
-            {
-                if(this == &o) return *this;
-                _ptr = std::unique_ptr<value_holder_interface>(
-                        o._ptr->clone());
-
-                return *this;
-            }
+            value &operator=(const value &o);
 
             //-----------------------------------------------------------------
             //! move assignment operator
-            value &operator=(value &&o)
-            {
-                if(this == &o) return *this;
-                _ptr = std::move(o._ptr);
-                return *this;
-            }
+            value &operator=(value &&o);
 
             //-----------------------------------------------------------------
             /*!
@@ -189,19 +165,7 @@ namespace core{
             \throws TypeError if T does not match the original data type
             \return value of type T 
             */
-            template<typename T> T as() const
-            {
-                if(!_ptr) _throw_not_allocated_error(EXCEPTION_RECORD);
-
-                if(type_id() == TypeIDMap<T>::type_id)
-                {
-                    return dynamic_cast<value_holder<T>*>(_ptr.get())->as();
-                }
-                throw TypeError(EXCEPTION_RECORD,
-                        "incompatible type - cannot return value");
-
-                return T(0); //just to make the compiler happy
-            }
+            template<typename T> T as() const;
 
             //-----------------------------------------------------------------
             /*!
@@ -211,19 +175,35 @@ namespace core{
             \throws MemoryNotAllocatedError if value is not initialized
             \return type ID.
             */
-            TypeID type_id() const
-            {
-                if(_ptr)
-                    return _ptr->type_id();
-                else
-                    _throw_not_allocated_error(EXCEPTION_RECORD);
-
-                return TypeID::NONE; //just to make the compiler happy
-            }
+            TypeID type_id() const;
 
             friend std::ostream &operator<<(std::ostream &,const value &);
             friend std::istream &operator>>(std::istream &,value &);
     };
+
+    //=====================implementation of template member functions=========
+    template<typename T> T value::as() const
+    {
+        if(!_ptr) _throw_not_allocated_error(EXCEPTION_RECORD);
+
+        if(type_id() == TypeIDMap<T>::type_id)
+        {
+            return dynamic_cast<value_holder<T>*>(_ptr.get())->as();
+        }
+        throw TypeError(EXCEPTION_RECORD,
+                "incompatible type - cannot return value");
+
+        return T(0); //just to make the compiler happy
+    }
+
+    //-------------------------------------------------------------------------
+    template<typename VT> value &value::operator=(const VT &v)
+    {
+        _ptr = std::unique_ptr<value_holder_interface>(
+                new value_holder<VT>(v));
+
+        return *this;
+    }
 
     //-------------------------------------------------------------------------
     /*!
@@ -236,15 +216,7 @@ namespace core{
     \param v reference to value
     \return reference to output stream
     */
-    std::ostream &operator<<(std::ostream &stream,const value &v)
-    {
-        if(v._ptr)
-            return v._ptr->write(stream);
-        else 
-            v._throw_not_allocated_error(EXCEPTION_RECORD);
-
-        return stream;
-    }
+    std::ostream &operator<<(std::ostream &stream,const value &v);
 
     //-------------------------------------------------------------------------
     /*!
@@ -262,18 +234,7 @@ namespace core{
     \param v value where to store data
     \return reference to input stream
     */
-    std::istream &operator>>(std::istream &stream,value &v)
-    {
-        if(v._ptr)
-            return v._ptr->read(stream);
-        else
-            v._throw_not_allocated_error(EXCEPTION_RECORD);
-
-        return stream;
-    }
-
-    
-
+    std::istream &operator>>(std::istream &stream,value &v);
 
 //end of namespace
 }
