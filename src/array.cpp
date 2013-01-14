@@ -117,6 +117,39 @@ namespace core{
     }
 
     //-------------------------------------------------------------------------
+    value array::at(size_t i) const
+    {
+        if(_ptr)
+            return _ptr->at(i);
+        else
+            array::_throw_not_allocated_error(EXCEPTION_RECORD);
+
+        return value::create<Int16>(); //just to make the compiler happy
+    }
+
+    //-------------------------------------------------------------------------
+    value_ref array::operator[](size_t i) 
+    {
+        if(_ptr)
+            return (*_ptr)[i];
+        else
+            array::_throw_not_allocated_error(EXCEPTION_RECORD);
+
+        return value_ref(); //just to make the compiler happy
+    }
+
+    //-------------------------------------------------------------------------
+    value_ref array::at(size_t i)
+    {
+        if(_ptr)
+            return _ptr->at(i);
+        else
+            array::_throw_not_allocated_error(EXCEPTION_RECORD);
+
+        return value_ref(); //just to make the compiler happy
+    }
+
+    //-------------------------------------------------------------------------
     String array::type_name() const
     {
         if(_ptr)

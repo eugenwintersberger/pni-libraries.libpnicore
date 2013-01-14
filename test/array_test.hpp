@@ -25,6 +25,7 @@
 #include<cppunit/extensions/HelperMacros.h>
 #include<boost/current_function.hpp>
 
+#include "EqualityCheck.hpp"
 #include <pni/core/array.hpp>
 #include <functional>
 #include <sstream>
@@ -62,6 +63,8 @@ template<typename OT> class array_test : public CppUnit::TestFixture
         CPPUNIT_TEST(test_copy_and_move);
         CPPUNIT_TEST(test_io);
         CPPUNIT_TEST(test_inquery);
+        CPPUNIT_TEST(test_element_access);
+        CPPUNIT_TEST(test_at_access);
         CPPUNIT_TEST_SUITE_END();
 
         OT _object1;
@@ -75,6 +78,8 @@ template<typename OT> class array_test : public CppUnit::TestFixture
         void test_copy_and_move();
         void test_io();
         void test_inquery();
+        void test_element_access();
+        void test_at_access();
 };
 
 //-----------------------------------------------------------------------------
@@ -142,6 +147,42 @@ template<typename OT> void array_test<OT>::test_io()
 
     s>>o;
     std::cout<<o<<std::endl;
+}
+
+//-----------------------------------------------------------------------------
+template<typename OT> void array_test<OT>::test_element_access()
+{
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+
+    array o(_object1);
+
+    //write data to array
+    for(size_t i=0;i<o.size();++i)
+        CPPUNIT_ASSERT_NO_THROW(o[i] = typename OT::value_type(i));
+
+    //reading data back
+    for(size_t i=0;i<o.size();++i)
+        check_equality(typename OT::value_type(i),
+                       o[i].as<typename OT::value_type>());
+
+}
+
+//-----------------------------------------------------------------------------
+template<typename OT> void array_test<OT>::test_at_access()
+{
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+    
+    array o(_object1);
+
+    //write data to array
+    for(size_t i=0;i<o.size();++i)
+        CPPUNIT_ASSERT_NO_THROW(o.at(i) = typename OT::value_type(i));
+
+    //reading data back
+    for(size_t i=0;i<o.size();++i)
+        check_equality(typename OT::value_type(i),
+                       o.at(i).as<typename OT::value_type>());
+
 }
 
 //-----------------------------------------------------------------------------
