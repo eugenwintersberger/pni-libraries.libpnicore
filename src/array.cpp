@@ -159,6 +159,17 @@ namespace core{
 
         return ""; //just to make the compiler happy
     }
+
+    //-------------------------------------------------------------------------
+    const void *array::ptr() const
+    {
+        if(_ptr)
+            return _ptr->ptr();
+        else
+            array::_throw_not_allocated_error(EXCEPTION_RECORD);
+
+        return nullptr;
+    }
    
     //-------------------------------------------------------------------------
     std::ostream &operator<<(std::ostream &os,const array &o)

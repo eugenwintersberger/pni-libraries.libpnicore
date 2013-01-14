@@ -34,14 +34,36 @@
 namespace pni{
 namespace core{
 
-#define DEPRECATION_WARNING(oldfunc,newfunc)\
-    std::cerr<<"DEPRECATION WARGING:"<<std::endl;\
-    std::cerr<<"Function: ";\
-    std::cerr<<oldfunc;\
-    std::cerr<<" is deprecated!"<<std::endl;\
-    std::cerr<<"Use instead: ";\
-    std::cerr<<newfunc;\
-    std::cerr<<std::endl;
+    /*!
+    \brief runtime warning for functions
+
+    This macro inserts a warning message shown at runtime when a deprecated
+    function or class member function is used. It should remaind the developer
+    that the function in use will most probably vanish in a future release. 
+    Call the macro at the beginning of the deprecated function. It uses the
+    BOOST_CURRENT_FUNCTION macro to get the name of the actual function. 
+    The only argument is the signature of the new function to be used instread.
+    \code 
+    void old_function()
+    {
+        DEPRECATED_FUNCTION("void new_function()");
+        .......
+    }
+
+    void new_function()
+    {
+        .......
+    }
+    \endcode
+    \param newfunc the new function to use
+    */
+#define DEPRECATED_FUNCTION(newfunc)\
+    std::cerr<<"DEPRECATION WARNING:"<<std::endl; \
+    std::cerr<<""<<BOOST_CURRENT_FUNCTION;\
+    std::cerr<<" is deprecated use "<<newfunc<<" instread!";\
+    std::cerr<<std::endl
+
+
 
 
 

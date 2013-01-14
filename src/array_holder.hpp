@@ -27,6 +27,16 @@
 namespace pni{
 namespace core{
 
+    template<typename ATYPE> const void *get_pointer(const ATYPE &a)
+    {
+        return (void *)(a.storage().ptr());
+    }
+
+    template<typename ATYPE> const void *get_pointer(const NumArray<ATYPE> &a)
+    {
+        return (void *)(a.storage().storage().ptr());
+    }
+
     template<typename OT> class array_holder:public array_holder_interface
     {
         private:
@@ -116,6 +126,11 @@ namespace core{
             virtual String type_name() const
             {
                 return typeid(OT).name();
+            }
+
+            virtual const void *ptr() const
+            {
+                return get_pointer(_object);            
             }
 
     };

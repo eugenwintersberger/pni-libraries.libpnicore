@@ -139,6 +139,9 @@ namespace core{
             //-----------------------------------------------------------------
             virtual value_ref at(size_t i) = 0;
 
+            //-----------------------------------------------------------------
+            virtual const void *ptr() const = 0;
+
     };
 
 //end of namespace

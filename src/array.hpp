@@ -214,6 +214,10 @@ namespace core{
 
             const_iterator begin() const { return const_iterator(this,0); }
             const_iterator end() const { return const_iterator(this,size()); }
+
+            //-----------------------------------------------------------------
+            //! get pointer to data
+            const void *ptr() const;
             
     };
 
