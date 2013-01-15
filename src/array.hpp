@@ -41,7 +41,7 @@ namespace core{
         public:
             typedef array *cont_ptr;
             typedef value_ref return_type;
-            typedef value* ptr_type;
+            typedef value_ref* ptr_type;
             typedef value_ref ref_type;
     };
 
