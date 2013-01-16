@@ -116,7 +116,14 @@ namespace core{
 
             //-----------------------------------------------------------------
             //! copy constructor
-            value_ref(const value_ref &o):_ptr(o._ptr->clone()) {}
+            value_ref(const value_ref &o)
+            {
+                if(o._ptr)
+                    _ptr =
+                        std::unique_ptr<value_holder_interface>(o._ptr->clone());
+                else
+                    _ptr = nullptr;
+            }
 
             //-----------------------------------------------------------------
             //! move constructor
