@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2012 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
+ * (c) Copyright 2013 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
  *
  * This file is part of libpnicore.
  *
@@ -17,15 +17,19 @@
  * along with libpnicore.  If not, see <http://www.gnu.org/licenses/>.
  *************************************************************************
  *
- * Created on: May 16, 2012
+ * Created on: Jan 16, 2013
  *     Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
  */
 #pragma once
 
 #include "Exceptions.hpp" 
+#include "value.hpp"
+#include "value_ref.hpp"
 
 namespace pni{
 namespace core{
+
+    class array;
    
     //=========================================================================
     /*! 
@@ -45,7 +49,7 @@ namespace core{
     \tparam ITERABLE container type over which to iterate
     \tparam const_flag 1 if the iterator is a const iterator.
     */
-    template<typename ITERABLE,int const_flag> class IterTypes
+    template<int const_flag> class array_iterator_types
     {};
 
     //=========================================================================
@@ -58,16 +62,17 @@ namespace core{
     \tparam ITERABLE container over which the iterator should run
     \sa IterTypes<ITERABLE,const_flag>
     */
-    template<typename ITERABLE> class IterTypes<ITERABLE,0>
+    template<> class array_iterator_types<0>
     {
         public:
-            typedef ITERABLE *cont_ptr; //!< container pointer
+            typedef array *cont_ptr; //!< container pointer
+            typedef value_ref value_type;
             //! return type for the dereferencing operator
-            typedef typename ITERABLE::value_type& return_type;
+            typedef value_ref return_type;
             //! pointer type for -> operator
-            typedef typename ITERABLE::value_type* ptr_type;    
+            typedef value_ref* ptr_type;    
             //! reference type 
-            typedef typename ITERABLE::value_type& ref_type;
+            typedef value_ref ref_type;
     };
 
 
@@ -81,16 +86,17 @@ namespace core{
     \tparam ITERABLE type over which the iterator should run
     \sa IterTypes<ITERABLE,const_flag>
     */
-    template<typename ITERABLE> class IterTypes<ITERABLE,1>
+    template<> class array_iterator_types<1>
     {
         public:
-            typedef const ITERABLE *cont_ptr; //!< container pointer
+            typedef const array *cont_ptr; //!< container pointer
+            typedef value value_type;
             //! return type for dereferencing operator
-            typedef typename ITERABLE::value_type return_type;    
+            typedef value return_type;    
             //! pointer type for -> operator
-            typedef const typename ITERABLE::value_type *ptr_type; 
+            typedef const value *ptr_type; 
             //! reference type
-            typedef const typename ITERABLE::value_type &ref_type;
+            typedef const value &ref_type;
     };
    
 
@@ -117,51 +123,51 @@ namespace core{
     that this iterator, unlike the standard C++ iterators, throws an exception
     if one tries to dereference an invalid iterator.
     */
-    template<typename ITERABLE,int const_flag> class Iterator
+    template<int const_flag> class array_iterator
     {
         private:
+            
             //! pointer to the container object
-            typename IterTypes<ITERABLE,const_flag>::cont_ptr _container; 
+            typename array_iterator_types<const_flag>::cont_ptr _container; 
 
             //! actual position state of the iterator
             ssize_t _state;                    
 
-            //! maximum number of elements in the container
-            ssize_t _maxsize;
+            //! actual selected element
+            typename array_iterator_types<const_flag>::value_type _value;
+
 
             //! set the item pointer
             void _set_item()
             {
                 if(*this) 
-                    this->_item = &(*(this->_container))[this->_state];
-                else
-                    this->_item = nullptr;
+                    this->_value = (*(this->_container))[this->_state];
             }
 
 #ifdef NOEXPLICITCONV 
-            typedef void (Iterator<ITERABLE,const_flag>::*bool_type)() const;
+            typedef void (array_iterator<const_flag>::*bool_type)() const;
             void bool_operator_function() const {}
 #endif
 
         public:
             //====================public types==================================
             //! value type of the container
-            typedef typename ITERABLE::value_type value_type;
+            typedef typename array_iterator_types<const_flag>::value_type value_type;
             //! pointer type the iterator provides
-            typedef typename IterTypes<ITERABLE,const_flag>::ptr_type pointer;
+            typedef typename array_iterator_types<const_flag>::ptr_type pointer;
             //! reference type the iterator provides
-            typedef typename IterTypes<ITERABLE,const_flag>::ref_type reference;
+            typedef typename array_iterator_types<const_flag>::ref_type reference;
             //! pointer type of the container
-            typedef typename IterTypes<ITERABLE,const_flag>::cont_ptr cptr_type;
+            typedef typename array_iterator_types<const_flag>::cont_ptr cptr_type;
             //! difference type of the iterator
             typedef ssize_t difference_type;
             //! type of iterator
             typedef std::random_access_iterator_tag iterator_category;
             //! iterator type
-            typedef Iterator<ITERABLE,const_flag> iterator_type;
+            typedef array_iterator<const_flag> iterator_type;
             //================constructor and destructor========================
             //! default constructor
-            Iterator():_container(nullptr),_state(0),_maxsize(0) {}
+            array_iterator():_container(nullptr),_state(0) {}
 
             //------------------------------------------------------------------
             /*! \brief standard constructor
@@ -171,36 +177,36 @@ namespace core{
             \param container pointer to the container object
             \param state initial position of the iterator
             */
-            Iterator(cptr_type container,size_t state=0):
+            array_iterator(cptr_type container,size_t state=0):
                 _container(container),
-                _state(state),
-                _maxsize(container->size())
+                _state(state)
             { 
+                _set_item(); 
             }
 
             //------------------------------------------------------------------
             //! copy constructor
-            Iterator(const iterator_type &i):
+            array_iterator(const iterator_type &i):
                 _container(i._container),
                 _state(i._state),
-                _maxsize(i._maxsize)
+                _value(i._value)
             { }
 
             //------------------------------------------------------------------
             //! move constructor
-            Iterator(iterator_type &&i):
+            array_iterator(iterator_type &&i):
                 _container(i._container),
                 _state(i._state),
-                _maxsize(i._maxsize)
+                _value(i._value)
             {
                 i._container = nullptr;
                 i._state = 0;
-                i._maxsize = 0;
+                i._value = iterator_type::value_type();
             }
 
             //------------------------------------------------------------------
             //! default constructor
-            ~Iterator() {}
+            ~array_iterator() {}
 
             //=================assignment operator==============================
             //! copy assignment operator
@@ -209,7 +215,7 @@ namespace core{
                 if(this == &i) return *this;
                 this->_container = i._container;
                 this->_state     = i._state;
-                this->_maxsize   = i._maxsize;
+                this->_value     = i._value;
                 return *this;
             }
 
@@ -222,8 +228,8 @@ namespace core{
                 i._container = nullptr;
                 this->_state = i._state;
                 i._state = 0;
-                this->_maxsize = i._maxsize;
-                i._maxsize = 0;
+                this->_value = i._value;
+                i._value = value_type();
                 return *this;
             }
 
@@ -241,14 +247,19 @@ namespace core{
 #ifdef NOEXPLICITCONV
             operator bool_type() const
             {
-                return  !((!this->_container)||(this->_state >= this->_maxsize)||(this->_state<0)) ? &iterator_type::bool_operator_function : 0;
+                return  !((!this->_container)||
+                          (this->_state >= ssize_t(this->_container->size()))||
+                          (this->_state<0)) ? 
+                          &iterator_type::bool_operator_function : 0;
             }
 #else
             explicit operator bool() const
             {
                 //if(!this->_container) return false;
                 //ssize_t size = (ssize_t)(this->_container->size());
-                return !((!this->_container)||(this->_state >= this->_maxsize)||(this->_state<0));
+                return !((!this->_container)||
+                         (this->_state >= ssize_t(this->_container->size()))||
+                         (this->_state<0));
             }
 #endif
             //------------------------------------------------------------------
@@ -260,12 +271,12 @@ namespace core{
             \throws IteratorError if the iterator is invalid
             \return reference or value of the actual object
             */
-            typename IterTypes<ITERABLE,const_flag>::return_type operator*()
+            typename array_iterator_types<const_flag>::return_type operator*()
             {
                 if(!(*this))
                     throw IteratorError(EXCEPTION_RECORD,"Iterator invalid!");
 
-                return (*(this->_container))[this->_state];
+                return this->_value;
             }
 
             //------------------------------------------------------------------
@@ -281,7 +292,7 @@ namespace core{
                 if(!(*this))
                     throw IteratorError(EXCEPTION_RECORD,"Iterator invalid!");
 
-                return &(*(this->_container))[this->_state];
+                return &this->_value;
             }
 
             //------------------------------------------------------------------
@@ -289,6 +300,7 @@ namespace core{
             iterator_type &operator++()
             {
                 this->_state++;
+                _set_item();
                 return *this;
             }
 
@@ -296,7 +308,7 @@ namespace core{
             //! increment iterator position
             iterator_type operator++(int i)
             {
-                Iterator<ITERABLE,const_flag> temp = *this;
+                iterator_type temp = *this;
                 ++(*this);
                 return temp;
             }
@@ -306,6 +318,7 @@ namespace core{
             iterator_type &operator--()
             {
                 this->_state--;
+                _set_item();
                 return *this;
             }
 
@@ -313,7 +326,7 @@ namespace core{
             //! decrement operators
             iterator_type operator--(int i)
             {
-                Iterator<ITERABLE,const_flag> tmp = *this;
+                iterator_type tmp = *this;
                 --(*this);
                 return tmp;
             }
@@ -323,6 +336,7 @@ namespace core{
             iterator_type &operator+=(ssize_t i)
             {
                 this->_state += i;
+                _set_item();
                 return *this;
             }
 
@@ -331,6 +345,7 @@ namespace core{
             iterator_type &operator-=(ssize_t i)
             {
                 this->_state -= i;
+                _set_item();
                 return *this;
             }
             //------------------------------------------------------------------
@@ -401,10 +416,10 @@ namespace core{
     \param b offset to add
     \return new iterator 
     */
-    template<typename ITERABLE,int const_flag> Iterator<ITERABLE,const_flag> 
-        operator+(const Iterator<ITERABLE,const_flag> &a, ssize_t b)
+    template<int const_flag> array_iterator<const_flag> 
+        operator+(const array_iterator<const_flag> &a, ssize_t b)
     {
-        Iterator<ITERABLE,const_flag> iter = a;
+        array_iterator<const_flag> iter = a;
         iter += b;
         return iter;
     }
@@ -419,8 +434,8 @@ namespace core{
     \param b original iterator
     \return new iterator
     */
-    template<typename ITERABLE,int const_flag> Iterator<ITERABLE,const_flag>
-        operator+(ssize_t a, const Iterator<ITERABLE,const_flag> &b)
+    template<int const_flag> array_iterator<const_flag>
+        operator+(ssize_t a, const array_iterator<const_flag> &b)
     {
         return b+a;
     }
@@ -435,10 +450,10 @@ namespace core{
     \param b offset
     \return new iterator to new position
     */
-    template<typename ITERABLE,int const_flag> Iterator<ITERABLE,const_flag>
-        operator-(const Iterator<ITERABLE,const_flag> &a, ssize_t b)
+    template<int const_flag> array_iterator<const_flag>
+        operator-(const array_iterator<const_flag> &a, ssize_t b)
     {
-        Iterator<ITERABLE,const_flag> iter = a;
+        array_iterator<const_flag> iter = a;
         iter -= b;
         return iter;
     }
@@ -453,9 +468,9 @@ namespace core{
     \param b second iterator
     \return offset difference
     */
-    template<typename ITERABLE,int const_flag> ssize_t
-        operator-(const Iterator<ITERABLE,const_flag> &a, 
-                const Iterator<ITERABLE,const_flag> &b)
+    template<int const_flag> ssize_t
+        operator-(const array_iterator<const_flag> &a, 
+                const array_iterator<const_flag> &b)
     {
         return a.state() - b.state();
     }

@@ -39,6 +39,7 @@ class IteratorTest: public CppUnit::TestFixture
         CPPUNIT_TEST(test_binary_arithmetics);
         CPPUNIT_TEST(test_stl_algos);
         CPPUNIT_TEST(test_increment);
+        CPPUNIT_TEST(test_ptr_access);
         CPPUNIT_TEST_SUITE_END();
     private:
         typedef std::vector<double> Iterable;
@@ -56,4 +57,5 @@ class IteratorTest: public CppUnit::TestFixture
         void test_binary_arithmetics();
         void test_stl_algos();
         void test_increment();
+        void test_ptr_access();
 };

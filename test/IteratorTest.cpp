@@ -248,3 +248,16 @@ void IteratorTest::test_increment()
     CPPUNIT_ASSERT(*iter == 1);
 }
 
+//-----------------------------------------------------------------------------
+void IteratorTest::test_ptr_access()
+{
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+
+    std::vector<String> v{"hello","world","this","is","a text"};
+
+    typedef Iterator<std::vector<String>,0> iterator_t;
+    typedef Iterator<std::vector<String>,1> const_iterator_t;
+
+    iterator_t first(&v,0);
+    CPPUNIT_ASSERT(first->size() == 5);
+}

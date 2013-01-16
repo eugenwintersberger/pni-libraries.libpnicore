@@ -28,31 +28,11 @@
 #include "Types.hpp"
 #include "Array.hpp"
 #include "array_holder.hpp"
-#include "Iterator.hpp"
+#include "array_iterator.hpp"
 
 
 namespace pni{
 namespace core{
-    
-    class array;
-
-    template<> class IterTypes<array,0>
-    {
-        public:
-            typedef array *cont_ptr;
-            typedef value_ref return_type;
-            typedef value_ref* ptr_type;
-            typedef value_ref ref_type;
-    };
-
-    template<> class IterTypes<array,1>
-    {
-        public:
-            typedef const array *cont_ptr;
-            typedef value return_type;
-            typedef const value* ptr_type;
-            typedef const value_ref ref_type;
-    };
 
     /*!
     \brief type erasure for data objects
@@ -102,8 +82,8 @@ namespace core{
         public:
             //====================public types=================================
             typedef value value_type;
-            typedef Iterator<array,0> iterator;
-            typedef Iterator<array,1> const_iterator;
+            typedef array_iterator<0> iterator;
+            typedef array_iterator<1> const_iterator;
             //===================constructors and destructor===================
             /*!
             \brief copy original object
