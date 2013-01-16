@@ -85,6 +85,9 @@ namespace core{
             typedef array_iterator<0> iterator;
             typedef array_iterator<1> const_iterator;
             //===================constructors and destructor===================
+            array():_ptr(nullptr)
+            {}
+            //-----------------------------------------------------------------
             /*!
             \brief copy original object
 
