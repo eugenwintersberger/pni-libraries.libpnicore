@@ -34,19 +34,13 @@ namespace core{
     //=========================================================================
     /*! 
     \ingroup iterator_types
-    \brief iterator return type map
+    \brief type map for the array_iterator template
 
-    One of the difficult tasks in creating an iterator is to determine the
-    return type for the dereferencing-operator (*). In the case of a read/write
-    iterator the return type is a reference to the element the iterator actually
-    points to. For const iterators this should be the value_type of the
-    iterable (the const iterator returns by value to avoid modification of the
-    element). 
-    This is the default template without data members. Have a look on its
-    specializations to for a particular return type
-    \sa IterTypes<ITERABLE,0>
-    \sa IterTypes<ITERABLE,1>
-    \tparam ITERABLE container type over which to iterate
+    Provides the types required by the array_iterator template depending on the
+    state of the const_flag template parameter. This is only a stub. See the
+    specialized versions for the concrete types used for the iterator.
+    \sa array_iterator_types<0>
+    \sa array_iterator_types<1>
     \tparam const_flag 1 if the iterator is a const iterator.
     */
     template<int const_flag> class array_iterator_types
@@ -54,13 +48,12 @@ namespace core{
 
     //=========================================================================
     /*! \ingroup iterator_types
-    \brief return types for non-const iterators
+    \brief type map for a non-const array_iterator instance
 
-    Specialization of the IterTypes template for non-const iterators.
-    In this case the return_type member type is a reference to the value_type of
-    the ITERABLE.
-    \tparam ITERABLE container over which the iterator should run
-    \sa IterTypes<ITERABLE,const_flag>
+    Specialization of the array_iterator_types template for non-const iterators.
+    IN the case of a non-const iterator the value_ref instances are return which
+    refere to the particular data values in the array.
+    \sa array_iterator_types<const_flag>
     */
     template<> class array_iterator_types<0>
     {
@@ -79,12 +72,12 @@ namespace core{
 
     //=========================================================================
     /*! \ingroup iterator_types
-    \brief return types for const iterators
+    \brief type map for const array_iterator instance
 
-    Specialization of the IterReturnType template for const iterators. Here the
-    return type of the dereferencing operator is just value_type. 
-    \tparam ITERABLE type over which the iterator should run
-    \sa IterTypes<ITERABLE,const_flag>
+    Specialization of the array_iterator_types type map for const array_iterator
+    instances. For const iterators instances of value are returned holding
+    copies of the data values.
+    \sa array_iterator_types<const_flag>
     */
     template<> class array_iterator_types<1>
     {
@@ -104,24 +97,15 @@ namespace core{
 
     /*! 
     \ingroup iterator_types   
-    \brief iterator type
+    \brief array iterator
 
-    This is the most generic iterator provided by libpnicore. It can be used
-    with all container types provided by the library. A container that wants to
-    use this iterator must implement the following interface
-    \code
-    template<typename T> class ITERABLE<T>
-    {
-        public:
-            typedef T value_type;
-            size_t size() const;
-            T &operator[](size_t i);
-            T operator[](size_t i) const;
-    };
-    \endcode
-    This template implements a simple forward iterator. It must be mentioned
-    that this iterator, unlike the standard C++ iterators, throws an exception
-    if one tries to dereference an invalid iterator.
+    This is a special iterator template for the array type erasure. The template
+    parameter decides whether or not the iterator is const. The major difference
+    between this template and the default Iterator<ITERABLE,const_flag> template
+    is the fact that it stores the actual value of the iterator as a member
+    variable. This is necessary as the array type erasure does not provide
+    direct access to the array type it hides but rather creates new objects
+    providing access to this data.
     */
     template<int const_flag> class array_iterator
     {
