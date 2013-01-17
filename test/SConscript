@@ -35,6 +35,7 @@ sources_list.extend(["index_iterator_test.cpp"])
 sources_list.extend(["value_test.cpp"])
 sources_list.extend(["value_ref_test.cpp"])
 sources_list.extend(["array_test.cpp"])
+sources_list.extend(["EqualityCheck.cpp"])
 
 bm_sources = ["iteratorbm.cpp"]
 

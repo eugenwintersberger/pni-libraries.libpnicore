@@ -17,30 +17,39 @@
  * along with libpnicore.  If not, see <http://www.gnu.org/licenses/>.
  *************************************************************************
  *
- *  Created on: Jan 12, 2013
+ *  Created on: Jan 17, 2013
  *      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
  */
-
-#include <boost/current_function.hpp>
-#include<cppunit/extensions/HelperMacros.h>
+#pragma once
 
 #include <pni/core/Array.hpp>
-#include <pni/core/Scalar.hpp>
-#include "array_test.hpp"
 
-typedef SArray<UInt32,3,2> sarray_t;
-typedef NumArray<DArray<Float64> > narray_t;
-typedef Scalar<Int64> scalar_t;
-
-CPPUNIT_TEST_SUITE_REGISTRATION(array_test<DArray<Float32> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_test<DArray<String> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_test<sarray_t> );
-CPPUNIT_TEST_SUITE_REGISTRATION(array_test<narray_t> );
-CPPUNIT_TEST_SUITE_REGISTRATION(array_test<scalar_t>);
-
-//-------------------------------------------------------------
-void create_object(DArray<String> &o)
+template<typename ATYPE> class array_factory
 {
-    o = DArray<String>(shape_t{2});
-    o[0] = "hello"; o[1] = "world";
-}
+    public:
+        template<typename CTYPE> static ATYPE create(const CTYPE &s)
+        {
+            return ATYPE(s);
+        }
+};
+
+template<typename T,size_t ...DIMS> class array_factory<SArray<T,DIMS...> >
+{
+    public:
+        static SArray<T,DIMS...> create(shape_t &s)
+        {
+            return SArray<T,DIMS...>();
+        }
+};
+
+template<typename T> class array_factory<Scalar<T> >
+{
+    public:
+        static Scalar<T> create(shape_t &s)
+        {
+            return Scalar<T>();
+        }
+};
+
+
+

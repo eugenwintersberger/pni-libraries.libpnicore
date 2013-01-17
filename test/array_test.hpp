@@ -26,34 +26,13 @@
 #include<boost/current_function.hpp>
 
 #include "EqualityCheck.hpp"
+#include "array_factory.hpp"
+#include "data_factory.hpp"
 #include <pni/core/array.hpp>
 #include <functional>
 #include <sstream>
 
 using namespace pni::core;
-
-//-----------------------------------------------------------------------------
-template<typename ...DTYPES> void create_object(DArray<DTYPES...> &o)
-{
-    o = DArray<DTYPES...>(shape_t{3,2});
-}
-
-//-----------------------------------------------------------------------------
-template<typename T,size_t ...DIMS> void create_object(SArray<T,DIMS...> &o)
-{
-}
-
-//-----------------------------------------------------------------------------
-template<typename T> void create_object(Scalar<T> &o)
-{
-    
-}
-
-//-----------------------------------------------------------------------------
-template<typename ATYPE> void create_object(NumArray<ATYPE> &o)
-{
-    o = NumArray<ATYPE>(shape_t{3,2});
-}
 
 //-----------------------------------------------------------------------------
 template<typename OT> class array_test : public CppUnit::TestFixture
@@ -68,8 +47,10 @@ template<typename OT> class array_test : public CppUnit::TestFixture
         CPPUNIT_TEST(test_iterator);
         CPPUNIT_TEST_SUITE_END();
 
+        shape_t _shape;
         OT _object1;
         OT _object2;
+        std::vector<typename OT::value_type> _data;
 
     public:
         void setUp();
@@ -87,15 +68,14 @@ template<typename OT> class array_test : public CppUnit::TestFixture
 //-----------------------------------------------------------------------------
 template<typename OT> void array_test<OT>::setUp()
 {
-    create_object(_object1);
-    create_object(_object2);
+    _shape = shape_t({3,2});
+    data_factory<typename OT::value_type>::create(3*2,_data);
+    _object1 = array_factory<OT>::create(_shape);
+    _object2 = array_factory<OT>::create(_shape);
 }
 
 //-----------------------------------------------------------------------------
-template<typename OT> void array_test<OT>::tearDown()
-{
-    
-}
+template<typename OT> void array_test<OT>::tearDown() { }
 
 //-----------------------------------------------------------------------------
 template<typename OT> void array_test<OT>::test_construction()
@@ -160,12 +140,11 @@ template<typename OT> void array_test<OT>::test_element_access()
 
     //write data to array
     for(size_t i=0;i<o.size();++i)
-        CPPUNIT_ASSERT_NO_THROW(o[i] = typename OT::value_type(i));
+        CPPUNIT_ASSERT_NO_THROW(o[i] = _data[i]);
 
     //reading data back
     for(size_t i=0;i<o.size();++i)
-        check_equality(typename OT::value_type(i),
-                       o[i].as<typename OT::value_type>());
+        check_equality(_data[i],o[i].as<typename OT::value_type>());
 
 }
 
@@ -175,17 +154,17 @@ template<typename OT> void array_test<OT>::test_iterator()
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
     array o(_object1);
-   
-    typename OT::value_type v = typename OT::value_type(0);
+ 
+    size_t index = 0;
     for(array::iterator iter = o.begin();iter!=o.end();++iter)
-        CPPUNIT_ASSERT_NO_THROW(*iter = v++);
+        CPPUNIT_ASSERT_NO_THROW(*iter = _data[index++]);
 
     std::cout<<o<<std::endl;
 
-    v = typename OT::value_type(0);
+    index =0;
     for(auto iter = o.begin();iter!=o.end();++iter)
         check_equality(iter->as<typename OT::value_type>(),
-                       v++); 
+                       _data[index++]); 
 }
 
 //-----------------------------------------------------------------------------
@@ -197,11 +176,11 @@ template<typename OT> void array_test<OT>::test_at_access()
 
     //write data to array
     for(size_t i=0;i<o.size();++i)
-        CPPUNIT_ASSERT_NO_THROW(o.at(i) = typename OT::value_type(i));
+        CPPUNIT_ASSERT_NO_THROW(o.at(i) = _data[i]);
 
     //reading data back
     for(size_t i=0;i<o.size();++i)
-        check_equality(typename OT::value_type(i),
+        check_equality(_data[i],
                        o.at(i).as<typename OT::value_type>());
 
 }

@@ -110,7 +110,7 @@ namespace core{
             //----------------------------------------------------------
             virtual std::istream &read(std::istream &stream)
             {
-                stream>>_value;
+                stream>>get_reference(_value);
                 return stream;
             }
 
