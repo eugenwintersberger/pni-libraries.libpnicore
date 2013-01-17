@@ -162,6 +162,10 @@ namespace core{
             shape_t shape() const;
 
             //-----------------------------------------------------------------
+            //! return shape in an arbitrary container
+            template<typename CTYPE> CTYPE shape() const;
+
+            //-----------------------------------------------------------------
             //! return number of elements
             size_t size() const; 
 
@@ -193,9 +197,14 @@ namespace core{
             //-----------------------------------------------------------------
 
             iterator begin() { return iterator(this,0); }
+
+            //-----------------------------------------------------------------
             iterator end() { return iterator(this,size()); }
 
+            //-----------------------------------------------------------------
             const_iterator begin() const { return const_iterator(this,0); }
+
+            //-----------------------------------------------------------------
             const_iterator end() const { return const_iterator(this,size()); }
 
             //-----------------------------------------------------------------
@@ -204,6 +213,16 @@ namespace core{
             
     };
 
+    //======================implementation of template members=================
+    template<typename CTYPE> CTYPE array::shape() const
+    {
+        shape_t s = this->shape();
+        CTYPE c(s.size());
+        std::copy(s.begin(),s.end(),c.begin());
+        return c;
+    }
+
+    //================declaration of stream operators==========================
 
     /*!
     \brief stream output
