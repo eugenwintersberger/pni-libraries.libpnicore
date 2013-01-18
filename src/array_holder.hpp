@@ -128,6 +128,7 @@ namespace core{
                 return typeid(OT).name();
             }
 
+            //-----------------------------------------------------------------
             virtual const void *ptr() const
             {
                 return get_pointer(_object);            

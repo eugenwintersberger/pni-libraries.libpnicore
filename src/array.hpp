@@ -35,29 +35,30 @@ namespace pni{
 namespace core{
 
     /*!
-    \brief type erasure for data objects
+    \brief type erasure array types
 
-    This is a type erasure for virtually all objects in pnicore that hold data.
-    It provides a very simple interface to access this data.
-    The construction is rather simple
+    This type erasure can hold all kind of array types provides by libpnicore.
+    It takes entire ownership over the array it holds.
+    The construction is fairly easy
     \code 
-    data_object obj = DArray<Float32>(shape_t{104,200});
+    array a = DArray<Float32>(shape_t{104,200});
     \endcode
-    In this example the object held by data_object will be constructed using
-    move operation as the right hand side of the assignment operator is a
-    temporary. Alternatively, the object can be copied using something like this
+    as the DArray instance is a temporary move construction will be used. 
+    Alternatively, copy construction can be done with
     \code
-    DArray<Float32> array(shape_t{104,200});
-    data_object obj = array;
+    DArray<Float32> data(shape_t{104,200});
+    array a = data;
     \endcode
     in which case the copy constructor is used to copy the array's data. 
+    It is clear that in this latter case the two objects are entirely decoupled. 
+    Changing a value in a will not influence the original instance data. 
 
-    Another important question is how to get the original object back. Several
-    cast functions are defined for the data_object class. 
-    \code
-    data_object obj = DArray<UInt32>(shape_t{104});
-    auto array = data_object_cast<DArray<UInt32> >(obj);
-    \endcode
+    Like any other array in libpnicore an instance of array can be considered as
+    a one dimensional container providing linear access to the data stored in it
+    by means of iterators, the [] operator, and the at() method. Like standard
+    C++ container only the latter method ensures index checking. 
+    See code examples at the various member functions for more detail about the
+    methods.
 
     */
     class array //the type erasure
@@ -78,13 +79,15 @@ namespace core{
                         "Instance of data_object holds no data!");
             }
 
-            std::unique_ptr<array_holder_interface> _ptr; //pointer to holder
+            //! pointer to an instance of array_holder 
+            std::unique_ptr<array_holder_interface> _ptr; 
         public:
             //====================public types=================================
-            typedef value value_type;
-            typedef array_iterator<0> iterator;
-            typedef array_iterator<1> const_iterator;
+            typedef value value_type; //!< value type of the array
+            typedef array_iterator<0> iterator; //!< read/write iterator
+            typedef array_iterator<1> const_iterator; //!< read only iterator
             //===================constructors and destructor===================
+            //! default constructor
             array():_ptr(nullptr)
             {}
             //-----------------------------------------------------------------
@@ -92,7 +95,15 @@ namespace core{
             \brief copy original object
 
             This constructor creates a type erasure by copying the original data
-            to the internal object.
+            to the internal object. This constructor is called in a situation as
+            this one
+            \code 
+            SArray<Float32,10,3> data;
+            ....
+            array a = data;
+            \endcode
+            the content of the original array data is copied to the internal
+            array of type SArray<Float32,10,3> encapsulated by the type erasure.
             \tparam T type of the object. 
             \param o const reference to the original object
             */
@@ -106,15 +117,16 @@ namespace core{
                                        >::type
                     > 
             array(const T &o):_ptr(new array_holder<T>(o))
-            {
-                //std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
-            }
+            { }
 
             //------------------------------------------------------------------
             /*!
             \brief move original object
 
-            Constructor moves the original object.
+            Constructor moves the original object to the type erasure
+            \code
+            array a = DArray<UInt16>(shape_t{1024,1024});
+            \endcode
             \tparam T original type
             \param o rvalue reference to the original object
             */
@@ -131,42 +143,70 @@ namespace core{
                 _ptr(new array_holder<typename std::remove_cv<
                                 typename std::remove_reference<T>::type>::type>
                                 (std::forward<T>(o)))
-            {
-                //std::cout<<BOOST_CURRENT_FUNCTION<<std::endl; 
-            }
+            { }
 
 
             //------------------------------------------------------------------
-            //copy constructor
+            //!copy constructor
             array(const array &e);
             //------------------------------------------------------------------
-            //move constructor
+            //!move constructor
             array(array &&e);
 
             //=====================public member functions=====================
             /*!
             \brief get type id
 
-            Returns the type ID of the value type of the container wrapped by
-            this instance. 
+            Return the type id of the data held by an instance of array.
             \return type id.
             */
             TypeID type_id() const;
             
             //-----------------------------------------------------------------
-            //! return rank of array or container
+            /*! 
+            \brief return rank of array 
+
+            Return the number of dimensions the multidimensional array spans. 
+            In the case of a scalar the return value of this method is 0. 
+            \return number of dimensions
+            */
             size_t rank() const;
 
             //-----------------------------------------------------------------
-            //! return shape of array or container
+            /*! 
+            \brief return shape 
+
+            Return the number of elements along each dimension of the array as
+            an instance of shape_t. In the case of a scalar value the return
+            value is empty (size=0).
+            \return shape of the array
+            */
             shape_t shape() const;
 
             //-----------------------------------------------------------------
-            //! return shape in an arbitrary container
+            /*!
+            \brief return shape in an arbitrary container
+
+            Return the number of dimensions along each dimension as a container
+            type specified by the user. 
+            \code
+            auto s = array.shape<std::list<size_t> >();
+            \endcode
+            If the wrapped type is a scalar an empty instance of CTYPE is
+            returned.
+            \tparam CTYPE container type
+            \return instance of CTYPE
+            */
             template<typename CTYPE> CTYPE shape() const;
 
             //-----------------------------------------------------------------
-            //! return number of elements
+            /*! 
+            \brief return number of elements
+
+            Returns the total number of elements stored in the array. In the
+            case of a scalar the size is 1. 
+            \return number of elements
+            */
             size_t size() const; 
 
             //-----------------------------------------------------------------
@@ -178,16 +218,48 @@ namespace core{
             std::istream &read(std::istream &is);
 
             //-----------------------------------------------------------------
-            //! get element at index i
+            /*! 
+            \brief get value at index i
+
+            This operator returns the content of the element with linear index i
+            as an instance of value by which one cannot alter the data stored in
+            the array. 
+            This operator performs no index checking. 
+            \param i linear index of the element
+            \return value holding the content of element i
+            */
             value operator[](size_t i) const;
 
             //-----------------------------------------------------------------
+            /*!
+            \brief get value at index i 
+            
+            Return the content of the array at linear index i as an instance of
+            value (thus only read only access). This method performs index
+            checking. 
+            \throws IndexError if i exceeds the size of the array
+            \param i linear index of the element
+            \return element at index i as instance of value
+            */
             value at(size_t i) const;
 
             //-----------------------------------------------------------------
+            /*!
+            \brief get a reference to index i
+
+            Return a reference to the element at linear index i. The reference
+            is provided as an instance of value_ref via which the content of the
+            array can be altered. This operator performs no index checking. 
+            \param i linear index i 
+            \return reference to element i
+            */
             value_ref operator[](size_t i);
 
             //-----------------------------------------------------------------
+            /*!
+            \brief get element at index i
+
+            */
             value_ref at(size_t i);
 
             //-----------------------------------------------------------------

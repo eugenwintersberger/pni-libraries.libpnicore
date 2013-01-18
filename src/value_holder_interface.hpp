@@ -31,17 +31,16 @@ namespace core{
     /*!
     \brief abstract interface for data holder
 
-    Internal class defining the abstract interface for a data value
-    holder. 
+    Internal class defining the abstract interface for a data value holder. 
     */
     class value_holder_interface
     {
         public:
-            //---------------------------------------------------------
+            //-----------------------------------------------------------------
             //! get type id
             virtual TypeID type_id() const = 0;
 
-            //---------------------------------------------------------
+            //-----------------------------------------------------------------
             /*!
             \brief clone 
 
@@ -50,11 +49,16 @@ namespace core{
             */
             virtual value_holder_interface *clone() const = 0;
 
-            //---------------------------------------------------------
+            //-----------------------------------------------------------------
+            //! write content to output stream
             virtual std::ostream &write(std::ostream &) const = 0;
 
+            //-----------------------------------------------------------------
+            //! read content from input stream
             virtual std::istream &read(std::istream &) = 0;
 
+            //-----------------------------------------------------------------
+            //! is reference
             virtual bool holds_reference() const = 0;
 
     };

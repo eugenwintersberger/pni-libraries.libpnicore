@@ -68,8 +68,7 @@ namespace core{
     This template implements the holder interface for the value class.
     \tparam T type of the data wrapped
     */
-    template<typename T> 
-        class value_holder : public value_holder_interface
+    template<typename T> class value_holder : public value_holder_interface
     {
         private:
             T _value; //!< the data value
