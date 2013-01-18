@@ -320,10 +320,6 @@ namespace core {
                 return this->_data.end();
             }
 
-            
-
-
-
     };
 
     /*!

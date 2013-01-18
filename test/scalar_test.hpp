@@ -27,6 +27,7 @@
 
 #include <boost/current_function.hpp>
 #include <pni/core/Scalar.hpp>
+#include "EqualityCheck.hpp"
 
 #define DOUBLE_PREC 1.e-3
 
@@ -73,15 +74,26 @@ template<typename T> void scalar_test<T>::test_constructors()
     CPPUNIT_ASSERT(s.template shape<shape_t>().size() == 0);
     CPPUNIT_ASSERT(s.size() == 1);
 
-    scalar_t s1 = 100;
-    CPPUNIT_ASSERT( s1 == 100);
+    scalar_t s1 = T(100);
+    check_equality(T(s1),T(100));
+
+    scalar_t s2 = s1;
+    check_equality(T(s2),T(s1));
 }
 
 //-----------------------------------------------------------------------------
 template<typename T> void scalar_test<T>::test_assignment()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+    
+    scalar_t s; 
 
+    s = T(20);
+    check_equality(T(s),T(20));
+
+    scalar_t s2;
+    s2 = s;
+    check_equality(T(s2),T(20));
 }
 
 //-----------------------------------------------------------------------------
@@ -89,6 +101,10 @@ template<typename T> void scalar_test<T>::test_access_unchecked()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
+    scalar_t s(T(100));
+
+    check_equality(s[0],T(100));
+    check_equality(s[1],T(100));
 }
 
 //-----------------------------------------------------------------------------
@@ -96,12 +112,19 @@ template<typename T> void scalar_test<T>::test_access_checked()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
+    scalar_t s(T(3));
+    check_equality(s.at(10),T(3));
+    check_equality(s.at(0),T(3));
 }
 
 //-----------------------------------------------------------------------------
 template<typename T> void scalar_test<T>::test_access_iterator()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+
+    scalar_t s(T(10));
+    for(auto iter = s.begin();iter!=s.end();++iter)
+        check_equality(*iter,T(10));
 
 }
 

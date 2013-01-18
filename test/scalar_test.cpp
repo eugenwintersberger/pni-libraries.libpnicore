@@ -23,12 +23,26 @@
 #include<iostream>
 #include<typeinfo>
 
-#include <boost/current_function.hpp>
 #include<cppunit/extensions/HelperMacros.h>
 
 #include "scalar_test.hpp"
 
 CPPUNIT_TEST_SUITE_REGISTRATION(scalar_test<UInt8>);
+CPPUNIT_TEST_SUITE_REGISTRATION(scalar_test<Int8>);
+CPPUNIT_TEST_SUITE_REGISTRATION(scalar_test<UInt16>);
+CPPUNIT_TEST_SUITE_REGISTRATION(scalar_test<Int16>);
+CPPUNIT_TEST_SUITE_REGISTRATION(scalar_test<UInt32>);
+CPPUNIT_TEST_SUITE_REGISTRATION(scalar_test<Int32>);
+CPPUNIT_TEST_SUITE_REGISTRATION(scalar_test<UInt64>);
+CPPUNIT_TEST_SUITE_REGISTRATION(scalar_test<Int64>);
+
+CPPUNIT_TEST_SUITE_REGISTRATION(scalar_test<Float32>);
+CPPUNIT_TEST_SUITE_REGISTRATION(scalar_test<Float64>);
+CPPUNIT_TEST_SUITE_REGISTRATION(scalar_test<Float128>);
+
+CPPUNIT_TEST_SUITE_REGISTRATION(scalar_test<Complex32>);
+CPPUNIT_TEST_SUITE_REGISTRATION(scalar_test<Complex64>);
+CPPUNIT_TEST_SUITE_REGISTRATION(scalar_test<Complex128>);
 
 
 
