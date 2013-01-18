@@ -29,22 +29,14 @@
 #pragma once
 
 #include <iostream>
-#include <complex>
-#include <limits>
 
 #include "Types.hpp"
-#include "TypeInfo.hpp"
-#include "Exceptions.hpp"
 #include "TypeIDMap.hpp"
-#include "ComplexUtils.hpp"
-#include "type_conversion.hpp"
-#include "CompType.hpp"
 #include "SBuffer.hpp"
 
 namespace pni {
 namespace core {
 
-using namespace boost::numeric;
 
     /*! 
     \ingroup numeric_array_classes
