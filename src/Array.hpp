@@ -137,8 +137,6 @@ namespace core{
     template<size_t ...DIMS> using NC128SArray = NumArray<C128SArray<DIMS...> >;
 #endif
 
-    //! standard type for array shapes
-    typedef std::vector<size_t> shape_t;
 
 //end of namespace
 }

@@ -33,6 +33,7 @@
 #include "Types.hpp"
 #include "TypeIDMap.hpp"
 #include "SBuffer.hpp"
+#include "ArrayView.hpp"
 
 namespace pni {
 namespace core {
@@ -119,6 +120,12 @@ namespace core {
                 if(this == &v) return *this;
                 this->_data = v._data;
                 return *this;
+            }
+
+            //=======================conversion operator========================
+            operator T() const
+            {
+                return this->_data[0];
             }
 
 
@@ -282,7 +289,7 @@ namespace core {
             */
             template<typename CTYPE> CTYPE shape() const
             {
-                return CTYPE{1};
+                return CTYPE();
             }
 
             //------------------------------------------------------------------

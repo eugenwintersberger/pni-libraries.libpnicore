@@ -15,6 +15,7 @@ sources_list.extend(["slice_test.cpp"])
 sources_list.extend(["binary_test.cpp"])
 
 #test of buffer classes
+sources_list.extend(["scalar_test.cpp"])
 sources_list.extend(["DBufferTest.cpp"])
 sources_list.extend(["RBufferTest.cpp"])
 sources_list.extend(["SBufferTest.cpp"])
