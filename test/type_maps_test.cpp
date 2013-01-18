@@ -63,6 +63,7 @@ void type_maps_test::test_type2id()
 
     CPPUNIT_ASSERT(TypeIDMap<String>::type_id == TypeID::STRING);
     CPPUNIT_ASSERT(TypeIDMap<Binary>::type_id == TypeID::BINARY);
+    CPPUNIT_ASSERT(TypeIDMap<Bool>::type_id == TypeID::BOOL);
 }
 
 //-----------------------------------------------------------------------------
@@ -116,5 +117,9 @@ void type_maps_test::test_id2type()
     CPPUNIT_ASSERT(
             TypeIDMap<IDTypeMap<TypeID::BINARY>::type >::type_id ==
             TypeID::BINARY);
+
+    CPPUNIT_ASSERT(
+            TypeIDMap<IDTypeMap<TypeID::BOOL>::type >::type_id ==
+            TypeID::BOOL);
 }
 

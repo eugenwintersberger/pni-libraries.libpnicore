@@ -24,20 +24,20 @@
 
 #include <iostream>
 
-#include "TypeClassTest.hpp"
+#include "type_class_test.hpp"
 
-CPPUNIT_TEST_SUITE_REGISTRATION(TypeClassTest);
+CPPUNIT_TEST_SUITE_REGISTRATION(type_class_test);
 
 using namespace pni::core;
 
 //-----------------------------------------------------------------------------
-void TypeClassTest::setUp(){ }
+void type_class_test::setUp(){ }
 
 //-----------------------------------------------------------------------------
-void TypeClassTest::tearDown(){ }
+void type_class_test::tearDown(){ }
 
 //-----------------------------------------------------------------------------
-void TypeClassTest::test_map()
+void type_class_test::test_map()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
     CPPUNIT_ASSERT(TypeClassMap<UInt8>::type_class == TypeClass::INTEGER);

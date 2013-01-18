@@ -31,9 +31,9 @@
 
 using namespace pni::core;
 
-class TypeClassTest : public CppUnit::TestFixture
+class type_class_test : public CppUnit::TestFixture
 {
-        CPPUNIT_TEST_SUITE(TypeClassTest);
+        CPPUNIT_TEST_SUITE(type_class_test);
         CPPUNIT_TEST(test_map);
         CPPUNIT_TEST_SUITE_END();
     public:
