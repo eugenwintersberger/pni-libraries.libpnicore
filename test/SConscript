@@ -12,7 +12,7 @@ sources_list.extend(["type_class_test.cpp"])
 sources_list.extend(["type_info_test.cpp"])
 sources_list.extend(["size_type_test.cpp"])
 sources_list.extend(["slice_test.cpp"])
-sources_list.extend(["BinaryTest.cpp"])
+sources_list.extend(["binary_test.cpp"])
 
 #test of buffer classes
 sources_list.extend(["DBufferTest.cpp"])

@@ -28,58 +28,59 @@
 #include <pni/core/Types.hpp>
 #include <pni/core/Binary.hpp>
 
-#include "BinaryTest.hpp"
+#include "binary_test.hpp"
 
 
-CPPUNIT_TEST_SUITE_REGISTRATION(BinaryTest);
+CPPUNIT_TEST_SUITE_REGISTRATION(binary_test);
 
 using namespace pni::core;
 
 //-----------------------------------------------------------------------------
-void BinaryTest::setUp(){ }
+void binary_test::setUp(){ }
 
 //-----------------------------------------------------------------------------
-void BinaryTest::tearDown(){ }
+void binary_test::tearDown(){ }
 
 //-----------------------------------------------------------------------------
-void BinaryTest::test_construction()
+void binary_test::test_construction()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
-    BinaryType<UInt8> bvalue;
+    binary_t bvalue;
     
-    BinaryType<UInt8> bvalue2 = 8; 
+    binary_t bvalue2 = 8; 
 }
 
 //-----------------------------------------------------------------------------
-void BinaryTest::test_comparison()
+void binary_test::test_comparison()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
-    BinaryType<UInt8> v1 = 8;
-    BinaryType<UInt8> v2 = 10;
-    BinaryType<UInt8> v3 = 8;
+    binary_t v1 = 8;
+    binary_t v2 = 10;
+    binary_t v3 = 8;
 
     CPPUNIT_ASSERT(v1 != v2);
     CPPUNIT_ASSERT(v1 == v3);
 }
 
 //-----------------------------------------------------------------------------
-void BinaryTest::test_assignment()
+void binary_test::test_assignment()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
-    BinaryType<UInt8> v1;
+    binary_t v1;
 
     v1 = 10;
 
-    BinaryType<UInt8> v2 = 10;
+    binary_t v2 = 10;
     CPPUNIT_ASSERT(v1 == v2);
 }
 
 //-----------------------------------------------------------------------------
-void BinaryTest::test_compatability()
+void binary_test::test_compatability()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+    typedef BinaryType<UInt8> binary_t;
     UInt8 rv;
-    BinaryType<UInt8> bv = 10;
+    binary_t bv = 10;
    
     //this should work
     rv = bv;
@@ -93,14 +94,15 @@ void BinaryTest::test_compatability()
     bv = f64;
 
     UInt8 *rptr = new UInt8[10];
-    BinaryType<UInt8> *bptr = new BinaryType<UInt8>[10];
+    binary_t *bptr = new binary_t[10];
 
-    for(size_t i=0;i<10;i++){
-        *rptr = i;
-        *bptr = i;
+    for(size_t i=0;i<10;i++)
+    {
+        rptr[i] = i;
+        bptr[i] = i;
     }
 
-    for(size_t i=0;i<10;i++) CPPUNIT_ASSERT(*rptr == *bptr);
+    for(size_t i=0;i<10;i++) CPPUNIT_ASSERT(rptr[i] == bptr[i]);
 
 
     delete [] rptr;
@@ -108,16 +110,16 @@ void BinaryTest::test_compatability()
 }
 
 //-----------------------------------------------------------------------------
-void BinaryTest::test_io_operator()
+void binary_test::test_io_operator()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
-    BinaryType<UInt8>  b = 'a';
+    binary_t  b = 'a';
 
     CPPUNIT_ASSERT(b == 'a');
     b = 'x';
     CPPUNIT_ASSERT(b == 'x');
 
-    BinaryType<UInt8>::binary_type bvalue;
+    binary_t::binary_type bvalue;
 
     bvalue = b;
     CPPUNIT_ASSERT(bvalue == 'x');
@@ -130,7 +132,7 @@ void BinaryTest::test_io_operator()
 }
 
 //-----------------------------------------------------------------------------
-void BinaryTest::test_io()
+void binary_test::test_io()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
@@ -154,7 +156,7 @@ void BinaryTest::test_io()
    
     //copy binary file
 
-    BinaryType<UInt8> buffer;
+    binary_t buffer;
     while(istream.get(((char&)buffer)))
     {
         ostream.put(((char&)buffer));

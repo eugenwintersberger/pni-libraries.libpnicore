@@ -27,9 +27,9 @@
 
 using namespace pni::core;
 
-class BinaryTest : public CppUnit::TestFixture
+class binary_test : public CppUnit::TestFixture
 {
-	CPPUNIT_TEST_SUITE(BinaryTest);
+	CPPUNIT_TEST_SUITE(binary_test);
     CPPUNIT_TEST(test_construction);
     CPPUNIT_TEST(test_comparison);
     CPPUNIT_TEST(test_assignment);
@@ -38,6 +38,7 @@ class BinaryTest : public CppUnit::TestFixture
     CPPUNIT_TEST(test_io);
 	CPPUNIT_TEST_SUITE_END();
 public:
+    typedef BinaryType<UInt8> binary_t;
 	void setUp();
 	void tearDown();
     void test_construction();
