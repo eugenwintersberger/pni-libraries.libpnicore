@@ -24,20 +24,20 @@
 
 #include <iostream>
 
-#include "TypeMapsTest.hpp"
+#include "type_maps_test.hpp"
 
-CPPUNIT_TEST_SUITE_REGISTRATION(TypeMapsTest);
+CPPUNIT_TEST_SUITE_REGISTRATION(type_maps_test);
 
 using namespace pni::core;
 
 //-----------------------------------------------------------------------------
-void TypeMapsTest::setUp(){ }
+void type_maps_test::setUp(){ }
 
 //-----------------------------------------------------------------------------
-void TypeMapsTest::tearDown(){ }
+void type_maps_test::tearDown(){ }
 
 //-----------------------------------------------------------------------------
-void TypeMapsTest::test_type2id()
+void type_maps_test::test_type2id()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
@@ -66,7 +66,7 @@ void TypeMapsTest::test_type2id()
 }
 
 //-----------------------------------------------------------------------------
-void TypeMapsTest::test_id2type()
+void type_maps_test::test_id2type()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 

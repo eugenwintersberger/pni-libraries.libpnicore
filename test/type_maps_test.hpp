@@ -32,9 +32,9 @@
 
 using namespace pni::core;
 
-class TypeMapsTest : public CppUnit::TestFixture
+class type_maps_test : public CppUnit::TestFixture
 {
-        CPPUNIT_TEST_SUITE(TypeMapsTest);
+        CPPUNIT_TEST_SUITE(type_maps_test);
         CPPUNIT_TEST(test_id2type);
         CPPUNIT_TEST(test_type2id);
         CPPUNIT_TEST_SUITE_END();
