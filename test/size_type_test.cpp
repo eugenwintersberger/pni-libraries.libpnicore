@@ -20,20 +20,20 @@
  *  Created on: May 31, 2012
  *      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
  */
-#pragma once
+#include <boost/current_function.hpp>
+#include "size_type_test.hpp"
 
-#include <random>
-#include <cppunit/TestFixture.h>
-#include <cppunit/extensions/HelperMacros.h>
-#include <pni/core/SizeType.hpp>
 
-using namespace pni::core;
+CPPUNIT_TEST_SUITE_REGISTRATION(size_type_test);
 
-class SizeTypeTest:public CppUnit::TestFixture
+void size_type_test::test_size()
 {
-        CPPUNIT_TEST_SUITE(SizeTypeTest);
-        CPPUNIT_TEST(test_size); 
-        CPPUNIT_TEST_SUITE_END();
-    public:
-        void test_size();
-};
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+
+    size_t s = SizeType<100>::size;
+    CPPUNIT_ASSERT(s == 100);
+    s = SizeType<100,2,4>::size;
+    CPPUNIT_ASSERT(s == 800);
+    s = SizeType<2,4>::size;
+    CPPUNIT_ASSERT(s == 8);
+}
