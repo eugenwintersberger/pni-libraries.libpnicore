@@ -33,9 +33,9 @@
 
 using namespace pni::core;
 
-class TypeInfoTest : public CppUnit::TestFixture
+class type_info_test : public CppUnit::TestFixture
 {
-        CPPUNIT_TEST_SUITE(TypeInfoTest);
+        CPPUNIT_TEST_SUITE(type_info_test);
         CPPUNIT_TEST(test_min_max);
         CPPUNIT_TEST(test_signed_integer<Int8>);
         CPPUNIT_TEST(test_signed_integer<Int16>);
@@ -48,6 +48,9 @@ class TypeInfoTest : public CppUnit::TestFixture
         CPPUNIT_TEST(test_float<Float32>);
         CPPUNIT_TEST(test_float<Float64>);
         CPPUNIT_TEST(test_float<Float128>);
+        CPPUNIT_TEST(test_complex<Complex32>);
+        CPPUNIT_TEST(test_complex<Complex64>);
+        CPPUNIT_TEST(test_complex<Complex128>);
         CPPUNIT_TEST_SUITE_END();
     public:
         void setUp() {}
@@ -57,12 +60,13 @@ class TypeInfoTest : public CppUnit::TestFixture
         template<typename T> void test_signed_integer();
         template<typename T> void test_unsigned_integer();
         template<typename T> void test_float();
+        template<typename T> void test_complex();
 
 
 };
 
 //-----------------------------------------------------------------------------
-template<typename T> void TypeInfoTest::test_signed_integer()
+template<typename T> void type_info_test::test_signed_integer()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
@@ -78,7 +82,7 @@ template<typename T> void TypeInfoTest::test_signed_integer()
 }
 
 //-----------------------------------------------------------------------------
-template<typename T> void TypeInfoTest::test_unsigned_integer()
+template<typename T> void type_info_test::test_unsigned_integer()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
@@ -92,7 +96,7 @@ template<typename T> void TypeInfoTest::test_unsigned_integer()
 }
 
 //-----------------------------------------------------------------------------
-template<typename T> void TypeInfoTest::test_float()
+template<typename T> void type_info_test::test_float()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
@@ -105,4 +109,17 @@ template<typename T> void TypeInfoTest::test_float()
 
     CPPUNIT_ASSERT(info_t::is_negative(-1.1232));
     CPPUNIT_ASSERT(!info_t::is_negative(2.342));
+}
+
+//-----------------------------------------------------------------------------
+template<typename T> void type_info_test::test_complex()
+{
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+
+    typedef TypeInfo<T> info_t;
+
+    CPPUNIT_ASSERT(info_t::size == sizeof(T));
+    CPPUNIT_ASSERT(!info_t::is_integer);
+    CPPUNIT_ASSERT(info_t::is_complex);
+
 }

@@ -23,12 +23,12 @@
 #include<cppunit/extensions/HelperMacros.h>
 #include<limits>
 
-#include "TypeInfoTest.hpp"
+#include "type_info_test.hpp"
 
-CPPUNIT_TEST_SUITE_REGISTRATION(TypeInfoTest);
+CPPUNIT_TEST_SUITE_REGISTRATION(type_info_test);
 
 //-----------------------------------------------------------------------------
-void TypeInfoTest::test_min_max()
+void type_info_test::test_min_max()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
