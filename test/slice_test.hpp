@@ -28,9 +28,9 @@
 
 using namespace pni::core;
 
-class SliceTest : public CppUnit::TestFixture
+class slice_test : public CppUnit::TestFixture
 {
-        CPPUNIT_TEST_SUITE(SliceTest);
+        CPPUNIT_TEST_SUITE(slice_test);
         CPPUNIT_TEST(test_construction);
         CPPUNIT_TEST(test_assignment);
         CPPUNIT_TEST(test_functions);

@@ -25,32 +25,32 @@
 #include <iostream>
 #include <boost/current_function.hpp>
 
-#include "SliceTest.hpp"
+#include "slice_test.hpp"
 
 
-CPPUNIT_TEST_SUITE_REGISTRATION(SliceTest);
+CPPUNIT_TEST_SUITE_REGISTRATION(slice_test);
 
 using namespace pni::core;
 
 //===========implementation of private test functions==========================
-void SliceTest::_construct(size_t start,size_t stop)
+void slice_test::_construct(size_t start,size_t stop)
 {
     Slice s(start,stop);
 }
 
-void SliceTest::_construct(size_t start,size_t stop,size_t stride)
+void slice_test::_construct(size_t start,size_t stop,size_t stride)
 {
     Slice s(start,stop,stride);
 }
 
 //-----------------------------------------------------------------------------
-void SliceTest::setUp() { }
+void slice_test::setUp() { }
 
 //-----------------------------------------------------------------------------
-void SliceTest::tearDown() { }
+void slice_test::tearDown() { }
 
 //-----------------------------------------------------------------------------
-void SliceTest::test_construction()
+void slice_test::test_construction()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
@@ -81,7 +81,7 @@ void SliceTest::test_construction()
 }
 
 //-----------------------------------------------------------------------------
-void SliceTest::test_assignment()
+void slice_test::test_assignment()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
@@ -98,7 +98,7 @@ void SliceTest::test_assignment()
 }
 
 //-----------------------------------------------------------------------------
-void SliceTest::test_functions()
+void slice_test::test_functions()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
