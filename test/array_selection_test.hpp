@@ -29,9 +29,9 @@
 
 using namespace pni::core;
 
-class ArraySelectionTest: public CppUnit::TestFixture 
+class array_selection_test: public CppUnit::TestFixture 
 {
-	CPPUNIT_TEST_SUITE(ArraySelectionTest);
+	CPPUNIT_TEST_SUITE(array_selection_test);
 	CPPUNIT_TEST(test_construction);
 	CPPUNIT_TEST(test_assignment);
 	CPPUNIT_TEST(test_index);

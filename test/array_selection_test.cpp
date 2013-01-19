@@ -26,23 +26,18 @@
 
 #include <list>
 
-#include "ArraySelectionTest.hpp"
+#include "array_selection_test.hpp"
 
-CPPUNIT_TEST_SUITE_REGISTRATION(ArraySelectionTest);
-
-//-----------------------------------------------------------------------------
-void ArraySelectionTest::setUp()
-{
-
-}
+CPPUNIT_TEST_SUITE_REGISTRATION(array_selection_test);
 
 //-----------------------------------------------------------------------------
-void ArraySelectionTest::tearDown()
-{
-}
+void array_selection_test::setUp() { }
 
 //-----------------------------------------------------------------------------
-void ArraySelectionTest::test_construction()
+void array_selection_test::tearDown() { }
+
+//-----------------------------------------------------------------------------
+void array_selection_test::test_construction()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
@@ -100,7 +95,7 @@ void ArraySelectionTest::test_construction()
 }
 
 //-----------------------------------------------------------------------------
-void ArraySelectionTest::test_assignment()
+void array_selection_test::test_assignment()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
     ArraySelection sel(itype({100,1,200}),itype({1,1,1}),itype({1,1,2}));
@@ -144,7 +139,7 @@ void ArraySelectionTest::test_assignment()
 }
 
 //-----------------------------------------------------------------------------
-void ArraySelectionTest::test_index()
+void array_selection_test::test_index()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
     ArraySelection sel(itype({10,20}),itype({1,2}),itype({3,2}));
