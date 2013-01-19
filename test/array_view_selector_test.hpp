@@ -29,9 +29,9 @@
 
 using namespace pni::core;
 
-class ArrayViewSelectorTest:public CppUnit::TestFixture
+class array_view_selector_test:public CppUnit::TestFixture
 {
-    CPPUNIT_TEST_SUITE(ArrayViewSelectorTest);
+    CPPUNIT_TEST_SUITE(array_view_selector_test);
     CPPUNIT_TEST(test_selector);
     CPPUNIT_TEST_SUITE_END();
     public:

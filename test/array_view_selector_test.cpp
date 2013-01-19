@@ -31,12 +31,12 @@
 #include <pni/core/ArrayView.hpp>
 #include <pni/core/service.hpp>
 
-#include "ArrayViewSelectorTest.hpp"
+#include "array_view_selector_test.hpp"
 
-//CPPUNIT_TEST_SUITE_REGISTRATION(ArrayViewSelectorTest);
+CPPUNIT_TEST_SUITE_REGISTRATION(array_view_selector_test);
 
-/*
-void ArrayViewSelectorTest::test_selector()
+
+void array_view_selector_test::test_selector()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
     typedef SArray<Float64,3,4,5,6> array_type;
@@ -49,10 +49,12 @@ void ArrayViewSelectorTest::test_selector()
     CPPUNIT_ASSERT(typeid(array_view::viewtype).name() == 
                    typeid(ArrayView<array_type>).name());
 
+    //this should return an array view
     CPPUNIT_ASSERT(typeid(ArrayViewSelector<array_type,Slice,Slice,size_t,size_t,size_t>::viewtype).name()==typeid(ArrayView<array_type>).name());
 
     typedef NumArray<array_type> narray_type;
 
+    //this will return a scalar view
     CPPUNIT_ASSERT(typeid(ArrayViewSelector<narray_type,size_t,size_t,size_t,size_t>::viewtype).name()
                    == typeid(Float64).name());
 
@@ -64,5 +66,3 @@ void ArrayViewSelectorTest::test_selector()
                    == typeid(NumArray<ArrayView<narray_type> >).name());
 
 }
-
-*/
