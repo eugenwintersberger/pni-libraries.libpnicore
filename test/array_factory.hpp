@@ -31,6 +31,7 @@ template<typename ATYPE> class array_factory
         {
             return ATYPE(s);
         }
+
 };
 
 template<typename T,size_t ...DIMS> class array_factory<SArray<T,DIMS...> >
