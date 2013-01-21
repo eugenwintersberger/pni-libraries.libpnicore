@@ -29,9 +29,9 @@
 
 using namespace pni::core;
 
-class IteratorTest: public CppUnit::TestFixture 
+class iterator_test: public CppUnit::TestFixture 
 {
-        CPPUNIT_TEST_SUITE(IteratorTest);
+        CPPUNIT_TEST_SUITE(iterator_test);
         CPPUNIT_TEST(test_construction);
         CPPUNIT_TEST(test_assignment);
         CPPUNIT_TEST(test_comparison);

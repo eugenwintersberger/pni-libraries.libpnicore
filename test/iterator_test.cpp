@@ -23,23 +23,23 @@
 #include <boost/current_function.hpp>
 #include<cppunit/extensions/HelperMacros.h>
 
-#include "IteratorTest.hpp"
+#include "iterator_test.hpp"
 #include <algorithm>
 #include <iterator>
 
-CPPUNIT_TEST_SUITE_REGISTRATION(IteratorTest);
+CPPUNIT_TEST_SUITE_REGISTRATION(iterator_test);
 
 //-----------------------------------------------------------------------------
-void IteratorTest::setUp()
+void iterator_test::setUp()
 {
     vector = Iterable{1,2,3,4,5,6,7};
 }
 
 //-----------------------------------------------------------------------------
-void IteratorTest::tearDown() { }
+void iterator_test::tearDown() { }
 
 //-----------------------------------------------------------------------------
-void IteratorTest::test_construction()
+void iterator_test::test_construction()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
     //==================testing default construction===========================
@@ -93,7 +93,7 @@ void IteratorTest::test_construction()
 }
 
 //-----------------------------------------------------------------------------
-void IteratorTest::test_assignment()
+void iterator_test::test_assignment()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
@@ -125,7 +125,7 @@ void IteratorTest::test_assignment()
 }
 
 //-----------------------------------------------------------------------------
-void IteratorTest::test_comparison()
+void iterator_test::test_comparison()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
@@ -166,7 +166,7 @@ void IteratorTest::test_comparison()
 }
 
 //-----------------------------------------------------------------------------
-void IteratorTest::test_unary_arithmetics()
+void iterator_test::test_unary_arithmetics()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
@@ -186,7 +186,7 @@ void IteratorTest::test_unary_arithmetics()
 }
 
 //-----------------------------------------------------------------------------
-void IteratorTest::test_binary_arithmetics()
+void iterator_test::test_binary_arithmetics()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
@@ -213,7 +213,7 @@ void IteratorTest::test_binary_arithmetics()
 }
 
 //-----------------------------------------------------------------------------
-void IteratorTest::test_stl_algos()
+void iterator_test::test_stl_algos()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
@@ -226,7 +226,7 @@ void IteratorTest::test_stl_algos()
 }
 
 //-----------------------------------------------------------------------------
-void IteratorTest::test_increment()
+void iterator_test::test_increment()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
@@ -249,7 +249,7 @@ void IteratorTest::test_increment()
 }
 
 //-----------------------------------------------------------------------------
-void IteratorTest::test_ptr_access()
+void iterator_test::test_ptr_access()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 

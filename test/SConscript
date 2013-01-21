@@ -26,7 +26,7 @@ sources_list.extend(["SBufferTest.cpp"])
 #tests for array utility classes
 
 sources_list.extend(["StaticCIndexMapTest.cpp"])
-sources_list.extend(["IteratorTest.cpp"])
+sources_list.extend(["iterator_test.cpp"])
 sources_list.extend(["add_operator_test.cpp"])
 sources_list.extend(["mult_operator_test.cpp"])
 sources_list.extend(["sub_operator_test.cpp"])
