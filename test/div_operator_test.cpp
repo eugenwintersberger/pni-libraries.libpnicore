@@ -25,21 +25,21 @@
 #include "div_operator_test.hpp"
 
 
-CPPUNIT_TEST_SUITE_REGISTRATION(div_operator_test<UInt8>);
-CPPUNIT_TEST_SUITE_REGISTRATION(div_operator_test<UInt8>);
-CPPUNIT_TEST_SUITE_REGISTRATION(div_operator_test<Int16>);
-CPPUNIT_TEST_SUITE_REGISTRATION(div_operator_test<Int16>);
-CPPUNIT_TEST_SUITE_REGISTRATION(div_operator_test<UInt32>);
-CPPUNIT_TEST_SUITE_REGISTRATION(div_operator_test<Int32>);
-CPPUNIT_TEST_SUITE_REGISTRATION(div_operator_test<UInt64>);
-CPPUNIT_TEST_SUITE_REGISTRATION(div_operator_test<Int64>);
+CPPUNIT_TEST_SUITE_REGISTRATION(div_operator_test<DArray<UInt8> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(div_operator_test<DArray<Int8> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(div_operator_test<DArray<UInt16> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(div_operator_test<DArray<Int16> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(div_operator_test<DArray<UInt32> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(div_operator_test<DArray<Int32> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(div_operator_test<DArray<UInt64> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(div_operator_test<DArray<Int64> >);
 
-CPPUNIT_TEST_SUITE_REGISTRATION(div_operator_test<Float32>);
-CPPUNIT_TEST_SUITE_REGISTRATION(div_operator_test<Float64>);
-CPPUNIT_TEST_SUITE_REGISTRATION(div_operator_test<Float128>);
-CPPUNIT_TEST_SUITE_REGISTRATION(div_operator_test<Complex32>);
-CPPUNIT_TEST_SUITE_REGISTRATION(div_operator_test<Complex64>);
-CPPUNIT_TEST_SUITE_REGISTRATION(div_operator_test<Complex128>);
+CPPUNIT_TEST_SUITE_REGISTRATION(div_operator_test<DArray<Float32> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(div_operator_test<DArray<Float64> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(div_operator_test<DArray<Float128> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(div_operator_test<DArray<Complex32> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(div_operator_test<DArray<Complex64> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(div_operator_test<DArray<Complex128> >);
 
 
 
