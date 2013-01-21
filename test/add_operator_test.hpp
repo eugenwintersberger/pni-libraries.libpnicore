@@ -28,10 +28,12 @@
 #include <algorithm>
 #include <boost/current_function.hpp>
 
+#include <pni/core/Array.hpp>
 #include "EqualityCheck.hpp"
 #include <pni/core/DArray.hpp>
 #include <pni/core/Scalar.hpp>
 #include <pni/core/NumArray.hpp>
+#include "array_factory.hpp"
 
 using namespace pni::core;
 
@@ -40,9 +42,9 @@ using namespace pni::core;
  thus can be considered as equivalent. However, we have to check ArrayView
  wether or not it works.
  */
-template<typename T> class add_operator_test: public CppUnit::TestFixture 
+template<typename ATYPE> class add_operator_test: public CppUnit::TestFixture 
 {
-        CPPUNIT_TEST_SUITE(add_operator_test<T>);
+        CPPUNIT_TEST_SUITE(add_operator_test<ATYPE>);
         CPPUNIT_TEST(test_construction);
         CPPUNIT_TEST(test_access);
         CPPUNIT_TEST(test_iterator);
@@ -50,11 +52,9 @@ template<typename T> class add_operator_test: public CppUnit::TestFixture
         CPPUNIT_TEST_SUITE_END();
     private:
         //==========private types==============================================
-        typedef DArray<T> atype;
-        typedef NumArray<atype> na_type;
-        typedef Scalar<T> s_type;
-        typedef std::vector<size_t> shape_t;
-
+        typedef NumArray<ATYPE> na_type;
+        typedef Scalar<typename ATYPE::value_type> s_type;
+        typedef typename ATYPE::value_type value_type;
 
         //===================private memebers==================================
         na_type a1;
@@ -73,22 +73,21 @@ template<typename T> class add_operator_test: public CppUnit::TestFixture
 };
 
 //-----------------------------------------------------------------------------
-template<typename T> void add_operator_test<T>::setUp()
+template<typename ATYPE> void add_operator_test<ATYPE>::setUp()
 {
-    shape = shape_t(3);
-    shape[0] = 2; shape[1] = 3; shape[2] = 4;
-    a1 = std::move(na_type(shape));
-    a2 = std::move(na_type(shape));
+    shape = shape_t{2,3,4};
+    a1 = na_type(array_factory<ATYPE>::create(shape));
+    a2 = na_type(array_factory<ATYPE>::create(shape));
     
-    std::fill(a1.begin(),a1.end(),T(100));
-    std::fill(a2.begin(),a2.end(),T(5));
+    std::fill(a1.begin(),a1.end(),value_type(100));
+    std::fill(a2.begin(),a2.end(),value_type(5));
 }
 
 //-----------------------------------------------------------------------------
-template<typename T> void add_operator_test<T>::tearDown() { }
+template<typename ATYPE> void add_operator_test<ATYPE>::tearDown() { }
 
 //-----------------------------------------------------------------------------
-template<typename T> void add_operator_test<T>::test_construction()
+template<typename ATYPE> void add_operator_test<ATYPE>::test_construction()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
     Add<na_type,na_type> op(a1,a2);
@@ -104,23 +103,23 @@ template<typename T> void add_operator_test<T>::test_construction()
 }
 
 //-----------------------------------------------------------------------------
-template<typename T> void add_operator_test<T>::test_access()
+template<typename ATYPE> void add_operator_test<ATYPE>::test_access()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
     Add<na_type,na_type> op1(a1,a2);
 
     for(size_t i=0;i<op1.size();i++)
-        check_equality(op1[i],T(105));
+        check_equality(op1[i],value_type(105));
 
     s_type s(10);
     Add<na_type,s_type> op2(a1,s);
 
     for(size_t i=0;i<op2.size();i++)
-        check_equality(op2[i],T(110));
+        check_equality(op2[i],value_type(110));
 }
 
 //-----------------------------------------------------------------------------
-template<typename T> void add_operator_test<T>::test_iterator()
+template<typename ATYPE> void add_operator_test<ATYPE>::test_iterator()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
     Add<na_type,na_type> op1(a1,a2);
@@ -132,7 +131,7 @@ template<typename T> void add_operator_test<T>::test_iterator()
     for(auto v: op1) 
     {
 #endif 
-        check_equality(v,T(105));
+        check_equality(v,value_type(105));
     }
 
     s_type s(10);
@@ -145,15 +144,15 @@ template<typename T> void add_operator_test<T>::test_iterator()
     for(auto v: op2) 
     {
 #endif 
-        check_equality(v,T(110));
+        check_equality(v,value_type(110));
     }
 }
 
 //-----------------------------------------------------------------------------
-template<typename T> void add_operator_test<T>::test_operator()
+template<typename ATYPE> void add_operator_test<ATYPE>::test_operator()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
-    na_type r = atype(shape);
+    na_type r = array_factory<ATYPE>::create(shape);
     r = a1+a2;
 #ifdef NOFOREACH
     for(auto iter = r.begin();iter!=r.end();++iter)
@@ -163,7 +162,7 @@ template<typename T> void add_operator_test<T>::test_operator()
     for(auto v: r) 
     {
 #endif 
-        check_equality(v,T(105));
+        check_equality(v,value_type(105));
     }
 
     r = a1+10;
@@ -175,7 +174,7 @@ template<typename T> void add_operator_test<T>::test_operator()
     for(auto v: r) 
     {
 #endif 
-        check_equality(v,T(110));
+        check_equality(v,value_type(110));
     }
 
     r = 95 + a1;
@@ -187,7 +186,7 @@ template<typename T> void add_operator_test<T>::test_operator()
     for(auto v: r) 
     {
 #endif 
-        check_equality(v,T(195));
+        check_equality(v,value_type(195));
     }
 
     //put it all together
@@ -201,7 +200,7 @@ template<typename T> void add_operator_test<T>::test_operator()
     for(auto v: r) 
     {
 #endif 
-        check_equality(v,T(115));
+        check_equality(v,value_type(115));
     }
 
 }
