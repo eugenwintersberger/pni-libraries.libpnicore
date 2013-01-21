@@ -34,10 +34,26 @@
 
 using namespace pni::core;
 
-typedef DArray<Float32> darray_type;
 typedef SArray<UInt16,NX,NY> sarray_type;
 
-CPPUNIT_TEST_SUITE_REGISTRATION(array_view_test<darray_type>);
+CPPUNIT_TEST_SUITE_REGISTRATION(array_view_test<DArray<UInt8> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(array_view_test<DArray<Int8> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(array_view_test<DArray<UInt16> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(array_view_test<DArray<Int16> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(array_view_test<DArray<UInt32> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(array_view_test<DArray<Int32> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(array_view_test<DArray<UInt64> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(array_view_test<DArray<Int64> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(array_view_test<DArray<Float32> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(array_view_test<DArray<Float64> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(array_view_test<DArray<Float128> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(array_view_test<DArray<Complex32> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(array_view_test<DArray<Complex64> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(array_view_test<DArray<Complex128> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(array_view_test<DArray<String> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(array_view_test<DArray<Bool> >);
+
+CPPUNIT_TEST_SUITE_REGISTRATION(array_view_test<sarray_type>);
 
 
 

@@ -213,8 +213,9 @@ template<typename ATYPE> void array_view_test<ATYPE>::test_assignment()
     //select roi
     auto roi = frame(Slice(1,10),Slice(0,100));
    
-    //allocate new array for a roi
-    ATYPE roia(roi);
+    //allocate new array for a roi - we have to use a DArray here as for a
+    //static array we would have to know the shape of the array
+    DArray<typename ATYPE::value_type> roia(roi);
     auto roi_s = roi.template shape<shape_t>();
     auto roia_s = roia.template shape<shape_t>();
     CPPUNIT_ASSERT(roia_s.size() == roi_s.size());

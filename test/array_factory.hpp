@@ -37,7 +37,7 @@ template<typename ATYPE> class array_factory
 template<typename T,size_t ...DIMS> class array_factory<SArray<T,DIMS...> >
 {
     public:
-        static SArray<T,DIMS...> create(shape_t &s)
+        template<typename CTYPE> static SArray<T,DIMS...> create(const CTYPE &s)
         {
             return SArray<T,DIMS...>();
         }
@@ -46,7 +46,7 @@ template<typename T,size_t ...DIMS> class array_factory<SArray<T,DIMS...> >
 template<typename T> class array_factory<Scalar<T> >
 {
     public:
-        static Scalar<T> create(shape_t &s)
+        template<typename CTYPE> static Scalar<T> create(const CTYPE &s)
         {
             return Scalar<T>();
         }

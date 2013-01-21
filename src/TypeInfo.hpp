@@ -201,7 +201,7 @@ namespace core{
             typedef Bool BaseType;
 
             static const size_t size = sizeof(Bool);
-            static const bool is_integer = false;
+            static const bool is_integer = true;
             static const bool is_signed = false;
             static const bool is_complex = false;
 

@@ -40,9 +40,9 @@ using namespace pni::core;
  thus can be considered as equivalent. However, we have to check ArrayView
  wether or not it works.
  */
-template<typename T> class AddOperatorTest: public CppUnit::TestFixture 
+template<typename T> class add_operator_test: public CppUnit::TestFixture 
 {
-        CPPUNIT_TEST_SUITE(AddOperatorTest<T>);
+        CPPUNIT_TEST_SUITE(add_operator_test<T>);
         CPPUNIT_TEST(test_construction);
         CPPUNIT_TEST(test_access);
         CPPUNIT_TEST(test_iterator);
@@ -73,7 +73,7 @@ template<typename T> class AddOperatorTest: public CppUnit::TestFixture
 };
 
 //-----------------------------------------------------------------------------
-template<typename T> void AddOperatorTest<T>::setUp()
+template<typename T> void add_operator_test<T>::setUp()
 {
     shape = shape_t(3);
     shape[0] = 2; shape[1] = 3; shape[2] = 4;
@@ -85,10 +85,10 @@ template<typename T> void AddOperatorTest<T>::setUp()
 }
 
 //-----------------------------------------------------------------------------
-template<typename T> void AddOperatorTest<T>::tearDown() { }
+template<typename T> void add_operator_test<T>::tearDown() { }
 
 //-----------------------------------------------------------------------------
-template<typename T> void AddOperatorTest<T>::test_construction()
+template<typename T> void add_operator_test<T>::test_construction()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
     Add<na_type,na_type> op(a1,a2);
@@ -104,7 +104,7 @@ template<typename T> void AddOperatorTest<T>::test_construction()
 }
 
 //-----------------------------------------------------------------------------
-template<typename T> void AddOperatorTest<T>::test_access()
+template<typename T> void add_operator_test<T>::test_access()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
     Add<na_type,na_type> op1(a1,a2);
@@ -120,7 +120,7 @@ template<typename T> void AddOperatorTest<T>::test_access()
 }
 
 //-----------------------------------------------------------------------------
-template<typename T> void AddOperatorTest<T>::test_iterator()
+template<typename T> void add_operator_test<T>::test_iterator()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
     Add<na_type,na_type> op1(a1,a2);
@@ -150,7 +150,7 @@ template<typename T> void AddOperatorTest<T>::test_iterator()
 }
 
 //-----------------------------------------------------------------------------
-template<typename T> void AddOperatorTest<T>::test_operator()
+template<typename T> void add_operator_test<T>::test_operator()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
     na_type r = atype(shape);
