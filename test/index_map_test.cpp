@@ -28,9 +28,9 @@
 
 #include <pni/core/CIndexMap.hpp>
 
-#include "IndexMapTest.hpp"
+#include "index_map_test.hpp"
 
-CPPUNIT_TEST_SUITE_REGISTRATION(IndexMapTest<CIndexMap>);
+CPPUNIT_TEST_SUITE_REGISTRATION(index_map_test<CIndexMap>);
 
 
 

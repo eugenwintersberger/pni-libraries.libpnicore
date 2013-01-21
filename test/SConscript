@@ -27,12 +27,12 @@ sources_list.extend(["SBufferTest.cpp"])
 
 sources_list.extend(["StaticCIndexMapTest.cpp"])
 sources_list.extend(["IteratorTest.cpp"])
-sources_list.extend(["IndexMapTest.cpp"])
 sources_list.extend(["add_operator_test.cpp"])
 sources_list.extend(["mult_operator_test.cpp"])
 sources_list.extend(["sub_operator_test.cpp"])
 sources_list.extend(["div_operator_test.cpp"])
 sources_list.extend(["index_map_base_test.cpp"])
+sources_list.extend(["index_map_test.cpp"])
 
 sources_list.extend(["SArrayTest.cpp"])
 sources_list.extend(["DArrayTest.cpp"])

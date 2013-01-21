@@ -34,9 +34,9 @@ using namespace pni::core;
 
 
 template<typename MTYPE>
-class IndexMapTest:public CppUnit::TestFixture
+class index_map_test:public CppUnit::TestFixture
 {
-        CPPUNIT_TEST_SUITE(IndexMapTest<MTYPE>);
+        CPPUNIT_TEST_SUITE(index_map_test<MTYPE>);
         CPPUNIT_TEST(test_offset<std::vector<size_t> >);
         CPPUNIT_TEST(test_offset<std::vector<ssize_t> >);
         CPPUNIT_TEST(test_offset<std::vector<int> >);
@@ -64,7 +64,7 @@ class IndexMapTest:public CppUnit::TestFixture
 
 //-----------------------------------------------------------------------------
 template<typename MTYPE> 
-template<typename CTYPE> void IndexMapTest<MTYPE>::test_offset()
+template<typename CTYPE> void index_map_test<MTYPE>::test_offset()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
@@ -80,7 +80,7 @@ template<typename CTYPE> void IndexMapTest<MTYPE>::test_offset()
 
 //-----------------------------------------------------------------------------
 template<typename MTYPE> 
-template<typename CTYPE> void IndexMapTest<MTYPE>::test_index()
+template<typename CTYPE> void index_map_test<MTYPE>::test_index()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
    
