@@ -24,6 +24,8 @@
 
 #include <pni/core/Array.hpp>
 
+using namespace pni::core;
+
 template<typename ATYPE> class array_factory
 {
     public:

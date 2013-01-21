@@ -28,10 +28,6 @@
 #include <algorithm>
 
 #include "array_factory.hpp"
-#include <pni/core/Array.hpp>
-#include <pni/core/NumArray.hpp>
-#include <pni/core/DArray.hpp>
-#include <pni/core/Scalar.hpp>
 
 #include "EqualityCheck.hpp"
 
