@@ -48,6 +48,7 @@ void run_benchmark(size_t nruns,const BMARKT &bmark)
     BenchmarkResult read_result  = average(read_bm);
 
     std::cout<<"Average values: "<<std::endl;
+    std::cout<<"write\tread"<<std::endl;
     std::cout<<write_result.time()<<"\t"<<read_result.time()<<std::endl;
 
 }

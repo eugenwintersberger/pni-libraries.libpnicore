@@ -37,13 +37,13 @@ sources_list.extend(["index_map_test.cpp"])
 sources_list.extend(["SArrayTest.cpp"])
 sources_list.extend(["DArrayTest.cpp"])
 sources_list.extend(["NumArrayTest.cpp"])
+sources_list.extend(["EqualityCheck.cpp"])
 sources_list.extend(["configuration_test.cpp"])
 sources_list.extend(["counter_test.cpp"])
 sources_list.extend(["index_iterator_test.cpp"])
 sources_list.extend(["value_test.cpp"])
 sources_list.extend(["value_ref_test.cpp"])
 sources_list.extend(["array_test.cpp"])
-sources_list.extend(["EqualityCheck.cpp"])
 
 bm_sources = ["iteratorbm.cpp"]
 
