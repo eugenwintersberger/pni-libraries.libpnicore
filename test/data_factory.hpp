@@ -28,6 +28,12 @@
 #include <pni/core/Types.hpp>
 #include "RandomDistributions.hpp"
 
+/*!
+\brief fill a container with data
+
+The data factories aim is to fill a particular container type with data. 
+\tparam T data type to create
+*/
 template<typename T> class data_factory
 {
     public:

@@ -28,9 +28,9 @@
 #include <pni/core/ArrayView.hpp>
 #include <pni/core/Array.hpp>
 #include <pni/core/index_iterator.hpp>
-#include "RandomDistributions.hpp"
+#include "uniform_distribution.hpp"
 #include "array_factory.hpp"
-#include "data_factory.hpp"
+#include "data_generator.hpp"
 #include "EqualityCheck.hpp"
 
 using namespace pni::core;
@@ -136,15 +136,13 @@ template<typename ATYPE> void array_view_test<ATYPE>::test_construction()
 //-----------------------------------------------------------------------------
 template<typename ATYPE> void array_view_test<ATYPE>::test_linear_access()
 { 
-    typedef data_factory<typename ATYPE::value_type> data_factory_t;
     typedef std::vector<typename ATYPE::value_type> ctype;
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
     //create an array and fill it with random data
     ATYPE  a = array_factory<ATYPE>::create(_shape);
-    ctype data;
-    data_factory_t::create(a.size(),data);
-    std::copy(data.begin(),data.end(),a.begin());
+    data_generator::fill(a.begin(),a.end(),
+                         uniform_distribution<typename ATYPE::value_type>());
 
     //create a selection
     auto view = a(Slice(0,1),Slice(2,7));
@@ -156,13 +154,11 @@ template<typename ATYPE> void array_view_test<ATYPE>::test_linear_access()
 //-----------------------------------------------------------------------------
 template<typename ATYPE> void array_view_test<ATYPE>::test_iterator_access()
 {
-    typedef data_factory<typename ATYPE::value_type> data_factory_t;
     typedef std::vector<typename ATYPE::value_type> ctype;
+    typedef uniform_distribution<typename ATYPE::value_type> udist_type;
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
     ATYPE a = array_factory<ATYPE>::create(shape_t{NX,NY});
-    ctype data;
-    data_factory_t::create(NX*NY,data);
-    std::copy(data.begin(),data.end(),a.begin());
+    data_generator::fill(a.begin(),a.end(),udist_type());
 
     //create the view
     auto v = a(Slice(10,35,2),Slice(100,125,3));
@@ -176,7 +172,8 @@ template<typename ATYPE> void array_view_test<ATYPE>::test_iterator_access()
                               s.begin()));
 
     //create data for the selection
-    data_factory_t::create(v.size(),data);
+    ctype data(v.size());
+    data_generator::fill(data.begin(),data.end(),udist_type());
 
     //check write access == set a constant value to all selected views
     auto diter = data.begin();
@@ -195,20 +192,17 @@ template<typename ATYPE> void array_view_test<ATYPE>::test_iterator_access()
     for(auto iter = data.begin();iter!=data.end();++iter)
         check_equality(*iter,a(selection.index(*index_iter++)));
 
-
 }
 
 //-----------------------------------------------------------------------------
 template<typename ATYPE> void array_view_test<ATYPE>::test_assignment()
 {
-    typedef std::vector<typename ATYPE::value_type> ctype;
+    typedef uniform_distribution<typename ATYPE::value_type> udist_type;
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl; 
    
     //create initial frame and fill it with data
     ATYPE frame = array_factory<ATYPE>::create(_shape);
-    ctype data;
-    data_factory<typename ATYPE::value_type>::create(frame.size(),data);
-    std::copy(data.begin(),data.end(),frame.begin());
+    data_generator::fill(frame.begin(),frame.end(),udist_type());
 
     //select roi
     auto roi = frame(Slice(1,10),Slice(0,100));
@@ -226,19 +220,17 @@ template<typename ATYPE> void array_view_test<ATYPE>::test_assignment()
 //-----------------------------------------------------------------------------
 template<typename ATYPE> void array_view_test<ATYPE>::test_multiindex_access()
 {
+    typedef uniform_distribution<typename ATYPE::value_type> udist_type;
     typedef std::vector<typename ATYPE::value_type> ctype;
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
     //create array 
     ATYPE a = array_factory<ATYPE>::create(_shape);
-   
-    //create data
-    ctype data;
-    data_factory<typename ATYPE::value_type>::create(a.size(),data);
-    std::copy(data.begin(),data.end(),a.begin());
+    data_generator::fill(a.begin(),a.end(),udist_type());
 
     auto view = a(1,Slice(0,100));
-    data_factory<typename ATYPE::value_type>::create(view.size(),data);
+    ctype data(view.size());
+    data_generator::fill(data.begin(),data.end(),udist_type());
     std::copy(data.begin(),data.end(),view.begin());
     auto diter = data.begin();
     for(size_t i=0;i<view.size();++i) check_equality(*diter++,view(i));
