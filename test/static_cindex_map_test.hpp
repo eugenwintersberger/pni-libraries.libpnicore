@@ -29,9 +29,9 @@
 
 using namespace pni::core;
 
-class StaticCIndexMapTest: public CppUnit::TestFixture 
+class static_cindex_map_test: public CppUnit::TestFixture 
 {
-        CPPUNIT_TEST_SUITE(StaticCIndexMapTest);
+        CPPUNIT_TEST_SUITE(static_cindex_map_test);
         CPPUNIT_TEST(test_construction);
         CPPUNIT_TEST(test_offset);
         CPPUNIT_TEST(test_index);

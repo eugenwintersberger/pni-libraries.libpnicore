@@ -26,18 +26,18 @@
 #include <pni/core/Types.hpp>
 #include <list>
 
-#include "StaticCIndexMapTest.hpp"
+#include "static_cindex_map_test.hpp"
 
-CPPUNIT_TEST_SUITE_REGISTRATION(StaticCIndexMapTest);
-
-//------------------------------------------------------------------------------
-void StaticCIndexMapTest::setUp(){ }
+CPPUNIT_TEST_SUITE_REGISTRATION(static_cindex_map_test);
 
 //------------------------------------------------------------------------------
-void StaticCIndexMapTest::tearDown(){ }
+void static_cindex_map_test::setUp(){ }
 
 //------------------------------------------------------------------------------
-void StaticCIndexMapTest::test_construction()
+void static_cindex_map_test::tearDown(){ }
+
+//------------------------------------------------------------------------------
+void static_cindex_map_test::test_construction()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
@@ -53,7 +53,7 @@ void StaticCIndexMapTest::test_construction()
 }
 
 //------------------------------------------------------------------------------
-void StaticCIndexMapTest::test_offset()
+void static_cindex_map_test::test_offset()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
@@ -77,7 +77,7 @@ void StaticCIndexMapTest::test_offset()
 }
 
 //------------------------------------------------------------------------------
-void StaticCIndexMapTest::test_index()
+void static_cindex_map_test::test_index()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
