@@ -22,24 +22,24 @@
  */
 #include<cppunit/extensions/HelperMacros.h>
 
-#include "MultOperatorTest.hpp"
+#include "mult_operator_test.hpp"
 
 
-CPPUNIT_TEST_SUITE_REGISTRATION(MultOperatorTest<UInt8>);
-CPPUNIT_TEST_SUITE_REGISTRATION(MultOperatorTest<UInt8>);
-CPPUNIT_TEST_SUITE_REGISTRATION(MultOperatorTest<Int16>);
-CPPUNIT_TEST_SUITE_REGISTRATION(MultOperatorTest<Int16>);
-CPPUNIT_TEST_SUITE_REGISTRATION(MultOperatorTest<UInt32>);
-CPPUNIT_TEST_SUITE_REGISTRATION(MultOperatorTest<Int32>);
-CPPUNIT_TEST_SUITE_REGISTRATION(MultOperatorTest<UInt64>);
-CPPUNIT_TEST_SUITE_REGISTRATION(MultOperatorTest<Int64>);
+CPPUNIT_TEST_SUITE_REGISTRATION(mult_operator_test<UInt8>);
+CPPUNIT_TEST_SUITE_REGISTRATION(mult_operator_test<UInt8>);
+CPPUNIT_TEST_SUITE_REGISTRATION(mult_operator_test<Int16>);
+CPPUNIT_TEST_SUITE_REGISTRATION(mult_operator_test<Int16>);
+CPPUNIT_TEST_SUITE_REGISTRATION(mult_operator_test<UInt32>);
+CPPUNIT_TEST_SUITE_REGISTRATION(mult_operator_test<Int32>);
+CPPUNIT_TEST_SUITE_REGISTRATION(mult_operator_test<UInt64>);
+CPPUNIT_TEST_SUITE_REGISTRATION(mult_operator_test<Int64>);
 
-CPPUNIT_TEST_SUITE_REGISTRATION(MultOperatorTest<Float32>);
-CPPUNIT_TEST_SUITE_REGISTRATION(MultOperatorTest<Float64>);
-CPPUNIT_TEST_SUITE_REGISTRATION(MultOperatorTest<Float128>);
-CPPUNIT_TEST_SUITE_REGISTRATION(MultOperatorTest<Complex32>);
-CPPUNIT_TEST_SUITE_REGISTRATION(MultOperatorTest<Complex64>);
-CPPUNIT_TEST_SUITE_REGISTRATION(MultOperatorTest<Complex128>);
+CPPUNIT_TEST_SUITE_REGISTRATION(mult_operator_test<Float32>);
+CPPUNIT_TEST_SUITE_REGISTRATION(mult_operator_test<Float64>);
+CPPUNIT_TEST_SUITE_REGISTRATION(mult_operator_test<Float128>);
+CPPUNIT_TEST_SUITE_REGISTRATION(mult_operator_test<Complex32>);
+CPPUNIT_TEST_SUITE_REGISTRATION(mult_operator_test<Complex64>);
+CPPUNIT_TEST_SUITE_REGISTRATION(mult_operator_test<Complex128>);
 
 
 
