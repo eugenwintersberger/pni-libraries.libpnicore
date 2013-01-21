@@ -23,20 +23,20 @@
 #include <boost/current_function.hpp>
 #include<cppunit/extensions/HelperMacros.h>
 
-#include "IndexMapBaseTest.hpp"
+#include "index_map_base_test.hpp"
 #include <list>
 
-CPPUNIT_TEST_SUITE_REGISTRATION(IndexMapBaseTest);
+CPPUNIT_TEST_SUITE_REGISTRATION(index_map_base_test);
 
 
 //-----------------------------------------------------------------------------
-void IndexMapBaseTest::setUp() {}
+void index_map_base_test::setUp() {}
 
 //-----------------------------------------------------------------------------
-void IndexMapBaseTest::tearDown() {}
+void index_map_base_test::tearDown() {}
 
 //-----------------------------------------------------------------------------
-void IndexMapBaseTest::test_construction()
+void index_map_base_test::test_construction()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
@@ -77,7 +77,7 @@ void IndexMapBaseTest::test_construction()
 }
 
 //-----------------------------------------------------------------------------
-void IndexMapBaseTest::test_assignment()
+void index_map_base_test::test_assignment()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
     IndexMapBase im1{2,3,4,5};
@@ -99,7 +99,7 @@ void IndexMapBaseTest::test_assignment()
 }
 
 //-----------------------------------------------------------------------------
-void IndexMapBaseTest::test_access()
+void index_map_base_test::test_access()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
     std::vector<size_t> s{3,2,5,7};

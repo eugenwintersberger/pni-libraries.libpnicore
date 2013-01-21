@@ -29,9 +29,9 @@
 
 using namespace pni::core;
 
-class IndexMapBaseTest: public CppUnit::TestFixture 
+class index_map_base_test: public CppUnit::TestFixture 
 {
-        CPPUNIT_TEST_SUITE(IndexMapBaseTest);
+        CPPUNIT_TEST_SUITE(index_map_base_test);
         CPPUNIT_TEST(test_construction);
         CPPUNIT_TEST(test_assignment);
         CPPUNIT_TEST(test_access);
