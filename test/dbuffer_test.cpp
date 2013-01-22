@@ -20,11 +20,11 @@
  *  Created on: Jul 19, 2012
  *      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
  */
-#include "DBufferTest.hpp"
+#include "dbuffer_test.hpp"
 
 
 #define BUFFER_TEST_REGISTRATION(VTYPE,ALLOC)\
-static CPPUNIT_NS::AutoRegisterSuite< DBufferTest<VTYPE,ALLOC> >  \
+static CPPUNIT_NS::AutoRegisterSuite< dbuffer_test<VTYPE,ALLOC> >  \
              CPPUNIT_MAKE_UNIQUE_NAME(autoRegisterRegistry__ )
 
 BUFFER_TEST_REGISTRATION(Int8,NewAllocator);
@@ -45,4 +45,6 @@ BUFFER_TEST_REGISTRATION(Complex64,NewAllocator);
 BUFFER_TEST_REGISTRATION(Complex128,NewAllocator);
 
 BUFFER_TEST_REGISTRATION(Binary,NewAllocator);
+BUFFER_TEST_REGISTRATION(Bool,NewAllocator);
+BUFFER_TEST_REGISTRATION(String,NewAllocator);
 

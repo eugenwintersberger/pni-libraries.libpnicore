@@ -19,7 +19,7 @@ sources_list.extend(["array_view_test.cpp"])
 
 #test of buffer classes
 sources_list.extend(["scalar_test.cpp"])
-sources_list.extend(["DBufferTest.cpp"])
+sources_list.extend(["dbuffer_test.cpp"])
 sources_list.extend(["RBufferTest.cpp"])
 sources_list.extend(["sbuffer_test.cpp"])
 

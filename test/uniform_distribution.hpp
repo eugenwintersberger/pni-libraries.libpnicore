@@ -48,8 +48,8 @@ template<typename T> class uniform_distribution
     public:
         uniform_distribution():
             _engine(),
-            _distribution(0.4*TypeInfo<T>::min(),0.4*TypeInfo<T>::max())
-        {}
+            _distribution(0.2*TypeInfo<T>::min(),0.2*TypeInfo<T>::max())
+        { }
 
         T operator()() 
         {
@@ -65,7 +65,7 @@ template<typename T> class uniform_distribution<std::complex<T> >
     public:
         uniform_distribution():
             _engine(),
-            _distribution(0.4*TypeInfo<Float32>::min(),0.4*TypeInfo<Float32>::max())
+            _distribution(0.2*TypeInfo<Float32>::min(),0.2*TypeInfo<Float32>::max())
         {}
         
         std::complex<T> operator()()
