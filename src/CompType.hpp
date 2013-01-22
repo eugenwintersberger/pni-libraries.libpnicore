@@ -26,7 +26,7 @@
 
 #pragma once
 
-#include "Types.hpp"
+#include "types.hpp"
 
 namespace pni{
 namespace core{
@@ -73,89 +73,89 @@ namespace core{
     }
 
     //! \cond no_doc
-    COMPTYPETRAITSINGLE(UInt8,UInt8);
-    COMPTYPETRAIT(UInt8,Int8,Int16);
-    COMPTYPETRAIT(UInt8,UInt16,UInt16);
-    COMPTYPETRAIT(UInt8,Int16,Int16);
-    COMPTYPETRAIT(UInt8,UInt32,UInt32);
-    COMPTYPETRAIT(UInt8,Int32,Int32);
-    COMPTYPETRAIT(UInt8,UInt64,UInt64);
-    COMPTYPETRAIT(UInt8,Int64,Int64);
-    COMPTYPETRAIT(UInt8,Float32,Float32);
-    COMPTYPETRAIT(UInt8,Float64,Float64);
-    COMPTYPETRAIT(UInt8,Float128,Float128);
+    COMPTYPETRAITSINGLE(uint8,uint8);
+    COMPTYPETRAIT(uint8,int8,int16);
+    COMPTYPETRAIT(uint8,uint16,uint16);
+    COMPTYPETRAIT(uint8,int16,int16);
+    COMPTYPETRAIT(uint8,uint32,uint32);
+    COMPTYPETRAIT(uint8,int32,int32);
+    COMPTYPETRAIT(uint8,uint64,uint64);
+    COMPTYPETRAIT(uint8,int64,int64);
+    COMPTYPETRAIT(uint8,float32,float32);
+    COMPTYPETRAIT(uint8,float64,float64);
+    COMPTYPETRAIT(uint8,float128,float128);
     
-    COMPTYPETRAITSINGLE(Int8,Int8);
-    COMPTYPETRAIT(Int8,UInt16,Int16);
-    COMPTYPETRAIT(Int8,Int16,Int16);
-    COMPTYPETRAIT(Int8,UInt32,Int64);
-    COMPTYPETRAIT(Int8,Int32,Int32);
-    COMPTYPETRAIT(Int8,UInt64,Int64);
-    COMPTYPETRAIT(Int8,Int64,Int64);
-    COMPTYPETRAIT(Int8,Float32,Float32);
-    COMPTYPETRAIT(Int8,Float64,Float64);
-    COMPTYPETRAIT(Int8,Float128,Float128);
+    COMPTYPETRAITSINGLE(int8,int8);
+    COMPTYPETRAIT(int8,uint16,int16);
+    COMPTYPETRAIT(int8,int16,int16);
+    COMPTYPETRAIT(int8,uint32,int64);
+    COMPTYPETRAIT(int8,int32,int32);
+    COMPTYPETRAIT(int8,uint64,int64);
+    COMPTYPETRAIT(int8,int64,int64);
+    COMPTYPETRAIT(int8,float32,float32);
+    COMPTYPETRAIT(int8,float64,float64);
+    COMPTYPETRAIT(int8,float128,float128);
     
-    COMPTYPETRAITSINGLE(UInt16,UInt16);
-    COMPTYPETRAIT(UInt16,Int16,Int16);
-    COMPTYPETRAIT(UInt16,UInt32,UInt32);
-    COMPTYPETRAIT(UInt16,Int32,Int32);
-    COMPTYPETRAIT(UInt16,UInt64,UInt64);
-    COMPTYPETRAIT(UInt16,Int64,Int64);
-    COMPTYPETRAIT(UInt16,Float32,Float32);
-    COMPTYPETRAIT(UInt16,Float64,Float64);
-    COMPTYPETRAIT(UInt16,Float128,Float128);
+    COMPTYPETRAITSINGLE(uint16,uint16);
+    COMPTYPETRAIT(uint16,int16,int16);
+    COMPTYPETRAIT(uint16,uint32,uint32);
+    COMPTYPETRAIT(uint16,int32,int32);
+    COMPTYPETRAIT(uint16,uint64,uint64);
+    COMPTYPETRAIT(uint16,int64,int64);
+    COMPTYPETRAIT(uint16,float32,float32);
+    COMPTYPETRAIT(uint16,float64,float64);
+    COMPTYPETRAIT(uint16,float128,float128);
     
-    COMPTYPETRAITSINGLE(Int16,Int16);
-    COMPTYPETRAIT(Int16,UInt32,Int64);
-    COMPTYPETRAIT(Int16,Int32,Int32);
-    COMPTYPETRAIT(Int16,UInt64,Int64);
-    COMPTYPETRAIT(Int16,Int64,Int64);
-    COMPTYPETRAIT(Int16,Float32,Float32);
-    COMPTYPETRAIT(Int16,Float64,Float64);
-    COMPTYPETRAIT(Int16,Float128,Float128);
+    COMPTYPETRAITSINGLE(int16,int16);
+    COMPTYPETRAIT(int16,uint32,int64);
+    COMPTYPETRAIT(int16,int32,int32);
+    COMPTYPETRAIT(int16,uint64,int64);
+    COMPTYPETRAIT(int16,int64,int64);
+    COMPTYPETRAIT(int16,float32,float32);
+    COMPTYPETRAIT(int16,float64,float64);
+    COMPTYPETRAIT(int16,float128,float128);
 
-    COMPTYPETRAITSINGLE(UInt32,UInt32);
-    COMPTYPETRAIT(UInt32,Int32,Int32);
-    COMPTYPETRAIT(UInt32,UInt64,UInt64);
-    COMPTYPETRAIT(UInt32,Int64,Int64);
-    COMPTYPETRAIT(UInt32,Float32,Float32);
-    COMPTYPETRAIT(UInt32,Float64,Float64);
-    COMPTYPETRAIT(UInt32,Float128,Float128);
+    COMPTYPETRAITSINGLE(uint32,uint32);
+    COMPTYPETRAIT(uint32,int32,int32);
+    COMPTYPETRAIT(uint32,uint64,uint64);
+    COMPTYPETRAIT(uint32,int64,int64);
+    COMPTYPETRAIT(uint32,float32,float32);
+    COMPTYPETRAIT(uint32,float64,float64);
+    COMPTYPETRAIT(uint32,float128,float128);
     
-    COMPTYPETRAITSINGLE(Int32,Int32);
-    COMPTYPETRAIT(Int32,UInt64,Int64);
-    COMPTYPETRAIT(Int32,Int64,Int64);
-    COMPTYPETRAIT(Int32,Float32,Float32);
-    COMPTYPETRAIT(Int32,Float64,Float64);
-    COMPTYPETRAIT(Int32,Float128,Float128);
+    COMPTYPETRAITSINGLE(int32,int32);
+    COMPTYPETRAIT(int32,uint64,int64);
+    COMPTYPETRAIT(int32,int64,int64);
+    COMPTYPETRAIT(int32,float32,float32);
+    COMPTYPETRAIT(int32,float64,float64);
+    COMPTYPETRAIT(int32,float128,float128);
     
-    COMPTYPETRAITSINGLE(UInt64,UInt64);
-    COMPTYPETRAIT(UInt64,Int64,Int64);
-    COMPTYPETRAIT(UInt64,Float32,Float32);
-    COMPTYPETRAIT(UInt64,Float64,Float64);
-    COMPTYPETRAIT(UInt64,Float128,Float128);
+    COMPTYPETRAITSINGLE(uint64,uint64);
+    COMPTYPETRAIT(uint64,int64,int64);
+    COMPTYPETRAIT(uint64,float32,float32);
+    COMPTYPETRAIT(uint64,float64,float64);
+    COMPTYPETRAIT(uint64,float128,float128);
 
-    COMPTYPETRAITSINGLE(Int64,Int64);
-    COMPTYPETRAIT(Int64,Float32,Float32);
-    COMPTYPETRAIT(Int64,Float64,Float64);
-    COMPTYPETRAIT(Int64,Float128,Float128);
+    COMPTYPETRAITSINGLE(int64,int64);
+    COMPTYPETRAIT(int64,float32,float32);
+    COMPTYPETRAIT(int64,float64,float64);
+    COMPTYPETRAIT(int64,float128,float128);
 
-    COMPTYPETRAITSINGLE(Float32,Float32);
-    COMPTYPETRAIT(Float32,Float64,Float64);
-    COMPTYPETRAIT(Float32,Float128,Float128);
+    COMPTYPETRAITSINGLE(float32,float32);
+    COMPTYPETRAIT(float32,float64,float64);
+    COMPTYPETRAIT(float32,float128,float128);
 
-    COMPTYPETRAITSINGLE(Float64,Float64);
-    COMPTYPETRAIT(Float64,Float128,Float128);
-    COMPTYPETRAITSINGLE(Float128,Float128);
+    COMPTYPETRAITSINGLE(float64,float64);
+    COMPTYPETRAIT(float64,float128,float128);
+    COMPTYPETRAITSINGLE(float128,float128);
 
-    COMPTYPETRAITSINGLE(Complex32,Complex32);
-    COMPTYPETRAIT(Complex32,Complex64,Complex64);
-    COMPTYPETRAIT(Complex32,Complex128,Complex128);
+    COMPTYPETRAITSINGLE(complex32,complex32);
+    COMPTYPETRAIT(complex32,complex64,complex64);
+    COMPTYPETRAIT(complex32,complex128,complex128);
 
-    COMPTYPETRAITSINGLE(Complex64,Complex64);
-    COMPTYPETRAIT(Complex64,Complex128,Complex128);
-    COMPTYPETRAITSINGLE(Complex128,Complex128);
+    COMPTYPETRAITSINGLE(complex64,complex64);
+    COMPTYPETRAIT(complex64,complex128,complex128);
+    COMPTYPETRAITSINGLE(complex128,complex128);
     //! \endcond
 //end off namespace
 }

@@ -25,7 +25,7 @@
 #include<memory>
 
 #include "Exceptions.hpp"
-#include "Types.hpp"
+#include "types.hpp"
 #include "Array.hpp"
 #include "array_holder.hpp"
 #include "array_iterator.hpp"
@@ -160,7 +160,7 @@ namespace core{
             Return the type id of the data held by an instance of array.
             \return type id.
             */
-            TypeID type_id() const;
+            type_id type_id() const;
             
             //-----------------------------------------------------------------
             /*! 

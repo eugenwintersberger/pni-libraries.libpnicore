@@ -24,7 +24,7 @@
 
 #pragma once
 
-#include "Types.hpp"
+#include "types.hpp"
 #include "Iterator.hpp"
 #include "ArrayViewSelector.hpp"
 #include "ArrayView.hpp"

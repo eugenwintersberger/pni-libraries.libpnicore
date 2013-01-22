@@ -25,7 +25,7 @@
 
 #pragma once
 
-#include "Types.hpp"
+#include "types.hpp"
 #include "SBuffer.hpp"
 #include "StaticCIndexMap.hpp"
 #include "Exceptions.hpp"
@@ -206,7 +206,7 @@ namespace core{
             typedef StaticCIndexMap<DIMS...> map_type;
             //===============public members====================================
             //! ID of the datatype stored in the array
-            static const TypeID type_id = TypeIDMap<value_type>::type_id;
+            static const type_id type_id = type_id_map<value_type>::type_id;
             
 
             //============================constructor and destructor===========

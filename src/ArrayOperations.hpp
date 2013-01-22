@@ -25,7 +25,7 @@
 
 #pragma once
 
-#include "Types.hpp"
+#include "types.hpp"
 #include "ArrayTrait.hpp"
 
 

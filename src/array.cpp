@@ -40,14 +40,14 @@ namespace core{
     }
 
     //-------------------------------------------------------------------------
-    TypeID array::type_id() const
+    type_id array::type_id() const
     { 
         if(_ptr)
             return _ptr->type_id(); 
         else
             array::_throw_not_allocated_error(EXCEPTION_RECORD);
 
-        return TypeID::NONE; //just to make the compiler happy
+        return type_id::NONE; //just to make the compiler happy
     }
 
     //-------------------------------------------------------------------------

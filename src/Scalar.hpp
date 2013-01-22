@@ -30,7 +30,7 @@
 
 #include <iostream>
 
-#include "Types.hpp"
+#include "types.hpp"
 #include "TypeIDMap.hpp"
 #include "SBuffer.hpp"
 #include "ArrayView.hpp"

@@ -35,14 +35,14 @@
 
 #include "Exceptions.hpp"
 #include "ExceptionUtils.hpp"
-#include "Types.hpp"
+#include "types.hpp"
 #include "Slice.hpp"
 #include "ArrayView.hpp"
 #include "ArrayViewSelector.hpp"
 #include "CIndexMap.hpp"
 
 #include "TypeInfo.hpp"
-#include "TypeIDMap.hpp"
+#include "type_id_map.hpp"
 #include "type_conversion.hpp"
 #include "Iterator.hpp"
 
