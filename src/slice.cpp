@@ -23,14 +23,14 @@
  *     Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
  */
 
-#include "Slice.hpp"
+#include "slice.hpp"
 #include <iostream>
 
 namespace pni{
 namespace core{
 
     //============implementation of private methods============================
-    void Slice::_check_start_stop(const ExceptionRecord &o) const
+    void slice::_check_start_stop(const exception_record &o) const
     {
         if(_first >= _last)
         {
@@ -41,7 +41,7 @@ namespace core{
     }
 
     //-------------------------------------------------------------------------
-    void Slice::_check_stride(const ExceptionRecord &o) const
+    void slice::_check_stride(const exception_record &o) const
     {
         if(span(*this)<_stride)
         {
@@ -54,7 +54,7 @@ namespace core{
     
     //==========implementation of constructors and destructor==================
 
-    Slice::Slice(size_t first,size_t last,size_t stride):
+    slice::slice(size_t first,size_t last,size_t stride):
         _first(first),
         _last(last),
         _stride(stride)
@@ -64,7 +64,7 @@ namespace core{
     }
 
     //-------------------------------------------------------------------------
-    Slice::Slice(const std::initializer_list<size_t> &l)
+    slice::slice(const std::initializer_list<size_t> &l)
     {
         if(l.size()<2)
         {
@@ -93,7 +93,7 @@ namespace core{
     }
 
     //-------------------------------------------------------------------------
-    Slice::Slice(size_t i):
+    slice::slice(size_t i):
         _first(i),
         _last(i+1),
         _stride(1)
@@ -104,7 +104,7 @@ namespace core{
 
 
     //=============implementation of assignment operators======================
-    Slice &Slice::operator=(const Slice &s)
+    slice &slice::operator=(const slice &s)
     {
         if(this == &s) return *this;
         _first = s._first;
@@ -114,7 +114,7 @@ namespace core{
     }
 
     //==========implementation of non-member functions=========================
-    std::ostream &operator<<(std::ostream &o,const Slice &s)
+    std::ostream &operator<<(std::ostream &o,const slice &s)
     {
         o<<s.first()<<":"<<s.last();
         if(s.stride()!=1) o<<":"<<s.stride();
@@ -122,13 +122,13 @@ namespace core{
     }
     
     //-------------------------------------------------------------------------
-    size_t size(const Slice &s)
+    size_t size(const slice &s)
     {
         return (span(s)+s.stride()-1)/s.stride();
     }
 
     //-------------------------------------------------------------------------
-    size_t span(const Slice &s)
+    size_t span(const slice &s)
     {
         return (s.last()-s.first());
     }

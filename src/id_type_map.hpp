@@ -27,7 +27,7 @@
  */
 
 
-#include "Types.hpp"
+#include "types.hpp"
 
 #pragma once
 
@@ -41,7 +41,7 @@ namespace core{
 This macro is used to create a specialization of IDTypeMap.
 */
 #define CREATE_ID_TYPE_MAP(tid,dtype)\
-    template<> class IDTypeMap<tid>\
+    template<> class id_type_map<tid>\
     {\
         public:\
             typedef dtype type;\
@@ -49,34 +49,34 @@ This macro is used to create a specialization of IDTypeMap.
 
     /*! 
     \ingroup type_classes
-    \brief map from TypeID to type
+    \brief map from type_id_t to type
 
-    This template implements a map from a TypeID to a specific data type.
+    This template implements a map from a type_id_T to a specific data type.
     */
-    template<TypeID id> class IDTypeMap
+    template<type_id_t id> class id_type_map
     {
         public:
             typedef UInt8 type; //!< type identified by the template parameter
     };
 
     //! \cond NO_API_DOC
-    CREATE_ID_TYPE_MAP(TypeID::UINT8,UInt8);
-    CREATE_ID_TYPE_MAP(TypeID::INT8,Int8);
-    CREATE_ID_TYPE_MAP(TypeID::UINT16,UInt16);
-    CREATE_ID_TYPE_MAP(TypeID::INT16,Int16);
-    CREATE_ID_TYPE_MAP(TypeID::UINT32,UInt32);
-    CREATE_ID_TYPE_MAP(TypeID::INT32,Int32);
-    CREATE_ID_TYPE_MAP(TypeID::UINT64,UInt64);
-    CREATE_ID_TYPE_MAP(TypeID::INT64,Int64);
-    CREATE_ID_TYPE_MAP(TypeID::FLOAT32,Float32);
-    CREATE_ID_TYPE_MAP(TypeID::FLOAT64,Float64);
-    CREATE_ID_TYPE_MAP(TypeID::FLOAT128,Float128);
-    CREATE_ID_TYPE_MAP(TypeID::COMPLEX32,Complex32);
-    CREATE_ID_TYPE_MAP(TypeID::COMPLEX64,Complex64);
-    CREATE_ID_TYPE_MAP(TypeID::COMPLEX128,Complex128);
-    CREATE_ID_TYPE_MAP(TypeID::STRING,String);
-    CREATE_ID_TYPE_MAP(TypeID::BINARY,Binary);
-    CREATE_ID_TYPE_MAP(TypeID::BOOL,Bool);
+    CREATE_ID_TYPE_MAP(type_id_t::UINT8,uint8);
+    CREATE_ID_TYPE_MAP(type_id_t::INT8,int8);
+    CREATE_ID_TYPE_MAP(type_id_t::UINT16,uint16);
+    CREATE_ID_TYPE_MAP(type_id_t::INT16,int16);
+    CREATE_ID_TYPE_MAP(type_id_t::UINT32,uint32);
+    CREATE_ID_TYPE_MAP(type_id_t::INT32,int32);
+    CREATE_ID_TYPE_MAP(type_id_t::UINT64,uint64);
+    CREATE_ID_TYPE_MAP(type_id_t::INT64,int64);
+    CREATE_ID_TYPE_MAP(type_id_t::FLOAT32,float32);
+    CREATE_ID_TYPE_MAP(type_id_t::FLOAT64,float64);
+    CREATE_ID_TYPE_MAP(type_id_t::FLOAT128,float128);
+    CREATE_ID_TYPE_MAP(type_id_t::COMPLEX32,complex32);
+    CREATE_ID_TYPE_MAP(type_id_t::COMPLEX64,complex64);
+    CREATE_ID_TYPE_MAP(type_id_t::COMPLEX128,complex128);
+    CREATE_ID_TYPE_MAP(type_id_t::STRING,string);
+    CREATE_ID_TYPE_MAP(type_id_t::BINARY,binary);
+    CREATE_ID_TYPE_MAP(type_id_t::BOOL,bool);
     //! \endcond NO_API_DOC
 
 }

@@ -53,23 +53,23 @@ namespace core{
     Stream operators are provided for IO operations using binary data. 
     \tparam NTYPE native type used to store binary data
     */
-    template<typename NTYPE> class BinaryType
+    template<typename NTYPE> class binary_t
     {
         private:
             NTYPE _value; //!< data value
 
             //! unary addition operator - deleted
-            const BinaryType<NTYPE> & 
-                operator+=(const BinaryType<NTYPE> &b) = delete;
+            const binary_t<NTYPE> & 
+                operator+=(const binary_t<NTYPE> &b) = delete;
             //! unary subtraction operator - delete
-            const BinaryType<NTYPE> & 
-                operator-=(const BinaryType<NTYPE> &b) = delete;
+            const binary_t<NTYPE> & 
+                operator-=(const binary_t<NTYPE> &b) = delete;
             //! unary multiplication operator
-            const BinaryType<NTYPE> & 
-                operator*=(const BinaryType<NTYPE> &b) = delete;
+            const binary_t<NTYPE> & 
+                operator*=(const binary_t<NTYPE> &b) = delete;
             //! unary division operator - delete
-            const BinaryType<NTYPE> & 
-                operator/=(const BinaryType<NTYPE> &b) = delete;
+            const binary_t<NTYPE> & 
+                operator/=(const binary_t<NTYPE> &b) = delete;
         public:
             //=================public data types===============================
             //! native type that is used for binary data
@@ -77,27 +77,27 @@ namespace core{
 
             //=============constructors and destructor=========================
             //! default constructor
-            explicit BinaryType();
+            explicit binary_t();
 
             //-----------------------------------------------------------------
             //! constructor
-            BinaryType(const NTYPE &value);
+            binary_t(const NTYPE &value);
 
             //-----------------------------------------------------------------
             //! copy constructor
-            BinaryType(const BinaryType<NTYPE> &o);
+            binary_t(const binary_t<NTYPE> &o);
 
             //-----------------------------------------------------------------
             //! destructor
-            ~BinaryType();
+            ~binary_t();
 
             //=================assignment operators============================
             //! copy assignment operators
-            BinaryType<NTYPE> &operator=(const BinaryType<NTYPE> &o);
+            binary_t<NTYPE> &operator=(const binary_t<NTYPE> &o);
 
             //-----------------------------------------------------------------
             //! assignment from a single value
-            BinaryType<NTYPE> &operator=(const NTYPE &value);
+            binary_t<NTYPE> &operator=(const NTYPE &value);
 
             //-----------------------------------------------------------------
             /*! conversion operator
@@ -113,50 +113,50 @@ namespace core{
 
 
     //! binary addition is deleted for BinaryType<NTYPE>
-    template<typename NTYPE> BinaryType<NTYPE> 
-        operator+(const BinaryType<NTYPE> &a,const BinaryType<NTYPE> &b)
+    template<typename NTYPE> binary_t<NTYPE> 
+        operator+(const binary_t<NTYPE> &a,const binary_t<NTYPE> &b)
         = delete;
 
     //! binary subtraction is deleted for BinaryType<NTYPE>
-    template<typename NTYPE> BinaryType<NTYPE>
-        operator-(const BinaryType<NTYPE> &a,const BinaryType<NTYPE> &b)
+    template<typename NTYPE> binary_t<NTYPE>
+        operator-(const binary_t<NTYPE> &a,const binary_t<NTYPE> &b)
         =delete;
 
-    //! binary multiplication is deleted for BinaryType<NTYPE>
-    template<typename NTYPE> BinaryType<NTYPE>
-        operator*(const BinaryType<NTYPE> &a,const BinaryType<NTYPE> &b)
+    //! binary multiplication is deleted for binary_t<NTYPE>
+    template<typename NTYPE> binary_t<NTYPE>
+        operator*(const binary_t<NTYPE> &a,const binary_t<NTYPE> &b)
         =delete;
 
-    //! binary division is deleted for BinaryType<NTYPE>
-    template<typename NTYPE> BinaryType<NTYPE>
-        operator/(const BinaryType<NTYPE> &a,const BinaryType<NTYPE> &b)
+    //! binary division is deleted for binary_t<NTYPE>
+    template<typename NTYPE> binary_t<NTYPE>
+        operator/(const binary_t<NTYPE> &a,const binary_t<NTYPE> &b)
         =delete;
 
     
     //=========implementation of constructors==================================
     //implementation of the default constructor
-    template<typename NTYPE> BinaryType<NTYPE>::BinaryType()
+    template<typename NTYPE> binary_t<NTYPE>::binary_t()
     { }
 
     //-------------------------------------------------------------------------
     template<typename NTYPE> 
-        BinaryType<NTYPE>::BinaryType(const NTYPE &value):
+        binary_t<NTYPE>::binary_t(const NTYPE &value):
         _value(value)
     { }
 
     //-------------------------------------------------------------------------
     template<typename NTYPE> 
-        BinaryType<NTYPE>::BinaryType(const BinaryType<NTYPE> &o):
+        binary_t<NTYPE>::binary_t(const binary_t<NTYPE> &o):
         _value(o._value)
     { }
 
     //-------------------------------------------------------------------------
-    template<typename NTYPE> BinaryType<NTYPE>::~BinaryType()
+    template<typename NTYPE> binary_t<NTYPE>::~binary_t()
     { }
 
     //===============implementation of the assignment operators================
-    template<typename NTYPE> BinaryType<NTYPE> &
-        BinaryType<NTYPE>::operator=(const BinaryType<NTYPE> &o)
+    template<typename NTYPE> binary_t<NTYPE> &
+        binary_t<NTYPE>::operator=(const binary_t<NTYPE> &o)
     {
         if(this == &o) return *this;
 
@@ -166,8 +166,8 @@ namespace core{
     }
 
     //-------------------------------------------------------------------------
-    template<typename NTYPE> BinaryType<NTYPE> &
-        BinaryType<NTYPE>::operator=(const NTYPE &value)
+    template<typename NTYPE> binary_t<NTYPE> &
+        binary_t<NTYPE>::operator=(const NTYPE &value)
     {
         _value = value;
         return *this;
@@ -175,7 +175,7 @@ namespace core{
 
     //-------------------------------------------------------------------------
     template<typename NTYPE>
-    std::ostream &operator<<(std::ostream &os,const BinaryType<NTYPE> &o)
+    std::ostream &operator<<(std::ostream &os,const binary_t<NTYPE> &o)
     {
         NTYPE b = o;
         os<<b;
@@ -184,7 +184,7 @@ namespace core{
 
     //-------------------------------------------------------------------------
     template<typename NTYPE>
-    std::istream &operator>>(std::istream &is,BinaryType<NTYPE> &o)
+    std::istream &operator>>(std::istream &is,binary_t<NTYPE> &o)
     {
         NTYPE b;
         is>>b;

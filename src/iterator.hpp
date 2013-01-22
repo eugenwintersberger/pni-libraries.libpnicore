@@ -22,7 +22,7 @@
  */
 #pragma once
 
-#include "Exceptions.hpp" 
+#include "exceptions.hpp" 
 
 namespace pni{
 namespace core{
@@ -40,12 +40,12 @@ namespace core{
     element). 
     This is the default template without data members. Have a look on its
     specializations to for a particular return type
-    \sa IterTypes<ITERABLE,0>
-    \sa IterTypes<ITERABLE,1>
+    \sa iter_types<ITERABLE,0>
+    \sa iter_types<ITERABLE,1>
     \tparam ITERABLE container type over which to iterate
     \tparam const_flag 1 if the iterator is a const iterator.
     */
-    template<typename ITERABLE,int const_flag> class IterTypes
+    template<typename ITERABLE,int const_flag> class iter_types
     {};
 
     //=========================================================================
@@ -56,9 +56,9 @@ namespace core{
     In this case the return_type member type is a reference to the value_type of
     the ITERABLE.
     \tparam ITERABLE container over which the iterator should run
-    \sa IterTypes<ITERABLE,const_flag>
+    \sa iter_types<ITERABLE,const_flag>
     */
-    template<typename ITERABLE> class IterTypes<ITERABLE,0>
+    template<typename ITERABLE> class iter_types<ITERABLE,0>
     {
         public:
             typedef ITERABLE *cont_ptr; //!< container pointer
@@ -79,9 +79,9 @@ namespace core{
     Specialization of the IterReturnType template for const iterators. Here the
     return type of the dereferencing operator is just value_type. 
     \tparam ITERABLE type over which the iterator should run
-    \sa IterTypes<ITERABLE,const_flag>
+    \sa iter_types<ITERABLE,const_flag>
     */
-    template<typename ITERABLE> class IterTypes<ITERABLE,1>
+    template<typename ITERABLE> class iter_types<ITERABLE,1>
     {
         public:
             typedef const ITERABLE *cont_ptr; //!< container pointer
@@ -117,11 +117,11 @@ namespace core{
     that this iterator, unlike the standard C++ iterators, throws an exception
     if one tries to dereference an invalid iterator.
     */
-    template<typename ITERABLE,int const_flag> class Iterator
+    template<typename ITERABLE,int const_flag> class iterator
     {
         private:
             //! pointer to the container object
-            typename IterTypes<ITERABLE,const_flag>::cont_ptr _container; 
+            typename iter_types<ITERABLE,const_flag>::cont_ptr _container; 
 
             //! actual position state of the iterator
             ssize_t _state;                    
@@ -139,7 +139,7 @@ namespace core{
             }
 
 #ifdef NOEXPLICITCONV 
-            typedef void (Iterator<ITERABLE,const_flag>::*bool_type)() const;
+            typedef void (iterator<ITERABLE,const_flag>::*bool_type)() const;
             void bool_operator_function() const {}
 #endif
 
@@ -148,20 +148,20 @@ namespace core{
             //! value type of the container
             typedef typename ITERABLE::value_type value_type;
             //! pointer type the iterator provides
-            typedef typename IterTypes<ITERABLE,const_flag>::ptr_type pointer;
+            typedef typename iter_types<ITERABLE,const_flag>::ptr_type pointer;
             //! reference type the iterator provides
-            typedef typename IterTypes<ITERABLE,const_flag>::ref_type reference;
+            typedef typename iter_types<ITERABLE,const_flag>::ref_type reference;
             //! pointer type of the container
-            typedef typename IterTypes<ITERABLE,const_flag>::cont_ptr cptr_type;
+            typedef typename iter_types<ITERABLE,const_flag>::cont_ptr cptr_type;
             //! difference type of the iterator
             typedef ssize_t difference_type;
             //! type of iterator
             typedef std::random_access_iterator_tag iterator_category;
             //! iterator type
-            typedef Iterator<ITERABLE,const_flag> iterator_type;
+            typedef iterator<ITERABLE,const_flag> iterator_type;
             //================constructor and destructor========================
             //! default constructor
-            Iterator():_container(nullptr),_state(0),_maxsize(0) {}
+            iterator():_container(nullptr),_state(0),_maxsize(0) {}
 
             //------------------------------------------------------------------
             /*! \brief standard constructor
@@ -171,16 +171,15 @@ namespace core{
             \param container pointer to the container object
             \param state initial position of the iterator
             */
-            Iterator(cptr_type container,size_t state=0):
+            iterator(cptr_type container,size_t state=0):
                 _container(container),
                 _state(state),
                 _maxsize(container->size())
-            { 
-            }
+            { }
 
             //------------------------------------------------------------------
             //! copy constructor
-            Iterator(const iterator_type &i):
+            iterator(const iterator_type &i):
                 _container(i._container),
                 _state(i._state),
                 _maxsize(i._maxsize)
@@ -200,7 +199,7 @@ namespace core{
 
             //------------------------------------------------------------------
             //! default constructor
-            ~Iterator() {}
+            ~iterator() {}
 
             //=================assignment operator==============================
             //! copy assignment operator
@@ -260,7 +259,7 @@ namespace core{
             \throws IteratorError if the iterator is invalid
             \return reference or value of the actual object
             */
-            typename IterTypes<ITERABLE,const_flag>::return_type operator*()
+            typename iter_types<ITERABLE,const_flag>::return_type operator*()
             {
                 if(!(*this))
                     throw IteratorError(EXCEPTION_RECORD,"Iterator invalid!");
@@ -279,7 +278,7 @@ namespace core{
             pointer operator->()
             {
                 if(!(*this))
-                    throw IteratorError(EXCEPTION_RECORD,"Iterator invalid!");
+                    throw iterator_error(EXCEPTION_RECORD,"Iterator invalid!");
 
                 return &(*(this->_container))[this->_state];
             }
@@ -401,10 +400,10 @@ namespace core{
     \param b offset to add
     \return new iterator 
     */
-    template<typename ITERABLE,int const_flag> Iterator<ITERABLE,const_flag> 
-        operator+(const Iterator<ITERABLE,const_flag> &a, ssize_t b)
+    template<typename ITERABLE,int const_flag> iterator<ITERABLE,const_flag> 
+        operator+(const iterator<ITERABLE,const_flag> &a, ssize_t b)
     {
-        Iterator<ITERABLE,const_flag> iter = a;
+        iterator<ITERABLE,const_flag> iter = a;
         iter += b;
         return iter;
     }
@@ -419,8 +418,8 @@ namespace core{
     \param b original iterator
     \return new iterator
     */
-    template<typename ITERABLE,int const_flag> Iterator<ITERABLE,const_flag>
-        operator+(ssize_t a, const Iterator<ITERABLE,const_flag> &b)
+    template<typename ITERABLE,int const_flag> iterator<ITERABLE,const_flag>
+        operator+(ssize_t a, const iterator<ITERABLE,const_flag> &b)
     {
         return b+a;
     }
@@ -435,10 +434,10 @@ namespace core{
     \param b offset
     \return new iterator to new position
     */
-    template<typename ITERABLE,int const_flag> Iterator<ITERABLE,const_flag>
-        operator-(const Iterator<ITERABLE,const_flag> &a, ssize_t b)
+    template<typename ITERABLE,int const_flag> iterator<ITERABLE,const_flag>
+        operator-(const iterator<ITERABLE,const_flag> &a, ssize_t b)
     {
-        Iterator<ITERABLE,const_flag> iter = a;
+        iterator<ITERABLE,const_flag> iter = a;
         iter -= b;
         return iter;
     }
@@ -454,8 +453,8 @@ namespace core{
     \return offset difference
     */
     template<typename ITERABLE,int const_flag> ssize_t
-        operator-(const Iterator<ITERABLE,const_flag> &a, 
-                const Iterator<ITERABLE,const_flag> &b)
+        operator-(const iterator<ITERABLE,const_flag> &a, 
+                const iterator<ITERABLE,const_flag> &b)
     {
         return a.state() - b.state();
     }

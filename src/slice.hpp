@@ -27,7 +27,7 @@
 #include <iostream>
 #include <utility>
 
-#include "Exceptions.hpp"
+#include "exceptions.hpp"
 
 namespace pni{
 namespace core{
@@ -37,7 +37,7 @@ namespace core{
 
     This types represents an index slice for an array. A slice can be used to
     identify an index range along a single dimensions. 
-    Slice objects are of particular importance for creating ArrayViews from 
+    slice objects are of particular importance for creating ArrayViews from 
     Array<T> template instances.
 
     A slice includes all indices between the the first and last index of the
@@ -46,7 +46,7 @@ namespace core{
     element. If the stride is not 1 the last index will be adopted so that the 
 
     */
-    class Slice
+    class slice
     {
         private:
             size_t _first;  //!< first index in the slice
@@ -73,7 +73,7 @@ namespace core{
         public:
             //==============constructors and destructor========================
             //! default constructor
-            Slice() {}
+            slice() {}
 
             //-----------------------------------------------------------------
             /*! \brief standard constructor
@@ -84,7 +84,7 @@ namespace core{
             \param last index 
             \param stride steps between subsequent elements
             */
-            explicit Slice(size_t first,size_t last,size_t stride=1);
+            explicit slice(size_t first,size_t last,size_t stride=1);
 
             //-----------------------------------------------------------------
             /*! \brief construction from a initializer list
@@ -107,7 +107,7 @@ namespace core{
             \throws RangeError if the first element is larger than the last
             \param l initializer list
             */
-            explicit Slice(const std::initializer_list<size_t> &l);
+            explicit slice(const std::initializer_list<size_t> &l);
 
             //-----------------------------------------------------------------
             /*! 
@@ -117,15 +117,15 @@ namespace core{
             use Slice(index,index+1,1). 
             \param index single index from which to create the slice
             */
-            explicit Slice(size_t index);
+            explicit slice(size_t index);
 
             //-----------------------------------------------------------------
             //! destructor
-            ~Slice(){}
+            ~slice(){}
 
             //===============assignment operators==============================
             //! copy assignment operator
-            Slice &operator=(const Slice &s);
+            slice &operator=(const Slice &s);
 
             //=================public member methods===========================
             /*! \brief return the first element
@@ -148,7 +148,7 @@ namespace core{
     }; 
 
     //! output operator
-    std::ostream &operator<<(std::ostream &o,const Slice &s);
+    std::ostream &operator<<(std::ostream &o,const slice &s);
 
     //-------------------------------------------------------------------------
     /*! 
@@ -162,7 +162,7 @@ namespace core{
     \param s slice object 
     \return number of spanned elements
     */
-    size_t size(const Slice &s);
+    size_t size(const slice &s);
 
     //-------------------------------------------------------------------------
     /*! \ingroup util_classes
@@ -175,7 +175,7 @@ namespace core{
     \param s slice for which to compute the span
     \return total number of elements
     */
-    size_t span(const Slice &s);
+    size_t span(const slice &s);
 
 
 
