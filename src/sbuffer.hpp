@@ -30,11 +30,10 @@
 #include <string>
 #include <sstream>
 #include <vector>
-#include "Exceptions.hpp"
-#include "Types.hpp"
-#include "TypeIDMap.hpp"
-#include "Iterator.hpp"
-#include "ExceptionUtils.hpp"
+#include "types.hpp"
+#include "type_id_map.hpp"
+#include "iterator.hpp"
+#include "exception_utils.hpp"
 
 namespace pni{
 namespace core{
@@ -47,7 +46,7 @@ namespace core{
     runtime.
     The usage of this template is rather simple
     \code
-    SBuffer<Float64,1024> buffer; //creates a buffer for 1024 Float64 values
+    sbuffer<float64,1024> buffer; //creates a buffer for 1024 Float64 values
 
     //full STL compatible
     for(auto v: buffer) std::cout<<v<<std::endl;
@@ -59,7 +58,7 @@ namespace core{
     size_t index; 
     std::cin>>index;
     try{ buffer.at(index) = ...; }
-    catch(IndexError &e)
+    catch(index_error &e)
     {
         ...handle error ...
     }
@@ -68,7 +67,7 @@ namespace core{
     \tparam T type to be stored in the buffer
     \tparam N number of element of T in the buffer
     */
-    template<typename T,size_t N >class SBuffer
+    template<typename T,size_t N >class sbuffer
     {
         private:
             T _data[N]; //!< pointer to the data block
@@ -77,27 +76,27 @@ namespace core{
             //! type stored in the buffer
             typedef T value_type;  
             //! buffer type
-            typedef SBuffer<T,N> buffer_type;
+            typedef sbuffer<T,N> buffer_type;
             //! smart pointer to a typed buffer
             typedef std::shared_ptr<buffer_type> shared_ptr;
             //! unique poitner type to a buffer
             typedef std::unique_ptr<buffer_type> unique_ptr;
             //! iterator type
-            typedef Iterator<buffer_type,0 > iterator;      
+            typedef iterator<buffer_type,0 > iterator;      
             //! const iterator type
-            typedef Iterator<buffer_type,1 > const_iterator; 
+            typedef iterator<buffer_type,1 > const_iterator; 
 
             //=============public static variables=============================
             //! type ID of the element type
-            static const TypeID type_id    = TypeIDMap<value_type>::type_id; 
+            static const type_id_t type_id    = type_id_map<value_type>::type_id; 
            
             //=================constructors and destructor=====================
             //! default constructor
-            explicit SBuffer(){}
+            explicit sbuffer(){}
 
             //-----------------------------------------------------------------
             //! \brief copy constructor
-            explicit SBuffer(const buffer_type &b)
+            explicit sbuffer(const buffer_type &b)
             {
                 //copy data
                 for(size_t i=0;i<this->size();i++) (*this)[i] = b[i];
@@ -109,14 +108,14 @@ namespace core{
 
             Sets the content of the StaticBuffer from an initializer list. 
             \code
-            StaticBuffer<UInt32,5> buffer = {1,3,5,6,10};
+            sbuffer<uint32,5> buffer = {1,3,5,6,10};
             \endcode
             An exception is thrown if the number of elements in the list does
             not match the size of the buffer.
-            \throws SizeMissmatchError list size does not match buffer size
+            \throws size_missmatch_error list size does not match buffer size
             \param list reference to the initializer list
             */
-            explicit SBuffer(const std::initializer_list<value_type> &list)
+            explicit sbuffer(const std::initializer_list<value_type> &list)
             {
                 check_equal_size(*this,list,EXCEPTION_RECORD);
                 
@@ -136,7 +135,7 @@ namespace core{
 
             //-----------------------------------------------------------------
             //! destructor
-            ~SBuffer() {} 
+            ~sbuffer() {} 
 
             //===================assignment operators==========================
             //! copy assignment operator
@@ -171,7 +170,7 @@ namespace core{
             /*! \brief get value at index i
 
             Returns the data value at index i of the buffer. 
-            \throws IndexError if i exceeds the size of the buffer
+            \throws index_error if i exceeds the size of the buffer
             \param i buffer index
             \return value at index i
             */
@@ -185,7 +184,7 @@ namespace core{
             /*! \brief get value at index i
 
             Returns a reference to the element in the buffer at index i.
-            \throws IndexError if i exceeds the size of the buffer
+            \throws index_error if i exceeds the size of the buffer
             \param i buffer index
             \return reference to the element at index i
             */
@@ -225,8 +224,7 @@ namespace core{
 
             This is quite similar to at(). However, unlike at() it can be used
             in a thread-safe interface.
-            \throws IndexError if i exceeds buffer size
-            \throws MemoryAllocationError if buffer is not allocated
+            \throws index_error if i exceeds buffer size
             \param i index where to insert the value\
             \param v value to insert
             */
@@ -302,7 +300,7 @@ namespace core{
     \return true if buffers are equal, false otherwise
     */
     template<typename T,typename U,size_t N>
-    bool operator==(const SBuffer<T,N> &a,const SBuffer<U,N> &b){
+    bool operator==(const sbuffer<T,N> &a,const sbuffer<U,N> &b){
         
         for(size_t i=0;i<a.size();i++)
             if(a[i] != b[i]) return false;
@@ -325,7 +323,7 @@ namespace core{
     \return true if buffers are not equal, false otherwise
     */
     template<typename T,typename U,size_t N>
-    bool operator!=(const SBuffer<T,N> &a,const SBuffer<U,N> &b)
+    bool operator!=(const sbuffer<T,N> &a,const sbuffer<U,N> &b)
     {
         if(a == b) return false;
         return true;
