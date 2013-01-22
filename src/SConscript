@@ -4,12 +4,9 @@ Import("build_env")
 
 #----------------------Building object files------------------------------------
 source_list = []
-source_list.extend(["Exceptions.cpp","Types.cpp","Slice.cpp",
-                    "ComplexUtils.cpp","ExceptionUtils.cpp",
-                    "ArraySelection.cpp","IndexMapBase.cpp","CIndexMap.cpp",
-                    "service.cpp","benchmark/BenchmarkResult.cpp"])
+source_list.extend(Glob("*.cpp"))
+source_list.extend(Glob("benchmark/*.cpp"))
 source_list.extend(Glob("config/*.cpp"))
-
                
 #build static and shared objects               
 shared_objects = build_env.SharedObject(source_list)

@@ -29,23 +29,15 @@
 #pragma once
 
 #include <iostream>
-#include <complex>
-#include <limits>
 
 #include "Types.hpp"
-#include "TypeInfo.hpp"
-#include "Exceptions.hpp"
-#include "ResultTypeTrait.hpp"
 #include "TypeIDMap.hpp"
-#include "ComplexUtils.hpp"
-#include "type_conversion.hpp"
-#include "CompType.hpp"
 #include "SBuffer.hpp"
+#include "ArrayView.hpp"
 
 namespace pni {
 namespace core {
 
-using namespace boost::numeric;
 
     /*! 
     \ingroup numeric_array_classes
@@ -90,11 +82,13 @@ using namespace boost::numeric;
 
             //-----------------------------------------------------------------
             //! copy constructor
-            explicit Scalar(const array_type &s):_data(s._data) {}
+            Scalar(const array_type &s):_data(s._data) {}
             
             //-----------------------------------------------------------------
             //! constructor from a scalar value
-            explicit Scalar(const value_type &r):_data({r}) {}
+            Scalar(const value_type &r):_data({r}) {}
+
+            //-----------------------------------------------------------------
 
             //-----------------------------------------------------------------
             //! destructor
@@ -126,6 +120,12 @@ using namespace boost::numeric;
                 if(this == &v) return *this;
                 this->_data = v._data;
                 return *this;
+            }
+
+            //=======================conversion operator========================
+            operator T() const
+            {
+                return this->_data[0];
             }
 
 
@@ -289,11 +289,72 @@ using namespace boost::numeric;
             */
             template<typename CTYPE> CTYPE shape() const
             {
-                return CTYPE{1};
+                return CTYPE();
             }
 
+            //------------------------------------------------------------------
+            //! get iterator to first element
+            iterator begin() 
+            { 
+                return this->_data.begin(); 
+            }
+
+            //------------------------------------------------------------------
+            //! get iterator to last+1 element
+            iterator end() 
+            { 
+                return this->_data.end();
+            }
+
+            //------------------------------------------------------------------
+            //! get const iterator to first element
+            const_iterator begin() const 
+            { 
+                return this->_data.begin(); 
+            }
+
+            //------------------------------------------------------------------
+            //! get const iterator to last+1 element
+            const_iterator end() const 
+            { 
+                return this->_data.end();
+            }
 
     };
+
+    /*!
+    \brief stream output operator
+
+    Write content to output stream.
+    \param os output stream
+    \param s scalar value
+    \return reference to output stream
+    */
+    template<typename T>
+    std::ostream &operator<<(std::ostream &os,const Scalar<T> &s)
+    {
+        T value = s[0]; 
+        os<<value;
+        return os;
+    }
+
+    //-------------------------------------------------------------------------
+    /*!
+    \brief input strema data
+
+    Read content from input stream
+    \param is input stream
+    \param s scalar 
+    \return reference to input stream
+    */
+    template<typename T>
+    std::istream &operator>>(std::istream &is,Scalar<T> &s)
+    {
+        T value;
+        is>>value;
+        s = value;
+        return is;
+    }
 
 //end of namespace
 }

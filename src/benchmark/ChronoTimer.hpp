@@ -46,12 +46,14 @@ namespace core{
         };\
         const String DurationUnitMap<durationtype>::unit = String(unit_string)
 
+    //! \cond NO_API_DOC
     DURATIONUNITMAP(std::chrono::nanoseconds,"ns");
     DURATIONUNITMAP(std::chrono::microseconds,"us");
     DURATIONUNITMAP(std::chrono::milliseconds,"ms");
     DURATIONUNITMAP(std::chrono::seconds,"s");
     DURATIONUNITMAP(std::chrono::minutes,"min");
     DURATIONUNITMAP(std::chrono::hours,"h");
+    //! \endcond NO_API_DOC
 
     /*!
     \brief timer class using chrono

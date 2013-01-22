@@ -132,3 +132,6 @@ template<typename T> void check_equality(const T &a,const T &b)
     EqualityCheck<T,TypeInfo<T>::is_integer,TypeInfo<T>::is_complex>::check(a,b);
 }
 
+void check_equality(const String &a,const String &b);
+void check_equality(const Bool &a,const Bool &b);
+

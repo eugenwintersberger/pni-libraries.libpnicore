@@ -557,6 +557,41 @@ namespace core{
 
     template<typename T,size_t ...DIMS> const
         StaticCIndexMap<DIMS...> SArray<T,DIMS...>::_shape = StaticCIndexMap<DIMS...>();
+
+    //-------------------------------------------------------------------------
+    /*!
+    \brief ostream operator
+
+    Operator writes SArray to an output stream.
+    \param os output streamn
+    \param array the array to write to output
+    */
+    template<typename T,size_t ...DIMS>
+    std::ostream &operator<<(std::ostream &os,const SArray<T,DIMS...> &array)
+    {
+        for(auto v: array)
+            os<<v<<" ";
+
+        return os;
+    }
+
+    //-------------------------------------------------------------------------
+    /*!
+    \brief istream operator
+
+    Operator reads array data form an input stream. The stream blocks until the
+    entire array data is read.
+    \param is input stream
+    \param array store data in this array
+    */
+    template<typename T,size_t ...DIMS>
+    std::istream &operator>>(std::istream &is,SArray<T,DIMS...> &array)
+    {
+        for(T &v: array)
+            is>>v;
+
+        return is;
+    }
 //end of namespace
 }
 }

@@ -53,7 +53,8 @@ namespace core{
     Stream operators are provided for IO operations using binary data. 
     \tparam NTYPE native type used to store binary data
     */
-    template<typename NTYPE> class BinaryType{
+    template<typename NTYPE> class BinaryType
+    {
         private:
             NTYPE _value; //!< data value
 
@@ -183,7 +184,8 @@ namespace core{
 
     //-------------------------------------------------------------------------
     template<typename NTYPE>
-    std::istream &operator>>(std::istream &is,BinaryType<NTYPE> &o){
+    std::istream &operator>>(std::istream &is,BinaryType<NTYPE> &o)
+    {
         NTYPE b;
         is>>b;
         o = b;

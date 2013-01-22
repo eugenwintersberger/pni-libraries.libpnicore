@@ -29,6 +29,7 @@
 #include <complex>
 #include <string>
 #include <cstdint>
+#include <vector>
 
 #include "Binary.hpp"
 
@@ -139,6 +140,9 @@ namespace core{
     bool operator<=(TypeClass a,TypeClass b);
     bool operator>=(TypeClass a,TypeClass b);
 #endif
+    
+    //! standard type for array shapes
+    typedef std::vector<size_t> shape_t;
 
 //end of namespace
 }

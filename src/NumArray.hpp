@@ -635,6 +635,42 @@ namespace core{
             
     };
 
+    //========================IO operators======================================
+    /*!
+    \brief output stream operator
+
+    Write array data to an output stream. 
+    \param o output stream
+    \param a const reference to the array
+    \return reference to output stream
+    */
+    template<typename ATYPE> 
+    std::ostream &operator<<(std::ostream &o,const NumArray<ATYPE> &a)
+    {
+        for(auto v: a)
+            o<<v<<" ";
+
+        return o;
+    }
+
+    //-------------------------------------------------------------------------
+    /*!
+    \brief input stream operator
+
+    Read data from an input stream.
+    \param i input stream
+    \param a reference to array
+    \return reference to input sream
+    */
+    template<typename ATYPE>
+    std::istream &operator>>(std::istream &i,NumArray<ATYPE> &a)
+    {
+        for(typename NumArray<ATYPE>::value_type &v: a)
+            i>>v;
+
+        return i;
+    }
+
     //===================Multiplication operator================================
     /*!
     \ingroup numeric_array_classes

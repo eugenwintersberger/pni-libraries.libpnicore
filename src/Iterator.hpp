@@ -70,6 +70,8 @@ namespace core{
             typedef typename ITERABLE::value_type& ref_type;
     };
 
+
+
     //=========================================================================
     /*! \ingroup iterator_types
     \brief return types for const iterators
@@ -90,6 +92,7 @@ namespace core{
             //! reference type
             typedef const typename ITERABLE::value_type &ref_type;
     };
+   
 
     //=========================================================================
 
@@ -278,7 +281,7 @@ namespace core{
                 if(!(*this))
                     throw IteratorError(EXCEPTION_RECORD,"Iterator invalid!");
 
-                return &(*this);
+                return &(*(this->_container))[this->_state];
             }
 
             //------------------------------------------------------------------
