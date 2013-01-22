@@ -26,12 +26,12 @@
 #include <iostream>
 #include <boost/shared_ptr.hpp>
 
-#include "SArrayTest.hpp"
+#include "sarray_test.hpp"
 
 using namespace pni::core;
 
 #define STATICARRAY_TEST_REGISTRATION(T)\
-static CPPUNIT_NS::AutoRegisterSuite< SArrayTest<T> >  \
+static CPPUNIT_NS::AutoRegisterSuite< sarray_test<T> >  \
              CPPUNIT_MAKE_UNIQUE_NAME(autoRegisterRegistry__ )
 
 STATICARRAY_TEST_REGISTRATION(UInt8);
@@ -50,5 +50,8 @@ STATICARRAY_TEST_REGISTRATION(Float128);
 STATICARRAY_TEST_REGISTRATION(Complex32);
 STATICARRAY_TEST_REGISTRATION(Complex64);
 STATICARRAY_TEST_REGISTRATION(Complex128);
+
+STATICARRAY_TEST_REGISTRATION(String);
+STATICARRAY_TEST_REGISTRATION(Bool);
 
 

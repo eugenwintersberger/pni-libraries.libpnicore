@@ -34,7 +34,7 @@ sources_list.extend(["div_operator_test.cpp"])
 sources_list.extend(["index_map_base_test.cpp"])
 sources_list.extend(["index_map_test.cpp"])
 
-sources_list.extend(["SArrayTest.cpp"])
+sources_list.extend(["sarray_test.cpp"])
 sources_list.extend(["DArrayTest.cpp"])
 sources_list.extend(["NumArrayTest.cpp"])
 sources_list.extend(["EqualityCheck.cpp"])

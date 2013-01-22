@@ -28,14 +28,15 @@
 
 #include <pni/core/SArray.hpp>
 
-#include "RandomDistributions.hpp"
+#include "data_generator.hpp"
+#include "uniform_distribution.hpp"
 #include "EqualityCheck.hpp"
 
 using namespace pni::core;
 
-template<typename T>
-class SArrayTest : public CppUnit::TestFixture{
-        CPPUNIT_TEST_SUITE(SArrayTest);
+template<typename T> class sarray_test : public CppUnit::TestFixture
+{
+        CPPUNIT_TEST_SUITE(sarray_test<T>);
         CPPUNIT_TEST(test_construction);
         CPPUNIT_TEST(test_linear_access);
         CPPUNIT_TEST(test_iterators);
@@ -58,13 +59,13 @@ class SArrayTest : public CppUnit::TestFixture{
 };
 
 //------------------------------------------------------------------------------
-template<typename T> void SArrayTest<T>::setUp(){ }
+template<typename T> void sarray_test<T>::setUp(){ }
 
 //------------------------------------------------------------------------------
-template<typename T> void SArrayTest<T>::tearDown(){ }
+template<typename T> void sarray_test<T>::tearDown(){ }
 
 //------------------------------------------------------------------------------
-template<typename T> void SArrayTest<T>::test_construction()
+template<typename T> void sarray_test<T>::test_construction()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
@@ -74,7 +75,9 @@ template<typename T> void SArrayTest<T>::test_construction()
     CPPUNIT_ASSERT(a1.size() == 6);
 
     //testing initializer list constructor
-    SArray<T,2,3> a2{1,2,3,4,5,6};
+    uniform_distribution<T> dist;
+    T v1 = dist(), v2=dist(),v3=dist(),v4=dist(),v5=dist(),v6=dist();
+    SArray<T,2,3> a2{v1,v2,v3,v4,v5,v6};
     CPPUNIT_ASSERT(a2.rank() == 2);
     CPPUNIT_ASSERT(a2.size() == 6);
 
@@ -85,37 +88,37 @@ template<typename T> void SArrayTest<T>::test_construction()
 }
 
 //------------------------------------------------------------------------------ 
-template<typename T> void SArrayTest<T>::test_linear_access()
+template<typename T> void sarray_test<T>::test_linear_access()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
-
-    SArray<T,2,3> a1{1,2,3,4,5,6};
-    std::vector<T> v1{1,2,3,4,5,6};
+    SArray<T,2,3> a1;
+    std::vector<T> data(a1.size());
+    data_generator::fill(data.begin(),data.end(),uniform_distribution<T>());
    
     //--------------------check operators without index checking----------------
 	//access via [] operator
 	for(size_t i=0;i<a1.size();i++) 
-        a1[i] = T(i);
+        a1[i] = data[i];
 
 	//check if data values have been transfered correctly
 	for(size_t i=0;i<a1.size();i++) 
-        check_equality(T(i),a1[i]);
+        check_equality(data[i],a1[i]);
 
     //-------------------check with index checking-----------------------------
 	//access via [] operator
 	for(size_t i=0;i<a1.size();i++) 
-        a1.at(i) = T(i);
+        a1.at(i) = data[i];
 
 	//check if data values have been transfered correctly
 	for(size_t i=0;i<a1.size();i++) 
-        check_equality(T(i),a1.at(i));
+        check_equality(data[i],a1.at(i));
 
     CPPUNIT_ASSERT_THROW(a1.at(a1.size()+10),IndexError);
 
 }
 
 //------------------------------------------------------------------------------
-template<typename T> void SArrayTest<T>::test_iterators()
+template<typename T> void sarray_test<T>::test_iterators()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
@@ -123,58 +126,28 @@ template<typename T> void SArrayTest<T>::test_iterators()
 
     //--------------------check standard iterator----------------
 	//access via [] operator
-    auto data = RandomDistribution::uniform<std::vector<T> >(a1.size());
+    std::vector<T> data(a1.size());
+    data_generator::fill(data.begin(),data.end(),uniform_distribution<T>());
 
     //----------------------testing write data---------------------------------
-    size_t index = 0;
-#ifdef NOFOREACH
+    auto diter = data.begin();
     for(auto iter = a1.begin(); iter!=a1.end();iter++)
-    {
-        T &v = *iter;
-#else
-    for(T &v: a1)
-    {
-#endif
-        v = data[index++];
-    }
+        *iter = *diter++;
    
     //-----------------------test reading data---------------------------------
-    index = 0;
-#ifdef NOFOREACH
+    diter = data.begin();
     for(auto iter=a1.begin();iter!=a1.end();iter++)
-    {
-        const T &v = *iter;
-#else
-    for(auto &v: a1)
-    {
-#endif
-        check_equality(v,data[index++]);
-    }
-
-
-    //-------------------check const iterator-----------------------------
-
-    index = 0;
-#ifdef NOFOREACH
-    for(auto iter = a1.begin();iter!=a1.end();iter++)
-    {
-        const T &v = *iter;
-#else
-    for(auto v: a1)
-    {
-#endif
-        check_equality(v,data[index++]); 
-    }
+        check_equality(*iter,*diter++);
 }
 
 //-----------------------------------------------------------------------------
-template<typename T> void SArrayTest<T>::test_multiindex_access()
+template<typename T> void sarray_test<T>::test_multiindex_access()
 {   
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
     SArray<T,2,3> a1;
-    
-    auto data = RandomDistribution::uniform<std::vector<T> >(a1.size());
+    std::vector<T> data(a1.size());
+    data_generator::fill(data.begin(),data.end(),uniform_distribution<T>());
 
     //----------------use variadic tempaltes to access data--------------
     for(size_t i=0;i<2;i++)
@@ -206,13 +179,13 @@ template<typename T> void SArrayTest<T>::test_multiindex_access()
 }
 
 //-----------------------------------------------------------------------------
-template<typename T> void SArrayTest<T>::test_multiindex_access_const()
+template<typename T> void sarray_test<T>::test_multiindex_access_const()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
-
-    auto data =RandomDistribution::uniform<std::vector<T> >(6);
+   
+    std::vector<T> data(6);
+    data_generator::fill(data.begin(),data.end(),uniform_distribution<T>());
     const SArray<T,2,3> a1(data);
-    
 
     //----------------use variadic tempaltes to access data--------------
     for(size_t i=0;i<2;i++)
@@ -232,49 +205,36 @@ template<typename T> void SArrayTest<T>::test_multiindex_access_const()
 
 
 //------------------------------------------------------------------------------
-template<typename T> void SArrayTest<T>::test_view()
+template<typename T> void sarray_test<T>::test_view()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
     SArray<T,10,3> v;
-    std::vector<Slice> s{Slice(0),Slice(0,3,1)};
+    std::vector<T> data(v.size());
+    data_generator::fill(data.begin(),data.end(),uniform_distribution<T>());
 
     for(size_t i=0;i<10;i++)
     {
         auto view = v(std::vector<Slice>{Slice(i),Slice(0,3,1)});
-        std::fill(view.begin(),view.end(),T(i));
+        std::copy(data.begin()+i*3,data.begin()+(i+1)*3,view.begin());
     }
     
     for(size_t i=0;i<10;i++)
     {
         //for reading we use a different construction here
         auto view = v(i,Slice(0,3,1));
-#ifdef NOFOREACH
-        for(auto iter = view.begin();iter!=view.end();++iter)
-        {
-            auto v = *iter;
-#else
-        for(auto v: view)
-        {
-#endif
-            check_equality(v,T(i));
-        }
+        CPPUNIT_ASSERT(std::equal(view.begin(),view.end(),data.begin()+i*3));
     }
 
     //check construction of a static array from a view
     auto view = v(2,Slice(0,3));
     SArray<T,3> c(view);
 
-    for(auto viter=view.begin(),citer=c.begin();viter!=view.end();
-            ++viter,++citer)
-    {
-        check_equality(*viter,*citer);
-    }
+    CPPUNIT_ASSERT(std::equal(c.begin(),c.end(),data.begin()+2*3));
 
-   
 }
 //------------------------------------------------------------------------------
-template<typename T> void SArrayTest<T>::test_typeinfo()
+template<typename T> void sarray_test<T>::test_typeinfo()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
