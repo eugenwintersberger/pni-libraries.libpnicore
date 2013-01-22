@@ -25,7 +25,7 @@
 
 #pragma once
 
-#include "DBuffer.hpp"
+#include "dbuffer.hpp"
 
 namespace pni {
 namespace core {
@@ -37,28 +37,28 @@ namespace core {
     This class can be used as a base class for dynamic (configurable at runtime)
     index maps. 
     */
-    class IndexMapBase
+    class index_map_base
     {
         private:
             //! buffer storing the shape of the index map
-            DBuffer<size_t> _shape;
+            dbuffer<size_t> _shape;
         public:
             //================constructors and destructor======================
             //! default constructor
-            IndexMapBase();
+            index_map_base();
             
             //-----------------------------------------------------------------
             //! copy constructor
-            IndexMapBase(const IndexMapBase &m);
+            index_map_base(const index_map_base &m);
 
             //-----------------------------------------------------------------
             //! move constructor
-            IndexMapBase(IndexMapBase &&m);
+            index_map_base(index_map_base &&m);
 
             //-----------------------------------------------------------------
             //! initialization from a container
             template<template<typename ...> class CTYPE,typename ...OTYPES> 
-                explicit IndexMapBase(const CTYPE<OTYPES...> &c):
+                explicit index_map_base(const CTYPE<OTYPES...> &c):
                 _shape(c.size())
             {
                 std::copy(c.begin(),c.end(),_shape.begin());
@@ -66,7 +66,7 @@ namespace core {
 
             //-----------------------------------------------------------------
             //! initialization from an initializer list
-            explicit IndexMapBase(const std::initializer_list<size_t> &l):
+            explicit index_map_base(const std::initializer_list<size_t> &l):
                 _shape(l.size())
             {
                 std::copy(l.begin(),l.end(),_shape.begin());
@@ -74,15 +74,15 @@ namespace core {
 
             //-----------------------------------------------------------------
             //! destructor
-            virtual ~IndexMapBase() {}
+            virtual ~index_map_base() {}
 
             //=================assignment operators============================
             //! copy assignment operator
-            IndexMapBase &operator=(const IndexMapBase &m);
+            index_map_base &operator=(const index_map_base &m);
 
             //-----------------------------------------------------------------
             //! move assignment operator
-            IndexMapBase &operator=(IndexMapBase &&m);
+            index_map_base &operator=(index_map_base &&m);
 
             //===================public methods================================
             /*! 
@@ -114,7 +114,7 @@ namespace core {
             Returns a const reference to the shape buffer.
             \return buffer reference
             */
-            const DBuffer<size_t> &shape() const { return _shape; }
+            const dbuffer<size_t> &shape() const { return _shape; }
 
             //-----------------------------------------------------------------
             /*! 
@@ -140,7 +140,7 @@ namespace core {
             */
             template<typename CTYPE> void shape(const CTYPE &c) 
             {
-                _shape = DBuffer<size_t>(c.size());
+                _shape = dbuffer<size_t>(c.size());
                 std::copy(c.begin(),c.end(),_shape.begin());
             }
     };

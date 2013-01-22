@@ -21,25 +21,25 @@
  *     Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
  */
 
-#include "IndexMapBase.hpp"
+#include "index_map_base.hpp"
 
 namespace pni{
 namespace core{
 
     //-------------------------------------------------------------------------
-    IndexMapBase::IndexMapBase():_shape() {}
+    index_map_base::index_map_base():_shape() {}
 
     //-------------------------------------------------------------------------
-    IndexMapBase::IndexMapBase(const IndexMapBase &m):
+    index_map_base::index_map_base(const index_map_base &m):
         _shape(m._shape)
     {}
 
     //-------------------------------------------------------------------------
-    IndexMapBase::IndexMapBase(IndexMapBase &&m):
+    index_map_base::index_map_base(index_map_base &&m):
         _shape(std::move(m._shape))
     {}
     //-------------------------------------------------------------------------
-    IndexMapBase &IndexMapBase::operator=(const IndexMapBase &m)
+    index_map_base &index_map_base::operator=(const index_map_base &m)
     {
         if(this == &m) return *this;
 
@@ -48,7 +48,7 @@ namespace core{
     }
 
     //-------------------------------------------------------------------------
-    IndexMapBase &IndexMapBase::operator=(IndexMapBase &&m)
+    index_map_base &index_map_base::operator=(index_map_base &&m)
     {
         if(this == &m) return *this;
         _shape = std::move(m._shape);
@@ -56,7 +56,7 @@ namespace core{
     }
 
     //--------------------------------------------------------------------------
-    size_t IndexMapBase::size() const
+    size_t index_map_base::size() const
     {
         //return 0 if the map is not initialized
         if(_shape.size() == 0) return 0;
@@ -76,7 +76,7 @@ namespace core{
     }
 
     //--------------------------------------------------------------------------
-    size_t IndexMapBase::rank() const
+    size_t index_map_base::rank() const
     {
         if(_shape.size() == 0) return 0;
         return _shape.size();
