@@ -28,7 +28,7 @@
 
 #include <iostream>
 #include <sstream>
-#include "Exceptions.hpp"
+#include "exceptions.hpp"
 
 namespace pni{
 namespace core{
@@ -40,20 +40,20 @@ namespace core{
     operator to free memory. 
     \code
     //allocate memory for 100 Float64 values
-    Float64 *ptr = NewAllocator::allocate<Float64>(100);
+    float64 *ptr = new_allocator::allocate<float64>(100);
 
     //free the pointer
-    NewAllocator::free(ptr);
+    new_allocator::free(ptr);
     \endcode 
     */
-    class NewAllocator
+    class new_allocator
     {
         public:
             /*! \brief allocate memory
 
             Static template method to allocate memory for n elements of size T.
             An exception will be thrown if allocation fails.
-            \throw MemoryAllocationError if allocation fails
+            \throw memory_allocation_error if allocation fails
             \tparam T data type for which memory should be allocated 
             \param n number of elements for which memory should be allocated
             \return pointer to the allocated memory region
@@ -71,13 +71,14 @@ namespace core{
                     std::stringstream ss;
                     ss<<"Allocation of "<<sizeof(T)*n<<" Bytes of memory";
                     ss<<" failed!";
-                    throw MemoryAllocationError(EXCEPTION_RECORD,ss.str());
+                    throw memory_allocation_error(EXCEPTION_RECORD,ss.str());
                 }
 
                 return ptr;
 
             }
 
+            //-----------------------------------------------------------------
             /*! \brief free memory
 
             Free memory allocated by this allocator class. 
