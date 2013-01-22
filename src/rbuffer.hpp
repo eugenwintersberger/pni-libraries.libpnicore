@@ -32,11 +32,10 @@
 #include <string>
 #include <sstream>
 #include <memory>
-#include "Exceptions.hpp"
-#include "ExceptionUtils.hpp"
-#include "Types.hpp"
-#include "TypeIDMap.hpp"
-#include "Iterator.hpp"
+#include "exception_utils.hpp"
+#include "types.hpp"
+#include "type_id_map.hpp"
+#include "iterator.hpp"
 
 namespace pni{
 namespace core{
@@ -50,19 +49,19 @@ namespace core{
     which supports only raw pointers. 
     The usage is quite straight forward as shown in this example:
     \code
-    UInt32 *ptr = new UInt32[100];
+    uint32 *ptr = new uint32[100];
 
-    RBuffer<UInt32> buffer(100,ptr);
+    rbuffer<uint32> buffer(100,ptr);
     \endcode
-    The constructor of RBuffer<T> takes the number of elements and a pointer to
+    The constructor of rbuffer<T> takes the number of elements and a pointer to
     the allocated memory as arguments. It is up to the user to take care that
     memory remains allocated during the entire lifetime of the instance of
-    RBuffer<T>. 
+    rbuffer<T>. 
     As the template does not memory management it is also up to the user to free
     the allocated memory when no longer needed.
     \tparam T element type 
     */
-    template<typename T> class RBuffer
+    template<typename T> class rbuffer
     {
         private:
             T *_data; //!< pointer to the data block
@@ -72,34 +71,34 @@ namespace core{
             //! type of data stored
             typedef T value_type;             
             //! type of the buffer
-            typedef RBuffer<T> buffer_type;
+            typedef rbuffer<T> buffer_type;
             //! unique pointer type 
             typedef std::unique_ptr<buffer_type> unique_ptr;
             //! shared pointer type
             typedef std::shared_ptr<buffer_type> shared_ptr;
             //! iterator type
-            typedef Iterator<buffer_type,0> iterator; 
+            typedef iterator<buffer_type,0> iterator; 
             //! const iterator type
-            typedef Iterator<buffer_type,1> const_iterator; 
+            typedef iterator<buffer_type,1> const_iterator; 
 
             //===================public static member variables================
             //! ID of the element data type
-            static const TypeID type_id    = TypeIDMap<value_type>::type_id; 
+            static const type_id_t type_id    = type_id_map<value_type>::type_id; 
 
             //=================constructors and destructors====================
             //! default constructor
-            explicit RBuffer():
+            explicit rbuffer():
                 _data(nullptr),
                 _size(0)
             {}
 
             //-----------------------------------------------------------------
             //! copy constructor
-            RBuffer(const buffer_type &b):_data(b._data),_size(b._size) {}
+            rbuffer(const buffer_type &b):_data(b._data),_size(b._size) {}
 
             //-----------------------------------------------------------------
             //! move constructor
-            RBuffer(buffer_type &&b):_data(b._data),_size(b._size)
+            rbuffer(buffer_type &&b):_data(b._data),_size(b._size)
             {
                 b._data = nullptr;
                 b._size = 0;
@@ -114,14 +113,14 @@ namespace core{
             \param n number of elements of type T in the buffer
             \param data pointer to the allocated memory
             */
-            explicit RBuffer(size_t n,T *data):
+            explicit rbuffer(size_t n,T *data):
                 _data(data),
                 _size(n)
             {}
 
             //-----------------------------------------------------------------
             //! destructor
-            ~RBuffer() 
+            ~rbuffer() 
             { 
                 this->_data = nullptr; 
                 this->_size = 0;
@@ -169,8 +168,8 @@ namespace core{
             size of the buffer. In addition an exception is thrown if the
             internal pointer of the template is a nullptr which indicates that
             no memory has been allocated at the first place.
-            \throws MemoryNotAllocatedError if buffer is not allocated
-            \throws IndexError if i exceeds buffer size
+            \throws memory_not_allocated_error if buffer is not allocated
+            \throws index_error if i exceeds buffer size
             \param i buffer index
             \return value at index i
             */
@@ -191,8 +190,8 @@ namespace core{
             size of the buffer. If the internal pointer is a nullptr an
             exception will be thrown as the template assumes that no memory has
             been allocated at the first place.
-            \throws MemoryNotAllocatedError if buffer not allocated
-            \throws IndexError if i exceeds buffer size
+            \throws memory_not_allocated_error if buffer not allocated
+            \throws index_error if i exceeds buffer size
             \param i buffer index
             \return reference to element at i
             */
@@ -235,8 +234,8 @@ namespace core{
 
             Insert a value at a given position. Familiar to at() but can be used
             in thread-safe wrappers.
-            \throws MemoryNotAllocatedError if internal pointer is nullptr
-            \throws IndexError if i exceeds buffer size
+            \throws memory_not_allocated_error if internal pointer is nullptr
+            \throws indesx_error if i exceeds buffer size
             \param i index where to insert the value
             \param v value to insert
             */
@@ -307,7 +306,7 @@ namespace core{
     \return true of equal, else otherwise
     */
     template<typename T,typename U>
-    bool operator==(const RBuffer<T> &a,const RBuffer<U> &b){
+    bool operator==(const rbuffer<T> &a,const rbuffer<U> &b){
         if(a.size() != b.size()) return false;
         
         return std::equal(a.begin(),a.end(),b.begin());
@@ -327,7 +326,7 @@ namespace core{
     \return true if not-equal, false otherwise
     */
     template<typename T,typename U>
-    bool operator!=(const RBuffer<T> &a,const RBuffer<U> &b){
+    bool operator!=(const rbuffer<T> &a,const rbuffer<U> &b){
         if(a == b) return false;
         return true;
     }
