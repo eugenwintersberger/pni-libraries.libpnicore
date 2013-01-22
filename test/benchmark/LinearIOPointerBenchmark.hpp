@@ -24,7 +24,7 @@
 
 #include <typeinfo>
 #include <pni/core/service.hpp>
-#include "../../src/Types.hpp"
+#include <pni/core/Types.hpp>
 
 using namespace pni::core;
 
