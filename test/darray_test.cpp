@@ -25,12 +25,12 @@
 #include <iostream>
 #include <boost/shared_ptr.hpp>
 
-#include "DArrayTest.hpp"
+#include "darray_test.hpp"
 
 using namespace pni::core;
 
 #define DYNAMICARRAY_TEST_REGISTRATION(T,BT,ALLOC)\
-static CPPUNIT_NS::AutoRegisterSuite< DArrayTest<T,BT<T,ALLOC> > >  \
+static CPPUNIT_NS::AutoRegisterSuite< darray_test<T,BT<T,ALLOC> > >  \
              CPPUNIT_MAKE_UNIQUE_NAME(autoRegisterRegistry__ )
 
 DYNAMICARRAY_TEST_REGISTRATION(UInt8,DBuffer,NewAllocator);
@@ -46,6 +46,8 @@ DYNAMICARRAY_TEST_REGISTRATION(Float128,DBuffer,NewAllocator);
 DYNAMICARRAY_TEST_REGISTRATION(Complex32,DBuffer,NewAllocator);
 DYNAMICARRAY_TEST_REGISTRATION(Complex64,DBuffer,NewAllocator);
 DYNAMICARRAY_TEST_REGISTRATION(Complex128,DBuffer,NewAllocator);
+DYNAMICARRAY_TEST_REGISTRATION(Bool,DBuffer,NewAllocator);
+DYNAMICARRAY_TEST_REGISTRATION(String,DBuffer,NewAllocator);
 /*
 ARRAY_TEST_REGISTRATION(UInt8,RefBuffer,NewAllocator);
 ARRAY_TEST_REGISTRATION(Int8,RefBuffer,NewAllocator);

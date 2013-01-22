@@ -25,18 +25,20 @@
 #include<cppunit/extensions/HelperMacros.h>
 #include<boost/current_function.hpp>
 
+#include <pni/core/Array.hpp>
 #include <pni/core/DArray.hpp>
 
-#include "RandomDistributions.hpp"
+#include "data_generator.hpp"
+#include "uniform_distribution.hpp"
 #include "EqualityCheck.hpp"
 #include "BufferHelper.hpp"
 
 using namespace pni::core;
 
 template<typename T,typename STORAGE>
-class DArrayTest : public CppUnit::TestFixture
+class darray_test : public CppUnit::TestFixture
 {
-        CPPUNIT_TEST_SUITE(DArrayTest);
+        CPPUNIT_TEST_SUITE(darray_test);
         CPPUNIT_TEST(test_construction);
         CPPUNIT_TEST(test_linear_access);
         CPPUNIT_TEST(test_iterators);
@@ -45,7 +47,7 @@ class DArrayTest : public CppUnit::TestFixture
         CPPUNIT_TEST(test_typeinfo);
         CPPUNIT_TEST_SUITE_END();
     private:
-        std::vector<size_t> s1,s2;
+        shape_t s1,s2;
         size_t r1,r2;
     public:
         void setUp();
@@ -62,18 +64,18 @@ class DArrayTest : public CppUnit::TestFixture
 };
 
 //------------------------------------------------------------------------------
-template<typename T,typename STORAGE> void DArrayTest<T,STORAGE>::setUp()
+template<typename T,typename STORAGE> void darray_test<T,STORAGE>::setUp()
 {
     s1 = {3,4};
     s2 = {2,3,5};
 }
 
 //------------------------------------------------------------------------------
-template<typename T,typename STORAGE> void DArrayTest<T,STORAGE>::tearDown(){ }
+template<typename T,typename STORAGE> void darray_test<T,STORAGE>::tearDown(){ }
 
 //------------------------------------------------------------------------------
 template<typename T,typename STORAGE>
-void DArrayTest<T,STORAGE>::test_construction()
+void darray_test<T,STORAGE>::test_construction()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
     //test default construction
@@ -102,21 +104,11 @@ void DArrayTest<T,STORAGE>::test_construction()
 
 //------------------------------------------------------------------------------
 template<typename T,typename STORAGE>
-void DArrayTest<T,STORAGE>::test_assignment()
+void darray_test<T,STORAGE>::test_assignment()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
     DArray<T,STORAGE> a1(s1,STORAGE(12));
-    size_t i;
-#ifdef NOFOREACH
-    for(auto iter = a1.begin();iter!=a1.end();++iter)
-    {
-        T &a = *iter;
-#else
-    for(T &a: a1)
-    {
-#endif 
-        a = T(i);
-    }
+    data_generator::fill(a1.begin(),a1.end(),uniform_distribution<T>());
    
     //copy assignment
     DArray<T,STORAGE> a2;
@@ -139,94 +131,72 @@ void DArrayTest<T,STORAGE>::test_assignment()
 
 //------------------------------------------------------------------------------
 template<typename T,typename STORAGE>
-void DArrayTest<T,STORAGE>::test_linear_access()
+void darray_test<T,STORAGE>::test_linear_access()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
     DArray<T,STORAGE> a1(s1,STORAGE(12));
+    std::vector<T> data(a1.size());
+    data_generator::fill(data.begin(),data.end(),uniform_distribution<T>());
 
     //--------------------check operators without index checking----------------
 	//access via [] operator
 	for(size_t i=0;i<a1.size();i++) 
-        CPPUNIT_ASSERT_NO_THROW(a1[i] = T(i));
+        CPPUNIT_ASSERT_NO_THROW(a1[i] = data[i]);
 
 	//check if data values have been transfered correctly
 	for(size_t i=0;i<a1.size();i++) 
-        CPPUNIT_ASSERT_NO_THROW(check_equality(T(i),a1[i]));
+        CPPUNIT_ASSERT_NO_THROW(check_equality(data[i],a1[i]));
 
     //-------------------check with index checking-----------------------------
 	//access via [] operator
 	for(size_t i=0;i<a1.size();i++) 
-        CPPUNIT_ASSERT_NO_THROW(a1.at(i) = T(i));
+        CPPUNIT_ASSERT_NO_THROW(a1.at(i) = data[i]);
 
 	//check if data values have been transfered correctly
 	for(size_t i=0;i<a1.size();i++) 
-        CPPUNIT_ASSERT_NO_THROW(check_equality(T(i),a1.at(i)));
+        CPPUNIT_ASSERT_NO_THROW(check_equality(data[i],a1.at(i)));
 
     CPPUNIT_ASSERT_THROW(a1.at(a1.size() + 100),IndexError);
-    CPPUNIT_ASSERT_THROW(a1.insert(2*a1.size(),100),IndexError);
+    CPPUNIT_ASSERT_THROW(a1.insert(2*a1.size(),uniform_distribution<T>()()),
+                         IndexError);
 
 }
 
 //------------------------------------------------------------------------------
 template<typename T,typename STORAGE>
-void DArrayTest<T,STORAGE>::test_iterators()
+void darray_test<T,STORAGE>::test_iterators()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
     DArray<T,STORAGE> a1(s1,STORAGE(12));
+    std::vector<T> data(a1.size());
+    data_generator::fill(data.begin(),data.end(),uniform_distribution<T>());
 
     //--------------------check standard iterator----------------
-	//access via [] operator
-    auto data = RandomDistribution::uniform<std::vector<T> >(a1.size());
-
-    size_t index = 0;
-#ifdef NOFOREACH
+    auto diter = data.begin();
     for(auto iter = a1.begin();iter!=a1.end();++iter)
-    {
-        T &v = *iter;
-#else
-    for(T &v: a1)
-    {
-#endif
-        v = data[index++];
-    }
-    
-    index = 0;
-#ifdef NOFOREACH
-    for(auto iter = a1.begin();iter!=a1.end();++iter)
-    {
-        auto &v = *iter;
-#else
-    for(auto &v: a1)
-    {
-#endif
-        check_equality(v,data[index++]);
-    }
+        *iter = *diter++;
 
+    diter = data.begin();
+    for(auto iter = a1.begin();iter!=a1.end();++iter)
+        check_equality(*iter,*diter++);
 
     //-------------------check const iterator-----------------------------
     const DArray<T,STORAGE> &a = a1;
 
-    index = 0;
-#ifdef NOFOREACH
+    diter = data.begin();
     for(auto iter = a.begin();iter!=a.end();++iter)
-    {
-        auto v = *iter;
-#else
-    for(auto v: a)
-    {
-#endif
-        check_equality(v,data[index++]); 
-    }
+        check_equality(*iter,*diter++); 
 }
 
 //-----------------------------------------------------------------------------
 template<typename T,typename STORAGE>
-void DArrayTest<T,STORAGE>::test_multiindex_access()
+void darray_test<T,STORAGE>::test_multiindex_access()
 {   
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
     DArray<T,STORAGE> a1(s1,STORAGE(12));
-    auto data = RandomDistribution::uniform<std::vector<T> >(a1.size());
+    std::vector<T> data(a1.size());
+    data_generator::fill(data.begin(),data.end(),uniform_distribution<T>());
 
     //----------------use variadic tempaltes to access data--------------
     for(size_t i=0;i<s1[0];i++)
@@ -264,12 +234,12 @@ void DArrayTest<T,STORAGE>::test_multiindex_access()
 
 //-----------------------------------------------------------------------------
 template<typename T,typename STORAGE>
-void DArrayTest<T,STORAGE>::test_multiindex_access_const()
+void darray_test<T,STORAGE>::test_multiindex_access_const()
 {   
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
-    //auto data = RandomDistribution::uniform<STORAGE>(12);
-    STORAGE data{1,2,3,4,5,6,7,8,9,10,11,12};
+    STORAGE data(12);
+    data_generator::fill(data.begin(),data.end(),uniform_distribution<T>());
     const DArray<T,STORAGE> a1(s1,data);
     CPPUNIT_ASSERT(a1.shape()[0] == s1[0]);
     CPPUNIT_ASSERT(a1.shape()[1] == s1[1]);
@@ -299,7 +269,7 @@ void DArrayTest<T,STORAGE>::test_multiindex_access_const()
 }
 //------------------------------------------------------------------------------
 template<typename T,typename STORAGE>
-void DArrayTest<T,STORAGE>::test_typeinfo()
+void darray_test<T,STORAGE>::test_typeinfo()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
     TypeID id1 = DArray<T,STORAGE>::type_id;
