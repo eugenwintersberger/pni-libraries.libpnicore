@@ -30,12 +30,11 @@
 #include <sstream>
 #include <vector>
 #include <algorithm>
-#include "Exceptions.hpp"
-#include "Types.hpp"
-#include "TypeIDMap.hpp"
-#include "NewAllocator.hpp"
-#include "Iterator.hpp"
-#include "ExceptionUtils.hpp"
+#include "types.hpp"
+#include "type_id_map.hpp"
+#include "new_allocator.hpp"
+#include "iterator.hpp"
+#include "exception_utils.hpp"
 
 namespace pni{
 namespace core{
@@ -47,7 +46,7 @@ namespace core{
     The dynamic buffer template creates a buffer type that can be freed and
     reallocated at runtime. This makes this template pretty flexible. 
     \code
-    DBuffer<Float64> buffer(1024);
+    dbuffer<float64> buffer(1024);
 
     buffer.allocate(2048);
 
@@ -57,10 +56,10 @@ namespace core{
     allocator type to request and release memory from and to the system. 
     This allows for different allocation strategies. 
     \tparam T data type for which to allocate memory
-    \tparam Allocator allocator type responsible for memory allocation and
+    \tparam ALLOCATOR allocator type responsible for memory allocation and
     relieve
     */
-    template<typename T,typename Allocator=NewAllocator >class DBuffer
+    template<typename T,typename ALLOCATOR=new_allocator >class dbuffer
     {
         private:
             T *_data; //!< pointer to the data block
@@ -79,36 +78,35 @@ namespace core{
             //! type stored in the buffer
             typedef T value_type;
             //! buffer type
-            typedef DBuffer<T,Allocator> buffer_type;
+            typedef dbuffer<T,ALLOCATOR> buffer_type;
             //! smart pointer to a typed buffer
             typedef std::shared_ptr<buffer_type> shared_ptr;
             //! unique poitner type to a buffer
             typedef std::unique_ptr<buffer_type> unique_ptr;
             //! allocator type
-            typedef Allocator allocator_type;
+            typedef ALLOCATOR allocator_type;
             //! iterator type
-            typedef Iterator<buffer_type,0 > iterator;        
+            typedef iterator<buffer_type,0 > iterator;        
             //! const iterator type
-            typedef Iterator<buffer_type,1 > const_iterator; 
+            typedef iterator<buffer_type,1 > const_iterator; 
 
             //=============public static variables=============================
-            //! type ID of the element type
-            static const TypeID type_id    = TypeIDMap<value_type>::type_id; 
+            static const type_id_t type_id = type_id_map<value_type>::type_id;
            
             //=================constructors and destructor=====================
             //! default constructor
-            explicit DBuffer():_data(nullptr),_size(0) {}
+            explicit dbuffer():_data(nullptr),_size(0) {}
 
             //-----------------------------------------------------------------
             /*! \brief copy constructor
 
             This constructor initializes the new Buffer with the content of the
             old. New memory is allocated for the newly created Buffer<T> object.
-            \throws MemoryAllocationError if allocation for the new buffer fails
+            \throws memory_allocation_error if allocation for the new buffer fails
             \param b reference to the original buffer
             */
-            DBuffer(const buffer_type &b):
-                _data(Allocator::template allocate<T>(b.size())),
+            dbuffer(const buffer_type &b):
+                _data(allocator_type::template allocate<T>(b.size())),
                 _size(b.size())
             {
                 //copy data
@@ -123,7 +121,7 @@ namespace core{
             freed. 
             \param b buffer to move
             */
-            DBuffer(buffer_type &&b):_data(b._data),_size(b._size) 
+            dbuffer(buffer_type &&b):_data(b._data),_size(b._size) 
             {
                 b._data = nullptr;
                 b._size = 0;
@@ -134,11 +132,11 @@ namespace core{
 
             Using this constructor the buffer will automatically allocate 
             memory.
-            \throws MemoryAllocationError if allocation on the heap fails
+            \throws memory_allocation_error if allocation on the heap fails
             \param n number of elements of type T in the buffer
             */
-            explicit DBuffer(size_t n):
-                _data(Allocator::template allocate<value_type>(n)),
+            explicit dbuffer(size_t n):
+                _data(allocator_type::template allocate<value_type>(n)),
                 _size(n)
             {}
 
@@ -153,8 +151,8 @@ namespace core{
             \throws MemoryAllocationError if memory allocation fails
             \param list reference to the initializer list
             */
-            explicit DBuffer(const std::initializer_list<value_type> &list):
-                _data(Allocator::template allocate<value_type>(list.size())),
+            explicit dbuffer(const std::initializer_list<value_type> &list):
+                _data(allocator_type::template allocate<value_type>(list.size())),
                 _size(list.size())
             
             {
@@ -171,8 +169,8 @@ namespace core{
             \param c container instance
             */
             template<template<typename ...> class CTYPE,typename ...OTS>
-            explicit DBuffer(const CTYPE<OTS...> &c):
-                _data(Allocator::template allocate<value_type>(c.size())),
+            explicit dbuffer(const CTYPE<OTS...> &c):
+                _data(allocator_type::template allocate<value_type>(c.size())),
                 _size(c.size())
             {
                 std::copy(c.begin(),c.end(),this->begin());
@@ -180,7 +178,7 @@ namespace core{
             
             //-----------------------------------------------------------------
             //! destructor
-            ~DBuffer() { this->free(); }
+            ~dbuffer() { this->free(); }
 
             //===================assignment operators==========================
             /*! 
@@ -240,8 +238,8 @@ namespace core{
             /*! \brief get value at index i
 
             Returns the data value at index i of the buffer. 
-            \throws MemoryNotAllocatedError if buffer is not allocated
-            \throws IndexError if i exceeds the size of the buffer
+            \throws memory_not_allocated_error if buffer is not allocated
+            \throws index_error if i exceeds the size of the buffer
             \param i buffer index
             \return value at index i
             */
@@ -258,8 +256,8 @@ namespace core{
             /*! \brief get value at index i
 
             Returns a reference to the element in the buffer at index i.
-            \throws MemoryNotAllocatedError if buffer is not allocated
-            \throws IndexError if i exceeds the size of the buffer
+            \throws memory_not_allocated_error if buffer is not allocated
+            \throws index_error if i exceeds the size of the buffer
             \param i buffer index
             \return reference to the element at index i
             */
@@ -277,8 +275,8 @@ namespace core{
             \brief insert value
 
             Insert value at index i.
-            \throws MemoryNotAllocatedError if buffer not allocated
-            \throws IndexError if i exceeds the size of the buffer
+            \throws memory_not_allocated_error if buffer not allocated
+            \throws index_error if i exceeds the size of the buffer
             \param i index where to insert data
             \param value the value to insert
             */
@@ -319,7 +317,7 @@ namespace core{
             Method allocates memory for size elements of type T. If the buffer
             is already allocated the original memory will be freed and new
             memory requested from ths OS. 
-            \throws MemoryAllocationError if things go wrong
+            \throws memory_allocation_error if things go wrong
             \param size number of elements for which to allocate memory
             */
             void allocate(size_t size)
@@ -328,8 +326,8 @@ namespace core{
                 if(this->size()) this->free();
                
                 //allocate new memory
-                try{ _data = Allocator::template allocate<T>(size); }
-                EXCEPTION_FORWARD(MemoryAllocationError);
+                try{ _data = allocator_tye::template allocate<T>(size); }
+                EXCEPTION_FORWARD(memory_allocation_error);
                 
                 //set the size member variable
                 _size = size;
@@ -339,7 +337,7 @@ namespace core{
             //! \brief free buffer memory
             void free()
             {
-                Allocator::template free(_data);
+                allocator_type::template free(_data);
                 this->_data = nullptr;
                 _size = 0;
             }
@@ -388,6 +386,7 @@ namespace core{
             {
                 return const_iterator(this,this->size());
             }
+           
 
     };
 
