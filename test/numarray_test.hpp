@@ -29,6 +29,8 @@
 #include <pni/core/DArray.hpp>
 #include <pni/core/SArray.hpp>
 
+#include "data_generator.hpp"
+#include "uniform_distribution.hpp"
 #include "RandomDistributions.hpp"
 #include "EqualityCheck.hpp"
 #include "BufferHelper.hpp"
@@ -36,9 +38,9 @@
 using namespace pni::core;
 
 template<typename ATYPE>
-class NumArrayTest : public CppUnit::TestFixture
+class numarray_test : public CppUnit::TestFixture
 {
-        CPPUNIT_TEST_SUITE(NumArrayTest);
+        CPPUNIT_TEST_SUITE(numarray_test);
         CPPUNIT_TEST(test_construction);
         CPPUNIT_TEST(test_linear_access);
         CPPUNIT_TEST(test_iterators);
@@ -83,12 +85,12 @@ class NumArrayTest : public CppUnit::TestFixture
 };
 
 //------------------------------------------------------------------------------
-template<typename ATYPE> void NumArrayTest<ATYPE>::setUp(){ }
+template<typename ATYPE> void numarray_test<ATYPE>::setUp(){ }
 
 //------------------------------------------------------------------------------
-template<typename ATYPE> void NumArrayTest<ATYPE>::tearDown(){ } 
+template<typename ATYPE> void numarray_test<ATYPE>::tearDown(){ } 
 //------------------------------------------------------------------------------
-template<typename ATYPE> void NumArrayTest<ATYPE>::test_construction()
+template<typename ATYPE> void numarray_test<ATYPE>::test_construction()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
@@ -104,7 +106,7 @@ template<typename ATYPE> void NumArrayTest<ATYPE>::test_construction()
 }
 
 //------------------------------------------------------------------------------
-template<typename ATYPE> void NumArrayTest<ATYPE>::test_assignment()
+template<typename ATYPE> void numarray_test<ATYPE>::test_assignment()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
@@ -130,7 +132,7 @@ template<typename ATYPE> void NumArrayTest<ATYPE>::test_assignment()
 }
 
 //------------------------------------------------------------------------------
-template<typename ATYPE> void NumArrayTest<ATYPE>::test_linear_access()
+template<typename ATYPE> void numarray_test<ATYPE>::test_linear_access()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
@@ -162,7 +164,7 @@ template<typename ATYPE> void NumArrayTest<ATYPE>::test_linear_access()
 }
 
 //------------------------------------------------------------------------------
-template<typename ATYPE> void NumArrayTest<ATYPE>::test_iterators()
+template<typename ATYPE> void numarray_test<ATYPE>::test_iterators()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
@@ -215,7 +217,7 @@ template<typename ATYPE> void NumArrayTest<ATYPE>::test_iterators()
 }
 
 //-----------------------------------------------------------------------------
-template<typename ATYPE> void NumArrayTest<ATYPE>::test_multiindex_access()
+template<typename ATYPE> void numarray_test<ATYPE>::test_multiindex_access()
 {   
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
@@ -267,7 +269,7 @@ template<typename ATYPE> void NumArrayTest<ATYPE>::test_multiindex_access()
 }
 
 //------------------------------------------------------------------------------
-template<typename ATYPE> void NumArrayTest<ATYPE>::test_typeinfo()
+template<typename ATYPE> void numarray_test<ATYPE>::test_typeinfo()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
@@ -277,7 +279,7 @@ template<typename ATYPE> void NumArrayTest<ATYPE>::test_typeinfo()
 }
 
 //-------------------------------------------------------------------------------
-template<typename ATYPE> void NumArrayTest<ATYPE>::test_unary_add()
+template<typename ATYPE> void numarray_test<ATYPE>::test_unary_add()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
@@ -333,7 +335,7 @@ template<typename ATYPE> void NumArrayTest<ATYPE>::test_unary_add()
 }
 
 //-----------------------------------------------------------------------------
-template<typename ATYPE> void NumArrayTest<ATYPE>::test_unary_sub()
+template<typename ATYPE> void numarray_test<ATYPE>::test_unary_sub()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
@@ -389,7 +391,7 @@ template<typename ATYPE> void NumArrayTest<ATYPE>::test_unary_sub()
 }
 
 //-----------------------------------------------------------------------------
-template<typename ATYPE> void NumArrayTest<ATYPE>::test_unary_mult()
+template<typename ATYPE> void numarray_test<ATYPE>::test_unary_mult()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
@@ -445,7 +447,7 @@ template<typename ATYPE> void NumArrayTest<ATYPE>::test_unary_mult()
 }
 
 //-----------------------------------------------------------------------------
-template<typename ATYPE> void NumArrayTest<ATYPE>::test_unary_div()
+template<typename ATYPE> void numarray_test<ATYPE>::test_unary_div()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
@@ -502,7 +504,7 @@ template<typename ATYPE> void NumArrayTest<ATYPE>::test_unary_div()
 }
 
 //-----------------------------------------------------------------------------
-template<typename ATYPE> void NumArrayTest<ATYPE>::test_view()
+template<typename ATYPE> void numarray_test<ATYPE>::test_view()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 

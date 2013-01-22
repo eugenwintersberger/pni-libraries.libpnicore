@@ -36,7 +36,7 @@ sources_list.extend(["index_map_test.cpp"])
 
 sources_list.extend(["sarray_test.cpp"])
 sources_list.extend(["darray_test.cpp"])
-sources_list.extend(["NumArrayTest.cpp"])
+sources_list.extend(["numarray_test.cpp"])
 sources_list.extend(["EqualityCheck.cpp"])
 sources_list.extend(["configuration_test.cpp"])
 sources_list.extend(["counter_test.cpp"])

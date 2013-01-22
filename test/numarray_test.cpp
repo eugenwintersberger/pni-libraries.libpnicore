@@ -25,12 +25,12 @@
 #include <iostream>
 #include <boost/shared_ptr.hpp>
 
-#include "NumArrayTest.hpp"
+#include "numarray_test.hpp"
 
 using namespace pni::core;
 
 #define NUMARRAY_TEST_REGISTRATION(ATYPE,VTYPE)\
-static CPPUNIT_NS::AutoRegisterSuite< NumArrayTest<ATYPE<VTYPE> > >  \
+static CPPUNIT_NS::AutoRegisterSuite< numarray_test<ATYPE<VTYPE> > >  \
              CPPUNIT_MAKE_UNIQUE_NAME(autoRegisterRegistry__ )
 
 NUMARRAY_TEST_REGISTRATION(DArray,UInt8);
