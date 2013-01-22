@@ -137,7 +137,6 @@ void numarray_test<ATYPE,IPAT>::test_assignment()
 }
 
 //------------------------------------------------------------------------------
-<<<<<<< HEAD:test/NumArrayTest.hpp
 template<typename ATYPE,template<typename> class IPAT> 
 void numarray_test<ATYPE,IPAT>::test_linear_access()
 {
