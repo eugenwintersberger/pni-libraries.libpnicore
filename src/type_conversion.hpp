@@ -32,7 +32,7 @@
 using namespace boost::numeric;
 
 #include "Exceptions.hpp"
-#include "TypeInfo.hpp"
+#include "type_info.hpp"
 
 
 namespace pni{
@@ -54,7 +54,7 @@ namespace core{
     \sa class ConversionStrategy<T,U,true,true>
     */
     template<typename T, typename U,bool t_complex,bool u_complex>
-    class ConversionStrategy{
+    class conversion_strategy{
         public:
             /*! \brief convert U to T
 
@@ -98,7 +98,7 @@ namespace core{
     of the conversion operation (which is of type U) is converted to the
     base type of T and assigned to the real part of the complex value.
     */
-    template<typename T,typename U> class ConversionStrategy<T,U,true,false>{
+    template<typename T,typename U> class conversion_strategy<T,U,true,false>{
         public:
             /*! \brief convert U to T
 
@@ -144,7 +144,7 @@ namespace core{
     A specialization of the ConversionStrategy template for the case that
     both types are complex. In this case the conversion is straight forward.
     */
-    template<typename T,typename U> class ConversionStrategy<T,U,true,true>{
+    template<typename T,typename U> class conversion_strategy<T,U,true,true>{
         public:
             /*! \brief convert U to T
 
@@ -197,7 +197,7 @@ namespace core{
     \param u value of type U
     \return value of u converted to T
     */
-    template<typename T,typename U> T convert_type(const U &u)
+    template<typename T,typename U> T convert(const U &u)
     {
         
         //static assert of the source type is float and T is an integer type
@@ -208,14 +208,14 @@ namespace core{
 
         //need to check for complex types - you cannot convert a complex type
         //to a non-complex type
-        BOOST_STATIC_ASSERT(!((!TypeInfo<T>::is_complex)&&
-                              (TypeInfo<U>::is_complex)));
+        BOOST_STATIC_ASSERT(!((!type_info<T>::is_complex)&&
+                              (type_info<U>::is_complex)));
 
         T value;
         try
         {
-            value = ConversionStrategy<T,U,TypeInfo<T>::is_complex,
-                                     TypeInfo<U>::is_complex >::convert(u);
+            value = ConversionStrategy<T,U,type_info<T>::is_complex,
+                                     type_info<U>::is_complex >::convert(u);
         }
         catch(TypeError &e)
         {

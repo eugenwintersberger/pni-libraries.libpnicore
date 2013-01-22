@@ -24,92 +24,92 @@
  *
  */
 
-#include "ComplexUtils.hpp"
+#include "complex_utils.hpp"
 
 namespace pni{
 namespace core{
 
     //-------------------------------------------------------------------------
-    bool operator==(const Complex32 &a,const Complex64 &b)
+    bool operator==(const complex32 &a,const complex64 &b)
     {
-        Complex64 _a(a.real(),a.imag());
+        complex64 _a(a.real(),a.imag());
 
         return (_a == b);
     }
 
     //-------------------------------------------------------------------------
-    bool operator==(const Complex32 &a,const Complex128 &b)
+    bool operator==(const complex32 &a,const complex128 &b)
     {
-        Complex64 _a(a.real(),a.imag());
+        complex64 _a(a.real(),a.imag());
 
         return (_a == b);
     }
 
     //-------------------------------------------------------------------------
-    bool operator==(const Complex64 &a,const Complex32 &b)
+    bool operator==(const complex64 &a,const complex32 &b)
     {
-        Complex64 _b(b.real(),b.imag());
+        complex64 _b(b.real(),b.imag());
         return (a == _b);
     }
 
     //-------------------------------------------------------------------------
-    bool operator==(const Complex64 &a,const Complex128 &b)
+    bool operator==(const complex64 &a,const complex128 &b)
     {
-        Complex128 _a(a.real(),a.imag());
+        complex128 _a(a.real(),a.imag());
         return(_a == b);
     }
 
     //-------------------------------------------------------------------------
-    bool operator==(const Complex128 &a,const Complex32 &b)
+    bool operator==(const complex128 &a,const complex32 &b)
     {
-        Complex128 _b(b.real(),b.imag());
+        complex128 _b(b.real(),b.imag());
         return(_b == a);
     }
 
     //-------------------------------------------------------------------------
-    bool operator==(const Complex128 &a,const Complex64 &b)
+    bool operator==(const complex128 &a,const complex64 &b)
     {
-        Complex128 _b(b.real(),b.imag());
+        complex128 _b(b.real(),b.imag());
         return(_b == a);
     }
 
     //-------------------------------------------------------------------------
-    bool operator!=(const Complex32 &a,const Complex64 &b)
+    bool operator!=(const complex32 &a,const complex64 &b)
     {
         if(a == b) return false;
         return true;
     }
 
     //-------------------------------------------------------------------------
-    bool operator!=(const Complex32 &a,const Complex128 &b)
+    bool operator!=(const complex32 &a,const complex128 &b)
     {
         if(a==b) return false;
         return true;
     }
 
     //-------------------------------------------------------------------------
-    bool operator!=(const Complex64 &a,const Complex32 &b)
+    bool operator!=(const complex64 &a,const complex32 &b)
     {
         if(a==b) return false;
         return true;
     }
 
     //-------------------------------------------------------------------------
-    bool operator!=(const Complex64 &a,const Complex128 &b)
+    bool operator!=(const complex64 &a,const complex128 &b)
     {
         if(a==b) return false;
         return true;
     }
 
     //-------------------------------------------------------------------------
-    bool operator!=(const Complex128 &a,const Complex32 &b)
+    bool operator!=(const complex128 &a,const complex32 &b)
     {
         if(a==b) return false;
         return true;
     }
 
     //-------------------------------------------------------------------------
-    bool operator!=(const Complex128 &a,const Complex64 &b)
+    bool operator!=(const complex128 &a,const complex64 &b)
     {
         if(a==b) return false;
         return true;

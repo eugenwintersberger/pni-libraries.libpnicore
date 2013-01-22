@@ -29,7 +29,7 @@
 
 #include <limits>
 
-#include "Types.hpp"
+#include "types.hpp"
 #include "Exceptions.hpp"
 
 namespace pni{
@@ -43,15 +43,15 @@ namespace core{
     is used to obtain information about types in other classes like arrays and
     scalars.
     */
-    template<typename T> class TypeInfo
+    template<typename T> class type_info
     {
         public:
             //==================public types===================================
             //! the type of T
-            typedef T Type;        
+            typedef T type;        
            
             //! the base type (only interesting for complex types)
-            typedef T BaseType;    
+            typedef T base_type;    
             
             //=================static members==================================
             //! size of the type in bytes
@@ -112,29 +112,29 @@ namespace core{
 
 
     //! \cond NO_API_DOC
-    template<> class TypeInfo<Complex32>
+    template<> class type_info<complex32>
     {
         public:
 
-            typedef Complex32 Type;
-            typedef Float32 BaseType;
+            typedef complex32 type;
+            typedef float32 base_type;
 
-            static const size_t size = sizeof(Complex32);
-            static const bool is_integer = std::numeric_limits<Float32>::is_integer;
-            static const bool is_signed = std::numeric_limits<Float32>::is_signed;
+            static const size_t size = sizeof(complex32);
+            static const bool is_integer = std::numeric_limits<float32>::is_integer;
+            static const bool is_signed = std::numeric_limits<float32>::is_signed;
             static const bool is_complex = true;
 
             //---------------------------------------------------------------------
-            static bool is_negative(Complex32 value){ return false; }
+            static bool is_negative(complex32 value){ return false; }
 
 
             //---------------------------------------------------------------------
             //! return the minimum value of the Complex32 type
-            static Float32 min() { return -std::numeric_limits<Float32>::max(); }
+            static float32 min() { return -std::numeric_limits<float32>::max(); }
 
             //---------------------------------------------------------------------
             //! return the maximum value of the Complex32 type
-            static Float32 max() { return std::numeric_limits<Float32>::max(); }
+            static float32 max() { return std::numeric_limits<float32>::max(); }
 
     };
 
@@ -142,42 +142,42 @@ namespace core{
 
     //! \ingroup Data-objects
     //! \brief PNITypes specialization for 64Bit IEEE floating point complex type
-    template<> class TypeInfo<Complex64>
+    template<> class type_info<complex64>
     {
         public:
 
-            typedef Complex64 Type;
-            typedef Float64 BaseType;
+            typedef complex64 type;
+            typedef float64 base_type;
 
-            static const size_t size = sizeof(Complex64);
-            static const bool is_integer = std::numeric_limits<Float64>::is_integer;
-            static const bool is_signed = std::numeric_limits<Float64>::is_signed;
+            static const size_t size = sizeof(complex64);
+            static const bool is_integer = std::numeric_limits<float64>::is_integer;
+            static const bool is_signed = std::numeric_limits<float64>::is_signed;
             static const bool is_complex = true;
 
             //-----------------------------------------------------------------
-            static bool is_negative(Complex64 value){ return false; }
+            static bool is_negative(complex64 value){ return false; }
 
             //-----------------------------------------------------------------
             //! return the minimum value of the Complex64 type
-            static Float64 min() { return -std::numeric_limits<Float64>::max(); }
+            static float64 min() { return -std::numeric_limits<float64>::max(); }
 
             //-----------------------------------------------------------------
             //! return the maximum value of the Complex64 type
-            static Float64 max() { return std::numeric_limits<Float64>::max(); }
+            static float64 max() { return std::numeric_limits<float64>::max(); }
 
     };
 
     //! \ingroup Data-objects
     //! \brief PNITypes specialization for 128Bit IEEE floating point complex type
-    template<> class TypeInfo<Complex128>
+    template<> class type_info<complex128>
     {
         public:
-            typedef Complex128 Type;
-            typedef Float128 BaseType;
+            typedef complex128 type;
+            typedef float128 base_type;
 
-            static const size_t size = sizeof(Complex128);
-            static const bool is_integer = std::numeric_limits<Float128>::is_integer;
-            static const bool is_signed = std::numeric_limits<Float128>::is_signed;
+            static const size_t size = sizeof(complex128);
+            static const bool is_integer = std::numeric_limits<float128>::is_integer;
+            static const bool is_signed = std::numeric_limits<float128>::is_signed;
             static const bool is_complex = true;
 
             //-----------------------------------------------------------------
@@ -185,22 +185,22 @@ namespace core{
 
             //-----------------------------------------------------------------
             //! return the minimum value of the Complex128 type
-            static Float128 min() { return -std::numeric_limits<Float128>::max(); }
+            static float128 min() { return -std::numeric_limits<float128>::max(); }
 
             //-----------------------------------------------------------------
             //! return the maximum value of the Complex128 type
-            static Float128 max() { return std::numeric_limits<Float128>::max(); }
+            static float128 max() { return std::numeric_limits<float128>::max(); }
     };
 
     //! \ingroup Data-objects
     //! \brief type info for bool
-    template<> class TypeInfo<Bool>
+    template<> class type_info<bool>
     {
         public:
-            typedef Bool Type;
-            typedef Bool BaseType;
+            typedef bool type;
+            typedef bool base_type;
 
-            static const size_t size = sizeof(Bool);
+            static const size_t size = sizeof(bool);
             static const bool is_integer = true;
             static const bool is_signed = false;
             static const bool is_complex = false;

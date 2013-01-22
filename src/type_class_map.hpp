@@ -23,7 +23,7 @@
  */
 #pragma once
 
-#include "Types.hpp"
+#include "types.hpp"
 
 namespace pni{
 namespace core{
@@ -35,10 +35,10 @@ namespace core{
 This macro creates a type to type class map specialization. 
 */
 #define CREATE_TYPE_CLASS_MAP(type,tclass)\
-    template<> class TypeClassMap<type>\
+    template<> class type_class_map<type>\
     {\
         public:\
-            static const TypeClass type_class = tclass;\
+            static const type_class_t type_class = tclass;\
     }
     
     /*!
@@ -48,34 +48,34 @@ This macro creates a type to type class map specialization.
     Template mapping a particular data type to its type class.
     \tparam T data type
     */
-    template<typename T> class TypeClassMap
+    template<typename T> class type_class_map
     {
         public:
             //! class of type T
-            static const TypeClass type_class = TypeClass::NONE;
+            static const type_class_t type_class = TypeClass::NONE;
     };
 
     //! \cond NO_API_DOC
-    CREATE_TYPE_CLASS_MAP(UInt8,TypeClass::INTEGER);
-    CREATE_TYPE_CLASS_MAP(Int8,TypeClass::INTEGER);
-    CREATE_TYPE_CLASS_MAP(UInt16,TypeClass::INTEGER);
-    CREATE_TYPE_CLASS_MAP(Int16,TypeClass::INTEGER);
-    CREATE_TYPE_CLASS_MAP(UInt32,TypeClass::INTEGER);
-    CREATE_TYPE_CLASS_MAP(Int32,TypeClass::INTEGER);
-    CREATE_TYPE_CLASS_MAP(UInt64,TypeClass::INTEGER);
-    CREATE_TYPE_CLASS_MAP(Int64,TypeClass::INTEGER);
+    CREATE_TYPE_CLASS_MAP(uint8,type_class_t::INTEGER);
+    CREATE_TYPE_CLASS_MAP(int8,type_class_t::INTEGER);
+    CREATE_TYPE_CLASS_MAP(uint16,type_class_t::INTEGER);
+    CREATE_TYPE_CLASS_MAP(int16,type_class_t::INTEGER);
+    CREATE_TYPE_CLASS_MAP(uint32,type_class_t::INTEGER);
+    CREATE_TYPE_CLASS_MAP(int32,type_class_t::INTEGER);
+    CREATE_TYPE_CLASS_MAP(uint64,type_class_t::INTEGER);
+    CREATE_TYPE_CLASS_MAP(int64,type_class_t::INTEGER);
     
-    CREATE_TYPE_CLASS_MAP(Float32,TypeClass::FLOAT);
-    CREATE_TYPE_CLASS_MAP(Float64,TypeClass::FLOAT);
-    CREATE_TYPE_CLASS_MAP(Float128,TypeClass::FLOAT);
+    CREATE_TYPE_CLASS_MAP(float32,type_class_t::FLOAT);
+    CREATE_TYPE_CLASS_MAP(float64,type_class_t::FLOAT);
+    CREATE_TYPE_CLASS_MAP(float128,type_class_t::FLOAT);
 
-    CREATE_TYPE_CLASS_MAP(Complex32,TypeClass::COMPLEX);
-    CREATE_TYPE_CLASS_MAP(Complex64,TypeClass::COMPLEX);
-    CREATE_TYPE_CLASS_MAP(Complex128,TypeClass::COMPLEX);
+    CREATE_TYPE_CLASS_MAP(complex32,type_class_t::COMPLEX);
+    CREATE_TYPE_CLASS_MAP(complex64,type_class_t::COMPLEX);
+    CREATE_TYPE_CLASS_MAP(complex128,type_class_t::COMPLEX);
 
-    CREATE_TYPE_CLASS_MAP(Bool,TypeClass::BOOL);
-    CREATE_TYPE_CLASS_MAP(Binary,TypeClass::BINARY);
-    CREATE_TYPE_CLASS_MAP(String,TypeClass::STRING);
+    CREATE_TYPE_CLASS_MAP(bool,type_class_t::BOOL);
+    CREATE_TYPE_CLASS_MAP(binary,type_class_t::BINARY);
+    CREATE_TYPE_CLASS_MAP(string,type_class_t::STRING);
 
     //! \endcond NO_API_DOC
 

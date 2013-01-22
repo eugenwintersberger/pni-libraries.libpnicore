@@ -26,8 +26,8 @@
 
 #pragma once
 
-#include "Types.hpp"
-#include "TypeInfo.hpp"
+#include "types.hpp"
+#include "type_info.hpp"
 
 namespace pni{
 namespace core{
@@ -35,7 +35,7 @@ namespace core{
     //-------------------------------------------------------------------------
     template<typename C,typename O> C __convert(const O &v)
     {
-        if(TypeInfo<O>::is_complex) return C(v.real(),v.imag());
+        if(type_info<O>::is_complex) return C(v.real(),v.imag());
 
         return C(v);
     }
@@ -51,7 +51,7 @@ namespace core{
     \param b 64-Bit complex value
     \return true if equal.
     */
-    bool operator==(const Complex32 &a,const Complex64 &b);
+    bool operator==(const complex32 &a,const complex64 &b);
     
     //-------------------------------------------------------------------------
     /*!
@@ -64,7 +64,7 @@ namespace core{
     \param b 128-Bit complex value
     \return true if equal.
     */
-    bool operator==(const Complex32 &a,const Complex128 &b);
+    bool operator==(const complex32 &a,const complex128 &b);
 
     //-------------------------------------------------------------------------
     /*!
@@ -77,7 +77,7 @@ namespace core{
     \param b 32-Bit complex value
     \return true if equal.
     */
-    bool operator==(const Complex64 &a,const Complex32 &b);
+    bool operator==(const complex64 &a,const complex32 &b);
     
     //-------------------------------------------------------------------------
     /*!
@@ -90,7 +90,7 @@ namespace core{
     \param b 128-Bit complex value
     \return true if equal.
     */
-    bool operator==(const Complex64 &a,const Complex128 &b);
+    bool operator==(const complex64 &a,const complex128 &b);
 
     //-------------------------------------------------------------------------
     /*!
@@ -103,7 +103,7 @@ namespace core{
     \param b 32-Bit complex value
     \return true if equal.
     */
-    bool operator==(const Complex128 &a,const Complex32 &b);
+    bool operator==(const complex128 &a,const complex32 &b);
     
     //-------------------------------------------------------------------------
     /*!
@@ -116,7 +116,7 @@ namespace core{
     \param b 64-Bit complex value
     \return true if equal.
     */
-    bool operator==(const Complex128 &a,const Complex64 &b);
+    bool operator==(const complex128 &a,const complex64 &b);
 
     //-------------------------------------------------------------------------
     /*!
@@ -129,7 +129,7 @@ namespace core{
     \param b 64-Bit complex value
     \return true if equal.
     */
-    bool operator!=(const Complex32 &a,const Complex64 &b);
+    bool operator!=(const complex32 &a,const complex64 &b);
     
     //-------------------------------------------------------------------------
     /*!
@@ -142,7 +142,7 @@ namespace core{
     \param b 128-Bit complex value
     \return true if equal.
     */
-    bool operator!=(const Complex32 &a,const Complex128 &b);
+    bool operator!=(const complex32 &a,const complex128 &b);
 
     //-------------------------------------------------------------------------
     /*!
@@ -155,7 +155,7 @@ namespace core{
     \param b 32-Bit complex value
     \return true if equal.
     */
-    bool operator!=(const Complex64 &a,const Complex32 &b);
+    bool operator!=(const complex64 &a,const complex32 &b);
     
     //-------------------------------------------------------------------------
     /*!
@@ -168,7 +168,7 @@ namespace core{
     \param b 128-Bit complex value
     \return true if equal.
     */
-    bool operator!=(const Complex64 &a,const Complex128 &b);
+    bool operator!=(const complex64 &a,const complex128 &b);
 
     //-------------------------------------------------------------------------
     /*!
@@ -181,7 +181,7 @@ namespace core{
     \param b 32-Bit complex value
     \return true if equal.
     */
-    bool operator!=(const Complex128 &a,const Complex32 &b);
+    bool operator!=(const complex128 &a,const complex32 &b);
     
     //-------------------------------------------------------------------------
     /*!
@@ -194,7 +194,7 @@ namespace core{
     \param b 64-Bit complex value
     \return true if equal.
     */
-    bool operator!=(const Complex128 &a,const Complex64 &b);
+    bool operator!=(const complex128 &a,const complex64 &b);
 
 //end of namespace
 }

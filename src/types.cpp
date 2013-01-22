@@ -24,32 +24,32 @@
  *
  */
 
-#include "Types.hpp"
+#include "types.hpp"
 
 namespace pni{
 namespace core{
 
     //! output operator for TypeID
-    std::ostream &operator<<(std::ostream &o,const TypeID &tid)
+    std::ostream &operator<<(std::ostream &o,const type_id_t &tid)
     {
-        if(tid==TypeID::NONE) {o<<"NONE"; return o;}
-        if(tid==TypeID::INT8) {o<<"INT8"; return o;}
-	    if(tid==TypeID::UINT8) {o<<"UINT8"; return o;}
-		if(tid==TypeID::INT16) {o<<"INT16"; return o;}
-		if(tid==TypeID::UINT16) {o<<"UINT16"; return o;}
-		if(tid==TypeID::INT32) {o<<"INT32"; return o;}
-		if(tid==TypeID::UINT32) {o<<"UINT32"; return o;}
-		if(tid==TypeID::INT64) {o<<"INT64"; return o;}
-		if(tid==TypeID::UINT64) {o<<"UINT64"; return o;}
-	    if(tid==TypeID::FLOAT32) {o<<"FLOAT32"; return o;}
-	    if(tid==TypeID::FLOAT64) {o<<"FLOAT64"; return o;}
-	    if(tid==TypeID::FLOAT128) {o<<"FLOAT128"; return o;}
-	    if(tid==TypeID::COMPLEX32) {o<<"COMPLEX32"; return o;}
-	    if(tid==TypeID::COMPLEX64) {o<<"COMPLEX64"; return o;}
-	    if(tid==TypeID::COMPLEX128) {o<<"COMPLEX128"; return o;}
-	    if(tid==TypeID::STRING) {o<<"STRING"; return o;}
-	    if(tid==TypeID::BINARY) {o<<"BINARY"; return o;}
-	    if(tid==TypeID::BOOL) {o<<"BOOL"; return o;}
+        if(tid==type_id_t::NONE) {o<<"NONE"; return o;}
+        if(tid==type_id_t::INT8) {o<<"INT8"; return o;}
+	    if(tid==type_id_t::UINT8) {o<<"UINT8"; return o;}
+		if(tid==type_id_t::INT16) {o<<"INT16"; return o;}
+		if(tid==type_id_t::UINT16) {o<<"UINT16"; return o;}
+		if(tid==type_id_t::INT32) {o<<"INT32"; return o;}
+		if(tid==type_id_t::UINT32) {o<<"UINT32"; return o;}
+		if(tid==type_id_t::INT64) {o<<"INT64"; return o;}
+		if(tid==type_id_t::UINT64) {o<<"UINT64"; return o;}
+	    if(tid==type_id_t::FLOAT32) {o<<"FLOAT32"; return o;}
+	    if(tid==type_id_t::FLOAT64) {o<<"FLOAT64"; return o;}
+	    if(tid==type_id_t::FLOAT128) {o<<"FLOAT128"; return o;}
+	    if(tid==type_id_t::COMPLEX32) {o<<"COMPLEX32"; return o;}
+	    if(tid==type_id_t::COMPLEX64) {o<<"COMPLEX64"; return o;}
+	    if(tid==type_id_t::COMPLEX128) {o<<"COMPLEX128"; return o;}
+	    if(tid==type_id_t::STRING) {o<<"STRING"; return o;}
+	    if(tid==type_id_t::BINARY) {o<<"BINARY"; return o;}
+	    if(tid==type_id_t::BOOL) {o<<"BOOL"; return o;}
 
         //this is just to make the compiler happy - we should never come here.
         return o; 
@@ -58,28 +58,28 @@ namespace core{
     //handle missing comparison operators for class enum types for some
     //compilers.
 #ifdef ENUMBUG
-    bool operator<(TypeID a,TypeID b) { return int(a)<int(b); }
+    bool operator<(type_id_t a,type_id_t b) { return int(a)<int(b); }
 
     //-------------------------------------------------------------------------
-    bool operator>(TypeID a,TypeID b) { return int(a)>int(b); }
+    bool operator>(type_id_t a,type_id_t b) { return int(a)>int(b); }
 
     //-------------------------------------------------------------------------
-    bool operator<=(TypeID a,TypeID b) { return int(a)<=int(b); }
+    bool operator<=(type_id_t a,type_id_t b) { return int(a)<=int(b); }
 
     //-------------------------------------------------------------------------
-    bool operator>=(TypeID a,TypeID b) { return int(a)>=int(b); }
+    bool operator>=(type_id_t a,type_id_t b) { return int(a)>=int(b); }
 
     //-------------------------------------------------------------------------
-    bool operator<(TypeClass a,TypeClass b) { return int(a)<int(b); }
+    bool operator<(type_class_t a,type_class_t b) { return int(a)<int(b); }
 
     //-------------------------------------------------------------------------
-    bool operator>(TypeClass a,TypeClass b) { return int(a)>int(b); }
+    bool operator>(type_class_t a,type_class_t b) { return int(a)>int(b); }
 
     //-------------------------------------------------------------------------
-    bool operator<=(TypeClass a,TypeClass b) { return int(a)<=int(b); }
+    bool operator<=(type_class_t a,type_class_t b) { return int(a)<=int(b); }
 
     //-------------------------------------------------------------------------
-    bool operator>=(TypeClass a,TypeClass b) { return int(a)>=int(b); }
+    bool operator>=(type_class_t a,type_class_t b) { return int(a)>=int(b); }
 #endif
 //end of namespace 
 }
