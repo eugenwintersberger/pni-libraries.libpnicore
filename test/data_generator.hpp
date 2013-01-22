@@ -47,3 +47,4 @@ void data_generator::fill(ITTARGET &&begin,ITTARGET &&end,
     for(auto iter = begin;iter!=end;++iter)
         *iter = gen();
 }
+    

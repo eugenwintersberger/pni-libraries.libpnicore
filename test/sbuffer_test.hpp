@@ -31,13 +31,14 @@
 
 #include "RandomDistributions.hpp"
 #include "EqualityCheck.hpp"
+#include "data_generator.hpp"
+#include "uniform_distribution.hpp"
 
 using namespace pni::core;
 
-template<typename T> 
-class SBufferTest:public CppUnit::TestFixture
+template<typename T> class sbuffer_test:public CppUnit::TestFixture
 {
-        CPPUNIT_TEST_SUITE(SBufferTest);
+        CPPUNIT_TEST_SUITE(sbuffer_test);
         CPPUNIT_TEST(test_constructors);
         CPPUNIT_TEST(test_access);
         CPPUNIT_TEST(test_assignment);
@@ -46,7 +47,6 @@ class SBufferTest:public CppUnit::TestFixture
         CPPUNIT_TEST_SUITE_END();
     private:
         UInt64 n1,n2;
-
 
     public:
         void setUp();
@@ -64,13 +64,13 @@ class SBufferTest:public CppUnit::TestFixture
 #define N2 2000
 
 //-----------------------------------------------------------------------------
-template<typename T> void SBufferTest<T>::setUp() { }
+template<typename T> void sbuffer_test<T>::setUp() { }
 
 //-----------------------------------------------------------------------------
-template<typename T> void SBufferTest<T>::tearDown() { }
+template<typename T> void sbuffer_test<T>::tearDown() { }
 
 //------------------------------------------------------------------------------
-template<typename T> void SBufferTest<T>::test_constructors()
+template<typename T> void sbuffer_test<T>::test_constructors()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
@@ -82,124 +82,91 @@ template<typename T> void SBufferTest<T>::test_constructors()
     //using copy constructor
     SBuffer<T,N1> b2(b1);
     CPPUNIT_ASSERT(b1.size() == b2.size());
-
-    SBuffer<T,3> b3{1,2,3};
 }
 
 //------------------------------------------------------------------------------
-template<typename T> void SBufferTest<T>::test_assignment()
+template<typename T> void sbuffer_test<T>::test_assignment()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
 	//testing here the assignment of equally typed buffers
 	SBuffer<T,N1> buffer1;
 	SBuffer<T,N1> buffer2;
-   
-    
-    std::fill(buffer1.begin(),buffer1.end(),T(100));
-    std::fill(buffer2.begin(),buffer2.end(),T(100));
-#ifdef NOFOREACH
-    for(auto iter = buffer1.begin();iter!=buffer1.end();++iter)
-    {
-        auto v = *iter;
-#else
-    for(auto v: buffer1)
-    {
-#endif
-        CPPUNIT_ASSERT(v == T(100));
-    }
 
-#ifdef NOFOREACH
-    for(auto iter=buffer2.begin();iter!=buffer2.end();++iter)
-    {
-        auto v = *iter;
-#else
-    for(auto v: buffer2)
-    {
-#endif
-        CPPUNIT_ASSERT(v == T(100));
-    }
+    data_generator::fill(buffer1.begin(),buffer1.end(),
+                         uniform_distribution<T>());
+    data_generator::fill(buffer2.begin(),buffer2.end(),
+                         uniform_distribution<T>());
+   
+    buffer1 = buffer2;    
 
     CPPUNIT_ASSERT(buffer1 == buffer2);
 
-    SBuffer<T,N2> buffer3;
-
 }
 
 //------------------------------------------------------------------------------
-template<typename T> void SBufferTest<T>::test_access()
+template<typename T> void sbuffer_test<T>::test_access()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
+    std::vector<T> data(N1);
 	SBuffer<T,N1> dbuffer;
+   
+    data_generator::fill(data.begin(),data.end(),uniform_distribution<T>());
 
 	for(size_t i=0;i<N1;i++) 
-        CPPUNIT_ASSERT_NO_THROW(dbuffer[i] = T(i));
+        CPPUNIT_ASSERT_NO_THROW(dbuffer[i] = data[i]);
 
 	for(size_t i=0;i<N1;i++)
-		CPPUNIT_ASSERT(T(i)==dbuffer[i]);
+        check_equality(data[i],dbuffer[i]);
 
     SBuffer<T,N2> ibuffer;
+    data = std::vector<T>(N2);
+    data_generator::fill(data.begin(),data.end(),uniform_distribution<T>());
     for(size_t i=0;i<ibuffer.size();i++)
-        CPPUNIT_ASSERT_NO_THROW(ibuffer.at(i) = T(i));
+        CPPUNIT_ASSERT_NO_THROW(ibuffer.at(i) = data[i]);
 
     for(size_t i=0;i<ibuffer.size();i++)
-        CPPUNIT_ASSERT(ibuffer.at(i) == T(i));
+        check_equality(ibuffer.at(i),data[i]);
 
     //check for IndexError exception
-    CPPUNIT_ASSERT_THROW(ibuffer.at(10000),IndexError);
+    CPPUNIT_ASSERT_THROW(ibuffer.at(N2+10),IndexError);
 }
 
 //------------------------------------------------------------------------------
-template<typename T> void SBufferTest<T>::test_comparison()
+template<typename T> void sbuffer_test<T>::test_comparison()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
 	SBuffer<T,100> b1;
 	SBuffer<T,100> b2;
 
-    std::fill(b1.begin(),b1.end(),T(1));
-    std::fill(b2.begin(),b2.end(),T(2));
+    data_generator::fill(b1.begin(),b1.end(),uniform_distribution<T>());
+    std::fill(b2.begin(),b2.end(),uniform_distribution<T>()());
 
-	CPPUNIT_ASSERT(b1 != b2);
-    std::fill(b2.begin(),b2.end(),T(1));
+	CPPUNIT_ASSERT(!std::equal(b1.begin(),b1.end(),b2.begin()));
+    std::copy(b2.begin(),b2.end(),b1.begin());
 	CPPUNIT_ASSERT(b1 == b2);
 }
 
 //-----------------------------------------------------------------------------
-template<typename T> void SBufferTest<T>::test_iterator()
+template<typename T> void sbuffer_test<T>::test_iterator()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
+    std::vector<T> data(1000);
     SBuffer<T,1000> b1;
-
-    auto data = RandomDistribution::uniform<std::vector<T> >(1000);
+    
+    data_generator::fill(data.begin(),data.end(),uniform_distribution<T>());
    
-    size_t index = 0;
-    std::cout<<"writing data to buffer ..."<<std::endl;
-#ifdef NOFOREACH
+    //writting data via iterator
+    typename std::vector<T>::const_iterator diter=data.begin();
     for(auto iter = b1.begin();iter!=b1.end();++iter)
-    {
-        T &v = *iter;
-#else
-    for(T &v: b1)
-    {
-#endif
-        CPPUNIT_ASSERT_NO_THROW(v = data[index++]);
-    }
+        CPPUNIT_ASSERT_NO_THROW(*iter = *diter++);
 
     //read data back
-    index = 0;
-    std::cout<<"reading data from buffer ..."<<std::endl;
-#ifdef NOFOREACH
+    diter = data.begin();
     for(auto iter=b1.begin();iter!=b1.end();++iter)
-    {
-        auto v = *iter;
-#else
-    for(auto v: b1)
-    {
-#endif
-        check_equality(v,data[index++]);
-    }
+        check_equality(*iter,*diter++);
 
 }
