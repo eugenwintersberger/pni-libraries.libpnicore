@@ -24,7 +24,7 @@
  *
  */
 
-#include "ExceptionUtils.hpp"
+#include "exception_utils.hpp"
 
 namespace pni{
 namespace core{
@@ -32,13 +32,13 @@ namespace core{
     //=====================implementation of helper functions===================
 
     //-------------------------------------------------------------------------
-    void check_index(size_t index,size_t maxindex,const ExceptionRecord &i)
+    void check_index(size_t index,size_t maxindex,const exception_record &i)
     {
         if(index>=maxindex)
         {
             std::stringstream ss;
             ss<<"Index ("<<index<<") exceeds maximum value ("<<maxindex<<")!";
-            throw IndexError(i,ss.str());
+            throw index_error(i,ss.str());
         }
     }
 

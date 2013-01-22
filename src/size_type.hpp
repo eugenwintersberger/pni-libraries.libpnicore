@@ -37,7 +37,7 @@ namespace core{
     \endcode
     will output 60 on the terminal.
     */
-    template<size_t ...indices> class SizeType;
+    template<size_t ...indices> class size_type;
 
     /*! 
     \ingroup util_classes
@@ -45,15 +45,15 @@ namespace core{
 
     The first real specialization of the SizeType template. 
     */
-    template<size_t i,size_t ...indices> class SizeType<i,indices...>
+    template<size_t i,size_t ...indices> class size_type<i,indices...>
     {
         public:
             //!< size
-            static const size_t size = i*SizeType<indices...>::size;
+            static const size_t size = i*size_type<indices...>::size;
     };
 
     //! type breaking the template recursion
-    template<> class SizeType<>
+    template<> class size_type<>
     {
         public:
             static const size_t size = 1; //!< size

@@ -30,7 +30,7 @@
 #include <typeinfo>
 #include <algorithm>
 
-#include "Exceptions.hpp"
+#include "exceptions.hpp"
 #include "service.hpp"
 
 namespace pni{
@@ -45,14 +45,14 @@ namespace core{
     two objects. It is typically used to compare the size of a shape and a 
     buffer or any other container object. 
     If the sizes do not match an exception is thrown.
-    \throws SizeMissmatchError if sizes do not match
+    \throws size_missmatch_error if sizes do not match
     \param a first object
     \param b second object
-    \param i ExceptionRecord for the location where to perform the check
+    \param i exception_record for the location where to perform the check
     performed
     */
     template<typename A,typename B> 
-        void check_equal_size(const A &a,const B &b,const ExceptionRecord &i)
+        void check_equal_size(const A &a,const B &b,const exception_record &i)
     {
         if(a.size() != b.size())
         {
@@ -61,7 +61,7 @@ namespace core{
             ss<<a.size()<<") ";
             ss<<"does not match size of "<<demangle_cpp_name(typeid(B).name())<<" (";
             ss<<b.size()<<")!";
-            throw SizeMissmatchError(i,String(ss.str()));
+            throw size_missmatch_error(i,string(ss.str()));
         }
     }
 
@@ -72,13 +72,13 @@ namespace core{
 
     This utilty function can be used to check if an index exeeds a particular
     value.
-    \throws IndexError if i exceeds imax
+    \throws index_error if i exceeds imax
     \param index actual index
     \param maxindex maximum value
-    \param i ExceptionRecord for the location where to perform the check
+    \param i exception_record for the location where to perform the check
     performed
     */
-    void check_index(size_t index,size_t maxindex,const ExceptionRecord &i);
+    void check_index(size_t index,size_t maxindex,const exception_record &i);
 
 
     //-------------------------------------------------------------------------
@@ -90,13 +90,13 @@ namespace core{
     not.
     \tparam A container type for the first shape
     \tparam B container type for the second shape
-    \throws ShapeMissmatchError if shapes do not match
+    \throws shape_missmatch_error if shapes do not match
     \param a first shape
     \param b second shape
-    \param i ExceptionRecord for the location where to perform the check
+    \param i exception_record for the location where to perform the check
     */
     template<typename A,typename B>
-    void check_equal_shape(const A &a,const B &b,const ExceptionRecord &i)
+    void check_equal_shape(const A &a,const B &b,const exception_record &i)
     {
         auto sa = a.template shape<std::vector<size_t> >();
         auto sb = b.template shape<std::vector<size_t> >();
@@ -131,7 +131,7 @@ namespace core{
             ss<<") do not match";
 
             //construct exception
-            throw ShapeMissmatchError(i,ss.str());
+            throw shape_missmatch_error(i,ss.str());
         }
     }
 
@@ -142,19 +142,19 @@ namespace core{
 
     Checks the allocation state of an allocateable object. If the object is not
     allocated an exception will be thrown.
-    \throws MemoryNotAllocatedError if object not allocated
+    \throws memory_not_allocated_error if object not allocated
     \param o object to check
-    \param i ExceptionRecord for the location where to perform the check
+    \param i exception_record for the location where to perform the check
     */
     template<typename OTYPE> void
-        check_allocation_state(const OTYPE &o,const ExceptionRecord &i)
+        check_allocation_state(const OTYPE &o,const exception_record &i)
     {
         if(!o.size())
         {
             std::stringstream ss;
             ss<<"Instance of "<<demangle_cpp_name(typeid(OTYPE).name());
             ss<<" not allocated!";
-            throw MemoryNotAllocatedError(i,ss.str());
+            throw memory_not_allocated_error(i,ss.str());
         }
     }
 
@@ -164,18 +164,18 @@ namespace core{
     \brief check pointer state
 
     Checks if a pointer is nullptr or not and throws an exception if it is.
-    \throws MemoryNotAllocatedError if pointer is a nullptr
+    \throws memory_not_allocated_error if pointer is a nullptr
     \param ptr pointer to check
-    \param i ExceptionRecord for the location where to perform the check
+    \param i exception_record for the location where to perform the check
     */
     template<typename T> 
-        void check_ptr_state(const T *ptr,const ExceptionRecord &i)
+        void check_ptr_state(const T *ptr,const exception_record &i)
     {
         if(!ptr)
         {
             std::stringstream ss;
             ss<<"Pointer is nullptr!";
-            throw MemoryNotAllocatedError(i,ss.str());
+            throw memory_not_allocated_error(i,ss.str());
         }
     }
 

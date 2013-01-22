@@ -27,25 +27,25 @@
 #include<iostream>
 #include<string>
 
-#include "Exceptions.hpp"
+#include "exceptions.hpp"
 
 namespace pni{
 namespace core{
 
     //-------------------------------------------------------------------------
-    std::ostream &operator<<(std::ostream &o,const ExceptionRecord &rec)
+    std::ostream &operator<<(std::ostream &o,const exception_record &rec)
     {
         o<<rec.file()<<"\t"<<rec.line()<<"\t"<<rec.function()<<std::endl;
         return o;
     }
 
     //============Implementation of constructors and destructor================
-    Exception::Exception():
+    exception::exception():
         std::exception()
     {}
 
     //--------------------------------------------------------------------------
-    Exception::Exception(const String &n):
+    exception::exception(const string &n):
         std::exception(),
         _name(n),
         _description(),
@@ -53,7 +53,7 @@ namespace core{
     {}
 
     //--------------------------------------------------------------------------
-    Exception::Exception(const String &n,const ExceptionRecord &i):
+    exception::exception(const string &n,const exception_record &i):
         std::exception(),
         _name(n),
         _description(),
@@ -63,7 +63,7 @@ namespace core{
     }
 
     //--------------------------------------------------------------------------
-    Exception::Exception(const String &n,const ExceptionRecord &i,const String &d):
+    exception::exception(const string &n,const exception_record &i,const string &d):
         std::exception(),
         _name(n),
         _description(d),
@@ -73,7 +73,7 @@ namespace core{
     }
 
     //==========Implementation of output methods and operator===================
-    std::ostream &Exception::print(std::ostream &o) const 
+    std::ostream &exception::print(std::ostream &o) const 
     {
         o<<"Exception: "<<this->name()<<std::endl<<std::endl;
         o<<std::endl<<"Description:"<<std::endl;
@@ -95,73 +95,73 @@ namespace core{
     }
 
     //--------------------------------------------------------------------------
-    std::ostream &operator<<(std::ostream &ostr,const Exception &ex)
+    std::ostream &operator<<(std::ostream &ostr,const exception &ex)
     {
         return ex.print(ostr);
     }
 
     //=========Implementation of the output operators for other errors==========
-    std::ostream &operator<<(std::ostream &o,const MemoryAllocationError &e)
+    std::ostream &operator<<(std::ostream &o,const memory_allocation_error &e)
     {
         return e.print(o);
     }
 
     //--------------------------------------------------------------------------
-    std::ostream &operator<<(std::ostream &o,const ShapeMissmatchError &e)
+    std::ostream &operator<<(std::ostream &o,const shape_missmatch_error &e)
     {
         return e.print(o);
     }
 
     //--------------------------------------------------------------------------
-    std::ostream &operator<<(std::ostream &o,const SizeMissmatchError &e)
+    std::ostream &operator<<(std::ostream &o,const size_missmatch_error &e)
     {
         return e.print(o);
     }
 
     //--------------------------------------------------------------------------
-    std::ostream &operator<<(std::ostream &o,const IndexError &e)
+    std::ostream &operator<<(std::ostream &o,const index_error &e)
     {
         return e.print(o);
     }
 
     //--------------------------------------------------------------------------
-    std::ostream &operator<<(std::ostream &o,const FileError &e)
+    std::ostream &operator<<(std::ostream &o,const file_error &e)
     {
         return e.print(o);
     }
 
     //--------------------------------------------------------------------------
-    std::ostream &operator<<(std::ostream &o,const TypeError &e)
+    std::ostream &operator<<(std::ostream &o,const type_error &e)
     {
         return e.print(o);
     }
 
     //--------------------------------------------------------------------------
-    std::ostream &operator<<(std::ostream &o,const RangeError &e)
+    std::ostream &operator<<(std::ostream &o,const range_error &e)
     {
         return e.print(o);
     }
 
     //--------------------------------------------------------------------------
-    std::ostream &operator<<(std::ostream &o,const NotImplementedError &e)
+    std::ostream &operator<<(std::ostream &o,const not_implemented_error &e)
     {
         return e.print(o);
     }
 
     //--------------------------------------------------------------------------
-    std::ostream &operator<<(std::ostream &o,const IteratorError &e)
+    std::ostream &operator<<(std::ostream &o,const iterator_error &e)
     {
         return e.print(o);
     }
 
     //--------------------------------------------------------------------------
-    std::ostream &operator<<(std::ostream &o,const KeyError &e)
+    std::ostream &operator<<(std::ostream &o,const key_error &e)
     {
         return e.print(o);
     }
 
     //--------------------------------------------------------------------------
-    std::ostream &operator<<(std::ostream &o,const MemoryNotAllocatedError &e)
+    std::ostream &operator<<(std::ostream &o,const memory_not_allocated_error &e)
     {
         return e.print(o);
     }

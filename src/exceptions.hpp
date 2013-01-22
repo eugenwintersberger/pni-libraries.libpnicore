@@ -36,7 +36,7 @@
 #include<list>
 #include<boost/current_function.hpp>
 
-#include "Types.hpp"
+#include "types.hpp"
 
 namespace pni{
 namespace core{
@@ -48,14 +48,14 @@ namespace core{
 \brief macro creating an instance of ExceptionRecord
 */
 #define EXCEPTION_RECORD\
-    ExceptionRecord(__FILE__,__LINE__,BOOST_CURRENT_FUNCTION)
+    exception_record(__FILE__,__LINE__,BOOST_CURRENT_FUNCTION)
 
 /*! 
 \ingroup error_classes
 \brief forward an exception
 
 This macro can be used to forward an exception caught from another function. It
-appends the ExceptionRecord of the current function to the existing exception
+appends the exception_record of the current function to the existing exception
 and throws the exception again. Consider the following examples
 \code
 try { value = buffer.at(index); }
@@ -82,22 +82,22 @@ Please note that the MUST NOT BE a semicolon at the end of this macro.
     Using the BOOST_CURRENT_FUNCTION macro defined in boost/current_function.hpp
     such a record can easily be constructed with
     \code
-    ExceptionRecord r(__FILE__,__LINE__,BOOST_CURRENT_FUNCTION);
+    exception_record r(__FILE__,__LINE__,BOOST_CURRENT_FUNCTION);
     \endcode
     */
-    class ExceptionRecord
+    class exception_record
     {
         private:
-            String _file; //!< source file where the exception occured
+            string _file; //!< source file where the exception occured
             size_t _line; //!< line number in the source file
-            String _function; //!< function in which the error occured
+            string _function; //!< function in which the error occured
         public:
             //===================constructors and destructor===================
             //! no default constructor
-            ExceptionRecord() = delete;
+            exception_record() = delete;
 
             //! constructor
-            ExceptionRecord(const String &file,size_t line,const String &func):
+            exception_record(const string &file,size_t line,const string &func):
                 _file(file),
                 _line(line),
                 _function(func)
@@ -105,18 +105,18 @@ Please note that the MUST NOT BE a semicolon at the end of this macro.
 
             //==================public member functions========================
             //! get file name
-            const String &file() const { return _file; }
+            const string &file() const { return _file; }
             //! get file line number
             size_t line() const { return _line; }
             //! get function
-            const String &function() const { return _function; } 
+            const string &function() const { return _function; } 
     };
 
     /*!
     \ingroup error_classes
     \brief error record output operator
     */
-    std::ostream &operator<<(std::ostream &o,const ExceptionRecord &rec); 
+    std::ostream &operator<<(std::ostream &o,const exception_record &rec); 
 
     //-------------------------------------------------------------------------
     /*!
@@ -125,14 +125,14 @@ Please note that the MUST NOT BE a semicolon at the end of this macro.
 
     This is the base class for all exceptions used in this library. 
     */
-    class Exception:public std::exception{
+    class exception:public std::exception{
         private:
             //! name of the exception
-            String _name;
+            string _name;
             //! description of the error occured
-            String _description; 
+            string _description; 
             //! exception records
-            std::list<ExceptionRecord> _records;
+            std::list<exception_record> _records;
         protected:
             /*! \brief ouptut method
 
@@ -145,10 +145,10 @@ Please note that the MUST NOT BE a semicolon at the end of this macro.
     public:
         //===================public types======================================
         //! const iterator over the error record
-        typedef std::list<ExceptionRecord>::const_iterator const_iterator;
+        typedef std::list<exception_record>::const_iterator const_iterator;
         //===================constructors and destructor=======================
         //! default constructor
-        Exception();
+        exception();
 
         //---------------------------------------------------------------------
         /*!
@@ -156,7 +156,7 @@ Please note that the MUST NOT BE a semicolon at the end of this macro.
 
         \param n name of the exception
         */
-        Exception(const String &n);
+        exception(const string &n);
 
         //---------------------------------------------------------------------
         /*! 
@@ -166,7 +166,7 @@ Please note that the MUST NOT BE a semicolon at the end of this macro.
         \param rec Exception record of the initial location where the error
         occured
         */
-        Exception(const String &n, const ExceptionRecord &rec);
+        exception(const string &n, const exception_record &rec);
 
         //---------------------------------------------------------------------
         /*!
@@ -177,11 +177,11 @@ Please note that the MUST NOT BE a semicolon at the end of this macro.
         occurrence  of the error
         \param d description of the exception
         */
-        Exception(const String &n, const ExceptionRecord &rec, const String &d);
+        exception(const string &n, const exception_record &rec, const string &d);
 
         //---------------------------------------------------------------------
         //! virtual destructor
-        virtual ~Exception() throw() { }
+        virtual ~exception() throw() { }
 
         //===================public member functions===========================
         /*! 
@@ -196,8 +196,9 @@ Please note that the MUST NOT BE a semicolon at the end of this macro.
 
         \return reference to the string object holding the name
         */
-        const String &name() const { return _name; }
+        const string &name() const { return _name; }
 
+        //---------------------------------------------------------------------
         /*!
         \brief add a new issuer
 
@@ -205,7 +206,7 @@ Please note that the MUST NOT BE a semicolon at the end of this macro.
         is re-thrown by an other function or class method.
         \code
         ...
-        catch(Exception &error)
+        catch(exception &error)
         {
             error.append(EXCEPTION_RECORD);
             throw error;
@@ -213,9 +214,9 @@ Please note that the MUST NOT BE a semicolon at the end of this macro.
         \endcode
         With this a particular exception can be traced througout the entire
         code.
-        \param n ExceptionRecord to append 
+        \param n exception_record to append 
         */
-        void append(const ExceptionRecord &n) { _records.push_back(n); }
+        void append(const exception_record &n) { _records.push_back(n); }
 
         //---------------------------------------------------------------------
         /*!
@@ -231,8 +232,9 @@ Please note that the MUST NOT BE a semicolon at the end of this macro.
 
         \return reference to the string object with the exceptions description
         */
-        const String &description() const { return _description; }
+        const string &description() const { return _description; }
 
+        //---------------------------------------------------------------------
         /*! 
         \brief get iterator to first error record
 
@@ -241,6 +243,7 @@ Please note that the MUST NOT BE a semicolon at the end of this macro.
         */
         const_iterator begin() const { return _records.begin(); }
 
+        //---------------------------------------------------------------------
         /*!
         \brief get iterator to the last error record
 
@@ -252,7 +255,7 @@ Please note that the MUST NOT BE a semicolon at the end of this macro.
 
         //---------------------------------------------------------------------
         //! output operator for exceptions
-        friend std::ostream &operator<<(std::ostream &, const Exception &);
+        friend std::ostream &operator<<(std::ostream &, const exception &);
             
     };
 
@@ -265,26 +268,33 @@ Please note that the MUST NOT BE a semicolon at the end of this macro.
     This exception is typically raised when allocation of memory on the heap
     fails. In other words when a call to new leads to a nullptr.
     */
-    class MemoryAllocationError: public Exception 
+    class memory_allocation_error: public exception 
     {
         public:
             //! default constructor
-            MemoryAllocationError() : Exception("MemoryAllocationError") 
+            memory_allocation_error() : exception("memory_allocation_error") 
             { }
 
-            //! constructor
+            //-----------------------------------------------------------------
+            /*! 
+            \brief constructor
 
-            //! \param i ExceptionRecord of the initial issuer
-            //! \param d description of the exception
-            explicit MemoryAllocationError(const ExceptionRecord &i, const String &d):
-                Exception("MemoryAllocationError", i, d) 
+            \param i exception_record of the initial issuer
+            \param d description of the exception
+            */
+            explicit memory_allocation_error(const exception_record &i, 
+                                             const string &d):
+                exception("memory_allocation_eror", i, d) 
             { }
+
+            //-----------------------------------------------------------------
             //! destructor
-            ~MemoryAllocationError() throw() { } 
+            ~memory_allocation_error() throw() { } 
 
+            //-----------------------------------------------------------------
             //! output operator
             friend std::ostream &
-                operator<<(std::ostream &o,const MemoryAllocationError &e);
+                operator<<(std::ostream &o,const memory_allocation_error &e);
     };
 
     //-------------------------------------------------------------------------
@@ -295,13 +305,15 @@ Please note that the MUST NOT BE a semicolon at the end of this macro.
     This exception is usually thrown if one tries to access not allocated 
     memory.
     */
-    class MemoryNotAllocatedError: public Exception
+    class memory_not_allocated_error: public exception
     {
         public:
             //! default constructor
-            MemoryNotAllocatedError(): Exception("MemoryNotAllocatedError") 
+            memory_not_allocated_error(): 
+                exception("memory_not_allocated_error") 
             {}
 
+            //-----------------------------------------------------------------
             /*! 
             \brief constructor
             
@@ -309,16 +321,17 @@ Please note that the MUST NOT BE a semicolon at the end of this macro.
             occurred 
             \param d description of the error
             */
-            explicit MemoryNotAllocatedError(const ExceptionRecord &i,const String &d):
-                Exception("MemoryNotAllocatedError",i,d) 
+            explicit memory_not_allocated_error(const exception_record &i,
+                                                const string &d):
+                exception("memory_not_allocated_error",i,d) 
             {}
 
             //! destructor
-            ~MemoryNotAllocatedError() throw() {}
+            ~memory_not_allocated_error() throw() {}
 
             //! output operator
             friend std::ostream &operator<<(std::ostream &o,const
-                    MemoryNotAllocatedError &e);
+                    memory_not_allocated_error &e);
     };
 
 
@@ -329,29 +342,33 @@ Please note that the MUST NOT BE a semicolon at the end of this macro.
 
     Raised in cases where the Shape objects of two objects are not equal.
     */
-    class ShapeMissmatchError: public Exception 
+    class shape_missmatch_error: public exception 
     {
         public:
             //! default constructor
-            ShapeMissmatchError() : Exception("ShapeMissmatchError") 
+            shape_missmatch_error() : 
+                exception("shape_missmatch_error") 
             { }
 
+            //-----------------------------------------------------------------
             /*! 
             \brief constructor
 
-            \param i ExceptionRecord of the initial occurrence of the error
+            \param i exception_record of the initial occurrence of the error
             \param d description of the exception
             */
-            explicit ShapeMissmatchError(const ExceptionRecord &i, const String &d) :
-                Exception("ShapeMissmatchError",i,d) 
+            explicit shape_missmatch_error(const exception_record &i, 
+                                           const string &d) :
+                exception("shape_missmatch_error",i,d) 
             { }
 
+            //-----------------------------------------------------------------
             //! destructor
-            ~ShapeMissmatchError() throw() { }
+            ~shape_missmatch_error() throw() { }
 
             //! output operator
             friend std::ostream &
-                operator<<(std::ostream &o,const ShapeMissmatchError &e);
+                operator<<(std::ostream &o,const shape_missmatch_error &e);
     };
 
     //--------------------------------------------------------------------------
@@ -362,29 +379,32 @@ Please note that the MUST NOT BE a semicolon at the end of this macro.
     This exception will be raised in cases where buffer sizes do not meet the
     requirements.
     */
-    class SizeMissmatchError: public Exception 
+    class size_missmatch_error: public exception 
     {
         public:
             //! default constructor
-            SizeMissmatchError() : Exception("SizeMissmatchError") 
+            size_missmatch_error() : exception("size_missmatch_error") 
             { }
 
+            //-----------------------------------------------------------------
             /*! 
             \brief constructor
 
-            \param i ExceptionRecord of the initial occurrence of the error
+            \param i exception_record of the initial occurrence of the error
             \param d description of the exception
             */
-            explicit SizeMissmatchError(const ExceptionRecord &i, const String &d) :
-                Exception("SizeMissmatchError", i,d) 
+            explicit size_missmatch_error(const exception_record &i, 
+                                          const string &d) :
+                exception("size_missmatch_error", i,d) 
             { }
 
+            //-----------------------------------------------------------------
             //! destructor
-            ~SizeMissmatchError() throw() { }
+            ~size_missmatch_error() throw() { }
 
             //! output operator
             friend std::ostream &
-                operator<<(std::ostream &o,const SizeMissmatchError &e);
+                operator<<(std::ostream &o,const size_missmatch_error &e);
     };
 
     //--------------------------------------------------------------------------
@@ -395,29 +415,31 @@ Please note that the MUST NOT BE a semicolon at the end of this macro.
     Raised if the index passed to a [] operator exceeds the size of the
     container it belongs to.
     */
-    class IndexError: public Exception 
+    class index_error: public exception 
     {
         public:
             //! default constructor
-            IndexError() : Exception("IndexError") 
+            index_error() : exception("index_error") 
             { }
 
+            //-----------------------------------------------------------------
             /*! 
             \brief constructor
 
-            \param i ExceptionRecord of the initial occurrence of the error
+            \param i exception_record of the initial occurrence of the error
             \param d description of the exception
             */
-            explicit IndexError(const ExceptionRecord &i, const String &d) :
-                Exception("IndexError", i, d) 
+            explicit index_error(const exception_record &i, const string &d) :
+                exception("index_error", i, d) 
             { }
-            
+           
+            //-----------------------------------------------------------------
             //! destructor
-            ~IndexError() throw() { }
+            ~index_error() throw() { }
 
             //! output operator
             friend std::ostream &
-                operator<<(std::ostream &o,const IndexError &e);
+                operator<<(std::ostream &o,const index_error &e);
     };
 
     //--------------------------------------------------------------------------
@@ -427,28 +449,30 @@ Please note that the MUST NOT BE a semicolon at the end of this macro.
 
     Raised in cases where a problem with the key of a hash map occurs.
     */
-    class KeyError: public Exception
+    class key_error: public exception
     {
         public:
             //! default constructor
-            KeyError():Exception("KeyError"){}
+            key_error():exception("key_error"){}
 
+            //-----------------------------------------------------------------
             /*! 
             \brief constructor
 
             \param i ExceptionRecord of the initial occurrence of the error
             \param d description of the error
             */
-            explicit KeyError(const ExceptionRecord &i,const String &d):
-                Exception("KeyError",i,d)
+            explicit key_error(const exception_record &i,const string &d):
+                exception("key_error",i,d)
             {}
 
+            //-----------------------------------------------------------------
             //! destructor
-            ~KeyError() throw() {}
+            ~key_error() throw() {}
 
             //! output operator
             friend std::ostream &
-                operator<<(std::ostream &o,const KeyError &e);
+                operator<<(std::ostream &o,const key_error &e);
     };
 
     //--------------------------------------------------------------------------
@@ -458,63 +482,67 @@ Please note that the MUST NOT BE a semicolon at the end of this macro.
 
     Raised typically in cases of problems with files.
     */
-    class FileError: public Exception 
+    class file_error: public exception 
     {
         public:
             //! default constructor
-            FileError() : Exception("FileError") { }
+            file_error() : exception("file_error") { }
 
+            //-----------------------------------------------------------------
             /*! 
             \brief constructor
 
-            \param i ExceptionRecord of the initial occurrence of the error
+            \param i exception_record of the initial occurrence of the error
             \param d description of the exception
             */
-            explicit FileError(const ExceptionRecord &i, const String &d) :
-                Exception("FileError", i, d) 
+            explicit file_error(const exception_record &i, const string &d) :
+                exception("file_error", i, d) 
             { }
 
+            //-----------------------------------------------------------------
             //! destructor
-            ~FileError() throw() { }
+            ~file_error() throw() { }
 
             //! output operator
             friend std::ostream &
-                operator<<(std::ostream &o,const FileError &e);
+                operator<<(std::ostream &o,const file_error &e);
 
     };
 
-    //------------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
     /*! 
     \ingroup error_classes
     \brief data type error
 
     This exception is raised in cases of errors concerning data types.
     */
-    class TypeError: public Exception 
+    class type_error: public exception 
     {
         public:
             //! default constructor
-            TypeError() : Exception("TypeError") { }
-            
+            type_error() : exception("type_error") { }
+           
+            //-----------------------------------------------------------------
             /*! 
             \brief constructor
 
-            \param i ExceptionRecord of the initial occurrence of the error
+            \param i exception_record of the initial occurrence of the error
             \param d error description as String
             */
-            explicit TypeError(const ExceptionRecord &i, const String &d):
-                Exception("TypeError", i, d) 
+            explicit type_error(const exception_record &i, const string &d):
+                exception("type_error", i, d) 
             { }
 
+            //-----------------------------------------------------------------
             //! destructor
-            ~TypeError() throw() { }
+            ~type_error() throw() { }
 
             //! output operator
             friend std::ostream &
-                operator<<(std::ostream &o,const TypeError &e);
+                operator<<(std::ostream &o,const type_error &e);
     };
 
-    //------------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
     /*! 
     \ingroup error_classes
     \brief data range error
@@ -522,12 +550,13 @@ Please note that the MUST NOT BE a semicolon at the end of this macro.
     This exception is raised in cases where data values exceed the range
     spanned by their data type.
     */
-    class RangeError: public Exception 
+    class range_error: public exception 
     {
         public:
             //! default constructor
-            RangeError(): Exception("RangeError"){ }
+            range_error(): exception("range_error"){ }
 
+            //-----------------------------------------------------------------
             /*! 
             \brief constructor
 
@@ -535,16 +564,17 @@ Please note that the MUST NOT BE a semicolon at the end of this macro.
             \param i error issuer as string
             \param d error description as string
             */
-            explicit RangeError(const ExceptionRecord &i,const String &d):
-                Exception("RangeError",i,d)
+            explicit rang_error(const exception_record &i,const string &d):
+                exception("range_error",i,d)
             { }
 
+            //-----------------------------------------------------------------
             //! destructor
-            ~RangeError() throw() { }
+            ~range_error() throw() { }
 
             //! output operator
             friend std::ostream &
-                operator<<(std::ostream &o,const RangeError &e);
+                operator<<(std::ostream &o,const range_error &e);
     };
 
     //--------------------------------------------------------------------------
@@ -556,28 +586,33 @@ Please note that the MUST NOT BE a semicolon at the end of this macro.
     as not implemented. Such an approach can be quite useful for debugging
     and development.
     */
-    class NotImplementedError:public Exception
+    class not_implemented_error:public exception
     {
         public:
             //! default construtor
-            NotImplementedError(): Exception("NotImplementedError"){ }
-
+            not_implemented_error(): 
+                exception("not_implemented_error")
+            { }
+            
+            //-----------------------------------------------------------------
             /*! 
             \brief constructor
 
-            \param i ExceptionRecord of the initial occurrence of the error
+            \param i exception_record of the initial occurrence of the error
             \param d error description
             */
-            explicit NotImplementedError(const ExceptionRecord &i,const String &d):
-                Exception("NotImplementedError",i,d)
+            explicit not_implemented_error(const exception_record &i,
+                                           const string &d):
+                exception("not_implemented_error",i,d)
             { }
 
+            //-----------------------------------------------------------------
             //! destructor
-            ~NotImplementedError() throw() { }
+            ~not_implemented_error() throw() { }
 
             //! output operator
             friend std::ostream &
-                operator<<(std::ostream &o,const NotImplementedError &e);
+                operator<<(std::ostream &o,const not_implemented_error &e);
     };
 
 
@@ -588,29 +623,32 @@ Please note that the MUST NOT BE a semicolon at the end of this macro.
 
     Exception thrown in case of iterator errors.
     */
-    class IteratorError:public Exception
+    class iterator_error:public exception
     {
         public:
             //! default constructor
-            IteratorError():Exception("IteratorError"){ }
+            iterator_error():exception("iterator_error"){ }
 
+            //-----------------------------------------------------------------
             /*! 
             \brief constructor
 
             Constructor setting the issuer and description of the error.
-            \param i ExceptionRecord of the initial occurrence of the error
+            \param i exception_record of the initial occurrence of the error
             \param d error description
             */
-            explicit IteratorError(const ExceptionRecord &i,const String &d):
-                Exception("IteratorError",i,d)
+            explicit iterator_error(const exception_record &i,const string &d):
+                exception("iterator_error",i,d)
             { }
 
+            //-----------------------------------------------------------------
             //! destructor
-            ~IteratorError() throw() { }
+            ~iterator_error() throw() { }
 
+            //-----------------------------------------------------------------
             //! output operator
             friend std::ostream &
-                operator<<(std::ostream &o,const IteratorError &e);
+                operator<<(std::ostream &o,const iterator_error &e);
     };
     
 
@@ -621,12 +659,12 @@ Please note that the MUST NOT BE a semicolon at the end of this macro.
     Thrown in cases where a command line argument (do not confuse this with an
     option has an inapropriate value or is missing).
     */
-    class cli_argument_error:public Exception
+    class cli_argument_error:public exception
     {
         public:
             //------------------------------------------------------------------
             //! default constructor
-            cli_argument_error():Exception("CLIArgumentError"){}
+            cli_argument_error():exception("cli_argument_error"){}
 
             //------------------------------------------------------------------
             /*! 
@@ -635,8 +673,8 @@ Please note that the MUST NOT BE a semicolon at the end of this macro.
             \param r exception record
             \param d description
             */
-            cli_argument_error(const ExceptionRecord &r,const String &d):
-                Exception("CLIArgumentError",r,d)
+            cli_argument_error(const exception_record &r,const string &d):
+                Exception("cli_argument_error",r,d)
             {}
             
             //------------------------------------------------------------------
@@ -655,12 +693,12 @@ Please note that the MUST NOT BE a semicolon at the end of this macro.
     Exception thrown in cases where a command line option is missing or has an
     inapropriate value.
     */
-    class cli_option_error:public Exception
+    class cli_option_error:public exception
     {
         public:
             //------------------------------------------------------------------
             //! default constructor
-            cli_option_error():Exception("CLIOptionError"){}
+            cli_option_error():exception("cli_option_error"){}
 
             //------------------------------------------------------------------
             /*!
@@ -669,8 +707,8 @@ Please note that the MUST NOT BE a semicolon at the end of this macro.
             \param r exception record
             \param d description
             */
-            cli_option_error(const ExceptionRecord &r,const String &d):
-                Exception("CLIOptionError",r,d)
+            cli_option_error(const exception_record &r,const string &d):
+                exception("cli_option_error",r,d)
             {}
 
             //------------------------------------------------------------------
@@ -687,12 +725,12 @@ Please note that the MUST NOT BE a semicolon at the end of this macro.
 
     Thrown in case of a general CLI error not related to arguments or options.
     */
-    class cli_error:public Exception
+    class cli_error:public exception
     {
         public:
             //------------------------------------------------------------------
             //! default constructor
-            cli_error():Exception("CLIError"){}
+            cli_error():exception("cli_error"){}
             
             //------------------------------------------------------------------
             /*!
@@ -701,8 +739,8 @@ Please note that the MUST NOT BE a semicolon at the end of this macro.
             \param r exception record
             \param d description
             */
-            cli_error(const ExceptionRecord &r,const String &d):
-                Exception("CLIError",r,d)
+            cli_error(const exception_record &r,const string &d):
+                exception("cli_eror",r,d)
             {}
 
             //------------------------------------------------------------------
@@ -721,12 +759,12 @@ Please note that the MUST NOT BE a semicolon at the end of this macro.
     This is exception is not intended to manage an error at all. It is thrown in
     the case that a user makes a help request from the CLI.
     */
-    class cli_help_request:public Exception
+    class cli_help_request:public exception
     {
         public:
             //------------------------------------------------------------------
             //! default constructor
-            cli_help_request():Exception("CLIHelpRequest"){}
+            cli_help_request():exception("cli_help_request"){}
             
             //------------------------------------------------------------------
             /*!
@@ -735,8 +773,8 @@ Please note that the MUST NOT BE a semicolon at the end of this macro.
             \param r exception record
             \param d description
             */
-            cli_help_request(const ExceptionRecord &r,const String &d):
-                Exception("CLIHelpRequest",r,d)
+            cli_help_request(const exception_record &r,const string &d):
+                exception("cli_help_request",r,d)
             {}
 
             //------------------------------------------------------------------
