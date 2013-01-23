@@ -24,14 +24,14 @@
  *
  */
 
-#include "ImageInfo.hpp"
+#include "image_info.hpp"
 
 namespace pni{
 namespace io{
        
     //---------------------------------------------------------------------
     //implementation of the standard constructor
-    ImageInfo::ImageInfo(size_t nx,size_t ny):
+    image_info::image_info(size_t nx,size_t ny):
         _nx(nx),
         _ny(ny),
         _channel_info()
@@ -39,7 +39,7 @@ namespace io{
 
     //---------------------------------------------------------------------
     //implementation of the move constructor
-    ImageInfo::ImageInfo(ImageInfo &&i):
+    image_info::image_info(image_info &&i):
         _nx(std::move(i._nx)),
         _ny(std::move(i._ny)),
         _channel_info(std::move(i._channel_info))
@@ -48,7 +48,7 @@ namespace io{
 
     //---------------------------------------------------------------------
     //implementation of the copy constructor
-    ImageInfo::ImageInfo(const ImageInfo &i):
+    image_info::image_info(const image_info &i):
         _nx(i._nx),
         _ny(i._ny),
         _channel_info(i._channel_info)
@@ -56,7 +56,7 @@ namespace io{
 
     //---------------------------------------------------------------------
     //implementation of move assignment operator
-    ImageInfo &ImageInfo::operator=(ImageInfo &&i) 
+    image_info &image_info::operator=(image_info &&i) 
     {
         if(this == &i) return *this;
 
@@ -69,7 +69,7 @@ namespace io{
 
     //---------------------------------------------------------------------
     //implementation of the copy assignment operator
-    ImageInfo &ImageInfo::operator=(const ImageInfo &i)
+    image_info &image_info::operator=(const image_info &i)
     {
         if(this == &i) return *this;
 
@@ -80,13 +80,13 @@ namespace io{
     }
 
     //-------------------------------------------------------------------------
-    std::vector<size_t> ImageInfo::bits_per_channel() const
+    std::vector<size_t> image_info::bits_per_channel() const
     {
         std::vector<size_t> result;
 #ifdef NOFOREACH
         for(auto iter = _channel_info.begin(); iter != _channel_info.end();iter++)
         {
-            ImageChannelInfo c = *iter;
+            image_channle_info c = *iter;
 #else
         for(auto c: _channel_info) 
         {
@@ -98,13 +98,13 @@ namespace io{
     }
 
     //-------------------------------------------------------------------------
-    std::vector<TypeID> ImageInfo::types_per_channel() const
+    std::vector<TypeID> image_info::types_per_channel() const
     {
         std::vector<TypeID> types;
 #ifdef NOFOREACH
         for( auto iter = _channel_info.begin();iter!=_channel_info.end();iter++)
         {
-            ImageChannelInfo c=*iter;
+            image_channel_info c=*iter;
 #else
         for(auto c: _channel_info)
         {
@@ -116,19 +116,19 @@ namespace io{
     }
 
     //---------------------------------------------------------------------
-    void ImageInfo::append_channel(const ImageChannelInfo &i)
+    void image_info::append_channel(const image_channel_info &i)
     {
         _channel_info.push_back(i);
     }
 
     //---------------------------------------------------------------------
-    ImageChannelInfo ImageInfo::get_channel(size_t i) const
+    image_channel_info image_info::get_channel(size_t i) const
     {
         return _channel_info[i];
     }
 
     //=================implementation of the output operator===============
-    std::ostream &operator<<(std::ostream &o,const ImageInfo &i)
+    std::ostream &operator<<(std::ostream &o,const image_info &i)
     {
         o<<"Image of size ("<<i.nx()<<" x "<<i.ny()<<"):"<<std::endl;
         o<<"Total pixels:   "<<i.npixels()<<std::endl;

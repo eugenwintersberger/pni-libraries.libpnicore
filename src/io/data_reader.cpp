@@ -25,21 +25,21 @@
  */
 
 
-#include "DataReader.hpp"
-#include "../Exceptions.hpp"
+#include "data_reader.hpp"
+#include "../exceptions.hpp"
 
 
 namespace pni{
 namespace io{
 
-    //===========implementation of private methods=========================
+    //================implementation of private methods=========================
     //default implementation
-    std::unique_ptr<std::ifstream> DataReader::
+    std::unique_ptr<std::ifstream> data_reader::
         _open_stream(const String &fname) const
     {
         std::unique_ptr<std::ifstream> stream(new std::ifstream()); 
         if(!stream)
-            throw MemoryAllocationError(EXCEPTION_RECORD,
+            throw memory_allocation_error(EXCEPTION_RECORD,
             "Cannot allocate memory for stream object!");
 
         if(_is_binary)
@@ -50,38 +50,41 @@ namespace io{
         return stream;
     }
 
-    //====================Implementation of constructors===================
+    //====================Implementation of constructors=======================
     //implementation of the default constructor
-    DataReader::DataReader() {}
+    data_reader::data_reader() {}
 
+    //-------------------------------------------------------------------------
     //implementation of the standard constructor
-    DataReader::DataReader(const String &fname,bool binary):
+    data_reader::data_reader(const string &fname,bool binary):
         _fname(fname),
         _is_binary(binary),
         _istream(_open_stream(fname))
     { 
         if(_istream->fail())
-            throw FileError(EXCEPTION_RECORD,
+            throw file_error(EXCEPTION_RECORD,
                     "Error opening file ["+fname+"]!");
     }
 
+    //-------------------------------------------------------------------------
     //implementation of the move constructor
-    DataReader::DataReader(DataReader &&r):
+    data_reader::data_reader(data_reader &&r):
         _fname(std::move(r._fname)),
         _is_binary(std::move(r._is_binary)),
         _istream(std::move(r._istream))
     {}
 
+    //-------------------------------------------------------------------------
     //implementation of the destructor
-    DataReader::~DataReader() 
+    data_reader::~data_reader() 
     {
         //close the file in case the object is getting destroied.
         if(_istream)
             if(_istream->good() && _istream->is_open()) _istream->close();
     }
 
-    //=============implementation of assignment operators==================
-    DataReader &DataReader::operator=(DataReader &&r)
+    //=============implementation of assignment operators======================
+    data_reader &data_reader::operator=(data_reader &&r)
     {
         if(this == &r) return *this;
 
@@ -91,26 +94,26 @@ namespace io{
         return *this;
     }
 
-    //============implementation of utilty methods=========================
-    String DataReader::filename() const
+    //============implementation of utilty methods=============================
+    string DataReader::filename() const
     {
         return _fname;
     }
 
-    //---------------------------------------------------------------------
-    void DataReader::filename(const String &fname)
+    //-------------------------------------------------------------------------
+    void data_reader::filename(const string &fname)
     {
         _fname = fname;
     }
     
-    //----------------------------------------------------------------------
-    void DataReader::close()
+    //-------------------------------------------------------------------------
+    void data_reader::close()
     {
         if(_istream->is_open()) _istream->close();
     }
 
-    //---------------------------------------------------------------------
-    void DataReader::open()
+    //-------------------------------------------------------------------------
+    void data_reader::open()
     {
         close(); //close the file if it is already open
         _istream = _open_stream(filename());

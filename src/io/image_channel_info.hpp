@@ -26,7 +26,7 @@
 
 #pragma once
 
-#include "../Types.hpp"
+#include "../types.hpp"
 
 using namespace pni::core;
 
@@ -36,35 +36,41 @@ namespace io{
     \ingroup io_classes
     \brief image channel information class
 
-    ImageChannelInfo holds information specific to a particular image channel. 
+    image_channle_info holds information specific to a particular image channel. 
     */
-    class ImageChannelInfo{
+    class image_channel_info
+    {
         private:
-            TypeID _tid;  //!< ID of the datatype used for this channel
+            type_id_t _tid;  //!< ID of the datatype used for this channel
             size_t _bits; //!< number of bits per channel
         public:
+            //-----------------------------------------------------------------
             //! default constructor
-            ImageChannelInfo():
-                _tid(TypeID::NONE),
+            image_channel_info():
+                _tid(type_id_t::NONE),
                 _bits(0)
             {}
+
+            //-----------------------------------------------------------------
             /*! \brief standard constructor
 
             \param id Typd id for the channel
             \param bits number of bits used to store channel data
             */
-            ImageChannelInfo(const TypeID &id,size_t bits):
+            image_channel_info(const type_id_t &id,size_t bits):
                 _tid(id),
                 _bits(bits)
             {}
 
+            //-----------------------------------------------------------------
             /*! \brief get type ID
 
             Returns the TypeID for the channel described by this object.
             \return type ID 
             */
-            TypeID type_id() const { return _tid; }
+            type_id_t type_id() const { return _tid; }
 
+            //-----------------------------------------------------------------
             /*! \brief get bits 
 
             Return the number of bits used to store this channels data

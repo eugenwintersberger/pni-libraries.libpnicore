@@ -28,7 +28,7 @@
 #include <memory>
 #include <iostream>
 #include <fstream>
-#include "../Types.hpp"
+#include "../types.hpp"
 
 using namespace pni::core;
 
@@ -44,11 +44,11 @@ namespace io{
     Thus all constructors are protected making them available only for derived
     classes.
     */
-    class DataReader
+    class data_reader
     {
         private:
             //! name of the file 
-            String _fname;           
+            string _fname;           
             //! flag determining how files will be opened
             bool _is_binary;         
             //the stream is accessed via a unique pointer this allows moveing
@@ -63,12 +63,14 @@ namespace io{
             default implementation for this method. If a different way of
             opening a stream is required this method must be overloaded by child
             classes.
-            \throws FileError if opening the file fails
+            \throws file_error if opening the file fails
+            \throws memory_allocation_error if allocation of a stream object
+            fails
             \param fname file name
             \return unique pointer to the input stream
             */
             std::unique_ptr<std::ifstream> 
-                _open_stream(const String &fname) const;
+                _open_stream(const string &fname) const;
         protected:
             /*! \brief get stream
 
@@ -90,7 +92,7 @@ namespace io{
 
             //=======================Constructors=============================== 
             //! default constructor
-            DataReader();
+            data_reader();
 
             //-----------------------------------------------------------------
             /*! 
@@ -102,44 +104,44 @@ namespace io{
             \param fname name of the file
             \param binary if true stream will be opened in binary mode
             */
-            explicit DataReader(const String &fname,bool binary=false);
+            explicit data_reader(const string &fname,bool binary=false);
            
             //-----------------------------------------------------------------
             //! move constructor
-            DataReader(DataReader &&r);
+            data_reader(data_reader &&r);
 
             //-----------------------------------------------------------------
             //!copy constructor is deleted
-            DataReader(const DataReader &r) = delete;
+            data_reader(const data_reader &r) = delete;
             
             //=======================assignment operator=======================
             //! copy assigment is deleted
-            DataReader &operator=(const DataReader &r) = delete;
+            data_reader &operator=(const data_reader &r) = delete;
 
             //-----------------------------------------------------------------
             //! move assignment
-            DataReader &operator=(DataReader &&r);
+            data_reader &operator=(data_reader &&r);
             
             
             
         public:
             //===============constructor and destructors===================
             //! destructor
-            virtual ~DataReader();
+            virtual ~data_reader();
 
             //====================member methods===========================
             /*! \brief get filename
 
             \return name of the file from which to read data
             */
-            pni::core::String filename() const;
+            pni::core::string filename() const;
 
             //-------------------------------------------------------------
             /*! \brief set filename
 
             \param fname name of the file to read data from
             */
-            void filename(const String &fname);
+            void filename(const string &fname);
 
             //-------------------------------------------------------------
             //! close the file

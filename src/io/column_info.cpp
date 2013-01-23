@@ -25,14 +25,14 @@
  */
 
 
-#include "ColumnInfo.hpp"
+#include "column_info.hpp"
 
 namespace pni{
 namespace io{
 
     //==================implementation of constructors and destructor==========
     //implementation of the  default constructor
-    ColumnInfo::ColumnInfo():
+    column_info::column_info():
         _name(),
         _tid(TypeID::NONE),
         _shape()
@@ -40,7 +40,7 @@ namespace io{
 
     //--------------------------------------------------------------------------
     //implementation of the copy constructor
-    ColumnInfo::ColumnInfo(const ColumnInfo &ci):
+    column_info::column_info(const column_info &ci):
         _name(ci._name),
         _tid(ci._tid),
         _shape(ci._shape)
@@ -48,7 +48,7 @@ namespace io{
 
     //-------------------------------------------------------------------------
     //implementation of the move constructor
-    ColumnInfo::ColumnInfo(ColumnInfo &&ci):
+    column_info::column_info(column_info &&ci):
         _name(std::move(ci._name)),
         _tid(std::move(ci._tid)),
         _shape(std::move(ci._shape))
@@ -56,7 +56,8 @@ namespace io{
 
     //-------------------------------------------------------------------------
     //implementation of the standard constructor
-    ColumnInfo::ColumnInfo(const String &n,TypeID tid,const std::vector<size_t> &s):
+    column_info::column_info(const string &n,type_id_t tid,
+                             const std::vector<size_t> &s):
         _name(n),
         _tid(tid),
         _shape(s)
@@ -64,12 +65,12 @@ namespace io{
 
     //-------------------------------------------------------------------------
     //implementation of the destructor
-    ColumnInfo::~ColumnInfo()
+    column_info::~column_info()
     {}
 
     //===================implementation of assignment operators================
     //implementation of the  copy assignment operator
-    ColumnInfo &ColumnInfo::operator=(const ColumnInfo &ci)
+    column_info &column_info::operator=(const column_info &ci)
     {
         if(this == &ci) return *this;
 
@@ -80,8 +81,9 @@ namespace io{
         return *this;
     }
 
+    //-------------------------------------------------------------------------
     //! move assignment operator
-    ColumnInfo &ColumnInfo::operator=(ColumnInfo &&ci)
+    column_info &column_info::operator=(column_info &&ci)
     {
         if(this == &ci) return *this;
 
@@ -92,7 +94,7 @@ namespace io{
     }
 
     //=================implementation of non-member operators==================
-    std::ostream &operator<<(std::ostream &o,const ColumnInfo &ci)
+    std::ostream &operator<<(std::ostream &o,const column_info &ci)
     {
         o<<"Column ["<<ci.name()<<"] of type ["<<ci.type_id();
         o<<"] and element shape [ ";

@@ -29,9 +29,9 @@
 #include<vector>
 #include<numeric>
 
-#include "../Types.hpp"
-#include "../Exceptions.hpp"
-#include "ImageChannelInfo.hpp"
+#include "../types.hpp"
+#include "../exceptions.hpp"
+#include "image_channel_info.hpp"
 
 using namespace pni::core;
 
@@ -44,7 +44,7 @@ namespace io{
 
     ImageInfo holds basic information about a particular image. 
     */
-    class ImageInfo
+    class image_info
     {
         private:
             //! number of pixels in x-direction
@@ -52,11 +52,11 @@ namespace io{
             //! number of pixels in y-direction
             size_t _ny;             
             //! channel information
-            std::vector<ImageChannelInfo> _channel_info; 
+            std::vector<image_channel_info> _channel_info; 
         public:
             //-----------------------------------------------------------------
             //! default constructor
-            ImageInfo():
+            image_info():
                 _nx(0),
                 _ny(0),
                 _channel_info(0)
@@ -69,23 +69,23 @@ namespace io{
             \param nx number of pixels in x-direction
             \param ny number of pixels in y-direction
             */
-            ImageInfo(size_t nx,size_t ny);
+            image_info(size_t nx,size_t ny);
 
             //-----------------------------------------------------------------
             //! move constructor
-            ImageInfo(ImageInfo &&i);
+            image_info(image_info &&i);
 
             //-----------------------------------------------------------------
             //! copy constructor
-            ImageInfo(const ImageInfo &i);
+            image_info(const image_info &i);
 
             //-----------------------------------------------------------------
             //! move assignment operator
-            ImageInfo &operator=(ImageInfo &&i);
+            image_info &operator=(image_info &&i);
 
             //-----------------------------------------------------------------
             //! copy assignment operator
-            ImageInfo &operator=(const ImageInfo &i);
+            image_info &operator=(const image_info &i);
 
             //====================general class methods========================
             /*! \brief get pixels along x
@@ -136,7 +136,7 @@ namespace io{
             Return a vector with the different types per channel.
             \return vector with data types for each channel
             */
-            std::vector<TypeID> types_per_channel() const;
+            std::vector<type_id_t> types_per_channel() const;
 
             //-----------------------------------------------------------------
             /*! \brief get number of channels
@@ -151,7 +151,7 @@ namespace io{
             Append information about a channel to the image information class.
             \param i channel information
             */ 
-            void append_channel(const ImageChannelInfo &i);
+            void append_channel(const image_channel_info &i);
 
             //-----------------------------------------------------------------
             /*! \brief get channel information
@@ -160,7 +160,7 @@ namespace io{
             \param i channel number
             \return channel information.
             */
-            ImageChannelInfo get_channel(size_t i) const;
+            image_channel_info get_channel(size_t i) const;
 
 
 
@@ -174,7 +174,7 @@ namespace io{
     \param i reference to an instance of ImageInfo
     \return reference to the output stream
     */
-    std::ostream &operator<<(std::ostream &o,const ImageInfo &i);
+    std::ostream &operator<<(std::ostream &o,const image_info &i);
 
 
 
