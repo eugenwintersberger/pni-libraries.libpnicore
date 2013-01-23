@@ -22,7 +22,7 @@
 
 #pragma once
 
-#include "IndexMapBase.hpp"
+#include "index_map_base.hpp"
 
 namespace pni{
 namespace core{
@@ -37,11 +37,11 @@ namespace core{
     containers that supports reverse iterators. This includes all STL container
     types.
     */
-    class CIndexMap : public IndexMapBase
+    class cindex_map : public index_map_base
     {
         private:
             //! buffer with strides between dimensions
-            DBuffer<size_t> _strides;         
+            dbuffer<size_t> _strides;         
 
             //================private methods==================================
             //! compute dimension strides
@@ -83,12 +83,12 @@ namespace core{
         public:
             //================constructors and destructor======================
             //! default constructor
-            CIndexMap():IndexMapBase(),_strides() {}
+            cindex_map():index_map_base(),_strides() {}
 
             //-----------------------------------------------------------------
             //!initializer list constructor
-            explicit CIndexMap(const std::initializer_list<size_t> &il):
-                IndexMapBase(il),
+            explicit cindex_map(const std::initializer_list<size_t> &il):
+                index_map_base(il),
                 _strides(il.size())
             {
                 _compute_strides();
@@ -97,8 +97,8 @@ namespace core{
             //-----------------------------------------------------------------
             //! constrution from contianer
             template<template<typename...> class CTYPE,typename ...OTS> 
-                explicit CIndexMap(const CTYPE<OTS...> &c):
-                IndexMapBase(c),
+                explicit cindex_map(const CTYPE<OTS...> &c):
+                index_map_base(c),
                 _strides(c.size())
             {
                 _compute_strides();
@@ -106,38 +106,38 @@ namespace core{
 
             //-----------------------------------------------------------------
             //! move constructor
-            CIndexMap(CIndexMap &&m):
-                IndexMapBase(std::move(m)),
+            cindex_map(cindex_map &&m):
+                index_map_base(std::move(m)),
                 _strides(std::move(m._strides))
             {}
 
             //-----------------------------------------------------------------
             //! copy constructor
-            CIndexMap(const CIndexMap &m):
-                IndexMapBase(m),
+            cindex_map(const cindex_map &m):
+                index_map_base(m),
                 _strides(m._strides)
             {}
 
             //-----------------------------------------------------------------
             //! destructor
-            ~CIndexMap() {}
+            ~cindex_map() {}
 
             //===================assignment operators==========================
             //! copy assignment operator
-            CIndexMap &operator=(const CIndexMap &m)
+            cindex_map &operator=(const cindex_map &m)
             {
                 if(this == &m) return *this;
-                IndexMapBase::operator=(m);
+                index_map_base::operator=(m);
                 _strides = m._strides;
                 return *this;
             }
 
             //-----------------------------------------------------------------
             //! move assignment operator
-            CIndexMap &operator=(CIndexMap &&m)
+            cindex_map &operator=(cindex_map &&m)
             {
                 if(this == &m) return *this;
-                IndexMapBase::operator=(std::move(m));
+                index_map_base::operator=(std::move(m));
                 _strides = std::move(m._strides);
                 return *this;
             }
@@ -153,14 +153,14 @@ namespace core{
             */
             template<typename CTYPE> void shape(const CTYPE &s)
             {
-                IndexMapBase::shape(s);
+                index_map_base::shape(s);
                 _strides = DBuffer<size_t>(s.size());
                 _compute_strides();
             }
 
             //need this to prevent the compiler from hiding all the original
             //functions from the base class.
-            using IndexMapBase::shape;
+            using index_map_base::shape;
 
             //-----------------------------------------------------------------
             /*!
@@ -169,7 +169,7 @@ namespace core{
             Computes the linear offset of multidimensional data from a 
             multi-index passed as argument list ot the function.
             \code
-            CIndexMap imap{3,4,5,8};
+            cindex_map imap{3,4,5,8};
             size_t offset = imap.offset(1,2,0,3);
             \endcode
             This function does no index nor rank checking. This is simply due to
@@ -191,14 +191,14 @@ namespace core{
             Computes the linear offset of multidimensional data from indices 
             stored in a container. 
             \code
-            CIndexMap imap{3,4,5,8};
+            cindex_map imap{3,4,5,8};
             std::vector<size_t> index{1,2,0,3};
             size_t offset = imap.offset(index);
             \endcode
 
-            \throws ShapeMissmatchError if the size of the index and the shape
+            \throws shape_missmatch_error if the size of the index and the shape
             container do not match
-            \throws IndexError if one of the indices exceeds the number of 
+            \throws index_error if one of the indices exceeds the number of 
             elements along its dimension
             \tparam CTYPE type of the index container
             \param c container with index data
@@ -213,7 +213,7 @@ namespace core{
 
             Compute the multidimensional index for a given offset and shape. 
             \code
-            CIndexMap imap{3,4,5,8};
+            cindex_map imap{3,4,5,8};
             auto index = imap.template index<std::vector<size_t> >(8);
             \endcode
             The container holding the index is allocated by the method so no
@@ -232,13 +232,13 @@ namespace core{
             This method takes the container for the index as a third argument thus
             avoiding that it must be allocated every time the method is called. 
             \code
-            CIndexMap imap{3,4,5,8};
+            cindex_map imap{3,4,5,8};
             std::vector<size_t> index(4);
             imap.index(8,index);
             \endcode
-            \throws ShapeMissmatchError if the size of the index container is not
+            \throws shape_missmatch_error if the size of the index container is not
             coinciding with that of the shape 
-            \throws SizeMissmatchError if the offset exceeds the total size of the
+            \throws size_missmatch_error if the offset exceeds the total size of the
             array represented by shape
             \tparam ITYPE container type for index
             \param offset the linear offset
@@ -252,7 +252,7 @@ namespace core{
 
         //-------------------------------------------------------------------------
         template<template<typename...> class CTYPE,typename ...OTYPES> 
-            size_t CIndexMap::offset(const CTYPE<OTYPES...> &index) const
+            size_t cindex_map::offset(const CTYPE<OTYPES...> &index) const
         {
 
             if(index.size() != rank())
@@ -260,7 +260,7 @@ namespace core{
                 std::stringstream ss;
                 ss<<"Rank of index ("<<index.size()<<") does not match ";
                 ss<<"map rank ("<<rank()<<")!";
-                throw ShapeMissmatchError(EXCEPTION_RECORD,ss.str());
+                throw shape_missmatch_error(EXCEPTION_RECORD,ss.str());
             }
 
             size_t offset = 0;
@@ -276,7 +276,7 @@ namespace core{
         }
 
         //-------------------------------------------------------------------------
-        template<typename ITYPE> ITYPE CIndexMap::index(size_t offset) const
+        template<typename ITYPE> ITYPE cindex_map::index(size_t offset) const
         {
             ITYPE index(shape().size());
             try { this->index(offset,index);}
@@ -288,7 +288,7 @@ namespace core{
 
         //-------------------------------------------------------------------------
         template<typename ITYPE>
-            void CIndexMap::index(size_t offset,ITYPE &index) const
+            void cindex_map::index(size_t offset,ITYPE &index) const
         {
             if(offset>=size())
             {

@@ -20,13 +20,13 @@
  *     Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
  */
 
-#include "CIndexMap.hpp"
+#include "cindex_map.hpp"
 
 namespace pni{
 namespace core{
 
     //-------------------------------------------------------------------------
-    void CIndexMap::_compute_strides()
+    void cindex_map::_compute_strides()
     {
         const DBuffer<size_t> &s = shape();
 
