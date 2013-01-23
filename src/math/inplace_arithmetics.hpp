@@ -26,9 +26,8 @@
 #include <limits>
 #include <functional>
 
-#include "Exceptions.hpp"
-#include "ExceptionUtils.hpp"
-#include "TypeInfo.hpp"
+#include "../exception_utils.hpp"
+#include "../type_info.hpp"
 
 namespace pni{
 namespace core{
@@ -43,7 +42,7 @@ namespace core{
     this class is used in inplace arithmetics. 
     \tparam ATYPE array type
     */
-    template<typename ATYPE> class InplaceArithmetics
+    template<typename ATYPE> class inplace_arithmetics
     {
                  
         public:
@@ -65,7 +64,7 @@ namespace core{
             
             //performe something like array += scalar
 
-            InplaceArithmetics<ATYPE>::add(array,scalar);
+            inplace_arithmetics<ATYPE>::add(array,scalar);
             \endcode
             \param a array of type ATYPE
             \param b scalar value of type ATYPE::value_type
@@ -93,7 +92,7 @@ namespace core{
             ATYPE array(...);
             std::vector<typename ATYPE::value_type> v(array.size());
 
-            InplaceArithmetics<ATYPE>::add(array,v);
+            inplace_arithmetics<ATYPE>::add(array,v);
             \endcode
             \tparam CTYPE container template
             \tparam OTS template parameters of the container template
@@ -125,7 +124,7 @@ namespace core{
             \code 
             ATYPE a(...);
             ATYPE b(...);
-            InplaceArithmetics<ATYPE>::add(a,b);
+            inplace_arithmetics<ATYPE>::add(a,b);
             \endcode
             \param a instance of ATYPE
             \param b instance of ATYPE
@@ -156,7 +155,7 @@ namespace core{
             \code
             ATYPE array(...);
             typename ATYPE::value_type scalar(5);
-            InplaceArithmetics<ATYPE>::sub(array,scalar);
+            inplace_arithmetics<ATYPE>::sub(array,scalar);
             \endcode
             \param a instance of ATYPE
             \param b scalar value
@@ -183,7 +182,7 @@ namespace core{
             \code
             ATYPE a(...);
             ATYPE b(...);
-            InplaceArithmetics<ATYPE>::sub(a,b);
+            inplace_arithmetics<ATYPE>::sub(a,b);
             \endcode
             \param a instance of ATYPE
             \param b instance of ATYPE
@@ -212,7 +211,7 @@ namespace core{
             \code
             ATYPE array(...);
             std::vector<typename ATYPE::value_type> v(array.size());
-            InplaceArithmetics<ATYPE>::sub(array,v);
+            inplace_arithmetics<ATYPE>::sub(array,v);
             \endcode
             \tparam CTYPE container template
             \tparam OTS container templat parameters
@@ -243,7 +242,7 @@ namespace core{
             \code
             ATYPE array(...);
             typename ATYPE::value_type scalar(5);
-            InplaceArithmetics<ATYPE>::mult(array,scalar);
+            inplace_arithmetics<ATYPE>::mult(array,scalar);
             \endcode
             \param a instance of ATYPE
             \param b scalar value
@@ -270,7 +269,7 @@ namespace core{
             \code
             ATYPE a(...);
             ATYPE b(...);
-            InplaceArithmetics<ATYPE>::mult(a,b);
+            inplace_arithmetics<ATYPE>::mult(a,b);
             \endcode
             \param a instance of ATYPE
             \param b instance of ATYPE
@@ -299,7 +298,7 @@ namespace core{
             \code
             ATYPE array(...);
             std::vector<typename ATYPE::value_type> v(array.size());
-            InplaceArithmetics<ATYPE>::mult(array,v);
+            inplace_arithmetics<ATYPE>::mult(array,v);
             \endcode
             \tparam CTYPE container template
             \tparam OTS CTYPE parameters
@@ -331,7 +330,7 @@ namespace core{
             \code
             ATYPE array(...);
             typename ATYPE::value_type scalar(5);
-            InplaceArithmetics<ATYPE>::div(array,scalar);
+            inplace_arithmetics<ATYPE>::div(array,scalar);
             \endcode
             \param a instance of ATYPE
             \parma b scalar value
@@ -358,7 +357,7 @@ namespace core{
             \code
             ATYPE a(...);
             ATYPE b(...);
-            InplaceArithmetics<ATYPE>::div(a,b);
+            inplace_arithmetics<ATYPE>::div(a,b);
             \endcode
             \param a instance of ATYPE
             \param b instance of ATYPE
@@ -388,7 +387,7 @@ namespace core{
             \code
             ATYPE array(...);
             std::vector<typename ATYPE::value_type> v(array.size());
-            InplaceArithmetics<ATYPE>::div(array,v);
+            inplace_arithmetics<ATYPE>::div(array,v);
             \endcode
             \tparam CTYPE container template
             \tparam OTS container template parameters

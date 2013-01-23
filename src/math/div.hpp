@@ -22,61 +22,75 @@
  */
 #pragma once
 
-#include "OpTraits.hpp"
+#include "op_traits.hpp"
 
-#include "../Iterator.hpp"
+#include "../iterator.hpp"
 
 namespace pni{
 namespace core{
     
-    template<typename ATYPE> class ArrayView;
+    template<typename ATYPE> class array_view;
 
     /*! 
     \ingroup numeric_array_classes
-    \brief subtraction expression template
+    \brief Division expression template
 
-    Expression template for subtraction of array templates.
-    \tparam OP1T left operand type
-    \tparam OP2T right operand type
+    \tparam OP1T type of the left operand
+    \tparam OP2T type of the right operand
     */
-    template<typename OP1T,typename OP2T> class Sub
+    template<typename OP1T,typename OP2T> class div
     {
         private:
             //! reference to the left operand
-            typename OpTrait<OP1T>::ref_type _op1;
+            typename op_trait<OP1T>::ref_type _op1;
             //! reference to the right operand
-            typename OpTrait<OP2T>::ref_type _op2;
+            typename op_trait<OP2T>::ref_type _op2;
         public:
             //--------------------public types---------------------------------
-            //! type of the element 
+            //! result type of the operation
             typedef typename OP1T::value_type value_type;
-            //! type of the template
-            typedef Sub<OP1T,OP2T> array_type;
-            //! storage type - not used for this
+            //! type of the expression template
+            typedef div<OP1T,OP2T> array_type;
+            //! storage type
             typedef void storage_type;
-            //! iterator type
-            typedef Iterator<array_type,0> iterator;
+            //! non-const iterator - just for interface
+            typedef iterator<array_type,0> iterator;
             //! const iterator type
-            typedef Iterator<array_type,1> const_iterator;
+            typedef iterator<array_type,1> const_iterator;
             //! view type
-            typedef ArrayView<array_type> view_type;
+            typedef array_view<array_type> view_type;
 
             //===================constructors==================================
-            //! standard constructor
-            Sub(const OP1T &o1,const OP2T &o2):
+            /*!
+            \brief constructor
+            \param o1 left operand
+            \param o2 right operand
+            */
+            div(const OP1T &o1,const OP2T &o2):
                 _op1(o1),
                 _op2(o2)
             {}
 
             //====================public methods===============================
-            //! get value i
+            /*!
+            \brief return result at i
+
+            Return the result of a[i]/b[i]. 
+            \param i index at which to perform operation
+            \return result of the operation
+            */
             value_type operator[](size_t i) const
             {
-                return this->_op1[i]-this->_op2[i];
+                return this->_op1[i]/this->_op2[i];
             }
 
             //-----------------------------------------------------------------
-            //! get size of the 
+            /*! 
+            \brief get size
+
+            Return the maximum of a.size() and b.size(). 
+            \return size
+            */
             size_t size() const
             {
                 return _op1.size()>_op2.size() ? _op1.size() : _op2.size();
@@ -105,20 +119,21 @@ namespace core{
                 return  _op1.template shape<CTYPE>();
             }
             //=====================iterators===================================
-            //! get const iterator to the first element
+            //! get const iterator to first element
             const_iterator begin() const
             {
                 return const_iterator(this,0);
             }
 
             //-----------------------------------------------------------------
-            //! get const iterator to the last element
+            //! get const iterator to last+1 element
             const_iterator end() const
             {
                 return const_iterator(this,this->size());
             }
 
     };
+
 
 
 //end of namespace

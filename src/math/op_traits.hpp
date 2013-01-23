@@ -22,7 +22,7 @@
  */
 #pragma once
 
-#include "../Scalar.hpp"
+#include "../scalar.hpp"
 
 namespace pni{
 namespace core{
@@ -32,7 +32,7 @@ namespace core{
     \brief operator reference trait
 
     */
-    template<typename OT> struct OpTrait
+    template<typename OT> struct op_trait
     {
         //! reference type for the operand
         typedef OT const& ref_type; 
@@ -42,10 +42,10 @@ namespace core{
     \ingroup numeric_array_classes
     \brief operator reference trait - specialization
     */
-    template<typename T> struct OpTrait<Scalar<T> >
+    template<typename T> struct op_trait<scalar<T> >
     {
         //! reference type for a scalar operand
-        typedef Scalar<T> ref_type;
+        typedef scalar<T> ref_type;
     };
 //end of namespace
 }

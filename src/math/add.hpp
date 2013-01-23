@@ -22,14 +22,14 @@
  */
 #pragma once
 
-#include "OpTraits.hpp"
+#include "op_traits.hpp"
 
-#include "../Iterator.hpp"
+#include "../iterator.hpp"
 
 namespace pni{
 namespace core{
 
-    template<typename ATYPE> class ArrayView;
+    template<typename ATYPE> class array_view;
 
     /*!
     \ingroup numeric_array_types
@@ -38,27 +38,27 @@ namespace core{
     \tparam OP1T type of left operand
     \tparam OP2T type of right operand
     */
-    template<typename OP1T,typename OP2T> class Add
+    template<typename OP1T,typename OP2T> class add
     {
         private:
             //! reference to the left operand
-            typename OpTrait<OP1T>::ref_type _op1;
+            typename op_trait<OP1T>::ref_type _op1;
             //! reference to the right operand
-            typename OpTrait<OP2T>::ref_type _op2;
+            typename op_trait<OP2T>::ref_type _op2;
         public:
             //--------------------public types---------------------------------
             //! result type of the operation
             typedef typename OP1T::value_type value_type;
             //! type of the expression template
-            typedef Add<OP1T,OP2T> array_type;
+            typedef add<OP1T,OP2T> array_type;
             //! storage type
             typedef void storage_type;
             //! non-const iterator type - just for interface
-            typedef Iterator<array_type,0> iterator;
+            typedef iterator<array_type,0> iterator;
             //! const iterator type
-            typedef Iterator<array_type,1> const_iterator;
+            typedef iterator<array_type,1> const_iterator;
             //! view type
-            typedef ArrayView<array_type> view_type;
+            typedef array_view<array_type> view_type;
 
             //===================constructors==================================
             /*!
@@ -66,7 +66,7 @@ namespace core{
             \param o1 left operand
             \param o2 right operand
             */
-            Add(const OP1T &o1,const OP2T &o2):
+            add(const OP1T &o1,const OP2T &o2):
                 _op1(o1),
                 _op2(o2)
             {}
