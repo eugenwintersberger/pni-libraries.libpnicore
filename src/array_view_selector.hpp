@@ -25,13 +25,13 @@
 
 #pragma once
 
-#include "ArrayView.hpp"
+#include "array_view.hpp"
 
 
 namespace pni {
 namespace core {
 
-    template<typename ATYPE,template<typename> class IPA> class NumArray;
+    template<typename ATYPE,template<typename> class IPA> class numarray;
 
     /*! 
     \ingroup util_classes
@@ -54,7 +54,7 @@ namespace core {
     \endcode
     This type decides on the return type depending on the argument types.
     */
-    template<typename ATYPE,typename ...ITYPES> struct ArrayViewSelector
+    template<typename ATYPE,typename ...ITYPES> struct array_view_selector
     {};
 
     //-------------------------------------------------------------------------
@@ -66,12 +66,12 @@ namespace core {
     is instantiated recursively.
     */
     template<typename ATYPE,typename T,typename ...ITYPES> struct
-        ArrayViewSelector<ATYPE,T,ITYPES...>
+        array_view_selector<ATYPE,T,ITYPES...>
     {
         //! recursive instantiation of the selector type
-        typedef typename ArrayViewSelector<ATYPE,ITYPES...>::viewtype viewtype;
+        typedef typename array_view_selector<ATYPE,ITYPES...>::viewtype viewtype;
         //! reference type
-        typedef typename ArrayViewSelector<ATYPE,ITYPES...>::reftype  reftype;
+        typedef typename array_view_selector<ATYPE,ITYPES...>::reftype  reftype;
     };
 
     //-------------------------------------------------------------------------
@@ -83,12 +83,12 @@ namespace core {
     type.
     */
     template<typename ATYPE,typename ...ITYPES> struct
-        ArrayViewSelector<ATYPE,Slice,ITYPES...>
+        array_view_selector<ATYPE,Slice,ITYPES...>
     {
         //! array view return type
-        typedef ArrayView<ATYPE> viewtype; 
+        typedef array_view<ATYPE> viewtype; 
         //! array view reference type
-        typedef ArrayView<ATYPE> reftype; 
+        typedef array_view<ATYPE> reftype; 
     };
 
     //-------------------------------------------------------------------------
@@ -100,12 +100,12 @@ namespace core {
     class.
     */
     template<typename ATYPE,template<typename> class IPA,typename ...ITYPES> 
-        struct ArrayViewSelector<NumArray<ATYPE,IPA>,Slice,ITYPES...>
+        struct array_view_selector<numarray<ATYPE,IPA>,Slice,ITYPES...>
     {
         //! array view return type
-        typedef NumArray<ArrayView<NumArray<ATYPE,IPA> >,IPA > viewtype;
+        typedef numarray<array_view<numarray<ATYPE,IPA> >,IPA > viewtype;
         //! array view reference type
-        typedef NumArray<ArrayView<NumArray<ATYPE,IPA> >,IPA > reftype;
+        typedef numarray<array_view<numarray<ATYPE,IPA> >,IPA > reftype;
     };
 
     //-------------------------------------------------------------------------
@@ -116,7 +116,7 @@ namespace core {
     Break condition for recursive template type instantiation for a scalar
     return type. This will be chosen if all arguments are single index types.
     */
-    template<typename ATYPE> struct ArrayViewSelector<ATYPE>
+    template<typename ATYPE> struct array_view_selector<ATYPE>
     {
         //! element type
         typedef typename ATYPE::value_type viewtype; 

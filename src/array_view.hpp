@@ -27,10 +27,10 @@
 #pragma once
 
 
-#include "CIndexMap.hpp"
-#include "DBuffer.hpp"
-#include "Iterator.hpp"
-#include "ArraySelection.hpp"
+#include "cindex_map.hpp"
+#include "dbuffer.hpp"
+#include "iterator.hpp"
+#include "array_selection.hpp"
 
 namespace pni{
 namespace core{
@@ -42,28 +42,28 @@ namespace core{
     is allocated. 
     An array view can be obtained from an array using the () operator. 
     \code
-    DArray<Float32> a(std::vector<size_t>{3,4,10});
+    darray<float32> a(std::vector<size_t>{3,4,10});
 
     //create a (4,10) view from the above array 
-    auto view = a(1,Slice{0,4},Slice{0,10});
+    auto view = a(1,slice{0,4},Slice{0,10});
 
     //the view can now be used like any other array - however, no new memory is
     //allocated.
 
     //create an array from the view
-    DArray<Float32> roi(view.shape<std::vector<size_t> >(),
-                        DArray<Float32>::storage_type(view));
+    darray<float32> roi(view.shape<std::vector<size_t> >(),
+                        darray<float32>::storage_type(view));
     \endcode
 
     
     */
-    template<typename ATYPE> class ArrayView
+    template<typename ATYPE> class array_view
     {
         private:
             //! parent array from which to draw data
             ATYPE *_parray; 
             //! selection object for index transformation 
-            ArraySelection _selection;
+            array_selection _selection;
             //! index map to produce the original selection index
             CIndexMap _imap;
 
@@ -74,7 +74,7 @@ namespace core{
             //! storage type
             typedef ATYPE storage_type;
             //! type of the view 
-            typedef ArrayView<storage_type> array_type;
+            typedef array_view<storage_type> array_type;
             //! shared pointer type
             typedef std::shared_ptr<array_type> shared_ptr;
             //! unique pointer type
@@ -84,15 +84,15 @@ namespace core{
             //! const iterator type
             typedef Iterator<array_type,1> const_iterator; 
             //! view type
-            typedef ArrayView<array_type> view_type;
+            typedef array_view<array_type> view_type;
             //! map type
-            typedef CIndexMap map_type;
+            typedef cindex_map map_type;
             //========================public members===========================
             //! type id of the value_type
             static const size_t type_id = ATYPE::type_id;
             //=============constructors and destructor=========================
 
-            ArrayView():_parray(nullptr),_selection() {}
+            array_view():_parray(nullptr),_selection() {}
 
             //-----------------------------------------------------------------
             /*! \brief constructor
@@ -100,7 +100,7 @@ namespace core{
             This constructor creates a view which includes the entire array.
             \param a reference to the original array
             */
-            ArrayView(storage_type &a):
+            array_view(storage_type &a):
                 _parray(&a),
                 _selection(),
                 _imap()
@@ -112,8 +112,8 @@ namespace core{
                 std::fill(offset.begin(),offset.end(),0);
                 std::fill(stride.begin(),stride.end(),1);
 
-                this->_selection = ArraySelection(shape,offset,stride);
-                this->_imap = CIndexMap(this->_selection.shape());
+                this->_selection = array_selection(shape,offset,stride);
+                this->_imap = cindex_map(this->_selection.shape());
             }
 
             //-----------------------------------------------------------------
@@ -125,7 +125,7 @@ namespace core{
             \param s selection object defining the description
             dimension
             */
-            ArrayView(storage_type &a,const ArraySelection &s):
+            array_view(storage_type &a,const array_selection &s):
                 _parray(&a),
                 _selection(s),
                 _imap(_selection.shape())
@@ -137,7 +137,7 @@ namespace core{
 
             //-----------------------------------------------------------------
             //! copy constructor
-            ArrayView(const array_type &o):
+            array_view(const array_type &o):
                 _parray(o._parray),
                 _selection(o._selection),
                 _imap(o._imap)
@@ -145,7 +145,7 @@ namespace core{
 
             //-----------------------------------------------------------------
             //! move constructor
-            ArrayView(array_type &&o):
+            array_view(array_type &&o):
                 _parray(o._parray),
                 _selection(std::move(o._selection)),
                 _imap(std::move(o._imap))
@@ -178,7 +178,7 @@ namespace core{
 
             Using a container object to hold the multidimensional indices to
             access view data. 
-            \throws ShapeMissmatchError if size of container does not match
+            \throws shape_missmatch_error if size of container does not match
             view rank
             \param index container with multidimensional index
             \return reference to value at index
@@ -195,7 +195,7 @@ namespace core{
 
             Using a container object to hold the multidimensional indices to
             access view data. 
-            \throws ShapeMissmatchError if size of container does not match
+            \throws shape_missmatch_error if size of container does not match
             view rank
             \param index container with multidimensional index
             \return value at index
@@ -214,8 +214,8 @@ namespace core{
             () operator allows access to the data using a multidimensional
             index represented by the arguments of the operator. 
             \code 
-            Array<Float32,Buffer> data({100,200,100});
-            auto view = data(Slice(50,75),Slice(0,200),Slice(25,41));
+            darray<Float32> data({100,200,100});
+            auto view = data(slice(50,75),slice(0,200),slice(25,41));
             std::cout<<view(3,34,10)<<std::endl;
             \endcode
             This works essentially the same as for the Array template.
@@ -235,8 +235,8 @@ namespace core{
             () operator allows access to the data using a multidimensional
             index represented by the arguments of the operator. 
             \code 
-            Array<Float32,Buffer> data({100,200,100});
-            auto view = data(Slice(50,75),Slice(0,200),Slice(25,41));
+            darray<float32> data({100,200,100});
+            auto view = data(slice(50,75),slice(0,200),slice(25,41));
             std::cout<<view(3,34,10)<<std::endl;
             \endcode
             This works essentially the same as for the Array template.
@@ -270,6 +270,7 @@ namespace core{
                 return s;
             }
 
+            //-----------------------------------------------------------------
             /*!
             \brief get index map
 
@@ -283,7 +284,7 @@ namespace core{
 
             Provides access to the linearized data. With this operator
             linear access is provided to the elements of the view.
-            \throws MemoryAccessError if some of the involved objects is not
+            \throws memory_access_error if some of the involved objects is not
             allocated
             \param i linear index of the element
             \return reference to the value at index i 
@@ -299,7 +300,7 @@ namespace core{
 
             Provides const access to the linearized data. With this operator
             linear access is provided to the elements of the view.
-            \throws MemoryAccessError if some of the involved objects is not
+            \throws memory_access_error if some of the involved objects is not
             allocated
             \param i linear index of the element
             \return value at index i 
