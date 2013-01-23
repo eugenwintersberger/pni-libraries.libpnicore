@@ -43,14 +43,14 @@ namespace core{
     entirely determined at compile time by its template parameters. 
     For instance, the following code creates a static shape of size 4x10
     \code
-    StaticCIndexMap<4,10> im;
+    static_cindex_map<4,10> im;
     \endcode
     As this type cannot be configured at runtime it is perfectly suited for
     static the creation of n-dimensional static array types like matrices or
     vectors. 
     \tparam DIMS number of elements along each dimension
     */
-    template<size_t ...DIMS> class StaticCIndexMap
+    template<size_t ...DIMS> class static_cindex_map
     {
         private:
             //! static buffer holding the data
@@ -194,9 +194,9 @@ namespace core{
         public:
             //! default constructor
 #ifdef NOCEXPR
-            StaticCIndexMap() {}
+            static_cindex_map() {}
 #else
-            constexpr StaticCIndexMap() { }
+            constexpr static_cindex_map() { }
 #endif
             
             //-----------------------------------------------------------------
@@ -395,7 +395,7 @@ namespace core{
 
     //ensure that the dimension data is loaded into the buffer
     template<size_t ...DIMS> 
-        const size_t StaticCIndexMap<DIMS...>::_dims[sizeof...(DIMS)] = {DIMS...};
+        const size_t static_cindex_map<DIMS...>::_dims[sizeof...(DIMS)] = {DIMS...};
 
 //end of namespace
 }
