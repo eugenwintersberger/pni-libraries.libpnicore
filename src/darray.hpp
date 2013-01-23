@@ -33,18 +33,17 @@
 #include<cstdio>
 #include<typeinfo>
 
-#include "Exceptions.hpp"
-#include "ExceptionUtils.hpp"
+#include "exception_utils.hpp"
 #include "types.hpp"
-#include "Slice.hpp"
-#include "ArrayView.hpp"
-#include "ArrayViewSelector.hpp"
-#include "CIndexMap.hpp"
+#include "slice.hpp"
+#include "array_view.hpp"
+#include "array_view_selector.hpp"
+#include "cindex_map.hpp"
 
-#include "TypeInfo.hpp"
+#include "type_info.hpp"
 #include "type_id_map.hpp"
 #include "type_conversion.hpp"
-#include "Iterator.hpp"
+#include "iterator.hpp"
 
 namespace pni {
 namespace core {
@@ -58,9 +57,9 @@ namespace core {
     \tparam IMAP the index map 
     */
     template<typename T,
-             typename STORAGE=DBuffer<T,NewAllocator>,
-             typename IMAP=CIndexMap > 
-    class DArray
+             typename STORAGE=dbuffer<T,new_allocator>,
+             typename IMAP=cindex_map > 
+    class darray
     {
         private:
             //! Index map of the array 
@@ -80,14 +79,14 @@ namespace core {
             \return array view object
             */
             template<typename ...ITYPES>
-            ArrayView<DArray<T,STORAGE,IMAP> >
-                _get_data(ArrayView<DArray<T,STORAGE,IMAP> > &view,ITYPES ...indices)
+            array_view<DArray<T,STORAGE,IMAP> >
+                _get_data(array_view<darray<T,STORAGE,IMAP> > &view,ITYPES ...indices)
             {
 
-                std::vector<Slice> slices{Slice(indices)...};
-                ArraySelection s = ArraySelection::create(slices);
+                std::vector<slice> slices{slice(indices)...};
+                arrawy_selection s = array_selection::create(slices);
 
-                return ArrayView<DArray<T,STORAGE,IMAP> >(*this,s);
+                return array_view<darray<T,STORAGE,IMAP> >(*this,s);
             }
 
             //-----------------------------------------------------------------
@@ -137,12 +136,12 @@ namespace core {
             \return array view
             */
             template<template<typename ...> class CTYPE,typename ...OTS>
-            ArrayView<DArray<T,STORAGE,IMAP> >
-            _get_data(ArrayView<DArray<T,STORAGE,IMAP> >&view,const CTYPE<OTS...> &c)
+            array_view<darray<T,STORAGE,IMAP> >
+            _get_data(array_view<darray<T,STORAGE,IMAP> >&view,const CTYPE<OTS...> &c)
             {
-                ArraySelection s = ArraySelection::create(c);
+                array_selection s = array_selection::create(c);
 
-                return ArrayView<DArray<T,STORAGE,IMAP> >(*this,s);
+                return array_view<darray<T,STORAGE,IMAP> >(*this,s);
             }
 
             //-----------------------------------------------------------------
@@ -168,7 +167,7 @@ namespace core {
             //! arrays element type
             typedef T value_type;  
             //! type of the array
-            typedef DArray<T,STORAGE> array_type;
+            typedef darray<T,STORAGE> array_type;
             //! type of the buffer object
             typedef STORAGE storage_type;
             //! shared pointer to array_type
@@ -176,7 +175,7 @@ namespace core {
             //! unique pointer to array type
             typedef std::unique_ptr<array_type> unique_ptr; 
             //! type for array view
-            typedef ArrayView<array_type> view_type;
+            typedef array_view<array_type> view_type;
             //! iterator type
             typedef typename STORAGE::iterator iterator;
             //! const iterator type
@@ -186,7 +185,7 @@ namespace core {
             
             //==================public members=================================
             //! type ID of the element type
-            static const TypeID type_id; 
+            static const type_id_t type_id; 
 
             //=================constructors and destructor=====================
             /*! \brief default constructor
@@ -198,7 +197,7 @@ namespace core {
             is known at the time of definition but all other parameters
             are obtained later in the code.
             */
-            DArray():_imap(),_data() {}
+            darray():_imap(),_data() {}
 
             //-----------------------------------------------------------------
             /*! \brief copy constructor
@@ -208,11 +207,11 @@ namespace core {
             \throws MemoryAllocationError if memory allocation fails
             \param a array from which to copy
             */
-            DArray(const array_type &a):_imap(a._imap),_data(a._data) { }
+            darray(const array_type &a):_imap(a._imap),_data(a._data) { }
 
             //-----------------------------------------------------------------
             //! move constructor
-            DArray(array_type &&a):
+            darray(array_type &&a):
                 _imap(std::move(a._imap)),
                 _data(std::move(a._data))
             { }
@@ -224,13 +223,13 @@ namespace core {
             object. An exception will be raised if their sizes do not match.
             To keep ownership the objects will be copied.
 
-            \throws MemoryAllocationError if memory allocation fails
-            \throws SizeMissmatchError if sizes do not match
+            \throws memory_allocation_error if memory allocation fails
+            \throws size_missmatch_error if sizes do not match
             \param s shape object
             \param b buffer object
             */
             template<template<typename...> class CTYPE,typename ...OTS>
-            explicit DArray(const CTYPE<OTS...> &s, const STORAGE &b):
+            explicit darray(const CTYPE<OTS...> &s, const STORAGE &b):
                 _imap(s),
                 _data(b)
             {
@@ -244,7 +243,7 @@ namespace core {
             \param buffer buffer object
             */
             template<template<typename...> class CTYPE,typename ...OTS>
-            explicit DArray(const CTYPE<OTS...> &s,STORAGE &&buffer):
+            explicit darray(const CTYPE<OTS...> &s,STORAGE &&buffer):
                 _imap(s),
                 _data(std::move(buffer))
             { }
@@ -260,7 +259,8 @@ namespace core {
             \tparam ATYPE array type of the view
             \param a reference to the array view
             */
-            template<typename ATYPE> explicit DArray(const ArrayView<ATYPE> &a):
+            template<typename ATYPE> 
+            explicit darray(const array_view<ATYPE> &a):
                 _imap(a.shape<std::vector<size_t> >()),
                 _data(a)
             { }
@@ -271,11 +271,11 @@ namespace core {
 
             Construct Array from a shape and let the constructor allocate
             memory.
-            \throws MemoryAllocationError if memory allocation fails
+            \throws memory_allocation_error if memory allocation fails
             \param s shape container
             */
             template<template<typename...> class CTYPE,typename ...OTS> 
-                explicit DArray(const CTYPE<OTS...> &s):
+                explicit darray(const CTYPE<OTS...> &s):
                 _imap(s),
                 _data(STORAGE(_imap.size()))
             { }
@@ -283,7 +283,7 @@ namespace core {
 
             //-----------------------------------------------------------------
             //! destructor
-            ~DArray() { }
+            ~darray() { }
 
             //===================assignment operators==========================
             //! copy assignment operator
@@ -321,9 +321,9 @@ namespace core {
             The size of the new shape must match the size of the buffer
             associated with the array.
 
-            \throws SizeMissmatchError if allocated buffer and shape size do not
+            \throws size_missmatch_error if allocated buffer and shape size do not
             match
-            \throws MemoryNotAllocatedError if no memory is allocated
+            \throws memory_not_allocated_error if no memory is allocated
             \param s shape of the array
             */
             template<typename CTYPE> void shape(const CTYPE &s)
@@ -334,6 +334,7 @@ namespace core {
                 this->_imap = map;
             }
 
+            //-----------------------------------------------------------------
             /*! \brief get index map
 
             Returns a const reference to the index map of the array.
@@ -347,11 +348,12 @@ namespace core {
             Return a constant reference to the array shape. 
             \return array shape const reference
             */
-            const DBuffer<size_t> &shape() const 
+            const dbuffer<size_t> &shape() const 
             { 
                 return this->_imap.shape(); 
             }
 
+            //----------------------------------------------------------------
             //! shape to container
             template<typename CTYPE> CTYPE shape() const
             {
@@ -408,7 +410,7 @@ namespace core {
 
             Return a reference to the value at linear index i. This method
             performs index checking. 
-            \throws IndexError if i exceeds array size
+            \throws index_error if i exceeds array size
             \param i linear index of element
             \return reference to the value at i
             */
@@ -419,7 +421,7 @@ namespace core {
 
             Return the value of element i. This method
             performs index checking. 
-            \throws IndexError if i exceeds array size
+            \throws index_error if i exceeds array size
             \param i linear index of element
             \return value at i
             */
@@ -430,7 +432,7 @@ namespace core {
             \brief insert value at index i
 
             Insert value at index i. 
-            \throws IndexError if i exceeds the size of the array
+            \throws index_error if i exceeds the size of the array
             \param i linear index of the element
             \param value the value to store at index i
             */
@@ -446,18 +448,18 @@ namespace core {
 
             Returns the data at a position described by the multidimensional
             index i. 
-            \throws ShapeMissmatchError if size of c does not match the rank of
+            \throws shape_missmatch_error if size of c does not match the rank of
             the array
-            \throws IndexError if one of the indices exceeds the number of
+            \throws index_error if one of the indices exceeds the number of
             elements along its dimension
             \param c multidimensional index 
             \return reference to the element at position i
             */
             template<template<typename ...> class CTYPE,typename ...OTS> 
-            typename ArrayViewSelector<array_type,typename CTYPE<OTS...>::value_type>::reftype
+            typename array_view_selector<array_type,typename CTYPE<OTS...>::value_type>::reftype
             operator()(const CTYPE<OTS...> &c)
             {
-                typedef ArrayViewSelector<array_type,typename CTYPE<OTS...>::value_type> selector;
+                typedef array_view_selector<array_type,typename CTYPE<OTS...>::value_type> selector;
                 typedef typename selector::viewtype viewtype;
                 typedef typename selector::reftype  viewref;
 
@@ -470,18 +472,18 @@ namespace core {
 
             Returns the data at a position described by the multidimensional
             index i. 
-            \throws ShapeMissmatchError if size of c does not match the rank of
+            \throws shape_missmatch_error if size of c does not match the rank of
             the array
-            \throws IndexError if one of the indices exceeds the number of
+            \throws index_error if one of the indices exceeds the number of
             elements along its dimension
             \param c multidimensional index 
             \return value of the element at position i
             */
             template<template<typename ...> class CTYPE,typename ...OTS>
-            typename ArrayViewSelector<array_type,typename CTYPE<OTS...>::value_type>::viewtype
+            typename array_view_selector<array_type,typename CTYPE<OTS...>::value_type>::viewtype
             operator()(const CTYPE<OTS...> &c) const
             {
-                typedef ArrayViewSelector<array_type,typename CTYPE<OTS...>::value_type> sel;
+                typedef array_view_selector<array_type,typename CTYPE<OTS...>::value_type> sel;
                 typename sel::viewtype result = typename sel::viewtype();
 
                 return _get_data(result,c);
@@ -498,10 +500,10 @@ namespace core {
             \return reference to the element at position i
             */
             template<typename ...ITYPES>
-                typename ArrayViewSelector<array_type,ITYPES...>::reftype
+                typename array_view_selector<array_type,ITYPES...>::reftype
                 operator()(ITYPES ...indices) 
             {
-                typedef ArrayViewSelector<array_type,ITYPES...> selector;
+                typedef array_view_selector<array_type,ITYPES...> selector;
                 typedef typename selector::viewtype viewtype;
                 typedef typename selector::reftype  viewref;
 
@@ -519,10 +521,10 @@ namespace core {
             \return value of the element at position i
             */
             template<typename ...ITYPES> 
-                typename ArrayViewSelector<array_type,ITYPES...>::viewtype
+                typename array_view_selector<array_type,ITYPES...>::viewtype
                 operator()(ITYPES ...indices) const
             {
-                typedef ArrayViewSelector<array_type,ITYPES...> sel;
+                typedef array_view_selector<array_type,ITYPES...> sel;
                 typename sel::viewtype result = typename sel::viewtype();
 
                 return _get_data(result,indices...);
@@ -566,7 +568,7 @@ namespace core {
 
     //set data for static member attribute
     template<typename T,typename STORAGE,typename IMAP>
-    const TypeID DArray<T,STORAGE,IMAP>::type_id = TypeIDMap<T>::type_id;
+    const type_id_t darray<T,STORAGE,IMAP>::type_id = type_id_map<T>::type_id;
     //=====================non-member operators================================
 
     /*!
@@ -578,7 +580,7 @@ namespace core {
     \return output stream
     */
     template<typename T,typename STORAGE>
-    std::ostream &operator<<(std::ostream &o,const DArray<T,STORAGE> &a)
+    std::ostream &operator<<(std::ostream &o,const darray<T,STORAGE> &a)
     {
         for(auto v: a)
             o<<v<<" ";
@@ -596,7 +598,7 @@ namespace core {
     \return reference to input stream
     */
     template<typename T,typename STORAGE>
-    std::istream &operator>>(std::istream &is,DArray<T,STORAGE> &a)
+    std::istream &operator>>(std::istream &is,darray<T,STORAGE> &a)
     {
         for(T &v: a)
             is>>v;
@@ -606,8 +608,8 @@ namespace core {
    
     //-------------------------------------------------------------------------
     template<typename T,typename STORAGE>
-    bool operator==(const DArray<T,STORAGE> &b1, 
-                    const DArray<T,STORAGE> &b2) 
+    bool operator==(const darray<T,STORAGE> &b1, 
+                    const darray<T,STORAGE> &b2) 
     {
         if((b1.shape() == b2.shape()) &&
            (b1.storage() == b2.storage())) return true;
@@ -617,8 +619,8 @@ namespace core {
 
     //-------------------------------------------------------------------------
     template<typename T,typename STORAGE>
-    bool operator!=(const DArray<T,STORAGE> &b1, 
-                    const DArray<T,STORAGE> &b2) 
+    bool operator!=(const darray<T,STORAGE> &b1, 
+                    const darray<T,STORAGE> &b2) 
     {
         if (!(b1 == b2)) {
             return true;
