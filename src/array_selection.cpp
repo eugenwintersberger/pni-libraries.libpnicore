@@ -21,12 +21,12 @@
  *     Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
  */
 
-#include "ArraySelection.hpp"
+#include "array_selection.hpp"
 
 namespace pni{
 namespace core{
     //=====================implementation of constructors and destructor========
-    ArraySelection::ArraySelection(const ArraySelection &s):
+    array_selection::array_selection(const array_selection &s):
         _oshape(s._oshape),
         _offset(s._offset),
         _stride(s._stride),
@@ -36,7 +36,7 @@ namespace core{
     {}
 
     //--------------------------------------------------------------------------
-    ArraySelection::ArraySelection(ArraySelection &&s):
+    array_selection::array_selection(array_selection &&s):
         _oshape(std::move(s._oshape)),
         _offset(std::move(s._offset)),
         _stride(std::move(s._stride)),
@@ -52,7 +52,7 @@ namespace core{
         s._size = 0;
     }
     //===========implementation of assignment operators=========================
-    ArraySelection &ArraySelection::operator=(const ArraySelection &s)
+    array_selection &array_selection::operator=(const array_selection &s)
     {
         if(this == &s) return *this;
         _oshape = s._oshape;
@@ -65,7 +65,7 @@ namespace core{
     }
 
     //--------------------------------------------------------------------------
-    ArraySelection &ArraySelection::operator=(ArraySelection &&s)
+    array_selection &array_selection::operator=(array_selection &&s)
     {
         if(this == &s) return *this;
         _oshape = std::move(s._oshape);
@@ -81,7 +81,7 @@ namespace core{
 
     //======================implementation of general purpose methods===========
 
-    ArraySelection ArraySelection::create(const std::vector<Slice> &s)
+    array_selection array_selection::create(const std::vector<slice> &s)
     {
         std::vector<size_t> shape(s.size());
         std::vector<size_t> offset(s.size());
@@ -102,11 +102,11 @@ namespace core{
             index++;
         }
 
-        return ArraySelection(shape,offset,stride);
+        return array_selection(shape,offset,stride);
     }
 
     //--------------------------------------------------------------------------
-    std::ostream &operator<<(std::ostream &o,const ArraySelection &s)
+    std::ostream &operator<<(std::ostream &o,const array_selection &s)
     {
         o<<"original data:"<<std::endl;
         for(size_t i=0;i<s._oshape.size();i++)

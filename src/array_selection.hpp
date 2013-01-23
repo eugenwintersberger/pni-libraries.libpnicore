@@ -25,8 +25,8 @@
 #include <vector>
 #include <algorithm>
 
-#include "ExceptionUtils.hpp"
-#include "Slice.hpp"
+#include "exception_utils.hpp"
+#include "slice.hpp"
 
 namespace pni{
 namespace core{
@@ -50,7 +50,7 @@ namespace core{
     element in the selection. However, to get the data from the original array
     this must be modified to (1,i,j) which is the major purpose of this type.
     */
-    class ArraySelection
+    class array_selection
     {
         private:
             //member variables describing the selection in the original array
@@ -108,9 +108,9 @@ namespace core{
             //------------------------------------------------------------------
             //! standard constructor
             template<template<typename ...> class CTYPE,typename ...OTS>
-            explicit ArraySelection(const CTYPE<OTS...> &oshape,
-                                    const CTYPE<OTS...> &ooffset,
-                                    const CTYPE<OTS...> &ostride):
+            explicit array_selection(const CTYPE<OTS...> &oshape,
+                                     const CTYPE<OTS...> &ooffset,
+                                     const CTYPE<OTS...> &ostride):
                 _oshape(oshape.size()),
                 _offset(ooffset.size()),
                 _stride(ostride.size())
@@ -124,23 +124,23 @@ namespace core{
 
             //-----------------------------------------------------------------
             //! copy constructor
-            ArraySelection(const ArraySelection &s);
+            array_selection(const array_selection &s);
 
             //-----------------------------------------------------------------
             //! move constructor
-            ArraySelection(ArraySelection &&s);
+            array_selection(array_selection &&s);
 
             //-----------------------------------------------------------------
             //! static creation function
-            static ArraySelection create(const std::vector<Slice> &s);
+            static array_selection create(const std::vector<slice> &s);
 
             //=====================assignment operators========================
             //! copy assignment operator
-            ArraySelection &operator=(const ArraySelection &s);
+            array_selection &operator=(const array_selection &s);
 
             //-----------------------------------------------------------------
             //! move assignment operator
-            ArraySelection &operator=(ArraySelection &&s);
+            array_selection &operator=(array_selection &&s);
            
             //=================inquery methods=================================
             /*! 
@@ -271,7 +271,7 @@ namespace core{
 
             //create a (1,25,128) selection from a 3D array at offset (1,1,1)
             //and with stride (1,1,1)
-            ArraySelection s(itype{1,25,128},itype{1,1,1},itype{1,1,1});
+            array_selection s(itype{1,25,128},itype{1,1,1},itype{1,1,1});
 
             //selection index
             itype sindex{2,100};
@@ -288,7 +288,7 @@ namespace core{
             The method assumes that all index containers are of appropriate
             size. If this is not the case an exception will be thrown
 
-            \throws SizeMissmatchError if sindex does not match the rank of the
+            \throws size_missmatch_error if sindex does not match the rank of the
             selection or if oindex does not match the rank of the original array
 
             \tparam ITYPE container type for the indices
@@ -344,7 +344,7 @@ namespace core{
             }
             //! output operator
             friend std::ostream &
-                operator<<(std::ostream &o,const ArraySelection &s);
+                operator<<(std::ostream &o,const array_selection &s);
     };
 
             
