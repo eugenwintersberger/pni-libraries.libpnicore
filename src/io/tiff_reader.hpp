@@ -30,11 +30,11 @@
 #include<vector>
 #include<boost/current_function.hpp>
 
-#include "ImageReader.hpp"
-#include "ImageInfo.hpp"
-#include "tiff/IFD.hpp"
-#include "tiff/IFDEntry.hpp"
-#include "tiff/StripReader.hpp"
+#include "image_reader.hpp"
+#include "image_info.hpp"
+#include "tiff/ifd.hpp"
+#include "tiff/ifd_entry.hpp"
+#include "tiff/strip_reader.hpp"
 
 using namespace pni::core;
 
@@ -50,7 +50,8 @@ namespace io{
     The copy constructor and the copy assignment operator are deleted to prevent
     copy construction of this object. 
     */
-    class TIFFReader:public ImageReader {
+    class tiff_reader:public image_reader 
+    {
         private:
             bool _little_endian;  //!< true if data is stored as little endian
             std::vector<tiff::IFD> _ifds; //!< IFD list
@@ -91,7 +92,7 @@ namespace io{
             \param stream input stream from which to read data
             \return IFD offset
             */
-            static Int32 _read_ifd_offset(std::ifstream &stream);
+            static int32 _read_ifd_offset(std::ifstream &stream);
 
             //-----------------------------------------------------------------
             /*! \brief read IFD size
@@ -113,7 +114,7 @@ namespace io{
             \return vector with pixels per channel
             */
             static std::vector<size_t> 
-                _get_bits_per_sample(std::ifstream &stream,const tiff::IFD &ifd);
+                _get_bits_per_sample(std::ifstream &stream,const tiff::ifd &ifd);
 
             //-----------------------------------------------------------------
             /*! \brief get sample format
@@ -126,7 +127,7 @@ namespace io{
             \return vector with sample formats for each channel
             */
             static std::vector<size_t> 
-                _get_sample_format(std::ifstream &stream,const tiff::IFD &ifd);
+                _get_sample_format(std::ifstream &stream,const tiff::ifd &ifd);
 
             //-----------------------------------------------------------------
             /*! \brief determine channel data type
@@ -134,12 +135,12 @@ namespace io{
             Static method to deduce the type of an image channel from the sample
             format and the number of bits used for the channel data. If the type
             could not be deduced an exception will be thrown.
-            \throws TypeError if the type cannot be deduced from the data
+            \throws type_error if the type cannot be deduced from the data
             \param bps number of bits per sample
             \param sf sample format
             \return TypeID of the corresponding type
             */
-            static TypeID _get_type_id(size_t bps,size_t sf);
+            static type_id_t _get_type_id(size_t bps,size_t sf);
            
             //-----------------------------------------------------------------
             /*! \brief read IDF data from the file
@@ -165,7 +166,7 @@ namespace io{
         public:
             //==============constructors and destructor========================
             //! default constructor
-            TIFFReader();
+            tiff_reader();
 
             //-----------------------------------------------------------------
             /*! 
@@ -173,29 +174,29 @@ namespace io{
 
             \param r reader from which to move data to the new instance
             */
-            TIFFReader(TIFFReader &&r);
+            tiff_reader(tiff_reader &&r);
 
             //-----------------------------------------------------------------
             //! standard constructor
-            explicit TIFFReader(const String &fname);
+            explicit tiff_reader(const string &fname);
 
             //-----------------------------------------------------------------
             //! copy constructor is deleted 
-            TIFFReader(const TIFFReader &) = delete;
+            tiff_reader(const tiff_reader &) = delete;
 
             //-----------------------------------------------------------------
             //! destructor
-            ~TIFFReader();
+            ~tiff_reader();
 
             //======================assignment operators=======================
             /*! 
             \brief move assignment operator
             */
-            TIFFReader &operator=(TIFFReader &&r);
+            tiff_reader &operator=(tiff_reader &&r);
 
             //--------------------------------------------------------------
             //! copy assignment operator is deleted
-            TIFFReader &operator=(const TIFFReader &r) = delete;
+            tiff_reader &operator=(const tiff_reader &r) = delete;
 
             //=====================class methods===========================
             /*! \brief get number of images
@@ -212,7 +213,7 @@ namespace io{
             \param i index of the image
             \return instance of ImageInfo for the requested image
             */
-            virtual ImageInfo info(size_t i) const;
+            virtual image_info info(size_t i) const;
 
             //-----------------------------------------------------------------
             //! open the file
@@ -228,19 +229,19 @@ namespace io{
             Template method to read image data from the file. The returns an
             instance of the the template Array<T,BT> and does all the
             configuration and memory allocation work for this object.
-            \throws MemoryAllocationError if array allocation fails
+            \throws memory_allocation_error if array allocation fails
             \param i index of the image in the file
             \param c index of the image channel to read
             \return instance of an array template
             */
             template<typename CTYPE> CTYPE image(size_t i,size_t c=0) 
             {
-                ImageInfo info = this->info(i);
+                image_info info = this->info(i);
                 CTYPE data;
                 try { data = CTYPE(info.npixels()); }
                 catch(...)
                 {
-                    throw MemoryAllocationError(EXCEPTION_RECORD,
+                    throw memory_allocation_error(EXCEPTION_RECORD,
                             "Allocation of image data container failed!");
                 }
 
@@ -258,7 +259,7 @@ namespace io{
             method is that memory allocation must be done only once before this
             method is called. This increases performance dramatically in
             particular if many images of equal size should be read.
-            \throws SizeMissmatchError if the size of the container does not
+            \throws size_missmatch_error if the size of the container does not
             match the number of pixels stored in the image
             \param data instance of CTYPE where data will be stored
             \param i index of the image in the file
@@ -267,34 +268,35 @@ namespace io{
             template<typename CTYPE> 
                 void image(CTYPE &data,size_t i,size_t c=0) 
             {
-                ImageInfo info = this->info(i);
+                image_info info = this->info(i);
                 if(data.size() != info.npixels())
                 {
                     std::stringstream ss;
                     ss<<"Container size ("<<data.size()<<") does not match";
                     ss<<"number of pixels ("<<info.npixels()<<")!";
-                    throw SizeMissmatchError(EXCEPTION_RECORD,ss.str());
+                    throw size_missmatch_error(EXCEPTION_RECORD,ss.str());
                 }
 
                 //read data
                 _read_data(i,c,data);
             }
-           
+          
+            //-----------------------------------------------------------------
             //! output operator of an TIFFReader object
-            friend std::ostream &operator<<(std::ostream &o,const TIFFReader
-                    &r);
+            friend std::ostream &operator<<(std::ostream &o,
+                                            const tiff_reader &r);
 
     };
 
     template<typename CTYPE> 
-        void TIFFReader::_read_data(size_t i,size_t c,CTYPE &data)
+        void tiff_reader::_read_data(size_t i,size_t c,CTYPE &data)
     {
         //obtain the proper IFD
-        tiff::IFD &ifd = this->_ifds.at(i);
+        tiff::ifd &ifd = this->_ifds.at(i);
         std::ifstream &stream = this->_get_stream();
 
         //assume here that the image is stored using strips
-        tiff::StripReader reader(tiff::StripReader::create(stream,ifd,this->info(i)));
+        tiff::strip_reader reader(tiff::strip_reader::create(stream,ifd,this->info(i)));
         std::cout<<reader<<std::endl;
 
         reader.read(c,stream,data);

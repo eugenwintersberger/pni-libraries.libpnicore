@@ -25,19 +25,19 @@
  */
             
 
-#include "SpreadsheetReader.hpp"
+#include "spreadsheet_reader.hpp"
 
 namespace pni{
 namespace io{
 
     //============constructors and destructor==================================
     //default constructor implementation
-    SpreadsheetReader::SpreadsheetReader():DataReader(){}
+    spreadsheet_reader::spreadsheet_reader():data_reader(){}
 
     //-------------------------------------------------------------------------
     //move constructor implementation
-    SpreadsheetReader::SpreadsheetReader(SpreadsheetReader &&o):
-        DataReader(std::move(o)),
+    spreadsheet_reader::spreadsheet_reader(spreadsheet_reader &&o):
+        data_reader(std::move(o)),
         _columns_info(std::move(o._columns_info)),
         _nrec(o._nrec)
     {
@@ -52,16 +52,16 @@ namespace io{
 
     //-------------------------------------------------------------------------
     //destructor implementation
-    SpreadsheetReader::~SpreadsheetReader()
+    spreadsheet_reader::~spreadsheet_reader()
     {}
 
     //=====================assignment operators================================
     //move assignment operator implementation
-    SpreadsheetReader &SpreadsheetReader::operator=(SpreadsheetReader &&r)
+    spreadsheet_reader &spreadsheet_reader::operator=(spreadsheet_reader &&r)
     {
         if(this == &r) return *this;
 
-        DataReader::operator=(std::move(r));
+        data_reader::operator=(std::move(r));
         _columns_info = std::move(r._columns_info);
         _nrec = r._nrec;
         r._nrec = 0;
@@ -69,7 +69,7 @@ namespace io{
     }
 
     //=====================public methods implementation=======================
-    bool SpreadsheetReader::has_column(const String &name) const
+    bool spreadsheet_reader::has_column(const string &name) const
     {
 #ifdef NOFOREACH
         for(auto iter = this->begin();iter!=this->end();++iter)
@@ -86,7 +86,7 @@ namespace io{
     }
 
     //-------------------------------------------------------------------------
-    size_t SpreadsheetReader::column_index(const String &name) const
+    size_t spreadsheet_reader::column_index(const string &name) const
     {
         size_t index = 0;
 #ifdef NOFOREACH
@@ -101,11 +101,12 @@ namespace io{
         }
 
         //throw exception if the column name does not exist
-        ExceptionRecord r(__FILE__,__LINE__,BOOST_CURRENT_FUNCTION);
-        throw KeyError(r,"Column with name ["+name+"] does not exist!");
+        exception_record r(__FILE__,__LINE__,BOOST_CURRENT_FUNCTION);
+        throw key_error(r,"Column with name ["+name+"] does not exist!");
 
         return 0; //make the compiler happy - a value is returned.
     }
 
 //end of namespace
-}}
+}
+}

@@ -26,38 +26,38 @@
  */
 
 
-#include "ImageReader.hpp"
+#include "image_reader.hpp"
 
 namespace pni{
 namespace io{
 
     //================implementation of constructors===========================
     //implementation of the default constructor
-    ImageReader::ImageReader():DataReader() {}
+    image_reader::image_reader():data_reader() {}
 
     //-------------------------------------------------------------------------
     //implementation of the move constructor
-    ImageReader::ImageReader(ImageReader &&i):
-        DataReader(std::move(i))
+    image_reader::image_reader(image_reader &&i):
+        data_reader(std::move(i))
     {}
 
     //-------------------------------------------------------------------------
     //implementation of the standard constructor
-    ImageReader::ImageReader(const String &fname,bool binary):
-        DataReader(fname,binary)
+    image_reader::image_reader(const string &fname,bool binary):
+        data_reader(fname,binary)
     {}
 
     //-------------------------------------------------------------------------
     //implementation of the destructor
-    ImageReader::~ImageReader() {} 
+    image_reader::~image_reader() {} 
 
     //===========implementation of assignment operators========================
     //implementation of move assignment
-    ImageReader &ImageReader::operator=(ImageReader &&i)
+    image_reader &image_reader::operator=(image_reader &&i)
     {
         if(this == &i) return *this;
 
-        DataReader::operator=(std::move(i));
+        data_reader::operator=(std::move(i));
         return *this;
     }
 

@@ -32,9 +32,9 @@
 #include<string>
 #include<vector>
 
-#include "../Types.hpp"
-#include "DataReader.hpp"
-#include "ImageInfo.hpp"
+#include "../types.hpp"
+#include "data_reader.hpp"
+#include "image_info.hpp"
 
 using namespace pni::core;
 
@@ -45,38 +45,39 @@ namespace io{
     \ingroup io_classes
     \brief base class for image readers
 
-    The ImageReader class provides the basic functionality for all other
+    The image_reader class provides the basic functionality for all other
     image readers. It opens the file and provides a stream from which to
     read data. ImageReader objects cannot be copied or copy-assigned. 
     However, they can be moved using std::move. 
 
-    Like DataReader (from which it is derived) an ImageReader object cannot
+    Like data_reader (from which it is derived) an ImageReader object cannot
     be instantiated using this class. All constructors and assignment
     operators are thus protected making them only available to derived
     classes.
     */
-    class ImageReader:public DataReader{
+    class image_reader:public data_reader
+    {
         protected:
             //===================constructors and destructor===================
             //! default constructor
-            ImageReader();
+            image_reader();
             //! copy constructor is deleted
-            ImageReader(const ImageReader &) = delete;
+            image_reader(const image_reader &) = delete;
             //! move constructor
-            ImageReader(ImageReader &&r);
+            image_reader(image_reader &&r);
             //! standard constructor taking the filename as string object
-            explicit ImageReader(const String &fname,bool binary=false);
+            explicit image_reader(const string &fname,bool binary=false);
             
             //==================assignment operators===========================
             //!copy assignment is deleted
-            ImageReader &operator=(const ImageReader &r) = delete;
+            image_reader &operator=(const image_reader &r) = delete;
 
             //! move assignment operator
-            ImageReader &operator=(ImageReader &&r);
+            image_reader &operator=(image_reader &&r);
 
         public:
             //! destructor
-            virtual ~ImageReader();
+            virtual ~image_reader();
 
 
             //====================methods======================================
@@ -101,7 +102,7 @@ namespace io{
             \param i index of the image
             \return vector with ImageInfo objects
             */
-            virtual ImageInfo info(size_t i) const = 0;
+            virtual image_info info(size_t i) const = 0;
 
             //-----------------------------------------------------------------
             /*! \brief method to read a single channel
@@ -117,7 +118,7 @@ namespace io{
             */
             template<typename ATYPE> ATYPE image(size_t i,size_t c=0) 
             {
-                throw NotImplementedError(EXCEPTION_RECORD,
+                throw not_implemented_error(EXCEPTION_RECORD,
                         "Method not implemented!");
 
                 return ATYPE(); //just to make the compiler happy
@@ -139,7 +140,7 @@ namespace io{
             template<typename ATYPE> 
                 void image(ATYPE &array,size_t i,size_t c=0) 
             {
-                throw NotImplementedError(EXCEPTION_RECORD,
+                throw not_implemented_error(EXCEPTION_RECORD,
                         "Method not implemented!");
             }
 

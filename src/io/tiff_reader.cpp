@@ -26,16 +26,16 @@
 
 #include <numeric>
 
-#include "../Exceptions.hpp"
-#include "../Types.hpp"
-#include "TIFFReader.hpp"
+#include "../exceptions.hpp"
+#include "../types.hpp"
+#include "tiff_reader.hpp"
 
 namespace pni{
 namespace io{
 
     //============implementation of private methods============================
     //implementation of _set_endianess
-    bool TIFFReader::_is_little_endian(std::ifstream &stream)
+    bool tiff_reader::_is_little_endian(std::ifstream &stream)
     {
         std::streampos orig_pos = stream.tellg();
 
@@ -55,7 +55,7 @@ namespace io{
 
     //-------------------------------------------------------------------------
     //implementation of check tiff
-    void TIFFReader::_check_if_tiff(std::ifstream &stream)
+    void tiff_reader::_check_if_tiff(std::ifstream &stream)
     {
         std::streampos orig_pos = stream.tellg();
 
@@ -63,7 +63,7 @@ namespace io{
         stream.seekg(2,std::ios::beg);
 
         //read the magic number
-        UInt16 magic;
+        uint16 magic;
         stream.read((char *)(&magic),2);
             
         //reset stream position
@@ -75,16 +75,16 @@ namespace io{
     
     //--------------------------------------------------------------------------
     //implementation of read IFD offset
-    Int32 TIFFReader::_read_ifd_offset(std::ifstream &stream)
+    int32 tiff_reader::_read_ifd_offset(std::ifstream &stream)
     {
         //no we need to read the IFD entries read the first IFD offset
-        Int32 offset = 0;
+        int32 offset = 0;
         stream.read((char*)(&offset),4);
         return offset;
     }
     
     //-------------------------------------------------------------------------
-    size_t TIFFReader::_read_ifd_size(std::ifstream &stream)
+    size_t tiff_reader::_read_ifd_size(std::ifstream &stream)
     {
         size_t size = 0;
         stream.read((char *)(&size),2);
@@ -93,7 +93,7 @@ namespace io{
 
     //-------------------------------------------------------------------------
     //implementation of _read_image_info
-    void TIFFReader::_read_ifds()
+    void tiff_reader::_read_ifds()
     {
         //obtain stream
         std::ifstream &stream = _get_stream();
@@ -103,13 +103,13 @@ namespace io{
         _little_endian = TIFFReader::_is_little_endian(stream);
         
         //now we check if the file is really a TIFF file
-        TIFFReader::_check_if_tiff(stream);
+        tiff_reader::_check_if_tiff(stream);
 
 
         //set the stream to the position of the first IFD offse
         stream.seekg(4,std::ios::beg);
         //no we need to read the IFD entries read the first IFD offset
-        Int32 ifd_offset = _read_ifd_offset(stream);
+        int32 ifd_offset = _read_ifd_offset(stream);
         if(ifd_offset == 0)
             throw FileError(EXCEPTION_RECORD,"File "+filename()+" does not "
                     "contain an IDF entry!");
@@ -122,7 +122,7 @@ namespace io{
             //create the IDF from the stream - here we assume that the IFD
             //constructor returns the stream at the position where the offset of
             //the next IFD is stored.
-            tiff::IFD ifd(_read_ifd_size(stream));
+            tiff::ifd ifd(_read_ifd_size(stream));
 #ifdef NOFOREACH
             for(auto iter=ifd.begin();iter!=ifd.end();iter++)
             {
@@ -142,8 +142,8 @@ namespace io{
     }
 
     //-------------------------------------------------------------------------
-    std::vector<size_t> TIFFReader::
-        _get_bits_per_sample(std::ifstream &stream,const tiff::IFD &ifd) 
+    std::vector<size_t> tiff_reader::
+        _get_bits_per_sample(std::ifstream &stream,const tiff::ifd &ifd) 
     {
         std::vector<size_t> bits_per_sample(1);
         try
@@ -160,8 +160,8 @@ namespace io{
     }
 
     //-------------------------------------------------------------------------
-    std::vector<size_t> TIFFReader::
-        _get_sample_format(std::ifstream &stream,const tiff::IFD &ifd)
+    std::vector<size_t> tiff_reader::
+        _get_sample_format(std::ifstream &stream,const tiff::ifd &ifd)
     {
         std::vector<size_t> sample_format(1);
         try
@@ -176,7 +176,7 @@ namespace io{
     }
 
     //---------------------------------------------------------------------
-    TypeID TIFFReader::_get_type_id(size_t bps,size_t sf) 
+    type_id_t tiff_reader::_get_type_id(size_t bps,size_t sf) 
     {
         switch(sf)
         {
@@ -184,12 +184,12 @@ namespace io{
                 //unsigned integer data
                 switch(bps)
                 {
-                    case 8: return TypeID::UINT8;
-                    case 16: return TypeID::UINT16;
-                    case 32: return TypeID::UINT32;
-                    case 64: return TypeID::UINT64;
+                    case 8: return type_id_t::UINT8;
+                    case 16: return type_id_t::UINT16;
+                    case 32: return type_id_t::UINT32;
+                    case 64: return type_id_t::UINT64;
                     default:
-                         throw TypeError(EXCEPTION_RECORD,
+                         throw type_error(EXCEPTION_RECORD,
                                "Invalid unsiged integer type!");
                 }
                 break;
@@ -197,12 +197,12 @@ namespace io{
                 //signed integer data
                 switch(bps)
                 {
-                    case 8: return TypeID::INT8;
-                    case 16: return TypeID::INT16;
-                    case 32: return TypeID::INT32;
-                    case 64: return TypeID::INT64;
+                    case 8: return type_id_t::INT8;
+                    case 16: return type_id_t::INT16;
+                    case 32: return type_id_t::INT32;
+                    case 64: return type_id_t::INT64;
                     default:
-                        throw TypeError(EXCEPTION_RECORD,
+                        throw type_error(EXCEPTION_RECORD,
                               "Invalid siged integer type!");
                 }
                 break;
@@ -210,54 +210,54 @@ namespace io{
                 //IEEE floating point data
                 switch(bps)
                 {
-                    case 32: return TypeID::FLOAT32;
-                    case 64: return TypeID::FLOAT64;
+                    case 32: return type_id_t::FLOAT32;
+                    case 64: return type_id_t::FLOAT64;
                     default:
-                        throw TypeError(EXCEPTION_RECORD,
+                        throw type_error(EXCEPTION_RECORD,
                               "Invalid floating point type!");
                 }
                 break;
 
             default:
                 //throw an exception here
-                throw TypeError(EXCEPTION_RECORD,"Cannot derive type id!");
+                throw type_error(EXCEPTION_RECORD,"Cannot derive type id!");
 
         }
     }
 
     //=============implementation of constructors and destructor===========
     //implementation of the default constructor
-    TIFFReader::TIFFReader():ImageReader()
+    tiff_reader::tiff_reader():image_reader()
     { 
         //set the stream format to binary
-        DataReader::_set_binary();
+        data_reader::_set_binary();
     }
 
     //---------------------------------------------------------------------
     //implementation of the move constructor
-    TIFFReader::TIFFReader(TIFFReader &&r):
-        ImageReader(std::move(r)),
+    tiff_reader::tiff_reader(tiff_reader &&r):
+        image_reader(std::move(r)),
         _little_endian(std::move(r._little_endian)),
         _ifds(std::move(r._ifds))
     {}
 
     //---------------------------------------------------------------------
     //implementation of the standard constructor
-    TIFFReader::TIFFReader(const String &fname):ImageReader(fname,true)
+    tiff_reader::tiff_reader(const String &fname):image_reader(fname,true)
     { 
         _read_ifds(); 
     }
 
     //---------------------------------------------------------------------
     //imlementation of the destructor
-    TIFFReader::~TIFFReader() 
+    tiff_reader::~tiff_reader() 
     { }
 
     //==================implementation of assignment operators=============
-    TIFFReader &TIFFReader::operator=(TIFFReader &&r)
+    tiff_reader &tiff_reader::operator=(tiff_reader &&r)
     {
         if(this == &r) return *this;
-        ImageReader::operator=(std::move(r));
+        image_reader::operator=(std::move(r));
         _ifds = std::move(r._ifds);
 
         return *this;
@@ -265,16 +265,16 @@ namespace io{
 
     //=====================implementation of member methods====================
 
-    size_t TIFFReader::nimages() const
+    size_t tiff_reader::nimages() const
     {
         return _ifds.size();
     }
 
     //-------------------------------------------------------------------------
-    ImageInfo TIFFReader::info(size_t i) const 
+    image_info tiff_reader::info(size_t i) const 
     {
         //get the right ifd
-        const tiff::IFD &ifd = _ifds[i];
+        const tiff::ifd &ifd = _ifds[i];
 
         //the number of pixels in x-direction is associated with the image width
         //in TIFF
@@ -295,11 +295,11 @@ namespace io{
 
         //the information gathered so far should be enough to assemble image
         //information
-        ImageInfo info(nx,ny);
+        image_info info(nx,ny);
         //now we need to add the channels
         for(size_t i=0;i<bits_per_sample.size();i++)
         {
-            ImageChannelInfo channel(_get_type_id(bits_per_sample[i],
+            image_channel_info channel(_get_type_id(bits_per_sample[i],
                                                   sample_format[i]),
                                      bits_per_sample[i]);
             info.append_channel(channel);
@@ -312,22 +312,22 @@ namespace io{
 
     //-------------------------------------------------------------------------
     //implementation of open
-    void TIFFReader::open()
+    void tiff_reader::open()
     {
-        DataReader::open();
+        data_reader::open();
         _read_ifds();
     }
 
     //-------------------------------------------------------------------------
     //implementation of close
-    void TIFFReader::close()
+    void tiff_reader::close()
     {
-        DataReader::close();
+        data_reader::close();
         _ifds.clear();
     }
 
     //=====================implementation of friend functions and operators====
-    std::ostream &operator<<(std::ostream &o,const TIFFReader &r)
+    std::ostream &operator<<(std::ostream &o,const tiff_reader &r)
     {
         o<<"TIFFReader for file: "<<r.filename()<<std::endl;
         o<<"File contains: "<<r.nimages()<<" images"<<std::endl; 

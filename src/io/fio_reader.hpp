@@ -31,8 +31,8 @@
 #include<boost/regex.hpp>
 #include<boost/current_function.hpp>
 
-#include "../DArray.hpp"
-#include "SpreadsheetReader.hpp"
+#include "../darray.hpp"
+#include "spreadsheet_reader.hpp"
 
 namespace pni{
 namespace io{
@@ -45,11 +45,11 @@ namespace io{
     stored in columns. Thus such files correspond to the family of spreadsheet
     style files. 
     */
-    class FIOReader:public SpreadsheetReader
+    class fio_reader:public spreadsheet_reader
     {
         private:
             //! parameter stream positions
-            std::map<String,std::streampos> _param_map;
+            std::map<string,std::streampos> _param_map;
             //! offset where real data starts
             std::streampos _data_offset; 
 
@@ -93,7 +93,7 @@ namespace io{
             \param tstr type string
             \return TypeID 
             */
-            static TypeID _typestr2id(const String &tstr);
+            static type_id_t _typestr2id(const string &tstr);
 
             //-----------------------------------------------------------------
             /*! 
@@ -103,7 +103,7 @@ namespace io{
             \param line string object holding the lines content
             \return instance of ColumnInfo
             */
-            static ColumnInfo _read_column_info(const String &line);
+            static column_info _read_column_info(const string &line);
           
             //------------------------------------------------------------------
             /*! 
@@ -115,7 +115,7 @@ namespace io{
             \param line input line
             \return vector with cell content as strings
             */
-            static std::vector<String> _read_data_line(const String &line);
+            static std::vector<string> _read_data_line(const string &line);
 
             //-----------------------------------------------------------------
             /*! 
@@ -138,7 +138,7 @@ namespace io{
             \param stream input stream
             \param value string value where to store parameter data
             */
-            void _get_parameter_data(std::ifstream &stream,String &value) const;
+            void _get_parameter_data(std::ifstream &stream,string &value) const;
 
             //-------------------------------------------------------------------
             /*! 
@@ -147,7 +147,7 @@ namespace io{
             Private template method to read column data and store it to an array
             object. If EOF is reached before all data was read an exception will
             be thrown.
-            \throw FileError if EOF is reached before end of data
+            \throw file_error if EOF is reached before end of data
             \param index index of the column in the file
             \param array instance of the Array template where to store the data
             */
@@ -157,26 +157,26 @@ namespace io{
         public:
             //==============constructor and destructor=========================
             //! default constructor
-            FIOReader();
+            fio_reader();
 
             //! copy construction is deleted
-            FIOReader(const FIOReader &r) = delete;
+            fio_reader(const fio_reader &r) = delete;
 
             //! move constructor
-            FIOReader(FIOReader &&r);
+            fio_reader(fio_reader &&r);
 
             //! standard constructor
-            FIOReader(const String &n);
+            fio_reader(const String &n);
 
             //! destructor
-            ~FIOReader();
+            ~fio_reader();
 
             //===================assignment operators==========================
             //! copy assignment is deleted
-            FIOReader &operator=(const FIOReader &r) = delete;
+            fio_reader &operator=(const fio_reader &r) = delete;
 
             //! move assignemnt operator
-            FIOReader &operator=(FIOReader &&r);
+            fio_reader &operator=(fio_reader &&r);
 
             //=================public member methods===========================
             /*! 
@@ -195,18 +195,18 @@ namespace io{
             the file.
             \return parameter names
             */
-            std::vector<String> parameter_names() const;
+            std::vector<string> parameter_names() const;
 
             //-----------------------------------------------------------------
             /*! 
             \brief get parameter by name
 
             Return the value of a parameter stored in the FIO file by name. 
-            \throws KeyError if parameter name does not exist
+            \throws key_errror if parameter name does not exist
             \param name parameter name
             \return parameter value as type T
             */
-            template<typename T> T parameter(const String &name) const;
+            template<typename T> T parameter(const string &name) const;
            
             //-----------------------------------------------------------------
             /*! 
@@ -214,12 +214,12 @@ namespace io{
 
             Returns a single column and stores the data into an array object.
             If the column name does not exist an exception is thrown.
-            \throws KeyError if column does not exist
-            \throws FileError if EOF is reached before end of data
+            \throws key_error if column does not exist
+            \throws file_error if EOF is reached before end of data
             \param n name of the column
             \return instance of ATYPE holding the data.
             */
-            template<typename CTYPE> CTYPE column(const String &n) const;
+            template<typename CTYPE> CTYPE column(const string &n) const;
 
             //-----------------------------------------------------------------
             /*! 
@@ -228,26 +228,26 @@ namespace io{
             Read a single column and stores the result in an appropriate
             container. The method assumes that the container is of appropriate
             size and shape. 
-            \throws KeyError if the requested column does not exist
-            \throws FileError in any other case of error
+            \throws key_error if the requested column does not exist
+            \throws file_error in any other case of error
             \tparam CTYPE container type
             \param n name of the column
             \param c instance of CTYPE that will in the end contain the data
             */
             template<typename CTYPE> 
-                void column(const String &n,CTYPE &c) const;
+                void column(const string &n,CTYPE &c) const;
 
     };
     
     //==========implementation of private template methods=====================
     template<typename T> 
-        void FIOReader::_get_parameter_data(std::ifstream &stream,T &value) const
+        void fio_reader::_get_parameter_data(std::ifstream &stream,T &value) const
     {
         stream>>value;
     }
 
     //======================template implementation============================
-    template<typename T> T FIOReader::parameter(const String &name) const
+    template<typename T> T fio_reader::parameter(const string &name) const
     {
         std::ifstream &stream = this->_get_stream();
         std::streampos opos = stream.tellg(); //backup old stream position
@@ -268,7 +268,7 @@ namespace io{
 
     //-------------------------------------------------------------------------
     template<typename CTYPE> 
-        void FIOReader::column(const String &n,CTYPE &c) const
+        void fio_reader::column(const string &n,CTYPE &c) const
     {
         size_t cindex = 0; //column index
 
@@ -276,7 +276,7 @@ namespace io{
         {
             cindex = this->column_index(n);
         }
-        catch(KeyError &error)
+        catch(key_error &error)
         {
             //append a new issuer to the exception
             error.append(EXCEPTION_RECORD);
@@ -287,7 +287,7 @@ namespace io{
         {
             this->_read_column(cindex,c);
         }
-        catch(FileError &error)
+        catch(file_error &error)
         {
             error.append(EXCEPTION_RECORD);
             throw error;
@@ -296,7 +296,7 @@ namespace io{
 
 
     //-------------------------------------------------------------------------
-    template<typename CTYPE> CTYPE FIOReader::column(const String &n) const
+    template<typename CTYPE> CTYPE fio_reader::column(const string &n) const
     {
         //create the container 
         //allocate a new array
@@ -310,14 +310,14 @@ namespace io{
 
     //-------------------------------------------------------------------------
     template<typename CTYPE> 
-        void FIOReader::_read_column(size_t index,CTYPE &c) const
+        void fio_reader::_read_column(size_t index,CTYPE &c) const
     {
         std::ifstream &stream = this->_get_stream();
         std::streampos orig_pos = stream.tellg();
         //move stream to data section
         stream.seekg(_data_offset,std::ios::beg);
 
-        String linebuffer;
+        string linebuffer;
 #ifdef NOFOREACH
         for(auto iter = c.begin();iter!=c.end();++iter)
         {
@@ -336,10 +336,10 @@ namespace io{
                 //set file stream back to its original position
                 stream.seekg(orig_pos,std::ios::beg); 
                 //throw FileError if reading data form the file failed
-                throw FileError(EXCEPTION_RECORD,"Error reading data from file!"); 
+                throw file_error(EXCEPTION_RECORD,"Error reading data from file!"); 
             }
             //split data line
-            std::vector<String> string_data = this->_read_data_line(linebuffer);
+            std::vector<string> string_data = this->_read_data_line(linebuffer);
             //set requested element to the string buffer
             std::stringstream ss(string_data[index]);
 

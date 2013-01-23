@@ -27,10 +27,10 @@
 
 #include <vector>
 #include <boost/current_function.hpp>
-#include "../Types.hpp"
-#include "../Exceptions.hpp"
-#include "DataReader.hpp"
-#include "ColumnInfo.hpp"
+#include "../types.hpp"
+#include "../exceptions.hpp"
+#include "data_reader.hpp"
+#include "column_info.hpp"
 
 namespace pni{
 namespace io{
@@ -42,25 +42,25 @@ namespace io{
     data files. Most of the ASCII formats written following this storage
     convention. 
     */
-    class SpreadsheetReader:public DataReader
+    class spreadsheet_reader:public data_reader
     {
         private:
-            std::vector<ColumnInfo> _columns_info; //!< column information
+            std::vector<column_info> _columns_info; //!< column information
             size_t _nrec;    //!< number of records in the sheet
 
         protected:
             //============constructors and destructor==========================
             //! default constructor
-            SpreadsheetReader();
+            spreadsheet_reader();
 
             //! copy constructor is deleted
-            SpreadsheetReader(const SpreadsheetReader &) = delete;
+            spreadsheet_reader(const spreadsheet_reader &) = delete;
 
             //! move constructor
-            SpreadsheetReader(SpreadsheetReader &&o);
+            spreadsheet_reader(spreadsheet_reader &&o);
 
             //! standard constructor
-            SpreadsheetReader(const String &n);
+            spreadsheet_reader(const String &n);
 
             //==================protected member functions======================
             /*! \brief append a column
@@ -69,7 +69,7 @@ namespace io{
             reader.
             \param i column info to add
             */
-            virtual void _append_column(const ColumnInfo &i)
+            virtual void _append_column(const column_info &i)
             {
                 _columns_info.push_back(i);
             }
@@ -82,26 +82,27 @@ namespace io{
             \param i index of the column in the file
             \return ColumnInfo instance for this column
             */
-            virtual ColumnInfo _get_column(size_t i) const
+            virtual column_info _get_column(size_t i) const
             {
                 return _columns_info.at(i);
             }
 
+            //-----------------------------------------------------------------
             /*! \brief get column information 
 
             Protected method used by child classes to obtain column information
             by using the name of the column. 
-            \throws KeyError if the name of the column does not exist
+            \throws key_error if the name of the column does not exist
             \param n name of the column
-            \return ColumnInfo instance for this column
+            \return column_info instance for this column
             */
-            virtual ColumnInfo _get_column(const String &n) const
+            virtual column_info _get_column(const String &n) const
             {
                 size_t i=0;
 #ifdef NOFOREACH
                 for(auto iter = _columns_info.begin();iter!=_columns_info.end();iter++)
                 {
-                    ColumnInfo c = *iter;
+                    column_info c = *iter;
 #else
                 for(auto c: _columns_info)
                 {
@@ -113,11 +114,12 @@ namespace io{
                     i++;
                 }
                
-                throw KeyError(EXCEPTION_RECORD,"Column ["+n+"] not found!");
+                throw key_error(EXCEPTION_RECORD,"Column ["+n+"] not found!");
 
-                return ColumnInfo(); //just to get rid of compiler warning
+                return column_info(); //just to get rid of compiler warning
             }
 
+            //-----------------------------------------------------------------
             /*! \brief set number of records
 
             Child classes can use this method to set the number of records in
@@ -129,18 +131,21 @@ namespace io{
 
         public:
             //========================public type==============================
-            typedef std::vector<ColumnInfo>::iterator iterator; //!< iterator type
-            typedef std::vector<ColumnInfo>::const_iterator const_iterator; //!< const iterator type
+            //! iterator type
+            typedef std::vector<column_info>::iterator iterator;
+            //! const iterator type
+            typedef std::vector<column_info>::const_iterator const_iterator; 
             //=======================destructor================================
             //! destructor
-            virtual ~SpreadsheetReader();
+            virtual ~spreadsheet_reader();
 
             //===================assignment operators==========================
             //! copy assignment operator is deleted
-            SpreadsheetReader &operator=(const SpreadsheetReader &) = delete;
+            spreadsheet_reader &operator=(const spreadsheet_reader &) = delete;
 
+            //-----------------------------------------------------------------
             //! move assignment operator
-            SpreadsheetReader &operator=(SpreadsheetReader &&r);
+            spreadsheet_reader &operator=(spreadsheet_reader &&r);
 
             //===============public memeber methods============================
             /*! \brief get column number 
@@ -153,6 +158,7 @@ namespace io{
                 return _columns_info.size();
             }
 
+            //-----------------------------------------------------------------
             /*! \brief get record number
 
             Return the number of records in the spreadsheet.
@@ -160,6 +166,7 @@ namespace io{
             */
             size_t nrecords() const { return _nrec; }
 
+            //-----------------------------------------------------------------
             /*! \brief get iterator to first column
 
             Return an iterator pointing to the first column in the file.
@@ -167,6 +174,7 @@ namespace io{
             */
             iterator begin() { return _columns_info.begin(); }
 
+            //-----------------------------------------------------------------
             /*! \brief get const first iterator
 
             Return a const iterator to the first column in the file.
@@ -174,6 +182,7 @@ namespace io{
             */
             const_iterator begin() const { return _columns_info.begin(); }
 
+            //-----------------------------------------------------------------
             /*! \brief get last iterator
 
             Return an iterator to the last column in the file.
@@ -181,6 +190,7 @@ namespace io{
             */
             iterator end() { return _columns_info.end(); }
 
+            //-----------------------------------------------------------------
             /*! \brief get const last iterator
 
             Returns a const iterator to the last column in the file.
@@ -188,6 +198,7 @@ namespace io{
             */
             const_iterator end() const { return _columns_info.end(); }
 
+            //-----------------------------------------------------------------
             /*! 
             \brief checks if a particular column exists
 
@@ -196,17 +207,18 @@ namespace io{
             \param name of the column
             \return true if column exists, false otherwise
             */
-            bool has_column(const String &name) const;
+            bool has_column(const string &name) const;
 
+            //-----------------------------------------------------------------
             /*! 
             \brief get column index 
 
             Get the index of a particular column.
-            \throws KeyError if the column does not exist
+            \throws key_error if the column does not exist
             \param name name of the column
             \return numeric index 
             */
-            size_t column_index(const String &name) const;
+            size_t column_index(const string &name) const;
 
     };
 

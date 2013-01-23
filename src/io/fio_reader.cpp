@@ -26,14 +26,15 @@
 
 #include <sstream>
 #include <string>
-#include "FIOReader.hpp"
+#include "fio_reader.hpp"
 
 namespace pni{
 namespace io{
+
     //======================private member functions===========================
-    void FIOReader::_parse_file(std::ifstream &stream)
+    void fio_reader::_parse_file(std::ifstream &stream)
     {
-        String::value_type buffer; 
+        string::value_type buffer; 
         while(!stream.eof())
         {
             //read a character
@@ -62,10 +63,10 @@ namespace io{
     }
 
     //-------------------------------------------------------------------------
-    void FIOReader::_parse_parameters(std::ifstream &stream)
+    void fio_reader::_parse_parameters(std::ifstream &stream)
     {
-        String::value_type buffer;
-        String param_name;
+        string::value_type buffer;
+        string param_name;
         //clear the parameter map
         _param_map.clear();
 
@@ -110,7 +111,7 @@ namespace io{
     }
 
     //-------------------------------------------------------------------------
-    void FIOReader::_parse_data(std::ifstream &stream)
+    void fio_reader::_parse_data(std::ifstream &stream)
     {
         boost::regex comment("^!"); //regular expression for comment lines
         boost::regex col("^ Col.*"); //column description match
@@ -118,7 +119,7 @@ namespace io{
         boost::regex is_dcol("^\\s+[+-]?\\d+\\.?\\d*e?[+-]?\\d*.*");
         boost::smatch match;
 
-        String linebuffer;
+        string linebuffer;
         std::streampos data_offset_tmp = 0;
         size_t nr = 0; //number of records
 
@@ -157,7 +158,7 @@ namespace io{
     }
 
     //-------------------------------------------------------------------------
-    void FIOReader::_get_parameter_data(std::ifstream &stream,String &value)
+    void fio_reader::_get_parameter_data(std::ifstream &stream,string &value)
         const
     {
         char buffer;
@@ -172,37 +173,37 @@ namespace io{
     }
 
     //=================implementation of static private methods================
-    TypeID FIOReader::_typestr2id(const String &tstr)
+    type_id_t fio_reader::_typestr2id(const string &tstr)
     {
         if(tstr == "FLOAT") 
-            return TypeID::FLOAT32;
+            return type_id_t::FLOAT32;
         else if(tstr == "DOUBLE")
-            return TypeID::FLOAT64;
+            return type_id_t::FLOAT64;
         else
-            return TypeID::NONE;
+            return type_id_t::NONE;
     }
 
     //-------------------------------------------------------------------------
-    ColumnInfo FIOReader::_read_column_info(const String &line)
+    column_info fio_reader::_read_column_info(const string &line)
     {
-        String cname;
-        String ctype;
+        string cname;
+        string ctype;
         size_t cindex;
         std::stringstream ss(line);
         ss>>cname>>cindex>>cname>>ctype;
         
-        return ColumnInfo(cname,_typestr2id(ctype),std::vector<size_t>());
+        return column_info(cname,_typestr2id(ctype),std::vector<size_t>());
     }
 
     //-------------------------------------------------------------------------
-    std::vector<String> FIOReader::_read_data_line(const String &line)
+    std::vector<String> fio_reader::_read_data_line(const string &line)
     {
         boost::regex dcol("[+-]?\\d+\\.?\\d*e?[+-]?\\d*");
-        std::vector<String> record;
+        std::vector<string> record;
 
         boost::match_results<String::const_iterator> imatch;
-        String::const_iterator start = line.begin();
-        String::const_iterator end   = line.end();
+        string::const_iterator start = line.begin();
+        string::const_iterator end   = line.end();
         while(boost::regex_search(start,end,imatch,dcol,boost::match_default))
         {
             record.push_back(imatch.str());
@@ -214,20 +215,20 @@ namespace io{
 
     //=======================constructors and destructor======================= 
     //default constructor implementation
-    FIOReader::FIOReader():SpreadsheetReader() {}
+    fio_reader::fio_reader():spreadsheet_reader() {}
 
     //--------------------------------------------------------------------------
     //move constructor implementation
-    FIOReader::FIOReader(FIOReader &&r):
-        SpreadsheetReader(std::move(r)),
+    fio_reader::fio_reader(fio_reader &&r):
+        spreadsheet_reader(std::move(r)),
         _param_map(std::move(r._param_map)),
         _data_offset(std::move(r._data_offset))
     {}
 
     //-------------------------------------------------------------------------
     //standard constructor implementation
-    FIOReader::FIOReader(const String &n):
-        SpreadsheetReader(n),
+    fio_reader::fio_reader(const String &n):
+        spreadsheet_reader(n),
         _param_map(),
         _data_offset(0)
     {
@@ -236,15 +237,15 @@ namespace io{
 
     //-------------------------------------------------------------------------
     //! destructor
-    FIOReader::~FIOReader()
+    fio_reader::~fio_reader()
     {}
 
     //=================assignment operators====================================
     //move assignment implementation
-    FIOReader &FIOReader::operator=(FIOReader &&r)
+    fio_reader &fio_reader::operator=(fio_reader &&r)
     {
         if(this == &r) return *this;
-        SpreadsheetReader::operator=(std::move(r));
+        spreadsheet_reader::operator=(std::move(r));
         _param_map = std::move(r._param_map);
         _data_offset = std::move(r._data_offset);
 
@@ -253,16 +254,16 @@ namespace io{
 
     //=============public memeber methods======================================
     //implementation of nparameters
-    size_t FIOReader::nparameters() const
+    size_t fio_reader::nparameters() const
     {
         return _param_map.size();
     }
     
     //-------------------------------------------------------------------------
     //implementation of parameter names
-    std::vector<String> FIOReader::parameter_names() const
+    std::vector<string> fio_reader::parameter_names() const
     {
-        std::vector<String> pnames;
+        std::vector<string> pnames;
 #ifdef NOFOREACH
         for(auto iter = _param_map.begin();iter!=_param_map.end();iter++)
         {
