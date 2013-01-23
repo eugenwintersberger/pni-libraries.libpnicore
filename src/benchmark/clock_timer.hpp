@@ -21,7 +21,7 @@
  *      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
  */
 #pragma once
-#include "../Types.hpp"
+#include "../types.hpp"
 
 #include<iostream>
 #include<ctime>
@@ -35,7 +35,7 @@ namespace core{
     This timer uses the standard clock() function provided by the C standard
     library. It should only be used if C++11 std::chrono services are not available.
     */
-    class ClockTimer
+    class clock_timer
     {
         private:
             clock_t _start; //!< start time
@@ -43,10 +43,10 @@ namespace core{
 
         public:
             //======================static members=================================
-            static const String name; 
+            static const string name; 
             //=======================constructors==================================
             //! default constructor
-            ClockTimer():_start(0),_stop(0) {}
+            clock_timer():_start(0),_stop(0) {}
 
             //========================public member functions======================
             /*!
@@ -73,21 +73,21 @@ namespace core{
             in units of seconds. 
             \return time duration
             */
-            Float64 duration() const
+            float64 duration() const
             {
                 return ((double)(_stop-_start))/CLOCKS_PER_SEC;
             }
 
             //---------------------------------------------------------------------
             //! get time unit
-            String unit() const
+            string unit() const
             {
-                return String("s");
+                return string("s");
             }
     };
 
     //setup the static name of the timer
-    const String ClockTimer::name = String("ClockTimer");
+    const string clock_timer::name = string("ClockTimer");
 
 //end of namespace
 }

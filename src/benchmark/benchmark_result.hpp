@@ -23,7 +23,7 @@
 #pragma once
 
 #include <iostream>
-#include "../Types.hpp"
+#include "../types.hpp"
 
 namespace pni{
 namespace core{
@@ -31,23 +31,23 @@ namespace core{
     /*!
     \brief result of a single benchmark
 
-    The BenchmarResult class holds all the information that is obtained during a
+    The benchmark_result class holds all the information that is obtained during a
     single benchmark. 
 
     For timing the new classes from the chrono namespace are used. This should
     give bettet. 
     */
-    class BenchmarkResult 
+    class benchmark_result 
     {
         private:
             //! time required for reading data
-            Float64 _time;  
+            float64 _time;  
             //! unit of time
-            String _unit;
+            string _unit;
         public:
             //====================constructors and destructor===================
             //! default constructor
-            BenchmarkResult():
+            benchmark_result():
                 _time(0.),
                 _unit("")
             {}
@@ -59,23 +59,23 @@ namespace core{
             \param time the time the function took to run
             \param unit the unit used to measure the time
             */
-            BenchmarkResult(Float64 time,const String &unit):
+            benchmark_result(Float64 time,const String &unit):
                 _time(time),
                 _unit(unit)
             {}
 
             //==================public member functions=========================
             //! get time
-            Float64 time() const { return _time; }
+            float64 time() const { return _time; }
 
             //------------------------------------------------------------------
             //! get the unit
-            String unit() const { return _unit; }
+            string unit() const { return _unit; }
 
     };
 
     //! output operator for benchmark result
-    std::ostream &operator<<(std::ostream &o,const BenchmarkResult &r);
+    std::ostream &operator<<(std::ostream &o,const benchmark_result &r);
 
 //end of namespace
 }

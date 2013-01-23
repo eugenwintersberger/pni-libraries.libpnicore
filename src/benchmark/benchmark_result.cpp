@@ -20,12 +20,12 @@
  *  Created on: Oct 24, 2012
  *      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
  */
-#include "BenchmarkResult.hpp"
+#include "benchmark_result.hpp"
 
 namespace pni{
 namespace core{
 
-    std::ostream &operator<<(std::ostream &o,const BenchmarkResult &r)
+    std::ostream &operator<<(std::ostream &o,const benchmark_result &r)
     {
         o<<r.time()<<"\t("<<r.unit()<<")";
         return o;

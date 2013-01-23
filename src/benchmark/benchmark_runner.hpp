@@ -21,57 +21,64 @@
  *      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
  */
 #pragma once
-#include "BenchmarkResult.hpp"
+#include "benchmark_result.hpp"
 #include <list>
 #include <functional>
 
 namespace pni{
 namespace core{
 
-    class BenchmarkRunner
+    class benchmark_runner
     {
         private:
             //! list with benchmark results
-            std::list<BenchmarkResult> _results;
+            std::list<benchmark_result> _results;
             std::function<void()> _pre_run;
             std::function<void()> _post_run;
 
             void do_nothing() {}
 
         public:
-            //======================public types===================================
-            typedef std::list<BenchmarkResult>::iterator iterator;
-            typedef std::list<BenchmarkResult>::const_iterator const_iterator;
+            //======================public types================================
+            typedef std::list<benchmark_result>::iterator iterator;
+            typedef std::list<benchmark_result>::const_iterator const_iterator;
             typedef std::function<void()> function_t;
 
-            //====================constructors and destructor=======================
+            //====================constructors and destructor===================
             //! default constructor
-            BenchmarkRunner():_results(0)
+            benchmark_runner():_results(0)
             {
                 _pre_run =
-                    function_t(std::bind(&BenchmarkRunner::do_nothing,*this));
+                    function_t(std::bind(&benchmark_runner::do_nothing,*this));
                 _post_run = 
-                    function_t(std::bind(&BenchmarkRunner::do_nothing,*this));
+                    function_t(std::bind(&benchmark_runner::do_nothing,*this));
             }
 
+            //-----------------------------------------------------------------
             //! destructor
-            virtual ~BenchmarkRunner(){}
+            virtual ~benchmark_runner(){}
 
+            //-----------------------------------------------------------------
             //! perform all runs
             template<typename TIMERT> void run(size_t n,function_t &func);
 
+            //-----------------------------------------------------------------
             //! get iterator to first element
             iterator begin() { return _results.begin(); }
 
+            //-----------------------------------------------------------------
             //! get iterator to last+1 element
             iterator end() { return _results.end(); }
 
+            //-----------------------------------------------------------------
             //! get const iterator to first element
             const_iterator begin() const { return _results.begin(); }
 
+            //-----------------------------------------------------------------
             //! get const iterator to last+1 element
             const_iterator end() const { return _results.end(); }
 
+            //-----------------------------------------------------------------
             //! get size
             size_t size() const { return _results.size(); }
 
@@ -81,7 +88,7 @@ namespace core{
     };
 
     //-----------------------------------------------------------------------------
-    template<typename TIMERT> void BenchmarkRunner::run(size_t n,function_t &func)
+    template<typename TIMERT> void benchmark_runner::run(size_t n,function_t &func)
     {
         for(size_t i=0;i<n;i++)
         {
@@ -97,16 +104,16 @@ namespace core{
             _post_run(); //run function after benchmark
 
             //getting the result
-            BenchmarkResult result(timer.duration(),timer.unit());
+            benchmark_result result(timer.duration(),timer.unit());
             _results.push_back(result);
         }
 
     }
 
     //-----------------------------------------------------------------------------
-    BenchmarkResult average(const BenchmarkRunner &bm)
+    benchmark_result average(const benchmark_runner &bm)
     {
-        Float64 time = 0.;
+        float64 time = 0.;
 
 #ifdef NOFOREACH
         for(auto iter = bm.begin();iter!=bm.end();++iter)
@@ -121,7 +128,7 @@ namespace core{
 
         time /= Float64(bm.size());
 
-        return BenchmarkResult(time,bm.begin()->unit());
+        return benchmark_result(time,bm.begin()->unit());
 
     }
 

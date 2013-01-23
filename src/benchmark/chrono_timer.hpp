@@ -22,7 +22,7 @@
  */
 #pragma once
 
-#include "../Types.hpp"
+#include "../types.hpp"
 
 #include<chrono>
 #include<iostream>
@@ -37,14 +37,14 @@ namespace core{
     on a string value.
     \tparam DTYPE chrono duration time
     */
-    template<typename DTYPE> struct DurationUnitMap;
+    template<typename DTYPE> struct duration_unit_map;
 
 #define DURATIONUNITMAP(durationtype,unit_string)\
-        template<> struct DurationUnitMap<durationtype>\
+        template<> struct duration_unit_map<durationtype>\
         {\
             static const String unit;\
         };\
-        const String DurationUnitMap<durationtype>::unit = String(unit_string)
+        const String duration_unit_map<durationtype>::unit = string(unit_string)
 
     //! \cond NO_API_DOC
     DURATIONUNITMAP(std::chrono::nanoseconds,"ns");
@@ -62,10 +62,10 @@ namespace core{
     To create a timer instance using the high_resolution_clock one could use 
     the following code to obtain a result in nanoseconds
     \code
-    #include<chrono>
+    #include<pni/core/benchmark/chrono>
 
     ....
-    ChronoTimer<std::chrono::high_resolution_clock,
+    chrono_timer<std::chrono::high_resolution_clock,
                 std::chrono::nanoseconds> timer;
 
     //start the timer
@@ -82,7 +82,7 @@ namespace core{
     \tparam CLKT clock type
     \tparam DTYPE duration type
     */
-    template<typename CLKT,typename DTYPE> class ChronoTimer
+    template<typename CLKT,typename DTYPE> class chrono_timer
     {
         private:
             typename CLKT::time_point _start; //!< start time
@@ -90,10 +90,10 @@ namespace core{
 
         public:
             //=====================static members===============================
-            static const String name;
+            static const string name;
             //=======================public types===============================
             //! default constructor
-            ChronoTimer(): _start(),_stop() {}
+            chrono_timer(): _start(),_stop() {}
 
             //===========================public member functions================
             //! start the timer
@@ -105,22 +105,22 @@ namespace core{
 
             //------------------------------------------------------------------
             //! get the duration as double
-            Float64 duration() const
+            float64 duration() const
             {
-                return Float64(std::chrono::duration_cast<DTYPE>(_stop-_start).count());
+                return float64(std::chrono::duration_cast<DTYPE>(_stop-_start).count());
             }
 
             //------------------------------------------------------------------
             //! get the unit of the timer
-            String unit() const 
+            string unit() const 
             {
-                return String(DurationUnitMap<DTYPE>::unit);           
+                return string(duration_unit_map<DTYPE>::unit);           
             }
     };
 
     //setup the static name of the timer
     template<typename CLKT,typename DTYPE>
-    const String ChronoTimer<CLKT,DTYPE>::name = String("ChronoTimer");
+    const string chrono_timer<CLKT,DTYPE>::name = string("chrono_timer");
 
 //end of namespace
 }
