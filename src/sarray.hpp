@@ -26,12 +26,12 @@
 #pragma once
 
 #include "types.hpp"
-#include "SBuffer.hpp"
-#include "StaticCIndexMap.hpp"
-#include "Exceptions.hpp"
-#include "Slice.hpp"
-#include "ArrayView.hpp"
-#include "ArrayViewSelector.hpp"
+#include "sbuffer.hpp"
+#include "static_cindex_map.hpp"
+#include "exceptins.hpp"
+#include "slice.hpp"
+#include "array_view.hpp"
+#include "array_view_selector.hpp"
 
 namespace pni{
 namespace core{
@@ -51,7 +51,7 @@ namespace core{
     \code
 
     //create a static array of shape 4x5x10 of type double
-    SArray<double,4,5,10> array;
+    sarray<double,4,5,10> array;
 
     //data access is as usuall with the () operator
     double v = array(1,4,8);
@@ -59,21 +59,19 @@ namespace core{
 
     //global assignment works too
     array = 10;
-
-    
     \endcode
 
     \tparam T data type to be stored in the array
     \tparam DIMS list of template parameters each representing the number of
     elements along a particular dimension.
     */
-    template<typename T,size_t ...DIMS> class SArray
+    template<typename T,size_t ...DIMS> class sarray
     {
         private:
             //! static buffer holding the data
-            SBuffer<T,SizeType<DIMS...>::size > _data;    
+            sbuffer<T,SizeType<DIMS...>::size > _data;    
             //! static shape describing the arrays dimensionality
-            static const StaticCIndexMap<DIMS...> _shape; 
+            static const static_cindex_map<DIMS...> _shape; 
 
 
             //===================private methods===============================
@@ -87,15 +85,15 @@ namespace core{
             \return array view
             */
             template<typename ...ITYPES> 
-                ArrayView<SArray<T,DIMS...> > 
-                 _get_data(ArrayView<SArray<T,DIMS...> > &view,
+                array_view<sarray<T,DIMS...> > 
+                 _get_data(array_view<sarray<T,DIMS...> > &view,
                                ITYPES ...indices)
             {
 
-                ArraySelection s =
-                    ArraySelection::create(std::vector<Slice>{Slice(indices)...});
+                array_selection s =
+                    array_selection::create(std::vector<slice>{slice(indices)...});
 
-                return ArrayView<SArray<T,DIMS...> >(*this,s);
+                return array_view<sarray<T,DIMS...> >(*this,s);
             }
 
             //-----------------------------------------------------------------
@@ -140,12 +138,12 @@ namespace core{
             \return array view object`
             */
             template<template<typename ...> class CTYPE,typename ...OTS>
-            ArrayView<SArray<T,DIMS...> >
-            _get_data(ArrayView<SArray<T,DIMS...> > &view,const CTYPE<OTS...> &c)
+            array_view<sarray<T,DIMS...> >
+            _get_data(array_view<sarray<T,DIMS...> > &view,const CTYPE<OTS...> &c)
             {
-                ArraySelection s = ArraySelection::create(c);
+                array_selection s = array_selection::create(c);
 
-                return ArrayView<SArray<T,DIMS...> >(*this,s);
+                return array_view<sarray<T,DIMS...> >(*this,s);
 
             }
 
@@ -189,11 +187,11 @@ namespace core{
             //! data type of the elements stored in the array
             typedef T value_type; 
             //! type of the array
-            typedef SArray<T,DIMS...> array_type;
+            typedef sarray<T,DIMS...> array_type;
             //! type of the arrya view
-            typedef ArrayView<array_type> view_type;
+            typedef array_view<array_type> view_type;
             //! storage type
-            typedef SBuffer<T,SizeType<DIMS...>::size > storage_type;
+            typedef sbuffer<T,size_type<DIMS...>::size > storage_type;
             //! shared pointer to this type
             typedef std::shared_ptr<array_type> shared_ptr;
             //! unique pointer to this type
@@ -203,26 +201,26 @@ namespace core{
             //! const iterator
             typedef typename storage_type::const_iterator const_iterator; 
             //! type of the index map
-            typedef StaticCIndexMap<DIMS...> map_type;
+            typedef static_cindex_map<DIMS...> map_type;
             //===============public members====================================
             //! ID of the datatype stored in the array
-            static const type_id type_id = type_id_map<value_type>::type_id;
+            static const type_id_t type_id = type_id_map<value_type>::type_id;
             
 
             //============================constructor and destructor===========
             //! default constructor
-            SArray() {} 
+            sarray() {} 
 
             //-----------------------------------------------------------------
             /*!
             \brief construct from an ArrayView object
 
-            \throws SizeMissmatchError if sizes do not match
-            \throws ShapeMissmatchError if shapes do not match
+            \throws size_missmatch_error if sizes do not match
+            \throws shape_missmatch_error if shapes do not match
             \tparam ATYPE array type of the view
             \param view reference to the view object
             */
-            template<typename ATYPE> SArray(const ArrayView<ATYPE> &view)
+            template<typename ATYPE> sarray(const array_view<ATYPE> &view)
             {
                 check_equal_size(view,*this,EXCEPTION_RECORD);
                 check_equal_shape(view,*this,EXCEPTION_RECORD);
@@ -232,14 +230,14 @@ namespace core{
 
             //-----------------------------------------------------------------
             //! copy constructor
-            explicit SArray(const array_type &a):
+            explicit sarray(const array_type &a):
                 _data(a._data)
             {}
 
             //-----------------------------------------------------------------
             //! construct from a container type
             template<template<typename ...> class CTYPE,typename ...OTS>
-                SArray(const CTYPE<OTS...> &c)
+                sarray(const CTYPE<OTS...> &c)
             {
                 //can check here only for size
                 check_equal_size(c,*this,EXCEPTION_RECORD);
@@ -249,7 +247,7 @@ namespace core{
 
             //-----------------------------------------------------------------
             //! construct from a different array type
-            template<typename AT> SArray(const AT &a)
+            template<typename AT> sarray(const AT &a)
             {
                 //can check here for size and shape
                 check_equal_size(a,*this,EXCEPTION_RECORD);
@@ -260,7 +258,7 @@ namespace core{
 
             //-----------------------------------------------------------------
             //! construction from an initializer list
-            SArray(const std::initializer_list<T> &il)
+            sarray(const std::initializer_list<T> &il)
             {
                 check_equal_size(il,*this,EXCEPTION_RECORD);
 
@@ -279,7 +277,7 @@ namespace core{
 
             //-----------------------------------------------------------------
             //! destructor
-            ~SArray() {}
+            ~sarray() {}
 
 
             //==============assignment operators===============================
@@ -301,8 +299,8 @@ namespace core{
             argument list. As the method returns a reference to the element read
             write access is provided to the element.
             \code
-            StaticArray<Float64,3,4> array;
-            Float64 value = array(1,3);
+            sarray<float64,3,4> array;
+            float64 value = array(1,3);
             array(1,3) = 3.4;
             \endcode
             This method template throws a compile time error if the number of
@@ -312,14 +310,14 @@ namespace core{
             \return reference to the array element
             */
             template<typename ...ITYPES>
-                typename ArrayViewSelector<array_type,ITYPES...>::reftype
+                typename array_view_selector<array_type,ITYPES...>::reftype
                 operator()(ITYPES ...indices)
             {
 
                 static_assert((sizeof...(indices))==(sizeof...(DIMS)),
                         "Number of indices does not match array rank!");
 
-                typedef ArrayViewSelector<array_type,ITYPES...> selector;
+                typedef array_view_selector<array_type,ITYPES...> selector;
                 typedef typename selector::viewtype viewtype;
                 typedef typename selector::reftype  viewref;
 
@@ -337,8 +335,8 @@ namespace core{
             access). The element is identified by its multidimensional index
             passed to the method as an argument list. 
             \code
-            StaticArray<Float64,3,4> array;
-            Float64 value = array(1,3);
+            sarray<float64,3,4> array;
+            float64 value = array(1,3);
             \endcode
             As the method returns the value of the element it cannot be used for
             write access.
@@ -349,13 +347,13 @@ namespace core{
             \return value of the array element
             */
             template<typename ...ITYPES> 
-                typename ArrayViewSelector<array_type, ITYPES...>::viewtype 
+                typename array_view_selector<array_type, ITYPES...>::viewtype 
                 operator()(ITYPES ...indices) const
             {
                 static_assert((sizeof...(indices))==(sizeof...(DIMS)),
                         "Number of indices does not match array rank!");
 
-                typedef typename ArrayViewSelector<array_type,ITYPES...>::viewtype
+                typedef typename array_view_selector<array_type,ITYPES...>::viewtype
                     result_type;
 
                 return _get_data(result_type(),indices...);
@@ -370,18 +368,18 @@ namespace core{
             index. The indices are stored in a container of type CTYPE. Every
             container providing the [] operators for data access and a forward
             iterator are allowed. 
-            \throws ShapeMissmatchError if container size and array rank do not
+            \throws shape_missmatch_error if container size and array rank do not
             match
             \tparam CTYPE container type
             \param c container with indices
             \return reference to the element
             */
             template<template<typename ...> class CTYPE,typename ...OTS>
-            typename ArrayViewSelector<array_type,typename CTYPE<OTS...>::value_type>::reftype
+            typename array_view_selector<array_type,typename CTYPE<OTS...>::value_type>::reftype
             operator()(const CTYPE<OTS...> &c)
             {
 
-                typedef ArrayViewSelector<array_type,typename CTYPE<OTS...>::value_type> selector;
+                typedef array_view_selector<array_type,typename CTYPE<OTS...>::value_type> selector;
                 typedef typename selector::viewtype viewtype;
                 typedef typename selector::reftype  viewref;
 
@@ -397,17 +395,17 @@ namespace core{
             multidimensional index. The index is provided as a container of type
             CTYPE. Every container type implementing the [] operator and an STL
             compliant forward iterator is allowed. 
-            \throws ShapeMissmatchError if container size and array rank do not
+            \throws shape_missmatch_error if container size and array rank do not
             match
             \tparam CTYPE container type
             \param c container with indices
             \return value of the array element
             */
             template<template<typename ...> class CTYPE,typename ...OTS>
-            typename ArrayViewSelector<array_type,typename CTYPE<OTS...>::value_type>::viewtype
+            typename array_view_selector<array_type,typename CTYPE<OTS...>::value_type>::viewtype
             operator()(const CTYPE<OTS...> &c) const
             {
-                typedef ArrayViewSelector<array_type,typename CTYPE<OTS...>::value_type> sel;
+                typedef array_view_selector<array_type,typename CTYPE<OTS...>::value_type> sel;
                 typename sel::viewtype result = typename sel::viewtype();
 
                 return _get_data(result,c);
@@ -445,7 +443,7 @@ namespace core{
 
             Get the value of the element with linear index i. An exception is
             thrown if the index exceeds the size of the array.
-            \throws IndexError if i exceeds array size
+            \throws index_error if i exceeds array size
             \param i linear index of the value
             \return value of array element
             */
@@ -462,7 +460,7 @@ namespace core{
 
             Return the reference to the element at linear index i. If i exceeds
             the size of the array an exception will be thrown.
-            \throws IndexError if exceeds the size of the array
+            \throws index_error if exceeds the size of the array
             \param i linear index of the element
             \return reference to the requested element
             */
@@ -479,7 +477,7 @@ namespace core{
 
             Insert a data value at linear position i. Method throws an exception
             if i exceeds the size of the array.
-            \throws IndexError if i exceeds the arrays size
+            \throws index_error if i exceeds the arrays size
             \param i index where to insert the value
             \param v value to insert
             */
@@ -522,7 +520,7 @@ namespace core{
             The container must implement the [] operator for data access as well
             as a simple forward iterator.
             \code
-            StaticArray<UInt16,100,100> array;
+            sarray<uint16,100,100> array;
             auto shape = array.shape<std::vector<size_t> >();
             \endcode
             \tparam CTYPE container type
@@ -533,6 +531,7 @@ namespace core{
                 return this->_shape.shape<CTYPE>();
             }
 
+            //-----------------------------------------------------------------
             /*!
             \brief get index map
 
@@ -556,7 +555,7 @@ namespace core{
     };
 
     template<typename T,size_t ...DIMS> const
-        StaticCIndexMap<DIMS...> SArray<T,DIMS...>::_shape = StaticCIndexMap<DIMS...>();
+        static_cindex_map<DIMS...> sarray<T,DIMS...>::_shape = static_cindex_map<DIMS...>();
 
     //-------------------------------------------------------------------------
     /*!
@@ -567,7 +566,7 @@ namespace core{
     \param array the array to write to output
     */
     template<typename T,size_t ...DIMS>
-    std::ostream &operator<<(std::ostream &os,const SArray<T,DIMS...> &array)
+    std::ostream &operator<<(std::ostream &os,const sarray<T,DIMS...> &array)
     {
         for(auto v: array)
             os<<v<<" ";
@@ -585,7 +584,7 @@ namespace core{
     \param array store data in this array
     */
     template<typename T,size_t ...DIMS>
-    std::istream &operator>>(std::istream &is,SArray<T,DIMS...> &array)
+    std::istream &operator>>(std::istream &is,sarray<T,DIMS...> &array)
     {
         for(T &v: array)
             is>>v;
