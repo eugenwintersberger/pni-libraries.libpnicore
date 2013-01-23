@@ -31,9 +31,9 @@
 #include <iostream>
 
 #include "types.hpp"
-#include "TypeIDMap.hpp"
-#include "SBuffer.hpp"
-#include "ArrayView.hpp"
+#include "type_id_map.hpp"
+#include "sbuffer.hpp"
+#include "array_view.hpp"
 
 namespace pni {
 namespace core {
@@ -48,19 +48,19 @@ namespace core {
 
     \tparam T scalar type of the data stored.
     */
-    template<typename T> class Scalar
+    template<typename T> class scalar
     {
         private:
             //! static buffer holding the data value
-            SBuffer<T,1> _data; 
+            sbuffer<T,1> _data; 
         public:
             //================public data types================================
             //! native data type of the scalar
             typedef T value_type;
             //! type of the scalar itself
-            typedef Scalar<T> array_type;
+            typedef scalar<T> array_type;
             //! storage type
-            typedef SBuffer<T,1> storage_type;
+            typedef sbuffer<T,1> storage_type;
             //! shared pointer typ
             typedef std::shared_ptr<array_type> shared_ptr;
             //! unique pointer type
@@ -70,29 +70,29 @@ namespace core {
             //! const iterator
             typedef typename storage_type::const_iterator const_iterator;
             //! view type
-            typedef ArrayView<array_type> view_type;
+            typedef array_view<array_type> view_type;
             
             //===============public members====================================
             //! type ID of the data type held by the scalar
-            static const TypeID type_id = TypeIDMap<T>::type_id;
+            static const type_id_t type_id = type_id_map<T>::type_id;
 
             //====================constructors and destructor==================
             //! default constructor
-            Scalar():_data() {}
+            scalar():_data() {}
 
             //-----------------------------------------------------------------
             //! copy constructor
-            Scalar(const array_type &s):_data(s._data) {}
+            scalar(const array_type &s):_data(s._data) {}
             
             //-----------------------------------------------------------------
             //! constructor from a scalar value
-            Scalar(const value_type &r):_data({r}) {}
+            scalar(const value_type &r):_data({r}) {}
 
             //-----------------------------------------------------------------
 
             //-----------------------------------------------------------------
             //! destructor
-            ~Scalar() {}
+            ~scalar() {}
 
             //=================assignment operators============================
             /*! 
@@ -331,7 +331,7 @@ namespace core {
     \return reference to output stream
     */
     template<typename T>
-    std::ostream &operator<<(std::ostream &os,const Scalar<T> &s)
+    std::ostream &operator<<(std::ostream &os,const scalar<T> &s)
     {
         T value = s[0]; 
         os<<value;
@@ -348,7 +348,7 @@ namespace core {
     \return reference to input stream
     */
     template<typename T>
-    std::istream &operator>>(std::istream &is,Scalar<T> &s)
+    std::istream &operator>>(std::istream &is,scalar<T> &s)
     {
         T value;
         is>>value;
