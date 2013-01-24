@@ -25,8 +25,8 @@
  */
 
 #include<boost/regex.hpp>
-#include "DectrisReader.hpp"
-#include "../../Exceptions.hpp"
+#include "dectris_reader.hpp"
+#include "../../exceptions.hpp"
 
 
 namespace pni{
@@ -35,13 +35,13 @@ namespace cbf{
 
     //==================implementation of static memeber functions=========
     //implementation of the read_header method
-    std::streampos DectrisReader::read_header(std::ifstream &is,
-            std::vector<pni::io::ImageInfo> &info,CompressionID &ct)
+    std::streampos dectris_reader::read_header(std::ifstream &is,
+            std::vector<pni::io::image_info> &info,CompressionID &ct)
     {
-        UInt8 byte;
-        String linebuffer;
+        uint8 byte;
+        string linebuffer;
         size_t nx=0,ny=0,bits_per_pixel;
-        TypeID tid;
+        type_id_t tid;
         
         //define some useful regular expressions
         boost::regex quoted_text("\".*\"");
@@ -65,7 +65,7 @@ namespace cbf{
             if(((unsigned char)byte) == 0xd5)
             {
                 //ok - if we came here we are done with all the rubish
-                ImageInfo iinfo(nx,ny);
+                image_info iinfo(nx,ny);
                 iinfo.append_channel(ImageChannelInfo(tid,bits_per_pixel));
                 info.push_back(iinfo);
 
@@ -83,13 +83,13 @@ namespace cbf{
                 if(boost::regex_match(linebuffer,conversion_regex))
                 {
                     if(!boost::regex_search(linebuffer,match,quoted_text))
-                        throw FileError(EXCEPTION_RECORD,
+                        throw file_error(EXCEPTION_RECORD,
                                 "Cannot find conversion string!");
                     
                     if(match.str(0) == "\"x-CBF_BYTE_OFFSET\"")
-                        ct = CompressionID::CBF_BYTE_OFFSET;
+                        ct = compression_id::CBF_BYTE_OFFSET;
                     else
-                        throw FileError(EXCEPTION_RECORD,
+                        throw file_error(EXCEPTION_RECORD,
                                 "Unknown compression algorithm!");
 
                 }
@@ -98,24 +98,24 @@ namespace cbf{
                 if(boost::regex_match(linebuffer,type_regex))
                 {
                     if(!boost::regex_search(linebuffer,match,quoted_text))
-                        throw FileError(EXCEPTION_RECORD,
+                        throw file_error(EXCEPTION_RECORD,
                         "Cannot find data type string!");
 
                     //set the data type id
                     if(match.str(0) == "\"signed 32-bit integer\"")
                     {
-                        tid=TypeID::INT32;
+                        tid=type_id_t::INT32;
                         bits_per_pixel = 32;
                     }
                     else
-                        throw FileError(EXCEPTION_RECORD,"Unkown data type!");
+                        throw file_error(EXCEPTION_RECORD,"Unkown data type!");
                 }
 
                 //---------get number of pixels in y-direction-------------
                 if(boost::regex_match(linebuffer,ny_regex))
                 {
                     if(!boost::regex_search(linebuffer,match,int_numbers))
-                        throw FileError(EXCEPTION_RECORD,
+                        throw file_error(EXCEPTION_RECORD,
                         "Cannot read number of pixels in y-direction!");
 
                     ny = std::atoi(match.str(0).c_str());
@@ -125,7 +125,7 @@ namespace cbf{
                 if(boost::regex_match(linebuffer,nx_regex))
                 {
                     if(!boost::regex_search(linebuffer,match,int_numbers))
-                        throw FileError(EXCEPTION_RECORD,
+                        throw file_error(EXCEPTION_RECORD,
                         "Cannot read number of pixels in x-direction!");
 
                     nx = std::atoi(match.str(0).c_str());

@@ -30,8 +30,8 @@
 #include<fstream>
 #include<vector>
 
-#include "../ImageInfo.hpp"
-#include "Types.hpp"
+#include "../image_info.hpp"
+#include "types.hpp"
 
 using namespace pni::core;
 
@@ -46,7 +46,7 @@ namespace cbf{
     This type provides static method to read data from CBF files written by
     detectors from DECTRIS. 
     */
-    class DectrisReader
+    class dectris_reader
     {
         public:
             /*! \brief read header information
@@ -63,6 +63,7 @@ namespace cbf{
             static std::streampos read_header(std::ifstream &is,
                     std::vector<pni::io::ImageInfo> &info,CompressionID &ct);
 
+            //-----------------------------------------------------------------
             /*! \brief read data 
 
             Static method to read byte offset compressed data from DECTRIS CBF
@@ -84,8 +85,8 @@ namespace cbf{
 
     //-------------------------------------------------------------------------
     template<typename CBFT,typename CTYPE>
-        void DectrisReader::read_data_byte_offset( std::ifstream &is,
-                const pni::io::ImageInfo &info, CTYPE &data)
+        void dectris_reader::read_data_byte_offset( std::ifstream &is,
+                const pni::io::image_info &info, CTYPE &data)
     {
 
         //unsigned long i;
@@ -113,7 +114,7 @@ namespace cbf{
             try { is.read((char *)(&buffer),1); }
             catch(...)
             {
-                throw FileError(EXCEPTION_RECORD,
+                throw file_error(EXCEPTION_RECORD,
                         "Error reading 1Byte from the CBF stream!");
             }
 
@@ -129,7 +130,7 @@ namespace cbf{
             try { is.read((char *) (&buffer), 2); }
             catch(...)
             {
-                throw FileError(EXCEPTION_RECORD,
+                throw file_error(EXCEPTION_RECORD,
                         "Error reading 2Byte from the CBF stream!");
             }
 
@@ -145,7 +146,7 @@ namespace cbf{
             try { is.read((char*) (&buffer), 4); }
             catch(...)
             {
-                throw FileError(EXCEPTION_RECORD,
+                throw file_error(EXCEPTION_RECORD,
                         "Error reading 4byte from the CBF stream!");
             }
 
