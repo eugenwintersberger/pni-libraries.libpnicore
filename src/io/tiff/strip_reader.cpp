@@ -26,21 +26,19 @@
  *
  */
 
-#include "../../Exceptions.hpp"
-#include "StripReader.hpp"
+#include "../../exceptions.hpp"
+#include "strip_reader.hpp"
 
 namespace pni {
 namespace io {
 namespace tiff {
     //======================implementation of constructors and destructor======
     //implementation of the default constructor
-    StripReader::StripReader() 
-    {
-    }
+    strip_reader::strip_reader() { }
 
     //-------------------------------------------------------------------------
     //implementation of the copy constructor
-    StripReader::StripReader(const StripReader &o):
+    strip_reader::strip_reader(const strip_reader &o):
         _offsets(o._offsets),
         _byte_cnts(o._byte_cnts),
         _bits_per_channel(o._bits_per_channel),
@@ -49,7 +47,7 @@ namespace tiff {
 
     //-------------------------------------------------------------------------
     //implementation of move constructor
-    StripReader::StripReader(StripReader &&o):
+    strip_reader::strip_reader(strip_reader &&o):
         _offsets(std::move(o._offsets)),
         _byte_cnts(std::move(o._byte_cnts)),
         _bits_per_channel(std::move(o._bits_per_channel)),
@@ -58,10 +56,10 @@ namespace tiff {
 
     //------------------------------------------------------------------------
     //implementation of the standard constructor
-    StripReader::StripReader(const std::vector<size_t> &offsets,
+    strip_reader::strip_reader(const std::vector<size_t> &offsets,
                              const std::vector<size_t> &byte_counts,
                              const std::vector<size_t> &bits_per_channel,
-                             const std::vector<TypeID> &channel_types):
+                             const std::vector<type_id_t> &channel_types):
         _offsets(offsets),
         _byte_cnts(byte_counts),
         _bits_per_channel(bits_per_channel),
@@ -70,12 +68,12 @@ namespace tiff {
 
     //-------------------------------------------------------------------------
     //implementation of the destructor
-    StripReader::~StripReader() 
+    strip_reader::~strip_reader() 
     { }
 
     //=========================implementation of assignment operators==========
     //implementation of copy assignment
-    StripReader &StripReader::operator=(const StripReader &o)
+    strip_reader &strip_reader::operator=(const strip_reader &o)
     {
         if(this == &o) return *this;
 
@@ -88,7 +86,7 @@ namespace tiff {
 
     //-------------------------------------------------------------------------
     //implementation of move assignment
-    StripReader &StripReader::operator=(StripReader &&o)
+    strip_reader &strip_reader::operator=(strip_reader &&o)
     {
         if(this == &o) return *this;
 
@@ -100,18 +98,19 @@ namespace tiff {
     }
 
     //======================implementation of public methods===================
-    StripReader StripReader::create(std::ifstream &stream,const IFD &ifd,
-                                    const ImageInfo &info)
+    strip_reader strip_reader::create(std::ifstream &stream,const ifd &image_dir,
+                                    const image_info &info)
     {
-       return StripReader(ifd["StripOffsets"].value<size_t>(stream),
-                          ifd["StripByteCounts"].value<size_t>(stream),
-                          info.bits_per_channel(),
-                          info.types_per_channel());
+       return strip_reader(image_dir["StripOffsets"].value<size_t>(stream),
+                           image_dir["StripByteCounts"].value<size_t>(stream),
+                           info.bits_per_channel(),
+                           info.types_per_channel());
     }
 
-    
+   
+    //-------------------------------------------------------------------------
     //output operator
-    std::ostream &operator<<(std::ostream &o,const StripReader &r)
+    std::ostream &operator<<(std::ostream &o,const strip_reader &r)
     {
         for(size_t i=0;i<r._bits_per_channel.size();i++)
         {

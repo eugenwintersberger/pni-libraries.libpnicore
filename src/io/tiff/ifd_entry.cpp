@@ -26,9 +26,9 @@
 
 
 
-#include "../../Exceptions.hpp"
-#include "IFDEntry.hpp"
-#include "Standard.hpp"
+#include "../../exceptions.hpp"
+#include "ifd_entry.hpp"
+#include "standard.hpp"
 
 
 namespace pni{
@@ -36,73 +36,73 @@ namespace io{
 namespace tiff{
     //================manage enum types if the compiler does not do it=========
 #ifdef ENUMBUG
-    bool operator<(IFDEntryTypeID a,IFDEntryTypeID b)
+    bool operator<(ifd_entry_type_id a,ifd_entry_type_id b)
     {
         return int(a)<int(b);
     }
 
     //-------------------------------------------------------------------------
-    bool operator>(IFDEntryTypeID a,IFDEntryTypeID b)
+    bool operator>(ifd_entry_type_id a,ifd_entry_type_id b)
     {
         return int(a)>int(b);
     }
 
     //-------------------------------------------------------------------------
-    bool operator<=(IFDEntryTypeID a,IFDEntryTypeID b)
+    bool operator<=(ifd_entry_type_id a,ifd_entry_type_id b)
     {
         return int(a)<=int(b);
     }
 
     //-------------------------------------------------------------------------
-    bool operator>=(IFDEntryTypeID a,IFDEntryTypeID b)
+    bool operator>=(ifd_entry_type_id a,ifd_entry_type_id b)
     {
         return int(a)>=int(b);
     }
 #endif
 
     //map object associating TIFF type tags to IDFEntryTypeId enums
-    std::map<UInt16,IFDEntryTypeID> 
-        TypeTag2EntryTypeId = {{1,IFDEntryTypeID::BYTE},
-                               {2,IFDEntryTypeID::ASCII},
-                               {3,IFDEntryTypeID::SHORT},
-                               {4,IFDEntryTypeID::LONG},
-                               {5,IFDEntryTypeID::RATIONAL},
-                               {6,IFDEntryTypeID::SBYTE},
-                               {7,IFDEntryTypeID::UNDEFINED},
-                               {8,IFDEntryTypeID::SSHORT},
-                               {9,IFDEntryTypeID::SLONG},
-                               {10,IFDEntryTypeID::SRATIONAL},
-                               {11,IFDEntryTypeID::FLOAT},
-                               {12,IFDEntryTypeID::DOUBLE}};
+    std::map<uint16,ifd_entry_type_id> type_tag_to_entry_type_id = 
+                               {{1,ifd_entry_type_id::BYTE},
+                               {2,ifd_entry_type_id::ASCII},
+                               {3,ifd_entry_type_id::SHORT},
+                               {4,ifd_entry_type_id::LONG},
+                               {5,ifd_entry_type_id::RATIONAL},
+                               {6,ifd_entry_type_id::SBYTE},
+                               {7,ifd_entry_type_id::UNDEFINED},
+                               {8,ifd_entry_type_id::SSHORT},
+                               {9,ifd_entry_type_id::SLONG},
+                               {10,ifd_entry_type_id::SRATIONAL},
+                               {11,ifd_entry_type_id::FLOAT},
+                               {12,ifd_entry_type_id::DOUBLE}};
 
     //map object associating IDFEntryTypeIds to PNI TypeIDs
-    std::map<IFDEntryTypeID,TypeID> 
-        EntryTypeId2TypeID = {{IFDEntryTypeID::BYTE,TypeID::UINT8},
-                              {IFDEntryTypeID::ASCII,TypeID::STRING},
-                              {IFDEntryTypeID::SHORT,TypeID::UINT16},
-                              {IFDEntryTypeID::LONG,TypeID::UINT32},
-                              {IFDEntryTypeID::RATIONAL,TypeID::FLOAT64},
-                              {IFDEntryTypeID::SBYTE,TypeID::INT8},
-                              {IFDEntryTypeID::UNDEFINED,TypeID::NONE},
-                              {IFDEntryTypeID::SSHORT,TypeID::INT16},
-                              {IFDEntryTypeID::SLONG,TypeID::INT32},
-                              {IFDEntryTypeID::SRATIONAL,TypeID::FLOAT64},
-                              {IFDEntryTypeID::FLOAT,TypeID::FLOAT32},
-                              {IFDEntryTypeID::DOUBLE,TypeID::FLOAT64}};
+    std::map<ifd_entry_type_id,type_id_t> entry_type_to_type_id = 
+                          {{ifd_entry_type_id::BYTE,type_id_t::UINT8},
+                          {ifd_entry_type_id::ASCII,type_id_t::STRING},
+                          {ifd_entry_type_id::SHORT,type_id_t::UINT16},
+                          {ifd_entry_type_id::LONG,type_id_t::UINT32},
+                          {ifd_entry_type_id::RATIONAL,type_id_t::FLOAT64},
+                          {ifd_entry_type_id::SBYTE,type_id_t::INT8},
+                          {ifd_entry_type_id::UNDEFINED,type_id_t::NONE},
+                          {ifd_entry_type_id::SSHORT,type_id_t::INT16},
+                          {ifd_entry_type_id::SLONG,type_id_t::INT32},
+                          {ifd_entry_type_id::SRATIONAL,type_id_t::FLOAT64},
+                          {ifd_entry_type_id::FLOAT,type_id_t::FLOAT32},
+                          {ifd_entry_type_id::DOUBLE,type_id_t::FLOAT64}};
 
 
     //==================constructors and destructor========================
     //implementation of the  default constructor
-    IFDEntry::IFDEntry():
+    ifd_entry::ifd_entry():
         _tag(0),
-        _tid(IFDEntryTypeID::UNDEFINED),
+        _tid(ifd_entry_type_id::UNDEFINED),
         _size(0),
         _data(0)
     {}
 
     //---------------------------------------------------------------------
     //implementation of the copy constructor
-    IFDEntry::IFDEntry(const IFDEntry &e):
+    ifd_entry::ifd_entry(const ifd_entry &e):
         _tag(e._tag),
         _tid(e._tid),
         _size(e._size),
@@ -111,7 +111,7 @@ namespace tiff{
 
     //---------------------------------------------------------------------
     //implementation of the  move constructor
-    IFDEntry::IFDEntry(IFDEntry &&e):
+    ifd_entry::ifd_entry(ifd_entry &&e):
         _tag(std::move(e._tag)),
         _tid(std::move(e._tid)),
         _size(std::move(e._size)),
@@ -120,7 +120,7 @@ namespace tiff{
 
     //---------------------------------------------------------------------
     //implementation of the standard constructor
-    IFDEntry::IFDEntry(UInt16 tag,IFDEntryTypeID tid,size_t size, 
+    ifd_entry::ifd_entry(uint16 tag,ifd_entry_type_id tid,size_t size, 
                       std::streampos data):
         _tag(tag),
         _tid(tid),
@@ -130,12 +130,12 @@ namespace tiff{
 
     //---------------------------------------------------------------------
     //implementation of the destructor
-    IFDEntry::~IFDEntry()
+    ifd_entry::~ifd_entry()
     {}
 
     //=====================assignment operators============================
     //implementation of the copy assignment operator
-    IFDEntry &IFDEntry::operator=(const IFDEntry &e)
+    ifd_entry &ifd_entry::operator=(const ifd_entry &e)
     {
         if(this == &e) return *this;
         
@@ -148,7 +148,7 @@ namespace tiff{
 
     //---------------------------------------------------------------------
     //implementation of the move assignment operator
-    IFDEntry &IFDEntry::operator=(IFDEntry &&e)
+    ifd_entry &ifd_entry::operator=(ifd_entry &&e)
     {
         if(this == &e) return *this;
         _tag = std::move(e._tag);
@@ -159,18 +159,18 @@ namespace tiff{
     }
 
     //===========implementation of static methods==========================
-    IFDEntry IFDEntry::create_from_stream(std::ifstream &stream)
+    ifd_entry ifd_entry::create_from_stream(std::ifstream &stream)
     {
-        UInt16 tag = 0;
+        uint16 tag = 0;
         stream.read((char *)(&tag),2);
         
-        UInt16 tid = 0;
+        uint16 tid = 0;
         stream.read((char *)(&tid),2);
 
-        UInt32 count = 0;
+        uint32 count = 0;
         stream.read((char *)(&count),4);
 
-        IFDEntry e(tag,TypeTag2EntryTypeId[tid],count,stream.tellg());
+        ifd_entry e(tag,type_tag_to_entry_type_id[tid],count,stream.tellg());
         //add additional for byte 
         stream.seekg(4,std::ios::cur);
         return e;
@@ -179,42 +179,43 @@ namespace tiff{
 
     //=======================class methods=================================
     //implementation of nelements
-    size_t IFDEntry::size() const
+    size_t ifd_entry::size() const
     {
         return _size;
     }
 
     //----------------------------------------------------------------------
-    String IFDEntry::name() const
+    string ifd_entry::name() const
     {
        try{
-           return TIFFTagNameMap[_tag];
+           return tiff_tag_name_map[_tag];
        }catch(...){
-           return String("unknown");
+           return string("unknown");
        }
     }
 
     //-----------------------------------------------------------------------
-    TypeID IFDEntry::type_id() const
+    type_id_t ifd_entry::type_id() const
     {
-        return EntryTypeId2TypeID[_tid];
+        return entry_type_id_to_type_id[_tid];
     }
 
     //-----------------------------------------------------------------------
-    void IFDEntry::_read_entry_data(std::vector<String> &r,std::ifstream &stream)
+    void ifd_entry::_read_entry_data(std::vector<string> &r,
+                                     std::ifstream &stream)
     {
         //now we have to walk through all types available in TIFF - not very
         //nice but we have no other choice at runtime
-        if(this->_tid == IFDEntryTypeID::ASCII)
-            IFDEntryReader<String,String>::read(r,stream);
+        if(this->_tid == ifd_entry_type_id::ASCII)
+            ifd_entry_reader<string,string>::read(r,stream);
         else
-            throw TypeError(EXCEPTION_RECORD,
+            throw type_error(EXCEPTION_RECORD,
             "IFD entry is of unknown or incompatible type!");
        
     }
 
     //=================implementation of friend methods and operators========
-    std::ostream &operator<<(std::ostream &o,const IFDEntry &e)
+    std::ostream &operator<<(std::ostream &o,const ifd_entry &e)
     {
         o<<"IFD entry: "<<e.name()<<" (tag="<< e._tag<<") with "<<e.size()<<" of type ";
         o<<e.type_id();

@@ -27,17 +27,20 @@
  */
 
 
-#include "TIFFExceptions.hpp"
+#include "exceptions.hpp"
 
 namespace pni{
-namespace utils{
+namespace io{
+namespace tiff{
 
-//implementation of the output operator
-std::ostream &operator<<(std::ostream &o,const TIFFReadError &e){
-	return e.print(o);
-}
+    //implementation of the output operator
+    std::ostream &operator<<(std::ostream &o,const tiff_read_error &e)
+    {
+        return e.print(o);
+    }
 
 //end of namespace
+}
 }
 }
 

@@ -32,10 +32,10 @@
 #include <map>
 #include <boost/current_function.hpp>
 
-#include "../../Types.hpp"
-#include "../../Exceptions.hpp"
-#include "Rational.hpp"
-#include "IFDEntryReader.hpp"
+#include "../../types.hpp"
+#include "../../exceptions.hpp"
+#include "rational.hpp"
+#include "ifd_entry_reader.hpp"
 
 using namespace pni::core;
 
@@ -43,14 +43,14 @@ namespace pni{
 namespace io{
 namespace tiff{
     
-    enum class IFDEntryTypeID { BYTE, ASCII,SHORT,LONG,RATIONAL,SBYTE,UNDEFINED,
+    enum class ifd_entry_type_id { BYTE, ASCII,SHORT,LONG,RATIONAL,SBYTE,UNDEFINED,
                                   SSHORT,SLONG,SRATIONAL,FLOAT,DOUBLE};
 
 #ifdef ENUMBUG
-    bool operator<(IFDEntryTypeID a,IFDEntryTypeID b);
-    bool operator>(IFDEntryTypeID a,IFDEntryTypeID b);
-    bool operator<=(IFDEntryTypeID a,IFDEntryTypeID b);
-    bool operator>=(IFDEntryTypeID a,IFDEntryTypeID b);
+    bool operator<(ifd_entry_type_id a,ifd_entry_type_id b);
+    bool operator>(ifd_entry_type_id a,ifd_entry_type_id b);
+    bool operator<=(ifd_entry_type_id a,ifd_entry_type_id b);
+    bool operator>=(ifd_entry_type_id a,ifd_entry_type_id b);
 #endif
 
     /*!
@@ -59,11 +59,11 @@ namespace tiff{
 
     This class can manage the content of a single IFDEntry. 
     */
-    class IFDEntry
+    class ifd_entry
     {
         private:
-            UInt16 _tag;            //!< ID of the entry
-            IFDEntryTypeID _tid;   //!< type id of the entry
+            uint16 _tag;            //!< ID of the entry
+            ifd_entry_type_id _tid;   //!< type id of the entry
             size_t _size;          //!< number of elements of the entry
             std::streampos _data;  //!< marks data position
 
@@ -93,15 +93,15 @@ namespace tiff{
         public:
             //=============constructors and destructor=========================
             //! default constructor
-            IFDEntry();
+            ifd_entry();
 
             //-----------------------------------------------------------------
             //! copy constructor
-            IFDEntry(const IFDEntry &e);
+            ifd_entry(const ifd_entry &e);
 
             //-----------------------------------------------------------------
             //! move constructor
-            IFDEntry(IFDEntry &&e);
+            ifd_entry(ifd_entry &&e);
 
             //-----------------------------------------------------------------
             /*! \brief standard constructor
@@ -112,19 +112,19 @@ namespace tiff{
             \param size number of elements stored in this entry
             \param data starting position of data in the stream
             */
-            IFDEntry(UInt16 tag,IFDEntryTypeID tid,size_t size,std::streampos
+            ifd_entry(uint16 tag,ifd_entry_type_id tid,size_t size,std::streampos
                     data);
 
             //-----------------------------------------------------------------
             //! destructor
-            ~IFDEntry();
+            ~ifd_entry();
 
             //=====================assignment operators========================
             //! copy assignment operator
-            IFDEntry &operator=(const IFDEntry &e);
+            ifd_entry &operator=(const ifd_entry &e);
 
             //! move assignment operator
-            IFDEntry &operator=(IFDEntry &&e);
+            ifd_entry &operator=(ifd_entry &&e);
 
             //===============static methods====================================
             /*! \brief create entry from stream
@@ -134,7 +134,7 @@ namespace tiff{
             \param stream input stream from which to read data
             \return instance of IFDEntry
             */
-            static IFDEntry create_from_stream(std::ifstream &stream);
+            static ifd_entry create_from_stream(std::ifstream &stream);
 
             //==================class methods==================================
             /*! \brief number of elements
@@ -150,7 +150,7 @@ namespace tiff{
             Returns the name of the entry as a string.
             \return name as string
             */
-            String name() const;
+            string name() const;
 
             //-----------------------------------------------------------------
             /*! \brief get type ID
@@ -158,7 +158,7 @@ namespace tiff{
             Returns the TypeID of the entries type. 
             \return type ID of entry
             */
-            TypeID type_id() const;
+            type_id_t type_id() const;
 
             //-----------------------------------------------------------------
             /*! \brief get entry value
@@ -182,7 +182,7 @@ namespace tiff{
 
 
     //==============implementation of public template methods===================
-    template<typename T> std::vector<T> IFDEntry::value(std::ifstream &stream)
+    template<typename T> std::vector<T> ifd_entry::value(std::ifstream &stream)
     {
         //create a vector of appropriate length
         std::vector<T> result(this->size());
@@ -203,7 +203,7 @@ namespace tiff{
         try{
             this->_read_entry_data(result,stream);
         }
-        catch(TypeError &e)
+        catch(type_error &e)
         {
             e.append(EXCEPTION_RECORD);
             //reset the stream to its original position
@@ -219,32 +219,32 @@ namespace tiff{
     }
 
     //--------------------------------------------------------------------------
-    template<typename T> void IFDEntry:: 
+    template<typename T> void ifd_entry:: 
         _read_entry_data(std::vector<T> &r,std::ifstream &stream)
     {
-        if(this->_tid == IFDEntryTypeID::BYTE) 
-            IFDEntryReader<T,UInt8>::read(r,stream);
-        else if(this->_tid == IFDEntryTypeID::SHORT)
-            IFDEntryReader<T,UInt16>::read(r,stream);
-        else if(this->_tid == IFDEntryTypeID::LONG)
-            IFDEntryReader<T,UInt32>::read(r,stream);
-        else if(this->_tid == IFDEntryTypeID::RATIONAL)
-            IFDEntryReader<T,Rational<UInt16> >::read(r,stream);
-        else if(this->_tid == IFDEntryTypeID::SBYTE)
-            IFDEntryReader<T,Int8>::read(r,stream);
-        else if(this->_tid == IFDEntryTypeID::SSHORT)
-            IFDEntryReader<T,Int16>::read(r,stream);
-        else if(this->_tid == IFDEntryTypeID::SLONG)
-            IFDEntryReader<T,Int32>::read(r,stream);
-        else if(this->_tid == IFDEntryTypeID::SRATIONAL)
-            IFDEntryReader<T,Rational<Int32> >::read(r,stream);
-        else if(this->_tid == IFDEntryTypeID::FLOAT)
-            IFDEntryReader<T,Float32>::read(r,stream);
-        else if(this->_tid == IFDEntryTypeID::DOUBLE)
-            IFDEntryReader<T,Float64>::read(r,stream);
+        if(this->_tid == ifd_entry_type_id::BYTE) 
+            ifd_entry_reader<T,uint8>::read(r,stream);
+        else if(this->_tid == ifd_entry_type_id::SHORT)
+            ifd_entry_reader<T,uint16>::read(r,stream);
+        else if(this->_tid == ifd_entry_type_id::LONG)
+            ifd_entry_reader<T,uint32>::read(r,stream);
+        else if(this->_tid == ifd_entry_type_id::RATIONAL)
+            ifd_entry_reader<T,rational<uint16> >::read(r,stream);
+        else if(this->_tid == ifd_entry_type_id::SBYTE)
+            ifd_entry_reader<T,int8>::read(r,stream);
+        else if(this->_tid == ifd_entry_type_id::SSHORT)
+            ifd_entry_reader<T,int16>::read(r,stream);
+        else if(this->_tid == ifd_entry_type_id::SLONG)
+            ifd_entry_reader<T,int32>::read(r,stream);
+        else if(this->_tid == ifd_entry_type_id::SRATIONAL)
+            ifd_entry_reader<T,sational<Int32> >::read(r,stream);
+        else if(this->_tid == ifd_entry_type_id::FLOAT)
+            ifd_entry_reader<T,float32>::read(r,stream);
+        else if(this->_tid == ifd_entry_type_id::DOUBLE)
+            ifd_entry_reader<T,float64>::read(r,stream);
         else
             //reset stream position
-            throw TypeError(EXCEPTION_RECORD,"IFD entry ["+this->name()+
+            throw type_error(EXCEPTION_RECORD,"IFD entry ["+this->name()+
                     "] contains unknown data!");
     }
 

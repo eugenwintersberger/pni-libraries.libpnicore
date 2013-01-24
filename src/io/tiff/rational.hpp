@@ -30,7 +30,7 @@
 
 #include <iostream>
 
-#include "../../Types.hpp"
+#include "../../types.hpp"
 
 using namespace pni::core;
 
@@ -45,20 +45,21 @@ namespace tiff{
     IFD entries in TIFF files can consist of a rational number. This class
     implements such a type as a template.
     */
-    template<typename T> class Rational{
+    template<typename T> class rational
+    {
         protected:
             T _numerator;    //!< numerator of the rational number
             T _denominator;  //!< denominator of the rational number
         public:
             //=================constructors and destructor=================
             //! default constructor
-            Rational();
+            rational();
             //! copy constructor
-            Rational(const Rational &o);
+            rational(const rational &o);
             //! standard constructor
-            explicit Rational(const T &,const T&);
+            explicit rational(const T &,const T&);
             //! destructor
-            ~Rational(){}
+            ~rational(){}
 
             //====================conversion operator=======================
             /*! \brief conversion operator
@@ -74,7 +75,7 @@ namespace tiff{
 
             //================assignment operator===========================
             //! copy assignment operator
-            virtual Rational<T> &operator=(const Rational<T> &r);
+            virtual rational<T> &operator=(const ratoinal<T> &r);
 
             //! set the numerator
             void numerator(const T &v) { _numerator = v; }
@@ -90,26 +91,29 @@ namespace tiff{
 
     //=============implementation of template methods======================
     //implementation of the default constructor
-    template<typename T> Rational<T>::Rational():
+    template<typename T> rational<T>::rational():
         _numerator(0),
         _denominator(0)
     { }
 
+    //------------------------------------------------------------------------
     //implementation of the copy constructor
-    template<typename T> Rational<T>::Rational(const Rational<T> &r):
+    template<typename T> rational<T>::rational(const rational<T> &r):
         _numerator(r._numerator),
         _denominator(r._denominator)
     { }
 
+    //------------------------------------------------------------------------
     //implementation of the standard constructor
-    template<typename T> Rational<T>::Rational(const T &n,const T &d):
+    template<typename T> rational<T>::rational(const T &n,const T &d):
         _numerator(n),
         _denominator(d)
     { }
 
+    //------------------------------------------------------------------------
     //implementation of the copy assignment operator
     template<typename T> 
-        Rational<T> &Rational<T>::operator=(const Rational<T> &r)
+        rational<T> &rational<T>::operator=(const rational<T> &r)
     {
         if(this != &r){
             _numerator = r._numerator;
@@ -118,6 +122,7 @@ namespace tiff{
         return *this;
     }
     
+    //------------------------------------------------------------------------
     //implementation of the output operator
     template<typename T> 
         std::ostream &operator<<(std::ostream &o,const Rational<T> &r)
@@ -128,8 +133,8 @@ namespace tiff{
 
 
     //some default types 
-    typedef Rational<UInt32> URational;
-    typedef Rational<Int32> SRational;
+    typedef rational<uint32> uirational;
+    typedef rational<int32> irational;
 
 //end namespaces
 }

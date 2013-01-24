@@ -33,9 +33,9 @@
 #include <fstream>
 #include <iostream>
 
-#include "../../Types.hpp"
+#include "../../types.hpp"
 
-#include "IFDEntry.hpp"
+#include "ifd_entry.hpp"
 
 namespace pni{
 namespace io{
@@ -59,24 +59,25 @@ namespace tiff{
     The IFD class behaves like a C++ container providing iterators to run over
     all entries stored in the IFD.  
     */
-    class IFD {
+    class ifd 
+    {
         protected:
-            std::vector<IFDEntry> _entries; //!< list of IFD entries
+            std::vector<ifd_entry> _entries; //!< list of IFD entries
         public:
             //===============public data types=================================
             //some data types that can be useful for IFDs
             //! iterator over IDF entries in IDFList
-            typedef std::vector<IFDEntry>::iterator       iterator;       
+            typedef std::vector<ifd_entry>::iterator       iterator;       
             //! const. iterator over IDF entries in IDF List
-            typedef std::vector<IFDEntry>::const_iterator const_iterator; 
+            typedef std::vector<ifd_entry>::const_iterator const_iterator; 
 
             //==================constructors and destructor====================
             //! default constructor
-            IFD();
+            ifd();
 
             //-----------------------------------------------------------------
             //! copy constructor
-            IFD(const IFD &o);
+            ifd(const ifd &o);
 
             //-----------------------------------------------------------------
             /*! \brief standard constructor
@@ -88,23 +89,23 @@ namespace tiff{
             with the next IFD.
             \param size number of elements in the entry
             */
-            explicit IFD(size_t size);
+            explicit ifd(size_t size);
 
             //-----------------------------------------------------------------
             //! move constructor
-            IFD(IFD &&o);
+            ifd(ifd &&o);
 
             //-----------------------------------------------------------------
             //! destructor
-            ~IFD();
+            ~ifd();
 
             //===================assignment operator===========================
             //! copy assignment operator
-            IFD &operator = (const IFD &o);
+            ifd &operator = (const ifd &o);
 
             //-----------------------------------------------------------------
             //! move assignment operator
-            IFD &operator = (IFD &&o);
+            ifd &operator = (ifd &&o);
 
             //====================public member methods========================
             /*! \brief get number of IFD entries
@@ -125,7 +126,7 @@ namespace tiff{
             \param i unsigned integer with the index of the entry
             \return smart pointer to an IFDAbstractEntry object
             */
-            IFDEntry operator[](size_t i) const;
+            ifd_entry operator[](size_t i) const;
 
             //-----------------------------------------------------------------
             /*! 
@@ -138,7 +139,7 @@ namespace tiff{
             \param n a string with the name of the entry
             \return smart pointer to an IFDAbstractEntry
             */
-            IFDEntry operator[](const String &n) const;
+            ifd_entry operator[](const string &n) const;
 
             //-----------------------------------------------------------------
             /*! \brief get first iterator
@@ -182,7 +183,7 @@ namespace tiff{
             \param idf Image directory to print
             \return output stream
             */
-            friend std::ostream &operator<<(std::ostream &o,const IFD &idf);
+            friend std::ostream &operator<<(std::ostream &o,const ifd &image_dir);
     };
 
 

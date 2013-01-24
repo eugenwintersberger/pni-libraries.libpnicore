@@ -26,8 +26,8 @@
  *
  */
 
-#include "IFD.hpp"
-#include "IFDEntry.hpp"
+#include "ifd.hpp"
+#include "ifd_entry.hpp"
 
 namespace pni{
 namespace io{
@@ -35,48 +35,48 @@ namespace tiff{
 
     //================implementation of constructors and destructor============ 
     //implementation of the default constructor
-    IFD::IFD():
+    ifd::ifd():
         _entries(0)
     { }
 
     //-------------------------------------------------------------------------
     //implementation of the copy constructor
-    IFD::IFD(const IFD &ifd):
+    ifd::ifd(const ifd &ifd):
         _entries(ifd._entries)
     { }
 
     //-------------------------------------------------------------------------
     //implementation fo the move constructor
-    IFD::IFD(IFD &&ifd):
+    ifd::ifd(ifd &&ifd):
         _entries(std::move(ifd._entries))
     {}
 
     //-------------------------------------------------------------------------
     //implementation of the standard constructor
-    IFD::IFD(size_t size):
+    ifd::ifd(size_t size):
         _entries(size)
     { }
 
     //------------------------------------------------------------------------------
     //implementation of the destructor
-    IFD::~IFD() 
+    ifd::~ifd() 
     {
         _entries.clear();
     }
 
     //==============implementation of assignment operators=====================
     //implementation of copy assignment operator
-    IFD &IFD::operator=(const IFD &o){
-        if(this != &o){
+    ifd &ifd::operator=(const ifd &o)
+    {
+        if(this != &o)
             _entries = o._entries;
-        }
 
         return *this;
     }
 
     //-------------------------------------------------------------------------
     //implementation of the move assignment operator
-    IFD &IFD::operator=(IFD &&o)
+    ifd &ifd::operator=(ifd &&o)
     {
         if(this != &o) _entries = std::move(o._entries);
         return *this;
@@ -84,12 +84,13 @@ namespace tiff{
 
     //===============implementation of public member methods===================
     //implementation of the index access operator 
-    IFDEntry IFD::operator[](const size_t i) const{
+    ifd_entry ifd::operator[](const size_t i) const
+    {
         return _entries[i];
     }
 
     //------------------------------------------------------------------------------
-    IFDEntry IFD::operator[](const String &n) const{
+    ifd_entry ifd::operator[](const string &n) const{
 #ifdef NOFOREACH
         for(auto iter=(*this).begin();iter!=(*this).end();iter++)
         {
@@ -101,15 +102,15 @@ namespace tiff{
             if(entry.name() == n) return entry;
         }
 
-        throw KeyError(EXCEPTION_RECORD,"IFD entry key ["+n+"] not found in IFD!");
+        throw key_error(EXCEPTION_RECORD,"IFD entry key ["+n+"] not found in IFD!");
     }
 
     //==================implementation of friend operators=====================
-    std::ostream &operator<<(std::ostream &o,const IFD &ifd)
+    std::ostream &operator<<(std::ostream &o,const ifd &image_dir)
     {
-        o<<"IFD content ("<<ifd.size()<<" entries):"<<std::endl;
+        o<<"IFD content ("<<image_dir.size()<<" entries):"<<std::endl;
 #ifdef NOFOREACH
-        for(auto iter=ifd.begin();iter!=ifd.end();iter++)
+        for(auto iter=image_dir.begin();iter!=image_dir.end();iter++)
         {
             auto entry = *iter;
 #else

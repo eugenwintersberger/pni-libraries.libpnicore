@@ -27,10 +27,11 @@
  */
 
 #pragma once
-#include "../Exceptions.hpp"
+#include "../exceptions.hpp"
 
 namespace pni{
-namespace core{
+namespace io{
+namespace tiff{
 
     /*! 
     \ingroup error_classes
@@ -39,25 +40,28 @@ namespace core{
     This exception is thrown in cases where errors occur during reading TIFF
     files.
     */
-    class TIFFReadError:public Exception
+    class tiff_read_error:public exception
     {
         public:
             //! default constructor
-            TIFFReadError():Exception("TIFFReadError"){}
+            tiff_read_error():exception("tiff_read_error"){}
             //! constructor
 
             //! \param i signature of the exception issuer
             //! \param d description of the error
-            TIFFReadError(const String &i,const String &d):Exception("TIFFReadError",i,d){}
+            tiff_read_error(const string &i,const string &d):
+                exception("tiff_read_error",i,d)
+            {}
             //! destructor
-            virtual ~TIFFReadError() throw() {}
+            virtual ~tiff_read_error() throw() {}
 
             //! output operator
-            friend std::ostream &operator<<(std::ostream &o,const TIFFReadError &e);
+            friend std::ostream &operator<<(std::ostream &o,const
+                    tiff_read_error &e);
     };
 
 //end of namespace
 }
 }
-
+}
 

@@ -24,14 +24,14 @@
  *
  */
 
-#include "IFDEntryReader.hpp"
+#include "ifd_entry_reader.hpp"
 
 namespace pni{
 namespace io{
 namespace tiff{
 
     void
-    IFDEntryReader<String,String>::read(std::vector<String> &r,std::ifstream &stream)
+    ifd_entry_reader<string,string>::read(std::vector<string> &r,std::ifstream &stream)
     {
         //in the special case of strings the size of the vector comming from the
         //calling method is the number of bytes all strings stored occupy. We
@@ -41,29 +41,34 @@ namespace tiff{
         r.clear();
 
         //check wether or not all the data fits into the first 4 Bytes
-        if (sizeof(char) * size > 4) {
+        if (sizeof(char) * size > 4) 
+        {
             //if data does not fit we interpret the 4 Bytes as offset and jump
             //to this position
-            Int32 offset = 0;
+            int32 offset = 0;
             stream.read((char *) (&offset), 4);
             stream.seekg(offset, std::ios::beg);
         }
 
         //start reading data
-        std::vector<String> result(0);
+        std::vector<string> result(0);
         char buffer;
-        String s;
+        string s;
 
-        for (size_t i = 0; i < size; i++) {
+        for (size_t i = 0; i < size; i++) 
+        {
             //read a character from the stream
             stream.read((char *) (&buffer), sizeof(char));
 
-            if (buffer == '\0') {
+            if (buffer == '\0') 
+            {
                 //if the end of a string was reached we store the string in the
                 //vector and reset the string object.
                 r.push_back(s);
                 s.clear();
-            }else{
+            }
+            else
+            {
                 //add the character to the existing string
                 s += buffer;
             }

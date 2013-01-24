@@ -29,7 +29,7 @@
 #include<fstream>
 #include<vector>
 
-#include "../../Types.hpp"
+#include "../../sypes.hpp"
 
 using namespace pni::core;
 
@@ -45,8 +45,7 @@ namespace tiff{
     This template reads IFD entries of a particular type and returns the result
     as a vector of a particular result type. 
     */
-    template<typename RTYPE,typename ETYPE>
-        class IFDEntryReader
+    template<typename RTYPE,typename ETYPE> class ifd_entry_reader
     {
         public:
             /*! \brief read entry data
@@ -64,7 +63,7 @@ namespace tiff{
     };
 
     //-------------------------------------------------------------------------
-    template<typename RTYPE,typename ETYPE> void IFDEntryReader<RTYPE,ETYPE>::
+    template<typename RTYPE,typename ETYPE> void ifd_entry_reader<RTYPE,ETYPE>::
         read(std::vector<RTYPE> &r,std::ifstream &stream)
     {
 
@@ -74,7 +73,7 @@ namespace tiff{
         if(sizeof(ETYPE)*r.size()>4){
             //if the data does not fit into 4 Byte we interpret data as an
             //offset and move the stream pointer to this new position
-            Int32 offset;
+            int32 offset;
             stream.read((char *)(&offset),4);
             stream.seekg(offset,std::ios::beg);
         }
@@ -102,11 +101,11 @@ namespace tiff{
     If the entry data is of type ASCII a special reader is required which is 
     provided by this partial specialization of the IFDEntryReader template.
     */
-    template<> class IFDEntryReader<String,String>
+    template<> class ifd_entry_reader<string,string>
     {
         public:
             //! read string entry 
-            static void read(std::vector<String> &r,std::ifstream &stream);
+            static void read(std::vector<string> &r,std::ifstream &stream);
     };
 
 
