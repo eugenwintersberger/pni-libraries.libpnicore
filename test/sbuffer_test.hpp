@@ -27,7 +27,7 @@
 #include <algorithm>
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
-#include <pni/core/SBuffer.hpp>
+#include <pni/core/sbuffer.hpp>
 
 #include "RandomDistributions.hpp"
 #include "EqualityCheck.hpp"
@@ -46,7 +46,7 @@ template<typename T> class sbuffer_test:public CppUnit::TestFixture
         CPPUNIT_TEST(test_iterator);
         CPPUNIT_TEST_SUITE_END();
     private:
-        UInt64 n1,n2;
+        size_t n1,n2;
 
     public:
         void setUp();
@@ -75,12 +75,12 @@ template<typename T> void sbuffer_test<T>::test_constructors()
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
     //create first buffer using the default constructor
-    SBuffer<T,N1> b1; //default constructor
+    sbuffer<T,N1> b1; //default constructor
     CPPUNIT_ASSERT(b1.size() == N1);
     
     //=====================copy and move constructor=============================
     //using copy constructor
-    SBuffer<T,N1> b2(b1);
+    sbuffer<T,N1> b2(b1);
     CPPUNIT_ASSERT(b1.size() == b2.size());
 }
 
@@ -90,8 +90,8 @@ template<typename T> void sbuffer_test<T>::test_assignment()
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
 	//testing here the assignment of equally typed buffers
-	SBuffer<T,N1> buffer1;
-	SBuffer<T,N1> buffer2;
+	sbuffer<T,N1> buffer1;
+	sbuffer<T,N1> buffer2;
 
     data_generator::fill(buffer1.begin(),buffer1.end(),
                          uniform_distribution<T>());
@@ -110,7 +110,7 @@ template<typename T> void sbuffer_test<T>::test_access()
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
     std::vector<T> data(N1);
-	SBuffer<T,N1> dbuffer;
+	sbuffer<T,N1> dbuffer;
    
     data_generator::fill(data.begin(),data.end(),uniform_distribution<T>());
 
@@ -120,7 +120,7 @@ template<typename T> void sbuffer_test<T>::test_access()
 	for(size_t i=0;i<N1;i++)
         check_equality(data[i],dbuffer[i]);
 
-    SBuffer<T,N2> ibuffer;
+    sbuffer<T,N2> ibuffer;
     data = std::vector<T>(N2);
     data_generator::fill(data.begin(),data.end(),uniform_distribution<T>());
     for(size_t i=0;i<ibuffer.size();i++)
@@ -130,7 +130,7 @@ template<typename T> void sbuffer_test<T>::test_access()
         check_equality(ibuffer.at(i),data[i]);
 
     //check for IndexError exception
-    CPPUNIT_ASSERT_THROW(ibuffer.at(N2+10),IndexError);
+    CPPUNIT_ASSERT_THROW(ibuffer.at(N2+10),index_error);
 }
 
 //------------------------------------------------------------------------------
@@ -138,8 +138,8 @@ template<typename T> void sbuffer_test<T>::test_comparison()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
-	SBuffer<T,100> b1;
-	SBuffer<T,100> b2;
+	sbuffer<T,100> b1;
+	sbuffer<T,100> b2;
 
     data_generator::fill(b1.begin(),b1.end(),uniform_distribution<T>());
     std::fill(b2.begin(),b2.end(),uniform_distribution<T>()());
@@ -155,7 +155,7 @@ template<typename T> void sbuffer_test<T>::test_iterator()
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
     std::vector<T> data(1000);
-    SBuffer<T,1000> b1;
+    sbuffer<T,1000> b1;
     
     data_generator::fill(data.begin(),data.end(),uniform_distribution<T>());
    

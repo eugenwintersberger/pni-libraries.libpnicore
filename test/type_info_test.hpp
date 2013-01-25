@@ -27,8 +27,8 @@
 #include<cppunit/extensions/HelperMacros.h>
 #include <limits>
 #include <climits>
-#include <pni/core/Types.hpp>
-#include <pni/core/TypeInfo.hpp>
+#include <pni/core/types.hpp>
+#include <pni/core/type_info.hpp>
 
 
 using namespace pni::core;
@@ -37,20 +37,20 @@ class type_info_test : public CppUnit::TestFixture
 {
         CPPUNIT_TEST_SUITE(type_info_test);
         CPPUNIT_TEST(test_min_max);
-        CPPUNIT_TEST(test_signed_integer<Int8>);
-        CPPUNIT_TEST(test_signed_integer<Int16>);
-        CPPUNIT_TEST(test_signed_integer<Int32>);
-        CPPUNIT_TEST(test_signed_integer<Int64>);
-        CPPUNIT_TEST(test_unsigned_integer<UInt8>);
-        CPPUNIT_TEST(test_unsigned_integer<UInt16>);
-        CPPUNIT_TEST(test_unsigned_integer<UInt32>);
-        CPPUNIT_TEST(test_unsigned_integer<UInt64>);
-        CPPUNIT_TEST(test_float<Float32>);
-        CPPUNIT_TEST(test_float<Float64>);
-        CPPUNIT_TEST(test_float<Float128>);
-        CPPUNIT_TEST(test_complex<Complex32>);
-        CPPUNIT_TEST(test_complex<Complex64>);
-        CPPUNIT_TEST(test_complex<Complex128>);
+        CPPUNIT_TEST(test_signed_integer<int8>);
+        CPPUNIT_TEST(test_signed_integer<int16>);
+        CPPUNIT_TEST(test_signed_integer<int32>);
+        CPPUNIT_TEST(test_signed_integer<int64>);
+        CPPUNIT_TEST(test_unsigned_integer<uint8>);
+        CPPUNIT_TEST(test_unsigned_integer<uint16>);
+        CPPUNIT_TEST(test_unsigned_integer<uint32>);
+        CPPUNIT_TEST(test_unsigned_integer<uint64>);
+        CPPUNIT_TEST(test_float<float32>);
+        CPPUNIT_TEST(test_float<float64>);
+        CPPUNIT_TEST(test_float<float128>);
+        CPPUNIT_TEST(test_complex<complex32>);
+        CPPUNIT_TEST(test_complex<complex64>);
+        CPPUNIT_TEST(test_complex<complex128>);
         CPPUNIT_TEST_SUITE_END();
     public:
         void setUp() {}
@@ -70,7 +70,7 @@ template<typename T> void type_info_test::test_signed_integer()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
-    typedef TypeInfo<T> info_t;
+    typedef type_info<T> info_t;
 
     CPPUNIT_ASSERT(info_t::size == sizeof(T));
     CPPUNIT_ASSERT(info_t::is_signed);
@@ -86,7 +86,7 @@ template<typename T> void type_info_test::test_unsigned_integer()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
-    typedef TypeInfo<T> info_t;
+    typedef type_info<T> info_t;
 
     CPPUNIT_ASSERT(info_t::size == sizeof(T));
     CPPUNIT_ASSERT(!info_t::is_signed);
@@ -100,7 +100,7 @@ template<typename T> void type_info_test::test_float()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
-    typedef TypeInfo<T> info_t;
+    typedef type_info<T> info_t;
 
     CPPUNIT_ASSERT(info_t::size == sizeof(T));
     CPPUNIT_ASSERT(info_t::is_signed);
@@ -116,7 +116,7 @@ template<typename T> void type_info_test::test_complex()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
-    typedef TypeInfo<T> info_t;
+    typedef type_info<T> info_t;
 
     CPPUNIT_ASSERT(info_t::size == sizeof(T));
     CPPUNIT_ASSERT(!info_t::is_integer);

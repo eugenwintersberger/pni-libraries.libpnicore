@@ -64,7 +64,7 @@ void configuration_test::test_configcli()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
-    std::vector<String> argv{"-n4"};
+    std::vector<string> argv{"-n4"};
     cli_args args(argv);
     std::cout<<args<<std::endl;
 

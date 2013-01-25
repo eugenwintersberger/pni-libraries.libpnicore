@@ -4,18 +4,18 @@
 #include <chrono>
 #include <ratio>
 #include <ctime>
-#include <pni/core/Iterator.hpp>
-#include <pni/core/DBuffer.hpp>
-#include <pni/core/DArray.hpp>
-#include <pni/core/Array.hpp>
+#include <pni/core/container_iterator.hpp>
+#include <pni/core/dbuffer.hpp>
+#include <pni/core/darray.hpp>
+#include <pni/core/arrays.hpp>
 
-#include <pni/core/benchmark/BenchmarkRunner.hpp>
-#include <pni/core/benchmark/BenchmarkResult.hpp>
-#include <pni/core/benchmark/ChronoTimer.hpp>
-#include <pni/core/benchmark/ClockTimer.hpp>
+#include <pni/core/benchmark/benchmark_result.hpp>
+#include <pni/core/benchmark/benchmark_runner.hpp>
+#include <pni/core/benchmark/chrono_timer.hpp>
+#include <pni/core/benchmark/clock_timer.hpp>
 
-#include "benchmark/MultiIndexIOPointer.hpp"
-#include "benchmark/MultiIndexIOArray.hpp"
+#include "benchmark/multiindex_io_pointer.hpp"
+#include "benchmark/multiindex_io_array.hpp"
 
 #include <utility>
 using namespace pni::core;
@@ -25,16 +25,16 @@ void run_benchmark(size_t nruns,const BMARKT &bmark)
 {
     std::cout<<bmark.name()<<std::endl;
     //create benchmark functions from the benchmark object
-    BenchmarkRunner::function_t write_func,read_func;
+    benchmark_runner::function_t write_func,read_func;
     write_func = std::bind(&BMARKT::write_data,bmark);
     read_func  = std::bind(&BMARKT::read_data,bmark);
 
-    BenchmarkRunner write_bm,read_bm;
+    benchmark_runner write_bm,read_bm;
     write_bm.run<CLKT>(nruns,write_func);
     read_bm.run<CLKT>(nruns,read_func);
 
-    String write_unit = write_bm.begin()->unit();
-    String read_unit = read_bm.begin()->unit();
+    string write_unit = write_bm.begin()->unit();
+    string read_unit = read_bm.begin()->unit();
     std::cout<<"write ("<<write_unit<<")\tread ("<<read_unit<<")"<<std::endl;
     for(auto wit=write_bm.begin(),rit=read_bm.begin();
         wit!=write_bm.end() && rit != read_bm.end();
@@ -44,8 +44,8 @@ void run_benchmark(size_t nruns,const BMARKT &bmark)
     }
     std::cout<<std::endl;
 
-    BenchmarkResult write_result = average(write_bm);
-    BenchmarkResult read_result  = average(read_bm);
+    benchmark_result write_result = average(write_bm);
+    benchmark_result read_result  = average(read_bm);
 
     std::cout<<"Average values: "<<std::endl;
     std::cout<<"write\tread"<<std::endl;
@@ -54,17 +54,17 @@ void run_benchmark(size_t nruns,const BMARKT &bmark)
 }
 
 
-typedef ChronoTimer<std::chrono::high_resolution_clock,std::chrono::nanoseconds> bmtimer_t;
+typedef chrono_timer<std::chrono::high_resolution_clock,std::chrono::nanoseconds> bmtimer_t;
 
 int main(int argc,char **argv)
 {
-    typedef DArray<double,DBuffer<double> > darray_t; //DArray type
-    typedef SArray<double,100,100> sarray_t;
-    typedef NumArray<darray_t> ndarray_t;             //numerical array type
-    typedef MultiIndexIOArray<darray_t> darray_bm_t;  //darray multiindex benchmark type
-    typedef MultiIndexIOArray<ndarray_t> narray_bm_t; //ndarray multiindex benchmark type
-    typedef MultiIndexIOArray<sarray_t> sarray_bm_t;
-    typedef MultiIndexIOPointer<double> ptr_bm_t;     //pointer muldiindex benchmark type
+    typedef darray<double,dbuffer<double> > darray_t; //DArray type
+    typedef sarray<double,100,100> sarray_t;
+    typedef numarray<darray_t> ndarray_t;             //numerical array type
+    typedef multiindex_io_array<darray_t> darray_bm_t;  //darray multiindex benchmark type
+    typedef multiindex_io_array<ndarray_t> narray_bm_t; //ndarray multiindex benchmark type
+    typedef multiindex_io_array<sarray_t> sarray_bm_t;
+    typedef multiindex_io_pointer<double> ptr_bm_t;     //pointer muldiindex benchmark type
 
     //---------------read user arguments--------------------------------------
     if(argc<5) 
@@ -73,7 +73,7 @@ int main(int argc,char **argv)
         return 1;
     }
 
-    String type(argv[1]);
+    string type(argv[1]);
     size_t nruns = atoi(argv[2]);
     size_t nx = atoi(argv[3]);
     size_t ny = atoi(argv[4]);

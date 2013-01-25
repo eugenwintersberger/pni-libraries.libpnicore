@@ -126,7 +126,7 @@ namespace core{
             time += result.time();
         }
 
-        time /= Float64(bm.size());
+        time /= float64(bm.size());
 
         return benchmark_result(time,bm.begin()->unit());
 

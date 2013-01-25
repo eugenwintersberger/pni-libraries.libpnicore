@@ -25,7 +25,7 @@
 #include<cppunit/TestFixture.h>
 #include<cppunit/extensions/HelperMacros.h>
 #include<vector>
-#include <pni/core/Iterator.hpp>
+#include <pni/core/container_iterator.hpp>
 
 using namespace pni::core;
 
@@ -42,10 +42,10 @@ class iterator_test: public CppUnit::TestFixture
         CPPUNIT_TEST(test_ptr_access);
         CPPUNIT_TEST_SUITE_END();
     private:
-        typedef std::vector<double> Iterable;
-        typedef Iterator<Iterable,1> const_iterator;
-        typedef Iterator<Iterable,0> iterator;
-        Iterable vector;
+        typedef std::vector<double> iterable;
+        typedef container_iterator<iterable,1> const_iterator;
+        typedef container_iterator<iterable,0> iterator;
+        iterable vector;
     public:
         void setUp();
         void tearDown();

@@ -33,21 +33,22 @@ using namespace pni::core;
 static CPPUNIT_NS::AutoRegisterSuite< darray_test<T,BT<T,ALLOC> > >  \
              CPPUNIT_MAKE_UNIQUE_NAME(autoRegisterRegistry__ )
 
-DYNAMICARRAY_TEST_REGISTRATION(UInt8,DBuffer,NewAllocator);
-DYNAMICARRAY_TEST_REGISTRATION(UInt16,DBuffer,NewAllocator);
-DYNAMICARRAY_TEST_REGISTRATION(Int16,DBuffer,NewAllocator);
-DYNAMICARRAY_TEST_REGISTRATION(UInt32,DBuffer,NewAllocator);
-DYNAMICARRAY_TEST_REGISTRATION(Int32,DBuffer,NewAllocator);
-DYNAMICARRAY_TEST_REGISTRATION(UInt64,DBuffer,NewAllocator);
-DYNAMICARRAY_TEST_REGISTRATION(Int64,DBuffer,NewAllocator);
-DYNAMICARRAY_TEST_REGISTRATION(Float32,DBuffer,NewAllocator);
-DYNAMICARRAY_TEST_REGISTRATION(Float64,DBuffer,NewAllocator);
-DYNAMICARRAY_TEST_REGISTRATION(Float128,DBuffer,NewAllocator);
-DYNAMICARRAY_TEST_REGISTRATION(Complex32,DBuffer,NewAllocator);
-DYNAMICARRAY_TEST_REGISTRATION(Complex64,DBuffer,NewAllocator);
-DYNAMICARRAY_TEST_REGISTRATION(Complex128,DBuffer,NewAllocator);
-DYNAMICARRAY_TEST_REGISTRATION(Bool,DBuffer,NewAllocator);
-DYNAMICARRAY_TEST_REGISTRATION(String,DBuffer,NewAllocator);
+DYNAMICARRAY_TEST_REGISTRATION(uint8,dbuffer,new_allocator);
+DYNAMICARRAY_TEST_REGISTRATION(int8,dbuffer,new_allocator);
+DYNAMICARRAY_TEST_REGISTRATION(uint16,dbuffer,new_allocator);
+DYNAMICARRAY_TEST_REGISTRATION(int16,dbuffer,new_allocator);
+DYNAMICARRAY_TEST_REGISTRATION(uint32,dbuffer,new_allocator);
+DYNAMICARRAY_TEST_REGISTRATION(int32,dbuffer,new_allocator);
+DYNAMICARRAY_TEST_REGISTRATION(uint64,dbuffer,new_allocator);
+DYNAMICARRAY_TEST_REGISTRATION(int64,dbuffer,new_allocator);
+DYNAMICARRAY_TEST_REGISTRATION(float32,dbuffer,new_allocator);
+DYNAMICARRAY_TEST_REGISTRATION(float64,dbuffer,new_allocator);
+DYNAMICARRAY_TEST_REGISTRATION(float128,dbuffer,new_allocator);
+DYNAMICARRAY_TEST_REGISTRATION(complex32,dbuffer,new_allocator);
+DYNAMICARRAY_TEST_REGISTRATION(complex64,dbuffer,new_allocator);
+DYNAMICARRAY_TEST_REGISTRATION(complex128,dbuffer,new_allocator);
+DYNAMICARRAY_TEST_REGISTRATION(bool,dbuffer,new_allocator);
+DYNAMICARRAY_TEST_REGISTRATION(string,dbuffer,new_allocator);
 /*
 ARRAY_TEST_REGISTRATION(UInt8,RefBuffer,NewAllocator);
 ARRAY_TEST_REGISTRATION(Int8,RefBuffer,NewAllocator);

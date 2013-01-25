@@ -32,7 +32,7 @@
 #include "scalar.hpp"
 #include "math/add.hpp"
 #include "math/sub.hpp"
-#include "math/div.hpp"
+#include "math/div_op.hpp"
 #include "math/mult.hpp"
 
 namespace pni{
@@ -916,10 +916,10 @@ namespace core{
     \return instance of NumArray with an expression template as storage type
     */
     template<typename AT1,typename AT2>
-    numarray<div<numarray<AT1>,numarray<AT2> > >
+    numarray<div_op<numarray<AT1>,numarray<AT2> > >
     operator/(const numarray<AT1> &a,const numarray<AT2> &b)
     {
-        typedef div<numarray<AT1>,numarray<AT2> > op_type;
+        typedef div_op<numarray<AT1>,numarray<AT2> > op_type;
         return numarray<op_type>(op_type(a,b));
     }
 
@@ -947,12 +947,12 @@ namespace core{
     \return NumArray instance with an expression template storage type
     */
     template<typename AT>
-    numarray<div<numarray<AT>,scalar<typename AT::value_type> > >
+    numarray<div_op<numarray<AT>,scalar<typename AT::value_type> > >
     operator/(const numarray<AT> &a,typename AT::value_type const &b)
     {
         typedef numarray<AT> atype;
         typedef scalar<typename AT::value_type> stype;
-        typedef div<atype,stype> op_type;
+        typedef div_op<atype,stype> op_type;
         return numarray<op_type>(op_type(a,stype(b)));
     }
 
@@ -980,12 +980,12 @@ namespace core{
     \return instance of NumArray with an expression template
     */
     template<typename AT>
-    numarray<div<scalar<typename AT::value_type>,numarray<AT> > >
+    numarray<div_op<scalar<typename AT::value_type>,numarray<AT> > >
     operator/(typename AT::value_type const &a,const numarray<AT> &b)
     {
         typedef numarray<AT> atype;
         typedef scalar<typename AT::value_type> stype;
-        typedef div<stype,atype> op_type;
+        typedef div_op<stype,atype> op_type;
         return numarray<op_type>(op_type(stype(a),b));
     }
    

@@ -23,8 +23,8 @@
 #pragma once
 
 #include <sstream>
-#include <pni/core/Types.hpp>
-#include <pni/core/TypeInfo.hpp>
+#include <pni/core/types.hpp>
+#include <pni/core/type_info.hpp>
 
 using namespace pni::core;
 
@@ -44,11 +44,11 @@ template<typename T> class uniform_distribution
 {
     private:
         std::mt19937_64 _engine;
-        typename uniform_distribution_map<T,TypeInfo<T>::is_integer>::distribution_type _distribution;
+        typename uniform_distribution_map<T,type_info<T>::is_integer>::distribution_type _distribution;
     public:
         uniform_distribution():
             _engine(),
-            _distribution(0.2*TypeInfo<T>::min(),0.2*TypeInfo<T>::max())
+            _distribution(0.2*type_info<T>::min(),0.2*type_info<T>::max())
         { }
 
         T operator()() 
@@ -61,11 +61,11 @@ template<typename T> class uniform_distribution<std::complex<T> >
 {
     private:
         std::mt19937_64 _engine;
-        typename uniform_distribution_map<T,TypeInfo<T>::is_integer>::distribution_type _distribution;
+        typename uniform_distribution_map<T,type_info<T>::is_integer>::distribution_type _distribution;
     public:
         uniform_distribution():
             _engine(),
-            _distribution(0.2*TypeInfo<Float32>::min(),0.2*TypeInfo<Float32>::max())
+            _distribution(0.2*type_info<float32>::min(),0.2*type_info<float32>::max())
         {}
         
         std::complex<T> operator()()
@@ -75,7 +75,7 @@ template<typename T> class uniform_distribution<std::complex<T> >
         }
 };
 
-template<> class uniform_distribution<Bool>
+template<> class uniform_distribution<bool>
 {
     private:
         std::mt19937_64 _engine;
@@ -92,31 +92,31 @@ template<> class uniform_distribution<Bool>
         }
 };
 
-template<> class uniform_distribution<Binary>
+template<> class uniform_distribution<binary>
 {
     private:
         std::mt19937_64 _engine;
-        std::uniform_int_distribution<UInt8> _distribution;
+        std::uniform_int_distribution<uint8> _distribution;
     public:
         uniform_distribution():
             _engine(),
             _distribution(0,255)
         {}
 
-        Binary operator()() 
+        binary operator()() 
         {
             return _distribution(_engine);
         }
 };
 
-template<> class uniform_distribution<String>
+template<> class uniform_distribution<string>
 {
     private:
         uniform_distribution<unsigned long> _distribution;
     public:
         uniform_distribution(){}
 
-        String operator()()
+        string operator()()
         {
             std::stringstream ss;
             ss<<_distribution();

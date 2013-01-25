@@ -25,7 +25,7 @@
 #include<cppunit/TestFixture.h>
 #include<cppunit/extensions/HelperMacros.h>
 #include<vector>
-#include <pni/core/IndexMapBase.hpp>
+#include <pni/core/index_map_base.hpp>
 
 using namespace pni::core;
 

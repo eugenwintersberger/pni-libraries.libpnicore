@@ -25,7 +25,7 @@
 #include <random>
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
-#include <pni/core/SizeType.hpp>
+#include <pni/core/size_type.hpp>
 
 using namespace pni::core;
 

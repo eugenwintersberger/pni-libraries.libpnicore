@@ -42,9 +42,9 @@ namespace core{
 #define DURATIONUNITMAP(durationtype,unit_string)\
         template<> struct duration_unit_map<durationtype>\
         {\
-            static const String unit;\
+            static const string unit;\
         };\
-        const String duration_unit_map<durationtype>::unit = string(unit_string)
+        const string duration_unit_map<durationtype>::unit = string(unit_string)
 
     //! \cond NO_API_DOC
     DURATIONUNITMAP(std::chrono::nanoseconds,"ns");

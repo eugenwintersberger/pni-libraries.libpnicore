@@ -25,9 +25,9 @@
 #include<cppunit/TestFixture.h>
 #include<cppunit/extensions/HelperMacros.h>
 
-#include <pni/core/NumArray.hpp>
-#include <pni/core/DArray.hpp>
-#include <pni/core/SArray.hpp>
+#include <pni/core/numarray.hpp>
+#include <pni/core/darray.hpp>
+#include <pni/core/sarray.hpp>
 
 #include "data_generator.hpp"
 #include "uniform_distribution.hpp"
@@ -55,9 +55,9 @@ class numarray_test : public CppUnit::TestFixture
     private:
         //---------------------------------------------------------------------
         template<typename T,typename ST,typename MT>
-        void create_array(DArray<T,ST,MT> &a)
+        void create_array(darray<T,ST,MT> &a)
         {
-            a = DArray<T,ST,MT>(std::vector<size_t>{3,4});
+            a = darray<T,ST,MT>(std::vector<size_t>{3,4});
         }
 
         //---------------------------------------------------------------------
@@ -95,12 +95,12 @@ template<typename ATYPE> void numarray_test<ATYPE>::test_construction()
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
     //default construction
-    NumArray<ATYPE> a1(create_array<ATYPE>());
+    numarray<ATYPE> a1(create_array<ATYPE>());
     CPPUNIT_ASSERT(a1.size() == 12);
     CPPUNIT_ASSERT(a1.rank() == 2);
 
     //copy construction
-    NumArray<ATYPE> a2(a1);
+    numarray<ATYPE> a2(a1);
     CPPUNIT_ASSERT(a2.rank() == a1.rank());
     CPPUNIT_ASSERT(a2.size() == a1.size());
 }
@@ -110,7 +110,7 @@ template<typename ATYPE> void numarray_test<ATYPE>::test_assignment()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
-    NumArray<ATYPE> a1(create_array<ATYPE>());
+    numarray<ATYPE> a1(create_array<ATYPE>());
     size_t i;
 #ifdef NOFOREACH
     for(auto iter = a1.begin();iter!=a1.end();++iter)
@@ -124,7 +124,7 @@ template<typename ATYPE> void numarray_test<ATYPE>::test_assignment()
     }
    
     //copy assignment
-    NumArray<ATYPE> a2(create_array<ATYPE>());
+    numarray<ATYPE> a2(create_array<ATYPE>());
     a2 = a1;
     CPPUNIT_ASSERT(a2.rank() == a1.rank());
     CPPUNIT_ASSERT(a2.size() == a2.size());
@@ -136,8 +136,8 @@ template<typename ATYPE> void numarray_test<ATYPE>::test_linear_access()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
-    typedef typename NumArray<ATYPE>::value_type value_type;
-    NumArray<ATYPE> a1(create_array<ATYPE>());
+    typedef typename numarray<ATYPE>::value_type value_type;
+    numarray<ATYPE> a1(create_array<ATYPE>());
 
 
     //--------------------check operators without index checking----------------
@@ -158,8 +158,8 @@ template<typename ATYPE> void numarray_test<ATYPE>::test_linear_access()
 	for(size_t i=0;i<a1.size();i++) 
         CPPUNIT_ASSERT_NO_THROW(check_equality(value_type(i),a1.at(i)));
 
-    CPPUNIT_ASSERT_THROW(a1.at(a1.size() + 100),IndexError);
-    CPPUNIT_ASSERT_THROW(a1.insert(2*a1.size(),100),IndexError);
+    CPPUNIT_ASSERT_THROW(a1.at(a1.size() + 100),index_error);
+    CPPUNIT_ASSERT_THROW(a1.insert(2*a1.size(),100),index_error);
 
 }
 
@@ -168,8 +168,8 @@ template<typename ATYPE> void numarray_test<ATYPE>::test_iterators()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
-    typedef typename NumArray<ATYPE>::value_type value_type;
-    NumArray<ATYPE> a1(create_array<ATYPE>());
+    typedef typename numarray<ATYPE>::value_type value_type;
+    numarray<ATYPE> a1(create_array<ATYPE>());
 
     //--------------------check standard iterator----------------
 	//access via [] operator
@@ -201,7 +201,7 @@ template<typename ATYPE> void numarray_test<ATYPE>::test_iterators()
 
 
     //-------------------check const iterator-----------------------------
-    const NumArray<ATYPE> &a = a1;
+    const numarray<ATYPE> &a = a1;
 
     index = 0;
 #ifdef NOFOREACH
@@ -221,12 +221,12 @@ template<typename ATYPE> void numarray_test<ATYPE>::test_multiindex_access()
 {   
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
-    typedef typename NumArray<ATYPE>::value_type value_type;
+    typedef typename numarray<ATYPE>::value_type value_type;
     typedef std::vector<size_t> stype;
     std::cout<<"void NumArrayTest<T,STORAGE>::test_multiindex_access()";
     std::cout<<std::endl;
 
-    NumArray<ATYPE> a1(create_array<ATYPE>());
+    numarray<ATYPE> a1(create_array<ATYPE>());
     auto s1 = a1.template shape<std::vector<size_t> >();
     auto data = RandomDistribution::uniform<std::vector<value_type> >(a1.size());
 
@@ -273,8 +273,8 @@ template<typename ATYPE> void numarray_test<ATYPE>::test_typeinfo()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
-    TypeID id1 = NumArray<ATYPE>::type_id;
-    TypeID id2 = TypeIDMap<typename ATYPE::value_type>::type_id;
+    type_id_t id1 = numarray<ATYPE>::type_id;
+    type_id_t id2 = type_id_map<typename ATYPE::value_type>::type_id;
     CPPUNIT_ASSERT(id1 == id2);
 }
 
@@ -283,8 +283,8 @@ template<typename ATYPE> void numarray_test<ATYPE>::test_unary_add()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
-    typedef typename NumArray<ATYPE>::value_type value_type;
-    NumArray<ATYPE> a(create_array<ATYPE>());
+    typedef typename numarray<ATYPE>::value_type value_type;
+    numarray<ATYPE> a(create_array<ATYPE>());
 
     //set initial value
     std::fill(a.begin(),a.end(),value_type(1));
@@ -303,7 +303,7 @@ template<typename ATYPE> void numarray_test<ATYPE>::test_unary_add()
     }
 
     //add a array
-    NumArray<ATYPE> b(create_array<ATYPE>());
+    numarray<ATYPE> b(create_array<ATYPE>());
     std::fill(b.begin(),b.end(),value_type(3));
 
     a += b;
@@ -339,8 +339,8 @@ template<typename ATYPE> void numarray_test<ATYPE>::test_unary_sub()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
-    typedef typename NumArray<ATYPE>::value_type value_type;
-    NumArray<ATYPE> a(create_array<ATYPE>());
+    typedef typename numarray<ATYPE>::value_type value_type;
+    numarray<ATYPE> a(create_array<ATYPE>());
 
     //set initial value
     std::fill(a.begin(),a.end(),value_type(15));
@@ -359,7 +359,7 @@ template<typename ATYPE> void numarray_test<ATYPE>::test_unary_sub()
     }
 
     //add a array
-    NumArray<ATYPE> b(create_array<ATYPE>());
+    numarray<ATYPE> b(create_array<ATYPE>());
     std::fill(b.begin(),b.end(),value_type(3));
 
     a -= b;
@@ -395,8 +395,8 @@ template<typename ATYPE> void numarray_test<ATYPE>::test_unary_mult()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
-    typedef typename NumArray<ATYPE>::value_type value_type;
-    NumArray<ATYPE> a(create_array<ATYPE>());
+    typedef typename numarray<ATYPE>::value_type value_type;
+    numarray<ATYPE> a(create_array<ATYPE>());
 
     //set initial value
     std::fill(a.begin(),a.end(),value_type(1));
@@ -415,7 +415,7 @@ template<typename ATYPE> void numarray_test<ATYPE>::test_unary_mult()
     }
 
     //add a array
-    NumArray<ATYPE> b(create_array<ATYPE>());
+    numarray<ATYPE> b(create_array<ATYPE>());
     std::fill(b.begin(),b.end(),value_type(3));
 
     a *= b;
@@ -451,8 +451,8 @@ template<typename ATYPE> void numarray_test<ATYPE>::test_unary_div()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
-    typedef typename NumArray<ATYPE>::value_type value_type;
-    NumArray<ATYPE> a(create_array<ATYPE>());
+    typedef typename numarray<ATYPE>::value_type value_type;
+    numarray<ATYPE> a(create_array<ATYPE>());
 
     //set initial value
     std::fill(a.begin(),a.end(),value_type(12));
@@ -471,7 +471,7 @@ template<typename ATYPE> void numarray_test<ATYPE>::test_unary_div()
     }
 
     //add a array
-    NumArray<ATYPE> b(create_array<ATYPE>());
+    numarray<ATYPE> b(create_array<ATYPE>());
     std::fill(b.begin(),b.end(),value_type(2));
 
     a /= b;
@@ -508,13 +508,13 @@ template<typename ATYPE> void numarray_test<ATYPE>::test_view()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
-    typedef typename NumArray<ATYPE>::value_type value_type;
-    NumArray<ATYPE> a(create_array<ATYPE>());
+    typedef typename numarray<ATYPE>::value_type value_type;
+    numarray<ATYPE> a(create_array<ATYPE>());
 
     //set initial value
     std::fill(a.begin(),a.end(),value_type(12));
 
-    auto view = a(size_t(0),Slice(0,4));
+    auto view = a(size_t(0),slice(0,4));
 
     view += value_type(1.32);
 

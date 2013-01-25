@@ -23,7 +23,7 @@
 #pragma once
 
 #include <typeinfo>
-#include <pni/core/Types.hpp>
+#include <pni/core/types.hpp>
 #include <pni/core/service.hpp>
 
 using namespace pni::core;
@@ -36,14 +36,14 @@ linear sequence. Iterators which must be provided by the container types are
 used to access the data in the container.
 \tparam CTYPE container type used for benchmarking
 */
-template<typename CTYPE> class LinearIOContainerIterator
+template<typename CTYPE> class linear_io_container_iterator
 {
     private:
         CTYPE _container;
         typename CTYPE::value_type _result;
     public:
         //==================construtors========================================
-        LinearIOContainerIterator(CTYPE &&cont):_container(std::move(cont)) {}
+        linear_io_container_iterator(CTYPE &&cont):_container(std::move(cont)) {}
 
         //================public member functions==============================
         /*!
@@ -80,8 +80,8 @@ template<typename CTYPE> class LinearIOContainerIterator
 
         //---------------------------------------------------------------------
         //! get benchmark name
-        String name() const
+        string name() const
         {
-            return String("Linear IO (Iterator) ")+demangle_cpp_name(typeid(CTYPE).name());
+            return string("Linear IO (Iterator) ")+demangle_cpp_name(typeid(CTYPE).name());
         }
 };

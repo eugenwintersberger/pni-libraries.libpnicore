@@ -48,9 +48,9 @@ template<typename ATYPE> class div_operator_test: public CppUnit::TestFixture
         CPPUNIT_TEST_SUITE_END();
     private:
         //==========private types==============================================
-        typedef NumArray<ATYPE> na_type;
+        typedef numarray<ATYPE> na_type;
         typedef typename ATYPE::value_type value_type;
-        typedef Scalar<value_type> s_type;
+        typedef scalar<value_type> s_type;
         //===================private memebers==================================
         na_type a1;
         na_type a2;
@@ -86,14 +86,14 @@ template<typename ATYPE> void div_operator_test<ATYPE>::test_construction()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
-    Div<na_type,na_type> op(a1,a2);
+    div_op<na_type,na_type> op(a1,a2);
     CPPUNIT_ASSERT(a1.size() == op.size());
    
     s_type s(10);
-    Div<na_type,s_type> op2(a1,s);
+    div_op<na_type,s_type> op2(a1,s);
     CPPUNIT_ASSERT(op2.size() == a1.size());
 
-    Div<s_type,s_type> op3(s,s);
+    div_op<s_type,s_type> op3(s,s);
     CPPUNIT_ASSERT(s.size() == op3.size());
 
 }
@@ -103,13 +103,13 @@ template<typename ATYPE> void div_operator_test<ATYPE>::test_access()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
-    Div<na_type,na_type> op1(a1,a2);
+    div_op<na_type,na_type> op1(a1,a2);
 
     for(size_t i=0;i<op1.size();i++)
         check_equality(op1[i],value_type(2));
 
     s_type s(2);
-    Div<na_type,s_type> op2(a1,s);
+    div_op<na_type,s_type> op2(a1,s);
 
     for(size_t i=0;i<op2.size();i++)
         check_equality(op2[i],value_type(5));
@@ -120,7 +120,7 @@ template<typename ATYPE> void div_operator_test<ATYPE>::test_iterator()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
-    Div<na_type,na_type> op1(a1,a2);
+    div_op<na_type,na_type> op1(a1,a2);
 #ifdef NOFOREACH
     for(auto iter = op1.begin();iter!=op1.end();++iter)
     {
@@ -133,7 +133,7 @@ template<typename ATYPE> void div_operator_test<ATYPE>::test_iterator()
     }
 
     s_type s(2);
-    Div<na_type,s_type> op2(a1,s);
+    div_op<na_type,s_type> op2(a1,s);
 #ifdef NOFOREACH
     for(auto iter = op2.begin();iter!=op2.end();++iter)
     {

@@ -24,7 +24,7 @@
 
 #include <typeinfo>
 #include <pni/core/service.hpp>
-#include <pni/core/Types.hpp>
+#include <pni/core/types.hpp>
 
 using namespace pni::core;
 
@@ -35,7 +35,7 @@ This benchmark tests the IO performance of plain pointer access. It is thus a
 good reference for other benchmarks using higher level data structures to store
 data.
 */
-template<typename T> class LinearIOPointerBenchmark
+template<typename T> class linear_io_pointer_benchmark
 {
     private:
         size_t _size; //!< number of element allocated for the benchmark
@@ -50,7 +50,7 @@ template<typename T> class LinearIOPointerBenchmark
         memory region for n elements.
         \param n number of elements 
         */
-        LinearIOPointerBenchmark(size_t n):
+        linear_io_pointer_benchmark(size_t n):
             _size(n),
             _ptr(new T[n]),
             _result(0)
@@ -58,7 +58,7 @@ template<typename T> class LinearIOPointerBenchmark
 
         //---------------------------------------------------------------------
         //! move constructor
-        LinearIOPointerBenchmark(LinearIOPointerBenchmark<T> &&bm):
+        linear_io_pointer_benchmark(linear_io_pointer_benchmark<T> &&bm):
             _size(bm._size),
             _ptr(bm._ptr),
             _result(bm._result)
@@ -70,7 +70,7 @@ template<typename T> class LinearIOPointerBenchmark
 
         //---------------------------------------------------------------------
         //! copy constructor
-        LinearIOPointerBenchmark(const LinearIOPointerBenchmark<T> &bm):
+        linear_io_pointer_benchmark(const linear_io_pointer_benchmark<T> &bm):
             _size(bm._size),
             _ptr(new T[_size]),
             _result(bm._result)
@@ -84,7 +84,7 @@ template<typename T> class LinearIOPointerBenchmark
 
         Frees the memory allocated by the constructor.
         */
-        ~LinearIOPointerBenchmark()
+        ~linear_io_pointer_benchmark()
         {
             if(_ptr) delete [] _ptr;
             _ptr = nullptr;
@@ -92,7 +92,8 @@ template<typename T> class LinearIOPointerBenchmark
 
         //====================assignment operators=============================
         //! copy assignment operator
-        LinearIOPointerBenchmark<T> &operator=(const LinearIOPointerBenchmark<T> &bm)
+        linear_io_pointer_benchmark<T> &operator=(const
+                linear_io_pointer_benchmark<T> &bm)
         {
             if(this == &bm) return *this;
 
@@ -107,7 +108,7 @@ template<typename T> class LinearIOPointerBenchmark
 
         //---------------------------------------------------------------------
         //! move assignment operator
-        LinearIOPointerBenchmark<T> &operator=(LinearIOPointerBenchmark<T> &&bm)
+        linear_io_pointer_benchmark<T> &operator=(linear_io_pointer_benchmark<T> &&bm)
         {
             if(this == &bm) return *this;
 
@@ -147,7 +148,7 @@ template<typename T> class LinearIOPointerBenchmark
 
         //-----------------------------------------------------------------
         //! get benchmark name
-        String name() const
+        string name() const
         {
             return "Linear IO (Pointer) "+demangle_cpp_name(typeid(T*).name());
         }

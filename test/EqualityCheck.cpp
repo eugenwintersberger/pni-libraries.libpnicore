@@ -3,7 +3,7 @@
 #include <boost/current_function.hpp>
 #include<cppunit/extensions/HelperMacros.h>
 
-void check_equality(const String &a,const String &b)
+void check_equality(const string &a,const string &b)
 {
     CPPUNIT_ASSERT(a == b);
 }

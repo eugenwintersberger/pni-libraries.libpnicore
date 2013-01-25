@@ -25,8 +25,8 @@
 #include <random>
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
-#include <pni/core/DBuffer.hpp>
-#include <pni/core/NewAllocator.hpp>
+#include <pni/core/dbuffer.hpp>
+#include <pni/core/new_allocator.hpp>
 
 #include "RandomDistributions.hpp"
 #include "EqualityCheck.hpp"
@@ -47,7 +47,7 @@ class dbuffer_test:public CppUnit::TestFixture
         CPPUNIT_TEST(test_iterator);
         CPPUNIT_TEST_SUITE_END();
     private:
-        UInt64 n1,n2;
+        size_t n1,n2;
     public:
         void setUp();
         void tearDown();
@@ -80,12 +80,12 @@ void dbuffer_test<T,Allocator>::test_constructors()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
     //create first buffer using the default constructor
-    DBuffer<T,Allocator> b1; //default constructor
+    dbuffer<T,Allocator> b1; //default constructor
     CPPUNIT_ASSERT(!b1.size());
     
     //create the second constructor with the standard constructor
     //allocating memory
-    DBuffer<T,Allocator> b2(this->n2);
+    dbuffer<T,Allocator> b2(this->n2);
     data_generator::fill(b2.begin(),b2.end(),uniform_distribution<T>());
     CPPUNIT_ASSERT(b2.size());
 
@@ -93,7 +93,7 @@ void dbuffer_test<T,Allocator>::test_constructors()
     T v1 = uniform_distribution<T>()();
     T v2 = uniform_distribution<T>()();
     T v3 = uniform_distribution<T>()();
-    DBuffer<T,Allocator> ibuffer{v1,v2,v3};
+    dbuffer<T,Allocator> ibuffer{v1,v2,v3};
     check_equality(ibuffer[0],v1);
     check_equality(ibuffer[1],v2);
     check_equality(ibuffer[2],v3);
@@ -101,7 +101,7 @@ void dbuffer_test<T,Allocator>::test_constructors()
 
     //=====================copy and move constructor=============================
     //using copy constructor
-    DBuffer<T,Allocator> b3(b2);
+    dbuffer<T,Allocator> b3(b2);
     CPPUNIT_ASSERT(b2.size());
     CPPUNIT_ASSERT(b3.size());
     CPPUNIT_ASSERT(b3.size() == b2.size());
@@ -109,7 +109,7 @@ void dbuffer_test<T,Allocator>::test_constructors()
         check_equality(b2[i],b3[i]);
 
     //using the move constructor
-    DBuffer<T,Allocator> b4 = std::move(b2);
+    dbuffer<T,Allocator> b4 = std::move(b2);
     CPPUNIT_ASSERT(b4.size());
     CPPUNIT_ASSERT(b4.size() == b3.size());
     CPPUNIT_ASSERT(!b2.size());
@@ -123,8 +123,8 @@ void dbuffer_test<T,Allocator>::test_assignment()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 	//testing here the assignment of equally typed buffers
-	DBuffer<T,Allocator> buffer1;
-	DBuffer<T,Allocator> buffer2;
+	dbuffer<T,Allocator> buffer1;
+	dbuffer<T,Allocator> buffer2;
 
 	//check first for some standard problems
 	//nothing happens - both are not allocated
@@ -146,7 +146,7 @@ void dbuffer_test<T,Allocator>::test_assignment()
 	CPPUNIT_ASSERT(buffer2.size());
     CPPUNIT_ASSERT(buffer1.size() == buffer2.size());
 
-	DBuffer<T,Allocator> buffer3;
+	dbuffer<T,Allocator> buffer3;
 	CPPUNIT_ASSERT_NO_THROW(buffer3 = buffer1);
 	CPPUNIT_ASSERT(buffer3.size());
 	CPPUNIT_ASSERT(buffer1.size());
@@ -154,7 +154,7 @@ void dbuffer_test<T,Allocator>::test_assignment()
 
 	//checking move assignment - moveing an  allocated
     //buffer to an not allocated one
-	DBuffer<T,Allocator> buffer4;
+	dbuffer<T,Allocator> buffer4;
 	CPPUNIT_ASSERT_NO_THROW(buffer4 = std::move(buffer3));
 	CPPUNIT_ASSERT(buffer4.size());
 	CPPUNIT_ASSERT(!buffer3.size());
@@ -175,17 +175,17 @@ template<typename T,typename Allocator>
 void dbuffer_test<T,Allocator>::test_allocation()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
-	DBuffer<T,Allocator> dbuffer(this->n1);
-	CPPUNIT_ASSERT(dbuffer.size() == this->n1);
+	dbuffer<T,Allocator> b1(this->n1);
+	CPPUNIT_ASSERT(b1.size() == this->n1);
 
-	CPPUNIT_ASSERT_NO_THROW(dbuffer.free());
-	CPPUNIT_ASSERT(dbuffer.size()==0);
+	CPPUNIT_ASSERT_NO_THROW(b1.free());
+	CPPUNIT_ASSERT(b1.size()==0);
 
-	DBuffer<T,Allocator> dbuffer2;
-	CPPUNIT_ASSERT(dbuffer2.size() == 0);
+	dbuffer<T,Allocator> b2;
+	CPPUNIT_ASSERT(b2.size() == 0);
 
-	CPPUNIT_ASSERT_NO_THROW(dbuffer2.allocate(n2));
-	CPPUNIT_ASSERT(dbuffer2.size() == n2);
+	CPPUNIT_ASSERT_NO_THROW(b2.allocate(n2));
+	CPPUNIT_ASSERT(b2.size() == n2);
 
 }
 
@@ -195,17 +195,17 @@ void dbuffer_test<T,Allocator>::test_access()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
-	DBuffer<T,Allocator> dbuffer(1000);
-    std::vector<T> data(dbuffer.size());
+	dbuffer<T,Allocator> buffer(1000);
+    std::vector<T> data(buffer.size());
     data_generator::fill(data.begin(),data.end(),uniform_distribution<T>());
 
 	for(size_t i=0;i<1000;i++) 
-        CPPUNIT_ASSERT_NO_THROW(dbuffer[i] = data[i]);
+        CPPUNIT_ASSERT_NO_THROW(buffer[i] = data[i]);
 
 	for(size_t i=0;i<1000;i++)
-		check_equality(data[i],dbuffer[i]);
+		check_equality(data[i],buffer[i]);
 
-    DBuffer<T,Allocator> ibuffer(4);
+    dbuffer<T,Allocator> ibuffer(4);
     data = std::vector<T>(ibuffer.size());
     data_generator::fill(data.begin(),data.end(),uniform_distribution<T>());
     for(size_t i=0;i<ibuffer.size();i++)
@@ -214,7 +214,7 @@ void dbuffer_test<T,Allocator>::test_access()
     for(size_t i=0;i<ibuffer.size();i++)
         check_equality(ibuffer.at(i),data[i]);
 
-    DBuffer<T,Allocator> jbuffer(4);
+    dbuffer<T,Allocator> jbuffer(4);
     data = std::vector<T>(jbuffer.size());
     data_generator::fill(data.begin(),data.end(),uniform_distribution<T>());
     for(size_t i=0;i<jbuffer.size();i++)
@@ -224,8 +224,8 @@ void dbuffer_test<T,Allocator>::test_access()
         check_equality(jbuffer[i],data[i]);
 
     //check for IndexError exception
-    CPPUNIT_ASSERT_THROW(ibuffer.at(100),IndexError);
-    CPPUNIT_ASSERT_THROW(ibuffer.insert(100,uniform_distribution<T>()()),IndexError);
+    CPPUNIT_ASSERT_THROW(ibuffer.at(100),index_error);
+    CPPUNIT_ASSERT_THROW(ibuffer.insert(100,uniform_distribution<T>()()),index_error);
 
 }
 
@@ -235,8 +235,8 @@ void dbuffer_test<T,Allocator>::test_comparison()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
-	DBuffer<T,Allocator> b1(100);
-	DBuffer<T,Allocator> b2(100);
+	dbuffer<T,Allocator> b1(100);
+	dbuffer<T,Allocator> b2(100);
 
     data_generator::fill(b1.begin(),b1.end(),uniform_distribution<T>());
     std::fill(b2.begin(),b2.end(),uniform_distribution<T>()());
@@ -252,7 +252,7 @@ void dbuffer_test<T,Allocator>::test_iterator()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
     
-    DBuffer<T,Allocator> b1(1000);
+    dbuffer<T,Allocator> b1(1000);
     std::vector<T> data(b1.size());
 
     data_generator::fill(data.begin(),data.end(),uniform_distribution<T>());

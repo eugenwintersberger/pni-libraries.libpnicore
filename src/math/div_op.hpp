@@ -38,7 +38,7 @@ namespace core{
     \tparam OP1T type of the left operand
     \tparam OP2T type of the right operand
     */
-    template<typename OP1T,typename OP2T> class div
+    template<typename OP1T,typename OP2T> class div_op
     {
         private:
             //! reference to the left operand
@@ -50,7 +50,7 @@ namespace core{
             //! result type of the operation
             typedef typename OP1T::value_type value_type;
             //! type of the expression template
-            typedef div<OP1T,OP2T> array_type;
+            typedef div_op<OP1T,OP2T> array_type;
             //! storage type
             typedef void storage_type;
             //! non-const iterator - just for interface
@@ -66,7 +66,7 @@ namespace core{
             \param o1 left operand
             \param o2 right operand
             */
-            div(const OP1T &o1,const OP2T &o2):
+            div_op(const OP1T &o1,const OP2T &o2):
                 _op1(o1),
                 _op2(o2)
             {}

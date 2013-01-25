@@ -242,8 +242,8 @@ namespace core{
             void insert(size_t i,const value_type &v)
             {
                 try { this->at(i) = v; } 
-                EXCEPTION_FORWARD(IndexError)
-                EXCEPTION_FORWARD(MemoryNotAllocatedError)
+                EXCEPTION_FORWARD(index_error)
+                EXCEPTION_FORWARD(memory_not_allocated_error)
             }
 
 

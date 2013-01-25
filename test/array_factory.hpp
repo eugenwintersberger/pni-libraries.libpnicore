@@ -22,7 +22,7 @@
  */
 #pragma once
 
-#include <pni/core/Array.hpp>
+#include <pni/core/arrays.hpp>
 
 using namespace pni::core;
 
@@ -36,21 +36,21 @@ template<typename ATYPE> class array_factory
 
 };
 
-template<typename T,size_t ...DIMS> class array_factory<SArray<T,DIMS...> >
+template<typename T,size_t ...DIMS> class array_factory<sarray<T,DIMS...> >
 {
     public:
-        template<typename CTYPE> static SArray<T,DIMS...> create(const CTYPE &s)
+        template<typename CTYPE> static sarray<T,DIMS...> create(const CTYPE &s)
         {
-            return SArray<T,DIMS...>();
+            return sarray<T,DIMS...>();
         }
 };
 
-template<typename T> class array_factory<Scalar<T> >
+template<typename T> class array_factory<scalar<T> >
 {
     public:
-        template<typename CTYPE> static Scalar<T> create(const CTYPE &s)
+        template<typename CTYPE> static scalar<T> create(const CTYPE &s)
         {
-            return Scalar<T>();
+            return scalar<T>();
         }
 };
 

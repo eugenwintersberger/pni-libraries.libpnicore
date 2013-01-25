@@ -25,7 +25,7 @@
 #include<cppunit/TestFixture.h>
 #include<cppunit/extensions/HelperMacros.h>
 
-#include <pni/core/ArrayViewSelector.hpp>
+#include <pni/core/array_view_selector.hpp>
 
 using namespace pni::core;
 

@@ -40,25 +40,25 @@ void type_class_test::tearDown(){ }
 void type_class_test::test_map()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
-    CPPUNIT_ASSERT(TypeClassMap<UInt8>::type_class == TypeClass::INTEGER);
-    CPPUNIT_ASSERT(TypeClassMap<Int8>::type_class == TypeClass::INTEGER);
-    CPPUNIT_ASSERT(TypeClassMap<UInt16>::type_class == TypeClass::INTEGER);
-    CPPUNIT_ASSERT(TypeClassMap<Int16>::type_class == TypeClass::INTEGER);
-    CPPUNIT_ASSERT(TypeClassMap<UInt32>::type_class == TypeClass::INTEGER);
-    CPPUNIT_ASSERT(TypeClassMap<Int32>::type_class == TypeClass::INTEGER);
-    CPPUNIT_ASSERT(TypeClassMap<UInt64>::type_class == TypeClass::INTEGER);
-    CPPUNIT_ASSERT(TypeClassMap<Int64>::type_class == TypeClass::INTEGER);
+    CPPUNIT_ASSERT(type_class_map<uint8>::type_class == type_class_t::INTEGER);
+    CPPUNIT_ASSERT(type_class_map<int8>::type_class == type_class_t::INTEGER);
+    CPPUNIT_ASSERT(type_class_map<uint16>::type_class == type_class_t::INTEGER);
+    CPPUNIT_ASSERT(type_class_map<int16>::type_class == type_class_t::INTEGER);
+    CPPUNIT_ASSERT(type_class_map<uint32>::type_class == type_class_t::INTEGER);
+    CPPUNIT_ASSERT(type_class_map<int32>::type_class == type_class_t::INTEGER);
+    CPPUNIT_ASSERT(type_class_map<uint64>::type_class == type_class_t::INTEGER);
+    CPPUNIT_ASSERT(type_class_map<int64>::type_class == type_class_t::INTEGER);
 
-    CPPUNIT_ASSERT(TypeClassMap<Float32>::type_class == TypeClass::FLOAT);
-    CPPUNIT_ASSERT(TypeClassMap<Float64>::type_class == TypeClass::FLOAT);
-    CPPUNIT_ASSERT(TypeClassMap<Float128>::type_class == TypeClass::FLOAT);
+    CPPUNIT_ASSERT(type_class_map<float32>::type_class == type_class_t::FLOAT);
+    CPPUNIT_ASSERT(type_class_map<float64>::type_class == type_class_t::FLOAT);
+    CPPUNIT_ASSERT(type_class_map<float128>::type_class == type_class_t::FLOAT);
 
-    CPPUNIT_ASSERT(TypeClassMap<Complex32>::type_class == TypeClass::COMPLEX);
-    CPPUNIT_ASSERT(TypeClassMap<Complex64>::type_class == TypeClass::COMPLEX);
-    CPPUNIT_ASSERT(TypeClassMap<Complex128>::type_class == TypeClass::COMPLEX);
+    CPPUNIT_ASSERT(type_class_map<complex32>::type_class == type_class_t::COMPLEX);
+    CPPUNIT_ASSERT(type_class_map<complex64>::type_class == type_class_t::COMPLEX);
+    CPPUNIT_ASSERT(type_class_map<complex128>::type_class == type_class_t::COMPLEX);
 
-    CPPUNIT_ASSERT(TypeClassMap<String>::type_class == TypeClass::STRING);
-    CPPUNIT_ASSERT(TypeClassMap<Binary>::type_class == TypeClass::BINARY);
-    CPPUNIT_ASSERT(TypeClassMap<Bool>::type_class == TypeClass::BOOL);
+    CPPUNIT_ASSERT(type_class_map<string>::type_class == type_class_t::STRING);
+    CPPUNIT_ASSERT(type_class_map<binary>::type_class == type_class_t::BINARY);
+    CPPUNIT_ASSERT(type_class_map<bool>::type_class == type_class_t::BOOL);
 
 }

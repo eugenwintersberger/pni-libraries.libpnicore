@@ -25,7 +25,7 @@
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
 #include <vector>
-#include <pni/core/StaticCIndexMap.hpp>
+#include <pni/core/static_cindex_map.hpp>
 
 using namespace pni::core;
 

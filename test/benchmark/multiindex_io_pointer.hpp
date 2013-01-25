@@ -23,8 +23,8 @@
 #pragma once
 
 #include <typeinfo>
-#include <pni/core/Types.hpp>
-#include <pni/core/Array.hpp>
+#include <pni/core/types.hpp>
+#include <pni/core/arrays.hpp>
 #include <pni/core/service.hpp>
 
 using namespace pni::core;
@@ -36,7 +36,7 @@ Benchmark class for testing IO performance on a raw pointer useing a
 multi-dimensional access pattern. 
 \tparam T data type for which to allocate memory
 */
-template<typename T> class MultiIndexIOPointer
+template<typename T> class multiindex_io_pointer
 {
     private:
         T *_ptr;    //!< pointer to memory
@@ -53,7 +53,7 @@ template<typename T> class MultiIndexIOPointer
         \param nx number of points in the first dimension
         \param ny number of points in the second dimension
         */
-        MultiIndexIOPointer(size_t nx,size_t ny):
+        multiindex_io_pointer(size_t nx,size_t ny):
             _ptr(new T[nx*ny]),
             _nx(nx),
             _ny(ny),
@@ -62,7 +62,7 @@ template<typename T> class MultiIndexIOPointer
 
         //---------------------------------------------------------------------
         //! copy constructor
-        MultiIndexIOPointer(const MultiIndexIOPointer<T> &mip):
+        multiindex_io_pointer(const multiindex_io_pointer<T> &mip):
             _ptr(new T[mip._nx*mip._ny]),
             _nx(mip._nx),
             _ny(mip._ny),
@@ -73,7 +73,7 @@ template<typename T> class MultiIndexIOPointer
 
         //---------------------------------------------------------------------
         //! move constructor
-        MultiIndexIOPointer(MultiIndexIOPointer<T> &&mip):
+        multiindex_io_pointer(multiindex_io_pointer<T> &&mip):
             _ptr(mip._ptr),
             _nx(mip._nx),
             _ny(mip._ny),
@@ -86,7 +86,7 @@ template<typename T> class MultiIndexIOPointer
 
         //---------------------------------------------------------------------
         //! destructor
-        ~MultiIndexIOPointer()
+        ~multiindex_io_pointer()
         {
             if(_ptr) delete [] _ptr;
             _ptr = nullptr;
@@ -94,7 +94,7 @@ template<typename T> class MultiIndexIOPointer
 
         //=====================assignment operators============================
         //! copy assignment operator
-        MultiIndexIOPointer<T> &operator=(const MultiIndexIOPointer<T> &mip)
+        multiindex_io_pointer<T> &operator=(const multiindex_io_pointer<T> &mip)
         {
             if(this == &mip) return *this;
 
@@ -110,7 +110,7 @@ template<typename T> class MultiIndexIOPointer
 
         //---------------------------------------------------------------------
         //! move assignment operator
-        MultiIndexIOPointer<T> &operator=(MultiIndexIOPointer<T> &&mip)
+        multiindex_io_pointer<T> &operator=(multiindex_io_pointer<T> &&mip)
         {
             if(this == &mip) return *this;
 
@@ -159,9 +159,9 @@ template<typename T> class MultiIndexIOPointer
 
         //---------------------------------------------------------------------
         //! get the benchmark name
-        String name() const
+        string name() const
         {
-            return String("Multi-index IO (Pointer) ")+
+            return string("Multi-index IO (Pointer) ")+
                    demangle_cpp_name(typeid(T*).name());
         }
             

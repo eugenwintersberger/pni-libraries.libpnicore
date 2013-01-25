@@ -25,7 +25,7 @@
 
 #include <sstream>
 #include <vector>
-#include <pni/core/Types.hpp>
+#include <pni/core/types.hpp>
 #include "RandomDistributions.hpp"
 
 /*!
@@ -44,18 +44,18 @@ template<typename T> class data_factory
         }
 };
 
-template<> class data_factory<String>
+template<> class data_factory<string>
 {
     public:
         template<template<typename ...> class CT,typename ...OTS>
-        static void create(size_t n,CT<String,OTS...> &c)
+        static void create(size_t n,CT<string,OTS...> &c)
         {
            typedef std::vector<int> vec_t;
 
            //create first integer random numbers
            vec_t buffer = RandomDistribution::uniform<vec_t>(n);
 
-           c = CT<String,OTS...>(n);
+           c = CT<string,OTS...>(n);
            vec_t::const_iterator biter = buffer.begin();
            for(auto iter=c.begin();iter!=c.end();++iter)
            {

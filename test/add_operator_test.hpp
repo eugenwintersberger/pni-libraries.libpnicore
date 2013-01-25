@@ -28,11 +28,11 @@
 #include <algorithm>
 #include <boost/current_function.hpp>
 
-#include <pni/core/Array.hpp>
+#include <pni/core/arrays.hpp>
 #include "EqualityCheck.hpp"
-#include <pni/core/DArray.hpp>
-#include <pni/core/Scalar.hpp>
-#include <pni/core/NumArray.hpp>
+#include <pni/core/darray.hpp>
+#include <pni/core/scalar.hpp>
+#include <pni/core/numarray.hpp>
 #include "array_factory.hpp"
 
 using namespace pni::core;
@@ -52,8 +52,8 @@ template<typename ATYPE> class add_operator_test: public CppUnit::TestFixture
         CPPUNIT_TEST_SUITE_END();
     private:
         //==========private types==============================================
-        typedef NumArray<ATYPE> na_type;
-        typedef Scalar<typename ATYPE::value_type> s_type;
+        typedef numarray<ATYPE> na_type;
+        typedef scalar<typename ATYPE::value_type> s_type;
         typedef typename ATYPE::value_type value_type;
 
         //===================private memebers==================================
@@ -90,14 +90,14 @@ template<typename ATYPE> void add_operator_test<ATYPE>::tearDown() { }
 template<typename ATYPE> void add_operator_test<ATYPE>::test_construction()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
-    Add<na_type,na_type> op(a1,a2);
+    add<na_type,na_type> op(a1,a2);
     CPPUNIT_ASSERT(a1.size() == op.size());
    
     s_type s(10);
-    Add<na_type,s_type> op2(a1,s);
+    add<na_type,s_type> op2(a1,s);
     CPPUNIT_ASSERT(op2.size() == a1.size());
 
-    Add<s_type,s_type> op3(s,s);
+    add<s_type,s_type> op3(s,s);
     CPPUNIT_ASSERT(s.size() == op3.size());
 
 }
@@ -106,13 +106,13 @@ template<typename ATYPE> void add_operator_test<ATYPE>::test_construction()
 template<typename ATYPE> void add_operator_test<ATYPE>::test_access()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
-    Add<na_type,na_type> op1(a1,a2);
+    add<na_type,na_type> op1(a1,a2);
 
     for(size_t i=0;i<op1.size();i++)
         check_equality(op1[i],value_type(105));
 
     s_type s(10);
-    Add<na_type,s_type> op2(a1,s);
+    add<na_type,s_type> op2(a1,s);
 
     for(size_t i=0;i<op2.size();i++)
         check_equality(op2[i],value_type(110));
@@ -122,7 +122,7 @@ template<typename ATYPE> void add_operator_test<ATYPE>::test_access()
 template<typename ATYPE> void add_operator_test<ATYPE>::test_iterator()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
-    Add<na_type,na_type> op1(a1,a2);
+    add<na_type,na_type> op1(a1,a2);
 #ifdef NOFOREACH
     for(auto iter = op1.begin();iter!=op1.end();++iter)
     {
@@ -135,7 +135,7 @@ template<typename ATYPE> void add_operator_test<ATYPE>::test_iterator()
     }
 
     s_type s(10);
-    Add<na_type,s_type> op2(a1,s);
+    add<na_type,s_type> op2(a1,s);
 #ifdef NOFOREACH
     for(auto iter = op2.begin();iter!=op2.end();++iter)
     {

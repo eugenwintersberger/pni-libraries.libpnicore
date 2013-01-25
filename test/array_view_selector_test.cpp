@@ -24,11 +24,11 @@
 #include<cppunit/extensions/HelperMacros.h>
 
 #include <typeinfo>
-#include <pni/core/Types.hpp>
-#include <pni/core/Slice.hpp>
-#include <pni/core/NumArray.hpp>
-#include <pni/core/SArray.hpp>
-#include <pni/core/ArrayView.hpp>
+#include <pni/core/types.hpp>
+#include <pni/core/slice.hpp>
+#include <pni/core/numarray.hpp>
+#include <pni/core/sarray.hpp>
+#include <pni/core/array_view.hpp>
 #include <pni/core/service.hpp>
 
 #include "array_view_selector_test.hpp"
@@ -39,30 +39,35 @@ CPPUNIT_TEST_SUITE_REGISTRATION(array_view_selector_test);
 void array_view_selector_test::test_selector()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
-    typedef SArray<Float64,3,4,5,6> array_type;
-    typedef ArrayViewSelector<array_type,size_t,size_t,size_t> scalar_view;
-    typedef ArrayViewSelector<array_type,size_t,size_t,Slice,size_t> array_view;
+    typedef sarray<float64,3,4,5,6> array_type;
+    typedef array_view_selector<array_type,size_t,size_t,size_t> scalar_selector_view;
+    typedef array_view_selector<array_type,size_t,size_t,slice,size_t> array_selector_view;
 
-    CPPUNIT_ASSERT(typeid(scalar_view::viewtype).name()==
-                   typeid(Float64).name());
+    CPPUNIT_ASSERT(typeid(scalar_selector_view::viewtype).name()==
+                   typeid(float64).name());
 
-    CPPUNIT_ASSERT(typeid(array_view::viewtype).name() == 
-                   typeid(ArrayView<array_type>).name());
+    CPPUNIT_ASSERT(typeid(array_selector_view::viewtype).name() == 
+                   typeid(array_view<array_type>).name());
 
     //this should return an array view
-    CPPUNIT_ASSERT(typeid(ArrayViewSelector<array_type,Slice,Slice,size_t,size_t,size_t>::viewtype).name()==typeid(ArrayView<array_type>).name());
+    CPPUNIT_ASSERT(typeid(array_view_selector<array_type,slice,slice,size_t,size_t,size_t>::viewtype).name()==typeid(array_view<array_type>).name());
 
-    typedef NumArray<array_type> narray_type;
+    typedef numarray<array_type> narray_type;
 
     //this will return a scalar view
-    CPPUNIT_ASSERT(typeid(ArrayViewSelector<narray_type,size_t,size_t,size_t,size_t>::viewtype).name()
-                   == typeid(Float64).name());
+    CPPUNIT_ASSERT(typeid(array_view_selector<narray_type,size_t,size_t,size_t,size_t>::viewtype).name()
+                   == typeid(float64).name());
 
     std::cout<<"---------------------------------------"<<std::endl;
-    std::cout<<"type: "<<demangle_cpp_name(typeid(ArrayViewSelector<narray_type,Slice,size_t,Slice,size_t>::viewtype).name())<<std::endl;
-    std::cout<<"type: "<<demangle_cpp_name(typeid(NumArray<ArrayView<narray_type> >).name())<<std::endl;
+    std::cout<<"type: "<<
+    demangle_cpp_name(typeid(
+    array_view_selector<narray_type,slice,size_t,slice,size_t>::viewtype).name()
+    )<<std::endl;
+    std::cout<<"type: "<<
+    demangle_cpp_name(typeid(numarray<array_view<narray_type> >).name())<<std::endl;
     std::cout<<"---------------------------------------"<<std::endl;
-    CPPUNIT_ASSERT(typeid(ArrayViewSelector<narray_type,Slice,size_t,Slice,size_t>::viewtype).name()
-                   == typeid(NumArray<ArrayView<narray_type> >).name());
+    CPPUNIT_ASSERT(
+    typeid(array_view_selector<narray_type,slice,size_t,slice,size_t>::viewtype).name()
+                   == typeid(numarray<array_view<narray_type> >).name());
 
 }

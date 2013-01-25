@@ -32,7 +32,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION(iterator_test);
 //-----------------------------------------------------------------------------
 void iterator_test::setUp()
 {
-    vector = Iterable{1,2,3,4,5,6,7};
+    vector = iterable{1,2,3,4,5,6,7};
 }
 
 //-----------------------------------------------------------------------------
@@ -217,8 +217,8 @@ void iterator_test::test_stl_algos()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
-    Iterable::iterator siter1 = vector.begin()+2;
-    Iterable::iterator siter2 = vector.begin()+5;
+    iterable::iterator siter1 = vector.begin()+2;
+    iterable::iterator siter2 = vector.begin()+5;
     CPPUNIT_ASSERT(std::distance(siter1,siter2) == 3);
     
     iterator iter1(&vector,2),iter2(&vector,5);
@@ -253,10 +253,10 @@ void iterator_test::test_ptr_access()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
-    std::vector<String> v{"hello","world","this","is","a text"};
+    std::vector<string> v{"hello","world","this","is","a text"};
 
-    typedef Iterator<std::vector<String>,0> iterator_t;
-    typedef Iterator<std::vector<String>,1> const_iterator_t;
+    typedef container_iterator<std::vector<string>,0> iterator_t;
+    typedef container_iterator<std::vector<string>,1> const_iterator_t;
 
     iterator_t first(&v,0);
     CPPUNIT_ASSERT(first->size() == 5);

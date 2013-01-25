@@ -25,8 +25,7 @@
 #include <iostream>
 #include <boost/current_function.hpp>
 
-#include <pni/core/Types.hpp>
-#include <pni/core/Binary.hpp>
+#include <pni/core/types.hpp>
 
 #include "binary_test.hpp"
 
@@ -45,18 +44,18 @@ void binary_test::tearDown(){ }
 void binary_test::test_construction()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
-    binary_t bvalue;
+    binary bvalue;
     
-    binary_t bvalue2 = 8; 
+    binary bvalue2 = 8; 
 }
 
 //-----------------------------------------------------------------------------
 void binary_test::test_comparison()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
-    binary_t v1 = 8;
-    binary_t v2 = 10;
-    binary_t v3 = 8;
+    binary v1 = 8;
+    binary v2 = 10;
+    binary v3 = 8;
 
     CPPUNIT_ASSERT(v1 != v2);
     CPPUNIT_ASSERT(v1 == v3);
@@ -66,11 +65,11 @@ void binary_test::test_comparison()
 void binary_test::test_assignment()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
-    binary_t v1;
+    binary v1;
 
     v1 = 10;
 
-    binary_t v2 = 10;
+    binary v2 = 10;
     CPPUNIT_ASSERT(v1 == v2);
 }
 
@@ -78,9 +77,9 @@ void binary_test::test_assignment()
 void binary_test::test_compatability()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
-    typedef BinaryType<UInt8> binary_t;
-    UInt8 rv;
-    binary_t bv = 10;
+    typedef binary_t<uint8> binary_type;
+    uint8 rv;
+    binary_type bv = 10;
    
     //this should work
     rv = bv;
@@ -90,11 +89,11 @@ void binary_test::test_compatability()
     CPPUNIT_ASSERT(bv == rv);
 
     //should not work
-    Float64 f64 = 12.3445;
+    float64 f64 = 12.3445;
     bv = f64;
 
-    UInt8 *rptr = new UInt8[10];
-    binary_t *bptr = new binary_t[10];
+    uint8 *rptr = new uint8[10];
+    binary_type *bptr = new binary_type[10];
 
     for(size_t i=0;i<10;i++)
     {
@@ -113,20 +112,20 @@ void binary_test::test_compatability()
 void binary_test::test_io_operator()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
-    binary_t  b = 'a';
+    binary  b = 'a';
 
     CPPUNIT_ASSERT(b == 'a');
     b = 'x';
     CPPUNIT_ASSERT(b == 'x');
 
-    binary_t::binary_type bvalue;
+    binary::binary_type bvalue;
 
     bvalue = b;
     CPPUNIT_ASSERT(bvalue == 'x');
     
     std::cout<<"value = "<<bvalue<<std::endl;
     std::cout<<"value = "<<b<<std::endl;
-    Int8 ivalue = 'z';
+    int8 ivalue = 'z';
     b = ivalue;
     std::cout<<"value = "<<b<<std::endl;
 }
@@ -156,7 +155,7 @@ void binary_test::test_io()
    
     //copy binary file
 
-    binary_t buffer;
+    binary buffer;
     while(istream.get(((char&)buffer)))
     {
         ostream.put(((char&)buffer));

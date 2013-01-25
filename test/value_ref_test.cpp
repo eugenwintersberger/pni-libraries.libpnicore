@@ -24,7 +24,7 @@
 #include <boost/current_function.hpp>
 #include<cppunit/extensions/HelperMacros.h>
 
-#include <pni/core/Array.hpp>
+#include <pni/core/arrays.hpp>
 #include "value_ref_test.hpp"
 
-CPPUNIT_TEST_SUITE_REGISTRATION(value_ref_test<Float32>);
+CPPUNIT_TEST_SUITE_REGISTRATION(value_ref_test<float32>);

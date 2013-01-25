@@ -56,7 +56,7 @@ This macro is used to create a specialization of IDTypeMap.
     template<type_id_t id> class id_type_map
     {
         public:
-            typedef UInt8 type; //!< type identified by the template parameter
+            typedef uint8 type; //!< type identified by the template parameter
     };
 
     //! \cond NO_API_DOC

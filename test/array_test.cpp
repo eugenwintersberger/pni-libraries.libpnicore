@@ -24,23 +24,23 @@
 #include <boost/current_function.hpp>
 #include<cppunit/extensions/HelperMacros.h>
 
-#include <pni/core/Array.hpp>
-#include <pni/core/Scalar.hpp>
+#include <pni/core/arrays.hpp>
+#include <pni/core/scalar.hpp>
 #include "array_test.hpp"
 
-typedef SArray<UInt32,3,2> sarray_t;
-typedef NumArray<DArray<Float64> > narray_t;
-typedef Scalar<Int64> scalar_t;
+typedef sarray<uint32,3,2> sarray_t;
+typedef numarray<darray<float64> > narray_t;
+typedef scalar<int64> scalar_t;
 
-CPPUNIT_TEST_SUITE_REGISTRATION(array_test<DArray<Float32> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_test<DArray<String> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(array_test<darray<float32> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(array_test<darray<string> >);
 CPPUNIT_TEST_SUITE_REGISTRATION(array_test<sarray_t> );
 CPPUNIT_TEST_SUITE_REGISTRATION(array_test<narray_t> );
 CPPUNIT_TEST_SUITE_REGISTRATION(array_test<scalar_t>);
 
 //-------------------------------------------------------------
-void create_object(DArray<String> &o)
+void create_object(darray<string> &o)
 {
-    o = DArray<String>(shape_t{2});
+    o = darray<string>(shape_t{2});
     o[0] = "hello"; o[1] = "world";
 }

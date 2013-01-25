@@ -24,7 +24,7 @@
 #include<cppunit/TestFixture.h>
 #include<cppunit/extensions/HelperMacros.h>
 
-#include <pni/core/Slice.hpp>
+#include <pni/core/slice.hpp>
 
 using namespace pni::core;
 

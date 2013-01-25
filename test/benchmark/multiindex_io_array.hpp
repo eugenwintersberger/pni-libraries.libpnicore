@@ -23,8 +23,8 @@
 #pragma once                
 
 #include <typeinfo>
-#include <pni/core/Types.hpp>
-#include <pni/core/Array.hpp>
+#include <pni/core/types.hpp>
+#include <pni/core/arrays.hpp>
 #include <pni/core/service.hpp>
 
 using namespace pni::core;
@@ -44,7 +44,7 @@ array(i,j) = 5.;
 The benchmark assumes a 2D array for the test.
 \tparam ATYPE array type to run the test for
 */
-template<typename ATYPE> class MultiIndexIOArray
+template<typename ATYPE> class multiindex_io_array
 {
     private:
         ATYPE _array;   //!< instance of the array
@@ -54,7 +54,7 @@ template<typename ATYPE> class MultiIndexIOArray
     public:
         //==================construtors========================================
         //! constructor
-        MultiIndexIOArray(ATYPE &&array):
+        multiindex_io_array(ATYPE &&array):
             _array(std::move(array)),
             _shape(_array.template shape<shape_t>())
         { }
@@ -96,9 +96,9 @@ template<typename ATYPE> class MultiIndexIOArray
 
         //---------------------------------------------------------------------
         //! get benchmark name
-        String name() const
+        string name() const
         {
-            return String("Multiindex IO (variadic) ")+demangle_cpp_name(typeid(ATYPE).name());
+            return string("Multiindex IO (variadic) ")+demangle_cpp_name(typeid(ATYPE).name());
         }
 };
 

@@ -25,8 +25,6 @@
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
 
-#include <pni/core/CIndexMap.hpp>
-
 #include <vector>
 #include <list>
 

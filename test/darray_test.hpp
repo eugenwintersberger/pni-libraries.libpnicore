@@ -25,8 +25,8 @@
 #include<cppunit/extensions/HelperMacros.h>
 #include<boost/current_function.hpp>
 
-#include <pni/core/Array.hpp>
-#include <pni/core/DArray.hpp>
+#include <pni/core/arrays.hpp>
+#include <pni/core/darray.hpp>
 
 #include "data_generator.hpp"
 #include "uniform_distribution.hpp"
@@ -79,22 +79,22 @@ void darray_test<T,STORAGE>::test_construction()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
     //test default construction
-    DArray<T,STORAGE> a1;
+    darray<T,STORAGE> a1;
     CPPUNIT_ASSERT(a1.size() == 0);
     CPPUNIT_ASSERT(a1.rank() == 0);
 
     //default construction
-    DArray<T,STORAGE> a2(s1,STORAGE(12));
+    darray<T,STORAGE> a2(s1,STORAGE(12));
     CPPUNIT_ASSERT(a2.size() == 12);
     CPPUNIT_ASSERT(a2.rank() == 2);
 
     //copy construction
-    DArray<T,STORAGE> a3(a2);
+    darray<T,STORAGE> a3(a2);
     CPPUNIT_ASSERT(a2.rank() == a3.rank());
     CPPUNIT_ASSERT(a2.size() == a3.size());
 
     //move construction
-    DArray<T,STORAGE> a4 = std::move(a2);
+    darray<T,STORAGE> a4 = std::move(a2);
     CPPUNIT_ASSERT(a2.size() == 0);
     CPPUNIT_ASSERT(a2.rank() == 0);
     CPPUNIT_ASSERT(a4.size() == a3.size());
@@ -107,18 +107,18 @@ template<typename T,typename STORAGE>
 void darray_test<T,STORAGE>::test_assignment()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
-    DArray<T,STORAGE> a1(s1,STORAGE(12));
+    darray<T,STORAGE> a1(s1,STORAGE(12));
     data_generator::fill(a1.begin(),a1.end(),uniform_distribution<T>());
    
     //copy assignment
-    DArray<T,STORAGE> a2;
+    darray<T,STORAGE> a2;
     a2 = a1;
     CPPUNIT_ASSERT(a2.rank() == a1.rank());
     CPPUNIT_ASSERT(a2.size() == a2.size());
     CPPUNIT_ASSERT(std::equal(a1.begin(),a1.end(),a2.begin()));
     
     //move assignment operator
-    DArray<T,STORAGE> a3;
+    darray<T,STORAGE> a3;
     a3 = std::move(a1); 
     CPPUNIT_ASSERT(a3.rank() == a2.rank());
     CPPUNIT_ASSERT(a3.size() == a2.size());
@@ -134,7 +134,7 @@ template<typename T,typename STORAGE>
 void darray_test<T,STORAGE>::test_linear_access()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
-    DArray<T,STORAGE> a1(s1,STORAGE(12));
+    darray<T,STORAGE> a1(s1,STORAGE(12));
     std::vector<T> data(a1.size());
     data_generator::fill(data.begin(),data.end(),uniform_distribution<T>());
 
@@ -156,9 +156,9 @@ void darray_test<T,STORAGE>::test_linear_access()
 	for(size_t i=0;i<a1.size();i++) 
         CPPUNIT_ASSERT_NO_THROW(check_equality(data[i],a1.at(i)));
 
-    CPPUNIT_ASSERT_THROW(a1.at(a1.size() + 100),IndexError);
+    CPPUNIT_ASSERT_THROW(a1.at(a1.size() + 100),index_error);
     CPPUNIT_ASSERT_THROW(a1.insert(2*a1.size(),uniform_distribution<T>()()),
-                         IndexError);
+                         index_error);
 
 }
 
@@ -167,7 +167,7 @@ template<typename T,typename STORAGE>
 void darray_test<T,STORAGE>::test_iterators()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
-    DArray<T,STORAGE> a1(s1,STORAGE(12));
+    darray<T,STORAGE> a1(s1,STORAGE(12));
     std::vector<T> data(a1.size());
     data_generator::fill(data.begin(),data.end(),uniform_distribution<T>());
 
@@ -181,7 +181,7 @@ void darray_test<T,STORAGE>::test_iterators()
         check_equality(*iter,*diter++);
 
     //-------------------check const iterator-----------------------------
-    const DArray<T,STORAGE> &a = a1;
+    const darray<T,STORAGE> &a = a1;
 
     diter = data.begin();
     for(auto iter = a.begin();iter!=a.end();++iter)
@@ -194,7 +194,7 @@ void darray_test<T,STORAGE>::test_multiindex_access()
 {   
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
-    DArray<T,STORAGE> a1(s1,STORAGE(12));
+    darray<T,STORAGE> a1(s1,STORAGE(12));
     std::vector<T> data(a1.size());
     data_generator::fill(data.begin(),data.end(),uniform_distribution<T>());
 
@@ -240,7 +240,7 @@ void darray_test<T,STORAGE>::test_multiindex_access_const()
 
     STORAGE data(12);
     data_generator::fill(data.begin(),data.end(),uniform_distribution<T>());
-    const DArray<T,STORAGE> a1(s1,data);
+    const darray<T,STORAGE> a1(s1,data);
     CPPUNIT_ASSERT(a1.shape()[0] == s1[0]);
     CPPUNIT_ASSERT(a1.shape()[1] == s1[1]);
 
@@ -272,7 +272,7 @@ template<typename T,typename STORAGE>
 void darray_test<T,STORAGE>::test_typeinfo()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
-    TypeID id1 = DArray<T,STORAGE>::type_id;
-    TypeID id2 = TypeIDMap<T>::type_id;
+    type_id_t id1 = darray<T,STORAGE>::type_id;
+    type_id_t id2 = type_id_map<T>::type_id;
     CPPUNIT_ASSERT(id1 == id2);
 }

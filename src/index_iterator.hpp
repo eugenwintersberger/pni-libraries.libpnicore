@@ -23,8 +23,8 @@
 #pragma once
 
 #include <vector>
-#include "Array.hpp"
-#include "CIndexMap.hpp"
+#include "arrays.hpp"
+#include "cindex_map.hpp"
 
 namespace pni{
 namespace core{
@@ -44,7 +44,7 @@ namespace core{
     \tparam INDEXT type of the index container
     \tparam IMT index map type
     */
-    template<typename INDEXT,typename IMT=CIndexMap> class index_iterator
+    template<typename INDEXT,typename IMT=cindex_map> class index_iterator
     {
         private:
             //! the index map used to compute the indices

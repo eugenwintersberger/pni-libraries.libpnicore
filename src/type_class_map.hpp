@@ -52,7 +52,7 @@ This macro creates a type to type class map specialization.
     {
         public:
             //! class of type T
-            static const type_class_t type_class = TypeClass::NONE;
+            static const type_class_t type_class = type_class_t::NONE;
     };
 
     //! \cond NO_API_DOC

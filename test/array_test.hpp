@@ -114,8 +114,8 @@ template<typename OT> void array_test<OT>::test_copy_and_move()
     CPPUNIT_ASSERT(o4.size() == _object1.size());
     CPPUNIT_ASSERT(o4.type_id() == OT::type_id);
 
-    CPPUNIT_ASSERT_THROW(o3.rank(),MemoryNotAllocatedError);
-    CPPUNIT_ASSERT_THROW(o3.size(),MemoryNotAllocatedError);
+    CPPUNIT_ASSERT_THROW(o3.rank(),memory_not_allocated_error);
+    CPPUNIT_ASSERT_THROW(o3.size(),memory_not_allocated_error);
 
 }
 
