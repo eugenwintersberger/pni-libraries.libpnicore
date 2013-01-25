@@ -36,7 +36,7 @@ namespace cbf{
     //==================implementation of static memeber functions=========
     //implementation of the read_header method
     std::streampos dectris_reader::read_header(std::ifstream &is,
-            std::vector<pni::io::image_info> &info,CompressionID &ct)
+            std::vector<pni::io::image_info> &info,compression_id &ct)
     {
         uint8 byte;
         string linebuffer;
@@ -66,7 +66,7 @@ namespace cbf{
             {
                 //ok - if we came here we are done with all the rubish
                 image_info iinfo(nx,ny);
-                iinfo.append_channel(ImageChannelInfo(tid,bits_per_pixel));
+                iinfo.append_channel(image_channel_info(tid,bits_per_pixel));
                 info.push_back(iinfo);
 
                 //this means that we have to store the offset and can 

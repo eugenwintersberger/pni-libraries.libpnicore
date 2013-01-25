@@ -6,6 +6,7 @@ Import("build_env")
 tiffsources = Glob("tiff/*.cpp")
            
 sources = Glob("*.cpp")
+sources.extend(Glob("cbf/*.cpp"))
 if GetOption("with_tiff"):
     sources.extend(tiffsources)
 sobjs = build_env.SharedObject(sources)
