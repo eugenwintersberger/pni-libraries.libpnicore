@@ -75,7 +75,7 @@ namespace tiff{
 
             //================assignment operator===========================
             //! copy assignment operator
-            virtual rational<T> &operator=(const ratoinal<T> &r);
+            virtual rational<T> &operator=(const rational<T> &r);
 
             //! set the numerator
             void numerator(const T &v) { _numerator = v; }
@@ -125,7 +125,7 @@ namespace tiff{
     //------------------------------------------------------------------------
     //implementation of the output operator
     template<typename T> 
-        std::ostream &operator<<(std::ostream &o,const Rational<T> &r)
+        std::ostream &operator<<(std::ostream &o,const rational<T> &r)
     {
         o<<r.numerator()<<"/"<<r.denominator();
         return o;

@@ -114,7 +114,7 @@ namespace tiff{
         {
             auto entry = *iter;
 #else
-        for(auto entry: ifd)
+        for(auto entry: image_dir)
         {
 #endif
             o<<entry<<std::endl;

@@ -96,7 +96,7 @@ namespace core{
         public:
             //===================constructors and destructor====================
             //! default constructor
-            ArraySelection():
+            array_selection():
                 _oshape(0),
                 _offset(0),
                 _stride(0),
@@ -338,7 +338,7 @@ namespace core{
             {
                 ITYPE oindex(_oshape.size());
                 try{ this->index(sindex,oindex); }
-                EXCEPTION_FORWARD(SizeMissmatchError);
+                EXCEPTION_FORWARD(size_missmatch_error);
 
                 return oindex;
             }

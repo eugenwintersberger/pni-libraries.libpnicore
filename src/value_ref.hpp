@@ -24,10 +24,10 @@
 #include<iostream>
 #include<memory>
 
-#include "Exceptions.hpp"
-#include "Types.hpp"
-#include "Array.hpp"
-#include "TypeIDMap.hpp"
+#include "exceptions.hpp"
+#include "types.hpp"
+#include "arrays.hpp"
+#include "type_id_map.hpp"
 #include "value_holder.hpp"
 
 namespace pni{
@@ -99,7 +99,7 @@ namespace core{
             \throw MemoryNotAllocatedError
             \param r exception record where the error occured.
             */
-            static void _throw_not_allocated_error(const ExceptionRecord &r);
+            static void _throw_not_allocated_error(const exception_record &r);
 
             //! pointer holding the value stored
             std::unique_ptr<value_holder_interface> _ptr;
@@ -180,7 +180,7 @@ namespace core{
             \throws MemoryNotAllocatedError if value is not initialized
             \return type ID.
             */
-            TypeID type_id() const;
+            type_id_t type_id() const;
 
             friend std::ostream &operator<<(std::ostream &,const value_ref &);
             friend std::istream &operator>>(std::istream &,value_ref &);
@@ -193,11 +193,11 @@ namespace core{
        
         if(!_ptr) _throw_not_allocated_error(EXCEPTION_RECORD);
 
-        if(type_id() == TypeIDMap<T>::type_id)
+        if(type_id() == type_id_map<T>::type_id)
         {
             return dynamic_cast<holder_t*>(_ptr.get())->as();
         }
-        throw TypeError(EXCEPTION_RECORD,
+        throw type_error(EXCEPTION_RECORD,
                 "incompatible type - cannot return value");
 
         return T(0); //just to make the compiler happy
@@ -224,13 +224,13 @@ namespace core{
         }
 
 
-        if(type_id() ==  TypeIDMap<T>::type_id)
+        if(type_id() ==  type_id_map<T>::type_id)
         {
             dynamic_cast<holder_t*>(_ptr.get())->as().get() = v;
             return *this;
         }
 
-        throw TypeError(EXCEPTION_RECORD,
+        throw type_error(EXCEPTION_RECORD,
                 "type does not match value_ref type");
         return *this;
     }

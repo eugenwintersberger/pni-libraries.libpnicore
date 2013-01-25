@@ -43,7 +43,7 @@
 #include "type_info.hpp"
 #include "type_id_map.hpp"
 #include "type_conversion.hpp"
-#include "iterator.hpp"
+#include "container_iterator.hpp"
 
 namespace pni {
 namespace core {
@@ -79,12 +79,12 @@ namespace core {
             \return array view object
             */
             template<typename ...ITYPES>
-            array_view<DArray<T,STORAGE,IMAP> >
+            array_view<darray<T,STORAGE,IMAP> >
                 _get_data(array_view<darray<T,STORAGE,IMAP> > &view,ITYPES ...indices)
             {
 
                 std::vector<slice> slices{slice(indices)...};
-                arrawy_selection s = array_selection::create(slices);
+                array_selection s = array_selection::create(slices);
 
                 return array_view<darray<T,STORAGE,IMAP> >(*this,s);
             }

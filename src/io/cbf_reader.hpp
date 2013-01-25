@@ -229,7 +229,7 @@ namespace io{
         //load the channel information
         image_channel_info channel = inf.get_channel(c);
 
-        if(_detector_vendor == cbf::VendorID::DECTRIS)
+        if(_detector_vendor == cbf::vendor_id::DECTRIS)
         {
             if(channel.type_id() == type_id_t::INT16)
                 //read 16Bit signed data

@@ -85,9 +85,9 @@ namespace core{
 
             //===============public inerface implementation============
             
-            virtual TypeID type_id() const 
+            virtual type_id_t type_id() const 
             {
-                return TypeIDMap<typename get_reference_type<T>::value_type >::type_id;
+                return type_id_map<typename get_reference_type<T>::value_type >::type_id;
             }
 
             //---------------------------------------------------------
@@ -113,6 +113,7 @@ namespace core{
                 return stream;
             }
 
+            //----------------------------------------------------------
             virtual bool holds_reference() const
             {
                 return is_reference_holder<T>::value;

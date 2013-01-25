@@ -23,7 +23,7 @@
 
 #include <iostream>
 #include <vector>
-#include "../Types.hpp"
+#include "../types.hpp"
 
 extern "C"
 {

@@ -88,7 +88,7 @@ namespace tiff{
             \param r vector where to store data
             \param stream input stream from which to read
             */
-            void _read_entry_data(std::vector<String> &r,std::ifstream &stream);
+            void _read_entry_data(std::vector<string> &r,std::ifstream &stream);
             
         public:
             //=============constructors and destructor=========================
@@ -176,7 +176,7 @@ namespace tiff{
 
             //-----------------------------------------------------------------
             //! output operator
-            friend std::ostream &operator<<(std::ostream &o,const IFDEntry &e);
+            friend std::ostream &operator<<(std::ostream &o,const ifd_entry &e);
 
     };
 
@@ -237,7 +237,7 @@ namespace tiff{
         else if(this->_tid == ifd_entry_type_id::SLONG)
             ifd_entry_reader<T,int32>::read(r,stream);
         else if(this->_tid == ifd_entry_type_id::SRATIONAL)
-            ifd_entry_reader<T,sational<Int32> >::read(r,stream);
+            ifd_entry_reader<T,rational<int32> >::read(r,stream);
         else if(this->_tid == ifd_entry_type_id::FLOAT)
             ifd_entry_reader<T,float32>::read(r,stream);
         else if(this->_tid == ifd_entry_type_id::DOUBLE)

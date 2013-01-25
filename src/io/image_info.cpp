@@ -98,9 +98,9 @@ namespace io{
     }
 
     //-------------------------------------------------------------------------
-    std::vector<TypeID> image_info::types_per_channel() const
+    std::vector<type_id_t> image_info::types_per_channel() const
     {
-        std::vector<TypeID> types;
+        std::vector<type_id_t> types;
 #ifdef NOFOREACH
         for( auto iter = _channel_info.begin();iter!=_channel_info.end();iter++)
         {

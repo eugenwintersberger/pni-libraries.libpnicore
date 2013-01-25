@@ -59,7 +59,7 @@ namespace core{
             \param time the time the function took to run
             \param unit the unit used to measure the time
             */
-            benchmark_result(Float64 time,const String &unit):
+            benchmark_result(float64 time,const string &unit):
                 _time(time),
                 _unit(unit)
             {}

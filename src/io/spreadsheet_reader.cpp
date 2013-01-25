@@ -46,8 +46,8 @@ namespace io{
 
     //-------------------------------------------------------------------------
     //standard constructor implementation
-    SpreadsheetReader::SpreadsheetReader(const String &n):
-        DataReader(n)
+    spreadsheet_reader::spreadsheet_reader(const string &n):
+        data_reader(n)
     {}
 
     //-------------------------------------------------------------------------

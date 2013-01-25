@@ -27,10 +27,10 @@
  *
  */
 
-#include "CBFReader.hpp"
+#include "cbf_reader.hpp"
 #include "strutils.hpp"
-#include "../Exceptions.hpp"
-#include "../Types.hpp"
+#include "../exceptions.hpp"
+#include "../types.hpp"
 
 //need to use regular expressions from boost
 #include<boost/regex.hpp>
@@ -41,13 +41,13 @@ namespace io{
 
     //================implementation of constructors and destructor========
     //implementation of the default constructor
-    CBFReader::CBFReader():ImageReader()
+    cbf_reader::cbf_reader():image_reader()
     { }
 
     //---------------------------------------------------------------------
     //implementation of the standard constructor
-    CBFReader::CBFReader(const String &fname):
-        ImageReader(fname)
+    cbf_reader::cbf_reader(const string &fname):
+        image_reader(fname)
     {
         //here the file is immediately opened  - we have to parse the 
         //header to obtain information about the data
@@ -57,20 +57,20 @@ namespace io{
 
     //---------------------------------------------------------------------
     //implementation of the destructor
-    CBFReader::~CBFReader()
+    cbf_reader::~cbf_reader()
     { }
 
     //================implementation of assignment operators===============
-    CBFReader &CBFReader::operator=(CBFReader &&r)
+    cbf_reader &cbf_reader::operator=(cbf_reader &&r)
     {
         if(this == &r) return *this;
 
-        ImageReader::operator=(std::move(r));
+        image_reader::operator=(std::move(r));
         return *this;
     }
 
     //===============implemenetation of private methods====================
-    void CBFReader::_parse_file(){
+    void cbf_reader::_parse_file(){
         char linebuffer[1024];
         std::ifstream &_istream = _get_stream();
 
@@ -90,13 +90,13 @@ namespace io{
                 if(boost::regex_search(match.str(0),regex_sls)||
                    boost::regex_search(match.str(0),regex_dectris))
                 {
-                    _data_offset = cbf::DectrisReader::read_header(_istream,
+                    _data_offset = cbf::dectris_reader::read_header(_istream,
                             _image_info,_compression_type);
-                    _detector_vendor = cbf::VendorID::DECTRIS;
+                    _detector_vendor = cbf::vendor_id::DECTRIS;
                     return;
                 }else{
                     //should raise an exception here
-                    throw FileError(EXCEPTION_RECORD,"Unknown CBF style!");
+                    throw file_error(EXCEPTION_RECORD,"Unknown CBF style!");
                 }
             }
         }

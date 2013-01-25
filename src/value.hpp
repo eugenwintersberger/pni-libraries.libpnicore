@@ -24,10 +24,10 @@
 #include<iostream>
 #include<memory>
 
-#include "Exceptions.hpp"
-#include "Types.hpp"
-#include "Array.hpp"
-#include "TypeIDMap.hpp"
+#include "exceptions.hpp"
+#include "types.hpp"
+#include "arrays.hpp"
+#include "type_id_map.hpp"
 #include "value_holder.hpp"
 
 namespace pni{
@@ -42,12 +42,12 @@ namespace core{
     No additional requirements are made on a data type.  
     Creating an instane is quite simple, just use
     \code
-    Float64 v1 = 100.243;
+    float64 v1 = 100.243;
     value v = v1;
     \endcode
     or
     \code
-    value v = Float64(1023); 
+    value v = float64(1023); 
     \endcode
     An arbitrary type can be assigned at runtime
     \code
@@ -58,8 +58,8 @@ namespace core{
     In this case the original value whill be overwritten. To obtain its original
     value use the as<> template member function of the value class
     \code
-    value v = Float32(1243.4029);
-    Float32 a = v.as<Float32>();
+    value v = float32(1243.4029);
+    float32 a = v.as<float32>();
     \endcode
     if the type passed as a template parameter to as<> does not match the type
     of the data wrapped by the value class a TypeError exception will be thrown. 
@@ -76,7 +76,7 @@ namespace core{
     data for reading. Thus a static method is provided by the class to create a
     new instance of value for a particular data type
     \code
-    value v = value::create<Float32>();
+    value v = value::create<float32>();
     \endcode
     */
     class value
@@ -90,7 +90,7 @@ namespace core{
             \throw MemoryNotAllocatedError
             \param r exception record where the error occured.
             */
-            static void _throw_not_allocated_error(const ExceptionRecord &r);
+            static void _throw_not_allocated_error(const exception_record &r);
 
             //! pointer holding the value stored
             std::unique_ptr<value_holder_interface> _ptr;
@@ -121,7 +121,7 @@ namespace core{
             MemoryNotAllocatedError exception. This static method allows to
             create a default object of a particular type. 
             \code
-            value v = value::create<Float128>();
+            value v = value::create<float128>();
             \endcode
             \tparam T type for which to create the value object
             \return instance of value for type T
@@ -134,9 +134,9 @@ namespace core{
 
             Assign a new value to class value. 
             \code
-            value v = value::create<Float32>();
+            value v = value::create<float32>();
 
-            v = UInt16(12);
+            v = uint16(12);
             \endcode
             The assignment copies the new value to an appropriate instance of
             value_holder. This means that the type changes. 
@@ -161,8 +161,8 @@ namespace core{
             been initialized before an exception is thrown. In addition, if the
             data type passed as a template parameter does not fit the type used
             to store the data an exception will be thrown.
-            \throws MemoryNotAllocatedError if value is uninitialized
-            \throws TypeError if T does not match the original data type
+            \throws memory_not_allocate_error if value is uninitialized
+            \throws type_error if T does not match the original data type
             \return value of type T 
             */
             template<typename T> T as() const;
@@ -172,10 +172,10 @@ namespace core{
             \brief get type id
 
             Returns the ID of the stored data type. 
-            \throws MemoryNotAllocatedError if value is not initialized
+            \throws memory_not_allocated_error if value is not initialized
             \return type ID.
             */
-            TypeID type_id() const;
+            type_id_t type_id() const;
 
             friend std::ostream &operator<<(std::ostream &,const value &);
             friend std::istream &operator>>(std::istream &,value &);
@@ -186,11 +186,11 @@ namespace core{
     {
         if(!_ptr) _throw_not_allocated_error(EXCEPTION_RECORD);
 
-        if(type_id() == TypeIDMap<T>::type_id)
+        if(type_id() == type_id_map<T>::type_id)
         {
             return dynamic_cast<value_holder<T>*>(_ptr.get())->as();
         }
-        throw TypeError(EXCEPTION_RECORD,
+        throw type_error(EXCEPTION_RECORD,
                 "incompatible type - cannot return value");
 
         return T(0); //just to make the compiler happy
@@ -211,7 +211,7 @@ namespace core{
 
     Writes the content of value to the output stream. An exception is thrown
     if the value is not initialized. 
-    \throws MemoryNotAllocatedError if value is not initialized 
+    \throws memory_allocation_error if value is not initialized 
     \param stream output stream
     \param v reference to value
     \return reference to output stream
@@ -225,11 +225,11 @@ namespace core{
     Read data from an input stream to the value. It is important to note that
     the value must be initialized otherwise an exception will be thrown. 
     \code
-    value v = value::create<UInt32>();
+    value v = value::create<uint32>();
     std::cin>>v;
     \endcode
 
-    \throw MemoryNotAllocatedError if value not initialized 
+    \throw memory_not_allocated_error if value not initialized 
     \param stream input stream
     \param v value where to store data
     \return reference to input stream

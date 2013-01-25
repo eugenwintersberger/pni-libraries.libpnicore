@@ -24,7 +24,7 @@
 #pragma once
 
 #include "../config.h"
-#include "../Types.hpp"
+#include "../types.hpp"
 #include "configuration.hpp"
 #include "config_parser.hpp"
 
@@ -49,7 +49,7 @@ namespace core{
             //! default constructor
             library_config();
             //! standard constructor
-            library_config(const String &fname);
+            library_config(const string &fname);
             //! destructor
             ~library_config();
 

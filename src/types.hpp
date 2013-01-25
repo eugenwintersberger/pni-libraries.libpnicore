@@ -31,7 +31,7 @@
 #include <cstdint>
 #include <vector>
 
-#include "Binary.hpp"
+#include "binary.hpp"
 
 //define some standard types
 namespace pni{
@@ -63,7 +63,7 @@ namespace core{
 
     typedef std::string string; //!< String type
 
-    typedef BinaryType<uint8> binary; //!< data type for binary data
+    typedef binary_t<uint8> binary; //!< data type for binary data
     typedef bool Bool;    //!< data type for boolean expressions
     /*! @} */
 

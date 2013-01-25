@@ -32,7 +32,7 @@ namespace core{
         return (void *)(a.storage().ptr());
     }
 
-    template<typename ATYPE> const void *get_pointer(const NumArray<ATYPE> &a)
+    template<typename ATYPE> const void *get_pointer(const numarray<ATYPE> &a)
     {
         return (void *)(a.storage().storage().ptr());
     }
@@ -68,7 +68,7 @@ namespace core{
             }
 
             //====================public member functions======================
-            virtual TypeID type_id() const{ return OT::type_id; }
+            virtual type_id_t type_id() const{ return OT::type_id; }
             
             //-----------------------------------------------------------------
             virtual size_t rank() const { return _object.rank(); }
@@ -123,7 +123,7 @@ namespace core{
             }
 
             //-----------------------------------------------------------------
-            virtual String type_name() const
+            virtual string type_name() const
             {
                 return typeid(OT).name();
             }

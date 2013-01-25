@@ -61,7 +61,7 @@ namespace cbf{
             \return position of data section
             */
             static std::streampos read_header(std::ifstream &is,
-                    std::vector<pni::io::ImageInfo> &info,CompressionID &ct);
+                    std::vector<pni::io::image_info> &info,compression_id &ct);
 
             //-----------------------------------------------------------------
             /*! \brief read data 
@@ -77,7 +77,7 @@ namespace cbf{
             template<typename CBFT,typename CTYPE>
                 static void read_data_byte_offset(
                         std::ifstream &is,
-                        const pni::io::ImageInfo &info,
+                        const pni::io::image_info &info,
                         CTYPE &data);
 
 

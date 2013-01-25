@@ -24,9 +24,9 @@
 #include<iostream>
 #include<memory>
 
-#include "Exceptions.hpp"
+#include "exceptions.hpp"
 #include "types.hpp"
-#include "Array.hpp"
+#include "arrays.hpp"
 #include "array_holder.hpp"
 #include "array_iterator.hpp"
 
@@ -41,12 +41,12 @@ namespace core{
     It takes entire ownership over the array it holds.
     The construction is fairly easy
     \code 
-    array a = DArray<Float32>(shape_t{104,200});
+    array a = darray<float32>(shape_t{104,200});
     \endcode
     as the DArray instance is a temporary move construction will be used. 
     Alternatively, copy construction can be done with
     \code
-    DArray<Float32> data(shape_t{104,200});
+    darray<float32> data(shape_t{104,200});
     array a = data;
     \endcode
     in which case the copy constructor is used to copy the array's data. 
@@ -73,9 +73,9 @@ namespace core{
             \throw MemoryNotAllocatedError
             \param r exception record where the error occured.
             */
-            static void _throw_not_allocated_error(const ExceptionRecord &r)
+            static void _throw_not_allocated_error(const exception_record &r)
             {
-                throw MemoryNotAllocatedError(r,
+                throw memory_not_allocated_error(r,
                         "Instance of data_object holds no data!");
             }
 
@@ -160,7 +160,7 @@ namespace core{
             Return the type id of the data held by an instance of array.
             \return type id.
             */
-            type_id type_id() const;
+            type_id_t type_id() const;
             
             //-----------------------------------------------------------------
             /*! 
@@ -264,7 +264,7 @@ namespace core{
 
             //-----------------------------------------------------------------
             //! return the type name
-            String type_name() const;
+            string type_name() const;
 
             //-----------------------------------------------------------------
 

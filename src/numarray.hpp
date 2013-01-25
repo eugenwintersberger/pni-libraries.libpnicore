@@ -25,15 +25,15 @@
 #pragma once
 
 #include "types.hpp"
-#include "Iterator.hpp"
-#include "ArrayViewSelector.hpp"
-#include "ArrayView.hpp"
-#include "InplaceArithmetics.hpp"
-#include "Scalar.hpp"
-#include "math/Add.hpp"
-#include "math/Sub.hpp"
-#include "math/Div.hpp"
-#include "math/Mult.hpp"
+#include "container_iterator.hpp"
+#include "array_view_selector.hpp"
+#include "array_view.hpp"
+#include "math/inplace_arithmetics.hpp"
+#include "scalar.hpp"
+#include "math/add.hpp"
+#include "math/sub.hpp"
+#include "math/div.hpp"
+#include "math/mult.hpp"
 
 namespace pni{
 namespace core{
@@ -48,8 +48,8 @@ namespace core{
     \tparam IPA inplace arithmetics type
 
     */
-    template<typename ATYPE,template<typename> class IPA=InplaceArithmetics> 
-        class NumArray
+    template<typename ATYPE,template<typename> class IPA=inplace_arithmetics> 
+        class numarray
     {
         //need to do here a compiletime check if types are equal
         private:
@@ -67,16 +67,16 @@ namespace core{
             \return array view object
             */
             template<typename ...ITYPES>
-            NumArray<ArrayView<NumArray<ATYPE,IPA> > ,IPA>
-            _get_data(NumArray<ArrayView<NumArray<ATYPE,IPA> >,IPA> &view,ITYPES ...indices)
+            numarray<array_view<numarray<ATYPE,IPA> > ,IPA>
+            _get_data(numarray<array_view<numarray<ATYPE,IPA> >,IPA> &view,ITYPES ...indices)
             {
-                typedef ArrayView<NumArray<ATYPE,IPA> > view_t;
-                std::vector<Slice> slices{Slice(indices)...};
-                ArraySelection s = ArraySelection::create(slices);
+                typedef array_view<numarray<ATYPE,IPA> > view_t;
+                std::vector<slice> slices{slice(indices)...};
+                array_selection s = array_selection::create(slices);
 
                 view_t tmp(*this,s);
 
-                return NumArray<view_t,IPA>(tmp);
+                return numarray<view_t,IPA>(tmp);
             }
 
             //-----------------------------------------------------------------
@@ -125,14 +125,14 @@ namespace core{
             \return array view
             */
             template<template<typename ...> class CTYPE,typename ...OTS>
-            NumArray<ArrayView<NumArray<ATYPE,IPA> >,IPA>
-            _get_data(NumArray<ArrayView<NumArray<ATYPE,IPA> >,IPA> &view,const CTYPE<OTS...> &c)
+            numarray<array_view<numarray<ATYPE,IPA> >,IPA>
+            _get_data(numarray<array_view<numarray<ATYPE,IPA> >,IPA> &view,const CTYPE<OTS...> &c)
             {
-                typedef ArrayView<NumArray<ATYPE,IPA> > view_t;
+                typedef array_view<numarray<ATYPE,IPA> > view_t;
 
-                ArraySelection s = ArraySelection::create(c);
+                array_selection s = array_selection::create(c);
 
-                return NumArray<view_t>(view_t(*this,s));
+                return numarray<view_t>(view_t(*this,s));
             }
 
             //-----------------------------------------------------------------
@@ -158,11 +158,11 @@ namespace core{
             //! element type of the array
             typedef typename ATYPE::value_type value_type;
             //! type of the array
-            typedef NumArray<ATYPE> array_type;
+            typedef numarray<ATYPE> array_type;
             //! type of array storage
             typedef ATYPE storage_type;
             //! type of the view
-            typedef ArrayView<typename storage_type::view_type> view_type;
+            typedef array_view<typename storage_type::view_type> view_type;
             //! shared smart pointer type to the numeric array
             typedef std::shared_ptr<array_type> shared_ptr;
             //! unique smart pointer type to the numeric array
@@ -177,44 +177,45 @@ namespace core{
             
             //=====================public members==============================
             //! type id of the element type
-            static const TypeID type_id = TypeIDMap<value_type>::type_id;
+            static const type_id_t type_id = type_id_map<value_type>::type_id;
 
             //======================constructors and destructor================
             //! default constructor
-            NumArray():_array() {}
+            numarray():_array() {}
 
             //! construction from an ArrayView
             template<typename VIEWSTORAGE> 
-                NumArray(const ArrayView<VIEWSTORAGE> &v):
+                numarray(const array_view<VIEWSTORAGE> &v):
                     _array(v)
             {}
 
             //-----------------------------------------------------------------
             //! construct from an arbitary array type
-            NumArray(storage_type &&a):_array(std::move(a)) {}
+            numarray(storage_type &&a):_array(std::move(a)) {}
 
             //-----------------------------------------------------------------
             //! implicit constructor
-            template<typename ...ARGTYPES> NumArray(ARGTYPES ...args):
+            template<typename ...ARGTYPES> numarray(ARGTYPES ...args):
                 _array(storage_type(args...))
             {}
 
+            //-----------------------------------------------------------------
             //! list constructor
-            NumArray(const std::initializer_list<typename storage_type::value_type> &l):
+            numarray(const std::initializer_list<typename storage_type::value_type> &l):
                 _array(storage_type(l))
             {}
 
 
             //-----------------------------------------------------------------
             //! copy constructor
-            NumArray(const array_type &a):_array(a._array) {}
+            numarray(const array_type &a):_array(a._array) {}
 
             //! move constructor
-            NumArray(array_type &&a):_array(std::move(a._array)) {}
+            numarray(array_type &&a):_array(std::move(a._array)) {}
 
             //-----------------------------------------------------------------
             //! destructor
-            ~NumArray() {} 
+            ~numarray() {} 
 
             //=================assignment operators===========================
             //! copy assignment
@@ -236,7 +237,7 @@ namespace core{
 
             //-----------------------------------------------------------------
             //! assignment from a NumArray type
-            template<typename AT> array_type &operator=(const NumArray<AT> &a)
+            template<typename AT> array_type &operator=(const numarray<AT> &a)
             {
                 std::copy(a.begin(),a.end(),this->begin());
                 return *this;
@@ -366,10 +367,10 @@ namespace core{
             \return array view or reference to the array value
             */
             template<typename ...ITYPES>
-            typename ArrayViewSelector<array_type,ITYPES...>::reftype
+            typename array_view_selector<array_type,ITYPES...>::reftype
             operator()(ITYPES ...indices)
             {
-                typedef ArrayViewSelector<array_type,ITYPES...> sel;
+                typedef array_view_selector<array_type,ITYPES...> sel;
                 typedef typename sel::viewtype view_t;
 
                 view_t r = view_t();
@@ -388,15 +389,13 @@ namespace core{
             \return single value or array view
             */
             template<typename ...ITYPES>
-            typename ArrayViewSelector<array_type,ITYPES...>::viewtype
+            typename array_view_selector<array_type,ITYPES...>::viewtype
             operator()(ITYPES ...indices) const
             {
-                typedef ArrayViewSelector<array_type,ITYPES...> sel;
+                typedef array_view_selector<array_type,ITYPES...> sel;
                 typename sel::viewtype result = typename sel::viewtype();
 
                 return _get_data(result,indices...);
-
-                //return this->_array(indices...);
             }
 
             //-----------------------------------------------------------------
@@ -409,7 +408,7 @@ namespace core{
             \return view or reference to a singel value
             */
             template<template<typename ...> class CTYPE,typename ...OTS>
-            typename ArrayViewSelector<array_type,typename CTYPE<OTS...>::value_type>::reftype
+            typename array_view_selector<array_type,typename CTYPE<OTS...>::value_type>::reftype
             operator()(const CTYPE<OTS...> &c)
             {
                 return this->_array(c);
@@ -427,7 +426,7 @@ namespace core{
             \return array view or element value
             */
             template<template<typename ...> class CTYPE,typename ...OTS>
-            typename ArrayViewSelector<array_type,typename CTYPE<OTS...>::value_type>::viewtype
+            typename array_view_selector<array_type,typename CTYPE<OTS...>::value_type>::viewtype
             operator()(const CTYPE<OTS...> &c) const
             {
                 return this->_array(c);
@@ -645,7 +644,7 @@ namespace core{
     \return reference to output stream
     */
     template<typename ATYPE> 
-    std::ostream &operator<<(std::ostream &o,const NumArray<ATYPE> &a)
+    std::ostream &operator<<(std::ostream &o,const numarray<ATYPE> &a)
     {
         for(auto v: a)
             o<<v<<" ";
@@ -663,9 +662,9 @@ namespace core{
     \return reference to input sream
     */
     template<typename ATYPE>
-    std::istream &operator>>(std::istream &i,NumArray<ATYPE> &a)
+    std::istream &operator>>(std::istream &i,numarray<ATYPE> &a)
     {
-        for(typename NumArray<ATYPE>::value_type &v: a)
+        for(typename numarray<ATYPE>::value_type &v: a)
             i>>v;
 
         return i;
@@ -683,9 +682,9 @@ namespace core{
     typedef std::vector<size_t> shape_t;
     shape_t shape{3,4,100};
 
-    NumArray<DArray<Float32> > a(DArray<Float32>(shape));
-    NumArray<DArray<Float32> > b(DArray<Float32>(shape));
-    NumArray<DArray<Float32> > c(DArray<Float32>(shape));
+    numarray<darray<float32> > a(darray<float32>(shape));
+    numarray<darray<float32> > b(darray<float32>(shape));
+    numarray<darray<float32> > c(darray<float32>(shape));
 
     std::fill(a.begin(),a.end(),100);
     std::fill(b.begin(),b.end(),200);
@@ -694,7 +693,7 @@ namespace core{
 
     \endcode
 
-    \throws ShapeMissmatchError if shapes do not match
+    \throws shape_missmatch_error if shapes do not match
     \tparam AT1 storage type of left operand
     \tparam AT2 storage type of right operand
     \param a left operand
@@ -702,13 +701,13 @@ namespace core{
     \return instance of NumArray with result
     */
     template<typename AT1,typename AT2>
-    NumArray<Mult<NumArray<AT1>,NumArray<AT2> > >
-    operator*(const NumArray<AT1> &a,const NumArray<AT2> &b)
+    numarray<mult<numarray<AT1>,numarray<AT2> > >
+    operator*(const numarray<AT1> &a,const numarray<AT2> &b)
     {
-        typedef Mult<NumArray<AT1>,NumArray<AT2> > op_type;
+        typedef mult<numarray<AT1>,numarray<AT2> > op_type;
         check_equal_shape(a,b,EXCEPTION_RECORD);
 
-        return NumArray<op_type>(op_type(a,b));
+        return numarray<op_type>(op_type(a,b));
     }
 
     //-------------------------------------------------------------------------
@@ -722,9 +721,9 @@ namespace core{
     typedef std::vector<size_t> shape_t;
     shape_t shape{3,4,100};
 
-    NumArray<DArray<Float32> > a(DArray<Float32>(shape));
-    NumArray<DArray<Float32> > c(DArray<Float32>(shape));
-    Float32 b = 200;
+    numarray<darray<float32> > a(darray<float32>(shape));
+    numarray<darray<float32> > c(darray<float32>(shape));
+    float32 b = 200;
 
     std::fill(a.begin(),a.end(),100);
     c = a * b;
@@ -736,13 +735,13 @@ namespace core{
     \return instance of NumArray with result
     */
     template<typename AT>
-    NumArray<Mult<NumArray<AT>,Scalar<typename AT::value_type> > >
-    operator*(const NumArray<AT> &a,typename AT::value_type const &b)
+    numarray<mult<numarray<AT>,scalar<typename AT::value_type> > >
+    operator*(const numarray<AT> &a,typename AT::value_type const &b)
     {
-        typedef NumArray<AT> atype;
-        typedef Scalar<typename AT::value_type> stype;
-        typedef Mult<atype,stype> op_type;
-        return NumArray<op_type>(op_type(a,stype(b)));
+        typedef numarray<AT> atype;
+        typedef scalar<typename AT::value_type> stype;
+        typedef mult<atype,stype> op_type;
+        return numarray<op_type>(op_type(a,stype(b)));
     }
 
     //-------------------------------------------------------------------------
@@ -751,14 +750,14 @@ namespace core{
     \brief multiplication operator
 
     Expression template operator for the multiplication of an instance of
-    NumArray and a scalar.    
+    numarray and a scalar.    
     \code
     typedef std::vector<size_t> shape_t;
     shape_t shape{3,4,100};
 
-    NumArray<DArray<Float32> > a(DArray<Float32>(shape));
-    NumArray<DArray<Float32> > c(DArray<Float32>(shape));
-    Float32 b = 200;
+    numarray<darray<float32> > a(darray<float32>(shape));
+    numarray<darray<float32> > c(darray<float32>(shape));
+    float32 b = 200;
 
     std::fill(a.begin(),a.end(),100);
     c = b * a;
@@ -770,13 +769,13 @@ namespace core{
     \return NumArray instance representing the result
     */
     template<typename AT>
-    NumArray<Mult<Scalar<typename AT::value_type>,NumArray<AT> > >
-    operator*(typename AT::value_type const &a,const NumArray<AT> &b)
+    numarray<mult<scalar<typename AT::value_type>,numarray<AT> > >
+    operator*(typename AT::value_type const &a,const numarray<AT> &b)
     {
-        typedef NumArray<AT> atype;
-        typedef Scalar<typename AT::value_type> stype;
-        typedef Mult<stype,atype> op_type;
-        return NumArray<op_type>(op_type(stype(a),b));
+        typedef numarray<AT> atype;
+        typedef scalar<typename AT::value_type> stype;
+        typedef mult<stype,atype> op_type;
+        return numarray<op_type>(op_type(stype(a),b));
     }
 
 
@@ -793,9 +792,9 @@ namespace core{
     typedef std::vector<size_t> shape_t;
     shape_t shape{3,4,100};
 
-    NumArray<DArray<Float32> > a(DArray<Float32>(shape));
-    NumArray<DArray<Float32> > b(DArray<Float32>(shape));
-    NumArray<DArray<Float32> > c(DArray<Float32>(shape));
+    numarray<darray<float32> > a(darray<float32>(shape));
+    numarray<darray<float32> > b(darray<float32>(shape));
+    numarray<darray<float32> > c(darray<float32>(shape));
 
     std::fill(a.begin(),a.end(),100);
     std::fill(b.begin(),b.end(),200);
@@ -812,11 +811,11 @@ namespace core{
     \return instance of NumArray with an expression template as storage type
     */
     template<typename AT1,typename AT2>
-    NumArray<Add<NumArray<AT1>,NumArray<AT2> > >
-    operator+(const NumArray<AT1> &a,const NumArray<AT2> &b)
+    numarray<add<numarray<AT1>,numarray<AT2> > >
+    operator+(const numarray<AT1> &a,const numarray<AT2> &b)
     {
-        typedef Add<NumArray<AT1>,NumArray<AT2> > op_type;
-        return NumArray<op_type>(op_type(a,b));
+        typedef add<numarray<AT1>,numarray<AT2> > op_type;
+        return numarray<op_type>(op_type(a,b));
     }
 
     //-------------------------------------------------------------------------
@@ -829,9 +828,9 @@ namespace core{
     typedef std::vector<size_t> shape_t;
     shape_t shape{3,4,100};
 
-    NumArray<DArray<Float32> > a(DArray<Float32>(shape));
-    NumArray<DArray<Float32> > c(DArray<Float32>(shape));
-    Float32 b = 200;
+    numarray<darray<float32> > a(darray<float32>(shape));
+    numarray<darray<float32> > c(darray<float32>(shape));
+    float32 b = 200;
 
     std::fill(a.begin(),a.end(),100);
     c = a + b;
@@ -843,13 +842,13 @@ namespace core{
     \return NumArray instance with an expression template storage type
     */
     template<typename AT>
-    NumArray<Add<NumArray<AT>,Scalar<typename AT::value_type> > >
-    operator+(const NumArray<AT> &a,typename AT::value_type const &b)
+    numarray<add<numarray<AT>,scalar<typename AT::value_type> > >
+    operator+(const numarray<AT> &a,typename AT::value_type const &b)
     {
-        typedef NumArray<AT> atype;
-        typedef Scalar<typename AT::value_type> stype;
-        typedef Add<atype,stype> op_type;
-        return NumArray<op_type>(op_type(a,stype(b)));
+        typedef numarray<AT> atype;
+        typedef scalar<typename AT::value_type> stype;
+        typedef add<atype,stype> op_type;
+        return numarray<op_type>(op_type(a,stype(b)));
     }
 
     //-------------------------------------------------------------------------
@@ -862,9 +861,9 @@ namespace core{
     typedef std::vector<size_t> shape_t;
     shape_t shape{3,4,100};
 
-    NumArray<DArray<Float32> > a(DArray<Float32>(shape));
-    NumArray<DArray<Float32> > c(DArray<Float32>(shape));
-    Float32 b = 200;
+    numarray<darray<float32> > a(darray<float32>(shape));
+    numarray<darray<float32> > c(darray<float32>(shape));
+    float32 b = 200;
 
     std::fill(a.begin(),a.end(),100);
     c = b + a;
@@ -876,13 +875,13 @@ namespace core{
     \return instance of NumArray with an expression template
     */
     template<typename AT>
-    NumArray<Add<Scalar<typename AT::value_type>,NumArray<AT> > >
-    operator+(typename AT::value_type const &a,const NumArray<AT> &b)
+    numarray<add<scalar<typename AT::value_type>,numarray<AT> > >
+    operator+(typename AT::value_type const &a,const numarray<AT> &b)
     {
-        typedef NumArray<AT> atype;
-        typedef Scalar<typename AT::value_type> stype;
-        typedef Add<stype,atype> op_type;
-        return NumArray<op_type>(op_type(stype(a),b));
+        typedef numarray<AT> atype;
+        typedef scalar<typename AT::value_type> stype;
+        typedef add<stype,atype> op_type;
+        return numarray<op_type>(op_type(stype(a),b));
     }
     
     //=================binary division operator================================
@@ -898,9 +897,9 @@ namespace core{
     typedef std::vector<size_t> shape_t;
     shape_t shape{3,4,100};
 
-    NumArray<DArray<Float32> > a(DArray<Float32>(shape));
-    NumArray<DArray<Float32> > b(DArray<Float32>(shape));
-    NumArray<DArray<Float32> > c(DArray<Float32>(shape));
+    numarray<darray<float32> > a(darray<float32>(shape));
+    numarray<darray<float32> > b(darray<float32>(shape));
+    numarray<darray<float32> > c(darray<float32>(shape));
 
     std::fill(a.begin(),a.end(),100);
     std::fill(b.begin(),b.end(),200);
@@ -917,11 +916,11 @@ namespace core{
     \return instance of NumArray with an expression template as storage type
     */
     template<typename AT1,typename AT2>
-    NumArray<Div<NumArray<AT1>,NumArray<AT2> > >
-    operator/(const NumArray<AT1> &a,const NumArray<AT2> &b)
+    numarray<div<numarray<AT1>,numarray<AT2> > >
+    operator/(const numarray<AT1> &a,const numarray<AT2> &b)
     {
-        typedef Div<NumArray<AT1>,NumArray<AT2> > op_type;
-        return NumArray<op_type>(op_type(a,b));
+        typedef div<numarray<AT1>,numarray<AT2> > op_type;
+        return numarray<op_type>(op_type(a,b));
     }
 
     //-------------------------------------------------------------------------
@@ -934,9 +933,9 @@ namespace core{
     typedef std::vector<size_t> shape_t;
     shape_t shape{3,4,100};
 
-    NumArray<DArray<Float32> > a(DArray<Float32>(shape));
-    NumArray<DArray<Float32> > c(DArray<Float32>(shape));
-    Float32 b = 200;
+    numarray<darray<float32> > a(darray<float32>(shape));
+    numarray<darray<float32> > c(darray<float32>(shape));
+    float32 b = 200;
 
     std::fill(a.begin(),a.end(),100);
     c = a / b;
@@ -948,13 +947,13 @@ namespace core{
     \return NumArray instance with an expression template storage type
     */
     template<typename AT>
-    NumArray<Div<NumArray<AT>,Scalar<typename AT::value_type> > >
-    operator/(const NumArray<AT> &a,typename AT::value_type const &b)
+    numarray<div<numarray<AT>,scalar<typename AT::value_type> > >
+    operator/(const numarray<AT> &a,typename AT::value_type const &b)
     {
-        typedef NumArray<AT> atype;
-        typedef Scalar<typename AT::value_type> stype;
-        typedef Div<atype,stype> op_type;
-        return NumArray<op_type>(op_type(a,stype(b)));
+        typedef numarray<AT> atype;
+        typedef scalar<typename AT::value_type> stype;
+        typedef div<atype,stype> op_type;
+        return numarray<op_type>(op_type(a,stype(b)));
     }
 
     //-------------------------------------------------------------------------
@@ -967,9 +966,9 @@ namespace core{
     typedef std::vector<size_t> shape_t;
     shape_t shape{3,4,100};
 
-    NumArray<DArray<Float32> > a(DArray<Float32>(shape));
-    NumArray<DArray<Float32> > c(DArray<Float32>(shape));
-    Float32 b = 200;
+    numarray<darray<float32> > a(darray<float32>(shape));
+    numarray<darray<float32> > c(darray<float32>(shape));
+    float32 b = 200;
 
     std::fill(a.begin(),a.end(),100);
     c = b / a;
@@ -981,13 +980,13 @@ namespace core{
     \return instance of NumArray with an expression template
     */
     template<typename AT>
-    NumArray<Div<Scalar<typename AT::value_type>,NumArray<AT> > >
-    operator/(typename AT::value_type const &a,const NumArray<AT> &b)
+    numarray<div<scalar<typename AT::value_type>,numarray<AT> > >
+    operator/(typename AT::value_type const &a,const numarray<AT> &b)
     {
-        typedef NumArray<AT> atype;
-        typedef Scalar<typename AT::value_type> stype;
-        typedef Div<stype,atype> op_type;
-        return NumArray<op_type>(op_type(stype(a),b));
+        typedef numarray<AT> atype;
+        typedef scalar<typename AT::value_type> stype;
+        typedef div<stype,atype> op_type;
+        return numarray<op_type>(op_type(stype(a),b));
     }
    
     //======================binary subtraction operator========================
@@ -1003,9 +1002,9 @@ namespace core{
     typedef std::vector<size_t> shape_t;
     shape_t shape{3,4,100};
 
-    NumArray<DArray<Float32> > a(DArray<Float32>(shape));
-    NumArray<DArray<Float32> > b(DArray<Float32>(shape));
-    NumArray<DArray<Float32> > c(DArray<Float32>(shape));
+    numarray<darray<float32> > a(darray<float32>(shape));
+    numarray<darray<float32> > b(darray<float32>(shape));
+    numarray<darray<float32> > c(darray<float32>(shape));
 
     std::fill(a.begin(),a.end(),100);
     std::fill(b.begin(),b.end(),200);
@@ -1022,11 +1021,11 @@ namespace core{
     \return instance of NumArray with an expression template as storage type
     */
     template<typename AT1,typename AT2>
-    NumArray<Sub<NumArray<AT1>,NumArray<AT2> > >
-    operator-(const NumArray<AT1> &a,const NumArray<AT2> &b)
+    numarray<sub<numarray<AT1>,numarray<AT2> > >
+    operator-(const numarray<AT1> &a,const numarray<AT2> &b)
     {
-        typedef Sub<NumArray<AT1>,NumArray<AT2> > op_type;
-        return NumArray<op_type>(op_type(a,b));
+        typedef sub<numarray<AT1>,numarray<AT2> > op_type;
+        return numarray<op_type>(op_type(a,b));
     }
 
     //-------------------------------------------------------------------------
@@ -1039,9 +1038,9 @@ namespace core{
     typedef std::vector<size_t> shape_t;
     shape_t shape{3,4,100};
 
-    NumArray<DArray<Float32> > a(DArray<Float32>(shape));
-    NumArray<DArray<Float32> > c(DArray<Float32>(shape));
-    Float32 b = 200;
+    numarray<darray<float32> > a(darray<float32>(shape));
+    numarray<darray<float32> > c(darray<float32>(shape));
+    float32 b = 200;
 
     std::fill(a.begin(),a.end(),100);
     c = a - b;
@@ -1053,13 +1052,13 @@ namespace core{
     \return NumArray instance with an expression template storage type
     */
     template<typename AT>
-    NumArray<Sub<NumArray<AT>,Scalar<typename AT::value_type> > >
-    operator-(const NumArray<AT> &a,typename AT::value_type const &b)
+    numarray<sub<numarray<AT>,scalar<typename AT::value_type> > >
+    operator-(const numarray<AT> &a,typename AT::value_type const &b)
     {
-        typedef NumArray<AT> atype;
-        typedef Scalar<typename AT::value_type> stype;
-        typedef Sub<atype,stype> op_type;
-        return NumArray<op_type>(op_type(a,stype(b)));
+        typedef numarray<AT> atype;
+        typedef scalar<typename AT::value_type> stype;
+        typedef sub<atype,stype> op_type;
+        return numarray<op_type>(op_type(a,stype(b)));
     }
 
     //-------------------------------------------------------------------------
@@ -1072,9 +1071,9 @@ namespace core{
     typedef std::vector<size_t> shape_t;
     shape_t shape{3,4,100};
 
-    NumArray<DArray<Float32> > a(DArray<Float32>(shape));
-    NumArray<DArray<Float32> > c(DArray<Float32>(shape));
-    Float32 b = 200;
+    numarray<darray<float32> > a(darray<float32>(shape));
+    numarray<darray<float32> > c(darray<float32>(shape));
+    float32 b = 200;
 
     std::fill(a.begin(),a.end(),100);
     c = b - a;
@@ -1086,13 +1085,13 @@ namespace core{
     \return instance of NumArray with an expression template
     */
     template<typename AT>
-    NumArray<Sub<Scalar<typename AT::value_type>,NumArray<AT> > >
-    operator-(typename AT::value_type const &a,const NumArray<AT> &b)
+    numarray<sub<scalar<typename AT::value_type>,numarray<AT> > >
+    operator-(typename AT::value_type const &a,const numarray<AT> &b)
     {
-        typedef NumArray<AT> atype;
-        typedef Scalar<typename AT::value_type> stype;
-        typedef Sub<stype,atype> op_type;
-        return NumArray<op_type>(op_type(stype(a),b));
+        typedef numarray<AT> atype;
+        typedef scalar<typename AT::value_type> stype;
+        typedef sub<stype,atype> op_type;
+        return numarray<op_type>(op_type(stype(a),b));
     }
 
 

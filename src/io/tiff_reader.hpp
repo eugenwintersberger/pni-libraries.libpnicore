@@ -54,7 +54,7 @@ namespace io{
     {
         private:
             bool _little_endian;  //!< true if data is stored as little endian
-            std::vector<tiff::IFD> _ifds; //!< IFD list
+            std::vector<tiff::ifd> _ifds; //!< IFD list
           
             //=====================private methods=============================
             /*! \brief check binary encoding

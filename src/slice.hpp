@@ -60,7 +60,7 @@ namespace core{
             \throws RangeError if first > last
             \param o signature of the origin where the error occured
             */
-            void _check_start_stop(const ExceptionRecord &o) const;
+            void _check_start_stop(const exception_record &o) const;
 
             /*! \brief check stride
 
@@ -69,7 +69,7 @@ namespace core{
             \throws RangeError if stride exceeds span
             \param o signature of the origin where the error occured 
             */
-            void _check_stride(const ExceptionRecord &o) const;
+            void _check_stride(const exception_record &o) const;
         public:
             //==============constructors and destructor========================
             //! default constructor
@@ -125,7 +125,7 @@ namespace core{
 
             //===============assignment operators==============================
             //! copy assignment operator
-            slice &operator=(const Slice &s);
+            slice &operator=(const slice &s);
 
             //=================public member methods===========================
             /*! \brief return the first element

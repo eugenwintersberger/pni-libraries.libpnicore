@@ -154,7 +154,7 @@ namespace core{
             template<typename CTYPE> void shape(const CTYPE &s)
             {
                 index_map_base::shape(s);
-                _strides = DBuffer<size_t>(s.size());
+                _strides = dbuffer<size_t>(s.size());
                 _compute_strides();
             }
 
@@ -280,7 +280,7 @@ namespace core{
         {
             ITYPE index(shape().size());
             try { this->index(offset,index);}
-            EXCEPTION_FORWARD(SizeMissmatchError);
+            EXCEPTION_FORWARD(size_missmatch_error);
 
             return index;
         }
@@ -294,7 +294,7 @@ namespace core{
             {
                 std::stringstream ss;
                 ss<<"Offset ("<<offset<<") exceeds linear size ("<<size()<<")!";
-                throw SizeMissmatchError(EXCEPTION_RECORD,ss.str());
+                throw size_missmatch_error(EXCEPTION_RECORD,ss.str());
             }
 
             size_t t;

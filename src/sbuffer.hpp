@@ -32,7 +32,7 @@
 #include <vector>
 #include "types.hpp"
 #include "type_id_map.hpp"
-#include "iterator.hpp"
+#include "container_iterator.hpp"
 #include "exception_utils.hpp"
 
 namespace pni{
@@ -82,9 +82,9 @@ namespace core{
             //! unique poitner type to a buffer
             typedef std::unique_ptr<buffer_type> unique_ptr;
             //! iterator type
-            typedef iterator<buffer_type,0 > iterator;      
+            typedef container_iterator<buffer_type,0 > iterator;      
             //! const iterator type
-            typedef iterator<buffer_type,1 > const_iterator; 
+            typedef container_iterator<buffer_type,1 > const_iterator; 
 
             //=============public static variables=============================
             //! type ID of the element type

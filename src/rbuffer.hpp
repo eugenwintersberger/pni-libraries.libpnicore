@@ -35,7 +35,7 @@
 #include "exception_utils.hpp"
 #include "types.hpp"
 #include "type_id_map.hpp"
-#include "iterator.hpp"
+#include "container_iterator.hpp"
 
 namespace pni{
 namespace core{
@@ -77,9 +77,9 @@ namespace core{
             //! shared pointer type
             typedef std::shared_ptr<buffer_type> shared_ptr;
             //! iterator type
-            typedef iterator<buffer_type,0> iterator; 
+            typedef container_iterator<buffer_type,0> iterator; 
             //! const iterator type
-            typedef iterator<buffer_type,1> const_iterator; 
+            typedef container_iterator<buffer_type,1> const_iterator; 
 
             //===================public static member variables================
             //! ID of the element data type

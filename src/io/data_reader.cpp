@@ -35,7 +35,7 @@ namespace io{
     //================implementation of private methods=========================
     //default implementation
     std::unique_ptr<std::ifstream> data_reader::
-        _open_stream(const String &fname) const
+        _open_stream(const string &fname) const
     {
         std::unique_ptr<std::ifstream> stream(new std::ifstream()); 
         if(!stream)
@@ -95,7 +95,7 @@ namespace io{
     }
 
     //============implementation of utilty methods=============================
-    string DataReader::filename() const
+    string data_reader::filename() const
     {
         return _fname;
     }

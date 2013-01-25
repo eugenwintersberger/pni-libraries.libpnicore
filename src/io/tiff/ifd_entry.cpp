@@ -197,7 +197,7 @@ namespace tiff{
     //-----------------------------------------------------------------------
     type_id_t ifd_entry::type_id() const
     {
-        return entry_type_id_to_type_id[_tid];
+        return entry_type_to_type_id[_tid];
     }
 
     //-----------------------------------------------------------------------

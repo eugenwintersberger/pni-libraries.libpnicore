@@ -27,9 +27,9 @@ namespace pni{
 namespace core{
 
     //-------------------------------------------------------------------------
-    void value_ref::_throw_not_allocated_error(const ExceptionRecord &r)
+    void value_ref::_throw_not_allocated_error(const exception_record &r)
     {
-        throw MemoryNotAllocatedError(r,
+        throw memory_not_allocated_error(r,
                 "Instance of value holds no data!");
     }
 
@@ -52,14 +52,14 @@ namespace core{
     }
 
     //-------------------------------------------------------------------------
-    TypeID value_ref::type_id() const
+    type_id_t value_ref::type_id() const
     {
         if(_ptr)
             return _ptr->type_id();
         else
             _throw_not_allocated_error(EXCEPTION_RECORD);
 
-        return TypeID::NONE; //just to make the compiler happy
+        return type_id_t::NONE; //just to make the compiler happy
     }
 
     //-------------------------------------------------------------------------

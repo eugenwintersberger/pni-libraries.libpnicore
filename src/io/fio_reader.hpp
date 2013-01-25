@@ -166,7 +166,7 @@ namespace io{
             fio_reader(fio_reader &&r);
 
             //! standard constructor
-            fio_reader(const String &n);
+            fio_reader(const string &n);
 
             //! destructor
             ~fio_reader();

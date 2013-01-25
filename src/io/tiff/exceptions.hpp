@@ -27,7 +27,10 @@
  */
 
 #pragma once
-#include "../exceptions.hpp"
+#include "../../types.hpp"
+#include "../../exceptions.hpp"
+
+using namespace pni::core;
 
 namespace pni{
 namespace io{
@@ -49,7 +52,7 @@ namespace tiff{
 
             //! \param i signature of the exception issuer
             //! \param d description of the error
-            tiff_read_error(const string &i,const string &d):
+            tiff_read_error(const exception_record &i,const string &d):
                 exception("tiff_read_error",i,d)
             {}
             //! destructor

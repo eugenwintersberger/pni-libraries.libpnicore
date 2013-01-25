@@ -121,9 +121,9 @@ namespace tiff {
             \param info ImageInfo object for the image
             \return instance of type StripReader
             */
-            static strip_reder create(std::ifstream &stream,
-                                      const ifd &image_dir,
-                                      const ImageInfo &info);
+            static strip_reader create(std::ifstream &stream,
+                                       const ifd &image_dir,
+                                       const image_info &info);
 
             //=====================public member methods========================
             /*! 

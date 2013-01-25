@@ -60,7 +60,7 @@ namespace io{
             spreadsheet_reader(spreadsheet_reader &&o);
 
             //! standard constructor
-            spreadsheet_reader(const String &n);
+            spreadsheet_reader(const string &n);
 
             //==================protected member functions======================
             /*! \brief append a column
@@ -96,7 +96,7 @@ namespace io{
             \param n name of the column
             \return column_info instance for this column
             */
-            virtual column_info _get_column(const String &n) const
+            virtual column_info _get_column(const string &n) const
             {
                 size_t i=0;
 #ifdef NOFOREACH

@@ -29,7 +29,7 @@
 
 #include "cindex_map.hpp"
 #include "dbuffer.hpp"
-#include "iterator.hpp"
+#include "container_iterator.hpp"
 #include "array_selection.hpp"
 
 namespace pni{
@@ -65,7 +65,7 @@ namespace core{
             //! selection object for index transformation 
             array_selection _selection;
             //! index map to produce the original selection index
-            CIndexMap _imap;
+            cindex_map _imap;
 
         public:
             //====================public types=================================
@@ -80,9 +80,9 @@ namespace core{
             //! unique pointer type
             typedef std::unique_ptr<array_type> unique_ptr; 
             //! iterator type
-            typedef Iterator<array_type,0> iterator;      
+            typedef container_iterator<array_type,0> iterator;      
             //! const iterator type
-            typedef Iterator<array_type,1> const_iterator; 
+            typedef container_iterator<array_type,1> const_iterator; 
             //! view type
             typedef array_view<array_type> view_type;
             //! map type

@@ -56,7 +56,7 @@ namespace core{
     }
   
     //-------------------------------------------------------------------------
-    void parse(configuration &c,const String &s)
+    void parse(configuration &c,const string &s)
     {
         std::ifstream cstream(s);
 

@@ -564,7 +564,7 @@ Please note that the MUST NOT BE a semicolon at the end of this macro.
             \param i error issuer as string
             \param d error description as string
             */
-            explicit rang_error(const exception_record &i,const string &d):
+            explicit range_error(const exception_record &i,const string &d):
                 exception("range_error",i,d)
             { }
 
@@ -674,7 +674,7 @@ Please note that the MUST NOT BE a semicolon at the end of this macro.
             \param d description
             */
             cli_argument_error(const exception_record &r,const string &d):
-                Exception("cli_argument_error",r,d)
+                exception("cli_argument_error",r,d)
             {}
             
             //------------------------------------------------------------------

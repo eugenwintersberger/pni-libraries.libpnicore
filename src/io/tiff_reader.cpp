@@ -69,7 +69,7 @@ namespace io{
         //reset stream position
         stream.seekg(orig_pos,std::ios::beg);
         if(magic!=42)
-            throw FileError(EXCEPTION_RECORD,"Not a TIFF file!");
+            throw file_error(EXCEPTION_RECORD,"Not a TIFF file!");
         
     }
     
@@ -100,7 +100,7 @@ namespace io{
 
         //check endianess of the data - we need to do this before all other
         //things in order to interpret binary data correctly
-        _little_endian = TIFFReader::_is_little_endian(stream);
+        _little_endian = tiff_reader::_is_little_endian(stream);
         
         //now we check if the file is really a TIFF file
         tiff_reader::_check_if_tiff(stream);
@@ -111,7 +111,7 @@ namespace io{
         //no we need to read the IFD entries read the first IFD offset
         int32 ifd_offset = _read_ifd_offset(stream);
         if(ifd_offset == 0)
-            throw FileError(EXCEPTION_RECORD,"File "+filename()+" does not "
+            throw file_error(EXCEPTION_RECORD,"File "+filename()+" does not "
                     "contain an IDF entry!");
 
         //read IFDs from the file
@@ -126,12 +126,12 @@ namespace io{
 #ifdef NOFOREACH
             for(auto iter=ifd.begin();iter!=ifd.end();iter++)
             {
-                tiff::IFDEntry &entry = *iter;
+                tiff::ifd_entry &entry = *iter;
 #else
-            for(tiff::IFDEntry &entry: ifd) 
+            for(tiff::ifd_entry &entry: ifd) 
             {
 #endif
-                entry = std::move(tiff::IFDEntry::create_from_stream(stream));
+                entry = std::move(tiff::ifd_entry::create_from_stream(stream));
             }
             //store the IFD
             _ifds.push_back(ifd);
@@ -243,7 +243,7 @@ namespace io{
 
     //---------------------------------------------------------------------
     //implementation of the standard constructor
-    tiff_reader::tiff_reader(const String &fname):image_reader(fname,true)
+    tiff_reader::tiff_reader(const string &fname):image_reader(fname,true)
     { 
         _read_ifds(); 
     }

@@ -28,7 +28,7 @@
 #include "types.hpp"
 #include "sbuffer.hpp"
 #include "static_cindex_map.hpp"
-#include "exceptins.hpp"
+#include "exceptions.hpp"
 #include "slice.hpp"
 #include "array_view.hpp"
 #include "array_view_selector.hpp"
@@ -69,7 +69,7 @@ namespace core{
     {
         private:
             //! static buffer holding the data
-            sbuffer<T,SizeType<DIMS...>::size > _data;    
+            sbuffer<T,size_type<DIMS...>::size > _data;    
             //! static shape describing the arrays dimensionality
             static const static_cindex_map<DIMS...> _shape; 
 

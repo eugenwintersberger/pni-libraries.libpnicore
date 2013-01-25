@@ -33,7 +33,7 @@
 #include "types.hpp"
 #include "type_id_map.hpp"
 #include "new_allocator.hpp"
-#include "iterator.hpp"
+#include "container_iterator.hpp"
 #include "exception_utils.hpp"
 
 namespace pni{
@@ -86,9 +86,9 @@ namespace core{
             //! allocator type
             typedef ALLOCATOR allocator_type;
             //! iterator type
-            typedef iterator<buffer_type,0 > iterator;        
+            typedef container_iterator<buffer_type,0 > iterator;        
             //! const iterator type
-            typedef iterator<buffer_type,1 > const_iterator; 
+            typedef container_iterator<buffer_type,1 > const_iterator; 
 
             //=============public static variables=============================
             static const type_id_t type_id = type_id_map<value_type>::type_id;
@@ -283,8 +283,8 @@ namespace core{
             void insert(size_t i,const value_type &value)
             {
                 try{ this->at(i) = value; }
-                EXCEPTION_FORWARD(IndexError)
-                EXCEPTION_FORWARD(MemoryNotAllocatedError)
+                EXCEPTION_FORWARD(index_error)
+                EXCEPTION_FORWARD(memory_not_allocated_error)
             }
 
             //-----------------------------------------------------------------
@@ -326,7 +326,7 @@ namespace core{
                 if(this->size()) this->free();
                
                 //allocate new memory
-                try{ _data = allocator_tye::template allocate<T>(size); }
+                try{ _data = allocator_type::template allocate<T>(size); }
                 EXCEPTION_FORWARD(memory_allocation_error);
                 
                 //set the size member variable
@@ -408,7 +408,7 @@ namespace core{
     \return true if buffers are equal, false otherwise
     */
     template<typename T,typename TAlloc,typename U,typename UAlloc>
-    bool operator==(const DBuffer<T,TAlloc> &a,const DBuffer<U,UAlloc> &b)
+    bool operator==(const dbuffer<T,TAlloc> &a,const dbuffer<U,UAlloc> &b)
     {
         if(a.size() != b.size()) return false;
 
@@ -430,7 +430,7 @@ namespace core{
     \return true if buffers are not equal, false otherwise
     */
     template<typename T,typename TAlloc,typename U,typename UAlloc>
-    bool operator!=(const DBuffer<T,TAlloc> &a,const DBuffer<U,UAlloc> &b)
+    bool operator!=(const dbuffer<T,TAlloc> &a,const dbuffer<U,UAlloc> &b)
     {
         if(a == b) return false;
         return true;

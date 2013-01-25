@@ -29,7 +29,7 @@
 #include<fstream>
 #include<vector>
 
-#include "../../sypes.hpp"
+#include "../../types.hpp"
 
 using namespace pni::core;
 

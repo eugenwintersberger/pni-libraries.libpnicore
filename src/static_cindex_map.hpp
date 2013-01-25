@@ -26,9 +26,8 @@
 #include <iostream>
 #include <sstream>
 
-#include "SizeType.hpp"
-#include "Exceptions.hpp"
-#include "ExceptionUtils.hpp"
+#include "size_type.hpp"
+#include "exception_utils.hpp"
 
 namespace pni{
 namespace core{
@@ -215,7 +214,7 @@ namespace core{
             Return the total number of elements described by the shape object.
             \return number of elements
             */
-            size_t size() const { return SizeType<DIMS...>::size;}
+            size_t size() const { return size_type<DIMS...>::size;}
 
             //-----------------------------------------------------------------
             /*! 
@@ -310,7 +309,7 @@ namespace core{
                     std::stringstream ss;
                     ss<<"Size of container ("<<c.size()<<") does not match";
                     ss<<" rank ("<<this->rank()<<")!";
-                    throw ShapeMissmatchError(EXCEPTION_RECORD,ss.str());
+                    throw shape_missmatch_error(EXCEPTION_RECORD,ss.str());
                 }
 
                 size_t index = 0;
@@ -328,7 +327,7 @@ namespace core{
                         ss<<"Index "<<--index<<" is "<<i;
                         ss<<" and exceeds its maximum value";
                         ss<<"of "<<this->_dims[--index]<<"!";
-                        throw IndexError(EXCEPTION_RECORD,ss.str());
+                        throw index_error(EXCEPTION_RECORD,ss.str());
                     }
                 }
                 
@@ -359,7 +358,7 @@ namespace core{
                     std::stringstream ss;
                     ss<<"Size of container ("<<c.size()<<") does not match";
                     ss<<" rank ("<<this->rank()<<")!";
-                    throw ShapeMissmatchError(EXCEPTION_RECORD,ss.str());
+                    throw shape_missmatch_error(EXCEPTION_RECORD,ss.str());
                 }
 
                 if(offset >= this->size())
@@ -367,7 +366,7 @@ namespace core{
                     std::stringstream ss;
                     ss<<"Offset "<<offset<<" exceeds shape size ";
                     ss<<this->size()<<"!";
-                    throw SizeMissmatchError(EXCEPTION_RECORD,ss.str());
+                    throw size_missmatch_error(EXCEPTION_RECORD,ss.str());
                 }
 
                 Index<0,true,DIMS...>::template index<CTYPE<OTS...> >(offset,c.begin());

@@ -23,11 +23,11 @@
 #pragma once
 
 #include <vector>
-#include "DArray.hpp"
-#include "SArray.hpp"
-#include "NumArray.hpp"
+#include "darray.hpp"
+#include "sarray.hpp"
+#include "numarray.hpp"
 #include "types.hpp"
-#include "Slice.hpp"
+#include "slice.hpp"
 
 
 namespace pni{
@@ -37,48 +37,48 @@ namespace core{
     \addtogroup multidim_array_classes
     @{
     */
-    typedef DArray<uint8> U8DArray; //!< 8Bit unsigned integer dynamic array
-    typedef DArray<int8>  I8DArray; //!< 8Bit signed integer dynamic array
-    typedef DArray<uint16> U16DArray; //!< 16Bit unsigned integer dynamic array
-    typedef DArray<int16>  I16DArray; //!< 16Bit signed integer dynamic array
-    typedef DArray<uint32> U32DArray; //!< 32Bit unsigned integer dynamic array
-    typedef DArray<int32>  I32DArray; //!< 32Bit signed integer dynamic array
-    typedef DArray<uint64> U64DArray; //!< 64Bit unsigned integer dynamic array
-    typedef DArray<int64>  I64DArray; //!< 64Bit signed integer dynamic array
+    typedef darray<uint8> u8darray; //!< 8Bit unsigned integer dynamic array
+    typedef darray<int8>  i8darray; //!< 8Bit signed integer dynamic array
+    typedef darray<uint16> u16darray; //!< 16Bit unsigned integer dynamic array
+    typedef darray<int16>  i16darray; //!< 16Bit signed integer dynamic array
+    typedef darray<uint32> u32darray; //!< 32Bit unsigned integer dynamic array
+    typedef darray<int32>  i32darray; //!< 32Bit signed integer dynamic array
+    typedef darray<uint64> u64darray; //!< 64Bit unsigned integer dynamic array
+    typedef darray<int64>  i64darray; //!< 64Bit signed integer dynamic array
 
     //! 32Bit IEEE floating point dynamic array
-    typedef DArray<float32> F32DArray; 
-    //! 64Bit IEEE floating point dynamic array
-    typedef DArray<float64> F64DArray;
+    typedef darray<float32> f32darray; 
+    //! 64Bit IEEE floating oint dynamic array
+    typedef darray<float64> f64darray;
     //! 128Bit IEEE floating point dynamic array
-    typedef DArray<float128> F128DArray;
+    typedef darray<float128> f128darray;
 
     //! 32Bit IEEE complex floating point dynamic array
-    typedef DArray<complex32> C32DArray;
+    typedef darray<complex32> c32darray;
     //! 64Bit IEEE complex floating point dynamic array
-    typedef DArray<complex64> C64DArray;
+    typedef darray<complex64> c64darray;
     //! 128Bit IEEE complex floating point dynamic array
-    typedef DArray<complex128> C128DArray;
+    typedef darray<complex128> c128darray;
     /*! @}*/
 
     //define some static arrays
 #ifndef NOTMPALIAS
-    template<size_t ...DIMS> using U8SArray = SArray<uint8,DIMS...>;
-    template<size_t ...DIMS> using I8SArray = SArray<int8,DIMS...>;
-    template<size_t ...DIMS> using U16SArray = SArray<uint16,DIMS...>;
-    template<size_t ...DIMS> using I16SArray = SArray<int16,DIMS...>;
-    template<size_t ...DIMS> using U32SArray = SArray<uint32,DIMS...>;
-    template<size_t ...DIMS> using I32SArray = SArray<int32,DIMS...>;
-    template<size_t ...DIMS> using U64SArray = SArray<uint64,DIMS...>;
-    template<size_t ...DIMS> using I64SArray = SArray<int64,DIMS...>;
+    template<size_t ...DIMS> using u8sarray = sarray<uint8,DIMS...>;
+    template<size_t ...DIMS> using i8sarray = sarray<int8,DIMS...>;
+    template<size_t ...DIMS> using u16sarray = sarray<uint16,DIMS...>;
+    template<size_t ...DIMS> using i16sarray = sarray<int16,DIMS...>;
+    template<size_t ...DIMS> using u32sarray = sarray<uint32,DIMS...>;
+    template<size_t ...DIMS> using i32sarray = sarray<int32,DIMS...>;
+    template<size_t ...DIMS> using u64sarray = sarray<uint64,DIMS...>;
+    template<size_t ...DIMS> using i64sarray = sarray<int64,DIMS...>;
 
-    template<size_t ...DIMS> using F32SArray = SArray<float32,DIMS...>;
-    template<size_t ...DIMS> using F64SArray = SArray<float64,DIMS...>;
-    template<size_t ...DIMS> using F128SArray = SArray<float128,DIMS...>;
+    template<size_t ...DIMS> using f32sarray = sarray<float32,DIMS...>;
+    template<size_t ...DIMS> using f64sarray = sarray<float64,DIMS...>;
+    template<size_t ...DIMS> using f128sarray = sarray<float128,DIMS...>;
     
-    template<size_t ...DIMS> using C32SArray = SArray<complex32,DIMS...>;
-    template<size_t ...DIMS> using C64SArray = SArray<complex64,DIMS...>;
-    template<size_t ...DIMS> using C128SArray = SArray<complex128,DIMS...>;
+    template<size_t ...DIMS> using c32sarray = sarray<complex32,DIMS...>;
+    template<size_t ...DIMS> using c64sarray = sarray<complex64,DIMS...>;
+    template<size_t ...DIMS> using c128sarray = sarray<complex128,DIMS...>;
 #endif
 
     /*! \addtogroup numeric_array_classes
@@ -86,55 +86,55 @@ namespace core{
      */
     //define some numeric arrays based on a dynamic array
     //! 8Bit unsinged integer numeric array with a dynamic container array
-    typedef NumArray<U8DArray> NU8DArray;
+    typedef numarray<u8darray> nu8darray;
     //! 8Bit signed integer numeric array with a dynamic container array
-    typedef NumArray<I8DArray> NI8DArray;
+    typedef numarray<i8darray> ni8darray;
     //! 16Bit unsigned integer numeric array with a dynamic container array
-    typedef NumArray<U16DArray> NU16DArray;
+    typedef numarray<u16darray> nu16darray;
     //! 16Bit signed integer numeric array with a dynamic container array
-    typedef NumArray<I16DArray> NI16DArray;
+    typedef numarray<i16darray> ni16darray;
     //! 32Bit unsigned integer numeric array with a dynamic container array
-    typedef NumArray<U32DArray> NU32DArray;
+    typedef numarray<u32darray> nu32darray;
     //! 32Bit singed integer numeric array with a dynamic container array
-    typedef NumArray<I32DArray> NI32DArray;
+    typedef numarray<i32darray> ni32darray;
     //! 64Bit unsigned integer numeric array with a dynamic container array
-    typedef NumArray<U64DArray> NU64DArray;
+    typedef numarray<u64darray> nu64darray;
     //! 64Bit signed integer numeric array with a dynamic container array
-    typedef NumArray<I64DArray> NI64DArray;
+    typedef numarray<i64darray> ni64darray;
    
     //! 32Bit IEEE floating point numeric array with a dynamic container type
-    typedef NumArray<F32DArray> NF32DArray;
+    typedef numarray<f32darray> nf32darray;
     //! 64Bit IEEE floating point numeric array with a dynamic container type
-    typedef NumArray<F64DArray> NF64DArray;
+    typedef numarray<f64darray> nf64darray;
     //! 128Bit IEEE floating point numeric array with a dynamic container type
-    typedef NumArray<F128DArray> NF128DArray;
+    typedef numarray<f128darray> nf128darray;
    
     //! 32Bit IEEE complex floating point numeric array with a dynamic container type
-    typedef NumArray<C32DArray> NC32DArray;
+    typedef numarray<c32darray> nc32darray;
     //! 64Bit IEEE complex floating point numeric array with a dynamic container type
-    typedef NumArray<C64DArray> NC64DArray;
+    typedef numarray<c64darray> nc64darray;
     //! 128Bit IEEE complex floating point numeric array with a dynamic container type
-    typedef NumArray<C128DArray> NC128DArray;
+    typedef numarray<c128darray> nc128darray;
     /*! @} */
 
     //define some numeric array templates based on static arrays
 #ifndef NOTMPALIAS
-    template<size_t ...DIMS> using NU8SArray = NumArray<U8SArray<DIMS...> >;
-    template<size_t ...DIMS> using NI8SArray = NumArray<I8SArray<DIMS...> >;
-    template<size_t ...DIMS> using NU16SArray = NumArray<U16SArray<DIMS...> >;
-    template<size_t ...DIMS> using NI16SArray = NumArray<I16SArray<DIMS...> >;
-    template<size_t ...DIMS> using NU32SArray = NumArray<U32SArray<DIMS...> >;
-    template<size_t ...DIMS> using NI32SArray = NumArray<I32SArray<DIMS...> >;
-    template<size_t ...DIMS> using NU64SArray = NumArray<U64SArray<DIMS...> >;
-    template<size_t ...DIMS> using NI64SArray = NumArray<I64SArray<DIMS...> >;
+    template<size_t ...DIMS> using nu8sarray = numarray<u8sarray<DIMS...> >;
+    template<size_t ...DIMS> using ni8sarray = numarray<i8sarray<DIMS...> >;
+    template<size_t ...DIMS> using nu16sarray = numarray<u16sarray<DIMS...> >;
+    template<size_t ...DIMS> using ni16sarray = numarray<i16sarray<DIMS...> >;
+    template<size_t ...DIMS> using nu32sarray = numarray<u32sarray<DIMS...> >;
+    template<size_t ...DIMS> using ni32sarray = numarray<i32sarray<DIMS...> >;
+    template<size_t ...DIMS> using nu64sarray = numarray<u64sarray<DIMS...> >;
+    template<size_t ...DIMS> using ni64sarray = numarray<i64sarray<DIMS...> >;
 
-    template<size_t ...DIMS> using NF32SArray = NumArray<F32SArray<DIMS...> >;
-    template<size_t ...DIMS> using NF64SArray = NumArray<F64SArray<DIMS...> >;
-    template<size_t ...DIMS> using NF128SArray = NumArray<F128SArray<DIMS...> >;
+    template<size_t ...DIMS> using nf32sarray = numarray<f32sarray<DIMS...> >;
+    template<size_t ...DIMS> using nf64sarray = numarray<f64sarray<DIMS...> >;
+    template<size_t ...DIMS> using nf128sarray = numarray<f128sarray<DIMS...> >;
 
-    template<size_t ...DIMS> using NC32SArray = NumArray<C32SArray<DIMS...> >;
-    template<size_t ...DIMS> using NC64SArray = NumArray<C64SArray<DIMS...> >;
-    template<size_t ...DIMS> using NC128SArray = NumArray<C128SArray<DIMS...> >;
+    template<size_t ...DIMS> using nc32sarray = numarray<c32sarray<DIMS...> >;
+    template<size_t ...DIMS> using nc64sarray = numarray<c64sarray<DIMS...> >;
+    template<size_t ...DIMS> using nc128sarray = numarray<c128sarray<DIMS...> >;
 #endif
 
 

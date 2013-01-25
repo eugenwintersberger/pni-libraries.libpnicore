@@ -196,12 +196,12 @@ namespace io{
     }
 
     //-------------------------------------------------------------------------
-    std::vector<String> fio_reader::_read_data_line(const string &line)
+    std::vector<string> fio_reader::_read_data_line(const string &line)
     {
         boost::regex dcol("[+-]?\\d+\\.?\\d*e?[+-]?\\d*");
         std::vector<string> record;
 
-        boost::match_results<String::const_iterator> imatch;
+        boost::match_results<string::const_iterator> imatch;
         string::const_iterator start = line.begin();
         string::const_iterator end   = line.end();
         while(boost::regex_search(start,end,imatch,dcol,boost::match_default))
@@ -227,7 +227,7 @@ namespace io{
 
     //-------------------------------------------------------------------------
     //standard constructor implementation
-    fio_reader::fio_reader(const String &n):
+    fio_reader::fio_reader(const string &n):
         spreadsheet_reader(n),
         _param_map(),
         _data_offset(0)

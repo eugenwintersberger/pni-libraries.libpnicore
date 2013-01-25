@@ -24,7 +24,7 @@
 
 #include "op_traits.hpp"
 
-#include "../iterator.hpp"
+#include "../container_iterator.hpp"
 
 namespace pni{
 namespace core{
@@ -54,9 +54,9 @@ namespace core{
             //! storage type
             typedef void storage_type;
             //! non-const iterator type - just for interface
-            typedef iterator<array_type,0> iterator;
+            typedef container_iterator<array_type,0> iterator;
             //! const iterator type
-            typedef iterator<array_type,1> const_iterator;
+            typedef container_iterator<array_type,1> const_iterator;
             //! view type
             typedef array_view<array_type> view_type;
 

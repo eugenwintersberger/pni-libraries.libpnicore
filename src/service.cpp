@@ -28,7 +28,7 @@ namespace pni{
 namespace core{
 
     //-------------------------------------------------------------------------
-    String demangle_cpp_name(const char *n)
+    string demangle_cpp_name(const char *n)
     {
 #if USE_GNU_DEMANGLING
         char *rname;
@@ -38,14 +38,14 @@ namespace core{
 
         if(rname!=NULL)
         {
-            String out(rname);
+            string out(rname);
             std::free(rname);
             return out;
         }
 
-        return String("Cannot Demangle name of symbol ")+String(n);
+        return string("Cannot Demangle name of symbol ")+string(n);
 #else
-        return String(n);
+        return string(n);
 #endif
     }
 

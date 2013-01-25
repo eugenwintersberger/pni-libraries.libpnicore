@@ -83,7 +83,7 @@ namespace core {
     type.
     */
     template<typename ATYPE,typename ...ITYPES> struct
-        array_view_selector<ATYPE,Slice,ITYPES...>
+        array_view_selector<ATYPE,slice,ITYPES...>
     {
         //! array view return type
         typedef array_view<ATYPE> viewtype; 
@@ -100,7 +100,7 @@ namespace core {
     class.
     */
     template<typename ATYPE,template<typename> class IPA,typename ...ITYPES> 
-        struct array_view_selector<numarray<ATYPE,IPA>,Slice,ITYPES...>
+        struct array_view_selector<numarray<ATYPE,IPA>,slice,ITYPES...>
     {
         //! array view return type
         typedef numarray<array_view<numarray<ATYPE,IPA> >,IPA > viewtype;

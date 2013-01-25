@@ -36,7 +36,7 @@ namespace core{
         {
             std::stringstream ss;
             ss<<"Last index ("<<_last<<") is equal or exceeds first ("<<_first<<")!";
-            throw RangeError(o,ss.str());
+            throw range_error(o,ss.str());
         }
     }
 
@@ -48,7 +48,7 @@ namespace core{
             std::stringstream ss;
             ss<<"Stride ("<<_stride<<") is larger than span ("<<span(*this);
             ss<<")!";
-            throw RangeError(o,ss.str());
+            throw range_error(o,ss.str());
         }
     }
     
