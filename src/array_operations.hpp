@@ -26,41 +26,10 @@
 #pragma once
 
 #include "types.hpp"
-#include "ArrayTrait.hpp"
 
 
 namespace pni{
 namespace core{
-
-    //--------------------------------------------------------------------------
-    /*! 
-    \ingroup data_classes
-    \brief compute the sum of all element in the array
-
-    Sum over all the elements in an Array type. The return type is choosen in a
-    way that no overflow can occur. This is necessary in particular for very
-    small types like 8Bit integers.
-    \param a array object over which to sum
-    \return number of type T
-    */
-    template<typename ARRAYT> 
-        typename ArrayType<typename ARRAYT::value_type>::Type sum(const ARRAYT &a)
-    {
-        typedef typename ArrayType<typename ARRAYT::value_type>::Type RType;
-        RType result(0);
-
-#ifdef NOFOREACH
-        for(auto iter=a.begin();iter!=a.end();iter++)
-        {
-            auto v=*iter;
-#else
-        for(auto v: a)
-        {
-#endif
-            result += v;
-        }
-        return result;
-    }
 
     //--------------------------------------------------------------------------
     /*! 
