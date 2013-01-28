@@ -5,22 +5,22 @@ Using selections
 
 #include <iostream>
 #include <vector>
-#include <pni/core/Types.hpp>
-#include <pni/core/DArray.hpp>
-#include <pni/core/SArray.hpp>
-#include <pni/core/Slice.hpp>
+#include <pni/core/types.hpp>
+#include <pni/core/darray.hpp>
+#include <pni/core/sarray.hpp>
+#include <pni/core/slice.hpp>
 
 using namespace pni::core;
 
 //some usefull type definitions
 typedef std::vector<size_t> shape_t; //container to describe array shapes
 typedef std::vector<size_t> index_t; //index type
-typedef DArray<Float32> F32Array;    //an array type for Float32 values
-typedef SArray<Float32,3> F32Vector; //a static 3-vector type
+typedef darray<float32> f32array;    //an array type for Float32 values
+typedef sarray<float32,3> f32vector; //a static 3-vector type
 
 
 
-std::ostream &operator<<(std::ostream &o,const F32Array &a)
+std::ostream &operator<<(std::ostream &o,const f32array &a)
 {
     auto shape = a.shape<shape_t>();
     for(size_t i=0;i<shape[0];i++)
@@ -33,7 +33,7 @@ std::ostream &operator<<(std::ostream &o,const F32Array &a)
     return o;
 }
 
-std::ostream &operator<<(std::ostream &o,const F32Vector &v)
+std::ostream &operator<<(std::ostream &o,const f32vector &v)
 {
     o<<"( ";
 #ifdef NOFOREACH
@@ -57,7 +57,7 @@ int main(int argc,char **argv)
     shape_t shape({10,3});
     //simpel construction from shape - memory allocation is done bye 
     //the array constructor
-    F32Array a(shape); 
+    f32array a(shape); 
 
     //initialize the array with 0
     std::fill(a.begin(),a.end(),0);
@@ -65,10 +65,10 @@ int main(int argc,char **argv)
     //using a selection to set the values of each vector
     for(size_t i=0;i<shape[0];i++)
     {
-        auto view = a(Slice(i),Slice(0,3));
-        view(0) = Float32(i)+0.1;
-        view(1) = Float32(i)+0.2;
-        view(2) = Float32(i)+0.3;
+        auto view = a(slice(i),slice(0,3));
+        view(0) = float32(i)+0.1;
+        view(1) = float32(i)+0.2;
+        view(2) = float32(i)+0.3;
     }
 
     //plotting some output
@@ -77,7 +77,7 @@ int main(int argc,char **argv)
     //do some conversion
     for(size_t i=0;i<shape[0];i++)
     {
-        F32Vector v(a(Slice(i),Slice(0,3)));
+        f32vector v(a(slice(i),slice(0,3)));
         std::cout<<"vector = "<<v<<std::endl;
     }        
 
