@@ -45,9 +45,9 @@ namespace core{
         _oargs(popts::positional_options_description())
     {
         //set command line options
-        _visible_opts.add_options()
-                ("help,h","print help message")
-                ;
+        //_visible_opts.add_options()
+         //       ("help,h","print help message")
+          //      ;
     }
 
     //--------------------------------------------------------------------------
