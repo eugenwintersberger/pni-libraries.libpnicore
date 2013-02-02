@@ -34,20 +34,20 @@ using namespace pni::core;
 static CPPUNIT_NS::AutoRegisterSuite< numarray_test<ATYPE<VTYPE>,IPAT > >  \
              CPPUNIT_MAKE_UNIQUE_NAME(autoRegisterRegistry__ )
 
-NUMARRAY_TEST_REGISTRATION(darray,uint8);
-NUMARRAY_TEST_REGISTRATION(darray,int8);
-NUMARRAY_TEST_REGISTRATION(darray,uint16);
-NUMARRAY_TEST_REGISTRATION(darray,int16);
-NUMARRAY_TEST_REGISTRATION(darray,uint32);
-NUMARRAY_TEST_REGISTRATION(darray,int32);
-NUMARRAY_TEST_REGISTRATION(darray,uint64);
-NUMARRAY_TEST_REGISTRATION(darray,int64);
-NUMARRAY_TEST_REGISTRATION(darray,float32);
-NUMARRAY_TEST_REGISTRATION(darray,float64);
-NUMARRAY_TEST_REGISTRATION(darray,float128);
-NUMARRAY_TEST_REGISTRATION(darray,complex32);
-NUMARRAY_TEST_REGISTRATION(darray,complex64);
-NUMARRAY_TEST_REGISTRATION(darray,complex128);
+NUMARRAY_TEST_REGISTRATION(darray,uint8,inplace_arithmetics);
+NUMARRAY_TEST_REGISTRATION(darray,int8,inplace_arithmetics);
+NUMARRAY_TEST_REGISTRATION(darray,uint16,inplace_arithmetics);
+NUMARRAY_TEST_REGISTRATION(darray,int16,inplace_arithmetics);
+NUMARRAY_TEST_REGISTRATION(darray,uint32,inplace_arithmetics);
+NUMARRAY_TEST_REGISTRATION(darray,int32,inplace_arithmetics);
+NUMARRAY_TEST_REGISTRATION(darray,uint64,inplace_arithmetics);
+NUMARRAY_TEST_REGISTRATION(darray,int64,inplace_arithmetics);
+NUMARRAY_TEST_REGISTRATION(darray,float32,inplace_arithmetics);
+NUMARRAY_TEST_REGISTRATION(darray,float64,inplace_arithmetics);
+NUMARRAY_TEST_REGISTRATION(darray,float128,inplace_arithmetics);
+NUMARRAY_TEST_REGISTRATION(darray,complex32,inplace_arithmetics);
+NUMARRAY_TEST_REGISTRATION(darray,complex64,inplace_arithmetics);
+NUMARRAY_TEST_REGISTRATION(darray,complex128,inplace_arithmetics);
 
 /*
 ARRAY_TEST_REGISTRATION(UInt8,RefBuffer,NewAllocator);

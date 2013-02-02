@@ -21,23 +21,23 @@
  *      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
  */
 
-#include <pni/core/Types.hpp>
-#include <pni/core/Array.hpp>
+#include <pni/core/types.hpp>
+#include <pni/core/arrays.hpp>
 #include <pni/core/math/mt_inplace_arithmetics.hpp>
 #include <pni/core/config/configuration.hpp>
 #include <pni/core/config/config_parser.hpp>
 
 
-#include <pni/core/benchmark/BenchmarkRunner.hpp>
-#include <pni/core/benchmark/BenchmarkResult.hpp>
-#include <pni/core/benchmark/ChronoTimer.hpp>
-#include <pni/core/benchmark/ClockTimer.hpp>
+#include <pni/core/benchmark/benchmark_runner.hpp>
+#include <pni/core/benchmark/benchmark_result.hpp>
+#include <pni/core/benchmark/chrono_timer.hpp>
+#include <pni/core/benchmark/clock_timer.hpp>
 
 #include "benchmark/inplace_arithmetic_benchmark.hpp"
 
 using namespace pni::core;
 
-typedef ChronoTimer<std::chrono::high_resolution_clock,std::chrono::nanoseconds> bmtimer_t;
+typedef chrono_timer<std::chrono::high_resolution_clock,std::chrono::nanoseconds> bmtimer_t;
 
 //-----------------------------------------------------------------------------
 template<typename ATYPE> void run_inplace_benchmark(size_t nruns,ATYPE &&a)
@@ -45,7 +45,7 @@ template<typename ATYPE> void run_inplace_benchmark(size_t nruns,ATYPE &&a)
     //define benchmark type
     typedef inplace_arithmetic_benchmark<ATYPE> bm_t; 
 
-    BenchmarkRunner::function_t add_func,mult_func,div_func,sub_func;
+    benchmark_runner::function_t add_func,mult_func,div_func,sub_func;
     bm_t benchmark(std::move(a));
 
     //define benchmark functions
@@ -55,7 +55,7 @@ template<typename ATYPE> void run_inplace_benchmark(size_t nruns,ATYPE &&a)
     mult_func = std::bind(&bm_t::mult,benchmark,1.23);
     
     //run benchmarks
-    BenchmarkRunner add_bm,mult_bm,div_bm,sub_bm;
+    benchmark_runner add_bm,mult_bm,div_bm,sub_bm;
 
     add_bm.run<bmtimer_t>(nruns,add_func);
     sub_bm.run<bmtimer_t>(nruns,sub_func);
@@ -63,7 +63,7 @@ template<typename ATYPE> void run_inplace_benchmark(size_t nruns,ATYPE &&a)
     mult_bm.run<bmtimer_t>(nruns,mult_func);
     
     //print benchmark results 
-    BenchmarkResult result;
+    benchmark_result result;
     result = average(add_bm);
     std::cout<<"Inplace add:\t"<<result<<std::endl;
     result = average(sub_bm);
@@ -91,20 +91,20 @@ int main(int argc,char **argv)
     parse(conf,argc,argv);
 
     //type definitions
-    typedef NumArray<DArray<Float64> > nf64array;
-    typedef NumArray<DArray<Float64>,mt_inplace_arithmetics> nf64array_mt;
+    typedef numarray<darray<float64> > nf64array;
+    typedef numarray<darray<float64>,mt_inplace_arithmetics> nf64array_mt;
 
     {
-        nf64array a_st{conf.value<size_t>("nx"),
-                       conf.value<size_t>("ny")};
+        nf64array a_st(shape_t{conf.value<size_t>("nx"),
+                       conf.value<size_t>("ny")});
         std::cout<<"Single threaded benchmark:"<<std::endl;
         run_inplace_benchmark(conf.value<size_t>("nruns"),std::move(a_st));
     }
 
     {
         //allocate memory
-        nf64array_mt a_mt{conf.value<size_t>("nx"),
-                       conf.value<size_t>("ny")};
+        nf64array_mt a_mt(shape_t{conf.value<size_t>("nx"),
+                       conf.value<size_t>("ny")});
         std::cout<<"Multithreaded benchmark:"<<std::endl;
         run_inplace_benchmark(conf.value<size_t>("nruns"),std::move(a_mt));
     }

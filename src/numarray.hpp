@@ -158,7 +158,7 @@ namespace core{
             //! element type of the array
             typedef typename ATYPE::value_type value_type;
             //! type of the array
-            typedef numarray<ATYPE> array_type;
+            typedef numarray<ATYPE,IPA> array_type;
             //! type of array storage
             typedef ATYPE storage_type;
             //! type of the view

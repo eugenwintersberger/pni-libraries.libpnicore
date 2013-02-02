@@ -29,9 +29,8 @@
 #include <vector>
 #include <utility>
 
-#include "../Exceptions.hpp"
-#include "../ExceptionUtils.hpp"
-#include "../TypeInfo.hpp"
+#include "../exception_utils.hpp"
+#include "../type_info.hpp"
 #include "../config/library_config.hpp"
 
 namespace pni{
