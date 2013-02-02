@@ -41,31 +41,31 @@ void index_map_base_test::test_construction()
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
     //default construction
-    IndexMapBase im1;
+    index_map_base im1;
 
     CPPUNIT_ASSERT(im1.size()==0);
     CPPUNIT_ASSERT(im1.rank()==0);
 
     //construction from initializer list
-    IndexMapBase im2{1,2,3,4,5};
+    index_map_base im2{1,2,3,4,5};
     CPPUNIT_ASSERT(im2.size()==2*3*4*5);
     CPPUNIT_ASSERT(im2.rank()==5);
 
     //construction from a container
     std::list<size_t> s{3,2,5,6};
-    IndexMapBase im3(s);
+    index_map_base im3(s);
     CPPUNIT_ASSERT(im3.size()==3*2*5*6);
     CPPUNIT_ASSERT(im3.rank()==4);
 
     //copy construction
-    IndexMapBase im4(im3);
+    index_map_base im4(im3);
     CPPUNIT_ASSERT(im4.size() == im3.size());
     CPPUNIT_ASSERT(im4.rank() == im3.rank());
     CPPUNIT_ASSERT(std::equal(im4.shape().begin(),im4.shape().end(),
                               im3.shape().begin()));
 
     //move construction
-    IndexMapBase im5 = std::move(im3);
+    index_map_base im5 = std::move(im3);
     CPPUNIT_ASSERT(im3.size() == 0);
     CPPUNIT_ASSERT(im3.rank() == 0);
 
@@ -80,8 +80,8 @@ void index_map_base_test::test_construction()
 void index_map_base_test::test_assignment()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
-    IndexMapBase im1{2,3,4,5};
-    IndexMapBase im2,im3;
+    index_map_base im1{2,3,4,5};
+    index_map_base im2,im3;
 
     im2 = im1;
     CPPUNIT_ASSERT(im2.rank() == im1.rank());
@@ -103,7 +103,7 @@ void index_map_base_test::test_access()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
     std::vector<size_t> s{3,2,5,7};
-    IndexMapBase im1(s);
+    index_map_base im1(s);
 
     //this is trivial
     CPPUNIT_ASSERT(std::equal(s.begin(),s.end(),im1.shape().begin()));

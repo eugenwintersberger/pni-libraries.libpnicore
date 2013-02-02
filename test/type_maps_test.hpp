@@ -26,9 +26,9 @@
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
 
-#include <pni/core/Types.hpp>
-#include <pni/core/IDTypeMap.hpp>
-#include <pni/core/TypeIDMap.hpp>
+#include <pni/core/types.hpp>
+#include <pni/core/id_type_map.hpp>
+#include <pni/core/type_id_map.hpp>
 
 using namespace pni::core;
 

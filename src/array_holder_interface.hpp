@@ -42,7 +42,7 @@ namespace core{
             Return the type ID of the held object.
             \return type id
             */
-            virtual TypeID type_id() const = 0;
+            virtual type_id_t type_id() const = 0;
             
             //-----------------------------------------------------------------
             /*!
@@ -125,7 +125,7 @@ namespace core{
             erasure.
             \return type name
             */
-            virtual String type_name() const = 0;
+            virtual string type_name() const = 0;
 
             //-----------------------------------------------------------------
             virtual value operator[](size_t i) const = 0;

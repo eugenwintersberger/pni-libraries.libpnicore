@@ -45,13 +45,13 @@ namespace core{
         _oargs(popts::positional_options_description())
     {
         //set command line options
-        _visible_opts.add_options()
-                ("help,h","print help message")
-                ;
+        //_visible_opts.add_options()
+         //       ("help,h","print help message")
+          //      ;
     }
 
     //--------------------------------------------------------------------------
-    bool configuration::has_option(const String &name) const
+    bool configuration::has_option(const string &name) const
     {
         if(_vmap.count(name)) return true;
         return false;
@@ -62,7 +62,7 @@ namespace core{
     {
         typedef boost::shared_ptr<popts::option_description> option_sptr;
         //assemble the name of the option
-        String oname = opt.long_name();
+        string oname = opt.long_name();
 
         if(!opt.short_name().empty())
             oname += ","+opt.short_name();

@@ -4,15 +4,15 @@ Data access with DArray
 */
 
 #include <vector>
-#include <pni/core/Types.hpp>
-#include <pni/core/DArray.hpp>
+#include <pni/core/types.hpp>
+#include <pni/core/darray.hpp>
 
 using namespace pni::core;
 
 //some usefull type definitions
 typedef std::vector<size_t> shape_t; //container to describe array shapes
 typedef std::vector<size_t> index_t; //index type
-typedef DArray<Float32> F32Array;    //an array type for Float32 values
+typedef darray<float32> f32array;    //an array type for Float32 values
 
 
 int main(int argc,char **argv)
@@ -20,7 +20,7 @@ int main(int argc,char **argv)
     shape_t shape({10,3});
     //simpel construction from shape - memory allocation is done bye 
     //the array constructor
-    F32Array a(shape); 
+    f32array a(shape); 
 
     //---------------linear access to data-------------------------------------
     //filling the array - works thanks to STL compliance
@@ -43,9 +43,9 @@ int main(int argc,char **argv)
 #ifdef NOFOREACH
     for(auto iter=a.begin();iter!=a.end();++iter)
     {
-        F32Array::value_type &v = *iter;
+        f32array::value_type &v = *iter;
 #else
-    for(F32Array::value_type &v: a) 
+    for(f32array::value_type &v: a) 
     {
 #endif
         v=100.; 

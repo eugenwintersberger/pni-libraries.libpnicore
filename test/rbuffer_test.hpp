@@ -28,8 +28,8 @@
 #include <algorithm>
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
-#include <pni/core/RBuffer.hpp>
-#include <pni/core/NewAllocator.hpp>
+#include <pni/core/rbuffer.hpp>
+#include <pni/core/new_allocator.hpp>
 
 #include "data_generator.hpp"
 #include "uniform_distribution.hpp"
@@ -48,7 +48,7 @@ template<typename T> class rbuffer_test:public CppUnit::TestFixture
         CPPUNIT_TEST(test_iterator);
         CPPUNIT_TEST_SUITE_END();
     private:
-        UInt64 n1,n2,n3;
+        size_t n1,n2,n3;
         T *ptr1;
         T *ptr2;
         T *ptr3;
@@ -89,26 +89,26 @@ template<typename T> void rbuffer_test<T>::test_constructors()
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
     //create first buffer using the default constructor
-    RBuffer<T> b1; //default constructor
+    rbuffer<T> b1; //default constructor
     CPPUNIT_ASSERT(!b1.size());
     
     //create the second constructor with the standard constructor
     //allocating memory
-    RBuffer<T> b2(this->n2,this->ptr2);
+    rbuffer<T> b2(this->n2,this->ptr2);
     CPPUNIT_ASSERT(b2.size() == this->n2);
     data_generator::fill(b2.begin(),b2.end(),uniform_distribution<T>());
 
 
     //=====================copy and move constructor=============================
     //using copy constructor
-    RBuffer<T> b3(b2);
+    rbuffer<T> b3(b2);
     CPPUNIT_ASSERT(b2.size());
     CPPUNIT_ASSERT(b3.size());
     CPPUNIT_ASSERT(b3.size() == b2.size());
     CPPUNIT_ASSERT(std::equal(b2.begin(),b2.end(),b3.begin()));
 
     //using the move constructor
-    RBuffer<T> b4 = std::move(b2);
+    rbuffer<T> b4 = std::move(b2);
     CPPUNIT_ASSERT(b4.size());
     CPPUNIT_ASSERT(b4.size() == b3.size());
     CPPUNIT_ASSERT(!b2.size());
@@ -121,20 +121,20 @@ template<typename T> void rbuffer_test<T>::test_assignment()
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
 	//testing here the assignment of equally typed buffers
-	RBuffer<T> buffer1;
-	RBuffer<T> buffer2;
+	rbuffer<T> buffer1;
+	rbuffer<T> buffer2;
 
     CPPUNIT_ASSERT(buffer1 == buffer2);
 
 	//now the lhs is not allocated and the rhs is
-    CPPUNIT_ASSERT_NO_THROW(buffer2 = RBuffer<T>(this->n2,this->ptr2));
+    CPPUNIT_ASSERT_NO_THROW(buffer2 = rbuffer<T>(this->n2,this->ptr2));
     CPPUNIT_ASSERT_NO_THROW(buffer1 = buffer2);
     //now the rhs is not allocate dnad the lhs is
     CPPUNIT_ASSERT_NO_THROW(buffer2 = buffer1);
 
     //booth buffers are allocated
-	CPPUNIT_ASSERT_NO_THROW(buffer2 = RBuffer<T>(this->n2,this->ptr2));
-	CPPUNIT_ASSERT_NO_THROW(buffer1 = RBuffer<T>(this->n1,this->ptr1));
+	CPPUNIT_ASSERT_NO_THROW(buffer2 = rbuffer<T>(this->n2,this->ptr2));
+	CPPUNIT_ASSERT_NO_THROW(buffer1 = rbuffer<T>(this->n1,this->ptr1));
     CPPUNIT_ASSERT(buffer2.size() == this->n2);
     CPPUNIT_ASSERT(buffer1.size() == this->n1);
     CPPUNIT_ASSERT(buffer1.size() != buffer2.size());
@@ -147,8 +147,8 @@ template<typename T> void rbuffer_test<T>::test_assignment()
 
 	//checking move assignment - moveing an  allocated
     //buffer to an not allocated one
-    RBuffer<T> buffer3 = buffer1;
-	RBuffer<T> buffer4;
+    rbuffer<T> buffer3 = buffer1;
+	rbuffer<T> buffer4;
 	CPPUNIT_ASSERT_NO_THROW(buffer4 = std::move(buffer3));
 	CPPUNIT_ASSERT(buffer4.size());
 	CPPUNIT_ASSERT(!buffer3.size());
@@ -168,7 +168,7 @@ template<typename T> void rbuffer_test<T>::test_assignment()
 template<typename T> void rbuffer_test<T>::test_access()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
-	RBuffer<T> dbuffer(this->n1,this->ptr1);
+	rbuffer<T> dbuffer(this->n1,this->ptr1);
     std::vector<T> data(dbuffer.size());
     data_generator::fill(data.begin(),data.end(),uniform_distribution<T>());
 
@@ -178,7 +178,7 @@ template<typename T> void rbuffer_test<T>::test_access()
 	for(size_t i=0;i<this->n1;i++)
         check_equality(data[i],dbuffer[i]);
 
-    RBuffer<T> ibuffer(this->n2,this->ptr2);
+    rbuffer<T> ibuffer(this->n2,this->ptr2);
     data = std::vector<T>(ibuffer.size());
     data_generator::fill(data.begin(),data.end(),uniform_distribution<T>());
     for(size_t i=0;i<ibuffer.size();i++)
@@ -188,7 +188,7 @@ template<typename T> void rbuffer_test<T>::test_access()
         check_equality(ibuffer.at(i),data[i]);
 
     //check for IndexError exception
-    CPPUNIT_ASSERT_THROW(ibuffer.at(this->n2+2),IndexError);
+    CPPUNIT_ASSERT_THROW(ibuffer.at(this->n2+2),index_error);
 }
 
 //------------------------------------------------------------------------------
@@ -196,8 +196,8 @@ template<typename T> void rbuffer_test<T>::test_comparison()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
-	RBuffer<T> b1(this->n1,this->ptr1);
-	RBuffer<T> b2(this->n3,this->ptr3);
+	rbuffer<T> b1(this->n1,this->ptr1);
+	rbuffer<T> b2(this->n3,this->ptr3);
     data_generator::fill(b1.begin(),b1.end(),uniform_distribution<T>());
     std::fill(b2.begin(),b2.end(),uniform_distribution<T>()());
 
@@ -211,7 +211,7 @@ template<typename T> void rbuffer_test<T>::test_iterator()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
-    RBuffer<T> b1(this->n1,this->ptr1);
+    rbuffer<T> b1(this->n1,this->ptr1);
     std::vector<T> data(b1.size());
     data_generator::fill(data.begin(),data.end(),uniform_distribution<T>());
 

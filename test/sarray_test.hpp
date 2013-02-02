@@ -26,7 +26,7 @@
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
 
-#include <pni/core/SArray.hpp>
+#include <pni/core/sarray.hpp>
 
 #include "data_generator.hpp"
 #include "uniform_distribution.hpp"
@@ -70,19 +70,19 @@ template<typename T> void sarray_test<T>::test_construction()
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
     //testing the default constructor
-    SArray<T,2,3> a1;
+    sarray<T,2,3> a1;
     CPPUNIT_ASSERT(a1.rank() == 2);
     CPPUNIT_ASSERT(a1.size() == 6);
 
     //testing initializer list constructor
     uniform_distribution<T> dist;
     T v1 = dist(), v2=dist(),v3=dist(),v4=dist(),v5=dist(),v6=dist();
-    SArray<T,2,3> a2{v1,v2,v3,v4,v5,v6};
+    sarray<T,2,3> a2{v1,v2,v3,v4,v5,v6};
     CPPUNIT_ASSERT(a2.rank() == 2);
     CPPUNIT_ASSERT(a2.size() == 6);
 
     //testing copy constructor
-    SArray<T,2,3> a3(a2);
+    sarray<T,2,3> a3(a2);
     CPPUNIT_ASSERT(a3.rank() == a2.rank());
     CPPUNIT_ASSERT(a3.size() == a2.size());
 }
@@ -91,7 +91,7 @@ template<typename T> void sarray_test<T>::test_construction()
 template<typename T> void sarray_test<T>::test_linear_access()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
-    SArray<T,2,3> a1;
+    sarray<T,2,3> a1;
     std::vector<T> data(a1.size());
     data_generator::fill(data.begin(),data.end(),uniform_distribution<T>());
    
@@ -113,7 +113,7 @@ template<typename T> void sarray_test<T>::test_linear_access()
 	for(size_t i=0;i<a1.size();i++) 
         check_equality(data[i],a1.at(i));
 
-    CPPUNIT_ASSERT_THROW(a1.at(a1.size()+10),IndexError);
+    CPPUNIT_ASSERT_THROW(a1.at(a1.size()+10),index_error);
 
 }
 
@@ -122,7 +122,7 @@ template<typename T> void sarray_test<T>::test_iterators()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
-    SArray<T,2,3> a1;
+    sarray<T,2,3> a1;
 
     //--------------------check standard iterator----------------
 	//access via [] operator
@@ -145,7 +145,7 @@ template<typename T> void sarray_test<T>::test_multiindex_access()
 {   
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
-    SArray<T,2,3> a1;
+    sarray<T,2,3> a1;
     std::vector<T> data(a1.size());
     data_generator::fill(data.begin(),data.end(),uniform_distribution<T>());
 
@@ -185,7 +185,7 @@ template<typename T> void sarray_test<T>::test_multiindex_access_const()
    
     std::vector<T> data(6);
     data_generator::fill(data.begin(),data.end(),uniform_distribution<T>());
-    const SArray<T,2,3> a1(data);
+    const sarray<T,2,3> a1(data);
 
     //----------------use variadic tempaltes to access data--------------
     for(size_t i=0;i<2;i++)
@@ -209,26 +209,26 @@ template<typename T> void sarray_test<T>::test_view()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
-    SArray<T,10,3> v;
+    sarray<T,10,3> v;
     std::vector<T> data(v.size());
     data_generator::fill(data.begin(),data.end(),uniform_distribution<T>());
 
     for(size_t i=0;i<10;i++)
     {
-        auto view = v(std::vector<Slice>{Slice(i),Slice(0,3,1)});
+        auto view = v(std::vector<slice>{slice(i),slice(0,3,1)});
         std::copy(data.begin()+i*3,data.begin()+(i+1)*3,view.begin());
     }
     
     for(size_t i=0;i<10;i++)
     {
         //for reading we use a different construction here
-        auto view = v(i,Slice(0,3,1));
+        auto view = v(i,slice(0,3,1));
         CPPUNIT_ASSERT(std::equal(view.begin(),view.end(),data.begin()+i*3));
     }
 
     //check construction of a static array from a view
-    auto view = v(2,Slice(0,3));
-    SArray<T,3> c(view);
+    auto view = v(2,slice(0,3));
+    sarray<T,3> c(view);
 
     CPPUNIT_ASSERT(std::equal(c.begin(),c.end(),data.begin()+2*3));
 
@@ -238,7 +238,7 @@ template<typename T> void sarray_test<T>::test_typeinfo()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
-    TypeID id1 = SArray<T,2,3>::type_id;
-    TypeID id2 = TypeIDMap<T>::type_id;
+    type_id_t id1 = sarray<T,2,3>::type_id;
+    type_id_t id2 = type_id_map<T>::type_id;
     CPPUNIT_ASSERT(id1 == id2);
 }

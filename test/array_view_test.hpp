@@ -25,8 +25,8 @@
 #include<cppunit/extensions/HelperMacros.h>
 
 #include<vector>
-#include <pni/core/ArrayView.hpp>
-#include <pni/core/Array.hpp>
+#include <pni/core/array_view.hpp>
+#include <pni/core/arrays.hpp>
 #include <pni/core/index_iterator.hpp>
 #include "uniform_distribution.hpp"
 #include "array_factory.hpp"
@@ -111,7 +111,7 @@ template<typename ATYPE> void array_view_test<ATYPE>::test_construction()
    ATYPE  a = array_factory<ATYPE>::create(_shape);
 
    //select a 2D array from the original 2D array
-   auto v1 = a(Slice(0,3),Slice(3,7));
+   auto v1 = a(slice(0,3),slice(3,7));
    CPPUNIT_ASSERT(v1.rank() == 2);
    CPPUNIT_ASSERT(v1.size() == 3*4);
    shape_t v1_shape{3,4};
@@ -122,7 +122,7 @@ template<typename ATYPE> void array_view_test<ATYPE>::test_construction()
                              v1_shape.begin()));
 
    //select a 1D strip from the 2D array
-   auto v2 = a(1,Slice(3,7));
+   auto v2 = a(1,slice(3,7));
    CPPUNIT_ASSERT(v2.rank() == 1);
    CPPUNIT_ASSERT(v2.size() == 4);
    shape_t v2_shape{4};
@@ -145,7 +145,7 @@ template<typename ATYPE> void array_view_test<ATYPE>::test_linear_access()
                          uniform_distribution<typename ATYPE::value_type>());
 
     //create a selection
-    auto view = a(Slice(0,1),Slice(2,7));
+    auto view = a(slice(0,1),slice(2,7));
     for(size_t i=0;i<view.size();++i)
         check_equality(view[i],a(0,2+i));
 
@@ -161,7 +161,7 @@ template<typename ATYPE> void array_view_test<ATYPE>::test_iterator_access()
     data_generator::fill(a.begin(),a.end(),udist_type());
 
     //create the view
-    auto v = a(Slice(10,35,2),Slice(100,125,3));
+    auto v = a(slice(10,35,2),slice(100,125,3));
     shape_t view_shape{13,9};
     CPPUNIT_ASSERT(v.size() == 13*9);
     CPPUNIT_ASSERT(v.rank() == 2);
@@ -187,7 +187,7 @@ template<typename ATYPE> void array_view_test<ATYPE>::test_iterator_access()
         check_equality(*iter,*diter++);
 
     //check if the data has been transfered to the original array
-    ArraySelection  selection(view_shape,shape_t{10,100},shape_t{2,3});
+    array_selection  selection(view_shape,shape_t{10,100},shape_t{2,3});
     index_iterator<shape_t> index_iter(view_shape,0);
     for(auto iter = data.begin();iter!=data.end();++iter)
         check_equality(*iter,a(selection.index(*index_iter++)));
@@ -205,11 +205,11 @@ template<typename ATYPE> void array_view_test<ATYPE>::test_assignment()
     data_generator::fill(frame.begin(),frame.end(),udist_type());
 
     //select roi
-    auto roi = frame(Slice(1,10),Slice(0,100));
+    auto roi = frame(slice(1,10),slice(0,100));
    
     //allocate new array for a roi - we have to use a DArray here as for a
     //static array we would have to know the shape of the array
-    DArray<typename ATYPE::value_type> roia(roi);
+    darray<typename ATYPE::value_type> roia(roi);
     auto roi_s = roi.template shape<shape_t>();
     auto roia_s = roia.template shape<shape_t>();
     CPPUNIT_ASSERT(roia_s.size() == roi_s.size());
@@ -228,7 +228,7 @@ template<typename ATYPE> void array_view_test<ATYPE>::test_multiindex_access()
     ATYPE a = array_factory<ATYPE>::create(_shape);
     data_generator::fill(a.begin(),a.end(),udist_type());
 
-    auto view = a(1,Slice(0,100));
+    auto view = a(1,slice(0,100));
     ctype data(view.size());
     data_generator::fill(data.begin(),data.end(),udist_type());
     std::copy(data.begin(),data.end(),view.begin());

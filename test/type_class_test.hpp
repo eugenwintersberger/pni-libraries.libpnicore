@@ -26,8 +26,8 @@
 #include<cppunit/extensions/HelperMacros.h>
 #include<boost/current_function.hpp>
 
-#include <pni/core/Types.hpp>
-#include <pni/core/TypeClassMap.hpp>
+#include <pni/core/types.hpp>
+#include <pni/core/type_class_map.hpp>
 
 using namespace pni::core;
 

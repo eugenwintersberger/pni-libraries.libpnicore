@@ -41,29 +41,29 @@ void type_maps_test::test_type2id()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
-    CPPUNIT_ASSERT(TypeIDMap<Int8>::type_id == TypeID::INT8);
-    CPPUNIT_ASSERT(TypeIDMap<UInt8>::type_id == TypeID::UINT8);
+    CPPUNIT_ASSERT(type_id_map<int8>::type_id == type_id_t::INT8);
+    CPPUNIT_ASSERT(type_id_map<uint8>::type_id == type_id_t::UINT8);
     
-    CPPUNIT_ASSERT(TypeIDMap<Int16>::type_id == TypeID::INT16);
-    CPPUNIT_ASSERT(TypeIDMap<UInt16>::type_id == TypeID::UINT16);
+    CPPUNIT_ASSERT(type_id_map<int16>::type_id == type_id_t::INT16);
+    CPPUNIT_ASSERT(type_id_map<uint16>::type_id == type_id_t::UINT16);
     
-    CPPUNIT_ASSERT(TypeIDMap<Int32>::type_id == TypeID::INT32);
-    CPPUNIT_ASSERT(TypeIDMap<UInt32>::type_id == TypeID::UINT32);
+    CPPUNIT_ASSERT(type_id_map<int32>::type_id == type_id_t::INT32);
+    CPPUNIT_ASSERT(type_id_map<uint32>::type_id == type_id_t::UINT32);
     
-    CPPUNIT_ASSERT(TypeIDMap<Int64>::type_id == TypeID::INT64);
-    CPPUNIT_ASSERT(TypeIDMap<UInt64>::type_id == TypeID::UINT64);
+    CPPUNIT_ASSERT(type_id_map<int64>::type_id == type_id_t::INT64);
+    CPPUNIT_ASSERT(type_id_map<uint64>::type_id == type_id_t::UINT64);
     
-    CPPUNIT_ASSERT(TypeIDMap<Float32>::type_id == TypeID::FLOAT32); 
-    CPPUNIT_ASSERT(TypeIDMap<Float64>::type_id == TypeID::FLOAT64); 
-    CPPUNIT_ASSERT(TypeIDMap<Float128>::type_id == TypeID::FLOAT128); 
+    CPPUNIT_ASSERT(type_id_map<float32>::type_id == type_id_t::FLOAT32); 
+    CPPUNIT_ASSERT(type_id_map<float64>::type_id == type_id_t::FLOAT64); 
+    CPPUNIT_ASSERT(type_id_map<float128>::type_id == type_id_t::FLOAT128); 
     
-    CPPUNIT_ASSERT(TypeIDMap<Complex32>::type_id == TypeID::COMPLEX32); 
-    CPPUNIT_ASSERT(TypeIDMap<Complex64>::type_id == TypeID::COMPLEX64); 
-    CPPUNIT_ASSERT(TypeIDMap<Complex128>::type_id == TypeID::COMPLEX128); 
+    CPPUNIT_ASSERT(type_id_map<complex32>::type_id == type_id_t::COMPLEX32); 
+    CPPUNIT_ASSERT(type_id_map<complex64>::type_id == type_id_t::COMPLEX64); 
+    CPPUNIT_ASSERT(type_id_map<complex128>::type_id == type_id_t::COMPLEX128); 
 
-    CPPUNIT_ASSERT(TypeIDMap<String>::type_id == TypeID::STRING);
-    CPPUNIT_ASSERT(TypeIDMap<Binary>::type_id == TypeID::BINARY);
-    CPPUNIT_ASSERT(TypeIDMap<Bool>::type_id == TypeID::BOOL);
+    CPPUNIT_ASSERT(type_id_map<string>::type_id == type_id_t::STRING);
+    CPPUNIT_ASSERT(type_id_map<binary>::type_id == type_id_t::BINARY);
+    CPPUNIT_ASSERT(type_id_map<bool>::type_id == type_id_t::BOOL);
 }
 
 //-----------------------------------------------------------------------------
@@ -72,54 +72,54 @@ void type_maps_test::test_id2type()
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
     CPPUNIT_ASSERT(
-            TypeIDMap<IDTypeMap<TypeID::INT8>::type >::type_id == TypeID::INT8);
+            type_id_map<id_type_map<type_id_t::INT8>::type >::type_id == type_id_t::INT8);
     CPPUNIT_ASSERT(
-            TypeIDMap<IDTypeMap<TypeID::UINT8>::type >::type_id == TypeID::UINT8);
+            type_id_map<id_type_map<type_id_t::UINT8>::type >::type_id == type_id_t::UINT8);
     
     CPPUNIT_ASSERT(
-            TypeIDMap<IDTypeMap<TypeID::INT16>::type >::type_id == TypeID::INT16);
+            type_id_map<id_type_map<type_id_t::INT16>::type >::type_id == type_id_t::INT16);
     CPPUNIT_ASSERT(
-            TypeIDMap<IDTypeMap<TypeID::UINT16>::type >::type_id == TypeID::UINT16);
+            type_id_map<id_type_map<type_id_t::UINT16>::type >::type_id == type_id_t::UINT16);
     
     CPPUNIT_ASSERT(
-            TypeIDMap<IDTypeMap<TypeID::INT32>::type >::type_id == TypeID::INT32);
+            type_id_map<id_type_map<type_id_t::INT32>::type >::type_id == type_id_t::INT32);
     CPPUNIT_ASSERT(
-            TypeIDMap<IDTypeMap<TypeID::UINT32>::type >::type_id == TypeID::UINT32);
+            type_id_map<id_type_map<type_id_t::UINT32>::type >::type_id == type_id_t::UINT32);
     
     CPPUNIT_ASSERT(
-            TypeIDMap<IDTypeMap<TypeID::INT64>::type >::type_id == TypeID::INT64);
+            type_id_map<id_type_map<type_id_t::INT64>::type >::type_id == type_id_t::INT64);
     CPPUNIT_ASSERT(
-            TypeIDMap<IDTypeMap<TypeID::UINT64>::type >::type_id == TypeID::UINT64);
+            type_id_map<id_type_map<type_id_t::UINT64>::type >::type_id == type_id_t::UINT64);
 
     CPPUNIT_ASSERT(
-            TypeIDMap<IDTypeMap<TypeID::FLOAT32>::type >::type_id ==
-            TypeID::FLOAT32);
+            type_id_map<id_type_map<type_id_t::FLOAT32>::type >::type_id ==
+            type_id_t::FLOAT32);
     CPPUNIT_ASSERT(
-            TypeIDMap<IDTypeMap<TypeID::FLOAT64>::type >::type_id ==
-            TypeID::FLOAT64);
+            type_id_map<id_type_map<type_id_t::FLOAT64>::type >::type_id ==
+            type_id_t::FLOAT64);
     CPPUNIT_ASSERT(
-            TypeIDMap<IDTypeMap<TypeID::FLOAT128>::type >::type_id ==
-            TypeID::FLOAT128);
+            type_id_map<id_type_map<type_id_t::FLOAT128>::type >::type_id ==
+            type_id_t::FLOAT128);
     
     CPPUNIT_ASSERT(
-            TypeIDMap<IDTypeMap<TypeID::COMPLEX32>::type >::type_id ==
-            TypeID::COMPLEX32);
+            type_id_map<id_type_map<type_id_t::COMPLEX32>::type >::type_id ==
+            type_id_t::COMPLEX32);
     CPPUNIT_ASSERT(
-            TypeIDMap<IDTypeMap<TypeID::COMPLEX64>::type >::type_id ==
-            TypeID::COMPLEX64);
+            type_id_map<id_type_map<type_id_t::COMPLEX64>::type >::type_id ==
+            type_id_t::COMPLEX64);
     CPPUNIT_ASSERT(
-            TypeIDMap<IDTypeMap<TypeID::COMPLEX128>::type >::type_id ==
-            TypeID::COMPLEX128);
+            type_id_map<id_type_map<type_id_t::COMPLEX128>::type >::type_id ==
+            type_id_t::COMPLEX128);
 
     CPPUNIT_ASSERT(
-            TypeIDMap<IDTypeMap<TypeID::STRING>::type >::type_id ==
-            TypeID::STRING);
+            type_id_map<id_type_map<type_id_t::STRING>::type >::type_id ==
+            type_id_t::STRING);
     CPPUNIT_ASSERT(
-            TypeIDMap<IDTypeMap<TypeID::BINARY>::type >::type_id ==
-            TypeID::BINARY);
+            type_id_map<id_type_map<type_id_t::BINARY>::type >::type_id ==
+            type_id_t::BINARY);
 
     CPPUNIT_ASSERT(
-            TypeIDMap<IDTypeMap<TypeID::BOOL>::type >::type_id ==
-            TypeID::BOOL);
+            type_id_map<id_type_map<type_id_t::BOOL>::type >::type_id ==
+            type_id_t::BOOL);
 }
 

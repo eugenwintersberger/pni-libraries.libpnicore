@@ -27,24 +27,24 @@
 static CPPUNIT_NS::AutoRegisterSuite< dbuffer_test<VTYPE,ALLOC> >  \
              CPPUNIT_MAKE_UNIQUE_NAME(autoRegisterRegistry__ )
 
-BUFFER_TEST_REGISTRATION(Int8,NewAllocator);
-BUFFER_TEST_REGISTRATION(UInt8,NewAllocator);
-BUFFER_TEST_REGISTRATION(Int16,NewAllocator);
-BUFFER_TEST_REGISTRATION(UInt16,NewAllocator);
-BUFFER_TEST_REGISTRATION(Int32,NewAllocator);
-BUFFER_TEST_REGISTRATION(UInt32,NewAllocator);
-BUFFER_TEST_REGISTRATION(Int64,NewAllocator);
-BUFFER_TEST_REGISTRATION(UInt64,NewAllocator);
+BUFFER_TEST_REGISTRATION(int8,new_allocator);
+BUFFER_TEST_REGISTRATION(uint8,new_allocator);
+BUFFER_TEST_REGISTRATION(int16,new_allocator);
+BUFFER_TEST_REGISTRATION(uint16,new_allocator);
+BUFFER_TEST_REGISTRATION(int32,new_allocator);
+BUFFER_TEST_REGISTRATION(uint32,new_allocator);
+BUFFER_TEST_REGISTRATION(int64,new_allocator);
+BUFFER_TEST_REGISTRATION(uint64,new_allocator);
 
-BUFFER_TEST_REGISTRATION(Float32,NewAllocator);
-BUFFER_TEST_REGISTRATION(Float64,NewAllocator);
-BUFFER_TEST_REGISTRATION(Float128,NewAllocator);
+BUFFER_TEST_REGISTRATION(float32,new_allocator);
+BUFFER_TEST_REGISTRATION(float64,new_allocator);
+BUFFER_TEST_REGISTRATION(float128,new_allocator);
 
-BUFFER_TEST_REGISTRATION(Complex32,NewAllocator);
-BUFFER_TEST_REGISTRATION(Complex64,NewAllocator);
-BUFFER_TEST_REGISTRATION(Complex128,NewAllocator);
+BUFFER_TEST_REGISTRATION(complex32,new_allocator);
+BUFFER_TEST_REGISTRATION(complex64,new_allocator);
+BUFFER_TEST_REGISTRATION(complex128,new_allocator);
 
-BUFFER_TEST_REGISTRATION(Binary,NewAllocator);
-BUFFER_TEST_REGISTRATION(Bool,NewAllocator);
-BUFFER_TEST_REGISTRATION(String,NewAllocator);
+BUFFER_TEST_REGISTRATION(binary,new_allocator);
+BUFFER_TEST_REGISTRATION(bool,new_allocator);
+BUFFER_TEST_REGISTRATION(string,new_allocator);
 

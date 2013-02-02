@@ -22,7 +22,7 @@
  */
 #pragma once
 
-#include "Exceptions.hpp" 
+#include "exceptions.hpp" 
 #include "value.hpp"
 #include "value_ref.hpp"
 
@@ -258,7 +258,7 @@ namespace core{
             typename array_iterator_types<const_flag>::return_type operator*()
             {
                 if(!(*this))
-                    throw IteratorError(EXCEPTION_RECORD,"Iterator invalid!");
+                    throw iterator_error(EXCEPTION_RECORD,"Iterator invalid!");
 
                 return this->_value;
             }
@@ -274,7 +274,7 @@ namespace core{
             pointer operator->()
             {
                 if(!(*this))
-                    throw IteratorError(EXCEPTION_RECORD,"Iterator invalid!");
+                    throw iterator_error(EXCEPTION_RECORD,"Iterator invalid!");
 
                 return &this->_value;
             }

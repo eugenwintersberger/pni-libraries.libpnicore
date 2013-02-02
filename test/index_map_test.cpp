@@ -26,11 +26,11 @@
 #include <vector>
 #include <list>
 
-#include <pni/core/CIndexMap.hpp>
+#include <pni/core/cindex_map.hpp>
 
 #include "index_map_test.hpp"
 
-CPPUNIT_TEST_SUITE_REGISTRATION(index_map_test<CIndexMap>);
+CPPUNIT_TEST_SUITE_REGISTRATION(index_map_test<cindex_map>);
 
 
 

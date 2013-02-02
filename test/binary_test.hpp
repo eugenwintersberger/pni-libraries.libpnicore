@@ -38,7 +38,7 @@ class binary_test : public CppUnit::TestFixture
     CPPUNIT_TEST(test_io);
 	CPPUNIT_TEST_SUITE_END();
 public:
-    typedef BinaryType<UInt8> binary_t;
+    typedef binary_t<uint8> binary_type;
 	void setUp();
 	void tearDown();
     void test_construction();

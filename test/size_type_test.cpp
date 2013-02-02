@@ -30,10 +30,10 @@ void size_type_test::test_size()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
-    size_t s = SizeType<100>::size;
+    size_t s = size_type<100>::size;
     CPPUNIT_ASSERT(s == 100);
-    s = SizeType<100,2,4>::size;
+    s = size_type<100,2,4>::size;
     CPPUNIT_ASSERT(s == 800);
-    s = SizeType<2,4>::size;
+    s = size_type<2,4>::size;
     CPPUNIT_ASSERT(s == 8);
 }

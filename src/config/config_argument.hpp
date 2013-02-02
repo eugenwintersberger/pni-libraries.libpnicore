@@ -22,7 +22,7 @@
  */
 #pragma once
 
-#include "../Types.hpp"
+#include "../types.hpp"
 #include "config_option.hpp"
 
 
@@ -59,7 +59,7 @@ namespace core{
             \param pos position of the argument
             \param exref optional external reference
             */
-            config_argument(const String &lname,int pos,T *exref=nullptr);
+            config_argument(const string &lname,int pos,T *exref=nullptr);
 
             //-----------------------------------------------------------------
             /*!
@@ -70,7 +70,7 @@ namespace core{
             \param default_value the default value to use for this option
             \param exref external reference
             */
-            config_argument(const String &lname,int pos,T default_value,
+            config_argument(const string &lname,int pos,T default_value,
                            T *exref=nullptr);
 
             //-----------------------------------------------------------------
@@ -90,14 +90,14 @@ namespace core{
 
     //--------------------------------------------------------------------------
     template<typename T>
-    config_argument<T>::config_argument(const String &lname,int pos,T *exref):
+    config_argument<T>::config_argument(const string &lname,int pos,T *exref):
         config_option<T>(lname,"","",exref),
         _position(pos)
     {}
 
     //--------------------------------------------------------------------------
     template<typename T>
-    config_argument<T>::config_argument(const String &lname,int pos,
+    config_argument<T>::config_argument(const string &lname,int pos,
                                         T default_value, T *exref):
         config_option<T>(lname,"","",default_value,exref),
         _position(pos)

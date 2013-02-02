@@ -26,7 +26,7 @@
 #include<cppunit/extensions/HelperMacros.h>
 
 #include <boost/current_function.hpp>
-#include <pni/core/Scalar.hpp>
+#include <pni/core/scalar.hpp>
 #include "EqualityCheck.hpp"
 
 #define DOUBLE_PREC 1.e-3
@@ -44,7 +44,7 @@ template<typename T> class scalar_test : public CppUnit::TestFixture
         CPPUNIT_TEST(test_conversion);
         CPPUNIT_TEST_SUITE_END();
     public:
-        typedef Scalar<T> scalar_t;
+        typedef scalar<T> scalar_t;
         void tearDown();
         void setUp();
         

@@ -24,8 +24,8 @@
 
 #include <random>
 
-#include <pni/core/TypeInfo.hpp>
-#include <pni/core/Types.hpp>
+#include <pni/core/type_info.hpp>
+#include <pni/core/types.hpp>
 
 using namespace pni::core;
 
@@ -44,7 +44,7 @@ template<typename CT> class UniformDistribution<CT,true,false>
 #ifndef NOCPPRAND
             std::mt19937_64 engine;
             std::uniform_int_distribution<> 
-                dist(TypeInfo<value_type>::min(),TypeInfo<value_type>::max());
+                dist(type_info<value_type>::min(),type_info<value_type>::max());
 #endif
 
 #ifdef NOFOREACH
@@ -77,7 +77,7 @@ template<typename CT> class UniformDistribution<CT,false,false>
 #ifndef NOCPPRAND       
             std::mt19937_64 engine;
             std::uniform_real_distribution<> 
-                dist(TypeInfo<Float32>::min(),TypeInfo<Float32>::max());
+                dist(type_info<float32>::min(),type_info<float32>::max());
 #endif
 
 #ifdef NOFOREACH
@@ -112,8 +112,8 @@ template<typename CT> class UniformDistribution<CT,false,true>
 #ifndef NOCPPRAND       
             std::mt19937_64 engine;
             std::uniform_real_distribution<>
-                dist(TypeInfo<Float32>::min(),
-                     TypeInfo<Float32>::max());
+                dist(type_info<float32>::min(),
+                     type_info<float32>::max());
 #endif
 
 #ifdef NOFOREACH
@@ -141,8 +141,8 @@ class RandomDistribution
         template<typename CT> static CT uniform(size_t n)
         {
             return UniformDistribution<CT,
-                                       TypeInfo<typename CT::value_type>::is_integer,
-                                       TypeInfo<typename CT::value_type>::is_complex>
+                                       type_info<typename CT::value_type>::is_integer,
+                                       type_info<typename CT::value_type>::is_complex>
                                            ::create_data(n);
         }
 };

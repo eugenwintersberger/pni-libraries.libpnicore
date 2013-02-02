@@ -85,8 +85,8 @@ template<typename T> void value_ref_test<T>::test_copy_and_move()
 
     value_ref v3(std::move(v2));
     CPPUNIT_ASSERT(v3.as<T>() == v1.as<T>());
-    CPPUNIT_ASSERT_THROW(v2.as<T>(),MemoryNotAllocatedError);
-    CPPUNIT_ASSERT_THROW(v3.as<Complex128>(),TypeError);
+    CPPUNIT_ASSERT_THROW(v2.as<T>(),memory_not_allocated_error);
+    CPPUNIT_ASSERT_THROW(v3.as<complex128>(),type_error);
 
 }
 
@@ -97,7 +97,7 @@ template<typename T> void value_ref_test<T>::test_assignment()
    
     T a(1);
     value_ref v1;
-    CPPUNIT_ASSERT_THROW(v1.as<T>(),MemoryNotAllocatedError); 
+    CPPUNIT_ASSERT_THROW(v1.as<T>(),memory_not_allocated_error); 
     //assign a reference
     v1 = std::ref(a);
 
@@ -112,7 +112,7 @@ template<typename T> void value_ref_test<T>::test_assignment()
     value_ref v3;
     v3 = std::move(v2);
     CPPUNIT_ASSERT(v3.as<T>() == v1.as<T>());
-    CPPUNIT_ASSERT_THROW(v2.as<T>(),MemoryNotAllocatedError);
+    CPPUNIT_ASSERT_THROW(v2.as<T>(),memory_not_allocated_error);
 }
 
 //-----------------------------------------------------------------------------
@@ -124,7 +124,7 @@ template<typename T> void value_ref_test<T>::test_stream()
     value_ref v=std::ref(data);
     ss>>v;
     std::cout<<v<<std::endl;
-    CPPUNIT_ASSERT(v.type_id() == TypeID::FLOAT32);
+    CPPUNIT_ASSERT(v.type_id() == type_id_t::FLOAT32);
 }
 
 

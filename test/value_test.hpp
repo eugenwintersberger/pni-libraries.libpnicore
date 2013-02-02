@@ -84,8 +84,8 @@ template<typename T> void value_test<T>::test_copy_and_move()
 
     value v3(std::move(v2));
     CPPUNIT_ASSERT(v3.as<T>() == v1.as<T>());
-    CPPUNIT_ASSERT_THROW(v2.as<T>(),MemoryNotAllocatedError);
-    CPPUNIT_ASSERT_THROW(v3.as<Complex128>(),TypeError);
+    CPPUNIT_ASSERT_THROW(v2.as<T>(),memory_not_allocated_error);
+    CPPUNIT_ASSERT_THROW(v3.as<complex128>(),type_error);
 
 }
 
@@ -95,7 +95,7 @@ template<typename T> void value_test<T>::test_assignment()
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
     
     value v1;
-    CPPUNIT_ASSERT_THROW(v1.as<T>(),MemoryNotAllocatedError);
+    CPPUNIT_ASSERT_THROW(v1.as<T>(),memory_not_allocated_error);
 
     v1 = T(1);
     CPPUNIT_ASSERT(v1.as<T>() == T(1));
@@ -107,7 +107,7 @@ template<typename T> void value_test<T>::test_assignment()
     value v3;
     v3 = std::move(v2);
     CPPUNIT_ASSERT(v3.as<T>() == v1.as<T>());
-    CPPUNIT_ASSERT_THROW(v2.as<T>(),MemoryNotAllocatedError);
+    CPPUNIT_ASSERT_THROW(v2.as<T>(),memory_not_allocated_error);
 }
 
 //-----------------------------------------------------------------------------
@@ -115,10 +115,10 @@ template<typename T> void value_test<T>::test_stream()
 {
     std::stringstream ss("12343.4");
 
-    value v=value::create<Float32>();
+    value v=value::create<float32>();
     ss>>v;
     std::cout<<v<<std::endl;
-    CPPUNIT_ASSERT(v.type_id() == TypeID::FLOAT32);
+    CPPUNIT_ASSERT(v.type_id() == type_id_t::FLOAT32);
 }
 
 

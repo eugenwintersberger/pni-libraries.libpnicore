@@ -27,8 +27,8 @@
 #include <boost/program_options.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/tokenizer.hpp>
-#include "../Types.hpp"
-#include "../Exceptions.hpp"
+#include "../types.hpp"
+#include "../exceptions.hpp"
 #include "config_option.hpp"
 #include "config_argument.hpp"
 
@@ -126,7 +126,7 @@ namespace core{
             \param name long name of the option
             \return true if option exists
             */
-            bool has_option(const String &name) const;
+            bool has_option(const string &name) const;
 
             //------------------------------------------------------------------
             /*! 
@@ -142,7 +142,7 @@ namespace core{
             \param name long name of the option
             \return value of the option as instance of type T
             */
-            template<typename T> T value(const String &name) const
+            template<typename T> T value(const string &name) const
             {
                 if(has_option(name)) return _vmap[name].as<T>();
                 {
@@ -164,7 +164,7 @@ namespace core{
             {
                 typedef boost::shared_ptr<popts::option_description> option_sptr;
                 //assemble the name of the option
-                String oname = opt.long_name();
+                string oname = opt.long_name();
 
                 if(!opt.short_name().empty())
                     oname += ","+opt.short_name();
@@ -193,7 +193,7 @@ namespace core{
             {
                 typedef boost::shared_ptr<popts::option_description> option_sptr;
                 //assemble the name of the option
-                String oname = arg.long_name();
+                string oname = arg.long_name();
 
                 //assemble the sematnic value
                 auto value =

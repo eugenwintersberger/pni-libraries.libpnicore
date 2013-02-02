@@ -45,7 +45,7 @@ namespace core{
     \param c reference to the configuration object
     \param fname name of the configuration file
     */
-    void parse(configuration &c,const String &fname);
+    void parse(configuration &c,const string &fname);
 
 //end of namespace
 }

@@ -29,7 +29,7 @@
 #define USE_GNU_DEMANGLING 1
 #endif
 
-#include "Types.hpp"
+#include "types.hpp"
 
 namespace pni{
 namespace core{
@@ -76,7 +76,7 @@ namespace core{
     \param n mangled name
     \return demangled name of the type 
     */
-    String demangle_cpp_name(const char *n);
+    string demangle_cpp_name(const char *n);
 
 
 

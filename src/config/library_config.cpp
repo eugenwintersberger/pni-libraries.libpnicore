@@ -37,7 +37,7 @@ namespace core{
     library_config::library_config() {}
 
     //-------------------------------------------------------------------------
-    library_config::library_config(const String &fname)
+    library_config::library_config(const string &fname)
     {
         _setup_configuration();
         parse(conf,fname);

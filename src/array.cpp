@@ -40,14 +40,14 @@ namespace core{
     }
 
     //-------------------------------------------------------------------------
-    TypeID array::type_id() const
+    type_id_t array::type_id() const
     { 
         if(_ptr)
             return _ptr->type_id(); 
         else
             array::_throw_not_allocated_error(EXCEPTION_RECORD);
 
-        return TypeID::NONE; //just to make the compiler happy
+        return type_id_t::NONE; //just to make the compiler happy
     }
 
     //-------------------------------------------------------------------------
@@ -113,7 +113,7 @@ namespace core{
         else
             array::_throw_not_allocated_error(EXCEPTION_RECORD);
 
-        return value::create<Int16>(); //just to make the compiler happy
+        return value::create<int16>(); //just to make the compiler happy
     }
 
     //-------------------------------------------------------------------------
@@ -124,7 +124,7 @@ namespace core{
         else
             array::_throw_not_allocated_error(EXCEPTION_RECORD);
 
-        return value::create<Int16>(); //just to make the compiler happy
+        return value::create<int16>(); //just to make the compiler happy
     }
 
     //-------------------------------------------------------------------------
@@ -150,7 +150,7 @@ namespace core{
     }
 
     //-------------------------------------------------------------------------
-    String array::type_name() const
+    string array::type_name() const
     {
         if(_ptr)
             return _ptr->type_name();

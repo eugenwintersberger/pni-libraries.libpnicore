@@ -25,7 +25,7 @@
 #include<cppunit/TestFixture.h>
 #include<cppunit/extensions/HelperMacros.h>
 #include<vector>
-#include <pni/core/ArraySelection.hpp>
+#include <pni/core/array_selection.hpp>
 
 using namespace pni::core;
 

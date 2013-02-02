@@ -23,7 +23,7 @@
 #pragma once
 
 #include <iostream>
-#include "Types.hpp"
+#include "types.hpp"
 
 namespace pni{
 namespace core{
@@ -38,7 +38,7 @@ namespace core{
         public:
             //-----------------------------------------------------------------
             //! get type id
-            virtual TypeID type_id() const = 0;
+            virtual type_id_t type_id() const = 0;
 
             //-----------------------------------------------------------------
             /*!
