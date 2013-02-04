@@ -186,7 +186,11 @@ namespace core{
         else
         {
             //an overflow occurred - we need to take some action
-            for(auto cb: _overflow_callbacks) cb();
+            for(auto iter = _overflow_callbacks.begin();
+                     iter!=_overflow_callbacks.end();
+                     ++iter)
+                (*iter)();
+
             if(reset_if_overflow) this->reset();
         }
     }
@@ -202,7 +206,11 @@ namespace core{
         else
         {
             //an underflow occurred - we need to take some action here
-            for(auto cb: _underflow_callbacks) cb();
+            for(auto iter=_underflow_callbacks.begin();
+                     iter!=_underflow_callbacks.end();
+                     ++iter)
+                (*iter)();
+
             if(reset_if_underflow) this->reset();
         }
     }

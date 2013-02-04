@@ -89,7 +89,8 @@ namespace core{
             static iterator_type end(const shape_t &shape)
             {
                 size_t size=1;
-                for(auto s: shape) size *= s;
+                for(auto iter=shape.begin();iter!=shape.end();++iter)
+                    size *= *iter;
 
                 return index_iterator(shape,size);
             }

@@ -48,7 +48,9 @@ template<typename IT> class index_iterator_test : public CppUnit::TestFixture
 template<typename IT> 
 void index_iterator_test<IT>::print_index(const IT &i)
 {
-    for(auto index: i) std::cout<<index<<" ";
+    for(auto iter = i.begin();iter!=i.end();++iter)
+        std::cout<<*iter<<" ";
+
     std::cout<<std::endl;
 }
 

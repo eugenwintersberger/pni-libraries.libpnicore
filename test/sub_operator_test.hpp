@@ -69,7 +69,7 @@ template<typename ATYPE> class sub_operator_test: public CppUnit::TestFixture
 //-----------------------------------------------------------------------------
 template<typename ATYPE> void sub_operator_test<ATYPE>::setUp()
 {
-    shape = shape_t{2,3,4};
+    shape = shape_t({2,3,4});
     a1 = na_type(array_factory<ATYPE>::create(shape));
     a2 = na_type(array_factory<ATYPE>::create(shape));
     
