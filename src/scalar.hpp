@@ -100,6 +100,7 @@ namespace core {
 
             Assigns a value of type T to the scalar.
             \param v value to assign
+            \return reference to array_type
             */
             array_type &operator=(const value_type &v)
             {
@@ -113,7 +114,8 @@ namespace core {
 
             This is the most trivial case. An object of type Scalar<T> is 
             assigned to an other object of type Scalar<T>.
-            \param v value of Scalar<T> to assign
+            \param v value of scalar<T> to assign
+            \return reference to array_type
             */
             array_type &operator=(const array_type &v)
             {
@@ -123,6 +125,13 @@ namespace core {
             }
 
             //=======================conversion operator========================
+            /*!
+            \brief conversion operator
+
+            Allows conversion from an instance of scalar<T> to a variable of
+            type T.
+            \return value of type T
+            */
             operator T() const
             {
                 return this->_data[0];
@@ -135,6 +144,7 @@ namespace core {
 
             Return the single data value independent of what value of i is
             given.
+            \param i linear index of the value
             \return value of the scalar
             */
             T operator[](size_t i) const { return this->_data[0]; }

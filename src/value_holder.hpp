@@ -28,6 +28,7 @@ namespace pni{
 namespace core{
 
     /*!
+    \ingroup type_classes
     \brief return reference
 
     Return the reference to its argument. 

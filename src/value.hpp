@@ -34,6 +34,7 @@ namespace pni{
 namespace core{
 
     /*!
+    \ingroup type_classes
     \brief type erasure for POD data
 
     This is a very simple type erasure for POD data. Only those data types
