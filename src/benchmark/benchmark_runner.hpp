@@ -28,6 +28,11 @@
 namespace pni{
 namespace core{
 
+    /*!
+    \brief benchmark runner class
+
+    This class runs benchmark functions.
+    */
     class benchmark_runner
     {
         private:
