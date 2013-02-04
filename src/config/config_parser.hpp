@@ -26,18 +26,6 @@
 namespace pni{
 namespace core{
 
-    /*!
-    \brief read config from command line options
-    
-    Function constructs the configuration instance from command line options
-    passed to a program.
-    \param c reference to the configuration object
-    \param argc number of command line arguments
-    \param argv argument values
-    */
-    void parse(configuration &c,int argc,const char **argv);
-
-
     //-------------------------------------------------------------------------
     /*!
     \brief store cli options in vector
