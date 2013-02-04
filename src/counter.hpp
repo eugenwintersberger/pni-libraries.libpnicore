@@ -61,8 +61,10 @@ namespace core{
 
         public:
             //=======================public types==============================
-            typedef T value_type; //! value type of the counter
-            typedef std::function<void()> callback_type; //! type for callbacks
+            //! value type of the counter
+            typedef T value_type;
+            //! type for callbacks
+            typedef std::function<void()> callback_type; 
 
             //===================constructors and destructor===================
             //! default constructor
