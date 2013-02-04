@@ -43,7 +43,7 @@ namespace core{
         private:
             configuration conf; //!< configuration objecct
 
-            //create the configuration structure
+            //!create the configuration structure
             void _setup_configuration();
         public:
             //! default constructor

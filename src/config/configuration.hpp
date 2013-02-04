@@ -94,6 +94,7 @@ namespace core{
             /*!
             \brief get hidden options
 
+            \return return hidden options description
             */
             const popts::options_description &hidden_options() const
             {
@@ -105,6 +106,7 @@ namespace core{
             \brief get arguments
 
             Return reference to the arguments of the configuration.
+            \return return positional options description
             */
             const popts::positional_options_description &arguments() const
             {
@@ -112,6 +114,13 @@ namespace core{
             }
 
             //-----------------------------------------------------------------
+            /*!
+            \brief get variables map
+
+            Return a const reference to the configuration variables map stored
+            in the configuration class.
+            \return reference to the variables map
+            */
             const popts::variables_map &map() const
             {
                 return  _vmap;
@@ -187,8 +196,23 @@ namespace core{
             }
 
             //------------------------------------------------------------------
+            /*!
+            \brief add an option
+
+            Overloaded version of the add_option template member for bool
+            variables. 
+            \param opt boolean configuration option
+            \param visible visibility flag
+            */
             void add_option(const config_option<Bool> &opt,bool visible=true);
 
+            //-----------------------------------------------------------------
+            /*!
+            \brief add argument
+
+            Adds an argument to the configuration.
+            \param arg argument 
+            */
             template<typename T> void add_argument(const config_argument<T> &arg)
             {
                 typedef boost::shared_ptr<popts::option_description> option_sptr;
@@ -209,6 +233,7 @@ namespace core{
             }
 
 
+            //! output operator
             friend std::ostream &operator<<(std::ostream &o,const configuration &c);
 
     };
