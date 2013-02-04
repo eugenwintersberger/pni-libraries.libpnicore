@@ -143,7 +143,7 @@ void numarray_test<ATYPE,IPAT,MT_BINARY_ARITHMETICS>::test_linear_access()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
-    typedef narray_t::value_type value_type;
+    typedef typename narray_t::value_type value_type;
     narray_t a1(create_array<ATYPE>());
 
 
