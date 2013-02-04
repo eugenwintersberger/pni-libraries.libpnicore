@@ -14,6 +14,9 @@
 #include <pni/core/benchmark/chrono_timer.hpp>
 #include <pni/core/benchmark/clock_timer.hpp>
 
+#include <pni/core/config/configuration.hpp>
+#include <pni/core/config/config_parser.hpp>
+
 #include "benchmark/multiindex_io_pointer.hpp"
 #include "benchmark/multiindex_io_array.hpp"
 
@@ -66,17 +69,34 @@ int main(int argc,char **argv)
     typedef multiindex_io_array<sarray_t> sarray_bm_t;
     typedef multiindex_io_pointer<double> ptr_bm_t;     //pointer muldiindex benchmark type
 
-    //---------------read user arguments--------------------------------------
-    if(argc<5) 
+    //-------------------setup user configuration-----------------------------
+    configuration config;
+    config.add_option(config_option<string>("array-type","t",
+                      "array type to be used","darray"));
+    config.add_option(config_option<size_t>("nx","x",
+                      "number of elements along first dimension",100));
+    config.add_option(config_option<size_t>("ny","y",
+                      "number of elements along second dimension",100));
+    config.add_option(config_option<size_t>("nruns","r",
+                      "number of runs",1));
+    config.add_option(config_option<bool>("help","h",
+                      "show program help",false));
+                      
+
+    parse(config,cliargs2vector(argc,argv));
+
+    if(config.value<bool>("help"))
     {
-        std::cerr<<"Usage: multiindexbm <type> <nruns> <nx> <ny>"<<std::endl;
+        std::cerr<<"multindexbm - benchmark program to test performance of";
+        std::cerr<<" multiindex data access."<<std::endl<<std::endl;
+        std::cerr<<config<<std::endl;
         return 1;
     }
 
-    string type(argv[1]);
-    size_t nruns = atoi(argv[2]);
-    size_t nx = atoi(argv[3]);
-    size_t ny = atoi(argv[4]);
+    string type = config.value<string>("array-type");
+    size_t nruns = config.value<size_t>("nruns");
+    size_t nx = config.value<size_t>("nx");
+    size_t ny = config.value<size_t>("ny");
     std::cout<<"Array size: "<<nx<<" "<<ny<<std::endl;
     std::cout<<"allocating "<<nx*ny*sizeof(double)/1024/1024<<" MByte of memory!";
     std::cout<<std::endl;
