@@ -66,17 +66,17 @@ namespace core{
     {
         //merging hidden and visible options to a single option description
         popts::options_description total_opts;
-        total_opts.add(c.visible_options());
-        total_opts.add(c.hidden_options());
+        total_opts.add(config.visible_options());
+        total_opts.add(config.hidden_options());
 
         //run the parser
         popts::store(popts::command_line_parser(args).
                      options(total_opts).
-                     positional(c.arguments()).run(),
-                     const_cast<popts::variables_map&>(c.map()));
+                     positional(config.arguments()).run(),
+                     const_cast<popts::variables_map&>(config.map()));
 
         //notify the variable map that we are done
-        popts::notify(const_cast<popts::variables_map&>(c.map()));
+        popts::notify(const_cast<popts::variables_map&>(config.map()));
        
     }
   
