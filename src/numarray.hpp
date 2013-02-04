@@ -24,6 +24,8 @@
 
 #pragma once
 
+#include <thread>
+
 #include "types.hpp"
 #include "container_iterator.hpp"
 #include "array_view_selector.hpp"
@@ -34,9 +36,95 @@
 #include "math/sub.hpp"
 #include "math/div_op.hpp"
 #include "math/mult.hpp"
+#include "config/library_config.hpp"
+
 
 namespace pni{
 namespace core{
+
+    template<bool mt_flag > struct copy_type;
+
+    /*!
+    \brief copy operation
+
+    Specialization of the copy_type for multithreading assignment.
+    */
+    template<> struct copy_type<true>
+    {
+        /*!
+        \brief copy operation
+
+        \tparam AT type of first container
+        \tparam BT type of second constainer
+        \param a reference to the source container
+        \param b non const reference to the target container
+        */
+        template<typename AT,typename BT> static void copy(const AT &a,BT &b)
+        {
+            typedef typename AT::const_iterator a_iterator_t;
+            typedef typename BT::iterator b_iterator_t;
+            typedef std::function<void(a_iterator_t,a_iterator_t,
+                                       b_iterator_t)> function_t;
+
+            size_t nth  = pnicore_config.n_arithmetic_threads(); 
+            size_t nres = a.size()%nth;
+            size_t npth = (a.size() - nres)/nth;
+            std::vector<std::thread> threads(nth);
+
+            a_iterator_t a_start,a_end;
+            b_iterator_t b_start,b_end;
+            for(size_t i = 0; i<nth;++i)
+            {
+
+                if(i==0)
+                {
+                    a_start = a.begin();
+                    b_start = b.begin();
+                }
+                else
+                {
+                    a_start = a_end;
+                    b_start = b_end;
+                }
+
+                b_end = b_start+npth;
+                a_end = a_start+npth;
+                
+                if(nres) 
+                {
+                    ++a_end;
+                    ++b_end;
+                    nres--;
+                }
+               
+                /*
+                function_t f =
+                    std::bind(&copy_type<true>::copy_worker<a_iterator_t,b_iterator_t>,a_start,a_end,b_start);
+                    */
+                threads[i] =
+                    std::thread(copy_worker<a_iterator_t,b_iterator_t>,a_start,a_end,b_start);
+            }
+
+            //join all threads
+            for(std::thread &thread: threads) thread.join();
+        }
+
+        private:
+        template<typename ITERA,typename ITERB> 
+        static void copy_worker(ITERA a_start,ITERA a_end,ITERB b_start)
+        {
+            std::copy(a_start,a_end,b_start);
+        }
+        
+    };
+
+    template<> struct copy_type<false>
+    {
+        template<typename AT,typename BT> static void copy(const AT &a,BT &b)
+        {
+            std::copy(a.begin(),a.end(),b.begin());
+        }
+    };
     
     /*! 
     \ingroup numeric_array_classes
@@ -48,7 +136,8 @@ namespace core{
     \tparam IPA inplace arithmetics type
 
     */
-    template<typename ATYPE,template<typename> class IPA=inplace_arithmetics> 
+    template<typename ATYPE,template<typename> class IPA=inplace_arithmetics,
+             bool MT_BINARY_ARITHMETICS=false> 
         class numarray
     {
         //need to do here a compiletime check if types are equal
@@ -67,10 +156,11 @@ namespace core{
             \return array view object
             */
             template<typename ...ITYPES>
-            numarray<array_view<numarray<ATYPE,IPA> > ,IPA>
-            _get_data(numarray<array_view<numarray<ATYPE,IPA> >,IPA> &view,ITYPES ...indices)
+            numarray<array_view<numarray<ATYPE,IPA> > ,IPA,MT_BINARY_ARITHMETICS>
+            _get_data(numarray<array_view<numarray<ATYPE,IPA>
+                    >,IPA,MT_BINARY_ARITHMETICS> &view,ITYPES ...indices)
             {
-                typedef array_view<numarray<ATYPE,IPA> > view_t;
+                typedef array_view<numarray<ATYPE,IPA,MT_BINARY_ARITHMETICS> > view_t;
                 std::vector<slice> slices{slice(indices)...};
                 array_selection s = array_selection::create(slices);
 
@@ -125,10 +215,10 @@ namespace core{
             \return array view
             */
             template<template<typename ...> class CTYPE,typename ...OTS>
-            numarray<array_view<numarray<ATYPE,IPA> >,IPA>
-            _get_data(numarray<array_view<numarray<ATYPE,IPA> >,IPA> &view,const CTYPE<OTS...> &c)
+            numarray<array_view<numarray<ATYPE,IPA> >,IPA,MT_BINARY_ARITHMETICS>
+            _get_data(numarray<array_view<numarray<ATYPE,IPA,MT_BINARY_ARITHMETICS> >,IPA> &view,const CTYPE<OTS...> &c)
             {
-                typedef array_view<numarray<ATYPE,IPA> > view_t;
+                typedef array_view<numarray<ATYPE,IPA,MT_BINARY_ARITHMETICS> > view_t;
 
                 array_selection s = array_selection::create(c);
 
@@ -158,7 +248,7 @@ namespace core{
             //! element type of the array
             typedef typename ATYPE::value_type value_type;
             //! type of the array
-            typedef numarray<ATYPE,IPA> array_type;
+            typedef numarray<ATYPE,IPA,MT_BINARY_ARITHMETICS> array_type;
             //! type of array storage
             typedef ATYPE storage_type;
             //! type of the view
@@ -239,7 +329,8 @@ namespace core{
             //! assignment from a NumArray type
             template<typename AT> array_type &operator=(const numarray<AT> &a)
             {
-                std::copy(a.begin(),a.end(),this->begin());
+                copy_type<MT_BINARY_ARITHMETICS>::copy(a,*this);
+                //std::copy(a.begin(),a.end(),this->begin());
                 return *this;
             }
 

@@ -37,7 +37,7 @@
 
 using namespace pni::core;
 
-template<typename ATYPE,template<typename> class IPAT>
+template<typename ATYPE,template<typename> class IPAT,bool MT_BINARY_ARITHMETICS>
 class numarray_test : public CppUnit::TestFixture
 {
         CPPUNIT_TEST_SUITE(numarray_test);
@@ -69,6 +69,7 @@ class numarray_test : public CppUnit::TestFixture
         }
         
     public:
+        typedef numarray<ATYPE,IPAT,MT_BINARY_ARITHMETICS> narray_t;
         void setUp();
         void tearDown();
         void test_construction();
@@ -85,37 +86,37 @@ class numarray_test : public CppUnit::TestFixture
 };
 
 //------------------------------------------------------------------------------
-template<typename ATYPE,template<typename> class IPAT> 
-void numarray_test<ATYPE,IPAT>::setUp(){ }
+template<typename ATYPE,template<typename> class IPAT,bool MT_BINARY_ARITHMETICS> 
+void numarray_test<ATYPE,IPAT,MT_BINARY_ARITHMETICS>::setUp(){ }
 
 //------------------------------------------------------------------------------
-template<typename ATYPE,template<typename> class IPAT> 
-void numarray_test<ATYPE,IPAT>::tearDown(){ } 
+template<typename ATYPE,template<typename> class IPAT,bool MT_BINARY_ARITHMETICS> 
+void numarray_test<ATYPE,IPAT,MT_BINARY_ARITHMETICS>::tearDown(){ } 
 
 //------------------------------------------------------------------------------
-template<typename ATYPE,template<typename> class IPAT> 
-void numarray_test<ATYPE,IPAT>::test_construction()
+template<typename ATYPE,template<typename> class IPAT,bool MT_BINARY_ARITHMETICS> 
+void numarray_test<ATYPE,IPAT,MT_BINARY_ARITHMETICS>::test_construction()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
     //default construction
-    numarray<ATYPE> a1(create_array<ATYPE>());
+    narray_t a1(create_array<ATYPE>());
     CPPUNIT_ASSERT(a1.size() == 12);
     CPPUNIT_ASSERT(a1.rank() == 2);
 
     //copy construction
-    numarray<ATYPE> a2(a1);
+    narray_t a2(a1);
     CPPUNIT_ASSERT(a2.rank() == a1.rank());
     CPPUNIT_ASSERT(a2.size() == a1.size());
 }
 
 //------------------------------------------------------------------------------
-template<typename ATYPE,template<typename> class IPAT> 
-void numarray_test<ATYPE,IPAT>::test_assignment()
+template<typename ATYPE,template<typename> class IPAT,bool MT_BINARY_ARITHMETICS> 
+void numarray_test<ATYPE,IPAT,MT_BINARY_ARITHMETICS>::test_assignment()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
-    numarray<ATYPE> a1(create_array<ATYPE>());
+    narray_t a1(create_array<ATYPE>());
     size_t i;
 #ifdef NOFOREACH
     for(auto iter = a1.begin();iter!=a1.end();++iter)
@@ -129,7 +130,7 @@ void numarray_test<ATYPE,IPAT>::test_assignment()
     }
    
     //copy assignment
-    numarray<ATYPE> a2(create_array<ATYPE>());
+    narray_t a2(create_array<ATYPE>());
     a2 = a1;
     CPPUNIT_ASSERT(a2.rank() == a1.rank());
     CPPUNIT_ASSERT(a2.size() == a2.size());
@@ -137,13 +138,13 @@ void numarray_test<ATYPE,IPAT>::test_assignment()
 }
 
 //------------------------------------------------------------------------------
-template<typename ATYPE,template<typename> class IPAT> 
-void numarray_test<ATYPE,IPAT>::test_linear_access()
+template<typename ATYPE,template<typename> class IPAT,bool MT_BINARY_ARITHMETICS> 
+void numarray_test<ATYPE,IPAT,MT_BINARY_ARITHMETICS>::test_linear_access()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
-    typedef typename numarray<ATYPE>::value_type value_type;
-    numarray<ATYPE> a1(create_array<ATYPE>());
+    typedef narray_t::value_type value_type;
+    narray_t a1(create_array<ATYPE>());
 
 
     //--------------------check operators without index checking----------------
@@ -170,13 +171,13 @@ void numarray_test<ATYPE,IPAT>::test_linear_access()
 }
 
 //------------------------------------------------------------------------------
-template<typename ATYPE,template<typename> class IPAT> 
-void numarray_test<ATYPE,IPAT>::test_iterators()
+template<typename ATYPE,template<typename> class IPAT,bool MT_BINARY_ARITHMETICS> 
+void numarray_test<ATYPE,IPAT,MT_BINARY_ARITHMETICS>::test_iterators()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
-    typedef typename numarray<ATYPE>::value_type value_type;
-    numarray<ATYPE> a1(create_array<ATYPE>());
+    typedef narray_t::value_type value_type;
+    narray_t a1(create_array<ATYPE>());
 
     //--------------------check standard iterator----------------
 	//access via [] operator
@@ -208,7 +209,7 @@ void numarray_test<ATYPE,IPAT>::test_iterators()
 
 
     //-------------------check const iterator-----------------------------
-    const numarray<ATYPE> &a = a1;
+    const narray_t &a = a1;
 
     index = 0;
 #ifdef NOFOREACH
@@ -224,17 +225,17 @@ void numarray_test<ATYPE,IPAT>::test_iterators()
 }
 
 //-----------------------------------------------------------------------------
-template<typename ATYPE,template<typename> class IPAT> 
-void numarray_test<ATYPE,IPAT>::test_multiindex_access()
+template<typename ATYPE,template<typename> class IPAT,bool MT_BINARY_ARITHMETICS> 
+void numarray_test<ATYPE,IPAT,MT_BINARY_ARITHMETICS>::test_multiindex_access()
 {   
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
-    typedef typename numarray<ATYPE>::value_type value_type;
+    typedef narray_t::value_type value_type;
     typedef std::vector<size_t> stype;
     std::cout<<"void NumArrayTest<T,STORAGE>::test_multiindex_access()";
     std::cout<<std::endl;
 
-    numarray<ATYPE> a1(create_array<ATYPE>());
+    narray_t a1(create_array<ATYPE>());
     auto s1 = a1.template shape<std::vector<size_t> >();
     auto data = RandomDistribution::uniform<std::vector<value_type> >(a1.size());
 
@@ -277,24 +278,24 @@ void numarray_test<ATYPE,IPAT>::test_multiindex_access()
 }
 
 //------------------------------------------------------------------------------
-template<typename ATYPE,template<typename> class IPAT> 
-void numarray_test<ATYPE,IPAT>::test_typeinfo()
+template<typename ATYPE,template<typename> class IPAT,bool MT_BINARY_ARITHMETICS> 
+void numarray_test<ATYPE,IPAT,MT_BINARY_ARITHMETICS>::test_typeinfo()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
-    type_id_t id1 = numarray<ATYPE>::type_id;
+    type_id_t id1 = narray_t::type_id;
     type_id_t id2 = type_id_map<typename ATYPE::value_type>::type_id;
     CPPUNIT_ASSERT(id1 == id2);
 }
 
 //-------------------------------------------------------------------------------
-template<typename ATYPE,template<typename> class IPAT> 
-void numarray_test<ATYPE,IPAT>::test_unary_add()
+template<typename ATYPE,template<typename> class IPAT,bool MT_BINARY_ARITHMETICS> 
+void numarray_test<ATYPE,IPAT,MT_BINARY_ARITHMETICS>::test_unary_add()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
-    typedef typename numarray<ATYPE>::value_type value_type;
-    numarray<ATYPE> a(create_array<ATYPE>());
+    typedef narray_t::value_type value_type;
+    narray_t a(create_array<ATYPE>());
 
     //set initial value
     std::fill(a.begin(),a.end(),value_type(1));
@@ -313,7 +314,7 @@ void numarray_test<ATYPE,IPAT>::test_unary_add()
     }
 
     //add a array
-    numarray<ATYPE> b(create_array<ATYPE>());
+    narray_t b(create_array<ATYPE>());
     std::fill(b.begin(),b.end(),value_type(3));
 
     a += b;
@@ -345,13 +346,13 @@ void numarray_test<ATYPE,IPAT>::test_unary_add()
 }
 
 //-----------------------------------------------------------------------------
-template<typename ATYPE,template<typename> class IPAT> 
-void numarray_test<ATYPE,IPAT>::test_unary_sub()
+template<typename ATYPE,template<typename> class IPAT,bool MT_BINARY_ARITHMETICS> 
+void numarray_test<ATYPE,IPAT,MT_BINARY_ARITHMETICS>::test_unary_sub()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
-    typedef typename numarray<ATYPE>::value_type value_type;
-    numarray<ATYPE> a(create_array<ATYPE>());
+    typedef narray_t::value_type value_type;
+    narray_t a(create_array<ATYPE>());
 
     //set initial value
     std::fill(a.begin(),a.end(),value_type(15));
@@ -370,7 +371,7 @@ void numarray_test<ATYPE,IPAT>::test_unary_sub()
     }
 
     //add a array
-    numarray<ATYPE> b(create_array<ATYPE>());
+    narray_t b(create_array<ATYPE>());
     std::fill(b.begin(),b.end(),value_type(3));
 
     a -= b;
@@ -402,13 +403,13 @@ void numarray_test<ATYPE,IPAT>::test_unary_sub()
 }
 
 //-----------------------------------------------------------------------------
-template<typename ATYPE,template<typename> class IPAT> 
-void numarray_test<ATYPE,IPAT>::test_unary_mult()
+template<typename ATYPE,template<typename> class IPAT,bool MT_BINARY_ARITHMETICS> 
+void numarray_test<ATYPE,IPAT,MT_BINARY_ARITHMETICS>::test_unary_mult()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
-    typedef typename numarray<ATYPE>::value_type value_type;
-    numarray<ATYPE> a(create_array<ATYPE>());
+    typedef narray_t::value_type value_type;
+    narray_t a(create_array<ATYPE>());
 
     //set initial value
     std::fill(a.begin(),a.end(),value_type(1));
@@ -427,7 +428,7 @@ void numarray_test<ATYPE,IPAT>::test_unary_mult()
     }
 
     //add a array
-    numarray<ATYPE> b(create_array<ATYPE>());
+    narray_t b(create_array<ATYPE>());
     std::fill(b.begin(),b.end(),value_type(3));
 
     a *= b;
@@ -459,13 +460,13 @@ void numarray_test<ATYPE,IPAT>::test_unary_mult()
 }
 
 //-----------------------------------------------------------------------------
-template<typename ATYPE,template<typename> class IPAT> 
-void numarray_test<ATYPE,IPAT>::test_unary_div()
+template<typename ATYPE,template<typename> class IPAT,bool MT_BINARY_ARITHMETICS> 
+void numarray_test<ATYPE,IPAT,MT_BINARY_ARITHMETICS>::test_unary_div()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
-    typedef typename numarray<ATYPE>::value_type value_type;
-    numarray<ATYPE> a(create_array<ATYPE>());
+    typedef narray_t::value_type value_type;
+    narray_t a(create_array<ATYPE>());
 
     //set initial value
     std::fill(a.begin(),a.end(),value_type(12));
@@ -484,7 +485,7 @@ void numarray_test<ATYPE,IPAT>::test_unary_div()
     }
 
     //add a array
-    numarray<ATYPE> b(create_array<ATYPE>());
+    narray_t b(create_array<ATYPE>());
     std::fill(b.begin(),b.end(),value_type(2));
 
     a /= b;
@@ -517,13 +518,13 @@ void numarray_test<ATYPE,IPAT>::test_unary_div()
 }
 
 //-----------------------------------------------------------------------------
-template<typename ATYPE,template<typename> class IPAT> 
-void numarray_test<ATYPE,IPAT>::test_view()
+template<typename ATYPE,template<typename> class IPAT,bool MT_BINARY_ARITHMETICS> 
+void numarray_test<ATYPE,IPAT,MT_BINARY_ARITHMETICS>::test_view()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
-    typedef typename numarray<ATYPE>::value_type value_type;
-    numarray<ATYPE> a(create_array<ATYPE>());
+    typedef narray_t::value_type value_type;
+    narray_t a(create_array<ATYPE>());
 
     //set initial value
     std::fill(a.begin(),a.end(),value_type(12));

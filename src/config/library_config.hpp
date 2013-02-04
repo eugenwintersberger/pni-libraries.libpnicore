@@ -58,7 +58,7 @@ namespace core{
 
     };
 
-static const library_config pniutils_config(CONFIG_FILE_PATH);
+static const library_config pnicore_config(CONFIG_FILE_PATH);
 
 //end of namespace
 }
