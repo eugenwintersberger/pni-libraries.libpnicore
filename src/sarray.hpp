@@ -568,8 +568,8 @@ namespace core{
     template<typename T,size_t ...DIMS>
     std::ostream &operator<<(std::ostream &os,const sarray<T,DIMS...> &array)
     {
-        for(auto v: array)
-            os<<v<<" ";
+        for(auto iter=array.begin();iter!=array.end();++iter)
+            os<<*iter<<" "; 
 
         return os;
     }
@@ -586,8 +586,8 @@ namespace core{
     template<typename T,size_t ...DIMS>
     std::istream &operator>>(std::istream &is,sarray<T,DIMS...> &array)
     {
-        for(T &v: array)
-            is>>v;
+        for(auto iter=array.begin();iter!=array.end();++iter)
+            is>>*iter;
 
         return is;
     }

@@ -582,8 +582,8 @@ namespace core {
     template<typename T,typename STORAGE>
     std::ostream &operator<<(std::ostream &o,const darray<T,STORAGE> &a)
     {
-        for(auto v: a)
-            o<<v<<" ";
+        for(auto iter = a.begin();iter!=a.end();++iter)
+            o<<*iter<<" ";
 
         return o;
     }
@@ -600,8 +600,8 @@ namespace core {
     template<typename T,typename STORAGE>
     std::istream &operator>>(std::istream &is,darray<T,STORAGE> &a)
     {
-        for(T &v: a)
-            is>>v;
+        for(auto iter=a.begin();iter!=a.end();++iter)
+            is>>*iter;
 
         return is;
     }
