@@ -5,8 +5,6 @@ import os
 
 ###--------------------------------------------------------------------------------
 #add some command line options
-AddOption("--enable-vtk",dest="with_vtk",action="store_true",default=False)
-AddOption("--enable-tiff",dest="with_tiff",action="store_true",default=False)
 AddOption("--enable-gperf",dest="with_gperf",action="store_true",default=False)
 AddOption("--enable-callgrind",dest="with_callgrind",action="store_true",default=False)
 
@@ -83,10 +81,6 @@ var.Add(PathVariable("BOOSTLIBDIR","BOOST library installation path","/usr/lib")
 var.Add(PathVariable("CPPUINCDIR","CPPUnit header installation path","/usr/include"))
 var.Add(PathVariable("CPPULIBDIR","CPPUnit library installation path","/usr/lib"))
 
-if GetOption("with_vtk"):
-    var.Add(PathVariable("VTKINCDIR","header installation path for VTK","/usr/include/vtk"))
-    var.Add(PathVariable("VTKLIBDIR","VTK library installation","/usr/lib"))
-
 #need now to create the proper library suffix
 
 #create the build environment
@@ -128,10 +122,6 @@ env.Append(CXXFLAGS = ["-Wall","-std=c++0x","-fno-deduce-init-list"])
 env.AppendUnique(CXXFLAGS=["-Wunknown-pragmas","-pedantic"])
 env.AppendUnique(LIBPATH=[env["BOOSTLIBDIR"],env["CPPULIBDIR"]])
 env.AppendUnique(CPPPATH=[env["BOOSTINCDIR"],env["CPPUINCDIR"]])
-
-if GetOption("with_vtk"):
-    env.AppendUnique(LIBPATH=[env["VTKLIBDIR"]])
-    env.AppendUnique(CPPPATH=[env["VTKINCDIR"]])
 
 
 #==========================run configuration===================================

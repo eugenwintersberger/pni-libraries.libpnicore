@@ -205,20 +205,6 @@ if GetOption("with_gperf"):
         Exit(1)
 
 
-if GetOption("with_vtk"):
-    if not conf.CheckLib("vtkFiltering",language="C++") or \
-       not conf.CheckLib("vtkftgl",language="C++") or \
-       not conf.CheckLib("vtkGenericFiltering",language="C++") or \
-       not conf.CheckLib("vtkGraphics",language="C++") or \
-       not conf.CheckLib("vtkHybrid",language="C++") or \
-       not conf.CheckLib("vtkImaging",language="C++") or \
-       not conf.CheckLib("vtkInfovis",language="C++") or \
-       not conf.CheckLib("vtkCommon",language="C++") or \
-       not conf.CheckLib("vtkRendering",language="C++") or \
-       not conf.CheckLib("vtkIO",language="C++"):
-        print "VTK libraries are missing!"
-        Exit(1)
-
 env = conf.Finish()
 
 #create the build environments for the library and the test
