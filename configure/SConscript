@@ -213,7 +213,16 @@ test_env  = env.Clone()
 
 if ('test' in COMMAND_LINE_TARGETS) or ('test_install' in COMMAND_LINE_TARGETS):
     test_env["ENV"]["PKG_CONFIG_PATH"] = os.environ["PKG_CONFIG_PATH"]
-    test_env.ParseConfig('pkg-config --cflags --libs pnicore')
+    
+    try:
+        test_env.ParseConfig('pkg-config --cflags --libs pnicore')
+    except:
+        Exit(1)
+
+    try:
+        test_env.ParseConfig('pkg-config --cflags --libs cppunit')
+    except:
+        Exit(1)
 
     #============================start configuration for tests=====================
     test_conf = Configure(test_env)

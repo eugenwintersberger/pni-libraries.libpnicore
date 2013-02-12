@@ -70,8 +70,6 @@ var.Add("INCDIR","installation path for header files","")
 var.Add("LIBDIR","library installation path","")
 var.Add(PathVariable("BOOSTINCDIR","BOOST header installation path","/usr/include"))
 var.Add(PathVariable("BOOSTLIBDIR","BOOST library installation path","/usr/lib"))
-var.Add(PathVariable("CPPUINCDIR","CPPUnit header installation path","/usr/include"))
-var.Add(PathVariable("CPPULIBDIR","CPPUnit library installation path","/usr/lib"))
 
 #need now to create the proper library suffix
 
@@ -112,8 +110,8 @@ if not env["DOCDIR"]:
 #set default compiler flags
 env.Append(CXXFLAGS = ["-Wall","-std=c++0x","-fno-deduce-init-list"])
 env.AppendUnique(CXXFLAGS=["-Wunknown-pragmas","-pedantic"])
-env.AppendUnique(LIBPATH=[env["BOOSTLIBDIR"],env["CPPULIBDIR"]])
-env.AppendUnique(CPPPATH=[env["BOOSTINCDIR"],env["CPPUINCDIR"]])
+env.AppendUnique(LIBPATH=[env["BOOSTLIBDIR"]])
+env.AppendUnique(CPPPATH=[env["BOOSTINCDIR"]])
 
 
 #==========================run configuration===================================
