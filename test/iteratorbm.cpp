@@ -87,13 +87,11 @@ int main(int argc,char **argv)
    
 
     run_benchmark<bmtimer_t>(1,ptr_bm_t(N));
-    //run_benchmark<ClockTimer>(1,ptr_bm_t(N));
 
     run_benchmark<bmtimer_t>(1,dbuffer_bm_t(dbuffer<double>(N)));
     run_benchmark<bmtimer_t>(1,darray_bm_t(darray<double,dbuffer<double> >(shape_t{2,N/2})));
     run_benchmark<bmtimer_t>(1,narray_bm_t(
                 numarray<darray<double,dbuffer<double> > >(shape_t{2,N/2})));
-    //run_benchmark<ClockTimer>(1,dbuffer_bm_t(DBuffer<double>(N)));
 
 
     return 0;
