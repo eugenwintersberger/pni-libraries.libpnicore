@@ -42,27 +42,19 @@ class LibFileNames(object):
 
 debug = ARGUMENTS.get("DEBUG",0)
 
-
-var = Variables('BuildConfig.py')
+#create build variables
+var = Variables()
 if os.name == "nt":
 	var.Add(PathVariable("PREFIX","set installation prefix",
-                         "C:\\Program Files\\libpniutils",
+                         "C:\\Program Files\\libpnicore",
                          PathVariable.PathAccept))
 elif os.name=="posix":
-	var.Add(PathVariable("PREFIX","set installation prefix","/usr",
+	var.Add(PathVariable("PREFIX","set installation prefix","/usr/local",
                          PathVariable.PathAccept))
 
-if os.name == "nt":
-	var.Add(PathVariable("BOOSTPREFIX",
-            "set the installation prefix for boost",
-            "C:\\Program Files\\boost",PathVariable.PathAccept))
-elif os.name == "posix":	
-	var.Add(PathVariable("BOOSTPREFIX","set the installation prefix for boost",
-                         "/usr"))
-
 #this are variables which should not be used by a user
-var.Add("VERSION","library version","0.0.0")
-var.Add("LIBNAME","library name","pniutils")
+var.Add("VERSION","library version","1.0.0")
+var.Add("LIBNAME","library name","pnicore")
 var.Add("SOVERSION","SOVersion of the library (binary interface version)","0")
 var.Add("MAINTAINER","package maintainer for the project","Eugen Wintersberger")
 var.Add("MAINTAINER_MAIL","e-mail of the package maintainer","eugen.wintersberger@desy.de")
@@ -85,7 +77,7 @@ var.Add(PathVariable("CPPULIBDIR","CPPUnit library installation path","/usr/lib"
 
 #create the build environment
 env = Environment(variables=var,ENV={'PATH':os.environ['PATH']},
-				  tools=['default','packaging','textfile'])
+				  tools=['default','textfile'])
 
 if GetOption("with_gperf"):
     env.Append(CXXFLAGS=["-g"])
