@@ -88,7 +88,7 @@ int main(int argc,char **argv)
     conf.add_option(config_option<size_t>("nruns","r",
                 "number of benchmark runs",1));
     
-    parse(conf,argc,argv);
+    parse(conf,cliargs2vector(argc,argv));
 
     //type definitions
     typedef numarray<darray<float64> > nf64array;

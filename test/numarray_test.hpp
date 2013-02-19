@@ -176,7 +176,7 @@ void numarray_test<ATYPE,IPAT,MT_BINARY_ARITHMETICS>::test_iterators()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
-    typedef narray_t::value_type value_type;
+    typedef typename narray_t::value_type value_type;
     narray_t a1(create_array<ATYPE>());
 
     //--------------------check standard iterator----------------
@@ -230,7 +230,7 @@ void numarray_test<ATYPE,IPAT,MT_BINARY_ARITHMETICS>::test_multiindex_access()
 {   
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
-    typedef narray_t::value_type value_type;
+    typedef typename narray_t::value_type value_type;
     typedef std::vector<size_t> stype;
     std::cout<<"void NumArrayTest<T,STORAGE>::test_multiindex_access()";
     std::cout<<std::endl;
@@ -294,7 +294,7 @@ void numarray_test<ATYPE,IPAT,MT_BINARY_ARITHMETICS>::test_unary_add()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
-    typedef narray_t::value_type value_type;
+    typedef typename narray_t::value_type value_type;
     narray_t a(create_array<ATYPE>());
 
     //set initial value
@@ -351,7 +351,7 @@ void numarray_test<ATYPE,IPAT,MT_BINARY_ARITHMETICS>::test_unary_sub()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
-    typedef narray_t::value_type value_type;
+    typedef typename narray_t::value_type value_type;
     narray_t a(create_array<ATYPE>());
 
     //set initial value
@@ -408,7 +408,7 @@ void numarray_test<ATYPE,IPAT,MT_BINARY_ARITHMETICS>::test_unary_mult()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
-    typedef narray_t::value_type value_type;
+    typedef typename narray_t::value_type value_type;
     narray_t a(create_array<ATYPE>());
 
     //set initial value
@@ -465,7 +465,7 @@ void numarray_test<ATYPE,IPAT,MT_BINARY_ARITHMETICS>::test_unary_div()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
-    typedef narray_t::value_type value_type;
+    typedef typename narray_t::value_type value_type;
     narray_t a(create_array<ATYPE>());
 
     //set initial value
@@ -523,7 +523,7 @@ void numarray_test<ATYPE,IPAT,MT_BINARY_ARITHMETICS>::test_view()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
-    typedef narray_t::value_type value_type;
+    typedef typename narray_t::value_type value_type;
     narray_t a(create_array<ATYPE>());
 
     //set initial value
