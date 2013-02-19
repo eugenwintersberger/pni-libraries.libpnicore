@@ -141,108 +141,6 @@ namespace core{
         class numarray
     {
         //need to do here a compiletime check if types are equal
-        private:
-            ATYPE _array; //!< array with data
-
-            //----------------------private methods----------------------------
-            /*! 
-            \brief get array view
-
-            Returns an instance of ArrayView if one of the indices is a Slice
-            type. 
-            \param view dummy parameter with the view type to select the proper
-            private member function
-            \param indices list of indices from which to construct the view
-            \return array view object
-            */
-            template<typename ...ITYPES>
-            numarray<array_view<numarray<ATYPE,IPA> > ,IPA,MT_BINARY_ARITHMETICS>
-            _get_data(numarray<array_view<numarray<ATYPE,IPA>
-                    >,IPA,MT_BINARY_ARITHMETICS> &view,ITYPES ...indices)
-            {
-                typedef array_view<numarray<ATYPE,IPA,MT_BINARY_ARITHMETICS> > view_t;
-                std::vector<slice> slices{slice(indices)...};
-                array_selection s = array_selection::create(slices);
-
-                view_t tmp(*this,s);
-
-                return numarray<view_t,IPA>(tmp);
-            }
-
-            //-----------------------------------------------------------------
-            /*!
-            \brief get element reference
-
-            Returns a reference to the element determined by indices if this
-            list does not contain an instance of Slice. 
-            \param v dummy variable to select the proper function template
-            \param indices list of index values determining the element to
-            return
-            \return reference to the element
-            */
-            template<typename ...ITYPES> typename ATYPE::value_type 
-                &_get_data(typename ATYPE::value_type v,ITYPES ...indices)
-            {
-                return this->_array(indices...);
-            }
-
-            //-----------------------------------------------------------------
-            /*!
-            \brief get element value
-
-            Return the value of the element determined by indices if this list
-            does not contain an instance of Slice.
-            \tparam ITYPES index types
-            \param v dummy variable to select the proper function template
-            \param indices list of indices identifiying the requrested element
-            \return value determined by the indices
-            */
-            template<typename ...ITYPES> typename ATYPE::value_type 
-                _get_data(typename ATYPE::value_type v,ITYPES ...indices) const
-            {
-                return this->_array(indices...);
-            }
-
-            //-----------------------------------------------------------------
-            /*!
-            \brief get array view 
-
-            Get an array view whose shape is determined by the container c.
-            \tparam CTYPE container template
-            \tparam OTS template arguments to CTYPE
-            \param view dummy variable to determine the function
-            \param c container with view parameters
-            \return array view
-            */
-            template<template<typename ...> class CTYPE,typename ...OTS>
-            numarray<array_view<numarray<ATYPE,IPA> >,IPA,MT_BINARY_ARITHMETICS>
-            _get_data(numarray<array_view<numarray<ATYPE,IPA,MT_BINARY_ARITHMETICS> >,IPA> &view,const CTYPE<OTS...> &c)
-            {
-                typedef array_view<numarray<ATYPE,IPA,MT_BINARY_ARITHMETICS> > view_t;
-
-                array_selection s = array_selection::create(c);
-
-                return numarray<view_t>(view_t(*this,s));
-            }
-
-            //-----------------------------------------------------------------
-            /*! 
-            \brief get reference to element
-
-            Returns a reference to an array element determined by the values in
-            a container.
-            \tparam CTYPE container template
-            \tparam OTS template arguments of CTYPE
-            \param v dummy argument to determine the function
-            \param c container with indices
-            \return element reference
-            */
-            template<template<typename ...> class CTYPE,typename ...OTS>
-                typename ATYPE::value_type &
-                _get_data(typename ATYPE::value_type v,const CTYPE<OTS...> &c)
-            {
-                return this->_data[this->_imap.offset(c)];
-            }
         public:
             //====================public types=================================
             //! element type of the array
@@ -264,6 +162,107 @@ namespace core{
             typedef typename ATYPE::const_iterator const_iterator;
             //! inplace arithmetic type
             typedef IPA<ATYPE> inplace_t;
+        private:
+            ATYPE _array; //!< array with data
+
+            //----------------------private methods----------------------------
+            /*! 
+            \brief get array view
+
+            Returns an instance of ArrayView if one of the indices is a Slice
+            type. 
+            \param view dummy parameter with the view type to select the proper
+            private member function
+            \param indices list of indices from which to construct the view
+            \return array view object
+            */
+            template<typename ...ITYPES>
+            numarray<array_view<array_type> ,IPA,MT_BINARY_ARITHMETICS>
+            _get_data(numarray<array_view<array_type>,IPA,MT_BINARY_ARITHMETICS> &view,ITYPES ...indices)
+            {
+                typedef array_view<array_type> view_t;
+                std::vector<slice> slices{slice(indices)...};
+                array_selection s = array_selection::create(slices);
+
+                view_t tmp(*this,s);
+
+                return numarray<view_t,IPA,MT_BINARY_ARITHMETICS>(tmp);
+            }
+
+            //-----------------------------------------------------------------
+            /*!
+            \brief get element reference
+
+            Returns a reference to the element determined by indices if this
+            list does not contain an instance of Slice. 
+            \param v dummy variable to select the proper function template
+            \param indices list of index values determining the element to
+            return
+            \return reference to the element
+            */
+            template<typename ...ITYPES> 
+                value_type &_get_data(value_type v,ITYPES ...indices)
+            {
+                return this->_array(indices...);
+            }
+
+            //-----------------------------------------------------------------
+            /*!
+            \brief get element value
+
+            Return the value of the element determined by indices if this list
+            does not contain an instance of Slice.
+            \tparam ITYPES index types
+            \param v dummy variable to select the proper function template
+            \param indices list of indices identifiying the requrested element
+            \return value determined by the indices
+            */
+            template<typename ...ITYPES> 
+                value_type _get_data(value_type v,ITYPES ...indices) const
+            {
+                return this->_array(indices...);
+            }
+
+            //-----------------------------------------------------------------
+            /*!
+            \brief get array view 
+
+            Get an array view whose shape is determined by the container c.
+            \tparam CTYPE container template
+            \tparam OTS template arguments to CTYPE
+            \param view dummy variable to determine the function
+            \param c container with view parameters
+            \return array view
+            */
+            template<template<typename ...> class CTYPE,typename ...OTS>
+            numarray<array_view<array_type>,IPA,MT_BINARY_ARITHMETICS>
+            _get_data(numarray<array_view<array_type>,IPA> &view,const CTYPE<OTS...> &c)
+            {
+                typedef array_view<array_type> view_t;
+
+                array_selection s = array_selection::create(c);
+
+                return numarray<view_t,IPA,MT_BINARY_ARITHMETICS>(view_t(*this,s));
+            }
+
+            //-----------------------------------------------------------------
+            /*! 
+            \brief get reference to element
+
+            Returns a reference to an array element determined by the values in
+            a container.
+            \tparam CTYPE container template
+            \tparam OTS template arguments of CTYPE
+            \param v dummy argument to determine the function
+            \param c container with indices
+            \return element reference
+            */
+            template<template<typename ...> class CTYPE,typename ...OTS>
+                value_type & _get_data(value_type v,const CTYPE<OTS...> &c)
+            {
+                return this->_data[this->_imap.offset(c)];
+            }
+        public:
             
             //=====================public members==============================
             //! type id of the element type

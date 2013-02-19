@@ -49,24 +49,20 @@ NUMARRAY_TEST_REGISTRATION(darray,complex32,inplace_arithmetics,false);
 NUMARRAY_TEST_REGISTRATION(darray,complex64,inplace_arithmetics,false);
 NUMARRAY_TEST_REGISTRATION(darray,complex128,inplace_arithmetics,false);
 
-/*
-ARRAY_TEST_REGISTRATION(UInt8,RefBuffer,NewAllocator);
-ARRAY_TEST_REGISTRATION(Int8,RefBuffer,NewAllocator);
-ARRAY_TEST_REGISTRATION(UInt16,RefBuffer,NewAllocator);
-ARRAY_TEST_REGISTRATION(Int16,RefBuffer,NewAllocator);
-ARRAY_TEST_REGISTRATION(UInt32,RefBuffer,NewAllocator);
-ARRAY_TEST_REGISTRATION(Int32,RefBuffer,NewAllocator);
-ARRAY_TEST_REGISTRATION(UInt64,RefBuffer,NewAllocator);
-ARRAY_TEST_REGISTRATION(Int64,RefBuffer,NewAllocator);
-
-ARRAY_TEST_REGISTRATION(Float32,RefBuffer,NewAllocator);
-ARRAY_TEST_REGISTRATION(Float64,RefBuffer,NewAllocator);
-ARRAY_TEST_REGISTRATION(Float128,RefBuffer,NewAllocator);
-
-ARRAY_TEST_REGISTRATION(Complex32,RefBuffer,NewAllocator);
-ARRAY_TEST_REGISTRATION(Complex64,RefBuffer,NewAllocator);
-ARRAY_TEST_REGISTRATION(Complex128,RefBuffer,NewAllocator);
-*/
+NUMARRAY_TEST_REGISTRATION(darray,uint8,inplace_arithmetics,true);
+NUMARRAY_TEST_REGISTRATION(darray,int8,inplace_arithmetics,true);
+NUMARRAY_TEST_REGISTRATION(darray,uint16,inplace_arithmetics,true);
+NUMARRAY_TEST_REGISTRATION(darray,int16,inplace_arithmetics,true);
+NUMARRAY_TEST_REGISTRATION(darray,uint32,inplace_arithmetics,true);
+NUMARRAY_TEST_REGISTRATION(darray,int32,inplace_arithmetics,true);
+NUMARRAY_TEST_REGISTRATION(darray,uint64,inplace_arithmetics,true);
+NUMARRAY_TEST_REGISTRATION(darray,int64,inplace_arithmetics,true);
+NUMARRAY_TEST_REGISTRATION(darray,float32,inplace_arithmetics,true);
+NUMARRAY_TEST_REGISTRATION(darray,float64,inplace_arithmetics,true);
+NUMARRAY_TEST_REGISTRATION(darray,float128,inplace_arithmetics,true);
+NUMARRAY_TEST_REGISTRATION(darray,complex32,inplace_arithmetics,true);
+NUMARRAY_TEST_REGISTRATION(darray,complex64,inplace_arithmetics,true);
+NUMARRAY_TEST_REGISTRATION(darray,complex128,inplace_arithmetics,true);
 
 
 
