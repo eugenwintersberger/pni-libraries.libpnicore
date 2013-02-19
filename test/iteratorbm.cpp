@@ -32,7 +32,8 @@
 #include <pni/core/benchmark/benchmark_runner.hpp>
 #include <pni/core/benchmark/benchmark_result.hpp>
 #include <pni/core/benchmark/chrono_timer.hpp>
-#include <pni/core/benchmark/clock_timer.hpp>
+#include <pni/core/config/configuration.hpp>
+#include <pni/core/config/config_parser.hpp>
 
 #include "benchmark/linear_io_pointer_benchmark.hpp"
 #include "benchmark/linear_io_container_iterator.hpp"
@@ -67,16 +68,30 @@ typedef chrono_timer<std::chrono::high_resolution_clock,std::chrono::nanoseconds
 
 int main(int argc,char **argv)
 {
-    if(argc<2) 
+    configuration conf;
+
+    conf.add_option(config_option<bool>("help","h","show help text",false));
+    conf.add_option(config_option<size_t>("size","n",
+                    "number of double elements to allocate",size_t(0)));
+    conf.add_option(config_option<size_t>("nruns","r",
+                    "number of runs",1));
+    conf.add_option(config_option<string>("type","t",
+                    "container type","dbuffer"));
+
+    parse(conf,cliargs2vector(argc,argv));
+
+    if(conf.value<bool>("help"))
     {
-        std::cerr<<"Usage: iterbm <N>"<<std::endl;
+        std::cerr<<conf<<std::endl;
         return 1;
     }
 
-    size_t N = atoi(argv[1]);
-    std::cout<<"allocating "<<N*sizeof(double)/1024/1024<<" MByte of memory!";
-    std::cout<<std::endl;
-    
+    if(conf.value<size_t>("size")==0)
+    {
+        std::cerr<<"cannot allocate 0 MBytes of memory"<<std::endl;
+        return 1;
+    }
+
     typedef linear_io_container_iterator<dbuffer<double> > dbuffer_bm_t;
     typedef linear_io_container_iterator<darray<double,dbuffer<double> > > darray_bm_t;
     typedef linear_io_container_iterator<numarray<
@@ -86,12 +101,25 @@ int main(int argc,char **argv)
     typedef linear_io_pointer_benchmark<double> ptr_bm_t;
    
 
-    run_benchmark<bmtimer_t>(1,ptr_bm_t(N));
+    if(conf.value<string>("type")=="ptr")
+        run_benchmark<bmtimer_t>(conf.value<size_t>("nruns"),
+                                 ptr_bm_t(conf.value<size_t>("size")));
 
-    run_benchmark<bmtimer_t>(1,dbuffer_bm_t(dbuffer<double>(N)));
-    run_benchmark<bmtimer_t>(1,darray_bm_t(darray<double,dbuffer<double> >(shape_t{2,N/2})));
-    run_benchmark<bmtimer_t>(1,narray_bm_t(
-                numarray<darray<double,dbuffer<double> > >(shape_t{2,N/2})));
+    else if(conf.value<string>("type")=="dbuffer")
+        run_benchmark<bmtimer_t>(conf.value<size_t>("nruns"),
+                                 dbuffer_bm_t(dbuffer<double>(conf.value<size_t>("size"))));
+    else if(conf.value<string>("type")=="darray")
+        run_benchmark<bmtimer_t>(conf.value<size_t>("nruns"),
+                                 darray_bm_t(darray<double,dbuffer<double> >(shape_t{2,conf.value<size_t>("size")/2})));
+    else if(conf.value<string>("type")=="numarray")
+        run_benchmark<bmtimer_t>(conf.value<size_t>("nruns"),narray_bm_t(
+                numarray<darray<double,dbuffer<double> >
+                >(shape_t{2,conf.value<size_t>("size")/2})));
+    else
+    {
+        std::cerr<<"unknow storage container!"<<std::endl;
+        return 1;
+    }
 
 
     return 0;
