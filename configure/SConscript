@@ -205,20 +205,6 @@ if GetOption("with_gperf"):
         Exit(1)
 
 
-if GetOption("with_vtk"):
-    if not conf.CheckLib("vtkFiltering",language="C++") or \
-       not conf.CheckLib("vtkftgl",language="C++") or \
-       not conf.CheckLib("vtkGenericFiltering",language="C++") or \
-       not conf.CheckLib("vtkGraphics",language="C++") or \
-       not conf.CheckLib("vtkHybrid",language="C++") or \
-       not conf.CheckLib("vtkImaging",language="C++") or \
-       not conf.CheckLib("vtkInfovis",language="C++") or \
-       not conf.CheckLib("vtkCommon",language="C++") or \
-       not conf.CheckLib("vtkRendering",language="C++") or \
-       not conf.CheckLib("vtkIO",language="C++"):
-        print "VTK libraries are missing!"
-        Exit(1)
-
 env = conf.Finish()
 
 #create the build environments for the library and the test
@@ -227,7 +213,16 @@ test_env  = env.Clone()
 
 if ('test' in COMMAND_LINE_TARGETS) or ('test_install' in COMMAND_LINE_TARGETS):
     test_env["ENV"]["PKG_CONFIG_PATH"] = os.environ["PKG_CONFIG_PATH"]
-    test_env.ParseConfig('pkg-config --cflags --libs pnicore')
+    
+    try:
+        test_env.ParseConfig('pkg-config --cflags --libs pnicore')
+    except:
+        Exit(1)
+
+    try:
+        test_env.ParseConfig('pkg-config --cflags --libs cppunit')
+    except:
+        Exit(1)
 
     #============================start configuration for tests=====================
     test_conf = Configure(test_env)

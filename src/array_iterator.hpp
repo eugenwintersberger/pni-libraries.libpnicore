@@ -59,6 +59,7 @@ namespace core{
     {
         public:
             typedef array *cont_ptr; //!< container pointer
+            //! reference type of the element
             typedef value_ref value_type;
             //! return type for the dereferencing operator
             typedef value_ref return_type;
@@ -83,6 +84,7 @@ namespace core{
     {
         public:
             typedef const array *cont_ptr; //!< container pointer
+            //! value type of the iterator
             typedef value value_type;
             //! return type for dereferencing operator
             typedef value return_type;    

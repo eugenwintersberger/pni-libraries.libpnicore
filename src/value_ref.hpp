@@ -34,14 +34,15 @@ namespace pni{
 namespace core{
 
     /*!
-    \brief type erasure for references POD data
+    \ingroup type_classes
+    \brief type erasure for references to POD data
 
     Unlike value this type erasure holds references to POD data created with
     std::ref. Like value the types managed by the erasure are those that are
-    defined in Types.hpp and thus have a TypeID value associated with them. 
-    Creating an instane is quite simple, just use
+    defined in types.hpp and thus have a type_id_t value associated with them. 
+    Instantiation is quite simple
     \code
-    Float64 v1 = 100.243;
+    float64 v1 = 100.243;
     value_ref v = std::ref(v1);
     \endcode
     The idea is that it is now possible to manipulate either the original object
@@ -49,7 +50,7 @@ namespace core{
     operator is slightly different from that of the value class as will be shown
     in the next example
     \code
-    Float32 v1 = 34;
+    float32 v1 = 34;
     value_ref v = std::ref(v1); 
     //v holds now aaaa reference to v1 and thus has a value of 34
 
@@ -58,7 +59,7 @@ namespace core{
     v = 1245.2340; 
 
     //however we can assign a new reference with
-    Complex32 x(1,2);
+    complex32 x(1,2);
     v = std::ref(x);
 
     //now v points to x rather than to v1
@@ -66,23 +67,23 @@ namespace core{
    
     Accessing the content of an instance of value_ref is again similar to value
     \code
-    Float32 v1 = 123.03;
+    float32 v1 = 123.03;
     value_ref v = std::ref(v1);
-    Float32 a = v.as<Float32>();
+    float32 a = v.as<float32>();
     \endcode
     if the type passed as a template parameter to as<> does not match the type
-    of the data wrapped by the value class a TypeError exception will be thrown. 
+    of the data wrapped by the value class a type_error exception will be thrown. 
 
     The value class provides input and output operators to read and write to an
     instance from streams. 
     \code
-    value v = ....;
+    value_ref v = ....;
     std::cin>>v;
     std::cout<<v;
     \endcode
     Other streams are of coarse supported. It is important to note that an
     uninitialized instance of v will throw an exception if one tries to access
-    data for reading. However as this class holds references ther is no such
+    data for reading. However as this class holds references there is no such
     thing as a creation function to create an empty object. It is up to the
     programmer to do proper initialization. Furthermore it is the responsibility
     of the user to ensure that the lifetime of an object exceeds that of a
@@ -94,10 +95,10 @@ namespace core{
             /*!
             \brief throw exception
 
-            Static helper method that throws a MemoryNotAllcatedError if the
+            Static helper method that throws a memory_not_allocated_error if the
             type erasure holds no data and data access is requested by the user.
-            \throw MemoryNotAllocatedError
-            \param r exception record where the error occured.
+            \throw memory_not_allocated_error
+            \param r exception record where the error occurred.
             */
             static void _throw_not_allocated_error(const exception_record &r);
 
@@ -109,7 +110,17 @@ namespace core{
             value_ref():_ptr(nullptr) {}
           
             //-----------------------------------------------------------------
-            //! template constructor from value
+            /*! 
+            \brief template constructor from value
+
+            Constructs a reference to a value. 
+            \code
+            float32 x = 100.;
+            value_ref v = std::ref(x);
+            \endcode
+            \tparam T type of the value to which the reference shall be created
+            \param v reference to the value
+            */
             template<typename T> value_ref(std::reference_wrapper<T> v):
                 _ptr(new value_holder<std::reference_wrapper<T> >(v))
             {}
@@ -131,13 +142,14 @@ namespace core{
 
             //==================assignment operators===========================
             /*! 
-            \brief copy assignment from value
+            \brief assign a value to the reference
 
-            Assign a new value to class value. 
+            Assign a new value to reference. 
             \code
-            value v = value::create<Float32>();
+            uint16 v1=1;
+            value_ref vr = std::ref(v1);
 
-            v = UInt16(12);
+            vr = uint16(12);
             \endcode
             The assignment copies the new value to an appropriate instance of
             value_holder. This means that the type changes. 
@@ -147,6 +159,20 @@ namespace core{
             template<typename T> value_ref &operator=(const T &v);
 
             //-----------------------------------------------------------------
+            /*!
+            \brief reference assignment
+
+            Assign a new reference to an instance of value_ref. 
+            \code
+            value_ref a = ...;
+            float128 x = 1.2343;
+            a = std::ref(x);
+            \endcode
+
+            \tparam T type of the original variable
+            \param r reference to the new variable
+            \return reference to new instance of value_ref
+            */
             template<typename T> 
             value_ref &operator=(const std::reference_wrapper<T> &r);
 
@@ -166,8 +192,8 @@ namespace core{
             been initialized before an exception is thrown. In addition, if the
             data type passed as a template parameter does not fit the type used
             to store the data an exception will be thrown.
-            \throws MemoryNotAllocatedError if value is uninitialized
-            \throws TypeError if T does not match the original data type
+            \throws memory_not_allocated_error if value is uninitialized
+            \throws type_error if T does not match the original data type
             \return value of type T 
             */
             template<typename T> T as() const;
@@ -177,13 +203,17 @@ namespace core{
             \brief get type id
 
             Returns the ID of the stored data type. 
-            \throws MemoryNotAllocatedError if value is not initialized
+            \throws memory_not_allocated_error if value is not initialized
             \return type ID.
             */
             type_id_t type_id() const;
 
-            friend std::ostream &operator<<(std::ostream &,const value_ref &);
-            friend std::istream &operator>>(std::istream &,value_ref &);
+            //! output stream operator
+            friend std::ostream &operator<<(std::ostream &stream,
+                                            const value_ref &v);
+            //! input stream operator
+            friend std::istream &operator>>(std::istream &stream,
+                                            value_ref &v);
     };
 
     //======================implementation of template members=================
@@ -241,7 +271,7 @@ namespace core{
 
     Writes the content of value to the output stream. An exception is thrown
     if the value is not initialized. 
-    \throws MemoryNotAllocatedError if value is not initialized 
+    \throws memory_not_allocated_error if value is not initialized 
     \param stream output stream
     \param v reference to value
     \return reference to output stream
@@ -255,11 +285,11 @@ namespace core{
     Read data from an input stream to the value. It is important to note that
     the value must be initialized otherwise an exception will be thrown. 
     \code
-    value v = value::create<UInt32>();
+    value v = value::create<uint32>();
     std::cin>>v;
     \endcode
 
-    \throw MemoryNotAllocatedError if value not initialized 
+    \throw memroy_not_allocated_error if value not initialized 
     \param stream input stream
     \param v value where to store data
     \return reference to input stream

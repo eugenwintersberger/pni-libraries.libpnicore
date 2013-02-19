@@ -37,7 +37,7 @@ namespace core{
     \brief single threaded inplace arithmetics
 
     This class provides single threaded arithmetic operations for numeric
-    arrays. It is used for inplace arithmetic operators <Operator>=. 
+    arrays. It is used for inplace arithmetic operators (*=,+=,-=,/=). 
     All member functions provided are static. See the NumArray template for how
     this class is used in inplace arithmetics. This is the single threaded
     version for inplace arithmetics.
@@ -242,7 +242,7 @@ namespace core{
             inplace_arithmetics<ATYPE>::div(array,scalar);
             \endcode
             \param a instance of ATYPE
-            \parma b scalar value
+            \param b scalar value
             */
             static void div(ATYPE &a,value_type b)
             {

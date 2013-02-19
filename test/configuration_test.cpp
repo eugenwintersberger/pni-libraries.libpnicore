@@ -63,12 +63,9 @@ void configuration_test::test_configfile()
 void configuration_test::test_configcli()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+    std::vector<string> args{"-n4"};
 
-    std::vector<string> argv{"-n4"};
-    cli_args args(argv);
-    std::cout<<args<<std::endl;
-
-    parse(conf_cli,args.argc(),const_cast<char**>(args.argv()));
+    parse(conf_cli,args);
     std::cout<<conf_cli<<std::endl;
 
     CPPUNIT_ASSERT(conf_cli.value<size_t>("nthreads")==4);

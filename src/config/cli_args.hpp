@@ -91,13 +91,13 @@ namespace core{
         size_t index = 1;
         _argv[0] = new char;
 
-        for(auto v: str_cont)
+        for(auto iter=str_cont.begin();iter!=str_cont.end();++iter)
         {
             //allocate memory 
-            _argv[index] = new char[v.size()+1];
+            _argv[index] = new char[iter->size()+1];
 
             //copy string
-            strncpy(_argv[index],v.c_str(),v.size()+1); 
+            strncpy(_argv[index],iter->c_str(),iter->size()+1); 
             
             index++; //increment argument index
         }

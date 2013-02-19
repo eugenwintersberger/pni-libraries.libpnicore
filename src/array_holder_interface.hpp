@@ -128,18 +128,23 @@ namespace core{
             virtual string type_name() const = 0;
 
             //-----------------------------------------------------------------
+            //! get element at linear index i
             virtual value operator[](size_t i) const = 0;
 
             //-----------------------------------------------------------------
+            //! get reference to element at linear index i
             virtual value_ref operator[](size_t i) = 0;
 
             //-----------------------------------------------------------------
+            //! get value at linear index i
             virtual value at(size_t i) const = 0;
 
             //-----------------------------------------------------------------
+            //! get reference to value at linear index i
             virtual value_ref at(size_t i) = 0;
 
             //-----------------------------------------------------------------
+            //! get pointer to data
             virtual const void *ptr() const = 0;
 
     };

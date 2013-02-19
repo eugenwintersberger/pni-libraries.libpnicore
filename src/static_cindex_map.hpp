@@ -187,6 +187,7 @@ namespace core{
 
             This special break condition is called in cases where the index map
             has to handle only a 1D array. 
+            \return offset value
             */
             template<size_t d> size_t _offset() const { return 0; }
 

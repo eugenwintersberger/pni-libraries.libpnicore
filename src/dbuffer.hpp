@@ -91,6 +91,7 @@ namespace core{
             typedef container_iterator<buffer_type,1 > const_iterator; 
 
             //=============public static variables=============================
+            //! id of the type stored in the buffer
             static const type_id_t type_id = type_id_map<value_type>::type_id;
            
             //=================constructors and destructor=====================

@@ -43,6 +43,7 @@ namespace core{
 
         public:
             //======================static members=================================
+            //! name of the timer
             static const string name; 
             //=======================constructors==================================
             //! default constructor

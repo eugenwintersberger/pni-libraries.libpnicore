@@ -34,6 +34,7 @@ namespace pni{
 namespace core{
 
     /*!
+    \ingroup type_classes
     \brief type erasure for POD data
 
     This is a very simple type erasure for POD data. Only those data types
@@ -177,8 +178,10 @@ namespace core{
             */
             type_id_t type_id() const;
 
-            friend std::ostream &operator<<(std::ostream &,const value &);
-            friend std::istream &operator>>(std::istream &,value &);
+            friend std::ostream &operator<<(std::ostream &stream,
+                                            const value &v);
+            friend std::istream &operator>>(std::istream &stream,
+                                            value &v);
     };
 
     //=====================implementation of template member functions=========

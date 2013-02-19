@@ -26,24 +26,42 @@
 #include <pni/core/types.hpp>
 #include <pni/core/type_info.hpp>
 
+#ifdef NOCPPRAND
+#include <boost/random/uniform_int.hpp>
+#include <boost/random/uniform_real.hpp>
+#include <boost/random/mersenne_twister.hpp>
+#endif
+
 using namespace pni::core;
 
 template<typename T,bool is_int> struct uniform_distribution_map;
 
 template<typename T> struct uniform_distribution_map<T,true>
 {
+#ifdef NOCPPRAND
+    typedef boost::uniform_int<T> distribution_type;
+#else
     typedef std::uniform_int_distribution<T> distribution_type;
+#endif
 };
 
 template<typename T> struct uniform_distribution_map<T,false>
 {
+#ifdef NOCPPRAND
+    typedef boost::uniform_real<T> distribution_type;
+#else
     typedef std::uniform_real_distribution<T> distribution_type;
+#endif
 };
 
 template<typename T> class uniform_distribution
 {
     private:
+#ifdef NOCPPRAND
+        boost::mt19937 _engine;
+#else
         std::mt19937_64 _engine;
+#endif
         typename uniform_distribution_map<T,type_info<T>::is_integer>::distribution_type _distribution;
     public:
         uniform_distribution():
@@ -60,7 +78,11 @@ template<typename T> class uniform_distribution
 template<typename T> class uniform_distribution<std::complex<T> >
 {
     private:
+#ifdef NOCPPRAND
+        boost::mt19937 _engine;
+#else
         std::mt19937_64 _engine;
+#endif
         typename uniform_distribution_map<T,type_info<T>::is_integer>::distribution_type _distribution;
     public:
         uniform_distribution():
@@ -78,8 +100,13 @@ template<typename T> class uniform_distribution<std::complex<T> >
 template<> class uniform_distribution<bool>
 {
     private:
+#ifdef NOCPPRAND
+        boost::mt19937 _engine;
+        boost::uniform_int<> _distribution;
+#else
         std::mt19937_64 _engine;
         std::uniform_int_distribution<> _distribution;
+#endif
     public:
         uniform_distribution():
             _engine(),
@@ -95,8 +122,13 @@ template<> class uniform_distribution<bool>
 template<> class uniform_distribution<binary>
 {
     private:
+#ifdef NOCPPRAND
+        boost::mt19937 _engine;
+        boost::uniform_int<uint8> _distribution;
+#else
         std::mt19937_64 _engine;
         std::uniform_int_distribution<uint8> _distribution;
+#endif
     public:
         uniform_distribution():
             _engine(),

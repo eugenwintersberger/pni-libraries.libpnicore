@@ -737,8 +737,8 @@ namespace core{
     template<typename ATYPE> 
     std::ostream &operator<<(std::ostream &o,const numarray<ATYPE> &a)
     {
-        for(auto v: a)
-            o<<v<<" ";
+        for(auto iter=a.begin();iter!=a.end();++iter)
+            o<<*iter<<" ";
 
         return o;
     }
@@ -755,8 +755,8 @@ namespace core{
     template<typename ATYPE>
     std::istream &operator>>(std::istream &i,numarray<ATYPE> &a)
     {
-        for(typename numarray<ATYPE>::value_type &v: a)
-            i>>v;
+        for(auto iter=a.begin();iter!=a.end();++iter)
+            i>>*iter;
 
         return i;
     }

@@ -28,20 +28,31 @@
 namespace pni{
 namespace core{
 
+    /*!
+    \brief benchmark runner class
+
+    This class runs benchmark functions.
+    */
     class benchmark_runner
     {
         private:
             //! list with benchmark results
             std::list<benchmark_result> _results;
+            //! function to run before a benchmark run
             std::function<void()> _pre_run;
+            //! function to run after a benchmark run
             std::function<void()> _post_run;
 
+            //! default pre- and post-run function
             void do_nothing() {}
 
         public:
             //======================public types================================
+            //! iterator for benchmark results
             typedef std::list<benchmark_result>::iterator iterator;
+            //! const iterator for benchnmark results
             typedef std::list<benchmark_result>::const_iterator const_iterator;
+            //! function type for pre- and post-run functions
             typedef std::function<void()> function_t;
 
             //====================constructors and destructor===================
@@ -82,8 +93,12 @@ namespace core{
             //! get size
             size_t size() const { return _results.size(); }
 
+            //-----------------------------------------------------------------
+            //! set pre-run function
             void prerun(const function_t f) { _pre_run = f; }
 
+            //-----------------------------------------------------------------
+            //! set post-run function
             void postrun(const function_t f) { _post_run = f; }
     };
 

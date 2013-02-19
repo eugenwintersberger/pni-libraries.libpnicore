@@ -26,39 +26,99 @@
 
 namespace pni{
 namespace core{
+
+    /*!
+    \ingroup type_classes
+    \brief return reference
+
+    Return the reference to its argument. 
+    \tparam T type of the reference
+    \param v input reference
+    \return reference to the argument
+    */
     template<typename T> T& get_reference(T& v)
     {
         return v;
     }
 
+    //-------------------------------------------------------------------------
+    /*!
+    \brief return reference
+
+    This template function returns the reference to an object wrapped in the
+    std::reference_wrapper template.
+    \param v reference to reference_wrapper
+    \return original reference
+    */
     template<typename T> T& get_reference(std::reference_wrapper<T> &v)
     {
         return v.get();
     }
 
+    //-------------------------------------------------------------------------
+    /*!
+    \brief get const reference
+
+    Return the const reference to an object wrapped by the reference_wrapper
+    template.
+    \param v reference to wrapper
+    \return original const reference
+    */
     template<typename T>
     const T& get_reference(const std::reference_wrapper<T> &v) 
     {
         return v.get();
     }
 
+    //-------------------------------------------------------------------------
+    /*!
+    \brief check if type is reference
+
+    Value is true if T is a reference type (an instance f the
+    std::reference_wrapper<T> template). In this default case the value member
+    is set to false.
+    */
     template<typename T> struct is_reference_holder
     {
+        //! value set to false
         static const bool value = false;
     };
 
+    //-------------------------------------------------------------------------
+    /*!
+    \brief chef if type is reference
+
+    Specialization of the is_reference_holder template. In this case the value
+    member is set to true.
+    */
     template<typename T> struct is_reference_holder<std::reference_wrapper<T> >
     {
+        //! value set to true
         static const bool value = true;
     };
 
+    //-------------------------------------------------------------------------
+    /*!
+    \brief get original type of reference
+
+    In this case T is just pushed through.
+    */
     template<typename T> struct get_reference_type
     {
+        //! original reference type
         typedef T value_type;
     };
 
+    //-------------------------------------------------------------------------
+    /*!
+    \brief get the original type of reference
+
+    In this case value_type is T which is the template parameter of the original 
+    std::reference_wrapper<> template.
+    */
     template<typename T> struct get_reference_type<std::reference_wrapper<T> >
     {
+        //! original reference type
         typedef T value_type;
     };
 
@@ -83,8 +143,7 @@ namespace core{
             value_holder(T v):_value(v) {}
 
 
-            //===============public inerface implementation============
-            
+            //===============public inerface implementation============            
             virtual type_id_t type_id() const 
             {
                 return type_id_map<typename get_reference_type<T>::value_type >::type_id;
@@ -97,6 +156,12 @@ namespace core{
             }
 
             //---------------------------------------------------------
+            /*!
+            \brief return value
+
+            Return the value stored.
+            \return value of type T
+            */
             T as() const { return _value; } 
 
             //---------------------------------------------------------

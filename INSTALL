@@ -9,48 +9,41 @@ Minimum requirements:
 -> SCons build system >= 2.0.0
 -> doxygen  (to build the documentation)
 -> cppunit  (to build unit tests)
+-> pkg-config needed to configure additional required packages
 
 
 2.) Build and installation
     ----------------------
 
-2.1.) Building and installing the library on Linux
-      --------------------------------------------
+2.1) Building and installing the library on Linux
+     --------------------------------------------
 In the simplest case one only wants to install the library and the
 documentation. This can be done with
 
-$> scons all doc install 
+$> scons all install 
 
 By default the build system tries to install everything below /usr/local in the
-corresponding subdirectories (which requires root privileges). Another
-installation directory can be passed to scons via the PREFIX build variable
+corresponding subdirectories (which requires root privileges). A different
+installation prefix can be determined by passing the PREFIX build variable to
+scaons
 
-$> scons PREFIX=/opt/pni all doc install
+$> scons PREFIX=/opt/pni all install
 
 in which case everything goes below /opt/pni. Before the build runs auto
 configuration takes place. Here we assume that you have all your libraries in
 default locations or at least pkg-config installed which points to the proper
-include directories and library directories. If you use non-standard locations
-and do not use pkg-config there are some build variables available which allow
-you to pass this information to the build process. These variables are namely 
+include directories and library directories. As the BOOST library provides no
+pkg-config file the installation parameters of the library can be set with two
+additional build variables (which are passed like PREFIX to scons)
 
 BOOSTINCDIR - header path (up to the boost directory) for BOOST
 BOOSTLIBDIR - library installation directory for BOOST
-CPPUINCDIR - CPPUnit include directory
-CPPULIBDIR - CPPUnit library installation directory 
-
-Additionally there are some command line switches that allow you to enable
-several features of the library not built by default. Actually there is only 
-
---enable-tiff - enabling TIFF support
-
-which enables TIFF support for data readers.
 
 It is strongly recommended that you use pkg-config to obtain compiler and linker
-flags for libpniutils. The reason is that the library uses several C++11
+flags for libpnicore. The library uses several C++11
 features that are maybe not all supported by your compiler. In this case some
 preprocessor directives are set during the configuration of the library enabling
-several workarounds. During installation the pniutils.pc file for pkg-config is
+several workarounds. During installation the pnicore.pc file for pkg-config is
 installed below $PREFIX/lib/pkgconfig. If your installation prefix is a
 non-standard location it is strongly recommended that you add the path to the
 pkgconfig directory to the PKG_CONFIG_PATH environment variable of your system. 
@@ -60,22 +53,42 @@ To check if everything worked well try
 $> pkg-config --cflags --libs pniutils
 
 You should then obtain some compiler flags like the path to the libraries header
-files and the linker flags required to link versus libpniutils. 
+files and the linker flags required to link versus libpnicore. 
+
+2.2) Post installation issues - system integration
+     ---------------------------------------------
+
+When installed from sources to non-standard locations of your file system two
+environment variables must be modified in order to make the library available to
+your uses.
+
+LD_LIBRARY_PATH -> to PREFIX/lib
+PKG_CONFIG_PATH -> to PREFIX/lib/pkgconfig
+
+The former informs the linker where to find the library while the later one
+helps during build by providing the proper compiler options to link and build
+with pnicore.
 
 
-2.2.) Building, installing and running unit tests and benchmarks on Linux
-      -------------------------------------------------------------------
-It is strongly recommended to run the unit-tests and benchmarks after installing
-the library. In order to build the tests use
+2.3) Building and running unit tests and benchmarks on Linux
+     -------------------------------------------------------
+    
+The testing frame work is slightly different from other software packages as it
+requires the libray and its header files to be installed correctly on your
+system rather than using the binaries in the source directory. The idea is that
+in this case not only the current build is checked but also if system
+integration of the library was successful. The tests can be build with
 
 > scons test
 
-which runs only the build. You will find tests afterwards in the ./test
-subdirectory. The test can run simply with
+After a successful build the test/ subdirectory in the source tree contains the
+test and benchmark programs. 
+To run the unit-test simply run
 
-$> ./pniutils 
+$> test/pnicoretest
 
-from within the test directory. 
+results of the tests can be found in unitest.xml in the test subdirectory.
+
 
 
 

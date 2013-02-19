@@ -29,6 +29,7 @@ namespace pni{
 namespace core{
 
     /*!
+    \ingroup type_classes
     \brief abstract interface for data holder
 
     Internal class defining the abstract interface for a data value holder. 
