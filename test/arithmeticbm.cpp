@@ -219,9 +219,16 @@ int main(int argc,char **argv)
         //set the number of threads in the library configuration
 
         //allocate memory
-        nf64array_mt array(shape_t{conf.value<size_t>("nx"),
-                                   conf.value<size_t>("ny")});
-        run_inplace_benchmark<false>(conf.value<size_t>("nruns"),std::move(array));
+        nf64array_mt a(shape_t{conf.value<size_t>("nx"),
+                               conf.value<size_t>("ny")});
+        if(conf.value<bool>("binary"))
+        {
+            nf64array_mt b(a.shape<shape_t>());
+            nf64array_mt c(a.shape<shape_t>());
+            run_binary_benchmark<false>(conf.value<size_t>("nruns"),a,b,c);
+        }
+        else
+            run_inplace_benchmark<false>(conf.value<size_t>("nruns"),std::move(a));
     }
 
     return 0;

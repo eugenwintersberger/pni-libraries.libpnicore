@@ -326,7 +326,8 @@ namespace core{
 
             //-----------------------------------------------------------------
             //! assignment from a NumArray type
-            template<typename AT> array_type &operator=(const numarray<AT> &a)
+            template<typename AT> array_type &operator=(const
+                    numarray<AT,IPA,MT_BINARY_ARITHMETICS> &a)
             {
                 copy_type<MT_BINARY_ARITHMETICS>::copy(a,*this);
                 //std::copy(a.begin(),a.end(),this->begin());
@@ -790,14 +791,21 @@ namespace core{
     \param b right operand
     \return instance of NumArray with result
     */
-    template<typename AT1,typename AT2>
-    numarray<mult<numarray<AT1>,numarray<AT2> > >
-    operator*(const numarray<AT1> &a,const numarray<AT2> &b)
+    template<typename AT1,
+             typename AT2,
+             template<typename> class IPA,
+             bool BMT_FLAG>
+    numarray<mult<numarray<AT1,IPA,BMT_FLAG>,
+                  numarray<AT2,IPA,BMT_FLAG> >,
+             IPA,BMT_FLAG>
+    operator*(const numarray<AT1,IPA,BMT_FLAG> &a,
+              const numarray<AT2,IPA,BMT_FLAG> &b)
     {
-        typedef mult<numarray<AT1>,numarray<AT2> > op_type;
+        typedef mult<numarray<AT1,IPA,BMT_FLAG>,
+                     numarray<AT2,IPA,BMT_FLAG> > op_type;
         check_equal_shape(a,b,EXCEPTION_RECORD);
 
-        return numarray<op_type>(op_type(a,b));
+        return numarray<op_type,IPA,BMT_FLAG>(op_type(a,b));
     }
 
     //-------------------------------------------------------------------------
@@ -824,14 +832,19 @@ namespace core{
     \param b right operand (scalar)
     \return instance of NumArray with result
     */
-    template<typename AT>
-    numarray<mult<numarray<AT>,scalar<typename AT::value_type> > >
-    operator*(const numarray<AT> &a,typename AT::value_type const &b)
+    template<typename AT,
+             template<typename> class IPA,
+             bool BMT_FLAG>
+    numarray<mult<numarray<AT,IPA,BMT_FLAG>,
+                  scalar<typename AT::value_type> >,
+             IPA,BMT_FLAG>
+    operator*(const numarray<AT,IPA,BMT_FLAG> &a,
+              typename AT::value_type const &b)
     {
-        typedef numarray<AT> atype;
+        typedef numarray<AT,IPA,BMT_FLAG> atype;
         typedef scalar<typename AT::value_type> stype;
         typedef mult<atype,stype> op_type;
-        return numarray<op_type>(op_type(a,stype(b)));
+        return numarray<op_type,IPA,BMT_FLAG>(op_type(a,stype(b)));
     }
 
     //-------------------------------------------------------------------------
@@ -858,14 +871,19 @@ namespace core{
     \param b right operand (array type)
     \return NumArray instance representing the result
     */
-    template<typename AT>
-    numarray<mult<scalar<typename AT::value_type>,numarray<AT> > >
-    operator*(typename AT::value_type const &a,const numarray<AT> &b)
+    template<typename AT,
+             template<typename> class IPA,
+             bool BMT_FLAG>
+    numarray<mult<scalar<typename AT::value_type>,
+                  numarray<AT,IPA,BMT_FLAG> >,
+             IPA,BMT_FLAG>
+    operator*(typename AT::value_type const &a,
+              const numarray<AT,IPA,BMT_FLAG> &b)
     {
-        typedef numarray<AT> atype;
+        typedef numarray<AT,IPA,BMT_FLAG> atype;
         typedef scalar<typename AT::value_type> stype;
         typedef mult<stype,atype> op_type;
-        return numarray<op_type>(op_type(stype(a),b));
+        return numarray<op_type,IPA,BMT_FLAG>(op_type(stype(a),b));
     }
 
 
@@ -900,12 +918,19 @@ namespace core{
     \param b right operand
     \return instance of NumArray with an expression template as storage type
     */
-    template<typename AT1,typename AT2>
-    numarray<add<numarray<AT1>,numarray<AT2> > >
-    operator+(const numarray<AT1> &a,const numarray<AT2> &b)
+    template<typename AT1,
+             typename AT2,
+             template<typename> class IPA,
+             bool BMT_FLAG>
+    numarray<add<numarray<AT1,IPA,BMT_FLAG>,
+                 numarray<AT2,IPA,BMT_FLAG> >,
+             IPA,BMT_FLAG>
+    operator+(const numarray<AT1,IPA,BMT_FLAG> &a,
+              const numarray<AT2,IPA,BMT_FLAG> &b)
     {
-        typedef add<numarray<AT1>,numarray<AT2> > op_type;
-        return numarray<op_type>(op_type(a,b));
+        typedef add<numarray<AT1,IPA,BMT_FLAG>,
+                    numarray<AT2,IPA,BMT_FLAG> > op_type;
+        return numarray<op_type,IPA,BMT_FLAG>(op_type(a,b));
     }
 
     //-------------------------------------------------------------------------
@@ -931,14 +956,19 @@ namespace core{
     \param b right operand (scalar)
     \return NumArray instance with an expression template storage type
     */
-    template<typename AT>
-    numarray<add<numarray<AT>,scalar<typename AT::value_type> > >
-    operator+(const numarray<AT> &a,typename AT::value_type const &b)
+    template<typename AT,
+             template<typename> class IPA,
+             bool BMT_FLAG>
+    numarray<add<numarray<AT,IPA,BMT_FLAG>,
+                 scalar<typename AT::value_type> >,
+              IPA,BMT_FLAG>
+    operator+(const numarray<AT,IPA,BMT_FLAG> &a,
+              typename AT::value_type const &b)
     {
-        typedef numarray<AT> atype;
+        typedef numarray<AT,IPA,BMT_FLAG> atype;
         typedef scalar<typename AT::value_type> stype;
         typedef add<atype,stype> op_type;
-        return numarray<op_type>(op_type(a,stype(b)));
+        return numarray<op_type,IPA,BMT_FLAG>(op_type(a,stype(b)));
     }
 
     //-------------------------------------------------------------------------
@@ -964,14 +994,19 @@ namespace core{
     \param b instance of NumArray
     \return instance of NumArray with an expression template
     */
-    template<typename AT>
-    numarray<add<scalar<typename AT::value_type>,numarray<AT> > >
-    operator+(typename AT::value_type const &a,const numarray<AT> &b)
+    template<typename AT,
+             template<typename> class IPA,
+             bool BMT_FLAG>
+    numarray<add<scalar<typename AT::value_type>,
+                 numarray<AT,IPA,BMT_FLAG> >,
+             IPA,BMT_FLAG>
+    operator+(typename AT::value_type const &a,
+              const numarray<AT,IPA,BMT_FLAG> &b)
     {
-        typedef numarray<AT> atype;
+        typedef numarray<AT,IPA,BMT_FLAG> atype;
         typedef scalar<typename AT::value_type> stype;
         typedef add<stype,atype> op_type;
-        return numarray<op_type>(op_type(stype(a),b));
+        return numarray<op_type,IPA,BMT_FLAG>(op_type(stype(a),b));
     }
     
     //=================binary division operator================================
@@ -1005,12 +1040,19 @@ namespace core{
     \param b right operand
     \return instance of NumArray with an expression template as storage type
     */
-    template<typename AT1,typename AT2>
-    numarray<div_op<numarray<AT1>,numarray<AT2> > >
-    operator/(const numarray<AT1> &a,const numarray<AT2> &b)
+    template<typename AT1,
+             typename AT2,
+             template<typename> class IPA,
+             bool BMT_FLAG>
+    numarray<div_op<numarray<AT1,IPA,BMT_FLAG>,
+                    numarray<AT2,IPA,BMT_FLAG> >,
+             IPA,BMT_FLAG>
+    operator/(const numarray<AT1,IPA,BMT_FLAG> &a,
+              const numarray<AT2,IPA,BMT_FLAG> &b)
     {
-        typedef div_op<numarray<AT1>,numarray<AT2> > op_type;
-        return numarray<op_type>(op_type(a,b));
+        typedef div_op<numarray<AT1,IPA,BMT_FLAG>,
+                       numarray<AT2,IPA,BMT_FLAG> > op_type;
+        return numarray<op_type,IPA,BMT_FLAG>(op_type(a,b));
     }
 
     //-------------------------------------------------------------------------
@@ -1036,14 +1078,19 @@ namespace core{
     \param b right operand (scalar)
     \return NumArray instance with an expression template storage type
     */
-    template<typename AT>
-    numarray<div_op<numarray<AT>,scalar<typename AT::value_type> > >
-    operator/(const numarray<AT> &a,typename AT::value_type const &b)
+    template<typename AT,
+             template<typename> class IPA,
+             bool BMT_FLAG>
+    numarray<div_op<numarray<AT,IPA,BMT_FLAG>,
+                    scalar<typename AT::value_type> >,
+             IPA,BMT_FLAG>
+    operator/(const numarray<AT,IPA,BMT_FLAG> &a,
+              typename AT::value_type const &b)
     {
-        typedef numarray<AT> atype;
+        typedef numarray<AT,IPA,BMT_FLAG> atype;
         typedef scalar<typename AT::value_type> stype;
         typedef div_op<atype,stype> op_type;
-        return numarray<op_type>(op_type(a,stype(b)));
+        return numarray<op_type,IPA,BMT_FLAG>(op_type(a,stype(b)));
     }
 
     //-------------------------------------------------------------------------
@@ -1069,14 +1116,19 @@ namespace core{
     \param b instance of NumArray
     \return instance of NumArray with an expression template
     */
-    template<typename AT>
-    numarray<div_op<scalar<typename AT::value_type>,numarray<AT> > >
-    operator/(typename AT::value_type const &a,const numarray<AT> &b)
+    template<typename AT,
+             template<typename> class IPA,
+             bool BMT_FLAG>
+    numarray<div_op<scalar<typename AT::value_type>,
+                    numarray<AT,IPA,BMT_FLAG> >, 
+             IPA,BMT_FLAG>
+    operator/(typename AT::value_type const &a,
+              const numarray<AT,IPA,BMT_FLAG> &b)
     {
-        typedef numarray<AT> atype;
+        typedef numarray<AT,IPA,BMT_FLAG> atype;
         typedef scalar<typename AT::value_type> stype;
         typedef div_op<stype,atype> op_type;
-        return numarray<op_type>(op_type(stype(a),b));
+        return numarray<op_type,IPA,BMT_FLAG>(op_type(stype(a),b));
     }
    
     //======================binary subtraction operator========================
@@ -1110,12 +1162,19 @@ namespace core{
     \param b right operand
     \return instance of NumArray with an expression template as storage type
     */
-    template<typename AT1,typename AT2>
-    numarray<sub<numarray<AT1>,numarray<AT2> > >
-    operator-(const numarray<AT1> &a,const numarray<AT2> &b)
+    template<typename AT1,
+             typename AT2,
+             template<typename> class IPA,
+             bool BMT_FLAG>
+    numarray<sub<numarray<AT1,IPA,BMT_FLAG>,
+                 numarray<AT2,IPA,BMT_FLAG> >,
+             IPA,BMT_FLAG>
+    operator-(const numarray<AT1,IPA,BMT_FLAG> &a,
+              const numarray<AT2,IPA,BMT_FLAG> &b)
     {
-        typedef sub<numarray<AT1>,numarray<AT2> > op_type;
-        return numarray<op_type>(op_type(a,b));
+        typedef sub<numarray<AT1,IPA,BMT_FLAG>,
+                    numarray<AT2,IPA,BMT_FLAG> > op_type;
+        return numarray<op_type,IPA,BMT_FLAG>(op_type(a,b));
     }
 
     //-------------------------------------------------------------------------
@@ -1141,14 +1200,19 @@ namespace core{
     \param b right operand (scalar)
     \return NumArray instance with an expression template storage type
     */
-    template<typename AT>
-    numarray<sub<numarray<AT>,scalar<typename AT::value_type> > >
-    operator-(const numarray<AT> &a,typename AT::value_type const &b)
+    template<typename AT,
+             template<typename> class IPA,
+             bool BMT_FLAG>
+    numarray<sub<numarray<AT,IPA,BMT_FLAG>,
+                 scalar<typename AT::value_type> >,
+             IPA,BMT_FLAG>
+    operator-(const numarray<AT,IPA,BMT_FLAG> &a,
+              typename AT::value_type const &b)
     {
-        typedef numarray<AT> atype;
+        typedef numarray<AT,IPA,BMT_FLAG> atype;
         typedef scalar<typename AT::value_type> stype;
         typedef sub<atype,stype> op_type;
-        return numarray<op_type>(op_type(a,stype(b)));
+        return numarray<op_type,IPA,BMT_FLAG>(op_type(a,stype(b)));
     }
 
     //-------------------------------------------------------------------------
@@ -1174,14 +1238,17 @@ namespace core{
     \param b instance of NumArray
     \return instance of NumArray with an expression template
     */
-    template<typename AT>
-    numarray<sub<scalar<typename AT::value_type>,numarray<AT> > >
-    operator-(typename AT::value_type const &a,const numarray<AT> &b)
+    template<typename AT,template<typename> class IPA,bool BMT_FLAG>
+    numarray<sub<scalar<typename AT::value_type>,
+                 numarray<AT,IPA,BMT_FLAG> >
+             ,IPA,BMT_FLAG>
+    operator-(typename AT::value_type const &a,
+              const numarray<AT,IPA,BMT_FLAG> &b)
     {
-        typedef numarray<AT> atype;
+        typedef numarray<AT,IPA,BMT_FLAG> atype;
         typedef scalar<typename AT::value_type> stype;
         typedef sub<stype,atype> op_type;
-        return numarray<op_type>(op_type(stype(a),b));
+        return numarray<op_type,IPA,BMT_FLAG>(op_type(stype(a),b));
     }
 
 
