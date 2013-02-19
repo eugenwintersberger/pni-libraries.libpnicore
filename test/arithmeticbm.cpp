@@ -26,7 +26,7 @@
 #include <pni/core/math/mt_inplace_arithmetics.hpp>
 #include <pni/core/config/configuration.hpp>
 #include <pni/core/config/config_parser.hpp>
-
+#include <pni/core/config/library_config.hpp>
 
 #include <pni/core/benchmark/benchmark_runner.hpp>
 #include <pni/core/benchmark/benchmark_result.hpp>
@@ -166,14 +166,15 @@ int main(int argc,char **argv)
                 "channels along second dimension",1024));
     conf.add_option(config_option<size_t>("nruns","r",
                 "number of benchmark runs",1));
-    conf.add_option(config_option<size_t>("nthreads","n",
-                "number of threads to use for arithmetics",1));
     conf.add_option(config_option<bool>("use-ptr","p",
                     "use raw pointer code",false));
     conf.add_option(config_option<bool>("binary","b",
                     "run binary arithmetics",false));
-    
-    parse(conf,cliargs2vector(argc,argv));
+    conf.add_option(config_option<size_t>("nthreads","",
+                    "number of threads",1));
+   
+    std::vector<string> args = cliargs2vector(argc,argv);
+    parse(conf,args,true);
 
     if(conf.value<bool>("help"))
     {
@@ -210,6 +211,7 @@ int main(int argc,char **argv)
     }
     else
     {
+        pnicore_config.n_arithmetic_threads(conf.value<size_t>("nthreads"));
         if(conf.value<bool>("use-ptr"))
         {
             std::cerr<<"multithreading benchmarks do not support pointers!"<<std::endl;

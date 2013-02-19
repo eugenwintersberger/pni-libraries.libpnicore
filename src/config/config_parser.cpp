@@ -44,7 +44,8 @@ namespace core{
     }
 
     //-------------------------------------------------------------------------
-    void parse(configuration &config,const std::vector<string> &args)
+    void parse(configuration &config,const std::vector<string> &args,
+               bool unregistered)
     {
         //merging hidden and visible options to a single option description
         popts::options_description total_opts;
@@ -52,10 +53,17 @@ namespace core{
         total_opts.add(config.hidden_options());
 
         //run the parser
-        popts::store(popts::command_line_parser(args).
-                     options(total_opts).
-                     positional(config.arguments()).run(),
-                     const_cast<popts::variables_map&>(config.map()));
+        if(unregistered)
+            popts::store(popts::command_line_parser(args).
+                         options(total_opts).
+                         positional(config.arguments()).
+                         allow_unregistered().run(),
+                         const_cast<popts::variables_map&>(config.map()));
+        else
+            popts::store(popts::command_line_parser(args).
+                         options(total_opts).
+                         positional(config.arguments()).run(),
+                         const_cast<popts::variables_map&>(config.map()));
 
         //notify the variable map that we are done
         popts::notify(const_cast<popts::variables_map&>(config.map()));

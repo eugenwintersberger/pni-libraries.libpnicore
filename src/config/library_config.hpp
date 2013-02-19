@@ -20,7 +20,6 @@
  * Created on: Dec 27, 2012
  *     Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
  */
-
 #pragma once
 
 #include "../config.h"
@@ -37,11 +36,14 @@ namespace core{
 
     Configuration class of the pniutils library. This library is used by all
     other classes to obtain configuration information.
+
+    This class most probably become a singleton.
     */
     class library_config
     {
         private:
             configuration conf; //!< configuration objecct
+            size_t _nthreads;
 
             //!create the configuration structure
             void _setup_configuration();
@@ -53,12 +55,18 @@ namespace core{
             //! destructor
             ~library_config();
 
+
+            //! set number of thread for arithmetics
+            void n_arithmetic_threads(size_t n) { _nthreads = n; }
+
             //! obtain number of threads for arithmetics
             size_t n_arithmetic_threads() const;
 
     };
 
-static const library_config pnicore_config(CONFIG_FILE_PATH);
+//create the static global configuration object by reading data from the central
+//configuration work. 
+static library_config pnicore_config(CONFIG_FILE_PATH);
 
 //end of namespace
 }

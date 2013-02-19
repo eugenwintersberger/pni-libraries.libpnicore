@@ -30,7 +30,8 @@ namespace core{
     //-------------------------------------------------------------------------
     void library_config::_setup_configuration()
     {
-        conf.add_option(config_option<size_t>("nthreads","","number of threads"));
+        conf.add_option(config_option<size_t>("nthreads","",
+                        "number of threads",&_nthreads));
     }
 
     //-------------------------------------------------------------------------
@@ -49,7 +50,7 @@ namespace core{
     //-------------------------------------------------------------------------
     size_t library_config::n_arithmetic_threads() const
     {
-        return conf.value<size_t>("nthreads");
+        return _nthreads;
     }
 
 //end of namespace

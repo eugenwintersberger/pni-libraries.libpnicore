@@ -20,7 +20,7 @@
  * Created on: Dec 27, 2012
  *     Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
  */
-
+#pragma once
 
 #include "configuration.hpp"
 namespace pni{
@@ -60,8 +60,9 @@ namespace core{
     \endcode
     \param c reference to the configuration to be parsed
     \param args command line arguments in a vector
+    \param unregistered flag to allow unregistered options
     */
-    void parse(configuration &c,const std::vector<string> &args);
+    void parse(configuration &c,const std::vector<string> &args,bool unregistered=false);
 
     //-------------------------------------------------------------------------
     /*!
