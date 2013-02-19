@@ -34,16 +34,28 @@
 #include <pni/core/benchmark/clock_timer.hpp>
 
 #include "benchmark/inplace_arithmetic_benchmark.hpp"
+#include "benchmark/inplace_arithmetic_benchmark_ptr.hpp"
 
 using namespace pni::core;
 
 typedef chrono_timer<std::chrono::high_resolution_clock,std::chrono::nanoseconds> bmtimer_t;
 
+template<typename ATYPE,bool use_ptr_flag> struct inplace_benchmark_type;
+template<typename ATYPE> struct inplace_benchmark_type<ATYPE,true>
+{
+    typedef inplace_arithmetic_benchmark_ptr<ATYPE> benchmark_type;
+};
+
+template<typename ATYPE> struct inplace_benchmark_type<ATYPE,false>
+{
+    typedef inplace_arithmetic_benchmark<ATYPE> benchmark_type;
+};
+
 //-----------------------------------------------------------------------------
-template<typename ATYPE> void run_inplace_benchmark(size_t nruns,ATYPE &&a)
+template<bool use_ptr_flag,typename ATYPE> void run_inplace_benchmark(size_t nruns,ATYPE &&a)
 {
     //define benchmark type
-    typedef inplace_arithmetic_benchmark<ATYPE> bm_t; 
+    typedef typename inplace_benchmark_type<ATYPE,use_ptr_flag>::benchmark_type bm_t; 
 
     benchmark_runner::function_t add_func,mult_func,div_func,sub_func;
     bm_t benchmark(std::move(a));
@@ -80,33 +92,48 @@ int main(int argc,char **argv)
 {
     //program configuration 
     configuration conf;
-
+    
+    conf.add_option(config_option<bool>("help","h",
+                "show help text",false));
     conf.add_option(config_option<size_t>("nx","x",
                 "channels along first dimension",1024));
     conf.add_option(config_option<size_t>("ny","y",
                 "channels along second dimension",1024));
     conf.add_option(config_option<size_t>("nruns","r",
                 "number of benchmark runs",1));
+    conf.add_option(config_option<size_t>("nthreads","n",
+                "number of threads to use for arithmetics",1));
+    conf.add_option(config_option<bool>("use-ptr","p",
+                    "use raw pointer code",false));
     
     parse(conf,cliargs2vector(argc,argv));
+
+    if(conf.value<bool>("help"))
+    {
+        std::cerr<<conf<<std::endl;
+        return 1;
+    }
+
 
     //type definitions
     typedef numarray<darray<float64> > nf64array;
     typedef numarray<darray<float64>,mt_inplace_arithmetics> nf64array_mt;
 
+    if(conf.value<size_t>("nthreads") == 1)
     {
-        nf64array a_st(shape_t{conf.value<size_t>("nx"),
-                       conf.value<size_t>("ny")});
-        std::cout<<"Single threaded benchmark:"<<std::endl;
-        run_inplace_benchmark(conf.value<size_t>("nruns"),std::move(a_st));
+        nf64array array(shape_t{conf.value<size_t>("nx"),
+                                conf.value<size_t>("ny")});
+        if(conf.value<bool>("use-ptr"))
+            run_inplace_benchmark<true>(conf.value<size_t>("nruns"),std::move(array));
+        else
+            run_inplace_benchmark<false>(conf.value<size_t>("nruns"),std::move(array));
     }
-
+    else
     {
         //allocate memory
-        nf64array_mt a_mt(shape_t{conf.value<size_t>("nx"),
-                       conf.value<size_t>("ny")});
-        std::cout<<"Multithreaded benchmark:"<<std::endl;
-        run_inplace_benchmark(conf.value<size_t>("nruns"),std::move(a_mt));
+        nf64array_mt array(shape_t{conf.value<size_t>("nx"),
+                                   conf.value<size_t>("ny")});
+        run_inplace_benchmark<false>(conf.value<size_t>("nruns"),std::move(array));
     }
 
     return 0;
