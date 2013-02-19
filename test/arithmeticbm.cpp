@@ -130,6 +130,14 @@ int main(int argc,char **argv)
     }
     else
     {
+        if(conf.value<bool>("use-ptr"))
+        {
+            std::cerr<<"multithreading benchmarks do not support pointers!"<<std::endl;
+            return 1;
+        }
+
+        //set the number of threads in the library configuration
+
         //allocate memory
         nf64array_mt array(shape_t{conf.value<size_t>("nx"),
                                    conf.value<size_t>("ny")});
