@@ -42,6 +42,11 @@ namespace core {
         private:
             //! buffer storing the shape of the index map
             dbuffer<size_t> _shape;
+            //! total size represented by the index map
+            size_t _size;
+
+            //! update the size of the map
+            void _size_update();
         public:
             //================constructors and destructor======================
             //! default constructor
@@ -62,6 +67,9 @@ namespace core {
                 _shape(c.size())
             {
                 std::copy(c.begin(),c.end(),_shape.begin());
+
+                //update the number of elements
+                _size_update();
             }
 
             //-----------------------------------------------------------------
@@ -70,6 +78,9 @@ namespace core {
                 _shape(l.size())
             {
                 std::copy(l.begin(),l.end(),_shape.begin());
+
+                //update the number of elements
+                _size_update();
             }
 
             //-----------------------------------------------------------------
@@ -93,7 +104,14 @@ namespace core {
             the default constructor is used the size is 0.
             \return number of elements
             */
-            size_t size() const;
+            size_t size() const
+            {
+                //return 0 if the map is not initialized
+                if(_shape.size() == 0) return 0;
+
+                return _size;
+
+            }
 
             //-----------------------------------------------------------------
             /*!
@@ -142,6 +160,9 @@ namespace core {
             {
                 _shape = dbuffer<size_t>(c.size());
                 std::copy(c.begin(),c.end(),_shape.begin());
+
+                //update the number of elements
+                _size_update();
             }
     };
 

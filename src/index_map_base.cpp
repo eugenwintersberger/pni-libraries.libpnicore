@@ -26,17 +26,31 @@
 namespace pni{
 namespace core{
 
+    void index_map_base::_size_update()
+    {
+        size_t tmp = 0;
+        for(size_t i=0;i<_shape.size();++i)
+        {
+            if(i==0) tmp = _shape[i];
+            else tmp *= _shape[i];
+        }
+
+        _size = tmp;
+    }
+
     //-------------------------------------------------------------------------
-    index_map_base::index_map_base():_shape() {}
+    index_map_base::index_map_base():_shape(),_size(0) {}
 
     //-------------------------------------------------------------------------
     index_map_base::index_map_base(const index_map_base &m):
-        _shape(m._shape)
+        _shape(m._shape),
+        _size(m._size)
     {}
 
     //-------------------------------------------------------------------------
     index_map_base::index_map_base(index_map_base &&m):
-        _shape(std::move(m._shape))
+        _shape(std::move(m._shape)),
+        _size(std::move(m._size))
     {}
     //-------------------------------------------------------------------------
     index_map_base &index_map_base::operator=(const index_map_base &m)
@@ -44,6 +58,7 @@ namespace core{
         if(this == &m) return *this;
 
         _shape = m._shape;
+        _size = m._size;
         return *this;
     }
 
@@ -52,28 +67,11 @@ namespace core{
     {
         if(this == &m) return *this;
         _shape = std::move(m._shape);
+        _size = m._size;
+        m._size = 0;
         return *this;
     }
 
-    //--------------------------------------------------------------------------
-    size_t index_map_base::size() const
-    {
-        //return 0 if the map is not initialized
-        if(_shape.size() == 0) return 0;
-
-        size_t s = 1;
-#ifdef NOFOREACH
-        for(auto iter = _shape.begin();iter!=_shape.end();++iter)
-        {
-            auto v = *iter;
-#else
-        for(auto v: _shape)
-        {
-#endif
-            s*=v;
-        }
-        return s;
-    }
 
     //--------------------------------------------------------------------------
     size_t index_map_base::rank() const
