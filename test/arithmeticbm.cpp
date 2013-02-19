@@ -35,6 +35,8 @@
 
 #include "benchmark/inplace_arithmetic_benchmark.hpp"
 #include "benchmark/inplace_arithmetic_benchmark_ptr.hpp"
+#include "benchmark/binary_arithmetic_benchmark.hpp"
+#include "benchmark/binary_arithmetic_benchmark_ptr.hpp"
 
 using namespace pni::core;
 
@@ -52,7 +54,20 @@ template<typename ATYPE> struct inplace_benchmark_type<ATYPE,false>
 };
 
 //-----------------------------------------------------------------------------
-template<bool use_ptr_flag,typename ATYPE> void run_inplace_benchmark(size_t nruns,ATYPE &&a)
+template<typename ATYPE,bool use_ptr_flag> struct binary_benchmark_type;
+template<typename ATYPE> struct binary_benchmark_type<ATYPE,true>
+{
+    typedef binary_arithmetic_benchmark_ptr<ATYPE> benchmark_type;
+};
+
+template<typename ATYPE> struct binary_benchmark_type<ATYPE,false>
+{
+    typedef binary_arithmetic_benchmark<ATYPE> benchmark_type;
+};
+
+//-----------------------------------------------------------------------------
+template<bool use_ptr_flag,typename ATYPE> 
+void run_inplace_benchmark(size_t nruns,ATYPE &&a)
 {
     //define benchmark type
     typedef typename inplace_benchmark_type<ATYPE,use_ptr_flag>::benchmark_type bm_t; 
@@ -88,6 +103,56 @@ template<bool use_ptr_flag,typename ATYPE> void run_inplace_benchmark(size_t nru
 }
 
 //-----------------------------------------------------------------------------
+
+template<typename ATYPE> void reset_array(ATYPE &a)
+{
+    std::fill(a.begin(),a.end(),typename ATYPE::value_type(0));
+}
+
+template<bool use_ptr_flag,typename ATYPE> 
+void run_binary_benchmark(size_t nruns,ATYPE &a,ATYPE &b,ATYPE &c)
+{
+    //define benchmark type
+    typedef typename binary_benchmark_type<ATYPE,use_ptr_flag>::benchmark_type bm_t; 
+
+    benchmark_runner::function_t add_func,mult_func,div_func,sub_func;
+    bm_t benchmark(a);
+
+    //define benchmark functions
+    add_func = std::bind(&bm_t::add,benchmark,c,a,b);
+    sub_func = std::bind(&bm_t::sub,benchmark,c,a,b);
+    div_func = std::bind(&bm_t::div,benchmark,c,a,b);
+    mult_func = std::bind(&bm_t::mult,benchmark,c,a,b);
+    
+    //run benchmarks
+    benchmark_runner add_bm,mult_bm,div_bm,sub_bm;
+
+    std::fill(a.begin(),a.end(),typename ATYPE::value_type(10.0));
+    std::fill(b.begin(),b.end(),typename ATYPE::value_type(100.0));
+    add_bm.run<bmtimer_t>(nruns,add_func);
+    std::fill(a.begin(),a.end(),typename ATYPE::value_type(10.0));
+    std::fill(b.begin(),b.end(),typename ATYPE::value_type(100.0));
+    sub_bm.run<bmtimer_t>(nruns,sub_func);
+    std::fill(a.begin(),a.end(),typename ATYPE::value_type(10.0));
+    std::fill(b.begin(),b.end(),typename ATYPE::value_type(100.0));
+    div_bm.run<bmtimer_t>(nruns,div_func);
+    std::fill(a.begin(),a.end(),typename ATYPE::value_type(10.0));
+    std::fill(b.begin(),b.end(),typename ATYPE::value_type(100.0));
+    mult_bm.run<bmtimer_t>(nruns,mult_func);
+    
+    //print benchmark results 
+    benchmark_result result;
+    result = average(add_bm);
+    std::cout<<"Binary add:\t"<<result<<std::endl;
+    result = average(sub_bm);
+    std::cout<<"Binary sub:\t"<<result<<std::endl;
+    result = average(div_bm);
+    std::cout<<"Binary div:\t"<<result<<std::endl;
+    result = average(mult_bm);
+    std::cout<<"Binary mult:\t"<<result<<std::endl;
+
+}
+//-----------------------------------------------------------------------------
 int main(int argc,char **argv)
 {
     //program configuration 
@@ -105,6 +170,8 @@ int main(int argc,char **argv)
                 "number of threads to use for arithmetics",1));
     conf.add_option(config_option<bool>("use-ptr","p",
                     "use raw pointer code",false));
+    conf.add_option(config_option<bool>("binary","b",
+                    "run binary arithmetics",false));
     
     parse(conf,cliargs2vector(argc,argv));
 
@@ -117,16 +184,29 @@ int main(int argc,char **argv)
 
     //type definitions
     typedef numarray<darray<float64> > nf64array;
-    typedef numarray<darray<float64>,mt_inplace_arithmetics> nf64array_mt;
+    typedef numarray<darray<float64>,mt_inplace_arithmetics,true> nf64array_mt;
 
     if(conf.value<size_t>("nthreads") == 1)
     {
-        nf64array array(shape_t{conf.value<size_t>("nx"),
-                                conf.value<size_t>("ny")});
-        if(conf.value<bool>("use-ptr"))
-            run_inplace_benchmark<true>(conf.value<size_t>("nruns"),std::move(array));
+        nf64array a(shape_t{conf.value<size_t>("nx"),conf.value<size_t>("ny")});
+
+        if(conf.value<bool>("binary"))
+        {
+            nf64array b(a.shape<shape_t>());
+            nf64array c(a.shape<shape_t>());
+
+            if(conf.value<bool>("use-ptr"))
+                run_binary_benchmark<true>(conf.value<size_t>("nruns"),a,b,c);
+            else
+                run_binary_benchmark<false>(conf.value<size_t>("nruns"),a,b,c);
+        }
         else
-            run_inplace_benchmark<false>(conf.value<size_t>("nruns"),std::move(array));
+        {
+            if(conf.value<bool>("use-ptr"))
+                run_inplace_benchmark<true>(conf.value<size_t>("nruns"),std::move(a));
+            else
+                run_inplace_benchmark<false>(conf.value<size_t>("nruns"),std::move(a));
+        }
     }
     else
     {
