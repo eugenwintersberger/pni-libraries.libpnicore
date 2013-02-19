@@ -803,7 +803,7 @@ namespace core{
     {
         typedef mult<numarray<AT1,IPA,BMT_FLAG>,
                      numarray<AT2,IPA,BMT_FLAG> > op_type;
-        check_equal_shape(a,b,EXCEPTION_RECORD);
+        //check_equal_shape(a,b,EXCEPTION_RECORD);
 
         return numarray<op_type,IPA,BMT_FLAG>(op_type(a,b));
     }
