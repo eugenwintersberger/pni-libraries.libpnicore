@@ -71,33 +71,75 @@ void run_inplace_benchmark(size_t nruns,ATYPE &&a)
 {
     //define benchmark type
     typedef typename inplace_benchmark_type<ATYPE,use_ptr_flag>::benchmark_type bm_t; 
-
-    benchmark_runner::function_t add_func,mult_func,div_func,sub_func;
-    bm_t benchmark(std::move(a));
-
-    //define benchmark functions
-    add_func = std::bind(&bm_t::add,benchmark,100);
-    sub_func = std::bind(&bm_t::sub,benchmark,10);
-    div_func = std::bind(&bm_t::div,benchmark,10);
-    mult_func = std::bind(&bm_t::mult,benchmark,1.23);
+    typedef typename ATYPE::value_type value_type;
     
     //run benchmarks
-    benchmark_runner add_bm,mult_bm,div_bm,sub_bm;
+    benchmark_runner add_bm_scalar,mult_bm_scalar,div_bm_scalar,sub_bm_scalar;
+    benchmark_runner add_bm_array,mult_bm_array,div_bm_array,sub_bm_array;
 
-    add_bm.run<bmtimer_t>(nruns,add_func);
-    sub_bm.run<bmtimer_t>(nruns,sub_func);
-    div_bm.run<bmtimer_t>(nruns,div_func);
-    mult_bm.run<bmtimer_t>(nruns,mult_func);
+    //scalar benchmark functions
+    benchmark_runner::function_t bm_function;
+
+    //run array benchmarks
+    ATYPE b(a.template shape<shape_t>());
+    //setup benchmark
+    bm_t benchmark(std::move(a));
+
+    //run scalar benchmark functions
+    bm_function = std::bind((void(bm_t::*)(value_type))&bm_t::add,benchmark,value_type(100));
+    add_bm_scalar.run<bmtimer_t>(nruns,bm_function);
     
+    bm_function = std::bind((void(bm_t::*)(value_type))&bm_t::sub,benchmark,10);
+    sub_bm_scalar.run<bmtimer_t>(nruns,bm_function);
+
+    bm_function = std::bind((void(bm_t::*)(value_type))&bm_t::div,benchmark,10);
+    div_bm_scalar.run<bmtimer_t>(nruns,bm_function);
+
+    bm_function = std::bind((void(bm_t::*)(value_type))&bm_t::mult,benchmark,1.23);
+    mult_bm_scalar.run<bmtimer_t>(nruns,bm_function);
+
+    
+    std::fill(b.begin(),b.end(),100);
+    bm_function = std::bind((void(bm_t::*)(const ATYPE&))&bm_t::add,
+                             benchmark,std::cref(b));
+    add_bm_array.run<bmtimer_t>(nruns,bm_function);
+
+    std::fill(b.begin(),b.end(),10);
+    bm_function = std::bind((void(bm_t::*)(const ATYPE&))&bm_t::sub,
+                            benchmark,std::cref(b));
+    sub_bm_array.run<bmtimer_t>(nruns,bm_function);
+
+    std::fill(b.begin(),b.end(),10);
+    bm_function = std::bind((void(bm_t::*)(const ATYPE&))&bm_t::div,
+                            benchmark,std::cref(b));
+    div_bm_array.run<bmtimer_t>(nruns,bm_function);
+
+    std::fill(b.begin(),b.end(),1.23);
+    bm_function = std::bind((void(bm_t::*)(const ATYPE&))&bm_t::mult,
+                            benchmark,std::cref(b));
+    mult_bm_array.run<bmtimer_t>(nruns,bm_function);
+
     //print benchmark results 
     benchmark_result result;
-    result = average(add_bm);
+
+    std::cout<<"array <OP>= scalar"<<std::endl;
+    result = average(add_bm_scalar);
     std::cout<<"Inplace add:\t"<<result<<std::endl;
-    result = average(sub_bm);
+    result = average(sub_bm_scalar);
     std::cout<<"Inplace sub:\t"<<result<<std::endl;
-    result = average(div_bm);
+    result = average(div_bm_scalar);
     std::cout<<"Inplace div:\t"<<result<<std::endl;
-    result = average(mult_bm);
+    result = average(mult_bm_scalar);
+    std::cout<<"Inplace mult:\t"<<result<<std::endl;
+    
+    std::cout<<"array <OP>= array"<<std::endl;
+    result = average(add_bm_array);
+    std::cout<<"Inplace add:\t"<<result<<std::endl;
+    result = average(sub_bm_array);
+    std::cout<<"Inplace sub:\t"<<result<<std::endl;
+    result = average(div_bm_array);
+    std::cout<<"Inplace div:\t"<<result<<std::endl;
+    result = average(mult_bm_array);
     std::cout<<"Inplace mult:\t"<<result<<std::endl;
 
 }

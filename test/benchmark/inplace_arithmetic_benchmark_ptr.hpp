@@ -42,19 +42,57 @@ template<typename ATYPE> class inplace_arithmetic_benchmark_ptr
             for(size_t i=0;i<_size;++i) _ptr[i] += v;
         }
 
+        void add(const ATYPE &a)
+        {
+            typedef typename ATYPE::value_type* ptr_t;
+            ptr_t a_ptr = const_cast<ptr_t>(a.storage().storage().ptr());
+
+            for(size_t i=0;i<_size;++i)
+                _ptr[i] += a_ptr[i];
+        }
+
+
         void sub(typename ATYPE::value_type v)
         {
             for(size_t i=0;i<_size;++i) _ptr[i] -= v;
         }
+
+        void sub(const ATYPE &a)
+        {
+            typedef typename ATYPE::value_type* ptr_t;
+            ptr_t a_ptr = const_cast<ptr_t>(a.storage().storage().ptr());
+
+            for(size_t i=0;i<_size;++i)
+                _ptr[i] -= a_ptr[i];
+        }
+
 
         void mult(typename ATYPE::value_type v)
         {
             for(size_t i=0;i<_size;++i) _ptr[i] *= v;
         }
 
+        void mult(const ATYPE &a)
+        {
+            typedef typename ATYPE::value_type* ptr_t;
+            ptr_t a_ptr = const_cast<ptr_t>(a.storage().storage().ptr());
+
+            for(size_t i=0;i<_size;++i)
+                _ptr[i] *= a_ptr[i];
+        }
+
         void div(typename ATYPE::value_type v)
         {
             for(size_t i=0;i<_size;++i) _ptr[i] /=v;
+        }
+
+        void div(const ATYPE &a)
+        {
+            typedef typename ATYPE::value_type* ptr_t;
+            ptr_t a_ptr = const_cast<ptr_t>(a.storage().storage().ptr());
+
+            for(size_t i=0;i<_size;++i)
+                _ptr[i] /= a_ptr[i];
         }
 
 };

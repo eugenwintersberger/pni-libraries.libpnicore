@@ -36,9 +36,19 @@ template<typename ATYPE> class inplace_arithmetic_benchmark
             _array += v;
         }
 
+        void add(const ATYPE &a)
+        {
+            _array += a;
+        }
+
         void sub(typename ATYPE::value_type v)
         {
             _array -= v;
+        }
+
+        void sub(const ATYPE &a)
+        {
+            _array -= a;
         }
 
         void mult(typename ATYPE::value_type v)
@@ -46,9 +56,19 @@ template<typename ATYPE> class inplace_arithmetic_benchmark
             _array *= v;
         }
 
+        void mult(const ATYPE &a)
+        {
+            _array *= a;
+        }
+
         void div(typename ATYPE::value_type v)
         {
             _array /= v;
+        }
+
+        void div(const ATYPE &a)
+        {
+            _array /= a;
         }
 
 };
