@@ -74,5 +74,15 @@ template<typename ATYPE> class binary_arithmetic_benchmark_ptr
             for(size_t i=0;i<_size;++i)
                 c_ptr[i] = a_ptr[i] / b_ptr[i];
         }
+        
+        void all(ATYPE &c,const ATYPE &a,const ATYPE &b)
+        {
+            typedef typename ATYPE::value_type* type;
+            type c_ptr = const_cast<type>(c.storage().storage().ptr());
+            type a_ptr = const_cast<type>(a.storage().storage().ptr());
+            type b_ptr = const_cast<type>(b.storage().storage().ptr());
+            for(size_t i=0;i<_size;++i)
+                c_ptr[i] = a_ptr[i]*b_ptr[i] + (a_ptr[i]-b_ptr[i])/a_ptr[i];
+        }
 
 };

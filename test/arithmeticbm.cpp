@@ -157,7 +157,7 @@ void run_binary_benchmark(size_t nruns,ATYPE &a,ATYPE &b,ATYPE &c)
     //define benchmark type
     typedef typename binary_benchmark_type<ATYPE,use_ptr_flag>::benchmark_type bm_t; 
 
-    benchmark_runner::function_t add_func,mult_func,div_func,sub_func;
+    benchmark_runner::function_t add_func,mult_func,div_func,sub_func,all_func;
     bm_t benchmark(a);
 
     //define benchmark functions
@@ -165,9 +165,10 @@ void run_binary_benchmark(size_t nruns,ATYPE &a,ATYPE &b,ATYPE &c)
     sub_func = std::bind(&bm_t::sub,benchmark,c,a,b);
     div_func = std::bind(&bm_t::div,benchmark,c,a,b);
     mult_func = std::bind(&bm_t::mult,benchmark,c,a,b);
+    all_func = std::bind(&bm_t::all,benchmark,c,a,b);
     
     //run benchmarks
-    benchmark_runner add_bm,mult_bm,div_bm,sub_bm;
+    benchmark_runner add_bm,mult_bm,div_bm,sub_bm,all_bm;
 
     std::fill(a.begin(),a.end(),typename ATYPE::value_type(10.0));
     std::fill(b.begin(),b.end(),typename ATYPE::value_type(100.0));
@@ -181,6 +182,9 @@ void run_binary_benchmark(size_t nruns,ATYPE &a,ATYPE &b,ATYPE &c)
     std::fill(a.begin(),a.end(),typename ATYPE::value_type(10.0));
     std::fill(b.begin(),b.end(),typename ATYPE::value_type(100.0));
     mult_bm.run<bmtimer_t>(nruns,mult_func);
+    std::fill(a.begin(),a.end(),typename ATYPE::value_type(10.0));
+    std::fill(b.begin(),b.end(),typename ATYPE::value_type(100.0));
+    all_bm.run<bmtimer_t>(nruns,all_func);
     
     //print benchmark results 
     benchmark_result result;
@@ -192,6 +196,8 @@ void run_binary_benchmark(size_t nruns,ATYPE &a,ATYPE &b,ATYPE &c)
     std::cout<<"Binary div:\t"<<result<<std::endl;
     result = average(mult_bm);
     std::cout<<"Binary mult:\t"<<result<<std::endl;
+    result = average(all_bm);
+    std::cout<<"Binary all:\t"<<result<<std::endl;
 
 }
 //-----------------------------------------------------------------------------

@@ -61,40 +61,26 @@ namespace core{
         */
         template<typename AT,typename BT> static void copy(const AT &a,BT &b)
         {
-            typedef typename AT::const_iterator a_iterator_t;
-            typedef typename BT::iterator b_iterator_t;
-            typedef std::function<void(a_iterator_t,a_iterator_t,
-                                       b_iterator_t)> function_t;
+            typedef std::function<void(size_t,size_t,const AT &,BT &)> function_t;
 
             size_t nth  = pnicore_config.n_arithmetic_threads(); 
-            size_t nres = a.size()%nth;
-            size_t npth = (a.size() - nres)/nth;
+            size_t nres = b.size()%nth;
+            size_t npth = (b.size() - nres)/nth;
             std::vector<std::thread> threads(nth);
 
-            a_iterator_t a_start,a_end;
-            b_iterator_t b_start,b_end;
+            size_t start=0,stop=0;
             for(size_t i = 0; i<nth;++i)
             {
 
-                if(i==0)
-                {
-                    a_start = a.begin();
-                    b_start = b.begin();
-                }
-                else
-                {
-                    a_start = a_end;
-                    b_start = b_end;
-                }
-
-                b_end = b_start+npth;
-                a_end = a_start+npth;
+                if(i==0) start = 0;
+                else start = stop;
+               
+                stop = start + npth;
                 
-                if(nres) 
+                if(nres)
                 {
-                    ++a_end;
-                    ++b_end;
-                    nres--;
+                    ++stop;
+                    --nres;
                 }
                
                 /*
@@ -102,7 +88,7 @@ namespace core{
                     std::bind(&copy_type<true>::copy_worker<a_iterator_t,b_iterator_t>,a_start,a_end,b_start);
                     */
                 threads[i] =
-                    std::thread(copy_worker<a_iterator_t,b_iterator_t>,a_start,a_end,b_start);
+                    std::thread(copy_worker<AT,BT>,start,stop,std::cref(a),std::ref(b));
             }
 
             //join all threads
@@ -110,19 +96,21 @@ namespace core{
         }
 
         private:
-        template<typename ITERA,typename ITERB> 
-        static void copy_worker(ITERA a_start,ITERA a_end,ITERB b_start)
+        template<typename AT,typename BT> 
+            static void copy_worker(size_t start,size_t stop,const AT &a,BT &b)
         {
-            std::copy(a_start,a_end,b_start);
+            for(size_t i=start;i<stop;++i) b[i] = a[i];
         }
         
     };
 
     template<> struct copy_type<false>
     {
+        //copy from a to b - the size of b is important
         template<typename AT,typename BT> static void copy(const AT &a,BT &b)
         {
-            std::copy(a.begin(),a.end(),b.begin());
+            size_t n = b.size();
+            for(size_t i=0;i<n;++i) b[i] = a[i];
         }
     };
     
@@ -330,7 +318,6 @@ namespace core{
                     numarray<AT,IPA,MT_BINARY_ARITHMETICS> &a)
             {
                 copy_type<MT_BINARY_ARITHMETICS>::copy(a,*this);
-                //std::copy(a.begin(),a.end(),this->begin());
                 return *this;
             }
 

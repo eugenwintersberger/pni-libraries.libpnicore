@@ -48,4 +48,9 @@ template<typename ATYPE> class binary_arithmetic_benchmark
             c= a/b;
         }
 
+        void all(ATYPE &c,const ATYPE &a,const ATYPE &b)
+        {
+            c = (a*b) + (a-b)/a;
+        }
+
 };
