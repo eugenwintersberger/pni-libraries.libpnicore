@@ -98,18 +98,35 @@ namespace core{
 
             Distributs a working function on several threads
             \tparam FTYPE function object type
-            \param a reference to the array
+            \param size the total size of the array
             \param f rvalue reference to the function objecct
             */
             template<typename FTYPE>
-            static void _run_threads(FTYPE &&f)
+            static void _run_threads(size_t size,FTYPE &&f)
             {
                 size_t nth = pnicore_config.n_arithmetic_threads();
                 std::vector<std::thread> threads(nth);
 
-                size_t index = 0;
-                for(std::thread &thread: threads)
-                    thread = std::thread(f,index++,nth);
+                size_t nres = size%nth;
+                size_t npth = (size - nres)/nth;
+
+                size_t start=0,stop=0;
+                for(size_t i = 0; i<nth;++i)
+                {
+
+                    if(i==0) start = 0;
+                    else start = stop;
+                   
+                    stop = start + npth;
+                    
+                    if(nres)
+                    {
+                        ++stop;
+                        --nres;
+                    }
+                   
+                    threads[i] = std::thread(f,start,stop);
+                }
 
                 //finally joind all threads and wait for execution end
                 for(size_t i=0;i<nth;++i) threads[i].join();
@@ -162,20 +179,12 @@ namespace core{
             {
                 using namespace std::placeholders;
 
-                auto f = [](typename ATYPE::iterator start,
-                            size_t offset,size_t nth,
-                            value_type b)
+                auto f = [](size_t start,size_t stop,ATYPE &a,value_type b)
                 {
-                    auto iter = start+offset;
-                    while(iter)
-                    {
-                        *iter += b;
-                        iter += nth;
-                    }
-         
+                    for(size_t i=start;i<stop;++i) a[i] += b;
                 };
 
-                _run_threads(std::bind(f,a.begin(),_1,_2,b));
+                _run_threads(a.size(),std::bind(f,_1,_2,std::ref(a),b));
             }
 
             //-----------------------------------------------------------------
@@ -197,21 +206,15 @@ namespace core{
             template<typename CTYPE> static void add(ATYPE &a,const CTYPE &b)
             {
                 using namespace std::placeholders;
-                auto f = [](typename ATYPE::iterator start,
-                            size_t offset,size_t nth,
+                auto f = [](size_t start,size_t stop,ATYPE &a,
                             typename CTYPE::const_iterator b)
                 {
-                    auto iter = start+offset;
-                    auto biter = b+offset;
-                    while(iter)
-                    {
-                        *iter += *b;
-                        iter += nth;
-                        biter += nth;
-                    }
+                    b += start; //set the iterator to its starting value
+                    for(size_t i=start;i<stop;++i)
+                        a[i] += *b++;
                 };
 
-                _run_threads(std::bind(f,a.begin(),_1,_2,b.begin()));
+                _run_threads(a.size(),std::bind(f,_1,_2,std::ref(a),b.begin()));
             }
 
 
@@ -232,20 +235,12 @@ namespace core{
             {
                 using namespace std::placeholders;
 
-                auto f = [](typename ATYPE::iterator start,
-                            size_t offset,size_t nth,
-                            value_type b)
+                auto f = [](size_t start,size_t stop,ATYPE &a,value_type b)
                 {
-                    auto iter = start+offset;
-                    while(iter)
-                    {
-                        *iter -= b;
-                        iter += nth;
-                    }
-         
+                    for(size_t i=start;i<stop;++i) a[i] -= b;
                 };
 
-                _run_threads(std::bind(f,a.begin(),_1,_2,b));
+                _run_threads(a.size(),std::bind(f,_1,_2,a,b));
             }
 
             //-----------------------------------------------------------------
@@ -267,21 +262,15 @@ namespace core{
             static void sub(ATYPE &a,const CTYPE &b)
             {
                 using namespace std::placeholders;
-                auto f = [](typename ATYPE::iterator start,
-                            size_t offset,size_t nth,
+                auto f = [](size_t start,size_t stop,ATYPE &a,
                             typename CTYPE::const_iterator b)
                 {
-                    auto iter = start+offset;
-                    auto biter = b+offset;
-                    while(iter)
-                    {
-                        *iter -= *b;
-                        iter += nth;
-                        biter += nth;
-                    }
+                    b += start; //set iterator to start value
+                    for(size_t i=start;i<stop;++i)
+                        a[i] -= *b++;
                 };
 
-                _run_threads(std::bind(f,a.begin(),_1,_2,b.begin()));
+                _run_threads(a.size(),std::bind(f,_1,_2,std::ref(a),b.begin()));
             }
 
             //=====================inplace multiplication======================
@@ -300,20 +289,12 @@ namespace core{
             {
                 using namespace std::placeholders;
                 
-                auto f = [](typename ATYPE::iterator start,
-                            size_t offset,size_t nth,
-                            value_type b)
+                auto f = [](size_t start,size_t stop,ATYPE &a,value_type b)
                 {
-                    auto iter = start+offset;
-                    while(iter)
-                    {
-                        *iter *= b;
-                        iter += nth;
-                    }
-         
+                    for(size_t i=start;i<stop;++i) a[i] *= b;
                 };
 
-                _run_threads(std::bind(f,a.begin(),_1,_2,b));
+                _run_threads(a.size(),std::bind(f,_1,_2,std::ref(a),b));
             }
 
 
@@ -336,21 +317,15 @@ namespace core{
             static void mult(ATYPE &a,const CTYPE &b)
             {
                 using namespace std::placeholders;
-                auto f = [](typename ATYPE::iterator start,
-                            size_t offset,size_t nth,
+                auto f = [](size_t start,size_t stop,ATYPE &a,
                             typename CTYPE::const_iterator b)
                 {
-                    auto iter = start+offset;
-                    auto biter = b+offset;
-                    while(iter)
-                    {
-                        *iter *= *b;
-                        iter += nth;
-                        biter += nth;
-                    }
+                    b += start; //set iterator to start position
+                    for(size_t i=start;i<stop;++i)
+                        a[i] *= *b++;
                 };
 
-                _run_threads(std::bind(f,a.begin(),_1,_2,b.begin()));
+                _run_threads(a.size(),std::bind(f,_1,_2,std::ref(a),b.begin()));
             }
             
             //=====================inplace division============================
@@ -370,20 +345,12 @@ namespace core{
             {
                 using namespace std::placeholders;
                 
-                auto f = [](typename ATYPE::iterator start,
-                            size_t offset,size_t nth,
-                            value_type b)
+                auto f = [](size_t start,size_t stop,ATYPE &a,value_type b)
                 {
-                    auto iter = start+offset;
-                    while(iter)
-                    {
-                        *iter /= b;
-                        iter += nth;
-                    }
-         
+                    for(size_t i=start;i<stop;++i) a[i] /= b;
                 };
 
-                _run_threads(std::bind(f,a.begin(),_1,_2,b));
+                _run_threads(a.size(),std::bind(f,_1,_2,std::ref(a),b));
             }
 
 
@@ -407,21 +374,15 @@ namespace core{
             static void div(ATYPE &a,const CTYPE &b)
             {
                 using namespace std::placeholders;
-                auto f = [](typename ATYPE::iterator start,
-                            size_t offset,size_t nth,
+                auto f = [](size_t start,size_t stop,ATYPE &a,
                             typename CTYPE::const_iterator b)
                 {
-                    auto iter = start+offset;
-                    auto biter = b+offset;
-                    while(iter)
-                    {
-                        *iter /= *b;
-                        iter += nth;
-                        biter += nth;
-                    }
+                    b += start;
+                    for(size_t i=start;i<stop;++i)
+                        a[i] /= *b++;
                 };
 
-                _run_threads(std::bind(f,a.begin(),_1,_2,b.begin()));
+                _run_threads(a.size(),std::bind(f,_1,_2,std::ref(a),b.begin()));
             }
             
     };
