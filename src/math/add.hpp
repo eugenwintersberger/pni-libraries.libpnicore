@@ -45,6 +45,8 @@ namespace core{
             typename op_trait<OP1T>::ref_type _op1;
             //! reference to the right operand
             typename op_trait<OP2T>::ref_type _op2;
+            //! size of the operator
+            size_t _size;
         public:
             //--------------------public types---------------------------------
             //! result type of the operation
@@ -68,8 +70,9 @@ namespace core{
             */
             add(const OP1T &o1,const OP2T &o2):
                 _op1(o1),
-                _op2(o2)
-            {}
+                _op2(o2),
+                _size(_op1.size()>_op2.size() ? _op1.size() : _op2.size())
+            { }
 
             //====================public methods===============================
             /*!
@@ -91,10 +94,7 @@ namespace core{
             Return the maximum of a.size() and b.size().
             \return number of elements of result
             */
-            size_t size() const
-            {
-                return _op1.size()>_op2.size() ? _op1.size() : _op2.size();
-            }
+            size_t size() const { return _size; }
 
             /*! 
             \brief get the shape
