@@ -72,16 +72,14 @@ namespace core{
             */
             static void add(ATYPE &a,value_type b)
             {
-#ifdef NOFOREACH
-                for(auto iter = a.begin();iter!=a.end();++iter)
-                {
-                    value_type &v = *iter;
-#else
-                for(value_type &v: a)
-                {
-#endif
-                    v+= b;
-                }
+                size_t n = a.size();
+                for(size_t i = 0;i<n;++i) a[i] += b;
+            }
+
+            static void add(ATYPE &a,const ATYPE &b)
+            {
+                size_t n = a.size();
+                for(size_t i=0;i<n;++i) a[i] += b[i];
             }
 
             //-----------------------------------------------------------------
@@ -131,16 +129,14 @@ namespace core{
             */
             static void sub(ATYPE &a,value_type b)
             {
-#ifdef NOFOREACH
-                for(auto iter = a.begin();iter!=a.end();++iter)
-                {
-                    value_type &v = *iter;
-#else
-                for(value_type &v: a)
-                {
-#endif
-                    v -= b;
-                }
+                size_t n = a.size();
+                for(size_t i=0;i<n;++i) a[i] -= b;
+            }
+
+            static void sub(ATYPE &a,const ATYPE &b)
+            {
+                size_t n = a.size();
+                for(size_t i=0;i<n;++i) a[i] -= b[i];
             }
 
             //-----------------------------------------------------------------
@@ -188,16 +184,14 @@ namespace core{
             */
             static void mult(ATYPE &a,value_type b)
             {
-#ifdef NOFOREACH
-                for(auto iter = a.begin();iter!=a.end();++iter)
-                {
-                    value_type &v = *iter;
-#else
-                for(value_type &v: a)
-                {
-#endif
-                    v *= b;
-                }
+                size_t n=a.size();
+                for(size_t i=0;i<n;++i) a[i] *= b;
+            }
+
+            static void mult(ATYPE &a,const ATYPE &b)
+            {
+                size_t n=a.size();
+                for(size_t i=0;i<n;++i) a[i] *= b[i];
             }
 
             //-----------------------------------------------------------------
@@ -246,16 +240,14 @@ namespace core{
             */
             static void div(ATYPE &a,value_type b)
             {
-#ifdef NOFOREACH
-                for(auto iter = a.begin();iter!=a.end();++iter)
-                {
-                    value_type &v = *iter;
-#else
-                for(value_type &v: a) 
-                {
-#endif
-                    v /= b;
-                }
+                size_t n = a.size();
+                for(size_t i=0;i<n;++i) a[i] /= b;
+            }
+
+            static void div(ATYPE &a,const ATYPE &b)
+            {
+                size_t n = a.size();
+                for(size_t i=0;i<n;++i) a[i] /= b[i];
             }
 
             //-----------------------------------------------------------------
