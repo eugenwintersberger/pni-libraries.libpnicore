@@ -33,7 +33,7 @@ static_library = build_env.StaticLibrary("${LIBNAME}",static_objects)
 #---------------------build the pkg-config file---------------------------------              
 #assemble linker path
 
-pkg_config_file = build_env.Substfile(target="${LIBNAME}",source=["pkgconf.in"],
+pkg_config_file = build_env.Substfile(target="${LIBNAME}",source=["pnicore.pc.in"],
                   SUBST_DICT={"@PREFIX@":"${PREFIX}","@LIBNAME@":"${LIBNAME}",
                   "@INCDIR@":build_env["INCDIR"].replace("/pni/core",""),
                   "@VERSION@":"${VERSION}","@INCPATH@":"${_CPPINCFLAGS}",
