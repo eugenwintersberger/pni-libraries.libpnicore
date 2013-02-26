@@ -8,8 +8,8 @@ void func(double x)
 
 int main(int argc,char **argv)
 {
-    auto func = std::bind(func,double(102.3));
-    func();
+    auto f = std::bind(func,double(102.3));
+    f();
 
     return 0;
 }
