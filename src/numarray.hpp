@@ -92,7 +92,8 @@ namespace core{
             }
 
             //join all threads
-            for(std::thread &thread: threads) thread.join();
+            for(auto iter=threads.begin();iter!=threads.end();++iter)
+                iter->join();
         }
 
         private:
