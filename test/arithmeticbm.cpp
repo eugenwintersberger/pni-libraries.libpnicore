@@ -237,7 +237,7 @@ int main(int argc,char **argv)
 
     if(conf.value<size_t>("nthreads") == 1)
     {
-        nf64array a(shape_t{conf.value<size_t>("nx"),conf.value<size_t>("ny")});
+        nf64array a(shape_t({conf.value<size_t>("nx"),conf.value<size_t>("ny")}));
 
         if(conf.value<bool>("binary"))
         {
@@ -269,8 +269,8 @@ int main(int argc,char **argv)
         //set the number of threads in the library configuration
 
         //allocate memory
-        nf64array_mt a(shape_t{conf.value<size_t>("nx"),
-                               conf.value<size_t>("ny")});
+        nf64array_mt a(shape_t({conf.value<size_t>("nx"),
+                               conf.value<size_t>("ny")}));
         if(conf.value<bool>("binary"))
         {
             nf64array_mt b(a.shape<shape_t>());
