@@ -11,6 +11,25 @@ def CheckNullPtr(context):
     context.Result(result)
     return result
 
+#====================check for bind============================================
+#Check for std::bind 
+
+def CheckBind(context):
+    context.Message("Checking for std::bind function support ...")
+    result = context.TryCompile(open('src/bind_test.cpp').read(),".cpp")
+    context.Result(result)
+    return result
+
+
+#==============================================================================
+##this test checks for lambda-function support of the C++ compiler
+#
+def CheckLambdaFunctions(context):
+    context.Message("Checking for lambda function support ...")
+    result = context.TryCompile(open('src/lambda_function_test.cpp').read(),".cpp")
+    context.Result(result)
+    return result
+
 #==================check for-each construction=================================
 #Test checking for for(auto v: container) construction support
 
@@ -71,6 +90,8 @@ CustomChecks["CheckForCppRandom"] = CheckForCppRandom
 CustomChecks["CheckForConstExpr"] = CheckForConstExpr
 CustomChecks["CheckForTemplateAlias"] = CheckForTemplateAlias
 CustomChecks["CheckForEnumBug"] = CheckForEnumBug
+CustomChecks["CheckLambdaFunctions"] = CheckLambdaFunctions
+CustomChecks["CheckBind"] = CheckBind
 
 Import('env')
 #start with configuration
@@ -78,6 +99,15 @@ conf = Configure(env,custom_tests = CustomChecks)
 
 
 #checking compiler capabilities
+#
+if not conf.CheckLambdaFunctions():
+    print "lambda functions are not supported by this compiler ...!"
+    env.AppendUnique(CPPDEFINES=['NO_LAMBDA_FUNC'])
+
+if not conf.CheckBind():
+    print "std::bind not supported by this compiler ...!"
+    env.AppendUnique(CPPDEFINES=['NO_STD_BIND'])
+
 if not conf.CheckNullPtr():
     print "nullptr not supported - use NULL"
     env.AppendUnique(CPPDEFINES=[('nullptr','NULL')])
