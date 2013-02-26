@@ -91,6 +91,14 @@ namespace core{
     */
     template<typename ATYPE> class mt_inplace_arithmetics
     {
+        public:
+            //===================public types==================================
+            //! value type of the array type
+            typedef typename ATYPE::value_type value_type;
+            //! array type iterator type
+            typedef typename ATYPE::iterator iterator;
+            //! array type const iterator type
+            typedef typename ATYPE::const_iterator const_iterator;
         private:
 
             /*!
@@ -151,14 +159,66 @@ namespace core{
             }
             */
 
+#ifdef NO_LAMBDA_FUNC
+            void _add_worker(size_t start,size_t stop,ATYPE &a,value_type b)
+            {
+                    for(size_t i=start;i<stop;++i) a[i] += b;
+            }
+
+            template<typename CTYPE>
+            void _add_worker(size_t start,size_t stop,ATYPE &a,
+                             typename CTYPE::const_iterator b)
+            {
+                b += start; //set the iterator to its starting value
+                for(size_t i=start;i<stop;++i)
+                    a[i] += *b++;
+            }
+                
+            void _sub_worker(size_t start,size_t stop,ATYPE &a,value_type b)
+            {
+                for(size_t i=start;i<stop;++i) a[i] -= b;
+            }
+
+            template<typename CTYPE>
+            void _sub_worker(size_t start,size_t stop,ATYPE &a,
+                             typename CTYPE::const_iterator b)
+            {
+                b += start; //set iterator to start value
+                for(size_t i=start;i<stop;++i)
+                    a[i] -= *b++;
+            }
+
+            void _mult_worker(size_t start,size_t stop,ATYPE &a,value_type b)
+            {
+                for(size_t i=start;i<stop;++i) a[i] *= b;
+            }
+                
+            template<typename CTYPE>
+            void _mult_worker(size_t start,size_t stop,ATYPE &a,
+                        typename CTYPE::const_iterator b)
+            {
+                b += start; //set iterator to start position
+                for(size_t i=start;i<stop;++i)
+                    a[i] *= *b++;
+            }
+                
+            void _div_worker(size_t start,size_t stop,ATYPE &a,value_type b)
+            {
+                for(size_t i=start;i<stop;++i) a[i] /= b;
+            }
+
+            template<typename CTYPE>
+            void _div_worker(size_t start,size_t stop,ATYPE &a,
+                             typename CTYPE::const_iterator b)
+            {
+                b += start;
+                for(size_t i=start;i<stop;++i)
+                    a[i] /= *b++;
+            }
+
+#endif 
+
         public:
-            //===================public types==================================
-            //! value type of the array type
-            typedef typename ATYPE::value_type value_type;
-            //! array type iterator type
-            typedef typename ATYPE::iterator iterator;
-            //! array type const iterator type
-            typedef typename ATYPE::const_iterator const_iterator;
             //==================inplace addition===============================
             /*!
             \brief add scalar to array
@@ -179,12 +239,16 @@ namespace core{
             {
                 using namespace std::placeholders;
 
+#ifndef NO_LAMBDA_FUNC
                 auto f = [](size_t start,size_t stop,ATYPE &a,value_type b)
                 {
                     for(size_t i=start;i<stop;++i) a[i] += b;
                 };
 
                 _run_threads(a.size(),std::bind(f,_1,_2,std::ref(a),b));
+#else
+                _run_threads(a.size(),std::bind(_add_worker,_1,_2,std::ref(a),b));
+#endif
             }
 
             //-----------------------------------------------------------------
@@ -206,6 +270,7 @@ namespace core{
             template<typename CTYPE> static void add(ATYPE &a,const CTYPE &b)
             {
                 using namespace std::placeholders;
+#ifndef NO_LAMBDA_FUNC
                 auto f = [](size_t start,size_t stop,ATYPE &a,
                             typename CTYPE::const_iterator b)
                 {
@@ -215,6 +280,9 @@ namespace core{
                 };
 
                 _run_threads(a.size(),std::bind(f,_1,_2,std::ref(a),b.begin()));
+#else
+                _run_threads(a.size(),std::bind(_add_worker<CTYPE>,_1,_2,std::ref(a),b.begin()));
+#endif
             }
 
 
@@ -234,13 +302,16 @@ namespace core{
             static void sub(ATYPE &a,value_type b)
             {
                 using namespace std::placeholders;
-
+#ifndef NO_LAMBDA_FUNC
                 auto f = [](size_t start,size_t stop,ATYPE &a,value_type b)
                 {
                     for(size_t i=start;i<stop;++i) a[i] -= b;
                 };
 
                 _run_threads(a.size(),std::bind(f,_1,_2,a,b));
+#else
+                _run_threads(a.size(),std::bind(_sub_worker,_1,_2,a,b));
+#endif
             }
 
             //-----------------------------------------------------------------
@@ -262,6 +333,7 @@ namespace core{
             static void sub(ATYPE &a,const CTYPE &b)
             {
                 using namespace std::placeholders;
+#ifndef NO_LAMBDA_FUNC
                 auto f = [](size_t start,size_t stop,ATYPE &a,
                             typename CTYPE::const_iterator b)
                 {
@@ -271,6 +343,9 @@ namespace core{
                 };
 
                 _run_threads(a.size(),std::bind(f,_1,_2,std::ref(a),b.begin()));
+#else
+                _run_threads(a.size(),std::bind(_sub_worker<CTYPE>,_1,_2,std::ref(a),b.begin()));
+#endif
             }
 
             //=====================inplace multiplication======================
@@ -288,13 +363,16 @@ namespace core{
             static void mult(ATYPE &a,value_type b)
             {
                 using namespace std::placeholders;
-                
+#ifndef NO_LAMBDA_FUNC 
                 auto f = [](size_t start,size_t stop,ATYPE &a,value_type b)
                 {
                     for(size_t i=start;i<stop;++i) a[i] *= b;
                 };
 
                 _run_threads(a.size(),std::bind(f,_1,_2,std::ref(a),b));
+#else
+                _run_threads(a.size(),std::bind(_mult_worker,_1,_2,std::ref(a),b));
+#endif
             }
 
 
@@ -317,6 +395,7 @@ namespace core{
             static void mult(ATYPE &a,const CTYPE &b)
             {
                 using namespace std::placeholders;
+#ifndef NO_LAMBDA_FUNC
                 auto f = [](size_t start,size_t stop,ATYPE &a,
                             typename CTYPE::const_iterator b)
                 {
@@ -326,6 +405,9 @@ namespace core{
                 };
 
                 _run_threads(a.size(),std::bind(f,_1,_2,std::ref(a),b.begin()));
+#else
+                _run_threads(a.size(),std::bind(_mult_worker<CTYPE>,_1,_2,std::ref(a),b.begin()));
+#endif
             }
             
             //=====================inplace division============================
@@ -344,13 +426,16 @@ namespace core{
             static void div(ATYPE &a,value_type b)
             {
                 using namespace std::placeholders;
-                
+#ifndef NO_LAMBDA_FUNC 
                 auto f = [](size_t start,size_t stop,ATYPE &a,value_type b)
                 {
                     for(size_t i=start;i<stop;++i) a[i] /= b;
                 };
 
                 _run_threads(a.size(),std::bind(f,_1,_2,std::ref(a),b));
+#else
+                _run_threads(a.size(),std::bind(_div_worker,_1,_2,std::ref(a),b));
+#endif
             }
 
 
@@ -374,6 +459,7 @@ namespace core{
             static void div(ATYPE &a,const CTYPE &b)
             {
                 using namespace std::placeholders;
+#ifndef NO_LAMBDA_FUNC
                 auto f = [](size_t start,size_t stop,ATYPE &a,
                             typename CTYPE::const_iterator b)
                 {
@@ -383,6 +469,9 @@ namespace core{
                 };
 
                 _run_threads(a.size(),std::bind(f,_1,_2,std::ref(a),b.begin()));
+#else
+                _run_threads(a.size(),std::bind(_div_worker<CTYPE>,_1,_2,std::ref(a),b.begin()));
+#endif
             }
             
     };
