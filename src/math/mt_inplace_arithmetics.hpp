@@ -27,6 +27,7 @@
 #include <functional>
 #include <thread>
 #include <vector>
+#include <list>
 #include <utility>
 
 #include "../exception_utils.hpp"
@@ -113,7 +114,7 @@ namespace core{
             static void _run_threads(size_t size,FTYPE &&f)
             {
                 size_t nth = pnicore_config.n_arithmetic_threads();
-                std::vector<std::thread> threads(nth);
+                std::list<std::thread> threads;
 
                 size_t nres = size%nth;
                 size_t npth = (size - nres)/nth;
@@ -133,11 +134,12 @@ namespace core{
                         --nres;
                     }
                    
-                    threads[i] = std::thread(f,start,stop);
+                    threads.push_back(std::move(std::thread(f,start,stop)));
                 }
 
                 //finally joind all threads and wait for execution end
-                for(size_t i=0;i<nth;++i) threads[i].join();
+                for(auto iter=threads.begin();iter!=threads.end();++iter) 
+                    iter->join();
             }
           
             //-----------------------------------------------------------------
@@ -180,7 +182,7 @@ namespace core{
             }
 
             template<typename CTYPE> static
-            void _sub_worker(size_t start,size_t stop,ATYPE &a,
+            void _sub_worker_c(size_t start,size_t stop,ATYPE &a,
                              typename CTYPE::const_iterator b)
             {
                 b += start; //set iterator to start value
@@ -194,7 +196,7 @@ namespace core{
             }
                 
             template<typename CTYPE> static
-            void _mult_worker(size_t start,size_t stop,ATYPE &a,
+            void _mult_worker_c(size_t start,size_t stop,ATYPE &a,
                         typename CTYPE::const_iterator b)
             {
                 b += start; //set iterator to start position
@@ -208,7 +210,7 @@ namespace core{
             }
 
             template<typename CTYPE> static
-            void _div_worker(size_t start,size_t stop,ATYPE &a,
+            void _div_worker_c(size_t start,size_t stop,ATYPE &a,
                              typename CTYPE::const_iterator b)
             {
                 b += start;
@@ -281,7 +283,8 @@ namespace core{
 
                 _run_threads(a.size(),std::bind(f,_1,_2,std::ref(a),b.begin()));
 #else
-                _run_threads(a.size(),std::bind(&mt_inplace_arithmetics::template _add_worker<CTYPE>,_1,_2,std::ref(a),b.begin()));
+                auto f = std::bind(&mt_inplace_arithmetics::template _add_worker_c<CTYPE>,_1,_2,std::ref(a),b.begin());
+                _run_threads(a.size(),f);
 #endif
             }
 
@@ -344,7 +347,7 @@ namespace core{
 
                 _run_threads(a.size(),std::bind(f,_1,_2,std::ref(a),b.begin()));
 #else
-                _run_threads(a.size(),std::bind(&mt_inplace_arithmetics::template _sub_worker<CTYPE>,_1,_2,std::ref(a),b.begin()));
+                _run_threads(a.size(),std::bind(&mt_inplace_arithmetics::template _sub_worker_c<CTYPE>,_1,_2,std::ref(a),b.begin()));
 #endif
             }
 
@@ -406,7 +409,7 @@ namespace core{
 
                 _run_threads(a.size(),std::bind(f,_1,_2,std::ref(a),b.begin()));
 #else
-                _run_threads(a.size(),std::bind(&mt_inplace_arithmetics::template _mult_worker<CTYPE>,_1,_2,std::ref(a),b.begin()));
+                _run_threads(a.size(),std::bind(&mt_inplace_arithmetics::template _mult_worker_c<CTYPE>,_1,_2,std::ref(a),b.begin()));
 #endif
             }
             
@@ -470,7 +473,7 @@ namespace core{
 
                 _run_threads(a.size(),std::bind(f,_1,_2,std::ref(a),b.begin()));
 #else
-                _run_threads(a.size(),std::bind(&mt_inplace_arithmetics::template _div_worker<CTYPE>,_1,_2,std::ref(a),b.begin()));
+                _run_threads(a.size(),std::bind(&mt_inplace_arithmetics::template _div_worker_c<CTYPE>,_1,_2,std::ref(a),b.begin()));
 #endif
             }
             

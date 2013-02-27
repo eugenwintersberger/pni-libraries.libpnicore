@@ -25,6 +25,7 @@
 #pragma once
 
 #include <thread>
+#include <list>
 
 #include "types.hpp"
 #include "container_iterator.hpp"
@@ -66,7 +67,7 @@ namespace core{
             size_t nth  = pnicore_config.n_arithmetic_threads(); 
             size_t nres = b.size()%nth;
             size_t npth = (b.size() - nres)/nth;
-            std::vector<std::thread> threads(nth);
+            std::list<std::thread> threads;
 
             size_t start=0,stop=0;
             for(size_t i = 0; i<nth;++i)
@@ -87,8 +88,7 @@ namespace core{
                 function_t f =
                     std::bind(&copy_type<true>::copy_worker<a_iterator_t,b_iterator_t>,a_start,a_end,b_start);
                     */
-                threads[i] =
-                    std::thread(copy_worker<AT,BT>,start,stop,std::cref(a),std::ref(b));
+                threads.push_back(std::move(std::thread(copy_worker<AT,BT>,start,stop,std::cref(a),std::ref(b))));
             }
 
             //join all threads
