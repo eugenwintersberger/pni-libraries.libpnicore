@@ -70,9 +70,12 @@ class benchmark_runner(object):
 
 class benchmark(object):
     def __init__(self,nx,ny):
-        self._a = numpy.ones((nx,ny),dtype="float64")
-        self._b = numpy.ones((nx,ny),dtype="float64")
-        self._c = numpy.ones((nx,ny),dtype="float64")
+        self._a = numpy.random.random_sample((nx,ny)).astype("float64")
+        self._b = numpy.random.random_sample((nx,ny)).astype("float64")
+        self._c = numpy.random.random_sample((nx,ny)).astype("float64")
+        self._d = numpy.random.random_sample((nx,ny)).astype("float64")
+        self._e = numpy.random.random_sample((nx,ny)).astype("float64")
+        self._f = numpy.random.random_sample((nx,ny)).astype("float64")
 
 class add_benchmark(benchmark):
     def __intit__(self,nx,ny):
@@ -108,7 +111,7 @@ class all_benchmark(benchmark):
         benchmark.__init__(self,nx,ny)
 
     def __call__(self):
-        self._c = (self._a*self._b)+(self._a-self._b)/self._a
+        self._c = (self._a*self._b)+(self._d-self._e)/self._f
 
        
 
@@ -156,8 +159,8 @@ runner = benchmark_runner()
 runner.run(options.nruns,all_bm)
 all_bm_result = average_result(runner)
 
-print "(a+b): ",add_bm_result.duration
-print "(a-b): ",sub_bm_result.duration
-print "(a*b): ",mult_bm_result.duration
-print "(a/b): ",div_bm_result.duration
-print "(a*b)+(a-b)/a: ",all_bm_result.duration
+print "(a+b):         ",add_bm_result.duration
+print "(a-b):         ",sub_bm_result.duration
+print "(a*b):         ",mult_bm_result.duration
+print "(a/b):         ",div_bm_result.duration
+print "(a*b)+(d-e)/f: ",all_bm_result.duration
