@@ -168,16 +168,28 @@ module arithmetics
             implicit none
             integer,intent(in) :: nx,ny
             integer :: i,j
+            real(kind = 8) :: rval
 
             call random_seed()
             do j = 1,ny
                 do i = 1,nx
-                   call random_number(a(i,j))
-                   call random_number(b(i,j))
-                   call random_number(c(i,j))
-                   call random_number(d(i,j))
-                   call random_number(e(i,j))
-                   call random_number(f(i,j))
+                   call random_number(rval)
+                   a(i,j) = rval*huge(rval)
+
+                   call random_number(rval)
+                   b(i,j) = rval*huge(rval)
+
+                   call random_number(rval)
+                   c(i,j) = rval*huge(rval)
+
+                   call random_number(rval)
+                   d(i,j) = rval*huge(rval)
+
+                   call random_number(rval)
+                   e(i,j) = rval*huge(rval)
+
+                   call random_number(rval)
+                   f(i,j) = rval*huge(rval)
                 end do
             end do
 
