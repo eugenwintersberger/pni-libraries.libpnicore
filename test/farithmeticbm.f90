@@ -296,11 +296,11 @@ program farithmeticbm
     all_result = result_average(results)
     call reset_benchmark_results(results)
 
-    write(*,*) 'add result:  ',result_duration(add_result) 
-    write(*,*) 'sub result:  ',result_duration(sub_result)
-    write(*,*) 'div result:  ',result_duration(div_result)
-    write(*,*) 'mult result: ',result_duration(mult_result)
-    write(*,*) 'all result:  ',result_duration(all_result)
+    write(*,*) 'c=(a+b):        ',result_duration(add_result) 
+    write(*,*) 'c=(a-b):        ',result_duration(sub_result)
+    write(*,*) 'c=(a/b):        ',result_duration(div_result)
+    write(*,*) 'c=(a*b):        ',result_duration(mult_result)
+    write(*,*) 'c=a*b+(d-e)/f:  ',result_duration(all_result)
 
 
     !in the end we have to free everything

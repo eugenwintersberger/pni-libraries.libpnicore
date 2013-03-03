@@ -179,15 +179,15 @@ void run_binary_benchmark(size_t nruns,ATYPE &a)
     //print benchmark results 
     benchmark_result result;
     result = average(add_bm);
-    std::cout<<"Binary add:\t"<<result<<std::endl;
+    std::cout<<"c=a+b:           "<<result<<std::endl;
     result = average(sub_bm);
-    std::cout<<"Binary sub:\t"<<result<<std::endl;
+    std::cout<<"c=a-b:           "<<result<<std::endl;
     result = average(div_bm);
-    std::cout<<"Binary div:\t"<<result<<std::endl;
+    std::cout<<"c=a/b:           "<<result<<std::endl;
     result = average(mult_bm);
-    std::cout<<"Binary mult:\t"<<result<<std::endl;
+    std::cout<<"c=a*b:           "<<result<<std::endl;
     result = average(all_bm);
-    std::cout<<"Binary all:\t"<<result<<std::endl;
+    std::cout<<"c=a*b + (d-e)/f: "<<result<<std::endl;
 
 }
 //-----------------------------------------------------------------------------
