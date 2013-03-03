@@ -22,35 +22,54 @@
  */
 #pragma once
 
+#include "../uniform_distribution.hpp"
+
 template<typename ATYPE> class binary_arithmetic_benchmark
 {
+    private:
+        ATYPE _a;
+        ATYPE _b;
+        ATYPE _c;
+        ATYPE _d;
+        ATYPE _e;
+        ATYPE _f;
     public:
-        binary_arithmetic_benchmark(ATYPE &a) {}
-
-        void add(ATYPE &c,const ATYPE &a,const ATYPE &b)
+        binary_arithmetic_benchmark(const ATYPE &a):
+            _a(a),_b(a),_c(a),
+            _d(a),_e(a),_f(a)
         {
-            c = a + b;
+            //initialize the data 
+
+            uniform_distribution<typename ATYPE::value_type> random_dist;
+
+            auto a_iter = _a.begin();
+            auto b_iter = _b.begin();
+            auto c_iter = _c.begin();
+            auto d_iter = _d.begin();
+            auto e_iter = _e.begin();
+            auto f_iter = _f.begin();
+
+            for(;a_iter!=_a.end();)
+            {
+                *(a_iter++) = random_dist();
+                *(b_iter++) = random_dist();
+                *(c_iter++) = random_dist();
+                *(d_iter++) = random_dist();
+                *(e_iter++) = random_dist();
+                *(f_iter++) = random_dist();
+            }
+        
         }
 
-        void sub(ATYPE &c,const ATYPE &a,const ATYPE &b)
-        {
-            c = a - b;
-        }
+        void add() { _c = _a + _b; }
+
+        void sub() { _c = _a - _b; }
 
 
-        void mult(ATYPE &c,const ATYPE &a,const ATYPE &b)
-        {
-            c = a * b;
-        }
+        void mult() { _c = _a * _b; }
 
-        void div(ATYPE &c,const ATYPE &a,const ATYPE &b)
-        {
-            c= a/b;
-        }
+        void div() { _c= _a/_b; }
 
-        void all(ATYPE &c,const ATYPE &a,const ATYPE &b)
-        {
-            c = (a*b) + (a-b)/a;
-        }
+        void all() { _c = (_a*_b) + (_d-_e)/_f; }
 
 };

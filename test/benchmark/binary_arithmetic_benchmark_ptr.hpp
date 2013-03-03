@@ -24,65 +24,84 @@
 
 template<typename ATYPE> class binary_arithmetic_benchmark_ptr
 {
+    public:
+        typedef typename ATYPE::value_type value_type;
     private:
+        ATYPE _a;
+        ATYPE _b;
+        ATYPE _c;
+        ATYPE _d;
+        ATYPE _e;
+        ATYPE _f;
         size_t _size;
+        value_type *_a_ptr;
+        value_type *_b_ptr;
+        value_type *_c_ptr;
+        value_type *_d_ptr;
+        value_type *_e_ptr;
+        value_type *_f_ptr;
     public:
         binary_arithmetic_benchmark_ptr(ATYPE &a):
-            _size(a.size())
-        {}
-
-        void add(ATYPE &c,const ATYPE &a,const ATYPE &b)
+            _a(a),_b(a),_c(a),
+            _d(a),_e(a),_f(a),_size(a.size()),
+            _a_ptr(const_cast<value_type*>(_a.storage().storage().ptr())),
+            _b_ptr(const_cast<value_type*>(_b.storage().storage().ptr())),
+            _c_ptr(const_cast<value_type*>(_c.storage().storage().ptr())),
+            _d_ptr(const_cast<value_type*>(_d.storage().storage().ptr())),
+            _e_ptr(const_cast<value_type*>(_e.storage().storage().ptr())),
+            _f_ptr(const_cast<value_type*>(_f.storage().storage().ptr()))
         {
-            typedef typename ATYPE::value_type* type;
-            type c_ptr = const_cast<type>(c.storage().storage().ptr());
-            type a_ptr = const_cast<type>(a.storage().storage().ptr());
-            type b_ptr = const_cast<type>(b.storage().storage().ptr());
+            //initialize the data 
 
-            for(size_t i=0;i<a.size();++i)
-                c_ptr[i] = a_ptr[i] + b_ptr[i];
+            uniform_distribution<typename ATYPE::value_type> random_dist;
+
+            auto a_iter = _a.begin();
+            auto b_iter = _b.begin();
+            auto c_iter = _c.begin();
+            auto d_iter = _d.begin();
+            auto e_iter = _e.begin();
+            auto f_iter = _f.begin();
+
+            for(;a_iter!=_a.end();)
+            {
+                *(a_iter++) = random_dist();
+                *(b_iter++) = random_dist();
+                *(c_iter++) = random_dist();
+                *(d_iter++) = random_dist();
+                *(e_iter++) = random_dist();
+                *(f_iter++) = random_dist();
+            }
         }
 
-        void sub(ATYPE &c,const ATYPE &a,const ATYPE &b)
+        void add()
         {
-            typedef typename ATYPE::value_type* type;
-            type c_ptr = const_cast<type>(c.storage().storage().ptr());
-            type a_ptr = const_cast<type>(a.storage().storage().ptr());
-            type b_ptr = const_cast<type>(b.storage().storage().ptr());
-
             for(size_t i=0;i<_size;++i)
-                c_ptr[i] = a_ptr[i] - b_ptr[i];
+                _c_ptr[i] = _a_ptr[i] + _b_ptr[i];
+        }
+
+        void sub()
+        {
+            for(size_t i=0;i<_size;++i)
+                _c_ptr[i] = _a_ptr[i] - _b_ptr[i];
         }
 
 
-        void mult(ATYPE &c,const ATYPE &a,const ATYPE &b)
+        void mult()
         {
-            typedef typename ATYPE::value_type* type;
-            type c_ptr = const_cast<type>(c.storage().storage().ptr());
-            type a_ptr = const_cast<type>(a.storage().storage().ptr());
-            type b_ptr = const_cast<type>(b.storage().storage().ptr());
-            
             for(size_t i=0;i<_size;++i)
-                c_ptr[i] = a_ptr[i] * b_ptr[i];
+                _c_ptr[i] = _a_ptr[i] * _b_ptr[i];
         }
 
-        void div(ATYPE &c,const ATYPE &a,const ATYPE &b)
+        void div()
         {
-            typedef typename ATYPE::value_type* type;
-            type c_ptr = const_cast<type>(c.storage().storage().ptr());
-            type a_ptr = const_cast<type>(a.storage().storage().ptr());
-            type b_ptr = const_cast<type>(b.storage().storage().ptr());
             for(size_t i=0;i<_size;++i)
-                c_ptr[i] = a_ptr[i] / b_ptr[i];
+                _c_ptr[i] = _a_ptr[i] / _b_ptr[i];
         }
         
-        void all(ATYPE &c,const ATYPE &a,const ATYPE &b)
+        void all()
         {
-            typedef typename ATYPE::value_type* type;
-            type c_ptr = const_cast<type>(c.storage().storage().ptr());
-            type a_ptr = const_cast<type>(a.storage().storage().ptr());
-            type b_ptr = const_cast<type>(b.storage().storage().ptr());
             for(size_t i=0;i<_size;++i)
-                c_ptr[i] = a_ptr[i]*b_ptr[i] + (a_ptr[i]-b_ptr[i])/a_ptr[i];
+                _c_ptr[i] = _a_ptr[i]*_b_ptr[i] + (_d_ptr[i]-_e_ptr[i])/_f_ptr[i];
         }
 
 };

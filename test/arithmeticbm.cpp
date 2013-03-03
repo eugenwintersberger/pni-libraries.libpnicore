@@ -152,7 +152,7 @@ template<typename ATYPE> void reset_array(ATYPE &a)
 }
 
 template<bool use_ptr_flag,typename ATYPE> 
-void run_binary_benchmark(size_t nruns,ATYPE &a,ATYPE &b,ATYPE &c)
+void run_binary_benchmark(size_t nruns,ATYPE &a)
 {
     //define benchmark type
     typedef typename binary_benchmark_type<ATYPE,use_ptr_flag>::benchmark_type bm_t; 
@@ -161,29 +161,19 @@ void run_binary_benchmark(size_t nruns,ATYPE &a,ATYPE &b,ATYPE &c)
     bm_t benchmark(a);
 
     //define benchmark functions
-    add_func = std::bind(&bm_t::add,benchmark,c,a,b);
-    sub_func = std::bind(&bm_t::sub,benchmark,c,a,b);
-    div_func = std::bind(&bm_t::div,benchmark,c,a,b);
-    mult_func = std::bind(&bm_t::mult,benchmark,c,a,b);
-    all_func = std::bind(&bm_t::all,benchmark,c,a,b);
+    add_func = std::bind(&bm_t::add,benchmark);
+    sub_func = std::bind(&bm_t::sub,benchmark);
+    div_func = std::bind(&bm_t::div,benchmark);
+    mult_func = std::bind(&bm_t::mult,benchmark);
+    all_func = std::bind(&bm_t::all,benchmark);
     
     //run benchmarks
     benchmark_runner add_bm,mult_bm,div_bm,sub_bm,all_bm;
 
-    std::fill(a.begin(),a.end(),typename ATYPE::value_type(10.0));
-    std::fill(b.begin(),b.end(),typename ATYPE::value_type(100.0));
     add_bm.run<bmtimer_t>(nruns,add_func);
-    std::fill(a.begin(),a.end(),typename ATYPE::value_type(10.0));
-    std::fill(b.begin(),b.end(),typename ATYPE::value_type(100.0));
     sub_bm.run<bmtimer_t>(nruns,sub_func);
-    std::fill(a.begin(),a.end(),typename ATYPE::value_type(10.0));
-    std::fill(b.begin(),b.end(),typename ATYPE::value_type(100.0));
     div_bm.run<bmtimer_t>(nruns,div_func);
-    std::fill(a.begin(),a.end(),typename ATYPE::value_type(10.0));
-    std::fill(b.begin(),b.end(),typename ATYPE::value_type(100.0));
     mult_bm.run<bmtimer_t>(nruns,mult_func);
-    std::fill(a.begin(),a.end(),typename ATYPE::value_type(10.0));
-    std::fill(b.begin(),b.end(),typename ATYPE::value_type(100.0));
     all_bm.run<bmtimer_t>(nruns,all_func);
     
     //print benchmark results 
@@ -241,13 +231,10 @@ int main(int argc,char **argv)
 
         if(conf.value<bool>("binary"))
         {
-            nf64array b(a.shape<shape_t>());
-            nf64array c(a.shape<shape_t>());
-
             if(conf.value<bool>("use-ptr"))
-                run_binary_benchmark<true>(conf.value<size_t>("nruns"),a,b,c);
+                run_binary_benchmark<true>(conf.value<size_t>("nruns"),a);
             else
-                run_binary_benchmark<false>(conf.value<size_t>("nruns"),a,b,c);
+                run_binary_benchmark<false>(conf.value<size_t>("nruns"),a);
         }
         else
         {
@@ -275,7 +262,7 @@ int main(int argc,char **argv)
         {
             nf64array_mt b(a.shape<shape_t>());
             nf64array_mt c(a.shape<shape_t>());
-            run_binary_benchmark<false>(conf.value<size_t>("nruns"),a,b,c);
+            run_binary_benchmark<false>(conf.value<size_t>("nruns"),a);
         }
         else
             run_inplace_benchmark<false>(conf.value<size_t>("nruns"),std::move(a));
