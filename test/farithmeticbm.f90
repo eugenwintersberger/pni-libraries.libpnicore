@@ -105,6 +105,9 @@ module arithmetics
     real(kind = 8),dimension(:,:),allocatable,private :: a
     real(kind = 8),dimension(:,:),allocatable,private :: b
     real(kind = 8),dimension(:,:),allocatable,private :: c
+    real(kind = 8),dimension(:,:),allocatable,private :: d
+    real(kind = 8),dimension(:,:),allocatable,private :: e
+    real(kind = 8),dimension(:,:),allocatable,private :: f
     contains
 
         !----------------------------------------------------------------------
@@ -137,7 +140,7 @@ module arithmetics
         subroutine run_all()
             implicit none
 
-            c = a*b + (a-b)/a
+            c = a*b + (e-f)/d
         end subroutine run_all
 
         !-----------------------------------------------------------------------
@@ -152,8 +155,34 @@ module arithmetics
             allocate(a(nx,ny),stat=mem_status)
             allocate(b(nx,ny),stat=mem_status)
             allocate(c(nx,ny),stat=mem_status)
+            allocate(d(nx,ny),stat=mem_status)
+            allocate(e(nx,ny),stat=mem_status)
+            allocate(f(nx,ny),stat=mem_status)
+
+            call initialize_data(nx,ny)
 
         end subroutine allocate_arithmetics
+
+        !-----------------------------------------------------------------------
+        subroutine initialize_data(nx,ny)
+            implicit none
+            integer,intent(in) :: nx,ny
+            integer :: i,j
+
+            call random_seed()
+            do j = 1,ny
+                do i = 1,nx
+                   call random_number(a(i,j))
+                   call random_number(b(i,j))
+                   call random_number(c(i,j))
+                   call random_number(d(i,j))
+                   call random_number(e(i,j))
+                   call random_number(f(i,j))
+                end do
+            end do
+
+        end subroutine initialize_data
+            
 
         !-----------------------------------------------------------------------
         subroutine deallocate_arithmetics()
@@ -170,6 +199,18 @@ module arithmetics
 
             if (allocated(c)) then
                 deallocate(c,stat=mem_status)
+            end if
+
+            if (allocated(d)) then
+                deallocate(d,stat=mem_status)
+            end if
+
+            if (allocated(e)) then
+                deallocate(e,stat=mem_status)
+            end if
+
+            if (allocated(f)) then
+                deallocate(f,stat=mem_status)
             end if
         end subroutine deallocate_arithmetics
 
