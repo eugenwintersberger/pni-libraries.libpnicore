@@ -236,10 +236,36 @@ program farithmeticbm
     integer :: nx,ny,nruns
     type(benchmark_result) :: add_result,sub_result,div_result,mult_result
     type(benchmark_result) :: all_result
+    integer :: ai !argument index
+    character(len=256) :: arg
 
-    nx = 5000
-    ny = 5000
+    !set default values
+    nx = 2000
+    ny = 2000
     nruns = 10
+
+    !parse command line arguments
+    cli_parse: do ai = 1,command_argument_count()
+        call get_command_argument(ai,arg)
+
+        if (index(arg,"-r")==1) then 
+            read(arg(3:),'(I10)') nruns
+        else if (index(arg,"--nruns=")==1) then
+            read(arg(9:),'(I10)') nruns
+        else if (index(arg,"-x")==1) then
+            read(arg(3:),'(I10)') nx
+        else if (index(arg,"--nx=")==1) then
+            read(arg(6:),'(I10)') nx
+        else if (index(arg,"-y")==1) then
+            read(arg(3:),'(I10)') ny
+        else if (index(arg,"--ny=")==1) then
+            read(arg(6:),'(I10)') ny
+        else 
+            write (*,*) 'unknown command line or unknown syntax'
+        end if
+
+    end do cli_parse
+
 
     !allocate memory
     call allocate_benchmark_results(nruns,results)
