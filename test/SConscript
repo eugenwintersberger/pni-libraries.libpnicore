@@ -51,7 +51,8 @@ pnicore_test = test_env.Program("pnicoretest",sources_list)
 iterbm = test_env.Program("iteratorbm",bm_sources)
 multiindexbm = test_env.Program("multiindexbm",["multiindexbm.cpp"])
 arithmeticbm = test_env.Program("arithmeticbm",["arithmeticbm.cpp"])
-test_targets = [pnicore_test,iterbm,multiindexbm,arithmeticbm]
+farithmeticbm = test_env.Program("farithmeticbm",["farithmeticbm.f90"],LIBS=[])
+test_targets = [pnicore_test,iterbm,multiindexbm,arithmeticbm,farithmeticbm]
 
 test_env.Alias("test",test_targets)
 test_install = test_env.Install("$PREFIX/bin",test_targets)
