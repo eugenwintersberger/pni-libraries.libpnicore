@@ -73,8 +73,8 @@ std::ostream &print_result(std::ostream &stream,benchmark_runner bm)
 
     float64 percent = (error.time()*100.)/av.time();
 
-    stream<<av.time()<<"\t(+-)"<<error.time()<<"\t"<<av.unit();
-    stream<<"\t(+-)"<<percent<<"%";
+    stream<<std::scientific<<av.time()*1.e-9<<"\t(+-)"<<error.time()*1.e-9<<"\t"<<av.unit();
+    stream<<"\t(+-)"<<std::fixed<<percent<<"%";
     return stream;
 }
 
