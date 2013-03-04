@@ -2,10 +2,8 @@ program farithmeticbm
     use benchmark
     use arithmetic_benchmark
     implicit none
-    type(benchmark_result),dimension(:),allocatable :: results
+    real(kind=8),dimension(:),allocatable :: results
     integer :: nx,ny,nruns
-    type(benchmark_result) :: add_result,sub_result,div_result,mult_result
-    type(benchmark_result) :: all_result
     integer :: ai !argument index
     character(len=256) :: arg
 
@@ -44,34 +42,27 @@ program farithmeticbm
     !run the add benchmarks    
     call run_benchmarks(run_add,results)
     call print_result('c=(a+b)',results)
-    call reset_benchmark_results(results)
+    results = 0.d0
         
     !run the sub benchmarks
     call run_benchmarks(run_sub,results)
     call print_result('c=(a-b)',results)
-    call reset_benchmark_results(results)
+    results = 0.d0
 
     !run the div benchmarks
     call run_benchmarks(run_div,results)
     call print_result('c=(a/b)',results)
-    call reset_benchmark_results(results)
+    results = 0.d0
 
     !run the mult benchmarks
     call run_benchmarks(run_mult,results)
     call print_result('c=a*b',results)
-    call reset_benchmark_results(results)
+    results = 0.d0
 
     !run the all benchmark
     call run_benchmarks(run_all,results)
     call print_result('c=a*b+(d-e)/f',results)
-    call reset_benchmark_results(results)
-
-
-    !write(*,*) 'c=(a+b):        ',result_duration(add_result) 
-    !write(*,*) 'c=(a-b):        ',result_duration(sub_result)
-    !write(*,*) 'c=(a/b):        ',result_duration(div_result)
-    !write(*,*) 'c=(a*b):        ',result_duration(mult_result)
-    !write(*,*) 'c=a*b+(d-e)/f:  ',result_duration(all_result)
+    results = 0.d0
 
 
     !in the end we have to free everything
