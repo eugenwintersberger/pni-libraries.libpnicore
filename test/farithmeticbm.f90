@@ -1,236 +1,6 @@
-module benchmark
-    implicit none
-
-    type benchmark_result
-        real(kind = 8) :: start_time
-        real(kind = 8) :: stop_time
-    end type benchmark_result
-
-    contains
-
-        !----------------------------------------------------------------------
-        type(benchmark_result) function result_average(results)
-            implicit none
-            type(benchmark_result),dimension(:),intent(in) :: results
-            type(benchmark_result) ::av_result
-            integer :: i
-
-            av_result%start_time = 0.
-            av_result%stop_time  = 0.
-            do i = 1,size(results)
-               av_result%start_time = results(i)%start_time
-               av_result%stop_time  = results(i)%stop_time
-            end do
-
-            result_average = av_result
-            return 
-        end function result_average
-        
-        !----------------------------------------------------------------------
-        real(kind = 8) function result_duration(res)
-            implicit none
-            type(benchmark_result),intent(in) :: res
-            real(kind =8) :: duration
-
-            duration = res%stop_time - res%start_time
-
-            result_duration = duration
-            return
-        end function result_duration
-
-        !----------------------------------------------------------------------
-        subroutine allocate_benchmark_results(nruns,results)
-            implicit none
-            integer,intent(in) :: nruns
-            type(benchmark_result),dimension(:),allocatable,intent(inout) :: results
-            integer :: mem_status,i
-
-            !check if array is already allocated
-            call deallocate_benchmark_results(results)
-
-            !allocate memory
-            allocate(results(nruns),stat=mem_status)
-
-            !initialize data
-            call reset_benchmark_results(results)
-
-
-        end subroutine allocate_benchmark_results
-
-        !----------------------------------------------------------------------
-        subroutine reset_benchmark_results(results)
-            implicit none
-            type(benchmark_result),dimension(:),intent(inout) :: results
-            integer :: i
-
-            do i = 1,size(results)
-                results(i)%start_time = 0.d0
-                results(i)%stop_time  = 0.d0
-            end do
-
-        end subroutine reset_benchmark_results
-
-        !----------------------------------------------------------------------
-        subroutine deallocate_benchmark_results(results)
-            implicit none
-            type(benchmark_result),dimension(:),allocatable,intent(inout):: results
-            integer :: mem_status
-
-            if (allocated(results)) then
-               deallocate(results,stat=mem_status) 
-            end if
-
-        end subroutine deallocate_benchmark_results
-
-        !-----------------------------------------------------------------------
-        subroutine run_benchmarks(proc,results)
-            implicit none
-            type(benchmark_result),dimension(:),intent(inout) :: results
-            integer :: i
-
-            do i = 1,size(results)
-                call cpu_time(results(i)%start_time)
-                call proc()
-                call cpu_time(results(i)%stop_time)
-            end do
-
-        end subroutine run_benchmarks
-
-end module benchmark
-
-module arithmetics
-    implicit none
-    save
-
-    real(kind = 8),dimension(:,:),allocatable,private :: a
-    real(kind = 8),dimension(:,:),allocatable,private :: b
-    real(kind = 8),dimension(:,:),allocatable,private :: c
-    real(kind = 8),dimension(:,:),allocatable,private :: d
-    real(kind = 8),dimension(:,:),allocatable,private :: e
-    real(kind = 8),dimension(:,:),allocatable,private :: f
-    contains
-
-        !----------------------------------------------------------------------
-        subroutine run_add()
-            implicit none
-            c = a + b
-        end subroutine run_add
-
-        !----------------------------------------------------------------------
-        subroutine run_sub()
-            implicit none
-            c = a - b
-        end subroutine run_sub
-
-        !----------------------------------------------------------------------
-        subroutine run_mult()
-            implicit none
-
-            c = a*b
-        end subroutine run_mult
-
-        !----------------------------------------------------------------------
-        subroutine run_div()
-            implicit none
-
-            c = a/b
-        end subroutine run_div
-
-        !----------------------------------------------------------------------
-        subroutine run_all()
-            implicit none
-
-            c = a*b + (e-f)/d
-        end subroutine run_all
-
-        !-----------------------------------------------------------------------
-        subroutine allocate_arithmetics(nx,ny)
-            implicit none
-            integer,intent(in) :: nx,ny
-            integer :: mem_status
-    
-            !deallocate memory if necessary
-            call deallocate_arithmetics()
-
-            allocate(a(nx,ny),stat=mem_status)
-            allocate(b(nx,ny),stat=mem_status)
-            allocate(c(nx,ny),stat=mem_status)
-            allocate(d(nx,ny),stat=mem_status)
-            allocate(e(nx,ny),stat=mem_status)
-            allocate(f(nx,ny),stat=mem_status)
-
-            call initialize_data(nx,ny)
-
-        end subroutine allocate_arithmetics
-
-        !-----------------------------------------------------------------------
-        subroutine initialize_data(nx,ny)
-            implicit none
-            integer,intent(in) :: nx,ny
-            integer :: i,j
-            real(kind = 8) :: rval
-
-            call random_seed()
-            do j = 1,ny
-                do i = 1,nx
-                   call random_number(rval)
-                   a(i,j) = rval*huge(rval)
-
-                   call random_number(rval)
-                   b(i,j) = rval*huge(rval)
-
-                   call random_number(rval)
-                   c(i,j) = rval*huge(rval)
-
-                   call random_number(rval)
-                   d(i,j) = rval*huge(rval)
-
-                   call random_number(rval)
-                   e(i,j) = rval*huge(rval)
-
-                   call random_number(rval)
-                   f(i,j) = rval*huge(rval)
-                end do
-            end do
-
-        end subroutine initialize_data
-            
-
-        !-----------------------------------------------------------------------
-        subroutine deallocate_arithmetics()
-            implicit none
-            integer :: mem_status
-
-            if (allocated(a)) then
-                deallocate(a,stat=mem_status)
-            end if
-
-            if (allocated(b)) then
-                deallocate(b,stat=mem_status)
-            end if
-
-            if (allocated(c)) then
-                deallocate(c,stat=mem_status)
-            end if
-
-            if (allocated(d)) then
-                deallocate(d,stat=mem_status)
-            end if
-
-            if (allocated(e)) then
-                deallocate(e,stat=mem_status)
-            end if
-
-            if (allocated(f)) then
-                deallocate(f,stat=mem_status)
-            end if
-        end subroutine deallocate_arithmetics
-
-end module arithmetics
-
 program farithmeticbm 
     use benchmark
-    use arithmetics
+    use arithmetic_benchmark
     implicit none
     type(benchmark_result),dimension(:),allocatable :: results
     integer :: nx,ny,nruns
@@ -273,34 +43,35 @@ program farithmeticbm
 
     !run the add benchmarks    
     call run_benchmarks(run_add,results)
-    add_result = result_average(results)
+    call print_result('c=(a+b)',results)
     call reset_benchmark_results(results)
         
     !run the sub benchmarks
     call run_benchmarks(run_sub,results)
-    sub_result = result_average(results)
+    call print_result('c=(a-b)',results)
     call reset_benchmark_results(results)
 
     !run the div benchmarks
     call run_benchmarks(run_div,results)
-    div_result = result_average(results)
+    call print_result('c=(a/b)',results)
     call reset_benchmark_results(results)
 
     !run the mult benchmarks
     call run_benchmarks(run_mult,results)
-    mult_result = result_average(results)
+    call print_result('c=a*b',results)
     call reset_benchmark_results(results)
 
     !run the all benchmark
     call run_benchmarks(run_all,results)
-    all_result = result_average(results)
+    call print_result('c=a*b+(d-e)/f',results)
     call reset_benchmark_results(results)
 
-    write(*,*) 'c=(a+b):        ',result_duration(add_result) 
-    write(*,*) 'c=(a-b):        ',result_duration(sub_result)
-    write(*,*) 'c=(a/b):        ',result_duration(div_result)
-    write(*,*) 'c=(a*b):        ',result_duration(mult_result)
-    write(*,*) 'c=a*b+(d-e)/f:  ',result_duration(all_result)
+
+    !write(*,*) 'c=(a+b):        ',result_duration(add_result) 
+    !write(*,*) 'c=(a-b):        ',result_duration(sub_result)
+    !write(*,*) 'c=(a/b):        ',result_duration(div_result)
+    !write(*,*) 'c=(a*b):        ',result_duration(mult_result)
+    !write(*,*) 'c=a*b+(d-e)/f:  ',result_duration(all_result)
 
 
     !in the end we have to free everything
