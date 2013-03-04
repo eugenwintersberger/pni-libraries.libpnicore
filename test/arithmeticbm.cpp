@@ -66,6 +66,19 @@ template<typename ATYPE> struct binary_benchmark_type<ATYPE,false>
 };
 
 //-----------------------------------------------------------------------------
+std::ostream &print_result(std::ostream &stream,benchmark_runner bm)
+{
+    benchmark_result av = average(bm);
+    benchmark_result error = standard_deviation(bm);
+
+    float64 percent = (error.time()*100.)/av.time();
+
+    stream<<av.time()<<"\t(+-)"<<error.time()<<"\t"<<av.unit();
+    stream<<"\t(+-)"<<percent<<"%";
+    return stream;
+}
+
+//-----------------------------------------------------------------------------
 template<bool use_ptr_flag,typename ATYPE> 
 void run_inplace_benchmark(size_t nruns,ATYPE &&a)
 {
@@ -120,27 +133,32 @@ void run_inplace_benchmark(size_t nruns,ATYPE &&a)
     mult_bm_array.run<bmtimer_t>(nruns,bm_function);
 
     //print benchmark results 
-    benchmark_result result;
 
     std::cout<<"array <OP>= scalar"<<std::endl;
-    result = average(add_bm_scalar);
-    std::cout<<"Inplace add:\t"<<result<<std::endl;
-    result = average(sub_bm_scalar);
-    std::cout<<"Inplace sub:\t"<<result<<std::endl;
-    result = average(div_bm_scalar);
-    std::cout<<"Inplace div:\t"<<result<<std::endl;
-    result = average(mult_bm_scalar);
-    std::cout<<"Inplace mult:\t"<<result<<std::endl;
+    std::cout<<"Inplace add:\t"; print_result(std::cout,add_bm_scalar); 
+    std::cout<<std::endl;
+
+    std::cout<<"Inplace sub:\t"; print_result(std::cout,sub_bm_scalar); 
+    std::cout<<std::endl;
+
+    std::cout<<"Inplace div:\t"; print_result(std::cout,div_bm_scalar); 
+    std::cout<<std::endl;
+
+    std::cout<<"Inplace mult:\t"; print_result(std::cout,mult_bm_scalar);
+    std::cout<<std::endl;
     
-    std::cout<<"array <OP>= array"<<std::endl;
-    result = average(add_bm_array);
-    std::cout<<"Inplace add:\t"<<result<<std::endl;
-    result = average(sub_bm_array);
-    std::cout<<"Inplace sub:\t"<<result<<std::endl;
-    result = average(div_bm_array);
-    std::cout<<"Inplace div:\t"<<result<<std::endl;
-    result = average(mult_bm_array);
-    std::cout<<"Inplace mult:\t"<<result<<std::endl;
+    std::cout<<std::endl<<"array <OP>= array"<<std::endl;
+    std::cout<<"Inplace add:\t"; print_result(std::cout,add_bm_array);
+    std::cout<<std::endl;
+
+    std::cout<<"Inplace sub:\t"; print_result(std::cout,sub_bm_array);
+    std::cout<<std::endl;
+
+    std::cout<<"Inplace div:\t"; print_result(std::cout,div_bm_array);
+    std::cout<<std::endl;
+
+    std::cout<<"Inplace mult:\t"; print_result(std::cout,mult_bm_array);
+    std::cout<<std::endl;
 
 }
 
@@ -177,17 +195,11 @@ void run_binary_benchmark(size_t nruns,ATYPE &a)
     all_bm.run<bmtimer_t>(nruns,all_func);
     
     //print benchmark results 
-    benchmark_result result;
-    result = average(add_bm);
-    std::cout<<"c=a+b:           "<<result<<std::endl;
-    result = average(sub_bm);
-    std::cout<<"c=a-b:           "<<result<<std::endl;
-    result = average(div_bm);
-    std::cout<<"c=a/b:           "<<result<<std::endl;
-    result = average(mult_bm);
-    std::cout<<"c=a*b:           "<<result<<std::endl;
-    result = average(all_bm);
-    std::cout<<"c=a*b + (d-e)/f: "<<result<<std::endl;
+    std::cout<<"c=a+b:           "; print_result(std::cout,add_bm)<<std::endl;
+    std::cout<<"c=a-b:           "; print_result(std::cout,sub_bm)<<std::endl;
+    std::cout<<"c=a/b:           "; print_result(std::cout,div_bm)<<std::endl;
+    std::cout<<"c=a*b:           "; print_result(std::cout,mult_bm)<<std::endl;
+    std::cout<<"c=a*b + (d-e)/f: "; print_result(std::cout,all_bm)<<std::endl;
 
 }
 //-----------------------------------------------------------------------------
