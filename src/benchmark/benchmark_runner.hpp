@@ -24,6 +24,7 @@
 #include "benchmark_result.hpp"
 #include <list>
 #include <functional>
+#include <cmath>
 
 namespace pni{
 namespace core{
@@ -125,7 +126,7 @@ namespace core{
 
     }
 
-    //-----------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
     benchmark_result average(const benchmark_runner &bm)
     {
         float64 time = 0.;
@@ -145,6 +146,21 @@ namespace core{
 
         return benchmark_result(time,bm.begin()->unit());
 
+    }
+
+    //-------------------------------------------------------------------------
+    benchmark_result standard_deviation(const benchmark_runner &bm)
+    {
+        float64 av = average(bm).time(); //compute the average value
+        float64 error_sum = 0.;
+
+        for(auto iter = bm.begin();iter!=bm.end();++iter)
+        {
+            error_sum += std::pow(iter->time()-av,2);
+        }
+
+        return benchmark_result(std::sqrt((1./(bm.size()-1))*error_sum),
+                                bm.begin()->unit());
     }
 
 //end of namespace
