@@ -21,6 +21,15 @@ uses guide or the administrators guide.
 /*! \defgroup index_mapping_classes Index mapper types
 */
 
+/*! \defgroup multidim_array_classes Multidimensional array classes
+*/
+
+/*! \defgroup iterator_types Iterators types of libpnicore
+*/
+
+/*! \defgroup numaric_array_classes Numeric array classes
+*/
+
 /*! \defgroup error_classes Exception classes
 
 In version 0.2.5 the exception backend has undergone a major rewrite. 
