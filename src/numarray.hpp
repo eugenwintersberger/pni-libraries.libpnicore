@@ -43,12 +43,22 @@
 namespace pni{
 namespace core{
 
+    /*!
+    \ingroup numeric_array_classes
+    \brief copy template
+
+    The specializations of this template provide static copy functions between
+    two arrays for single and multi-threaded applications. This is particularly
+    important in cases where one of the arrays is an expression template.
+    \tparam mt_flag flag deciding on multi-threading use
+    */
     template<bool mt_flag > struct copy_type;
 
     /*!
-    \brief copy operation
+    \ingroup numeric_array_classes
+    \brief multi-threaded specialization of copy_type
 
-    Specialization of the copy_type for multithreading assignment.
+    Implements a multi-threaded copy operation for numeric arrays.
     */
     template<> struct copy_type<true>
     {
@@ -84,11 +94,8 @@ namespace core{
                     --nres;
                 }
                
-                /*
-                function_t f =
-                    std::bind(&copy_type<true>::copy_worker<a_iterator_t,b_iterator_t>,a_start,a_end,b_start);
-                    */
-                threads.push_back(std::move(std::thread(copy_worker<AT,BT>,start,stop,std::cref(a),std::ref(b))));
+                threads.push_back(std::move(std::thread(copy_worker<AT,BT>,
+                                  start,stop,std::cref(a),std::ref(b))));
             }
 
             //join all threads
@@ -97,17 +104,44 @@ namespace core{
         }
 
         private:
-        template<typename AT,typename BT> 
-            static void copy_worker(size_t start,size_t stop,const AT &a,BT &b)
-        {
-            for(size_t i=start;i<stop;++i) b[i] = a[i];
-        }
+            /*!
+            \brief copy worker method
+
+            This private method is called by each thread and copies a part of
+            the array. 
+            \tparam AT type of array a
+            \tparam BT type of array b
+            \param start first index 
+            \param stop last index
+            \param a source array
+            \param b target array
+            */
+            template<typename AT,typename BT> 
+                static void copy_worker(size_t start,size_t stop,const AT &a,BT &b)
+            {
+                for(size_t i=start;i<stop;++i) b[i] = a[i];
+            }
         
     };
 
+    /*!
+    \ingroup numeric_array_classes
+    \brief copy type specialization
+
+    The specialization of the copy_type template for single-thread arrays.
+    */
     template<> struct copy_type<false>
     {
-        //copy from a to b - the size of b is important
+        /*!
+        \brief copy array   
+
+        Copy content of array a to array b. The size of array b determines the 
+        number of elements copied.
+        \tparam AT type of array a
+        \tparam BT type of array b
+        \param a source array 
+        \param b target array
+        */
         template<typename AT,typename BT> static void copy(const AT &a,BT &b)
         {
             size_t n = b.size();
