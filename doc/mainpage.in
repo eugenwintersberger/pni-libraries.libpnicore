@@ -18,6 +18,8 @@ uses guide or the administrators guide.
 
 /*! \defgroup buffer_classes Data buffer templates
 */
+/*! \defgroup index_mapping_classes Index mapper types
+*/
 
 /*! \defgroup error_classes Exception classes
 
