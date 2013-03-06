@@ -65,7 +65,6 @@ WARN_NO_PARAMDOC       = YES
 # configuration options related to the input files
 #---------------------------------------------------------------------------
 INPUT                  = ../src/ examples/ mainpage \
-                         examples_description \
                          multidim_array_classes \
                          numeric_array_types iterator_types \
 RECURSIVE              = YES
