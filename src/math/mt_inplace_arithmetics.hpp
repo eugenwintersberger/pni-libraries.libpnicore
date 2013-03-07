@@ -33,51 +33,11 @@
 #include "../exception_utils.hpp"
 #include "../type_info.hpp"
 #include "../config/library_config.hpp"
+#include "../range_distributor.hpp"
 
 namespace pni{
 namespace core{
 
-    class range_distributor
-    {
-        private:
-            std::vector<std::pair<size_t,size_t> > _ranges;
-        public:
-            typedef std::pair<size_t,size_t> value_type;
-            typedef std::vector<value_type>::iterator iterator;
-            typedef std::vector<value_type>::const_iterator const_iterator;
-
-
-            range_distributor(size_t nth,size_t s)
-                :_ranges(nth)
-            {
-                size_t nres = s%nth;
-                size_t npth = (s-nres)/nth;
-
-                size_t start=0,stop=0;
-               // std::cout<<a.size()<<std::endl;
-                for(size_t i = 0;i<nth;++i)
-                {
-                    if(i==0) start = 0;
-                    else start = stop;
-
-                    stop = start+npth;
-                    if(nres)
-                    {
-                        stop++;
-                        nres--;
-                    }
-                    _ranges[i] = {start,stop};
-                }
-                
-            }
-
-            iterator begin() { return _ranges.begin(); }
-            iterator end() { return _ranges.end(); }
-            const_iterator begin() const { return _ranges.begin(); }
-            const_iterator end() const { return _ranges.end(); }
-
-            
-    };
 
     /*! 
     \ingroup numeric_array_classes
@@ -115,51 +75,16 @@ namespace core{
             {
                 size_t nth = pnicore_config.n_arithmetic_threads();
                 std::list<std::thread> threads;
+                range_distributor ranges(nth,size);
 
-                size_t nres = size%nth;
-                size_t npth = (size - nres)/nth;
-
-                size_t start=0,stop=0;
-                for(size_t i = 0; i<nth;++i)
-                {
-
-                    if(i==0) start = 0;
-                    else start = stop;
-                   
-                    stop = start + npth;
-                    
-                    if(nres)
-                    {
-                        ++stop;
-                        --nres;
-                    }
-                   
-                    threads.push_back(std::move(std::thread(f,start,stop)));
-                }
+                for(auto iter=ranges.begin();iter!=ranges.end();++iter)
+                    threads.push_back(std::move(std::thread(f,iter->first,iter->second)));
 
                 //finally joind all threads and wait for execution end
                 for(auto iter=threads.begin();iter!=threads.end();++iter) 
                     iter->join();
             }
           
-            //-----------------------------------------------------------------
-            /*
-            template<typename FTYPE,typename ITYPE>
-            static void _run_threads(ATYPE &a,FTYPE &&f,ITYPE iter)
-            {
-                size_t nth = pnicore_config.n_arithmetic_threads();
-                std::vector<std::thread> threads(nth);
-
-                size_t index = 0;
-                for(auto r: rd)
-                {
-                    threads[index++] = std::thread(f,a.begin(),index++,nth,iter);
-                }
-
-                //finally joind all threads and wait for execution end
-                for(size_t i=0;i<nth;++i) threads[i].join();
-            }
-            */
 
 #ifdef NO_LAMBDA_FUNC
             static void _add_worker(size_t start,size_t stop,ATYPE &a,value_type b)
