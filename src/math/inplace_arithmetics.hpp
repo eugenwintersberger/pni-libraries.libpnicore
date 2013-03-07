@@ -76,6 +76,16 @@ namespace core{
                 for(size_t i = 0;i<n;++i) a[i] += b;
             }
 
+            //-----------------------------------------------------------------
+            /*!
+            \brief add array to array
+
+            Special method for inplace addition of two arrays of same type. 
+            No iterators are used for this operation thus one can expect higher
+            performance of this operation. 
+            \param a array of type ATYPE (LHS)
+            \param b array of type ATYPE (RHS)
+            */
             static void add(ATYPE &a,const ATYPE &b)
             {
                 size_t n = a.size();
@@ -133,6 +143,16 @@ namespace core{
                 for(size_t i=0;i<n;++i) a[i] -= b;
             }
 
+            //-----------------------------------------------------------------
+            /*!
+            \brief subtract array from array
+
+            Special method for inplace subtraction of two arrays of same type. 
+            No iterators are used for this operation thus one can expect higher
+            performance of this operation. 
+            \param a array of type ATYPE (LHS)
+            \param b array of type ATYPE (RHS)
+            */
             static void sub(ATYPE &a,const ATYPE &b)
             {
                 size_t n = a.size();
@@ -188,6 +208,16 @@ namespace core{
                 for(size_t i=0;i<n;++i) a[i] *= b;
             }
 
+            //-----------------------------------------------------------------
+            /*!
+            \brief multiply array by array
+
+            Special method for inplace multiplication of two arrays of same
+            type.  No iterators are used for this operation thus one can expect
+            higher performance of this operation. 
+            \param a array of type ATYPE (LHS)
+            \param b array of type ATYPE (RHS)
+            */
             static void mult(ATYPE &a,const ATYPE &b)
             {
                 size_t n=a.size();
@@ -244,6 +274,16 @@ namespace core{
                 for(size_t i=0;i<n;++i) a[i] /= b;
             }
 
+            //-----------------------------------------------------------------
+            /*!
+            \brief divide array by array
+
+            Special method for inplace division of two arrays of same type.  No
+            iterators are used for this operation thus one can expect higher
+            performance of this operation. 
+            \param a array of type ATYPE (LHS)
+            \param b array of type ATYPE (RHS)
+            */
             static void div(ATYPE &a,const ATYPE &b)
             {
                 size_t n = a.size();

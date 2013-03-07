@@ -43,7 +43,7 @@ namespace core{
     {
         private:
             configuration conf; //!< configuration objecct
-            size_t _nthreads;
+            size_t _nthreads;   //!< number of threads that should be used
 
             //!create the configuration structure
             void _setup_configuration();
