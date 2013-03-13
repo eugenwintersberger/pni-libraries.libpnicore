@@ -248,16 +248,12 @@ if ('test' in COMMAND_LINE_TARGETS) or ('test_install' in COMMAND_LINE_TARGETS):
     try:
         test_env["ENV"]["PKG_CONFIG_PATH"] = os.environ["PKG_CONFIG_PATH"]
     except:
-        pass
+        test_env["ENV"]["PKG_CONFIG_PATH"] = os.path.join(test_env["PREFIX"],"lib","pkgconfig")
         
     try:
         test_env.ParseConfig('pkg-config --cflags --libs pnicore')
     except:
-        #try to deduce the installation directories of the libraries and headers 
-        #for PNI core from the PREFIX build variable
-        test_env.AppendUnique(CPPPATH=[os.path.join("${PREFIX}","include")])
-        test_env.AppendUnique(LIBPATH=[os.path.join("${PREFIX}","lib")])
-        test_env.AppendUnique(LIBS=["pnicore"])
+        Exit(1)
 
     try:
         test_env.ParseConfig('pkg-config --cflags --libs cppunit')
