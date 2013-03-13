@@ -242,12 +242,22 @@ build_env = env.Clone()
 test_env  = env.Clone()
 
 if ('test' in COMMAND_LINE_TARGETS) or ('test_install' in COMMAND_LINE_TARGETS):
-    test_env["ENV"]["PKG_CONFIG_PATH"] = os.environ["PKG_CONFIG_PATH"]
-    
+
+    # do nothing in the case that the user has no local PKG_CONFIG_PATH variable
+    # set
+    try:
+        test_env["ENV"]["PKG_CONFIG_PATH"] = os.environ["PKG_CONFIG_PATH"]
+    except:
+        pass
+        
     try:
         test_env.ParseConfig('pkg-config --cflags --libs pnicore')
     except:
-        Exit(1)
+        #try to deduce the installation directories of the libraries and headers 
+        #for PNI core from the PREFIX build variable
+        test_env.AppendUnique(CPPPATH=[os.path.join("${PREFIX}","include")])
+        test_env.AppendUnique(LIBPATH=[os.path.join("${PREFIX}","lib")])
+        test_env.AppendUnique(LIBS=["pnicore"])
 
     try:
         test_env.ParseConfig('pkg-config --cflags --libs cppunit')
