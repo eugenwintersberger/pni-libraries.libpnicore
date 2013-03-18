@@ -4,17 +4,13 @@ Import("build_env")
 
 #----------------------Building object files------------------------------------
 source_list = []
-source_list.extend(["Exceptions.cpp","Types.cpp","Slice.cpp",
-                    "ComplexUtils.cpp","ExceptionUtils.cpp",
-                    "ArraySelection.cpp","IndexMapBase.cpp","CIndexMap.cpp",
-                    "service.cpp"])
+source_list.extend(Glob("*.cpp"))
+source_list.extend(Glob("benchmark/*.cpp"))
+source_list.extend(Glob("config/*.cpp"))
                
 #build static and shared objects               
 shared_objects = build_env.SharedObject(source_list)
 static_objects = build_env.StaticObject(source_list)
-(shared_io_objects,static_io_objects) = SConscript("io/SConscript")
-shared_objects.append(shared_io_objects)
-static_objects.append(static_io_objects)
 
 #----------------------Linking libraries----------------------------------------
 #link temporary shared library
@@ -37,14 +33,21 @@ static_library = build_env.StaticLibrary("${LIBNAME}",static_objects)
 #---------------------build the pkg-config file---------------------------------              
 #assemble linker path
 
-pkg_config_file = build_env.Substfile(target="${LIBNAME}",source=["pkgconf.in"],
+pkg_config_file = build_env.Substfile(target="${LIBNAME}",source=["pnicore.pc.in"],
                   SUBST_DICT={"@PREFIX@":"${PREFIX}","@LIBNAME@":"${LIBNAME}",
-                  "@INCDIR@":build_env["INCDIR"].replace("/pni/utils",""),
+                  "@INCDIR@":build_env["INCDIR"].replace("/pni/core",""),
                   "@VERSION@":"${VERSION}","@INCPATH@":"${_CPPINCFLAGS}",
                   "@DEFINES@":"${_CPPDEFFLAGS}",
                   "@LIBPATH@":"${_LIBDIRFLAGS}","@LIBS@":"${_LIBFLAGS}"},
                   SUBSTFILESUFFIX=".pc")
 build_env.AlwaysBuild(pkg_config_file)
+
+#----------------------create configuration header------------------------------
+config_header = build_env.Substfile(target="config.h",source=["config.h.in"],
+                  SUBST_DICT={"@CONFIG_FILE_PATH@":"${PREFIX}/etc/pniutils.cfg"}
+                  )
+build_env.AlwaysBuild(config_header)
+build_env.Alias("install",build_env.Install("${INCDIR}",config_header))
 
 #-------------------adding everyting to the "all" and "library" target----------
 build_env.Alias("all",[temp_shared_library,
@@ -72,7 +75,15 @@ shared_library_so_install = build_env.Command(inst_path+"/${LIBSONAME}",shared_l
 pkgc_inst = build_env.Install("${LIBDIR}/pkgconfig",[pkg_config_file])
 
 #install the header files
-incpniutils_inst = build_env.Install("${INCDIR}",[Glob("*.hpp"),"math"])
+incpniutils_inst = build_env.Install("${INCDIR}",Glob("*.hpp"))
+build_env.Alias("install",build_env.Install("${INCDIR}/math",Glob("math/*.hpp")))
+build_env.Alias("install",build_env.Install("${INCDIR}/config",Glob("config/*.hpp")))
+build_env.Alias("install",build_env.Install("${INCDIR}/benchmark",Glob("benchmark/*.hpp")))
+build_env.Alias("install",build_env.Install("${INCDIR}/hardware",Glob("hardware/*.hpp")))
+
+#install configuration file
+build_env.Alias("install",build_env.Install("${PREFIX}/etc","pniutils.cfg"))
+
 
 #add all installation targets to the global "install" target
 build_env.Alias("install",[shared_library_install,static_library_install,

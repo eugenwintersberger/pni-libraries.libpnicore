@@ -5,8 +5,6 @@ import os
 
 ###--------------------------------------------------------------------------------
 #add some command line options
-AddOption("--enable-vtk",dest="with_vtk",action="store_true",default=False)
-AddOption("--enable-tiff",dest="with_tiff",action="store_true",default=False)
 AddOption("--enable-gperf",dest="with_gperf",action="store_true",default=False)
 AddOption("--enable-callgrind",dest="with_callgrind",action="store_true",default=False)
 
@@ -44,27 +42,19 @@ class LibFileNames(object):
 
 debug = ARGUMENTS.get("DEBUG",0)
 
-
-var = Variables('BuildConfig.py')
+#create build variables
+var = Variables()
 if os.name == "nt":
 	var.Add(PathVariable("PREFIX","set installation prefix",
-                         "C:\\Program Files\\libpniutils",
+                         "C:\\Program Files\\libpnicore",
                          PathVariable.PathAccept))
 elif os.name=="posix":
-	var.Add(PathVariable("PREFIX","set installation prefix","/usr",
+	var.Add(PathVariable("PREFIX","set installation prefix","/usr/local",
                          PathVariable.PathAccept))
 
-if os.name == "nt":
-	var.Add(PathVariable("BOOSTPREFIX",
-            "set the installation prefix for boost",
-            "C:\\Program Files\\boost",PathVariable.PathAccept))
-elif os.name == "posix":	
-	var.Add(PathVariable("BOOSTPREFIX","set the installation prefix for boost",
-                         "/usr"))
-
 #this are variables which should not be used by a user
-var.Add("VERSION","library version","0.0.0")
-var.Add("LIBNAME","library name","pniutils")
+var.Add("VERSION","library version","0.9.0")
+var.Add("LIBNAME","library name","pnicore")
 var.Add("SOVERSION","SOVersion of the library (binary interface version)","0")
 var.Add("MAINTAINER","package maintainer for the project","Eugen Wintersberger")
 var.Add("MAINTAINER_MAIL","e-mail of the package maintainer","eugen.wintersberger@desy.de")
@@ -80,18 +70,12 @@ var.Add("INCDIR","installation path for header files","")
 var.Add("LIBDIR","library installation path","")
 var.Add(PathVariable("BOOSTINCDIR","BOOST header installation path","/usr/include"))
 var.Add(PathVariable("BOOSTLIBDIR","BOOST library installation path","/usr/lib"))
-var.Add(PathVariable("CPPUINCDIR","CPPUnit header installation path","/usr/include"))
-var.Add(PathVariable("CPPULIBDIR","CPPUnit library installation path","/usr/lib"))
-
-if GetOption("with_vtk"):
-    var.Add(PathVariable("VTKINCDIR","header installation path for VTK","/usr/include/vtk"))
-    var.Add(PathVariable("VTKLIBDIR","VTK library installation","/usr/lib"))
 
 #need now to create the proper library suffix
 
 #create the build environment
 env = Environment(variables=var,ENV={'PATH':os.environ['PATH']},
-				  tools=['default','packaging','textfile'])
+				  tools=['default','textfile'])
 
 if GetOption("with_gperf"):
     env.Append(CXXFLAGS=["-g"])
@@ -111,7 +95,7 @@ env.Append(LIBLINKNAME = libname.link_name(env))
 
 #create installation paths
 if not env["INCDIR"]:
-    env.Append(INCDIR = path.join(env["PREFIX"],"include/pni/utils"))
+    env.Append(INCDIR = path.join(env["PREFIX"],"include/pni/core"))
 
 if not env["LIBDIR"]:
     env.Append(LIBDIR = path.join(env["PREFIX"],"lib"))
@@ -125,12 +109,9 @@ if not env["DOCDIR"]:
 
 #set default compiler flags
 env.Append(CXXFLAGS = ["-Wall","-std=c++0x","-fno-deduce-init-list"])
-env.AppendUnique(LIBPATH=[env["BOOSTLIBDIR"],env["CPPULIBDIR"]])
-env.AppendUnique(CPPPATH=[env["BOOSTINCDIR"],env["CPPUINCDIR"]])
-
-if GetOption("with_vtk"):
-    env.AppendUnique(LIBPATH=[env["VTKLIBDIR"]])
-    env.AppendUnique(CPPPATH=[env["VTKINCDIR"]])
+env.AppendUnique(CXXFLAGS=["-Wunknown-pragmas","-pedantic"])
+env.AppendUnique(LIBPATH=[env["BOOSTLIBDIR"]])
+env.AppendUnique(CPPPATH=[env["BOOSTINCDIR"]])
 
 
 #==========================run configuration===================================
@@ -142,8 +123,8 @@ if debug:
     build_env.Append(CXXFLAGS=["-O0","-g"])
     test_env.Append(CXXFLAGS=["-O0","-g"])
 else:
-    build_env.Append(CXXFLAGS=["-O2"])
-    test_env.Append(CXXFLAGS=["-O2"])
+    build_env.Append(CXXFLAGS=["-O3"])
+    test_env.Append(CXXFLAGS=["-O3"])
 
 
 #the next line is necessary for the linker on Debian system - this needs 

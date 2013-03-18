@@ -1,4 +1,11 @@
 /log.txt
 /test.tif
 /fio_reader_test
-/iterbm
+/iteratorbm
+/*.dat
+/multiindexbm
+/unittest.xml
+/arithmeticbm
+/pnicoretest
+/farithmeticbm
+

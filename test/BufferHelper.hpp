@@ -1,23 +1,44 @@
-#ifndef __BUFFERHELPER_HPP__
-#define __BUFFERHELPER_HPP__
+/*
+ * (c) Copyright 2012 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
+ *
+ * This file is part of libpnicore.
+ *
+ * libpnicore is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * libpnicore is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with libpnicore.  If not, see <http://www.gnu.org/licenses/>.
+ *************************************************************************
+ *
+ *  Created on: May 22, 2012
+ *      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
+ */
+#pragma once
 
-#include <pni/utils/DBuffer.hpp>
-#include <pni/utils/RBuffer.hpp>
-#include <pni/utils/NewAllocator.hpp>
+#include <pni/core/dbuffer.hpp>
+#include <pni/core/rbuffer.hpp>
+#include <pni/core/new_allocator.hpp>
 
-using namespace pni::utils;
+using namespace pni::core;
 
+//-----------------------------------------------------------------------------
 template<typename T,typename Allocator>
-    void allocate_buffer(DBuffer<T,Allocator> &b,size_t n)
+    void allocate_buffer(dbuffer<T,Allocator> &b,size_t n)
 {
-    b =  DBuffer<T,Allocator>(n);
+    b =  dbuffer<T,Allocator>(n);
 }
 
 
-//-------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 template<typename T>
-    void allocate_buffer(RBuffer<T> &b,size_t n)
+    void allocate_buffer(rbuffer<T> &b,size_t n)
 {
-    b = RBuffer<T>(n,new T[n]);
+    b = rbuffer<T>(n,new T[n]);
 }
-#endif

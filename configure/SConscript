@@ -11,6 +11,25 @@ def CheckNullPtr(context):
     context.Result(result)
     return result
 
+#====================check for bind============================================
+#Check for std::bind 
+
+def CheckBind(context):
+    context.Message("Checking for std::bind function support ...")
+    result = context.TryCompile(open('src/bind_test.cpp').read(),".cpp")
+    context.Result(result)
+    return result
+
+
+#==============================================================================
+##this test checks for lambda-function support of the C++ compiler
+#
+def CheckLambdaFunctions(context):
+    context.Message("Checking for lambda function support ...")
+    result = context.TryCompile(open('src/lambda_function_test.cpp').read(),".cpp")
+    context.Result(result)
+    return result
+
 #==================check for-each construction=================================
 #Test checking for for(auto v: container) construction support
 
@@ -71,6 +90,8 @@ CustomChecks["CheckForCppRandom"] = CheckForCppRandom
 CustomChecks["CheckForConstExpr"] = CheckForConstExpr
 CustomChecks["CheckForTemplateAlias"] = CheckForTemplateAlias
 CustomChecks["CheckForEnumBug"] = CheckForEnumBug
+CustomChecks["CheckLambdaFunctions"] = CheckLambdaFunctions
+CustomChecks["CheckBind"] = CheckBind
 
 Import('env')
 #start with configuration
@@ -78,6 +99,15 @@ conf = Configure(env,custom_tests = CustomChecks)
 
 
 #checking compiler capabilities
+#
+if not conf.CheckLambdaFunctions():
+    print "lambda functions are not supported by this compiler ...!"
+    env.AppendUnique(CPPDEFINES=['NO_LAMBDA_FUNC'])
+
+if not conf.CheckBind():
+    print "std::bind not supported by this compiler ...!"
+    env.AppendUnique(CPPDEFINES=['NO_STD_BIND'])
+
 if not conf.CheckNullPtr():
     print "nullptr not supported - use NULL"
     env.AppendUnique(CPPDEFINES=[('nullptr','NULL')])
@@ -176,11 +206,23 @@ if not conf.CheckCXXHeader("boost/regex.hpp"):
 if not conf.CheckCXXHeader("boost/current_function.hpp"):
     print "BOOST current_function.hpp not found!"
     Exit(1)
+
+if not conf.CheckCXXHeader("boost/program_options.hpp"):
+    print "BOOST program options headers not installed"
+    Exit(1)
     
 
 #check for boost regular expressions library
 if not conf.CheckLib("boost_regex",language="C++"):
     print "BOOST regular expression library not found"
+    Exit(1)
+
+if not conf.CheckLib("boost_program_options",language="C++"):
+    print "BOOST program options library not installed!"
+    Exit(1)
+
+if not conf.CheckLib("boost_system",language="C++"):
+    print "BOOST system library not installed!"
     Exit(1)
 
 if GetOption("with_gperf"):
@@ -193,20 +235,6 @@ if GetOption("with_gperf"):
         Exit(1)
 
 
-if GetOption("with_vtk"):
-    if not conf.CheckLib("vtkFiltering",language="C++") or \
-       not conf.CheckLib("vtkftgl",language="C++") or \
-       not conf.CheckLib("vtkGenericFiltering",language="C++") or \
-       not conf.CheckLib("vtkGraphics",language="C++") or \
-       not conf.CheckLib("vtkHybrid",language="C++") or \
-       not conf.CheckLib("vtkImaging",language="C++") or \
-       not conf.CheckLib("vtkInfovis",language="C++") or \
-       not conf.CheckLib("vtkCommon",language="C++") or \
-       not conf.CheckLib("vtkRendering",language="C++") or \
-       not conf.CheckLib("vtkIO",language="C++"):
-        print "VTK libraries are missing!"
-        Exit(1)
-
 env = conf.Finish()
 
 #create the build environments for the library and the test
@@ -214,8 +242,22 @@ build_env = env.Clone()
 test_env  = env.Clone()
 
 if ('test' in COMMAND_LINE_TARGETS) or ('test_install' in COMMAND_LINE_TARGETS):
-    test_env["ENV"]["PKG_CONFIG_PATH"] = os.environ["PKG_CONFIG_PATH"]
-    test_env.ParseConfig('pkg-config --cflags --libs pniutils')
+    # do nothing in the case that the user has no local PKG_CONFIG_PATH variable
+    # set
+    try:
+        test_env["ENV"]["PKG_CONFIG_PATH"] = os.environ["PKG_CONFIG_PATH"]
+    except:
+        test_env["ENV"]["PKG_CONFIG_PATH"] = os.path.join(test_env["PREFIX"],"lib","pkgconfig")
+        
+    try:
+        test_env.ParseConfig('pkg-config --cflags --libs pnicore')
+    except:
+        Exit(1)
+
+    try:
+        test_env.ParseConfig('pkg-config --cflags --libs cppunit')
+    except:
+        Exit(1)
 
     #============================start configuration for tests=====================
     test_conf = Configure(test_env)

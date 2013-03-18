@@ -1,12 +1,34 @@
-#ifndef __RANDOMDISTRIBUTIONS_HPP__
-#define __RANDOMDISTRIBUTIONS_HPP__
+/*
+ * (c) Copyright 2012 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
+ *
+ * This file is part of libpnicore.
+ *
+ * libpnicore is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * libpnicore is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with libpnicore.  If not, see <http://www.gnu.org/licenses/>.
+ *************************************************************************
+ *
+ *  Created on: May 22, 2012
+ *      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
+ */
+#pragma once
 
 #include <random>
 
-#include <pni/utils/TypeInfo.hpp>
-#include <pni/utils/Types.hpp>
+#include <pni/core/type_info.hpp>
+#include <pni/core/types.hpp>
 
-using namespace pni::utils;
+using namespace pni::core;
+
 
 template<typename CT,bool is_int,bool is_complex> class UniformDistribution;
 
@@ -22,7 +44,7 @@ template<typename CT> class UniformDistribution<CT,true,false>
 #ifndef NOCPPRAND
             std::mt19937_64 engine;
             std::uniform_int_distribution<> 
-                dist(TypeInfo<value_type>::min(),TypeInfo<value_type>::max());
+                dist(type_info<value_type>::min(),type_info<value_type>::max());
 #endif
 
 #ifdef NOFOREACH
@@ -55,7 +77,7 @@ template<typename CT> class UniformDistribution<CT,false,false>
 #ifndef NOCPPRAND       
             std::mt19937_64 engine;
             std::uniform_real_distribution<> 
-                dist(TypeInfo<Float32>::min(),TypeInfo<Float32>::max());
+                dist(type_info<float32>::min(),type_info<float32>::max());
 #endif
 
 #ifdef NOFOREACH
@@ -90,8 +112,8 @@ template<typename CT> class UniformDistribution<CT,false,true>
 #ifndef NOCPPRAND       
             std::mt19937_64 engine;
             std::uniform_real_distribution<>
-                dist(TypeInfo<Float32>::min(),
-                     TypeInfo<Float32>::max());
+                dist(type_info<float32>::min(),
+                     type_info<float32>::max());
 #endif
 
 #ifdef NOFOREACH
@@ -119,9 +141,8 @@ class RandomDistribution
         template<typename CT> static CT uniform(size_t n)
         {
             return UniformDistribution<CT,
-                                       TypeInfo<typename CT::value_type>::is_integer,
-                                       TypeInfo<typename CT::value_type>::is_complex>
+                                       type_info<typename CT::value_type>::is_integer,
+                                       type_info<typename CT::value_type>::is_complex>
                                            ::create_data(n);
         }
 };
-#endif

@@ -4,14 +4,14 @@ Accessing data from a Buffer<T> template
 */
 
 #include <iostream>
-#include <pni/utils/DBuffer.hpp>
-#include <pni/utils/Types.hpp>
+#include <pni/core/dbuffer.hpp>
+#include <pni/core/types.hpp>
 
-using namespace pni::utils;
+using namespace pni::core;
 
 int main(int argc,char **argv)
 {
-    DBuffer<Float32> buffer(1234);
+    dbuffer<float32> buffer(1234);
 
     //access data without index check
     std::cout<<buffer[10]<<std::endl;
@@ -22,7 +22,7 @@ int main(int argc,char **argv)
     buffer.at(100) = 567.2334;
 
     //access to raw pointers
-    Float32 *ptr = const_cast<Float32*>(buffer.ptr());
+    float32 *ptr = const_cast<float32*>(buffer.ptr());
 
     return 0;
 }

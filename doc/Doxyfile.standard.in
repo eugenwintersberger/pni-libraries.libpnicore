@@ -64,11 +64,9 @@ WARN_NO_PARAMDOC       = YES
 #---------------------------------------------------------------------------
 # configuration options related to the input files
 #---------------------------------------------------------------------------
-INPUT                  = ../src/ examples/ mainpage installation usage \
-                         examples_description io_classes \
-                         multidim_array_classes buffer_classes \
-                         numeric_array_types iterator_types \
-                         index_mapping_classes
+INPUT                  = ../src/ examples/ mainpage \
+                         multidim_array_classes \
+                         numeric_array_types 
 RECURSIVE              = YES
 EXCLUDE_SYMLINKS       = NO
 EXAMPLE_PATH           = examples

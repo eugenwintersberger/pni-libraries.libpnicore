@@ -4,39 +4,57 @@ Import("test_env")
 
 
 #need to use here prepend in order to avoid triggering the istallation process
-sources_list = ["pniutilstest.cpp"]
-sources_list.extend(["DBufferTest.cpp"])
-sources_list.extend(["RBufferTest.cpp"])
-sources_list.extend(["SBufferTest.cpp"])
-sources_list.extend(["SizeTypeTest.cpp"])
-sources_list.extend(["StaticCIndexMapTest.cpp"])
-sources_list.extend(["IteratorTest.cpp"])
-sources_list.extend(["IndexMapTest.cpp"])
-sources_list.extend(["ArraySelectionTest.cpp"])
-sources_list.extend(["SArrayTest.cpp"])
-sources_list.extend(["ArrayViewSelectorTest.cpp"])
-sources_list.extend(["DArrayTest.cpp"])
-sources_list.extend(["NumArrayTest.cpp"])
-sources_list.extend(["AddOperatorTest.cpp"])
-sources_list.extend(["SubOperatorTest.cpp"])
-sources_list.extend(["DivOperatorTest.cpp"])
-sources_list.extend(["MultOperatorTest.cpp"])
-sources_list.extend(["ResultTypeTraitTest.cpp"])
-sources_list.extend(["IndexMapBaseTest.cpp"])
-#sources_list.extend(["ScalarTest.cpp"])
-sources_list.extend(["BinaryTest.cpp"])
-sources_list.extend(["TypeMapsTest.cpp"])
-sources_list.extend(["ArrayViewTest.cpp"])
-sources_list.extend(["SliceTest.cpp"])
-sources_list.extend(["TypeClassTest.cpp"])
-sources_list.extend(["TypeInfoTest.cpp"])
+sources_list = ["pnicoretest.cpp"]
+
+#test sources for utility classes
+sources_list.extend(["type_maps_test.cpp"])
+sources_list.extend(["type_class_test.cpp"])
+sources_list.extend(["type_info_test.cpp"])
+sources_list.extend(["size_type_test.cpp"])
+sources_list.extend(["slice_test.cpp"])
+sources_list.extend(["binary_test.cpp"])
+sources_list.extend(["array_view_selector_test.cpp"])
+sources_list.extend(["array_selection_test.cpp"])
+sources_list.extend(["array_view_test.cpp"])
+
+#test of buffer classes
+sources_list.extend(["scalar_test.cpp"])
+sources_list.extend(["dbuffer_test.cpp"])
+sources_list.extend(["rbuffer_test.cpp"])
+sources_list.extend(["sbuffer_test.cpp"])
+
+#tests for array utility classes
+
+sources_list.extend(["static_cindex_map_test.cpp"])
+sources_list.extend(["iterator_test.cpp"])
+sources_list.extend(["add_operator_test.cpp"])
+sources_list.extend(["mult_operator_test.cpp"])
+sources_list.extend(["sub_operator_test.cpp"])
+sources_list.extend(["div_operator_test.cpp"])
+sources_list.extend(["index_map_base_test.cpp"])
+sources_list.extend(["index_map_test.cpp"])
+
+sources_list.extend(["sarray_test.cpp"])
+sources_list.extend(["darray_test.cpp"])
+sources_list.extend(["numarray_test.cpp"])
+sources_list.extend(["EqualityCheck.cpp"])
+sources_list.extend(["configuration_test.cpp"])
+sources_list.extend(["counter_test.cpp"])
+sources_list.extend(["index_iterator_test.cpp"])
+sources_list.extend(["value_test.cpp"])
+sources_list.extend(["value_ref_test.cpp"])
+sources_list.extend(["array_test.cpp"])
 
 bm_sources = ["iteratorbm.cpp"]
-bm_sources.extend(["benchmark/BenchmarkResult.cpp"])
 
-pniutils_test = test_env.Program("pniutilstest",sources_list)
-iterbm = test_env.Program("iterbm",bm_sources)
-test_targets = [pniutils_test,iterbm]
+pnicore_test = test_env.Program("pnicoretest",sources_list)
+iterbm = test_env.Program("iteratorbm",bm_sources)
+multiindexbm = test_env.Program("multiindexbm",["multiindexbm.cpp"])
+arithmeticbm = test_env.Program("arithmeticbm",["arithmeticbm.cpp"])
+fobjs = filter(lambda o: str(o)[-4:] != '.mod', 
+               test_env.Object(["farithmeticbm.f90","benchmark/benchmark.f90","benchmark/arithmetic_benchmark.f90"],LIBS=[],F90FLAGS=["-O3","-J./test"]))
+farithmeticbm = test_env.Program("farithmeticbm",fobjs,F90FLAGS=["-O3","-I./test"])
+test_targets = [pnicore_test,iterbm,multiindexbm,arithmeticbm,farithmeticbm]
 
 test_env.Alias("test",test_targets)
 test_install = test_env.Install("$PREFIX/bin",test_targets)

@@ -3,6 +3,7 @@
 *.os
 *.swp
 *.log
+*.mod
 cbf_reader_test
 pniutilstest
 showPNITypes

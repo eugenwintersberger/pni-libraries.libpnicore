@@ -3,19 +3,19 @@
 This example shows the basic of the DBuffer template
 */
 #include <iostream>
-#include <pni/utils/DBuffer.hpp>
-#include <pni/utils/Types.hpp>
+#include <pni/core/dbuffer.hpp>
+#include <pni/core/types.hpp>
 
-using namespace pni::utils;
+using namespace pni::core;
 
 int main(int argc,char **argv)
 {
     //-----------------buffer creation an allocation---------------------------
     //allocation at creation
-    DBuffer<UInt8> buffer(100); 
+    dbuffer<uint8> buffer(100); 
 
     //defer memory allocation
-    DBuffer<Int32> bint32;  //create buffer
+    dbuffer<int32> bint32;  //create buffer
     bint32.allocate(1014);   //allocate memory
 
     //---------------------initializing buffers--------------------------------
@@ -23,7 +23,7 @@ int main(int argc,char **argv)
     std::fill(bint32.begin(),bint32.end(),10);
 
     //at creation using an initializer list
-    DBuffer<Float32> bfloat32({1.2,-23.123,90934.123}); 
+    dbuffer<float32> bfloat32({1.2,-23.123,90934.123}); 
 
     //-----------------------checking the state of a buffer--------------------
     //check if allocated
@@ -49,9 +49,9 @@ int main(int argc,char **argv)
 #ifdef NOFOREACH
     for(auto iter = bint32.begin();iter!=bint32.end();++iter)
     {
-        DBuffer<Int32>::value_type &v = *iter;
+        dbuffer<int32>::value_type &v = *iter;
 #else
-    for(DBuffer<Int32>::value_type &v: bint32)
+    for(dbuffer<int32>::value_type &v: bint32)
     {
 #endif
         v = 1;
