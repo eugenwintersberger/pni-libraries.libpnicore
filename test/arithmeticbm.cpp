@@ -266,6 +266,7 @@ int main(int argc,char **argv)
         }
 
         //set the number of threads in the library configuration
+        pnicore_config.n_arithmetic_threads(conf.value<size_t>("nthreads"));
 
         //allocate memory
         nf64array_mt a(shape_t({conf.value<size_t>("nx"),
