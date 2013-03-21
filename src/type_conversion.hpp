@@ -25,11 +25,8 @@
  */
 #pragma once
 
-#include <limits>
 #include <boost/static_assert.hpp>
 #include <boost/numeric/conversion/cast.hpp>
-
-using namespace boost::numeric;
 
 #include "exceptions.hpp"
 #include "type_info.hpp"
@@ -37,6 +34,8 @@ using namespace boost::numeric;
 
 namespace pni{
 namespace core{
+
+    using namespace boost::numeric;
 
     /*! \ingroup type_classes
     \brief general conversion strategy template
