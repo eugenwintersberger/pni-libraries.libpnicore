@@ -27,7 +27,7 @@
 
 #include <vector>
 #include <iostream>
-#include <typeinfo>
+//#include <typeinfo>
 #include <algorithm>
 
 #include "exceptions.hpp"
