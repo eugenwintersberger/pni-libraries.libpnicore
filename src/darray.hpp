@@ -25,13 +25,13 @@
 
 #pragma once
 
-#include<memory>
+//#include<memory>
 #include<iostream>
 #include<utility>
 #include<complex>
 #include<cstdarg>
 #include<cstdio>
-#include<typeinfo>
+//#include<typeinfo>
 
 #include "exception_utils.hpp"
 #include "types.hpp"
@@ -40,7 +40,7 @@
 #include "array_view_selector.hpp"
 #include "cindex_map.hpp"
 
-#include "type_info.hpp"
+//#include "type_info.hpp"
 #include "type_id_map.hpp"
 #include "type_conversion.hpp"
 #include "container_iterator.hpp"

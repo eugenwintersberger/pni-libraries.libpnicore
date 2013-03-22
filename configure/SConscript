@@ -242,7 +242,6 @@ build_env = env.Clone()
 test_env  = env.Clone()
 
 if ('test' in COMMAND_LINE_TARGETS) or ('test_install' in COMMAND_LINE_TARGETS):
-
     # do nothing in the case that the user has no local PKG_CONFIG_PATH variable
     # set
     try:

@@ -30,7 +30,6 @@
 #include <limits>
 
 #include "types.hpp"
-#include "exceptions.hpp"
 
 namespace pni{
 namespace core{
