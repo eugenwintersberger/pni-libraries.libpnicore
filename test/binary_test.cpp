@@ -32,7 +32,6 @@
 
 CPPUNIT_TEST_SUITE_REGISTRATION(binary_test);
 
-using namespace pni::core;
 
 //-----------------------------------------------------------------------------
 void binary_test::setUp(){ }
@@ -146,7 +145,6 @@ void binary_test::test_io()
    
     //need to determine the size of the file
     istream.seekg(0,std::ios::end);
-    size_t size = istream.tellg();
     istream.seekg(0,std::ios::beg);
 
 

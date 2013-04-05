@@ -28,7 +28,6 @@
 
 #include "numarray_test.hpp"
 
-using namespace pni::core;
 
 #define NUMARRAY_TEST_REGISTRATION(ATYPE,VTYPE,IPAT,MT)\
 static CPPUNIT_NS::AutoRegisterSuite< numarray_test<ATYPE<VTYPE>,IPAT,MT > >  \
