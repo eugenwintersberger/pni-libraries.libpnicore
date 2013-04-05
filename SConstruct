@@ -115,7 +115,6 @@ env.AppendUnique(CXXFLAGS=["-Wunknown-pragmas","-pedantic"])
 env.AppendUnique(LIBPATH=[env["BOOSTLIBDIR"]])
 env.AppendUnique(CPPPATH=[env["BOOSTINCDIR"]])
 
-
 #==========================run configuration===================================
 Export('env')
 (build_env,test_env) = SConscript('configure/SConscript')
