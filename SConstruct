@@ -65,6 +65,7 @@ var.Add("PKGNAME","name of the package for installation","")
 
 #build variables interesting for users that want to build from source
 var.Add("CXX","set the compiler to use","g++")
+var.Add("F90","set the Fortran 90 compiler","gfortran")
 var.Add("DOCDIR","installation directory for the documentation","")
 var.Add("INCDIR","installation path for header files","")
 var.Add("LIBDIR","library installation path","")
@@ -86,6 +87,7 @@ if GetOption("with_callgrind"):
 #set the proper compiler - this should be changed to something 
 #more general - independent of the underlying operating system
 env.Replace(CXX = env["CXX"])
+env.Replace(F90 = env["F90"])
 #create library namesl
 libname = LibFileNames(env["LIBNAME"],env["VERSION"],env["SOVERSION"])
 env.Append(LIBFULLNAME = libname.full_name(env))
