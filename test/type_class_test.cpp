@@ -28,8 +28,6 @@
 
 CPPUNIT_TEST_SUITE_REGISTRATION(type_class_test);
 
-using namespace pni::core;
-
 //-----------------------------------------------------------------------------
 void type_class_test::setUp(){ }
 

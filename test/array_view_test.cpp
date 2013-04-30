@@ -31,7 +31,6 @@
 
 #include "array_view_test.hpp"
 
-using namespace pni::core;
 
 typedef sarray<uint16,NX,NY> sarray_type;
 

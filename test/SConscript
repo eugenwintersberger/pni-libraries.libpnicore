@@ -54,8 +54,9 @@ arithmeticbm = test_env.Program("arithmeticbm",["arithmeticbm.cpp"])
 fobjs = filter(lambda o: str(o)[-4:] != '.mod', 
                test_env.Object(["farithmeticbm.f90","benchmark/benchmark.f90","benchmark/arithmetic_benchmark.f90"],LIBS=[],F90FLAGS=["-O3","-J./test"]))
 farithmeticbm = test_env.Program("farithmeticbm",fobjs,F90FLAGS=["-O3","-I./test"])
-test_targets = [pnicore_test,iterbm,multiindexbm,arithmeticbm,farithmeticbm]
+test_targets = [pnicore_test]
 
+test_env.Alias("benchmarks",[iterbm,multiindexbm,arithmeticbm,farithmeticbm])
 test_env.Alias("test",test_targets)
 test_install = test_env.Install("$PREFIX/bin",test_targets)
 test_env.Alias("test_install",test_install)

@@ -73,7 +73,7 @@ namespace core{
     //-------------------------------------------------------------------------
     void parse(configuration &c,const string &s)
     {
-        std::ifstream cstream(s);
+        std::ifstream cstream(s.c_str());
 
         popts::options_description total_opts;
         total_opts.add(c.visible_options());

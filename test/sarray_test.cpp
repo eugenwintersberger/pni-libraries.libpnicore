@@ -28,7 +28,6 @@
 
 #include "sarray_test.hpp"
 
-using namespace pni::core;
 
 #define STATICARRAY_TEST_REGISTRATION(T)\
 static CPPUNIT_NS::AutoRegisterSuite< sarray_test<T> >  \
