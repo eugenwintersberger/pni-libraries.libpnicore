@@ -45,6 +45,7 @@ template<typename OT> class array_test : public CppUnit::TestFixture
         CPPUNIT_TEST(test_element_access);
         CPPUNIT_TEST(test_at_access);
         CPPUNIT_TEST(test_iterator);
+        CPPUNIT_TEST(test_assignment);
         CPPUNIT_TEST_SUITE_END();
 
         shape_t _shape;
@@ -63,6 +64,7 @@ template<typename OT> class array_test : public CppUnit::TestFixture
         void test_element_access();
         void test_at_access();
         void test_iterator();
+        void test_assignment();
 };
 
 //-----------------------------------------------------------------------------
@@ -117,6 +119,30 @@ template<typename OT> void array_test<OT>::test_copy_and_move()
     CPPUNIT_ASSERT_THROW(o3.rank(),memory_not_allocated_error);
     CPPUNIT_ASSERT_THROW(o3.size(),memory_not_allocated_error);
 
+}
+
+//-----------------------------------------------------------------------------
+template<typename OT> void array_test<OT>::test_assignment()
+{
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+
+    array o1(_object1);
+    array o2,o3;
+
+    //copy assignment
+    o2 = o1;
+    CPPUNIT_ASSERT(o2.rank() == o1.rank());
+    CPPUNIT_ASSERT(o2.size() == o1.size());
+    CPPUNIT_ASSERT(o2.type_id() == o1.type_id());
+
+    //move assignment
+    o3 = std::move(o1);
+    CPPUNIT_ASSERT(o3.rank() == o2.rank());
+    CPPUNIT_ASSERT(o3.size() == o2.size());
+    CPPUNIT_ASSERT(o3.type_id() == o2.type_id());
+
+    CPPUNIT_ASSERT_THROW(o1.rank(),memory_not_allocated_error);
+    CPPUNIT_ASSERT_THROW(o1.size(),memory_not_allocated_error);
 }
 
 //-----------------------------------------------------------------------------

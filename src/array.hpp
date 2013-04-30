@@ -153,6 +153,14 @@ namespace core{
             //!move constructor
             array(array &&e);
 
+            //==============assignment operators===============================
+            //! copy assignment operator
+            array &operator=(const array &a);
+
+            //-----------------------------------------------------------------
+            //! move assignment operator
+            array &operator=(array &&a);
+
             //=====================public member functions=====================
             /*!
             \brief get type id

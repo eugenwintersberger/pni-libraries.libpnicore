@@ -40,6 +40,26 @@ namespace core{
     }
 
     //-------------------------------------------------------------------------
+    //copy assignment operator
+    array &array::operator=(const array &a)
+    {
+        if(&a == this) return *this;
+
+        this->_ptr = std::unique_ptr<array_holder_interface>(a._ptr->clone());
+        return *this;
+    }
+
+    //-------------------------------------------------------------------------
+    //move assignment operator
+    array &array::operator=(array &&a)
+    {
+        if(&a == this) return *this;
+
+        this->_ptr = std::move(a._ptr);
+        return *this;
+    }
+
+    //-------------------------------------------------------------------------
     type_id_t array::type_id() const
     { 
         if(_ptr)
