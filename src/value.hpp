@@ -106,7 +106,7 @@ namespace core{
 
             //-----------------------------------------------------------------
             //! copy constructor
-            value(const value &o):_ptr(o._ptr->clone()) {}
+            value(const value &o):_ptr(o._ptr ? o._ptr->clone() : nullptr) {}
 
             //-----------------------------------------------------------------
             //! move constructor
