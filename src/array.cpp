@@ -103,6 +103,7 @@ namespace core{
         return 0; //just to make the compiler happy
     }
 
+
     //-------------------------------------------------------------------------
     std::ostream &array::write(std::ostream &os) const 
     {
@@ -129,7 +130,7 @@ namespace core{
     value array::operator[](size_t i) const
     {
         if(_ptr)
-            return (*_ptr)[i];
+            return ((const array_holder_interface&)(*_ptr))[i];
         else
             array::_throw_not_allocated_error(EXCEPTION_RECORD);
 
