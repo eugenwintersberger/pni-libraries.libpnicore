@@ -54,26 +54,40 @@ namespace core{
         total_opts.add(config.hidden_options());
 
         //run the parser
-        popts::parsed_options parsed_opts(&total_opts);
         if(unregistered)
-            parsed_opts = popts::command_line_parser(args).
+        {
+            popts::parsed_options parsed_opts = 
+                          popts::command_line_parser(args).
                           options(total_opts).
                           positional(config.arguments()).
                           allow_unregistered().run();
+            //store the parsed options
+            popts::store(parsed_opts,const_cast<popts::variables_map&>(config.map()));
+            
+
+            //notify the variable map that we are done
+            popts::notify(const_cast<popts::variables_map&>(config.map()));
+
+            return
+                popts::collect_unrecognized(parsed_opts.options,popts::exclude_positional);
+        }
         else
-            parsed_opts = popts::command_line_parser(args).
+        {
+            popts::parsed_options parsed_opts = 
+                          popts::command_line_parser(args).
                           options(total_opts).
                           positional(config.arguments()).run();
+            //store the parsed options
+            popts::store(parsed_opts,const_cast<popts::variables_map&>(config.map()));
+            
 
-        //store the parsed options
-        popts::store(parsed_opts,const_cast<popts::variables_map&>(config.map()));
-        
+            //notify the variable map that we are done
+            popts::notify(const_cast<popts::variables_map&>(config.map()));
 
-        //notify the variable map that we are done
-        popts::notify(const_cast<popts::variables_map&>(config.map()));
+            return popts::collect_unrecognized(parsed_opts.options,
+                                               popts::exclude_positional);
+        }
 
-        return popts::collect_unrecognized(parsed_opts.options,
-                                           popts::include_positional);
        
     }
   
