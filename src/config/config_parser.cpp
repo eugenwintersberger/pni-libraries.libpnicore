@@ -37,15 +37,16 @@ namespace core{
     {
         std::vector<string> args; 
 
-        for(size_t i=1;i<argc;i++)
+        for(size_t i=1;(ssize_t)i<argc;i++)
             args.push_back(string(argv[i]));
 
         return args;
     }
 
     //-------------------------------------------------------------------------
-    void parse(configuration &config,const std::vector<string> &args,
-               bool unregistered)
+    std::vector<string> parse(configuration &config,
+                              const std::vector<string> &args,
+                              bool unregistered)
     {
         //merging hidden and visible options to a single option description
         popts::options_description total_opts;
@@ -53,20 +54,26 @@ namespace core{
         total_opts.add(config.hidden_options());
 
         //run the parser
+        popts::parsed_options parsed_opts(&total_opts);
         if(unregistered)
-            popts::store(popts::command_line_parser(args).
-                         options(total_opts).
-                         positional(config.arguments()).
-                         allow_unregistered().run(),
-                         const_cast<popts::variables_map&>(config.map()));
+            parsed_opts = popts::command_line_parser(args).
+                          options(total_opts).
+                          positional(config.arguments()).
+                          allow_unregistered().run();
         else
-            popts::store(popts::command_line_parser(args).
-                         options(total_opts).
-                         positional(config.arguments()).run(),
-                         const_cast<popts::variables_map&>(config.map()));
+            parsed_opts = popts::command_line_parser(args).
+                          options(total_opts).
+                          positional(config.arguments()).run();
+
+        //store the parsed options
+        popts::store(parsed_opts,const_cast<popts::variables_map&>(config.map()));
+        
 
         //notify the variable map that we are done
         popts::notify(const_cast<popts::variables_map&>(config.map()));
+
+        return popts::collect_unrecognized(parsed_opts.options,
+                                           popts::include_positional);
        
     }
   

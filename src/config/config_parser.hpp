@@ -61,8 +61,10 @@ namespace core{
     \param c reference to the configuration to be parsed
     \param args command line arguments in a vector
     \param unregistered flag to allow unregistered options
+    \return a vector with uncrecognized options
     */
-    void parse(configuration &c,const std::vector<string> &args,bool unregistered=false);
+    std::vector<string> parse(configuration &c,const std::vector<string> &args,
+                              bool unregistered=false);
 
     //-------------------------------------------------------------------------
     /*!
