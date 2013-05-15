@@ -27,7 +27,7 @@ namespace pni{
 namespace core{
 
     //copy constructor
-    array::array(const array &e):_ptr(e._ptr->clone())
+    array::array(const array &e):_ptr(e._ptr ? e._ptr->clone():nullptr)
     {
         //std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
     }
