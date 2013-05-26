@@ -57,6 +57,10 @@ void configuration_test::test_configfile()
 
     parse(conf_file,"pni.cfg");
     CPPUNIT_ASSERT(conf_file.value<size_t>("pniutils.nthreads")==4);
+
+    configuration c = std::move(conf_file);
+    CPPUNIT_ASSERT(c.value<size_t>("pniutils.nthreads")==4);
+
 }
 
 //-----------------------------------------------------------------------------

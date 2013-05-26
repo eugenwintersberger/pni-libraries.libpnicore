@@ -76,9 +76,15 @@ namespace core{
             //! copy constructor - deleted
             configuration(const configuration &c) = delete;
 
+            //! move constructor 
+            configuration(configuration &&c);
+
             //------------------------------------------------------------------
             //! destructor
             ~configuration() {}
+
+            //=====================assignment operators========================
+
 
             //=====================public member functions====================== 
             /*!

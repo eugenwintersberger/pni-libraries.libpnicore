@@ -51,6 +51,16 @@ namespace core{
     }
 
     //--------------------------------------------------------------------------
+    configuration::configuration(configuration &&c):
+        _vmap(std::move(c._vmap)),
+        _visible_opts(std::move(c._visible_opts)),
+        _hidden_opts(std::move(c._hidden_opts)),
+        _oargs(std::move(c._oargs))
+    {
+
+    }
+
+    //--------------------------------------------------------------------------
     bool configuration::has_option(const string &name) const
     {
         if(_vmap.count(name)) return true;
