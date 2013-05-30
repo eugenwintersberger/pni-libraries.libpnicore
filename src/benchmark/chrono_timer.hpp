@@ -39,20 +39,24 @@ namespace core{
     */
     template<typename DTYPE> struct duration_unit_map;
 
-#define DURATIONUNITMAP(durationtype,unit_string)\
+#define DURATIONUNITMAP(durationtype)\
         template<> struct duration_unit_map<durationtype>\
         {\
             static const string unit;\
-        };\
+        }
+
+#define DURATIONUNITMAPINIT(durationtype,unit_string)\
         const string duration_unit_map<durationtype>::unit = string(unit_string)
 
+
+
     //! \cond NO_API_DOC
-    DURATIONUNITMAP(std::chrono::nanoseconds,"ns");
-    DURATIONUNITMAP(std::chrono::microseconds,"us");
-    DURATIONUNITMAP(std::chrono::milliseconds,"ms");
-    DURATIONUNITMAP(std::chrono::seconds,"s");
-    DURATIONUNITMAP(std::chrono::minutes,"min");
-    DURATIONUNITMAP(std::chrono::hours,"h");
+    DURATIONUNITMAP(std::chrono::nanoseconds);
+    DURATIONUNITMAP(std::chrono::microseconds);
+    DURATIONUNITMAP(std::chrono::milliseconds);
+    DURATIONUNITMAP(std::chrono::seconds);
+    DURATIONUNITMAP(std::chrono::minutes);
+    DURATIONUNITMAP(std::chrono::hours);
     //! \endcond NO_API_DOC
 
     /*!

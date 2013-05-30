@@ -127,41 +127,26 @@ namespace core{
     }
 
     //--------------------------------------------------------------------------
-    benchmark_result average(const benchmark_runner &bm)
-    {
-        float64 time = 0.;
+    /*!
+    \brief compute the average result
 
-#ifdef NOFOREACH
-        for(auto iter = bm.begin();iter!=bm.end();++iter)
-        {
-            auto &result = *iter;
-#else
-        for(auto result: bm)
-        {
-#endif
-            time += result.time();
-        }
-
-        time /= float64(bm.size());
-
-        return benchmark_result(time,bm.begin()->unit());
-
-    }
+    Computes the average of the results of each individual run. The result is
+    returned as an instance of benchmark_result.
+    \param bm benchmark run
+    \return average benchmark result
+    */
+    benchmark_result average(const benchmark_runner &bm);
 
     //-------------------------------------------------------------------------
-    benchmark_result standard_deviation(const benchmark_runner &bm)
-    {
-        float64 av = average(bm).time(); //compute the average value
-        float64 error_sum = 0.;
+    /*!
+    \brief compute result standard deviation
 
-        for(auto iter = bm.begin();iter!=bm.end();++iter)
-        {
-            error_sum += std::pow(iter->time()-av,2);
-        }
-
-        return benchmark_result(std::sqrt((1./(bm.size()-1))*error_sum),
-                                bm.begin()->unit());
-    }
+    Computes the standard deviation for all individual results in the original
+    benchmark run. 
+    \param bm benchmark run
+    \return standard deviation of the result
+    */
+    benchmark_result standard_deviation(const benchmark_runner &bm);
 
 //end of namespace
 }
