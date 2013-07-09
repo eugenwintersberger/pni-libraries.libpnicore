@@ -342,12 +342,12 @@ Please note that the MUST NOT BE a semicolon at the end of this macro.
 
     Raised in cases where the Shape objects of two objects are not equal.
     */
-    class shape_missmatch_error: public exception 
+    class shape_mismatch_error: public exception 
     {
         public:
             //! default constructor
-            shape_missmatch_error() : 
-                exception("shape_missmatch_error") 
+            shape_mismatch_error() : 
+                exception("shape_mismatch_error") 
             { }
 
             //-----------------------------------------------------------------
@@ -357,18 +357,18 @@ Please note that the MUST NOT BE a semicolon at the end of this macro.
             \param i exception_record of the initial occurrence of the error
             \param d description of the exception
             */
-            explicit shape_missmatch_error(const exception_record &i, 
+            explicit shape_mismatch_error(const exception_record &i, 
                                            const string &d) :
-                exception("shape_missmatch_error",i,d) 
+                exception("shape_mismatch_error",i,d) 
             { }
 
             //-----------------------------------------------------------------
             //! destructor
-            ~shape_missmatch_error() throw() { }
+            ~shape_mismatch_error() throw() { }
 
             //! output operator
             friend std::ostream &
-                operator<<(std::ostream &o,const shape_missmatch_error &e);
+                operator<<(std::ostream &o,const shape_mismatch_error &e);
     };
 
     //--------------------------------------------------------------------------

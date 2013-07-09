@@ -310,7 +310,7 @@ namespace core{
                     std::stringstream ss;
                     ss<<"Size of container ("<<c.size()<<") does not match";
                     ss<<" rank ("<<this->rank()<<")!";
-                    throw shape_missmatch_error(EXCEPTION_RECORD,ss.str());
+                    throw shape_mismatch_error(EXCEPTION_RECORD,ss.str());
                 }
 
                 size_t index = 0;
@@ -359,7 +359,7 @@ namespace core{
                     std::stringstream ss;
                     ss<<"Size of container ("<<c.size()<<") does not match";
                     ss<<" rank ("<<this->rank()<<")!";
-                    throw shape_missmatch_error(EXCEPTION_RECORD,ss.str());
+                    throw shape_mismatch_error(EXCEPTION_RECORD,ss.str());
                 }
 
                 if(offset >= this->size())

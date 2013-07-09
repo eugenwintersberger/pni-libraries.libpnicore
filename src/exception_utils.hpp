@@ -90,7 +90,7 @@ namespace core{
     not.
     \tparam A container type for the first shape
     \tparam B container type for the second shape
-    \throws shape_missmatch_error if shapes do not match
+    \throws shape_mismatch_error if shapes do not match
     \param a first shape
     \param b second shape
     \param i exception_record for the location where to perform the check
@@ -131,7 +131,7 @@ namespace core{
             ss<<") do not match";
 
             //construct exception
-            throw shape_missmatch_error(i,ss.str());
+            throw shape_mismatch_error(i,ss.str());
         }
     }
 

@@ -806,7 +806,7 @@ namespace core{
 
     \endcode
 
-    \throws shape_missmatch_error if shapes do not match
+    \throws shape_mismatch_error if shapes do not match
     \tparam AT1 storage type of left operand
     \tparam AT2 storage type of right operand
     \param a left operand

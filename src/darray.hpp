@@ -448,7 +448,7 @@ namespace core {
 
             Returns the data at a position described by the multidimensional
             index i. 
-            \throws shape_missmatch_error if size of c does not match the rank of
+            \throws shape_mismatch_error if size of c does not match the rank of
             the array
             \throws index_error if one of the indices exceeds the number of
             elements along its dimension
@@ -472,7 +472,7 @@ namespace core {
 
             Returns the data at a position described by the multidimensional
             index i. 
-            \throws shape_missmatch_error if size of c does not match the rank of
+            \throws shape_mismatch_error if size of c does not match the rank of
             the array
             \throws index_error if one of the indices exceeds the number of
             elements along its dimension

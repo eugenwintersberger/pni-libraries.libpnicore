@@ -196,7 +196,7 @@ namespace core{
             size_t offset = imap.offset(index);
             \endcode
 
-            \throws shape_missmatch_error if the size of the index and the shape
+            \throws shape_mismatch_error if the size of the index and the shape
             container do not match
             \throws index_error if one of the indices exceeds the number of 
             elements along its dimension
@@ -236,7 +236,7 @@ namespace core{
             std::vector<size_t> index(4);
             imap.index(8,index);
             \endcode
-            \throws shape_missmatch_error if the size of the index container is not
+            \throws shape_mismatch_error if the size of the index container is not
             coinciding with that of the shape 
             \throws size_missmatch_error if the offset exceeds the total size of the
             array represented by shape
@@ -260,7 +260,7 @@ namespace core{
                 std::stringstream ss;
                 ss<<"Rank of index ("<<index.size()<<") does not match ";
                 ss<<"map rank ("<<rank()<<")!";
-                throw shape_missmatch_error(EXCEPTION_RECORD,ss.str());
+                throw shape_mismatch_error(EXCEPTION_RECORD,ss.str());
             }
 
             size_t offset = 0;

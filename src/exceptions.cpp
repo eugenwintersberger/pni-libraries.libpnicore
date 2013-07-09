@@ -107,7 +107,7 @@ namespace core{
     }
 
     //--------------------------------------------------------------------------
-    std::ostream &operator<<(std::ostream &o,const shape_missmatch_error &e)
+    std::ostream &operator<<(std::ostream &o,const shape_mismatch_error &e)
     {
         return e.print(o);
     }

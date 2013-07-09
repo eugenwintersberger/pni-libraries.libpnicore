@@ -216,7 +216,7 @@ namespace core{
             \brief construct from an ArrayView object
 
             \throws size_missmatch_error if sizes do not match
-            \throws shape_missmatch_error if shapes do not match
+            \throws shape_mismatch_error if shapes do not match
             \tparam ATYPE array type of the view
             \param view reference to the view object
             */
@@ -368,7 +368,7 @@ namespace core{
             index. The indices are stored in a container of type CTYPE. Every
             container providing the [] operators for data access and a forward
             iterator are allowed. 
-            \throws shape_missmatch_error if container size and array rank do not
+            \throws shape_mismatch_error if container size and array rank do not
             match
             \tparam CTYPE container type
             \param c container with indices
@@ -395,7 +395,7 @@ namespace core{
             multidimensional index. The index is provided as a container of type
             CTYPE. Every container type implementing the [] operator and an STL
             compliant forward iterator is allowed. 
-            \throws shape_missmatch_error if container size and array rank do not
+            \throws shape_mismatch_error if container size and array rank do not
             match
             \tparam CTYPE container type
             \param c container with indices

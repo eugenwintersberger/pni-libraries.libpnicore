@@ -177,7 +177,7 @@ namespace core{
 
             Using a container object to hold the multidimensional indices to
             access view data. 
-            \throws shape_missmatch_error if size of container does not match
+            \throws shape_mismatch_error if size of container does not match
             view rank
             \param index container with multidimensional index
             \return reference to value at index
@@ -194,7 +194,7 @@ namespace core{
 
             Using a container object to hold the multidimensional indices to
             access view data. 
-            \throws shape_missmatch_error if size of container does not match
+            \throws shape_mismatch_error if size of container does not match
             view rank
             \param index container with multidimensional index
             \return value at index

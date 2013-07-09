@@ -69,7 +69,7 @@ void static_cindex_map_test::test_offset()
 
     //test exceptions for offset computation
     CPPUNIT_ASSERT_THROW(s1.offset(std::list<size_t>{10,1}),index_error);
-    CPPUNIT_ASSERT_THROW(s1.offset(std::list<size_t>{1,2,3,4}),shape_missmatch_error);
+    CPPUNIT_ASSERT_THROW(s1.offset(std::list<size_t>{1,2,3,4}),shape_mismatch_error);
 
     static_cindex_map<2,3,5> s2;
     CPPUNIT_ASSERT(s2.offset(0,1,3) == 8);
@@ -99,8 +99,8 @@ void static_cindex_map_test::test_index()
     std::list<size_t> index2(3);
     CPPUNIT_ASSERT_NO_THROW(s1.index(9,index1));
     CPPUNIT_ASSERT_NO_THROW(s2.index(8,index2));
-    CPPUNIT_ASSERT_THROW(s1.index(9,index2),shape_missmatch_error);
-    CPPUNIT_ASSERT_THROW(s2.index(8,index1),shape_missmatch_error);
+    CPPUNIT_ASSERT_THROW(s1.index(9,index2),shape_mismatch_error);
+    CPPUNIT_ASSERT_THROW(s2.index(8,index1),shape_mismatch_error);
 
     CPPUNIT_ASSERT_THROW(s1.index(900,index1),size_missmatch_error);
     CPPUNIT_ASSERT_THROW(s2.index(800,index2),size_missmatch_error);
