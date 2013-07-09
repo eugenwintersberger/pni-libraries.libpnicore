@@ -288,7 +288,7 @@ namespace core{
             The method assumes that all index containers are of appropriate
             size. If this is not the case an exception will be thrown
 
-            \throws size_missmatch_error if sindex does not match the rank of the
+            \throws size_mismatch_error if sindex does not match the rank of the
             selection or if oindex does not match the rank of the original array
 
             \tparam ITYPE container type for the indices
@@ -338,7 +338,7 @@ namespace core{
             {
                 ITYPE oindex(_oshape.size());
                 try{ this->index(sindex,oindex); }
-                EXCEPTION_FORWARD(size_missmatch_error);
+                EXCEPTION_FORWARD(size_mismatch_error);
 
                 return oindex;
             }

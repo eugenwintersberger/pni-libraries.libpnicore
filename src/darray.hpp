@@ -224,7 +224,7 @@ namespace core {
             To keep ownership the objects will be copied.
 
             \throws memory_allocation_error if memory allocation fails
-            \throws size_missmatch_error if sizes do not match
+            \throws size_mismatch_error if sizes do not match
             \param s shape object
             \param b buffer object
             */
@@ -321,7 +321,7 @@ namespace core {
             The size of the new shape must match the size of the buffer
             associated with the array.
 
-            \throws size_missmatch_error if allocated buffer and shape size do not
+            \throws size_mismatch_error if allocated buffer and shape size do not
             match
             \throws memory_not_allocated_error if no memory is allocated
             \param s shape of the array

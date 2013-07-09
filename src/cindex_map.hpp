@@ -238,7 +238,7 @@ namespace core{
             \endcode
             \throws shape_mismatch_error if the size of the index container is not
             coinciding with that of the shape 
-            \throws size_missmatch_error if the offset exceeds the total size of the
+            \throws size_mismatch_error if the offset exceeds the total size of the
             array represented by shape
             \tparam ITYPE container type for index
             \param offset the linear offset
@@ -280,7 +280,7 @@ namespace core{
         {
             ITYPE index(shape().size());
             try { this->index(offset,index);}
-            EXCEPTION_FORWARD(size_missmatch_error);
+            EXCEPTION_FORWARD(size_mismatch_error);
 
             return index;
         }
@@ -294,7 +294,7 @@ namespace core{
             {
                 std::stringstream ss;
                 ss<<"Offset ("<<offset<<") exceeds linear size ("<<size()<<")!";
-                throw size_missmatch_error(EXCEPTION_RECORD,ss.str());
+                throw size_mismatch_error(EXCEPTION_RECORD,ss.str());
             }
 
             size_t t;

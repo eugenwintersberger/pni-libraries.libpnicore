@@ -112,7 +112,7 @@ namespace core{
             \endcode
             An exception is thrown if the number of elements in the list does
             not match the size of the buffer.
-            \throws size_missmatch_error list size does not match buffer size
+            \throws size_mismatch_error list size does not match buffer size
             \param list reference to the initializer list
             */
             explicit sbuffer(const std::initializer_list<value_type> &list)

@@ -113,7 +113,7 @@ namespace core{
     }
 
     //--------------------------------------------------------------------------
-    std::ostream &operator<<(std::ostream &o,const size_missmatch_error &e)
+    std::ostream &operator<<(std::ostream &o,const size_mismatch_error &e)
     {
         return e.print(o);
     }

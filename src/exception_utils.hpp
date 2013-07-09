@@ -45,7 +45,7 @@ namespace core{
     two objects. It is typically used to compare the size of a shape and a 
     buffer or any other container object. 
     If the sizes do not match an exception is thrown.
-    \throws size_missmatch_error if sizes do not match
+    \throws size_mismatch_error if sizes do not match
     \param a first object
     \param b second object
     \param i exception_record for the location where to perform the check
@@ -61,7 +61,7 @@ namespace core{
             ss<<a.size()<<") ";
             ss<<"does not match size of "<<demangle_cpp_name(typeid(B).name())<<" (";
             ss<<b.size()<<")!";
-            throw size_missmatch_error(i,string(ss.str()));
+            throw size_mismatch_error(i,string(ss.str()));
         }
     }
 

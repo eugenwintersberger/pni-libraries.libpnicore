@@ -215,7 +215,7 @@ namespace core{
             /*!
             \brief construct from an ArrayView object
 
-            \throws size_missmatch_error if sizes do not match
+            \throws size_mismatch_error if sizes do not match
             \throws shape_mismatch_error if shapes do not match
             \tparam ATYPE array type of the view
             \param view reference to the view object

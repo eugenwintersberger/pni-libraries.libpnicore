@@ -367,7 +367,7 @@ namespace core{
                     std::stringstream ss;
                     ss<<"Offset "<<offset<<" exceeds shape size ";
                     ss<<this->size()<<"!";
-                    throw size_missmatch_error(EXCEPTION_RECORD,ss.str());
+                    throw size_mismatch_error(EXCEPTION_RECORD,ss.str());
                 }
 
                 Index<0,true,DIMS...>::template index<CTYPE<OTS...> >(offset,c.begin());

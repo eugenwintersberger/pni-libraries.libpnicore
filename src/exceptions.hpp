@@ -374,16 +374,16 @@ Please note that the MUST NOT BE a semicolon at the end of this macro.
     //--------------------------------------------------------------------------
     /*! 
     \ingroup error_classes
-    \brief Size missmatch error
+    \brief Size mismatch error
 
     This exception will be raised in cases where buffer sizes do not meet the
     requirements.
     */
-    class size_missmatch_error: public exception 
+    class size_mismatch_error: public exception 
     {
         public:
             //! default constructor
-            size_missmatch_error() : exception("size_missmatch_error") 
+            size_mismatch_error() : exception("size_mismatch_error") 
             { }
 
             //-----------------------------------------------------------------
@@ -393,18 +393,18 @@ Please note that the MUST NOT BE a semicolon at the end of this macro.
             \param i exception_record of the initial occurrence of the error
             \param d description of the exception
             */
-            explicit size_missmatch_error(const exception_record &i, 
+            explicit size_mismatch_error(const exception_record &i, 
                                           const string &d) :
-                exception("size_missmatch_error", i,d) 
+                exception("size_mismatch_error", i,d) 
             { }
 
             //-----------------------------------------------------------------
             //! destructor
-            ~size_missmatch_error() throw() { }
+            ~size_mismatch_error() throw() { }
 
             //! output operator
             friend std::ostream &
-                operator<<(std::ostream &o,const size_missmatch_error &e);
+                operator<<(std::ostream &o,const size_mismatch_error &e);
     };
 
     //--------------------------------------------------------------------------
