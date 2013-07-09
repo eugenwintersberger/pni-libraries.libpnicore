@@ -53,9 +53,9 @@ elif os.name=="posix":
                          PathVariable.PathAccept))
 
 #this are variables which should not be used by a user
-var.Add("VERSION","library version","0.9.3")
+var.Add("VERSION","library version","0.9.4")
 var.Add("LIBNAME","library name","pnicore")
-var.Add("SOVERSION","SOVersion of the library (binary interface version)","0")
+var.Add("SOVERSION","SOVersion of the library (binary interface version)","1")
 var.Add("MAINTAINER","package maintainer for the project","Eugen Wintersberger")
 var.Add("MAINTAINER_MAIL","e-mail of the package maintainer","eugen.wintersberger@desy.de")
 var.Add("LIBSONAME","name of the library including the SO-version","")
