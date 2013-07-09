@@ -102,7 +102,7 @@ void static_cindex_map_test::test_index()
     CPPUNIT_ASSERT_THROW(s1.index(9,index2),shape_mismatch_error);
     CPPUNIT_ASSERT_THROW(s2.index(8,index1),shape_mismatch_error);
 
-    CPPUNIT_ASSERT_THROW(s1.index(900,index1),size_missmatch_error);
-    CPPUNIT_ASSERT_THROW(s2.index(800,index2),size_missmatch_error);
+    CPPUNIT_ASSERT_THROW(s1.index(900,index1),size_mismatch_error);
+    CPPUNIT_ASSERT_THROW(s2.index(800,index2),size_mismatch_error);
 }
 
