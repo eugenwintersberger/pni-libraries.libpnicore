@@ -38,6 +38,7 @@
 #include "math/div_op.hpp"
 #include "math/mult.hpp"
 #include "config/library_config.hpp"
+#include "numarray_tags.hpp"
 
 
 namespace pni{
@@ -160,7 +161,7 @@ namespace core{
 
     */
     template<typename ATYPE,
-             typename TAGTYPE = void,
+             typename TAGTYPE = non_tag,
              template<typename> class IPA=inplace_arithmetics,
              bool MT_BINARY_ARITHMETICS=false> 
         class numarray
