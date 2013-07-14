@@ -37,7 +37,7 @@
 
 using namespace pni::core;
 
-template<typename ATYPE,template<typename> class IPAT,bool MT_BINARY_ARITHMETICS>
+template<typename ATYPE,typename TAGTYPE,template<typename> class IPAT,bool MT_BINARY_ARITHMETICS>
 class numarray_test : public CppUnit::TestFixture
 {
         CPPUNIT_TEST_SUITE(numarray_test);
@@ -69,7 +69,7 @@ class numarray_test : public CppUnit::TestFixture
         }
         
     public:
-        typedef numarray<ATYPE,IPAT,MT_BINARY_ARITHMETICS> narray_t;
+        typedef numarray<ATYPE,TAGTYPE,IPAT,MT_BINARY_ARITHMETICS> narray_t;
         void setUp();
         void tearDown();
         void test_construction();
@@ -86,16 +86,16 @@ class numarray_test : public CppUnit::TestFixture
 };
 
 //------------------------------------------------------------------------------
-template<typename ATYPE,template<typename> class IPAT,bool MT_BINARY_ARITHMETICS> 
-void numarray_test<ATYPE,IPAT,MT_BINARY_ARITHMETICS>::setUp(){ }
+template<typename ATYPE,typename TAGTYPE,template<typename> class IPAT,bool MT_BINARY_ARITHMETICS> 
+void numarray_test<ATYPE,TAGTYPE,IPAT,MT_BINARY_ARITHMETICS>::setUp(){ }
 
 //------------------------------------------------------------------------------
-template<typename ATYPE,template<typename> class IPAT,bool MT_BINARY_ARITHMETICS> 
-void numarray_test<ATYPE,IPAT,MT_BINARY_ARITHMETICS>::tearDown(){ } 
+template<typename ATYPE,typename TAGTYPE,template<typename> class IPAT,bool MT_BINARY_ARITHMETICS> 
+void numarray_test<ATYPE,TAGTYPE,IPAT,MT_BINARY_ARITHMETICS>::tearDown(){ } 
 
 //------------------------------------------------------------------------------
-template<typename ATYPE,template<typename> class IPAT,bool MT_BINARY_ARITHMETICS> 
-void numarray_test<ATYPE,IPAT,MT_BINARY_ARITHMETICS>::test_construction()
+template<typename ATYPE,typename TAGTYPE,template<typename> class IPAT,bool MT_BINARY_ARITHMETICS> 
+void numarray_test<ATYPE,TAGTYPE,IPAT,MT_BINARY_ARITHMETICS>::test_construction()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
@@ -111,8 +111,8 @@ void numarray_test<ATYPE,IPAT,MT_BINARY_ARITHMETICS>::test_construction()
 }
 
 //------------------------------------------------------------------------------
-template<typename ATYPE,template<typename> class IPAT,bool MT_BINARY_ARITHMETICS> 
-void numarray_test<ATYPE,IPAT,MT_BINARY_ARITHMETICS>::test_assignment()
+template<typename ATYPE,typename TAGTYPE,template<typename> class IPAT,bool MT_BINARY_ARITHMETICS> 
+void numarray_test<ATYPE,TAGTYPE,IPAT,MT_BINARY_ARITHMETICS>::test_assignment()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
@@ -138,8 +138,8 @@ void numarray_test<ATYPE,IPAT,MT_BINARY_ARITHMETICS>::test_assignment()
 }
 
 //------------------------------------------------------------------------------
-template<typename ATYPE,template<typename> class IPAT,bool MT_BINARY_ARITHMETICS> 
-void numarray_test<ATYPE,IPAT,MT_BINARY_ARITHMETICS>::test_linear_access()
+template<typename ATYPE,typename TAGTYPE,template<typename> class IPAT,bool MT_BINARY_ARITHMETICS> 
+void numarray_test<ATYPE,TAGTYPE,IPAT,MT_BINARY_ARITHMETICS>::test_linear_access()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
@@ -171,8 +171,8 @@ void numarray_test<ATYPE,IPAT,MT_BINARY_ARITHMETICS>::test_linear_access()
 }
 
 //------------------------------------------------------------------------------
-template<typename ATYPE,template<typename> class IPAT,bool MT_BINARY_ARITHMETICS> 
-void numarray_test<ATYPE,IPAT,MT_BINARY_ARITHMETICS>::test_iterators()
+template<typename ATYPE,typename TAGTYPE,template<typename> class IPAT,bool MT_BINARY_ARITHMETICS> 
+void numarray_test<ATYPE,TAGTYPE,IPAT,MT_BINARY_ARITHMETICS>::test_iterators()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
@@ -225,8 +225,8 @@ void numarray_test<ATYPE,IPAT,MT_BINARY_ARITHMETICS>::test_iterators()
 }
 
 //-----------------------------------------------------------------------------
-template<typename ATYPE,template<typename> class IPAT,bool MT_BINARY_ARITHMETICS> 
-void numarray_test<ATYPE,IPAT,MT_BINARY_ARITHMETICS>::test_multiindex_access()
+template<typename ATYPE,typename TAGTYPE,template<typename> class IPAT,bool MT_BINARY_ARITHMETICS> 
+void numarray_test<ATYPE,TAGTYPE,IPAT,MT_BINARY_ARITHMETICS>::test_multiindex_access()
 {   
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
@@ -278,8 +278,8 @@ void numarray_test<ATYPE,IPAT,MT_BINARY_ARITHMETICS>::test_multiindex_access()
 }
 
 //------------------------------------------------------------------------------
-template<typename ATYPE,template<typename> class IPAT,bool MT_BINARY_ARITHMETICS> 
-void numarray_test<ATYPE,IPAT,MT_BINARY_ARITHMETICS>::test_typeinfo()
+template<typename ATYPE,typename TAGTYPE,template<typename> class IPAT,bool MT_BINARY_ARITHMETICS> 
+void numarray_test<ATYPE,TAGTYPE,IPAT,MT_BINARY_ARITHMETICS>::test_typeinfo()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
@@ -289,8 +289,8 @@ void numarray_test<ATYPE,IPAT,MT_BINARY_ARITHMETICS>::test_typeinfo()
 }
 
 //-------------------------------------------------------------------------------
-template<typename ATYPE,template<typename> class IPAT,bool MT_BINARY_ARITHMETICS> 
-void numarray_test<ATYPE,IPAT,MT_BINARY_ARITHMETICS>::test_unary_add()
+template<typename ATYPE,typename TAGTYPE,template<typename> class IPAT,bool MT_BINARY_ARITHMETICS> 
+void numarray_test<ATYPE,TAGTYPE,IPAT,MT_BINARY_ARITHMETICS>::test_unary_add()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
@@ -346,8 +346,8 @@ void numarray_test<ATYPE,IPAT,MT_BINARY_ARITHMETICS>::test_unary_add()
 }
 
 //-----------------------------------------------------------------------------
-template<typename ATYPE,template<typename> class IPAT,bool MT_BINARY_ARITHMETICS> 
-void numarray_test<ATYPE,IPAT,MT_BINARY_ARITHMETICS>::test_unary_sub()
+template<typename ATYPE,typename TAGTYPE,template<typename> class IPAT,bool MT_BINARY_ARITHMETICS> 
+void numarray_test<ATYPE,TAGTYPE,IPAT,MT_BINARY_ARITHMETICS>::test_unary_sub()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
@@ -403,8 +403,8 @@ void numarray_test<ATYPE,IPAT,MT_BINARY_ARITHMETICS>::test_unary_sub()
 }
 
 //-----------------------------------------------------------------------------
-template<typename ATYPE,template<typename> class IPAT,bool MT_BINARY_ARITHMETICS> 
-void numarray_test<ATYPE,IPAT,MT_BINARY_ARITHMETICS>::test_unary_mult()
+template<typename ATYPE,typename TAGTYPE,template<typename> class IPAT,bool MT_BINARY_ARITHMETICS> 
+void numarray_test<ATYPE,TAGTYPE,IPAT,MT_BINARY_ARITHMETICS>::test_unary_mult()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
@@ -460,8 +460,8 @@ void numarray_test<ATYPE,IPAT,MT_BINARY_ARITHMETICS>::test_unary_mult()
 }
 
 //-----------------------------------------------------------------------------
-template<typename ATYPE,template<typename> class IPAT,bool MT_BINARY_ARITHMETICS> 
-void numarray_test<ATYPE,IPAT,MT_BINARY_ARITHMETICS>::test_unary_div()
+template<typename ATYPE,typename TAGTYPE,template<typename> class IPAT,bool MT_BINARY_ARITHMETICS> 
+void numarray_test<ATYPE,TAGTYPE,IPAT,MT_BINARY_ARITHMETICS>::test_unary_div()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
@@ -518,8 +518,8 @@ void numarray_test<ATYPE,IPAT,MT_BINARY_ARITHMETICS>::test_unary_div()
 }
 
 //-----------------------------------------------------------------------------
-template<typename ATYPE,template<typename> class IPAT,bool MT_BINARY_ARITHMETICS> 
-void numarray_test<ATYPE,IPAT,MT_BINARY_ARITHMETICS>::test_view()
+template<typename ATYPE,typename TAGTYPE,template<typename> class IPAT,bool MT_BINARY_ARITHMETICS> 
+void numarray_test<ATYPE,TAGTYPE,IPAT,MT_BINARY_ARITHMETICS>::test_view()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 

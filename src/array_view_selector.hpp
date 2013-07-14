@@ -31,7 +31,7 @@
 namespace pni {
 namespace core {
 
-    template<typename ATYPE,template<typename> class IPA,bool
+    template<typename ATYPE,typename TAGTYPE,template<typename> class IPA,bool
         MT_BINARY_ARITHMETICS> class numarray;
 
     /*! 
@@ -100,17 +100,17 @@ namespace core {
     For numeric arrays we need to wrap the ArrayView template into a NumArray
     class.
     */
-    template<typename ATYPE,template<typename> class IPA,
+    template<typename ATYPE,typename TAGTYPE,template<typename> class IPA,
         bool MT_BINARY_ARITHMETICS, 
         typename ...ITYPES> 
-        struct array_view_selector<numarray<ATYPE,IPA,MT_BINARY_ARITHMETICS>,slice,ITYPES...>
+        struct array_view_selector<numarray<ATYPE,TAGTYPE,IPA,MT_BINARY_ARITHMETICS>,slice,ITYPES...>
     {
         //! array view return type
-        typedef numarray<array_view<numarray<ATYPE,IPA,MT_BINARY_ARITHMETICS>
-            >,IPA,MT_BINARY_ARITHMETICS > viewtype;
+        typedef numarray<array_view<numarray<ATYPE,TAGTYPE,IPA,MT_BINARY_ARITHMETICS>
+            >,TAGTYPE,IPA,MT_BINARY_ARITHMETICS > viewtype;
         //! array view reference type
-        typedef numarray<array_view<numarray<ATYPE,IPA,MT_BINARY_ARITHMETICS>
-            >,IPA,MT_BINARY_ARITHMETICS > reftype;
+        typedef numarray<array_view<numarray<ATYPE,TAGTYPE,IPA,MT_BINARY_ARITHMETICS>
+            >,TAGTYPE,IPA,MT_BINARY_ARITHMETICS > reftype;
     };
 
     //-------------------------------------------------------------------------

@@ -30,7 +30,7 @@
 
 
 #define NUMARRAY_TEST_REGISTRATION(ATYPE,VTYPE,IPAT,MT)\
-static CPPUNIT_NS::AutoRegisterSuite< numarray_test<ATYPE<VTYPE>,IPAT,MT > >  \
+static CPPUNIT_NS::AutoRegisterSuite< numarray_test<ATYPE<VTYPE>,int,IPAT,MT > >  \
              CPPUNIT_MAKE_UNIQUE_NAME(autoRegisterRegistry__ )
 
 NUMARRAY_TEST_REGISTRATION(darray,uint8,inplace_arithmetics,false);
