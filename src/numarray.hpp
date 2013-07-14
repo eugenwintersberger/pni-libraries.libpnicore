@@ -180,6 +180,8 @@ namespace core{
             typedef std::shared_ptr<array_type> shared_ptr;
             //! unique smart pointer type to the numeric array
             typedef std::unique_ptr<array_type> unique_ptr;
+            //! numarray tag
+            typedef TAGTYPE math_object_tag;
 
             //! iterator type
             typedef typename ATYPE::iterator iterator;
