@@ -16,5 +16,6 @@ Todo for the next release so1 - 0.9.4
 4.) review type erasures
     4.1.) better testing
     4.2.) review object behavior
+    4.3.) provide utility functions for the array type erasure
 
 
