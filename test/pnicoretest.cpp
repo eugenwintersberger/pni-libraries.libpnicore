@@ -46,7 +46,7 @@ int main(int argc,char **argv){
     runner.addTest(registry.makeTest());
     runner.eventManager().addListener(&progress);
 
-    std::ofstream os("unittest.xml");
+    std::ofstream os("pnicoretest.xml");
     runner.setOutputter(new CppUnit::XmlOutputter(&runner.result(),os));
     
     bool result = runner.run();
