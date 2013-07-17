@@ -27,7 +27,13 @@ uses guide or the administrators guide.
 /*! \defgroup iterator_types Iterators types of libpnicore
 */
 
-/*! \defgroup numaric_array_classes Numeric array classes
+/*! \defgroup numeric_array_classes Numeric array classes
+*/
+
+/*!
+\ingroup numeric_array_classes 
+\defgroup expression_templates Expression templates
+
 */
 
 /*! \defgroup error_classes Exception classes

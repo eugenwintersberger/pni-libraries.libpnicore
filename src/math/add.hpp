@@ -32,7 +32,7 @@ namespace core{
     template<typename ATYPE> class array_view;
 
     /*!
-    \ingroup numeric_array_types
+    \ingroup expression_templates
     \brief Addition expression template
     
     \tparam OP1T type of left operand

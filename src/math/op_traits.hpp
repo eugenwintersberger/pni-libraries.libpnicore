@@ -28,7 +28,7 @@ namespace pni{
 namespace core{
     
     /*! 
-    \ingroup numeric_array_classes
+    \ingroup expression_templates
     \brief operator reference trait
 
     */
@@ -39,7 +39,7 @@ namespace core{
     };
 
     /*! 
-    \ingroup numeric_array_classes
+    \ingroup expression_templates
     \brief operator reference trait - specialization
     */
     template<typename T> struct op_trait<scalar<T> >

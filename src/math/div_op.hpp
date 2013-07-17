@@ -32,7 +32,7 @@ namespace core{
     template<typename ATYPE> class array_view;
 
     /*! 
-    \ingroup numeric_array_classes
+    \ingroup expression_templates
     \brief Division expression template
 
     \tparam OP1T type of the left operand
