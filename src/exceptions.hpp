@@ -545,6 +545,39 @@ Please note that the MUST NOT BE a semicolon at the end of this macro.
     //--------------------------------------------------------------------------
     /*! 
     \ingroup error_classes
+    \brief data value error
+
+    This exception is raised in cases where a particular variable takes an
+    inappropriate value.
+    */
+    class value_error: public exception 
+    {
+        public:
+            //! default constructor
+            value_error() : exception("value_error") { }
+           
+            //-----------------------------------------------------------------
+            /*! 
+            \brief constructor
+
+            \param i exception_record of the initial occurrence of the error
+            \param d error description as String
+            */
+            explicit value_error(const exception_record &i, const string &d):
+                exception("value_error", i, d) 
+            { }
+
+            //-----------------------------------------------------------------
+            //! destructor
+            ~value_error() throw() { }
+
+            //! output operator
+            friend std::ostream &
+                operator<<(std::ostream &o,const value_error &e);
+    };
+    //--------------------------------------------------------------------------
+    /*! 
+    \ingroup error_classes
     \brief data range error
 
     This exception is raised in cases where data values exceed the range

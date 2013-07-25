@@ -137,6 +137,11 @@ namespace core{
     }
 
     //--------------------------------------------------------------------------
+    std::ostream &operator<<(std::ostream &o,const value_error &e)
+    {
+        return e.print(o);
+    }
+    //--------------------------------------------------------------------------
     std::ostream &operator<<(std::ostream &o,const range_error &e)
     {
         return e.print(o);
