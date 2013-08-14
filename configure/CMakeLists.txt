@@ -1,6 +1,7 @@
 include(CheckTypeSize)
+include(CheckCXXSourceCompiles)
 
-#check the size of data types
+#===================================check the size of data types===============
 check_type_size(uint8_t UINT8_SIZE)
 if(NOT ${UINT8_SIZE} EQUAL 1)
     message(FATAL_ERROR "uint8_t size is not 1Byte!")
@@ -56,8 +57,36 @@ if(NOT ${FLOAT128_SIZE} EQUAL 16)
     message(FATAL_ERROR "long double size is not 16Byte!")
 endif(NOT ${FLOAT128_SIZE}  EQUAL 16)
 
+#=================try to figure out some compiler capabilities=================
+file(READ "bind_test.cpp" BIND_TEST_SOURCE)
+check_cxx_source_compiles("${BIND_TEST_SOURCE}"  BIND_COMPILER_CHECK)
 
-#need to check for several libraries if they are installed
+file(READ "constexpr_test.cpp" CONST_EXPR_TEST_SOURCE)
+check_cxx_source_compiles("${CONST_EXPR_TEST_SOURCE}" CONST_EXPR_TEST)
+
+file(READ "enum_bug_test.cpp" ENUM_BUG_TEST_SOURCE)
+check_cxx_source_compiles("${ENUM_BUG_TEST_SOURCE}" ENUMB_BUG_TEST)
+
+file(READ "explicit_conversion_test.cpp" EXPLICIT_CONVERSION_TEST_SOURCE)
+check_cxx_source_compiles("${EXPLICIT_CONVERSION_TEST_SOURCE}"
+    EXPLICIT_CONVERSION_TEST)
+
+file(READ "foreach_test.cpp" FOREACH_TEST_SOURCE)
+check_cxx_source_compiles("${FOREACH_TEST_SOURCE}" FOREACH_TEST)
+
+file(READ "lambda_function_test.cpp" LAMBDA_FUNCTION_TEST_SOURCE)
+check_cxx_source_compiles("${LAMBDA_FUNCTION_TEST_SOURCE}" LAMBDA_FUNCTION_TEST)
+
+file(READ "nullptr_test.cpp" NULLPTR_TEST_SOURCE)
+check_cxx_source_compiles("${NULLPTR_TEST_SOURCE}" NULLPTR_TEST)
+
+file(READ "random_test.cpp" RANDOM_TEST_SOURCE)
+check_cxx_source_compiles("${RANDOM_TEST_SOURCE}" RANDOM_TEST)
+
+file(READ "template_alias_test.cpp" TEMPLATE_ALIAS_TEST_SOURCE)
+check_cxx_source_compiles("${TEMPLATE_ALIAS_TEST_SOURCE}" TEMPLATE_ALIAS_TEST)
+
+#==========need to check for several libraries if they are installed=============
 find_library(BOOST_OPTIONS_SEARCH boost_program_options PATHS "${BOOST_PREFIX}/lib")
 if(NOT BOOST_OPTIONS_SEARCH)
     message(FATAL_ERROR "boost_program_options library not found!")
