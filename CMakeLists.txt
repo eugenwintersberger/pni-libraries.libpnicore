@@ -1,5 +1,4 @@
 cmake_minimum_required(VERSION 2.6)
-
 project(PNIIO)
 set(CMAKE_VERBOSE_MAKEFILE ON)
 
@@ -20,21 +19,6 @@ set(PATCH_VERSION "4")
 set(LIBRARY_VERSION "${MAJOR_VERSION}.${MINOR_VERSION}.${PATCH_VERSION}")
 set(SO_VERSION "1")
 
-#need to check for several libraries if they are installed
-find_library(BOOST_OPTIONS_SEARCH xboost_program_options PATHS "${BOOST_PREFIX}/lib")
-if(NOT BOOST_OPTIONS_SEARCH)
-    message(FATAL_ERROR "boost_program_options library not found!")
-endif(NOT BOOST_OPTIONS_SEARCH)
-
-find_library(BOOST_SYSTEM_SEARCH boost_system PATHS "${BOOST_PREFIX}/lib")
-if(NOT BOOST_SYSTEM_SEARCH)
-    message(FATAL_ERROR "boost_system library not found!")
-endif(NOT BOOST_SYSTEM_SEARCH)
-
-find_library(BOOST_REGEX_SEARCH boost_regex PATHS "${BOOST_PREFIX}/lib")
-if(NOT BOOST_REGEX_SEARCH)
-    message(FATAL_ERROR "boost_regex library not found!")
-endif(not BOOST_REGEX_SEARCH)
-
+add_subdirectory(configure)
 add_subdirectory(src)
 
