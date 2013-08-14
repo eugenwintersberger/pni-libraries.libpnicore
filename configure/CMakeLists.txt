@@ -60,31 +60,58 @@ endif(NOT ${FLOAT128_SIZE}  EQUAL 16)
 #=================try to figure out some compiler capabilities=================
 file(READ "bind_test.cpp" BIND_TEST_SOURCE)
 check_cxx_source_compiles("${BIND_TEST_SOURCE}"  BIND_COMPILER_CHECK)
+if(NOT BIND_COMPILER_CHECK)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DNO_STD_BIND" )
+endif(NOT BIND_COMPILER_CHECK)
 
 file(READ "constexpr_test.cpp" CONST_EXPR_TEST_SOURCE)
 check_cxx_source_compiles("${CONST_EXPR_TEST_SOURCE}" CONST_EXPR_TEST)
+if(NOT CONST_EXPR_TEST)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DNOCEXPR")
+endif(NOT CONST_EXPR_TEST)
 
 file(READ "enum_bug_test.cpp" ENUM_BUG_TEST_SOURCE)
-check_cxx_source_compiles("${ENUM_BUG_TEST_SOURCE}" ENUMB_BUG_TEST)
+check_cxx_source_compiles("${ENUM_BUG_TEST_SOURCE}" ENUM_BUG_TEST)
+if(NOT ENUM_BUG_TEST)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DENUMBUG")
+endif(NOT ENUM_BUG_TEST)
 
 file(READ "explicit_conversion_test.cpp" EXPLICIT_CONVERSION_TEST_SOURCE)
 check_cxx_source_compiles("${EXPLICIT_CONVERSION_TEST_SOURCE}"
     EXPLICIT_CONVERSION_TEST)
+if(NOT EXPLICIT_CONVERSION_TEST)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DNOEXPLICITCONV")
+endif(NOT EXPLICIT_CONVERSION_TEST)
 
 file(READ "foreach_test.cpp" FOREACH_TEST_SOURCE)
 check_cxx_source_compiles("${FOREACH_TEST_SOURCE}" FOREACH_TEST)
+if(NOT FOREACH_TEST)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DNOFOREACH")
+endif(NOT FOREACH_TEST)
 
 file(READ "lambda_function_test.cpp" LAMBDA_FUNCTION_TEST_SOURCE)
 check_cxx_source_compiles("${LAMBDA_FUNCTION_TEST_SOURCE}" LAMBDA_FUNCTION_TEST)
+if(NOT LAMBDA_FUNCTION_TEST)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DNO_LAMBDA_FUNC")
+endif(NOT LAMBDA_FUNCTION_TEST)
 
 file(READ "nullptr_test.cpp" NULLPTR_TEST_SOURCE)
 check_cxx_source_compiles("${NULLPTR_TEST_SOURCE}" NULLPTR_TEST)
+if(NOT NULLPTR_TEST)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Dnullptr=NULL")
+endif(NOT NULLPTR_TEST)
 
 file(READ "random_test.cpp" RANDOM_TEST_SOURCE)
 check_cxx_source_compiles("${RANDOM_TEST_SOURCE}" RANDOM_TEST)
+if(NOT RANDOM_TEST)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DNOCPPRAND")
+endif(NOT RANDOM_TEST)
 
 file(READ "template_alias_test.cpp" TEMPLATE_ALIAS_TEST_SOURCE)
 check_cxx_source_compiles("${TEMPLATE_ALIAS_TEST_SOURCE}" TEMPLATE_ALIAS_TEST)
+if(NOT TEMPLATE_ALIAS_TEST)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DNOTMPALIAS")
+endif(NOT TEMPLATE_ALIAS_TEST)
 
 #==========need to check for several libraries if they are installed=============
 find_library(BOOST_OPTIONS_SEARCH boost_program_options PATHS "${BOOST_PREFIX}/lib")
