@@ -22,7 +22,7 @@
  * Created on: Aug 3, 2012
  *     Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
  */
-#include "service.hpp"
+#include <pni/core/service.hpp>
 
 namespace pni{
 namespace core{

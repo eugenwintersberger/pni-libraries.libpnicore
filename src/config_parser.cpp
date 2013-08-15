@@ -25,7 +25,7 @@
 #include <fstream>
 #include <boost/program_options.hpp>
 #include <boost/filesystem.hpp>
-#include "config_parser.hpp"
+#include <pni/core/config/config_parser.hpp>
 
 namespace popts = boost::program_options;
 

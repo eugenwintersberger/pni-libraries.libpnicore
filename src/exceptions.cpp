@@ -27,7 +27,7 @@
 #include<iostream>
 #include<string>
 
-#include "exceptions.hpp"
+#include <pni/core/exceptions.hpp>
 
 namespace pni{
 namespace core{

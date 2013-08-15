@@ -24,7 +24,7 @@
  *
  */
 
-#include "exception_utils.hpp"
+#include <pni/core/exception_utils.hpp>
 
 namespace pni{
 namespace core{

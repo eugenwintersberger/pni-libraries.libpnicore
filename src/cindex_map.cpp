@@ -20,7 +20,7 @@
  *     Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
  */
 
-#include "cindex_map.hpp"
+#include <pni/core/cindex_map.hpp>
 
 namespace pni{
 namespace core{

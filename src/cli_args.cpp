@@ -20,7 +20,7 @@
  *     Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
  */
 
-#include "cli_args.hpp"
+#include <pni/core/config/cli_args.hpp>
 
 namespace pni{
 namespace core{

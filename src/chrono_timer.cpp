@@ -21,7 +21,7 @@
  *      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
  */
 
-#include "chrono_timer.hpp"
+#include <pni/core/benchmark/chrono_timer.hpp>
 
 
 namespace pni{

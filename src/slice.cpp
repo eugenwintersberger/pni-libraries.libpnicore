@@ -23,7 +23,7 @@
  *     Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
  */
 
-#include "slice.hpp"
+#include <pni/core/slice.hpp>
 #include <iostream>
 
 namespace pni{

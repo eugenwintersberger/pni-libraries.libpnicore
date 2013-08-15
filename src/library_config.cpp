@@ -21,7 +21,7 @@
  *     Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
  */
 
-#include "library_config.hpp"
+#include <pni/core/config/library_config.hpp>
 
 namespace pni{
 namespace core{

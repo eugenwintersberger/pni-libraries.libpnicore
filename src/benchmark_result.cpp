@@ -20,7 +20,7 @@
  *  Created on: Oct 24, 2012
  *      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
  */
-#include "benchmark_result.hpp"
+#include <pni/core/benchmark/benchmark_result.hpp>
 
 namespace pni{
 namespace core{

@@ -20,6 +20,9 @@ set(PATCH_VERSION "4")
 set(LIBRARY_VERSION "${MAJOR_VERSION}.${MINOR_VERSION}.${PATCH_VERSION}")
 set(SO_VERSION "1")
 
-add_subdirectory(configure)
-add_subdirectory(src)
+include_directories("./include")
+include_directories("${CMAKE_CURRENT_BINARY_DIR}/include")
+add_subdirectory("configure")
+add_subdirectory("include")
+add_subdirectory("src")
 

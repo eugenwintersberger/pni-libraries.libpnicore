@@ -21,7 +21,7 @@
  *      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
  */
 
-#include "range_distributor.hpp"
+#include <pni/core/range_distributor.hpp>
 
 namespace pni{
 namespace core{

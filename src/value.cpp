@@ -21,7 +21,7 @@
  *     Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
  */
 
-#include "value.hpp"
+#include <pni/core/value.hpp>
 
 
 namespace pni{

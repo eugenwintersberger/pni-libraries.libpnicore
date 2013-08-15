@@ -21,7 +21,7 @@
  *     Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
  */
 
-#include "index_map_base.hpp"
+#include <pni/core/index_map_base.hpp>
 
 namespace pni{
 namespace core{

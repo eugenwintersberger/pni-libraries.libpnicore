@@ -21,7 +21,7 @@
  *      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
  */
 
-#include "benchmark_runner.hpp"
+#include <pni/core/benchmark/benchmark_runner.hpp>
 
 namespace pni{
 namespace core{

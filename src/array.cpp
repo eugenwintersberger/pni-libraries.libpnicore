@@ -21,7 +21,7 @@
  *     Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
  */
 
-#include "array.hpp"
+#include <pni/core/array.hpp>
 
 namespace pni{
 namespace core{

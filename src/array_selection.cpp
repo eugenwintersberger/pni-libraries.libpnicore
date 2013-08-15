@@ -21,7 +21,7 @@
  *     Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
  */
 
-#include "array_selection.hpp"
+#include <pni/core/array_selection.hpp>
 
 namespace pni{
 namespace core{

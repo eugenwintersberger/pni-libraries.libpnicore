@@ -26,7 +26,7 @@
 #include<cstdio>
 #include<cstdlib>
 
-#include "configuration.hpp"
+#include <pni/core/config/configuration.hpp>
 
 namespace pni{
 namespace core{

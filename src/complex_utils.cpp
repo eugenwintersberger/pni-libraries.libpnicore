@@ -24,7 +24,7 @@
  *
  */
 
-#include "complex_utils.hpp"
+#include <pni/core/complex_utils.hpp>
 
 namespace pni{
 namespace core{
