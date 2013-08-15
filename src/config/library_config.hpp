@@ -22,7 +22,7 @@
  */
 #pragma once
 
-#include "../config.h"
+#include "../config.hpp"
 #include "../types.hpp"
 #include "configuration.hpp"
 #include "config_parser.hpp"
