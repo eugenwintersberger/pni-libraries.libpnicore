@@ -27,4 +27,5 @@ include_directories("${CMAKE_CURRENT_BINARY_DIR}/include")
 add_subdirectory("configure")
 add_subdirectory("include")
 add_subdirectory("src")
+add_subdirectory("doc")
 
