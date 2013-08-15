@@ -13,7 +13,7 @@ install(TARGETS pnicore LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}")
 
 #have to create the pkg-config file
 CONFIGURE_FILE(pnicore.pc.cmake pnicore.pc @ONLY)
-install(FILES pnicore.pc DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")
-install(FILES pnicore.cfg DESTINATION "${CMAKE_INSTALL_SYSCONFDIR}/pnicore")
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/pnicore.pc" DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")
+install(FILES "pnicore.cfg" DESTINATION "${CMAKE_INSTALL_SYSCONFDIR}/pnicore")
 
 
