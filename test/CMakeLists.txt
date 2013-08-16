@@ -5,7 +5,3 @@ link_directories("${CMAKE_CURRENT_BINARY_DIR}/../src")
 add_executable(pnicoretest ${TEST_SOURCES})
 target_link_libraries(pnicoretest pnicore cppunit)
 
-add_test(unittest pnicoretest)
-
-
-

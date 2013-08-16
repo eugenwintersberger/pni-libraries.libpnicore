@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 2.6)
 include(GNUInstallDirs)
 project(PNIIO)
 set(CMAKE_VERBOSE_MAKEFILE ON)
-enable_testing()
 
 #===========================provide some user options==========================
 option(BOOST_PREFIX "installation prefix of the local BOOST installation" "/usr")
