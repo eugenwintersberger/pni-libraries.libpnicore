@@ -37,7 +37,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION(configuration_test);
 //-----------------------------------------------------------------------------
 void configuration_test::setUp()
 {
-    conf_file.add_option(config_option<size_t>("pniutils.nthreads","",
+    conf_file.add_option(config_option<size_t>("pnicore.nthreads","",
                          "number of threads"));
 
     conf_cli.add_option(config_option<size_t>("nthreads","n","number of threads"));
