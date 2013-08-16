@@ -1,12 +1,12 @@
-Installing pniutils
-===================
+Installing pnicore
+==================
 
 1.) Requirements to build the library
     ---------------------------------
 Minimum requirements:
 -> C++ Compiler g++ >= 4.4.1
 -> Boost library > 1.4
--> SCons build system >= 2.0.0
+-> cmake >= 2.6.0
 -> doxygen  (to build the documentation)
 -> cppunit  (to build unit tests)
 -> pkg-config needed to configure additional required packages
@@ -15,80 +15,67 @@ Minimum requirements:
 2.) Build and installation
     ----------------------
 
-2.1) Building and installing the library on Linux
-     --------------------------------------------
-In the simplest case one only wants to install the library and the
-documentation. This can be done with
+libpnicore has switched from scons to cmake as its build system. 
+We strongly recommend to build the library in a separate  build directory. 
+After obtaining the source tree (either by cloning the GIT repository or by
+downloading a tarball) create a build directory
 
-$> scons all install 
+$> mkdir libpnicore_build
 
-By default the build system tries to install everything below /usr/local in the
-corresponding subdirectories (which requires root privileges). A different
-installation prefix can be determined by passing the PREFIX build variable to
-scaons
+We assume here that the sources reside in some other directory named
+'libpnicore'. 
+Before the actual build you have to run cmake for configuration. For that
+purpose change into the build directory
 
-$> scons PREFIX=/opt/pni all install
+$> cd libpnicore_build
+$> cmake ../libpnicore
 
-in which case everything goes below /opt/pni. Before the build runs auto
-configuration takes place. Here we assume that you have all your libraries in
-default locations or at least pkg-config installed which points to the proper
-include directories and library directories. As the BOOST library provides no
-pkg-config file the installation parameters of the library can be set with two
-additional build variables (which are passed like PREFIX to scons)
+and call cmake with the path to the original source directory. Once cmake is
+done you can build the library simply with 
 
-BOOSTINCDIR - header path (up to the boost directory) for BOOST
-BOOSTLIBDIR - library installation directory for BOOST
+$> make 
 
-It is strongly recommended that you use pkg-config to obtain compiler and linker
-flags for libpnicore. The library uses several C++11
-features that are maybe not all supported by your compiler. In this case some
-preprocessor directives are set during the configuration of the library enabling
-several workarounds. During installation the pnicore.pc file for pkg-config is
-installed below $PREFIX/lib/pkgconfig. If your installation prefix is a
-non-standard location it is strongly recommended that you add the path to the
-pkgconfig directory to the PKG_CONFIG_PATH environment variable of your system. 
+and install the software with 
 
-To check if everything worked well try
+$> make install
 
-$> pkg-config --cflags --libs pniutils
+By default everything will be installed below /usr/local to which you have most
+probably no write-permissions. To install the library at an alternative location
+set the CMAKE_INSTALL_PREFIX during the cmake call 
+
+$> cmake -DCMAKE_INSTALL_PREFIX=/home/me/local ../libpnicore
+
+
+3.) Prepare your environment 
+    ------------------------
+
+Before you can actually use the library you may have to set some environment
+variables. LD_LIBRARY_PATH should point to the directory where the library
+binary is installed. Furthermore, when pkg-config should be used one may has to
+set the PKG_CONFIG_PATH which should point to
+CMAKE_INSTALL_PREFIX/lib/pkgconfig. To test if your setup is correct try 
+pkg-config 
+
+$> pkg-config --cflags --libs pnicore
 
 You should then obtain some compiler flags like the path to the libraries header
 files and the linker flags required to link versus libpnicore. 
 
-2.2) Post installation issues - system integration
-     ---------------------------------------------
+4.) Running the tests
+    -----------------
 
-When installed from sources to non-standard locations of your file system two
-environment variables must be modified in order to make the library available to
-your uses.
+We strongly recommend you to run the test code for the library to check if
+everything was built correctly. For this purpose change to the test directory
+below your build directory 
 
-LD_LIBRARY_PATH -> to PREFIX/lib
-PKG_CONFIG_PATH -> to PREFIX/lib/pkgconfig
+$> cd test
 
-The former informs the linker where to find the library while the later one
-helps during build by providing the proper compiler options to link and build
-with pnicore.
+and run 
 
+$> ./pnicoretest
 
-2.3) Building and running unit tests and benchmarks on Linux
-     -------------------------------------------------------
-    
-The testing frame work is slightly different from other software packages as it
-requires the libray and its header files to be installed correctly on your
-system rather than using the binaries in the source directory. The idea is that
-in this case not only the current build is checked but also if system
-integration of the library was successful. The tests can be build with
-
-> scons test
-
-After a successful build the test/ subdirectory in the source tree contains the
-test and benchmark programs. 
-To run the unit-test simply run
-
-$> test/pnicoretest
-
-results of the tests can be found in unitest.xml in the test subdirectory.
-
+If you have not installed the  library yet you may need to set LD_LIBRARY_PATH
+to the src directory of the build directory.
 
 
 
