@@ -8,20 +8,27 @@ set(GCC_COMPILER_RELEASE_FLAGS "-O3")
 #=====================need to check compiler flags=============================
 #check for supported c++11 flags
 
-#check_cxx_compiler_flag("-std=c++11" CPP11_FLAG_SUPPORTED)
-#if(NOT CPP11_FLAG_SUPPORTED)
-#    unset(CPP11_FLAG_SUPPORTED)
-#    check_cxx_compiler_flag("-std=c++0x" CPP11_FLAG_SUPPORTED)
-#    if(NOT CPP11_FLAG_SUPPORTED)
-#        message(FATAL_ERROR,"Compiler does not support C++11 compiler flag")
-#    else()
-#        add_definition(-std=c++0x)
-#    endif()
-#else()
-#add_definition(-std=c++11)
-#endif()
-add_definitions(-std=c++0x)
-set(CMAKE_REQUIRED_FLAGS "${CMAKE_REQUIRED_FLAGS} -std=c++0x")
+#store the original state of CMAKE_REQUIRED_FLAGS
+set(CMAKE_REQUIRED_FLAGS_ORIG "${CMAKE_REQUIRED_FLAGS}")
+
+set(CMAKE_REQUIRED_FLAGS "${CMAKE_REQUIRED_FLAGS_ORIG} -std=c++11")
+check_cxx_source_compiles("int main() { return 0; }" HAS_CXX11_FLAG)
+
+set(CMAKE_REQUIRED_FLAGS "${CMAKE_REQUIRED_FLAGS_ORIG} -std=c++0x")
+check_cxx_source_compiles("int main() { return 0; }" HAS_CXX0X_FLAG)
+
+if(HAS_CXX11_FLAG)
+    add_definitions(-std=c++11)
+    set(CMAKE_REQUIRED_FLAGS "${CMAKE_REQUIRED_FLAGS_ORIG} -std=c++11")
+else()
+    if(HAS_CXX0X_FLAG)
+        add_definitions(-std=c++0x)
+        set(CMAKE_REQUIRED_FLAGS "${CMAKE_REQUIRED_FLAGS_ORIG} -std=c++0x")
+    else()
+        message(FATAL_ERROR,"Compiler does not support C++11 compiler flag")
+    endif()
+endif()
+                          
 
 
 #===================================check the size of data types===============
