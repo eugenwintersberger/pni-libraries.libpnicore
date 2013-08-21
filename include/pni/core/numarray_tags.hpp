@@ -81,7 +81,7 @@ namespace core{
 
     template<> struct is_matrix<matrix_tag>
     {
-        bool value = true;
+       static const bool value = true;
     };
 
     //-------------------------------------------------------------------------
@@ -89,7 +89,7 @@ namespace core{
 
     template<> struct is_vector<vector_tag>
     {
-        bool value = true;
+        static const bool value = true;
     };
 
     //-------------------------------------------------------------------------
@@ -97,7 +97,7 @@ namespace core{
 
     template<> struct is_tensor<tensor_tag>
     {
-        bool value = true;
+        static const bool value = true;
     };
 
 

@@ -1,5 +1,28 @@
 include(CheckTypeSize)
 include(CheckCXXSourceCompiles)
+include(CheckCXXCompilerFlag)
+
+#set the default compiler flags
+set(GCC_COMPILER_RELEASE_FLAGS "-O3")
+
+#=====================need to check compiler flags=============================
+#check for supported c++11 flags
+
+#check_cxx_compiler_flag("-std=c++11" CPP11_FLAG_SUPPORTED)
+#if(NOT CPP11_FLAG_SUPPORTED)
+#    unset(CPP11_FLAG_SUPPORTED)
+#    check_cxx_compiler_flag("-std=c++0x" CPP11_FLAG_SUPPORTED)
+#    if(NOT CPP11_FLAG_SUPPORTED)
+#        message(FATAL_ERROR,"Compiler does not support C++11 compiler flag")
+#    else()
+#        add_definition(-std=c++0x)
+#    endif()
+#else()
+#add_definition(-std=c++11)
+#endif()
+add_definitions(-std=c++0x)
+set(CMAKE_REQUIRED_FLAGS "${CMAKE_REQUIRED_FLAGS} -std=c++0x")
+
 
 #===================================check the size of data types===============
 check_type_size(uint8_t UINT8_SIZE)
@@ -58,56 +81,56 @@ if(NOT ${FLOAT128_SIZE} EQUAL 16)
 endif()
 
 #=================try to figure out some compiler capabilities=================
-file(READ "bind_test.cpp" BIND_TEST_SOURCE)
+file(READ "configure/bind_test.cpp" BIND_TEST_SOURCE)
 check_cxx_source_compiles("${BIND_TEST_SOURCE}"  BIND_COMPILER_CHECK)
 if(NOT BIND_COMPILER_CHECK)
     add_definitions(-DNO_STD_BIND)
 endif()
 
-file(READ "constexpr_test.cpp" CONST_EXPR_TEST_SOURCE)
+file(READ "configure/constexpr_test.cpp" CONST_EXPR_TEST_SOURCE)
 check_cxx_source_compiles("${CONST_EXPR_TEST_SOURCE}" CONST_EXPR_TEST)
 if(NOT CONST_EXPR_TEST)
     add_definitions(-DNOCEXPR)
 endif()
 
-file(READ "enum_bug_test.cpp" ENUM_BUG_TEST_SOURCE)
+file(READ "configure/enum_bug_test.cpp" ENUM_BUG_TEST_SOURCE)
 check_cxx_source_compiles("${ENUM_BUG_TEST_SOURCE}" ENUM_BUG_TEST)
 if(NOT ENUM_BUG_TEST)
     add_definitions(-DENUMBUG)
 endif()
 
-file(READ "explicit_conversion_test.cpp" EXPLICIT_CONVERSION_TEST_SOURCE)
+file(READ "configure/explicit_conversion_test.cpp" EXPLICIT_CONVERSION_TEST_SOURCE)
 check_cxx_source_compiles("${EXPLICIT_CONVERSION_TEST_SOURCE}"
     EXPLICIT_CONVERSION_TEST)
 if(NOT EXPLICIT_CONVERSION_TEST)
     add_definitions(-DNOEXPLICITCONV)
 endif()
 
-file(READ "foreach_test.cpp" FOREACH_TEST_SOURCE)
+file(READ "configure/foreach_test.cpp" FOREACH_TEST_SOURCE)
 check_cxx_source_compiles("${FOREACH_TEST_SOURCE}" FOREACH_TEST)
 if(NOT FOREACH_TEST)
     add_definitions(-DNOFOREACH)
 endif()
 
-file(READ "lambda_function_test.cpp" LAMBDA_FUNCTION_TEST_SOURCE)
+file(READ "configure/lambda_function_test.cpp" LAMBDA_FUNCTION_TEST_SOURCE)
 check_cxx_source_compiles("${LAMBDA_FUNCTION_TEST_SOURCE}" LAMBDA_FUNCTION_TEST)
 if(NOT LAMBDA_FUNCTION_TEST)
     add_definitions(-DNO_LAMBDA_FUNC)
 endif()
 
-file(READ "nullptr_test.cpp" NULLPTR_TEST_SOURCE)
+file(READ "configure/nullptr_test.cpp" NULLPTR_TEST_SOURCE)
 check_cxx_source_compiles("${NULLPTR_TEST_SOURCE}" NULLPTR_TEST)
 if(NOT NULLPTR_TEST)
     add_definitions(-Dnullptr=NULL)
 endif()
 
-file(READ "random_test.cpp" RANDOM_TEST_SOURCE)
+file(READ "configure/random_test.cpp" RANDOM_TEST_SOURCE)
 check_cxx_source_compiles("${RANDOM_TEST_SOURCE}" RANDOM_TEST)
 if(NOT RANDOM_TEST)
     add_definitions(-DNOCPPRAND)
 endif()
 
-file(READ "template_alias_test.cpp" TEMPLATE_ALIAS_TEST_SOURCE)
+file(READ "configure/template_alias_test.cpp" TEMPLATE_ALIAS_TEST_SOURCE)
 check_cxx_source_compiles("${TEMPLATE_ALIAS_TEST_SOURCE}" TEMPLATE_ALIAS_TEST)
 if(NOT TEMPLATE_ALIAS_TEST)
     add_definitions(-DNOTMPALIAS)
