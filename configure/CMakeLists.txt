@@ -1,6 +1,12 @@
 include(CheckTypeSize)
 include(CheckCXXSourceCompiles)
 include(CheckCXXCompilerFlag)
+    
+
+set(CMAKE_INSTALL_LIBDIR "${CMAKE_INSTALL_REPFIX}/lib")
+set(CMAKE_INSTALL_SYSCONFDIR "${CMAKE_INSTALL_PREFIX}/etc")
+set(CMAKE_INSTALL_DOCDIR "${CMAKE_INSTALL_DOCDIR}/share/doc")
+set(CMAKE_INSTALL_INCLUDEDIR "${CMAKE_INSTALL_PREFIX}/include")
 
 #set the default compiler flags
 set(GCC_COMPILER_RELEASE_FLAGS "-O3")
