@@ -1,6 +1,6 @@
 prefix = @CMAKE_INSTALL_PREFIX@
 exec_prefix = ${prefix}
-includedir = @CMAKE_INSTALL_PREFIX@/include
+includedir = ${prefix}/include
 libdir = ${prefix}/lib
 
 Name: pnicore
