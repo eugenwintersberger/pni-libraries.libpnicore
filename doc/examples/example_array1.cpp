@@ -29,7 +29,7 @@ int main(int argc,char **argv)
     {
         a.shape(shape_t({1024,1024}));
     }
-    catch(size_missmatch_error &e)
+    catch(size_mismatch_error &e)
     {
         std::cout<<e<<std::endl;
         std::cout<<"Array size is not the same!"<<std::endl;
