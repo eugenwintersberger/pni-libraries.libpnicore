@@ -60,7 +60,7 @@ namespace core{
 
     //-------------------------------------------------------------------------
     /*!
-    \ingroup numeric_array_class
+    \ingroup numeric_array_classes
     \brief nothing special tag
 
     This is the default tag if a numeric type needs to special treatment. 
@@ -69,7 +69,7 @@ namespace core{
 
     //-------------------------------------------------------------------------
     /*!
-    \ingroup numeric_array_class
+    \ingroup numeric_array_classes
     \brief tensor tag
 
     Identifies an array as a tensor. 
@@ -77,26 +77,70 @@ namespace core{
     struct tensor_tag{};
 
     //-------------------------------------------------------------------------
+    /*!
+    \ingroup numeric_array_classes
+    \brief matrix identifier trait
+
+    Trait to identify numeric arrays with matrix semantics. By tdefault this
+    type is incomplete and has no members. A specialized version exists cases
+    where TAG is a matrix_tag type. 
+    \tparam TAG numeric array tag type
+    */
     template<typename TAG> struct is_matrix;
 
+    /*!
+    \ingroup numeric_array_classes
+    \brief matrix identifier trait 
+
+    Specialization of the is_matrix trait for matrix types.
+    */
     template<> struct is_matrix<matrix_tag>
     {
-       static const bool value = true;
-    };
-
-    //-------------------------------------------------------------------------
-    template<typename TAG> struct is_vector;
-
-    template<> struct is_vector<vector_tag>
-    {
+        //! true if tag is a matrix tag
         static const bool value = true;
     };
 
     //-------------------------------------------------------------------------
+    /*!
+    \ingroup numeric_array_classes
+    \brief vector identifier trait
+
+    Trait to identify arrays with vector semantics. 
+    \tparam TAG numeric array tag type
+    */
+    template<typename TAG> struct is_vector;
+
+    /*!
+    \ingroup numeric_array_classes
+    \brief vector identifier trati
+
+    Specialization of the is_vector trait for vector_tag types.
+    */
+    template<> struct is_vector<vector_tag>
+    {
+        //! true if tag is a vector tag
+        static const bool value = true;
+    };
+
+    //-------------------------------------------------------------------------
+    /*!
+    \brief numeric_array_classes
+    \brief tensor identifier trait
+
+    Trait to identify arrays with tensor semantics. 
+    \tparam TAG numeric array tag type
+    */
     template<typename TAG> struct is_tensor;
 
+    /*!
+    \brief numeric_arary_classes
+    \brief tensor identifier trat
+
+    Spezialization of the is_tensor trait for tensor_tag types.
+    */
     template<> struct is_tensor<tensor_tag>
     {
+        //! true if tag is a tensor tag
         static const bool value = true;
     };
 
