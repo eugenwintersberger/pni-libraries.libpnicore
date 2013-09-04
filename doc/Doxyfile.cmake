@@ -64,7 +64,7 @@ WARN_NO_PARAMDOC       = YES
 #---------------------------------------------------------------------------
 # configuration options related to the input files
 #---------------------------------------------------------------------------
-INPUT                  = @CMAKE_CURRENT_SOURCE_DIR@/../include ../include/ examples/ mainpage 
+INPUT                  = @CMAKE_CURRENT_SOURCE_DIR@/../include ../include/ @CMAKE_CURRENT_SOURCE_DIR@/examples/ mainpage 
 RECURSIVE              = YES
 EXCLUDE_SYMLINKS       = NO
 EXAMPLE_PATH           = examples

@@ -6,5 +6,5 @@ libdir = ${prefix}/lib
 Name: pnicore
 Description: PNI core library
 Version: @LIBRARY_VERSION@
-Cflags: -I${includedir} @CMAKE_CXX_FLAGS@
+Cflags: -I${includedir} @PNICORE_COMPILER_FLAGS@ 
 Libs: -L${libdir} -lpnicore -lboost_program_options -lboost_regex -lboost_system
