@@ -7,8 +7,12 @@ add_dependencies(pnicore config.hpp)
 set_target_properties(pnicore PROPERTIES VERSION "${LIBRARY_VERSION}"
                                        SOVERSION "${SO_VERSION}")
 target_link_libraries(pnicore boost_program_options boost_system boost_regex)
-get_target_property(TARGET_FLAGS pnicore COMPILE_DEFINITIONS ) 
-message("${TARET_FLAGS}") 
+get_directory_property(PNICORE_CMP_FLAGS_LIST DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} COMPILE_DEFINITIONS) 
+
+set(PNICORE_CMP_FLAGS "")
+foreach(FLAG ${PNICORE_CMP_FLAGS_LIST})
+    set(PNICORE_CMP_FLAGS "${PNICORE_CMP_FLAGS} -D${FLAG}")
+endforeach()
 
 #install code
 install(TARGETS pnicore LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}")
