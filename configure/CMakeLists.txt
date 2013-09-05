@@ -1,11 +1,18 @@
 include(CheckTypeSize)
 include(CheckCXXSourceCompiles)
 include(CheckCXXCompilerFlag)
-    
-
-
-#set the default compiler flags
-set(GCC_COMPILER_RELEASE_FLAGS "-O3")
+   
+#setup for GNU CXX compiler
+if(CMAKE_COMPILER_IS_GNUCXX)
+    message("found GNU compiler ...")
+    if("${CMAKE_BUILD_TYPE}" EQUAL "RELEASE")
+        message("setup for release build ...")
+        add_definitions(-03)
+    elseif("${CMAKE_BUILD_TYPE}" EQUAL "DEBUG")
+        message("setup for debug build ...")
+        add_definitions(-O1 -g)
+    endif()
+endif()
 
 #=====================need to check compiler flags=============================
 #check for supported c++11 flags
