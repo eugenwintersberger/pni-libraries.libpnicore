@@ -10,7 +10,6 @@ Basic usage of the DArray template.
 using namespace pni::core;
 
 //some usefull type definitions
-typedef std::vector<size_t> shape_t; //container to describe array shapes
 typedef darray<float32> f32array;    //an array type for Float32 values
 
 

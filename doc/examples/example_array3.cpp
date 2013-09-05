@@ -13,7 +13,6 @@ Using selections
 using namespace pni::core;
 
 //some usefull type definitions
-typedef std::vector<size_t> shape_t; //container to describe array shapes
 typedef std::vector<size_t> index_t; //index type
 typedef darray<float32> f32array;    //an array type for Float32 values
 typedef sarray<float32,3> f32vector; //a static 3-vector type
