@@ -70,7 +70,7 @@ int main(int argc,char **argv)
 
     vector_t v1(std::vector<float32>({1.,2.,3.}));
     std::cout<<"v1 = "<<v1<<std::endl;
-    vector_t v2{std::vector<float32>{4,5,6}};
+    vector_t v2{4,5,6};
     std::cout<<"v2 = "<<v2<<std::endl;
 
     //Vector v{std::vector<Float32>{4,5,6}};
