@@ -6,7 +6,10 @@ add_library(pnicore SHARED ${SOURCES})
 add_dependencies(pnicore config.hpp)
 set_target_properties(pnicore PROPERTIES VERSION "${LIBRARY_VERSION}"
                                        SOVERSION "${SO_VERSION}")
-target_link_libraries(pnicore boost_program_options boost_system boost_regex)
+if(Boost_FOUND)
+    include_directories(${Boost_INCLUDE_DIRS})
+    target_link_libraries(pnicore ${Boost_LIBRARIES})
+endif()
 get_directory_property(PNICORE_CMP_FLAGS_LIST DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} COMPILE_DEFINITIONS) 
 
 

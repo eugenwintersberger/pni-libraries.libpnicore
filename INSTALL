@@ -55,12 +55,24 @@ $> cmake -DCMAKE_VERBOSE_MAKEFILE=ON ../libpnicore
 In some cases one may wants to change the default C++ compiler. This can be done
 with the CMAKE_CXX_COMPILER variable. 
 
-$> cmake -DCMAKE_CXX_COMPILER=g++-4.4 -D.....
+$> cmake -DCMAKE_CXX_COMPILER=g++-4.4 -DCMAKE_C_COMPILER=gcc-4.4 ...
 
 However, this option should be used with care. Do not try to use this feature
 for cross compilation. For this purpose toolchain files are provided. However,
 it is perfectly ok to use this feature to work with different compiler version
-on the same platform. 
+on the same platform. One additional not: if one changes the CXX compiler the
+appropriate C compiler should be passed via the CMAKE_C_COMPILER VARIABLE. 
+
+The library currently provides two build types
+- RELEASE
+- DEBUG
+The former one uses all optimizations available while the latter on is for
+debuging purposes only. To set the build type use the CMAKE_BUILD_TYPE variable 
+
+$> cmake -DCMAKE_BUILD_TYPE=DEBUG ...
+
+It is important to note that the release types are case sensitive. You have to
+use RELEASE or DEBUG.
 
 
 3.) Prepare your environment 
