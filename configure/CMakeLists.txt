@@ -49,10 +49,10 @@ endif()
                           
 
 #===================================check the size of data types===============
-include(CheckTypeSizes.txt)
+include(configure/CheckTypeSizes.txt)
 
 #=================try to figure out some compiler capabilities=================
-include(CheckCompilerCaps.txt)
+include(configure/CheckCompilerCaps.txt)
 
 #==========need to check for several libraries if they are installed=============
 
