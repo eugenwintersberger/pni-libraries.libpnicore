@@ -29,7 +29,10 @@ if("${CMAKE_FAMILY_VERSION}" EQUAL "2.6")
     # Debian 32/64Bit     : lib
     # Debian multiarch    : lib/<ARCHSIG>
     #
-    set(CMAKE_INSTALL_LIBDIR "${CMAKE_INSTALL_PREFIX}/lib")
+    #However, as the time of writing this, the only systems that are available
+    #that do not run cmake 2.8 are old RHEL 6 and 5 systems. Thus we can set the 
+    #default to lib64
+    set(CMAKE_INSTALL_LIBDIR "${CMAKE_INSTALL_PREFIX}/lib64")
 else()
     include(GNUInstallDirs)
 endif()
