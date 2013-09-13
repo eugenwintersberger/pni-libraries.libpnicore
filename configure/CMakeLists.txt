@@ -46,7 +46,9 @@ else()
         message(FATAL_ERROR,"Compiler does not support C++11 compiler flag")
     endif()
 endif()
-                          
+
+#==========================check installation configuration====================
+include(configure/InstallConfig.cmake)                          
 
 #===================================check the size of data types===============
 include(configure/CheckTypeSizes.txt)
