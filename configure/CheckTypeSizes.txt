@@ -49,7 +49,6 @@ if(NOT ${FLOAT64_SIZE} EQUAL 8)
 endif()
 
 check_type_size("long double" FLOAT128_SIZE)
-message(${FLOAT128_SIZE})
 if((NOT ${FLOAT128_SIZE} EQUAL 16) AND (NOT ${FLOAT128_SIZE} EQUAL 12))
     message(FATAL_ERROR "long double size is not 16Byte!")
 endif()
