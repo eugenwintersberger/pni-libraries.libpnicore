@@ -16,11 +16,20 @@
 # This module is not available on cmake 2.6 and thus we have to define this 
 # variables manually
 # 
-if(("${CMAKE_FAMILY_VERSION}" EQUAL "2.6") OR ("${CMAKE_VERSION}" EQUAL "2.8.4"))
+message("${CMAKE_VERSION}")
+if(("${CMAKE_FAMILY_VERSION}" STREQUAL "2.6") OR 
+   ("${CMAKE_VERSION}" STREQUAL "2.8.4"))
+    message("Running custom installation configuration ...")
+
+    #==========================================================================
+    # FIRST WE HAVE TO DEFINE ALL THE RELATIVE PATHS
+    #==========================================================================
     #most of the paths are canonic and thus easy to define
-    set(CMAKE_INSTALL_SYSCONFDIR "${CMAKE_INSTALL_PREFIX}/etc")
-    set(CMAKE_INSTALL_DOCDIR "${CMAKE_INSTALL_PREFIX}/share/doc")
-    set(CMAKE_INSTALL_INCLUDEDIR "${CMAKE_INSTALL_PREFIX}/include")
+    set(CMAKE_INSTALL_SYSCONFDIR "etc")
+    set(CMAKE_INSTALL_DATAROOTDIR "share")
+    set(CMAKE_INSTALL_DATADIR "${CMAKE_INSTALL_DATAROOT_DIR}")
+    set(CMAKE_INSTALL_DOCDIR "doc/libpnicore")
+    set(CMAKE_INSTALL_INCLUDEDIR "include")
 
     #the library installation path is more difficult as we have several options
     #here
@@ -33,10 +42,22 @@ if(("${CMAKE_FAMILY_VERSION}" EQUAL "2.6") OR ("${CMAKE_VERSION}" EQUAL "2.8.4")
     #that do not run cmake 2.8 are old RHEL 6 and 5 systems. Thus we can set the 
     #default to lib64 in case of 64Bit systems and to lib in case of 32Bit
     if(CMAKE_SIZEOF_VOID_P EQUAL 8)
-        set(CMAKE_INSTALL_LIBDIR "${CMAKE_INSTALL_PREFIX}/lib64")
+        set(CMAKE_INSTALL_LIBDIR "lib64")
     else()
-        set(CMAKE_INSTALL_LIBDIR "${CMAKE_INSTALL_PREFIX}/lib")
+        set(CMAKE_INSTALL_LIBDIR "lib")
     endif()
+
+    #==========================================================================
+    # NOW WE DEFINE THE FULL PATH VARIABLES
+    #==========================================================================
+    set(CMAKE_INSTALL_FULL_SYSCONFDIR 
+        "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_SYSCONDIR}")
+    set(CMAKE_INSTALL_FULL_DOCDIR
+        "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_DOCDIR}")
+    set(CMAKE_INSTALL_FULL_INCLUDEDIR
+        "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_INCLUDEDIR}")
+    set(CMAKE_INSTALL_FULL_LIBDIR
+        "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}")
 else()
     include(GNUInstallDirs)
 endif()

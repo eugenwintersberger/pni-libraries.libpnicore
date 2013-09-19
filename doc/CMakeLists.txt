@@ -19,8 +19,8 @@ endif()
 add_custom_command(OUTPUT html COMMAND ${DOXYGEN_EXECUTABLE} Doxyfile)
 add_custom_target(documentation ALL SOURCES "html")
 install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/html" 
-        DESTINATION "${CMAKE_INSTALL_DOCDIR}/libpnicore-doc/")
+        DESTINATION "${CMAKE_INSTALL_FULL_DOCDIR}")
 
 install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/examples" 
-        DESTINATION "${CMAKE_INSTALL_DOCDIR}/libpnicore-doc/")
+        DESTINATION "${CMAKE_INSTALL_FULL_DOCDIR}")
 
