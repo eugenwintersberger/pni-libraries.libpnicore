@@ -1,7 +1,7 @@
 prefix = @CMAKE_INSTALL_PREFIX@
 exec_prefix = ${prefix}
 includedir = ${prefix}/include
-libdir = ${prefix}/lib
+libdir = @CMAKE_INSTALL_LIBDIR@
 
 Name: pnicore
 Description: PNI core library
