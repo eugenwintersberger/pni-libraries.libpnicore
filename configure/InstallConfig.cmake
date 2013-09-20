@@ -28,7 +28,7 @@ if(("${CMAKE_FAMILY_VERSION}" STREQUAL "2.6") OR
     set(CMAKE_INSTALL_SYSCONFDIR "etc")
     set(CMAKE_INSTALL_DATAROOTDIR "share")
     set(CMAKE_INSTALL_DATADIR "${CMAKE_INSTALL_DATAROOT_DIR}")
-    set(CMAKE_INSTALL_DOCDIR "doc/libpnicore")
+    set(CMAKE_INSTALL_DOCDIR "${CMAKE_INSTALL_DATADIR}/doc/libpnicore")
     set(CMAKE_INSTALL_INCLUDEDIR "include")
 
     #the library installation path is more difficult as we have several options
