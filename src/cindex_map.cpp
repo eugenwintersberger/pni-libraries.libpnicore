@@ -28,7 +28,7 @@ namespace core{
     //-------------------------------------------------------------------------
     void cindex_map::_compute_strides()
     {
-        const dbuffer<size_t> &s = shape();
+        const std::vector<size_t> &s = shape();
 
         for(ssize_t i=_strides.size()-1;i>=0;i--)
         {

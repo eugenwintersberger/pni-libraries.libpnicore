@@ -25,7 +25,8 @@
 
 #pragma once
 
-#include "dbuffer.hpp"
+#include <iostream>
+#include <vector>
 
 namespace pni {
 namespace core {
@@ -41,7 +42,7 @@ namespace core {
     {
         private:
             //! buffer storing the shape of the index map
-            dbuffer<size_t> _shape;
+            std::vector<size_t> _shape;
             //! total size represented by the index map
             size_t _size;
 
@@ -132,7 +133,7 @@ namespace core {
             Returns a const reference to the shape buffer.
             \return buffer reference
             */
-            const dbuffer<size_t> &shape() const { return _shape; }
+            const std::vector<size_t> &shape() const { return _shape; }
 
             //-----------------------------------------------------------------
             /*! 
@@ -158,7 +159,7 @@ namespace core {
             */
             template<typename CTYPE> void shape(const CTYPE &c) 
             {
-                _shape = dbuffer<size_t>(c.size());
+                _shape = std::vector<size_t>(c.size());
                 std::copy(c.begin(),c.end(),_shape.begin());
 
                 //update the number of elements

@@ -28,44 +28,25 @@
 #include "darray_test.hpp"
 
 
-#define DYNAMICARRAY_TEST_REGISTRATION(T,BT,ALLOC)\
-static CPPUNIT_NS::AutoRegisterSuite< darray_test<T,BT<T,ALLOC> > >  \
+#define DYNAMICARRAY_TEST_REGISTRATION(T,BT)\
+static CPPUNIT_NS::AutoRegisterSuite< darray_test<T,BT > >  \
              CPPUNIT_MAKE_UNIQUE_NAME(autoRegisterRegistry__ )
 
-DYNAMICARRAY_TEST_REGISTRATION(uint8,dbuffer,new_allocator);
-DYNAMICARRAY_TEST_REGISTRATION(int8,dbuffer,new_allocator);
-DYNAMICARRAY_TEST_REGISTRATION(uint16,dbuffer,new_allocator);
-DYNAMICARRAY_TEST_REGISTRATION(int16,dbuffer,new_allocator);
-DYNAMICARRAY_TEST_REGISTRATION(uint32,dbuffer,new_allocator);
-DYNAMICARRAY_TEST_REGISTRATION(int32,dbuffer,new_allocator);
-DYNAMICARRAY_TEST_REGISTRATION(uint64,dbuffer,new_allocator);
-DYNAMICARRAY_TEST_REGISTRATION(int64,dbuffer,new_allocator);
-DYNAMICARRAY_TEST_REGISTRATION(float32,dbuffer,new_allocator);
-DYNAMICARRAY_TEST_REGISTRATION(float64,dbuffer,new_allocator);
-DYNAMICARRAY_TEST_REGISTRATION(float128,dbuffer,new_allocator);
-DYNAMICARRAY_TEST_REGISTRATION(complex32,dbuffer,new_allocator);
-DYNAMICARRAY_TEST_REGISTRATION(complex64,dbuffer,new_allocator);
-DYNAMICARRAY_TEST_REGISTRATION(complex128,dbuffer,new_allocator);
-DYNAMICARRAY_TEST_REGISTRATION(bool,dbuffer,new_allocator);
-DYNAMICARRAY_TEST_REGISTRATION(string,dbuffer,new_allocator);
-/*
-ARRAY_TEST_REGISTRATION(UInt8,RefBuffer,NewAllocator);
-ARRAY_TEST_REGISTRATION(Int8,RefBuffer,NewAllocator);
-ARRAY_TEST_REGISTRATION(UInt16,RefBuffer,NewAllocator);
-ARRAY_TEST_REGISTRATION(Int16,RefBuffer,NewAllocator);
-ARRAY_TEST_REGISTRATION(UInt32,RefBuffer,NewAllocator);
-ARRAY_TEST_REGISTRATION(Int32,RefBuffer,NewAllocator);
-ARRAY_TEST_REGISTRATION(UInt64,RefBuffer,NewAllocator);
-ARRAY_TEST_REGISTRATION(Int64,RefBuffer,NewAllocator);
-
-ARRAY_TEST_REGISTRATION(Float32,RefBuffer,NewAllocator);
-ARRAY_TEST_REGISTRATION(Float64,RefBuffer,NewAllocator);
-ARRAY_TEST_REGISTRATION(Float128,RefBuffer,NewAllocator);
-
-ARRAY_TEST_REGISTRATION(Complex32,RefBuffer,NewAllocator);
-ARRAY_TEST_REGISTRATION(Complex64,RefBuffer,NewAllocator);
-ARRAY_TEST_REGISTRATION(Complex128,RefBuffer,NewAllocator);
-*/
-
+DYNAMICARRAY_TEST_REGISTRATION(uint8,std::vector<uint8>);
+DYNAMICARRAY_TEST_REGISTRATION(int8,std::vector<int8>);
+DYNAMICARRAY_TEST_REGISTRATION(uint16,std::vector<uint16>);
+DYNAMICARRAY_TEST_REGISTRATION(int16,std::vector<int16>);
+DYNAMICARRAY_TEST_REGISTRATION(uint32,std::vector<uint32>);
+DYNAMICARRAY_TEST_REGISTRATION(int32,std::vector<int32>);
+DYNAMICARRAY_TEST_REGISTRATION(uint64,std::vector<uint64>);
+DYNAMICARRAY_TEST_REGISTRATION(int64,std::vector<int64>);
+DYNAMICARRAY_TEST_REGISTRATION(float32,std::vector<float32>);
+DYNAMICARRAY_TEST_REGISTRATION(float64,std::vector<float64>);
+DYNAMICARRAY_TEST_REGISTRATION(float128,std::vector<float128>);
+DYNAMICARRAY_TEST_REGISTRATION(complex32,std::vector<complex32>);
+DYNAMICARRAY_TEST_REGISTRATION(complex64,std::vector<complex64>);
+DYNAMICARRAY_TEST_REGISTRATION(complex128,std::vector<complex128>);
+//DYNAMICARRAY_TEST_REGISTRATION(bool,std::vector<bool>);
+DYNAMICARRAY_TEST_REGISTRATION(string,std::vector<string>);
 
 

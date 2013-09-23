@@ -25,8 +25,9 @@
 
 #pragma once
 
+#include <array>
 #include "types.hpp"
-#include "sbuffer.hpp"
+#include "type_id_map.hpp"
 #include "static_cindex_map.hpp"
 #include "exceptions.hpp"
 #include "slice.hpp"
@@ -68,8 +69,8 @@ namespace core{
     template<typename T,size_t ...DIMS> class sarray
     {
         private:
-            //! static buffer holding the data
-            sbuffer<T,size_type<DIMS...>::size > _data;    
+            //! static array holding the data
+            std::array<T,size_type<DIMS...>::size > _data;    
             //! static shape describing the arrays dimensionality
             static const static_cindex_map<DIMS...> _shape; 
 
@@ -191,7 +192,7 @@ namespace core{
             //! type of the arrya view
             typedef array_view<array_type> view_type;
             //! storage type
-            typedef sbuffer<T,size_type<DIMS...>::size > storage_type;
+            typedef std::array<T,size_type<DIMS...>::size > storage_type;
             //! shared pointer to this type
             typedef std::shared_ptr<array_type> shared_ptr;
             //! unique pointer to this type
@@ -545,7 +546,7 @@ namespace core{
             \brief get reference to storage
 
             Return a constant reference to the storage of the array. 
-            \return reference to static buffer
+            \return reference to static array
             */
             const storage_type &storage() const
             {

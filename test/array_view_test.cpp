@@ -27,7 +27,6 @@
 #include <boost/current_function.hpp>
 
 #include <pni/core/darray.hpp>
-#include <pni/core/dbuffer.hpp>
 
 #include "array_view_test.hpp"
 
@@ -49,7 +48,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION(array_view_test<darray<complex32> >);
 CPPUNIT_TEST_SUITE_REGISTRATION(array_view_test<darray<complex64> >);
 CPPUNIT_TEST_SUITE_REGISTRATION(array_view_test<darray<complex128> >);
 CPPUNIT_TEST_SUITE_REGISTRATION(array_view_test<darray<string> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_view_test<darray<bool> >);
+//CPPUNIT_TEST_SUITE_REGISTRATION(array_view_test<darray<bool> >);
 
 
 #define SARRAY_VIEW_TEST_REG(T,NX,NY)\
@@ -71,7 +70,7 @@ SARRAY_VIEW_TEST_REG(complex32,NX,NY);
 SARRAY_VIEW_TEST_REG(complex64,NX,NY);
 SARRAY_VIEW_TEST_REG(complex128,NX,NY);
 SARRAY_VIEW_TEST_REG(string,NX,NY);
-SARRAY_VIEW_TEST_REG(bool,NX,NY);
+//SARRAY_VIEW_TEST_REG(bool,NX,NY);
 
 
 

@@ -27,11 +27,12 @@
 
 //#include<memory>
 #include<iostream>
+#include<sstream>
+#include<stdexcept>
 #include<utility>
 #include<complex>
 #include<cstdarg>
 #include<cstdio>
-//#include<typeinfo>
 
 #include "exception_utils.hpp"
 #include "types.hpp"
@@ -40,10 +41,8 @@
 #include "array_view_selector.hpp"
 #include "cindex_map.hpp"
 
-//#include "type_info.hpp"
 #include "type_id_map.hpp"
 #include "type_conversion.hpp"
-#include "container_iterator.hpp"
 
 namespace pni {
 namespace core {
@@ -57,7 +56,7 @@ namespace core {
     \tparam IMAP the index map 
     */
     template<typename T,
-             typename STORAGE=dbuffer<T,new_allocator>,
+             typename STORAGE=std::vector<T>,
              typename IMAP=cindex_map > 
     class darray
     {
@@ -262,8 +261,10 @@ namespace core {
             template<typename ATYPE> 
             explicit darray(const array_view<ATYPE> &a):
                 _imap(a.shape<std::vector<size_t> >()),
-                _data(a)
-            { }
+                _data(a.size())
+            { 
+                std::copy(a.begin(),a.end(),_data.begin());
+            }
 
 
             //-----------------------------------------------------------------
@@ -348,7 +349,7 @@ namespace core {
             Return a constant reference to the array shape. 
             \return array shape const reference
             */
-            const dbuffer<size_t> &shape() const 
+            const std::vector<size_t> &shape() const 
             { 
                 return this->_imap.shape(); 
             }
@@ -414,7 +415,20 @@ namespace core {
             \param i linear index of element
             \return reference to the value at i
             */
-            value_type &at(size_t i) { return this->_data.at(i); } 
+            value_type &at(size_t i) 
+            { 
+                try
+                {
+                    return this->_data.at(i); 
+                }
+                catch(std::out_of_range &error)
+                {
+                    std::stringstream ss;
+                    ss<<"Index "<<i<<" is out of range ("<<size()<<")!";
+                    throw index_error(EXCEPTION_RECORD,ss.str());
+                }
+            
+            } 
 
             //-----------------------------------------------------------------
             /*! \brief get value at i
@@ -425,7 +439,20 @@ namespace core {
             \param i linear index of element
             \return value at i
             */
-            value_type at(size_t i) const { return this->_data.at(i); } 
+            value_type at(size_t i) const 
+            { 
+                try
+                {
+                    return this->_data.at(i); 
+                }
+                catch(std::out_of_range &error)
+                {
+                    std::stringstream ss;
+                    ss<<"Index "<<i<<" is out of range ("<<size()<<")!";
+                    throw index_error(EXCEPTION_RECORD,ss.str());
+                }
+            
+            } 
 
             //-----------------------------------------------------------------
             /*!

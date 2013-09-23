@@ -22,7 +22,11 @@
 
 #pragma once
 
+#include <iostream>
+#include <sstream>
 #include "index_map_base.hpp"
+#include "exceptions.hpp"
+#include "exception_utils.hpp"
 
 namespace pni{
 namespace core{
@@ -41,7 +45,7 @@ namespace core{
     {
         private:
             //! buffer with strides between dimensions
-            dbuffer<size_t> _strides;         
+            std::vector<size_t> _strides;         
 
             //================private methods==================================
             //! compute dimension strides
@@ -154,7 +158,7 @@ namespace core{
             template<typename CTYPE> void shape(const CTYPE &s)
             {
                 index_map_base::shape(s);
-                _strides = dbuffer<size_t>(s.size());
+                _strides = std::vector<size_t>(s.size());
                 _compute_strides();
             }
 

@@ -141,7 +141,7 @@ void darray_test<T,STORAGE>::test_linear_access()
     //--------------------check operators without index checking----------------
 	//access via [] operator
 	for(size_t i=0;i<a1.size();i++) 
-        CPPUNIT_ASSERT_NO_THROW(a1[i] = data[i]);
+        CPPUNIT_ASSERT_NO_THROW(a1[i] = T(data[i]));
 
 	//check if data values have been transfered correctly
 	for(size_t i=0;i<a1.size();i++) 
@@ -150,7 +150,7 @@ void darray_test<T,STORAGE>::test_linear_access()
     //-------------------check with index checking-----------------------------
 	//access via [] operator
 	for(size_t i=0;i<a1.size();i++) 
-        CPPUNIT_ASSERT_NO_THROW(a1.at(i) = data[i]);
+        CPPUNIT_ASSERT_NO_THROW(a1.at(i) = T(data[i]));
 
 	//check if data values have been transfered correctly
 	for(size_t i=0;i<a1.size();i++) 
