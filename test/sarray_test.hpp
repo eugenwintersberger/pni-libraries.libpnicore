@@ -34,6 +34,13 @@
 
 using namespace pni::core;
 
+/*!
+\ingroup array_tests
+\brief test static array template
+
+Testing static arrays for compliance with the interface definition.
+\tparam T data type
+*/
 template<typename T> class sarray_test : public CppUnit::TestFixture
 {
         CPPUNIT_TEST_SUITE(sarray_test<T>);
@@ -48,9 +55,41 @@ template<typename T> class sarray_test : public CppUnit::TestFixture
     public:
         void setUp();
         void tearDown();
+
+        //---------------------------------------------------------------------
+        /*!
+        \brief testing array construction
+        
+        Test all the constructors provided by the template. 
+        */
         void test_construction();
+
+        //---------------------------------------------------------------------
+        /*!
+        \brief test linar access
+
+        Test the linear access to the data stored in the array. This includes
+        testing of the following methods
+
+        \li back()
+        \li front()
+        \li at(size_t i)
+        \li [](size_t i)
+
+        the at(size_t i) method should throw an exception while [] should not. 
+        */
         void test_linear_access();
+
+        //---------------------------------------------------------------------
+        /*!
+        \brief test forward iterator access
+
+        Testing the different iterators provided by the array template. 
+        This includes forward and backward iterators and their const
+        implementations.
+        */
         void test_iterators();
+
         void test_multiindex_access();
         void test_multiindex_access_const();
         void test_typeinfo();
@@ -81,10 +120,26 @@ template<typename T> void sarray_test<T>::test_construction()
     CPPUNIT_ASSERT(a2.rank() == 2);
     CPPUNIT_ASSERT(a2.size() == 6);
 
+    //testing initialization from a vector
+    std::vector<T> data{v1,v2,v3,v4,v5,v6};
+    sarray<T,6> d(data);
+    //vector size does not match - should throw
+    CPPUNIT_ASSERT_THROW((sarray<T,4>(data)),size_mismatch_error);
+
     //testing copy constructor
     sarray<T,2,3> a3(a2);
     CPPUNIT_ASSERT(a3.rank() == a2.rank());
     CPPUNIT_ASSERT(a3.size() == a2.size());
+
+    //construction from a different array
+    sarray<T,3,2> a4(data);
+    //same size but different shape - should throw
+    CPPUNIT_ASSERT_THROW((sarray<T,2,3>(a4)),shape_mismatch_error);
+    sarray<T,4,4> a5;
+    //different size - should throw
+    CPPUNIT_ASSERT_THROW((sarray<T,2,3>(a5)),size_mismatch_error);
+
+    //it makes no sense to have move construction on static arrays!
 }
 
 //------------------------------------------------------------------------------ 

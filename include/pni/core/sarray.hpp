@@ -26,6 +26,8 @@
 #pragma once
 
 #include <array>
+#include <sstream>
+#include <stdexcept>
 #include "types.hpp"
 #include "type_id_map.hpp"
 #include "static_cindex_map.hpp"
@@ -450,10 +452,18 @@ namespace core{
             */
             value_type at(size_t i) const
             {
-                check_index(i,this->size(),EXCEPTION_RECORD);
-
-                return (*this)[i];
+                try
+                {
+                    return _data.at(i);
+                }
+                catch(std::out_of_range &error)
+                {
+                    std::stringstream ss;
+                    ss<<"Array index "<<i<<" out of range ("<<size()<<")!";
+                    throw index_error(EXCEPTION_RECORD,ss.str());
+                }
             }
+
 
             //-----------------------------------------------------------------
             /*! 
@@ -467,9 +477,17 @@ namespace core{
             */
             value_type &at(size_t i) 
             {
-                check_index(i,this->size(),EXCEPTION_RECORD);
+                try
+                {
+                    return _data.at(i);
+                }
+                catch(std::out_of_range &error)
+                {
+                    std::stringstream ss;
+                    ss<<"Array index "<<i<<" out of range ("<<size()<<")!";
+                    throw index_error(EXCEPTION_RECORD,ss.str());
+                }
 
-                return (*this)[i];
             }
 
             //-----------------------------------------------------------------
@@ -477,16 +495,25 @@ namespace core{
             \brief insert value
 
             Insert a data value at linear position i. Method throws an exception
-            if i exceeds the size of the array.
+            if i exceeds the size of the array. This method is basically here
+            for future multithreading applications.
             \throws index_error if i exceeds the arrays size
             \param i index where to insert the value
             \param v value to insert
             */
             void insert(size_t i,const value_type &v)
             {
-                check_index(i,this->size(),EXCEPTION_RECORD);
+                try
+                {
+                    _data.at(i) = v;
+                }
+                catch(std::out_of_range &error)
+                {
+                    std::stringstream ss;
+                    ss<<"Array index "<<i<<" out of range ("<<size()<<")!";
+                    throw index_error(EXCEPTION_RECORD,ss.str());
+                }
 
-                (*this)[i] = v;
             }
 
             //-----------------------------------------------------------------
