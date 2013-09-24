@@ -46,7 +46,8 @@ template<typename T> class sarray_test : public CppUnit::TestFixture
         CPPUNIT_TEST_SUITE(sarray_test<T>);
         CPPUNIT_TEST(test_construction);
         CPPUNIT_TEST(test_linear_access);
-        CPPUNIT_TEST(test_iterators);
+        CPPUNIT_TEST(test_forward_iterators);
+        CPPUNIT_TEST(test_reverse_iterators);
         CPPUNIT_TEST(test_multiindex_access);
         CPPUNIT_TEST(test_multiindex_access_const);
         CPPUNIT_TEST(test_typeinfo);
@@ -84,11 +85,17 @@ template<typename T> class sarray_test : public CppUnit::TestFixture
         /*!
         \brief test forward iterator access
 
-        Testing the different iterators provided by the array template. 
-        This includes forward and backward iterators and their const
-        implementations.
+        Testing forward iterators.
         */
-        void test_iterators();
+        void test_forward_iterators();
+
+        //---------------------------------------------------------------------
+        /*!
+        \brief test reverse iterator access
+
+        Testing the reverse iterators.
+        */
+        void test_reverse_iterators();
 
         void test_multiindex_access();
         void test_multiindex_access_const();
@@ -183,7 +190,7 @@ template<typename T> void sarray_test<T>::test_linear_access()
 }
 
 //------------------------------------------------------------------------------
-template<typename T> void sarray_test<T>::test_iterators()
+template<typename T> void sarray_test<T>::test_forward_iterators()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
@@ -205,6 +212,28 @@ template<typename T> void sarray_test<T>::test_iterators()
         check_equality(*iter,*diter++);
 }
 
+//------------------------------------------------------------------------------
+template<typename T> void sarray_test<T>::test_reverse_iterators()
+{
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+
+    sarray<T,2,3> a1;
+
+    //--------------------check standard iterator----------------
+	//access via [] operator
+    std::vector<T> data(a1.size());
+    data_generator::fill(data.begin(),data.end(),uniform_distribution<T>());
+
+    //----------------------testing write data---------------------------------
+    auto diter = data.rbegin();
+    for(auto iter = a1.rbegin(); iter!=a1.rend();iter++)
+        *iter = *diter++;
+   
+    //-----------------------test reading data---------------------------------
+    diter = data.rbegin();
+    for(auto iter=a1.rbegin();iter!=a1.rend();iter++)
+        check_equality(*iter,*diter++);
+}
 //-----------------------------------------------------------------------------
 template<typename T> void sarray_test<T>::test_multiindex_access()
 {   

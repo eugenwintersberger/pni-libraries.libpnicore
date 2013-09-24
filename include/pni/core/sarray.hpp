@@ -203,6 +203,11 @@ namespace core{
             typedef typename storage_type::iterator iterator; 
             //! const iterator
             typedef typename storage_type::const_iterator const_iterator; 
+            //! reverse iterator
+            typedef typename storage_type::reverse_iterator reverse_iterator;
+            //! const reverse iterator
+            typedef typename storage_type::const_reverse_iterator
+                const_reverse_iterator;
             //! type of the index map
             typedef static_cindex_map<DIMS...> map_type;
             //===============public members====================================
@@ -569,6 +574,28 @@ namespace core{
             //-----------------------------------------------------------------
             //! get const iterator to last element
             const_iterator end() const   { return this->_data.end(); }
+
+            //-----------------------------------------------------------------
+            //! get reverse iterator to last element
+            reverse_iterator rbegin() { return this->_data.rbegin(); }
+
+            //-----------------------------------------------------------------
+            //! get const reverse iterator to last element
+            const_reverse_iterator rbegin() const 
+            { 
+                return this->_data.rbegin();
+            }
+
+            //-----------------------------------------------------------------
+            //! get reverse iterator to 0-1 element
+            reverse_iterator rend() { return this->_data.rend(); }
+
+            //-----------------------------------------------------------------
+            //! get const reverse iterator to 0-1 element
+            const_reverse_iterator rend() const 
+            {
+                return this->_data.rend();
+            }
 
             //=======================inquery methods===========================
             //! get number of elements
