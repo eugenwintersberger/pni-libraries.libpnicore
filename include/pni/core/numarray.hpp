@@ -430,7 +430,7 @@ namespace core{
             Get a reference to the element at linear index i. This method
             performs index checking and throws an exception if i exceeds the
             total size of the array.
-            \throws IndexError if i exceeds the total size of the array
+            \throws index_error if i exceeds the total size of the array
             \param i linear index of the element
             \return reference to the element at linear index i
             */
@@ -441,7 +441,7 @@ namespace core{
             \brief get value of element
 
             Return the value of an element at linear index i. 
-            \throws IndexError if i exceeds the total size of the array
+            \throws index_error if i exceeds the total size of the array
             \param i linear index of the element
             \return value at linear index i
             */
@@ -452,7 +452,7 @@ namespace core{
             \brief insert element
 
             Set the value of element at linaer index i to v. 
-            \throws IndexError if i exceeds the total size of the array
+            \throws index_error if i exceeds the total size of the array
             \param i linear index where to insert the value
             \param v value to insert
             */
@@ -460,6 +460,46 @@ namespace core{
             {
                 this->_array.insert(i,v);
             }
+
+            //-----------------------------------------------------------------
+            /*!
+            \brief reference to the first element
+
+            Return a reference to the first element in the linear view of the
+            array.
+            \return reference to the first element
+            */
+            value_type &front() { return this->_array.front(); }
+
+            //-----------------------------------------------------------------
+            /*!
+            \brief value of the first element
+
+            Return the first value of the first element in the linear view of
+            the array. 
+            \return value of first element
+            */
+            value_type front() const { return this->_array.front(); }
+
+            //----------------------------------------------------------------
+            /*!
+            \brief reference to the last element
+
+            Return a reference to the last element in the linear view on the
+            array.
+            \return reference to last element
+            */
+            value_type &back() { return this->_array.back(); }
+
+            //-----------------------------------------------------------------
+            /*!
+            \brief value of last element
+
+            Return the value of the last element in the linear view on the
+            array.
+            \return value of last element
+            */
+            value_type back() const { return this->_array.back(); }
 
             //-----------------------------------------------------------------
             /*!
