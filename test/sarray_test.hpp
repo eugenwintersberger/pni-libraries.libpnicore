@@ -168,6 +168,11 @@ template<typename T> void sarray_test<T>::test_linear_access()
 	for(size_t i=0;i<a1.size();i++) 
         check_equality(data[i],a1.at(i));
 
+    //-------------------check front() and back()------------------------------
+    check_equality(data.front(),a1.front());
+    check_equality(data.back(),a1.back());
+
+    //should throw as the index does not match
     CPPUNIT_ASSERT_THROW(a1.at(a1.size()+10),index_error);
 
 }

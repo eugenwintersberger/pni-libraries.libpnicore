@@ -517,6 +517,44 @@ namespace core{
             }
 
             //-----------------------------------------------------------------
+            /*!
+            \brief reference to first element
+
+            Return a reference to the first element in the linear view of the
+            array. 
+            \return reference to first element
+            */
+            value_type &front() { return _data.front(); }
+
+            //-----------------------------------------------------------------
+            /*!
+            \brief first element
+
+            Return the first element in the linear view of the array.
+            \return value of first element
+            */
+            value_type front() const { return _data.front(); }
+
+            //-----------------------------------------------------------------
+            /*!
+            \brief reference to last value
+
+            Return a reference to the last value of in the linear view of the
+            array.
+            \return reference to last value
+            */
+            value_type &back() { return _data.back(); }
+
+            //-----------------------------------------------------------------
+            /*!
+            \brief return last value
+
+            Return the last value in the linear view of the array. 
+            \return value of last element
+            */
+            value_type back() const { return _data.back(); }
+
+            //-----------------------------------------------------------------
             //! get iterator to first element
             iterator begin() { return this->_data.begin(); } 
             
