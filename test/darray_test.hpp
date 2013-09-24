@@ -48,6 +48,7 @@ class darray_test : public CppUnit::TestFixture
         CPPUNIT_TEST(test_construction);
         CPPUNIT_TEST(test_linear_access);
         CPPUNIT_TEST(test_iterators);
+        CPPUNIT_TEST(test_reverse_iterators);
         CPPUNIT_TEST(test_multiindex_access);
         CPPUNIT_TEST(test_multiindex_access_const);
         CPPUNIT_TEST(test_typeinfo);
@@ -62,6 +63,7 @@ class darray_test : public CppUnit::TestFixture
         void test_assignment();
         void test_linear_access();
         void test_iterators();
+        void test_reverse_iterators();
         void test_multiindex_access();
         void test_multiindex_access_const();
         void test_typeinfo();
@@ -184,7 +186,6 @@ void darray_test<T,STORAGE>::test_linear_access()
     //this would cause a segmentation fault. Maybe we should add some check here
     //at least for the standard methods (not for [])
     //CPPUNIT_ASSERT_NO_THROW(a2.back()=value);
-
 }
 
 //------------------------------------------------------------------------------
@@ -213,6 +214,31 @@ void darray_test<T,STORAGE>::test_iterators()
         check_equality(*iter,*diter++); 
 }
 
+//------------------------------------------------------------------------------
+template<typename T,typename STORAGE>
+void darray_test<T,STORAGE>::test_reverse_iterators()
+{
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+    darray<T,STORAGE> a1(s1,STORAGE(12));
+    std::vector<T> data(a1.size());
+    data_generator::fill(data.begin(),data.end(),uniform_distribution<T>());
+
+    //--------------------check standard iterator----------------
+    auto diter = data.rbegin();
+    for(auto iter = a1.rbegin();iter!=a1.rend();++iter)
+        *iter = *diter++;
+
+    diter = data.rbegin();
+    for(auto iter = a1.rbegin();iter!=a1.rend();++iter)
+        check_equality(*iter,*diter++);
+
+    //-------------------check const iterator-----------------------------
+    const darray<T,STORAGE> &a = a1;
+
+    diter = data.rbegin();
+    for(auto iter = a.rbegin();iter!=a.rend();++iter)
+        check_equality(*iter,*diter++); 
+}
 //-----------------------------------------------------------------------------
 template<typename T,typename STORAGE>
 void darray_test<T,STORAGE>::test_multiindex_access()
