@@ -13,7 +13,8 @@ include(UseLATEX.cmake)
 #                   COMMAND ${PDFLATEX_COMPILER} -shell-escape libpnicore_ug.tex
 #                   DEPENDS "libpnicore_ug.tex")
 add_latex_document(libpnicore_ug.tex
-    INPUTS tex/arrays.tex tex/types.tex
+    INPUTS tex/arrays.tex tex/types.tex tex/array_general_concepts.tex 
+    tex/appendix_multidim_arrays.tex
     CONFIGURE libpnicore_ug.tex
     USE_PDF
     )

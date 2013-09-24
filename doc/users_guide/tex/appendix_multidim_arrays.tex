@@ -1,0 +1,42 @@
+
+\section{Index maps}
+
+\begin{minted}{cpp}
+class index_map
+{
+public:
+//=======================constructors and destructor=======================
+index_map(); //default constructible
+
+//========================assignment operators=============================
+Shape &operator=(const Shape &s); //copy assignable 
+
+//=====================index and offset related methods====================
+
+//compute offset from an argument list
+template<typename ...ITYPES> size_t
+offset(ITYPES ...indices);
+
+//compute offset from a container type
+template<CTYPE> size_t offset(const
+CTYPE &v);
+
+//compute the multidimensional index for a particular offset value and 
+//return the result in an arbitrary container type
+template<CTYPE> CTYPE index(size_t offset);
+
+//compute the multidimensional index for a particular offset value and 
+//store the result in an already existing container
+template<CTYPE> void index(size_t offset,CTYPE &c);
+
+//=======================accessing shape parameters========================
+//number of dimensions
+size_t rank() const; 
+//number of elements that can be addressed by this map
+size_t size() const; 
+
+//return number of elements along each dimension of the shape
+template<CONT> CONT shape() const;
+
+};
+\end{minted}

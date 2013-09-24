@@ -1,1 +1,45 @@
 %%%documentation on arrays
+
+\section{General concepts}\label{sec:array:general_concepts}
+\input{tex/array_general_concepts.tex}
+
+\section{Static arrays}\label{sec:array:static_arrays}
+
+Static arrays are the most simple array objects provided by \libpnicore. Their
+data type as well as their complete shape is determined at compile time. Though
+they are not very flexible they are extremely fast as all the memory resides on
+the stack. They are primarily intended to be used for small objects like 3D
+vectors or matrices. 
+Instantiation of such a static array goes as simple as this
+\begin{minted}{cpp}
+#include <pni/core/sarray.hpp>
+
+using namespace pni::core;
+
+sarray<float64,3,3> matrix;
+\end{minted}
+Internally an instance of the {\tt std::array<T,N>} template (provided by the
+STL) is used to store the data. A static array can be created from every other
+array type or container type (a list or a vector).
+
+\begin{minted}{cpp}
+//construction from initializer list
+sarray<float64,3> v1 = {1.0,2.0,3.0}; 
+//copy construction from an already existing instance 
+sarray<float64,3> v2(v1);
+
+std::vector<float64> data{-1.2,4.0,-5.4,10.8};
+sarray<float64,2,2> matrix(data);
+\end{minted}
+
+
+
+\section{Dynamic arrays}\label{sec:array:dynamic_arrays}
+
+\section{Array slicing}\label{sec:array:array_slicing}
+
+\section{Numeric arrays}\label{sec:array:numeric_arrays}
+
+\section{The \arrayerasure\ type erasure}\label{sec:array:type_erasure}
+
+\section{Using arrays with low level libraries}
