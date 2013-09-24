@@ -35,6 +35,12 @@
 
 using namespace pni::core;
 
+/*!
+\brief darray template test
+
+\tparam T data type
+\tparam STORAGE storage container
+*/
 template<typename T,typename STORAGE>
 class darray_test : public CppUnit::TestFixture
 {
@@ -157,8 +163,27 @@ void darray_test<T,STORAGE>::test_linear_access()
         CPPUNIT_ASSERT_NO_THROW(check_equality(data[i],a1.at(i)));
 
     CPPUNIT_ASSERT_THROW(a1.at(a1.size() + 100),index_error);
-    CPPUNIT_ASSERT_THROW(a1.insert(2*a1.size(),uniform_distribution<T>()()),
-                         index_error);
+   
+    //-------------------testing insert-----------------------------------------
+    T value = uniform_distribution<T>()();
+    CPPUNIT_ASSERT_THROW(a1.insert(2*a1.size(),value),index_error);
+    CPPUNIT_ASSERT_NO_THROW(a1.insert(0,value));
+    check_equality(a1.at(0),value);
+
+    //------------------check front---------------------------------------------
+    a1.front() = data.back();
+    check_equality(a1.front(),data.back());
+    
+    //------------------check back----------------------------------------------
+    a1.back() = data.front();
+    check_equality(a1.back(),data.front());
+    
+    darray<T,STORAGE> a2;
+    CPPUNIT_ASSERT_NO_THROW(a2.back());
+    CPPUNIT_ASSERT_NO_THROW(a2.front());
+    //this would cause a segmentation fault. Maybe we should add some check here
+    //at least for the standard methods (not for [])
+    //CPPUNIT_ASSERT_NO_THROW(a2.back()=value);
 
 }
 

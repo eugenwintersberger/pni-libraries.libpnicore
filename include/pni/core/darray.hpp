@@ -179,6 +179,11 @@ namespace core {
             typedef typename STORAGE::iterator iterator;
             //! const iterator type
             typedef typename STORAGE::const_iterator const_iterator; 
+            //! reverse iterator
+            typedef typename STORAGE::reverse_iterator reverse_iterator;
+            //! const reverse iterator
+            typedef typename STORAGE::const_reverse_iterator
+                const_reverse_iterator;
             //! map type
             typedef IMAP map_type;
             
@@ -468,6 +473,46 @@ namespace core {
                 this->at(i)=value;
             }
 
+            //-----------------------------------------------------------------
+            /*!
+            \brief reference to first element
+
+            Return a reference to the first element in the linear view of the
+            array.
+            \return reference to first element
+            */
+            value_type &front() { return this->_data.front(); }
+
+            //-----------------------------------------------------------------
+            /*!
+            \brief value of first element
+
+            Return the value of the first element in the linear view of the
+            array.
+            \return value of the first element
+            */
+            value_type front() const { return this->_data.front(); }
+
+            //-----------------------------------------------------------------
+            /*!
+            \brief reference to last element
+
+            Return a reference to the last element in the linear view of the
+            array.
+            \return reference to last element
+            */
+            value_type &back() { return this->_data.back(); }
+
+            //-----------------------------------------------------------------
+            /*!
+            \brief value of last element
+
+            Return the value of the last element in the linear view of the
+            array. 
+            \return value of last element
+            */
+            value_type back() const { return this->_data.back(); }
+
 
             //-----------------------------------------------------------------
             /*! 
@@ -589,6 +634,28 @@ namespace core {
             \return iterator to last element
             */
             const_iterator end() const { return this->_data.end(); }
+
+            //-----------------------------------------------------------------
+            //! return reverse iterator to last element
+            reverse_iterator rbegin() { return this->_data.rbegin(); }
+
+            //-----------------------------------------------------------------
+            //! return const reverse iterator to last element
+            const_reverse_iterator rbegin() const
+            {
+                return this->_data.rbegin(); 
+            }
+
+            //-----------------------------------------------------------------
+            //! return reverse iterator to 0-1 element
+            reverse_iterator rend() { return this->_data.rend(); }
+
+            //-----------------------------------------------------------------
+            //! return const reverse iterator to 0-1 element
+            const_reverse_iterator rend() const
+            {
+                return this->_data.rend();
+            }
 
 
     };
