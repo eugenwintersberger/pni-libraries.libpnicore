@@ -290,6 +290,8 @@ namespace core{
             */
             value_type &operator[](size_t i)
             {
+                //compute the multidimensional index in the original array for
+                //the linear index i in the view
                 auto index = this->_imap.template index<std::vector<size_t> >(i);
                 return (*this)(index); 
             }
@@ -306,14 +308,58 @@ namespace core{
             */
             value_type operator[](size_t i) const
             {
+                //compute the multidimensional index in the original array for
+                //the linear index i in the view
                 auto index = this->_imap.template index<std::vector<size_t> >(i);
                 return (*this)(index); 
             }
 
             //-----------------------------------------------------------------
+            value_type &at(size_t i)
+            {
+                
+                return (*this)[i];
+            }
+
+            //-----------------------------------------------------------------
+            value_type at(size_t i) const
+            {
+                return (*this)[i];
+            }
+
+            //-----------------------------------------------------------------
+            void insert(size_t i,const value_type &v)
+            {
+                this->at(i) = v;
+            }
+
+            //-----------------------------------------------------------------
+            value_type &front()
+            {
+                return this->at(0);
+            }
+
+            value_type front() const 
+            {
+                return this->at(0);
+            }
+
+            value_type &back()
+            {
+                return this->at(size()-1);
+            }
+
+            value_type back() const 
+            {
+                return this->at(size()-1);
+            }
+
+
+
+            //-----------------------------------------------------------------
             /*! \brief get size
 
-            Return the total number of elements referenced by this view.
+            Return the total number of elements referenced by this view. 
             \return total number of elements
             */
             size_t size() const

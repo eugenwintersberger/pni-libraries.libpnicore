@@ -136,7 +136,8 @@ template<typename ATYPE> void array_view_test<ATYPE>::test_construction()
 //-----------------------------------------------------------------------------
 template<typename ATYPE> void array_view_test<ATYPE>::test_linear_access()
 { 
-    typedef std::vector<typename ATYPE::value_type> ctype;
+    typedef typename ATYPE::value_type value_type;
+    typedef std::vector<value_type> ctype;
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
     //create an array and fill it with random data
@@ -148,6 +149,15 @@ template<typename ATYPE> void array_view_test<ATYPE>::test_linear_access()
     auto view = a(slice(0,1),slice(2,7));
     for(size_t i=0;i<view.size();++i)
         check_equality(view[i],a(0,2+i));
+
+    //-----------------check for front-----------------------------------------
+    value_type v = a.front();
+    CPPUNIT_ASSERT_NO_THROW(view.front() = v);
+    check_equality(view.front(),v);
+
+    //-----------------check for back------------------------------------------
+    CPPUNIT_ASSERT_NO_THROW(view.back()=v);
+    check_equality(view.back(),v);
 
 }
 
