@@ -175,6 +175,11 @@ template<typename T> void sarray_test<T>::test_linear_access()
     //should throw as the index does not match
     CPPUNIT_ASSERT_THROW(a1.at(a1.size()+10),index_error);
 
+    //------------------need to check the insert method------------------------
+    a1.insert(0,data[1]);
+    check_equality(a1[0],data[1]);
+    CPPUNIT_ASSERT_THROW(a1.insert(a1.size(),data[1]),index_error);
+
 }
 
 //------------------------------------------------------------------------------
