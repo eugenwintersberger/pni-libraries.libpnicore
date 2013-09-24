@@ -19,6 +19,6 @@ add_latex_document(libpnicore_ug.tex
     )
 add_custom_target(users_guide ALL SOURCES "libpnicore_ug.pdf")
 
-install(DIRECTORY users_guide
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/libpnicore_ug.pdf" 
         DESTINATION "${CMAKE_INSTALL_FULL_DOCDIR}")
 
