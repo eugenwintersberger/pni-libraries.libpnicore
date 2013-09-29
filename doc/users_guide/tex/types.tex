@@ -1,1 +1,189 @@
 %%%documentation on data types
+
+\newcommand{\dtype}[1]{{\tt #1}}
+\newcommand{\podt}[2]{\dtype{#1#2}}
+\newcommand{\typeid}[1]{{\tt type\_id\_t::#1}}
+\newcommand{\typeidmap}{{\tt type\_id\_map}}
+\newcommand{\idtypemap}{{\tt id\_type\_map}}
+
+
+%%%==================================================================================
+\begin{table}[tb]
+\centering
+\begin{tabular}{c|p{0.5\linewidth}}
+\hline
+data type & description \\
+\hline\hline
+\podt{uint}{8}      & 8Bit unsinged integer           \\
+\podt{int}{8}       & 8Bit signed integer             \\
+\podt{uint}{16}     & 16Bit unsigned integer          \\
+\podt{int}{16}      & 16Bit signed integer            \\
+\podt{uint}{32}     & 32Bit unsigned integer          \\
+\podt{int}{32}      & 32Bit signed integer            \\
+\podt{uint}{64}     & 64Bit unsigned integer          \\
+\podt{int}{64}      & 64Bit signed integer            \\
+\podt{float}{32}    & 32Bit IEEE floating point type  \\
+\podt{float}{64}    & 64Bit IEEE floating point type  \\
+\podt{float}{128}   & 128Bit IEEE floating point type \\
+\podt{complex}{32}  & 32Bit IEEE complex float type   \\
+\podt{complex}{64}  & 64Bit IEEE complex float type   \\
+\podt{complex}{128} & 128Bit IEEE complex float type  \\
+\dtype{string}      & string  type                    \\
+\dtype{binary}      & binary type                     \\
+\hline
+\end{tabular}
+\caption{\small\label{tab:types:baisc_types} An overview of the basic POD data
+types provided by \libpnicore.}
+\end{table}
+%%%===================================================================================
+\libpnicore\ provides a set of primitive data types, defined in {\tt
+pni/core/types.hpp}, along with a set of utility functions
+and data structures in order to manage data types. These types are ensured to
+have the same size on every platform and architecture the library is
+compiled\footnote{This is not true for the 128 Bit long double type which is
+different on some RISC architectures.}.
+Table~\ref{tab:types:basic_types_str} gives an overview over all types defined in {\tt
+pni/core/types.hpp}. Most of these types are just {\tt typedef} statements to
+existing plain old data (POD) types. The complex types use the {\tt
+std::complex} template provided by the C++ standard library. This is also true
+for the {\tt string} type which is just a {\tt typedef} to {\tt std::string}. 
+
+More interesting is the {\tt binary} type. The notion behind this type is to
+transfer purly uninterpreted byte data. Typically one would use {\tt uint8} for
+this purpose. However, {\tt uint8} carries numeric semantics and provides
+arithmetic operators that should not be applied to this kind of data. Thus the
+extra {\tt binary} type. Which is essentially a thin wrapper around an integer
+type with all numeric operators stipped away from it. 
+
+\section{Identifying types at runtime}
+%%%============================================================================
+\begin{table}[tb]
+\centering
+\begin{minipage}[t]{0.49\linewidth}
+\centering
+\begin{tabular}{c|p{0.48\linewidth}}
+\hline
+data type & {\tt type\_id\_t} value \\
+\hline\hline
+\podt{uint}{8}      & \typeid{UINT8}      \\
+\podt{int}{8}       & \typeid{INT8}       \\
+\podt{uint}{16}     & \typeid{UINT16}     \\
+\podt{int}{16}      & \typeid{INT16}      \\
+\podt{uint}{32}     & \typeid{UINT32}     \\
+\podt{int}{32}      & \typeid{INT32}      \\
+\podt{uint}{64}     & \typeid{UINT64}     \\
+\podt{int}{64}      & \typeid{INT64}      \\
+\podt{float}{32}    & \typeid{FLOAT32}    \\
+\podt{float}{64}    & \typeid{FLOAT64}    \\
+\podt{float}{128}   & \typeid{FLOAT128}   \\
+\podt{complex}{32}  & \typeid{COMPLEX32}  \\
+\podt{complex}{64}  & \typeid{COMPLEX64}  \\
+\podt{complex}{128} & \typeid{COMPLEX128} \\
+\dtype{string}      & \typeid{STRING}     \\
+\dtype{binary}      & \typeid{BINARY}     \\
+\hline
+\end{tabular}
+\caption{\small\label{tab:types:type_ids} \libpnicore s basic types and thier ID
+values.}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.49\linewidth}
+\centering
+\begin{tabular}{c|p{0.48\linewidth}}
+\hline
+data type & string representation \\
+\hline\hline
+\podt{uint}{8}      &   {\tt "uint8"} , {\tt "ui8"} \\
+\podt{int}{8}       &   {\tt "int8"} , {\tt "i8"}   \\
+\podt{uint}{16}     &   {\tt "uint16"}, {\tt "ui16"}  \\
+\podt{int}{16}      &   {\tt "int16"}, {\tt "i16"}   \\
+\podt{uint}{32}     &   {\tt "uint32"}, {\tt "ui32"}   \\
+\podt{int}{32}      &   {\tt "int32"}, {\tt "i32"}  \\
+\podt{uint}{64}     &   {\tt "uint64"}, {\tt "ui64"}  \\
+\podt{int}{64}      &   {\tt "int64"}, {\tt "i64"}  \\
+\podt{float}{32}    &   {\tt "float32"}, {\tt "f32"}  \\
+\podt{float}{64}    &   {\tt "float64"}, {\tt "f64"}  \\
+\podt{float}{128}   &   {\tt "float128"}, {\tt "f128"}  \\
+\podt{complex}{32}  &   {\tt "complex32"}, {\tt "c32"}  \\
+\podt{complex}{64}  &   {\tt "complex64"}, {\tt "c64"}  \\
+\podt{complex}{128} &   {\tt "complex128"}, {\tt "c128"}  \\
+\dtype{string}      &   {\tt "string"}, {\tt "str"}  \\
+\dtype{binary}      &   {\tt "binary"} , {\tt binary}  \\
+\hline
+\end{tabular}
+\caption{\small\label{tab:types:type_str} Data types and their string
+representations.}
+\end{minipage}
+\end{table}
+
+%%%============================================================================
+At some point in time a program might has to determin the element type of
+containers at runtime. The information might come from user input or any other
+source. 
+\libpnicore\ provides i.e. two mechanisms to identify types: they can be either
+identified via the {\tt type\_id\_t} enumerations or from a string
+representation. 
+The former ones are shown in Tab.~\ref{tab:types:type_ids} while the latter ones
+in Tab.~\ref{tab:types:type_str}. Enumerations are most probably the most
+applicable mechanism when a type has to be identified by a program. However,
+users will prefer the string representation. 
+
+The IDs of types can be used with type maps provided by \libpnicore
+\begin{description}
+\item[\typeidmap] maps a type to its ID value defined in {\tt
+pni/core/type\_id\_map.hpp}
+\item[\idtypemap] maps from an ID to a type defined in {\tt
+pni/core/id\_type\_map}
+\end{description}
+The usage of these maps is rather simple. Consider for instance a function that
+returns the ID of the element type of a container. A possible implementation
+would be the following
+\begin{minted}[frame=lines]{cpp}
+#incldue<pni/core/types.hpp>
+#include<pni/core/type_id_map.hpp>
+
+using namespace pni::core;
+
+template<typename CTYPE> type_id_t type_id(const CTYPE &c)
+{
+    typedef typename CTYPE::value_type value_type;
+    return type_id_map<value_type>::type_id;
+}
+
+//one could use this with 
+auto data = get_data(...);
+
+std::cout<<type_id(data)<<std::endl;
+\end{minted}
+As follows from this example the {\tt std::ostream} operator is overloaded for
+type ids. Type IDs are enumerations and thus can be used as template parameters. 
+This allows for the implementation of a type map from ID values to types. 
+\begin{minted}[frame=lines]{cpp}
+#incldue<pni/core/types.hpp>
+#include<pni/core/id_type_map.hpp>
+
+using namespace pni::core;
+
+
+\end{minted}
+
+There are several utilities available to work with string representations of
+types. They are basically all contained in the {\tt pni/io/nx/utils/types.hpp}
+header file. The most important ones are two maps, one from stings to type IDs
+and one vice verse. Their usage is rather simple
+\begin{minted}{cpp}
+    #include <pni/core/type_utils.hpp>
+
+    using namespace pni::core;
+
+    //get a type id from a string
+    String rep = "string";
+    type_id_t id = str2type_id["str"];
+
+    //get a string from a type id
+    rep = type_id2str[type_id_t::FLOAT32];
+\end{minted}
+
+
+\section{Type erasures}
+
