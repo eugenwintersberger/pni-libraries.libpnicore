@@ -44,7 +44,7 @@ namespace core{
     \param c const reference to the container
     \return type ID of the stored elements.
     */
-    template<typename CTYPE,typename ...CPARAMS> 
+    template<template<typename...> class CTYPE,typename ...CPARAMS> 
         type_id_t type_id(const CTYPE<CPARAMS...> &c)
     {
         typedef typename CTYPE<CPARAMS...>::value_type value_type;
@@ -69,6 +69,28 @@ namespace core{
         return type_id_map<T>::type_id;
     }
 
+    //------------------------------------------------------------------------
+    template<typename T> type_id_t type_id(const std::complex<T> &v)
+    {
+        return type_id_map<std::complex<T> >::type_id;
+    }
+
+    //------------------------------------------------------------------------
+    /*!
+    \ingroup type_classes
+    \brief get type id of binary 
+
+    This is an overload for the type_id template for scalar values for the
+    binary type. As this is a template the compiler would choose the wrong
+    version (the one for containers). 
+    \param v instance of binary
+    \return type_id_t::BOOL
+    */
+    type_id_t type_id(const binary &v);
+
+    type_id_t type_id(const string &v);
+
+
     //-------------------------------------------------------------------------
     /*!
     \ingroup type_classes
@@ -90,7 +112,7 @@ namespace core{
      {"float128",type_id_t::FLOAT128},{"f128",type_id_t::FLOAT128},
      {"complex32",type_id_t::COMPLEX32},{"c32",type_id_t::COMPLEX32},
      {"complex64",type_id_t::COMPLEX64},{"c64",type_id_t::COMPLEX64},
-     {"complex128",type_id_t::COMPLEX128},{"c128",type_id_t::COMPLEX128}
+     {"complex128",type_id_t::COMPLEX128},{"c128",type_id_t::COMPLEX128},
      {"string",type_id_t::STRING},{"str",type_id_t::STRING},
      {"binary",type_id_t::BINARY}
     };
@@ -103,7 +125,7 @@ namespace core{
     This map provides mapping from type_id to the string representations of a
     type.
     */
-    std::map<string,type_id_t> type_id2str =
+    std::map<type_id_t,string> type_id2str =
     {{type_id_t::UINT8,"uint8"},   {type_id_t::INT8,"int8"},
      {type_id_t::UINT16,"uint16"}, {type_id_t::INT16,"int16"},
      {type_id_t::UINT32,"uint32"}, {type_id_t::INT32,"int32"},

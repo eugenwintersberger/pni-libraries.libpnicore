@@ -4,6 +4,7 @@ set(TEST_SOURCES pnicoretest.cpp
                  types/type_class_test.cpp
                  types/type_info_test.cpp
                  types/type_maps_test.cpp
+                 types/type_id_scalar_test.cpp
                  )
 #add_operator_test.cpp
 #array_selection_test.cpp
