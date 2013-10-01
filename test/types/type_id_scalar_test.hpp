@@ -40,6 +40,10 @@ using namespace pni::core;
                   &TestFixtureType::test_type_id<type,type_id_t::id>,           \
                   context.makeFixture() ) ) )
 
+/*!
+\brief testing type_id for scalars
+
+*/
 class type_id_scalar_test : public CppUnit::TestFixture
 {
         CPPUNIT_TEST_SUITE(type_id_scalar_test);

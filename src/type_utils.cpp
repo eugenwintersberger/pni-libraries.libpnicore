@@ -28,11 +28,13 @@
 namespace pni{
 namespace core{
 
+    //-------------------------------------------------------------------------
     type_id_t type_id(const binary &v)
     {
         return type_id_t::BINARY;
     }
 
+    //-------------------------------------------------------------------------
     type_id_t type_id(const string &v)
     {
         return type_id_t::STRING;

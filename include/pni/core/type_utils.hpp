@@ -70,6 +70,16 @@ namespace core{
     }
 
     //------------------------------------------------------------------------
+    /*!
+    \ingroup type_classes
+    \brief get type id of complex numbers
+
+    Return the ID of a complex number. We need this special overload otherwise
+    the container version would be loaded. 
+    \tparam T base type of the complex type
+    \param v reference to instance
+    \return type id of the complex type
+    */
     template<typename T> type_id_t type_id(const std::complex<T> &v)
     {
         return type_id_map<std::complex<T> >::type_id;
@@ -88,6 +98,15 @@ namespace core{
     */
     type_id_t type_id(const binary &v);
 
+    //-------------------------------------------------------------------------
+    /*!
+    \ingroup type_classes
+    \brief get string type id
+
+    This returns the type id for a string.
+    \param v ref to string instance
+    \return type id of a string
+    */
     type_id_t type_id(const string &v);
 
 
@@ -98,7 +117,7 @@ namespace core{
     
     A map instance mapping the string representations of types to type IDs.
     */
-    std::map<string,type_id_t> str2type_id =
+    static const std::map<string,type_id_t> str2type_id =
     {{"uint8",type_id_t::UINT8},{"ui8",type_id_t::UINT8},
      {"int8",type_id_t::INT8},{"i8",type_id_t::INT8},
      {"uint16",type_id_t::UINT16},{"ui16",type_id_t::UINT16},
@@ -125,7 +144,7 @@ namespace core{
     This map provides mapping from type_id to the string representations of a
     type.
     */
-    std::map<type_id_t,string> type_id2str =
+    static const std::map<type_id_t,string> type_id2str =
     {{type_id_t::UINT8,"uint8"},   {type_id_t::INT8,"int8"},
      {type_id_t::UINT16,"uint16"}, {type_id_t::INT16,"int16"},
      {type_id_t::UINT32,"uint32"}, {type_id_t::INT32,"int32"},

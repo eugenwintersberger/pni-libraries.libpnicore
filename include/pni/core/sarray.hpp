@@ -649,6 +649,26 @@ namespace core{
 
     template<typename T,size_t ...DIMS> const
         static_cindex_map<DIMS...> sarray<T,DIMS...>::_shape = static_cindex_map<DIMS...>();
+    
+    //-------------------------------------------------------------------------
+    /*!
+    \ingroup type_classes
+    \brief get type id of an sarray
+
+    Return the type id of an static array type. The default container template
+    cannot be used as the template contains size_t parameters and not only
+    types.
+    \tparam T primitive type
+    \tparam INDICES indices of the static array type
+    \param v reference to an instance of a static array
+    \return type ID 
+    \
+    */
+    template<typename T,size_t ...INDICES> 
+        type_id_t type_id(const sarray<T,INDICES...> &v)
+    {
+        return type_id_map<T>::type_id;
+    }
 
     //-------------------------------------------------------------------------
     /*!
