@@ -26,10 +26,13 @@
 #include <list>
 #include <pni/core/darray.hpp>
 #include <pni/core/sarray.hpp>
+#include <pni/core/numarray.hpp>
 
 #include "type_id_container_test.hpp"
 
 template<typename T> using sarray_temp = sarray<T,1>;
+template<typename T> using snarray = numarray<sarray_temp<T> >;
+template<typename T> using dnarray = numarray<darray<T> >;
 
 #define CTEST_REGISTRATION(ct,type,tid)\
 static CPPUNIT_NS::AutoRegisterSuite< type_id_container_test<ct<type>,tid > >  \
@@ -135,3 +138,42 @@ CTEST_REGISTRATION(sarray_temp,complex128,type_id_t::COMPLEX128);
 CTEST_REGISTRATION(sarray_temp,string,type_id_t::STRING);
 CTEST_REGISTRATION(sarray_temp,binary,type_id_t::BINARY);
 
+//====================snarray test=============================================
+CTEST_REGISTRATION(snarray,uint8,type_id_t::UINT8);
+CTEST_REGISTRATION(snarray,int8,type_id_t::INT8);
+CTEST_REGISTRATION(snarray,uint16,type_id_t::UINT16);
+CTEST_REGISTRATION(snarray,int16,type_id_t::INT16);
+CTEST_REGISTRATION(snarray,uint32,type_id_t::UINT32);
+CTEST_REGISTRATION(snarray,int32,type_id_t::INT32);
+CTEST_REGISTRATION(snarray,uint64,type_id_t::UINT64);
+CTEST_REGISTRATION(snarray,int64,type_id_t::INT64);
+
+CTEST_REGISTRATION(snarray,float32,type_id_t::FLOAT32);
+CTEST_REGISTRATION(snarray,float64,type_id_t::FLOAT64);
+CTEST_REGISTRATION(snarray,float128,type_id_t::FLOAT128);
+CTEST_REGISTRATION(snarray,complex32,type_id_t::COMPLEX32);
+CTEST_REGISTRATION(snarray,complex64,type_id_t::COMPLEX64);
+CTEST_REGISTRATION(snarray,complex128,type_id_t::COMPLEX128);
+
+CTEST_REGISTRATION(snarray,string,type_id_t::STRING);
+CTEST_REGISTRATION(snarray,binary,type_id_t::BINARY);
+
+//====================dnarray test=============================================
+CTEST_REGISTRATION(dnarray,uint8,type_id_t::UINT8);
+CTEST_REGISTRATION(dnarray,int8,type_id_t::INT8);
+CTEST_REGISTRATION(dnarray,uint16,type_id_t::UINT16);
+CTEST_REGISTRATION(dnarray,int16,type_id_t::INT16);
+CTEST_REGISTRATION(dnarray,uint32,type_id_t::UINT32);
+CTEST_REGISTRATION(dnarray,int32,type_id_t::INT32);
+CTEST_REGISTRATION(dnarray,uint64,type_id_t::UINT64);
+CTEST_REGISTRATION(dnarray,int64,type_id_t::INT64);
+
+CTEST_REGISTRATION(dnarray,float32,type_id_t::FLOAT32);
+CTEST_REGISTRATION(dnarray,float64,type_id_t::FLOAT64);
+CTEST_REGISTRATION(dnarray,float128,type_id_t::FLOAT128);
+CTEST_REGISTRATION(dnarray,complex32,type_id_t::COMPLEX32);
+CTEST_REGISTRATION(dnarray,complex64,type_id_t::COMPLEX64);
+CTEST_REGISTRATION(dnarray,complex128,type_id_t::COMPLEX128);
+
+CTEST_REGISTRATION(dnarray,string,type_id_t::STRING);
+CTEST_REGISTRATION(dnarray,binary,type_id_t::BINARY);

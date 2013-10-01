@@ -827,6 +827,30 @@ namespace core{
 
         return i;
     }
+    
+    //-------------------------------------------------------------------------
+    /*!
+    \ingroup type_classes
+    \brief get type id of a numarray 
+
+    Return the ID of the numarray instance.
+    \tparam ATYPE array type
+    \tparam TAGTYPE semantic tag type
+    \tparam IPA inplace arithmetic template
+    \tparam BMT_FLAG binary arithmetic flag
+    \param v reference to an instance of the numeric array
+    \return type ID 
+    \
+    */
+    template<typename ATYPE,
+             typename TAGTYPE,
+             template<typename> class IPA,
+             bool BMT_FLAG> 
+    type_id_t type_id(const numarray<ATYPE,TAGTYPE,IPA,BMT_FLAG> &v)
+    {
+        typedef numarray<ATYPE,TAGTYPE,IPA,BMT_FLAG> numarray_t;
+        return type_id_map<typename numarray_t::value_type>::type_id;
+    }
 
     //===================Multiplication operator================================
     /*!
