@@ -29,6 +29,7 @@
 #include <pni/core/numarray.hpp>
 
 #include "type_id_container_test.hpp"
+using namespace std;
 
 template<typename T> using sarray_temp = sarray<T,1>;
 template<typename T> using snarray = numarray<sarray_temp<T> >;
@@ -38,26 +39,27 @@ template<typename T> using dnarray = numarray<darray<T> >;
 static CPPUNIT_NS::AutoRegisterSuite< type_id_container_test<ct<type>,tid > >  \
              CPPUNIT_MAKE_UNIQUE_NAME(autoRegisterRegistry__ )
 
-#define TEST_FOR_CONTAINER(CT)\
-    CTEST_REGISTRATION(CT,uint8,type_id_t::UINT8);\
-    CTEST_REGISTRATION(CT,int8,type_id_t::INT8);\
-    CTEST_REGISTRATION(CT,uint16,type_id_t::UINT16);\
-    CTEST_REGISTRATION(CT,int16,type_id_t::INT16);\
-    CTEST_REGISTRATION(CT,uint32,type_id_t::UINT32);\
-    CTEST_REGISTRATION(CT,int32,type_id_t::INT32);\
-    CTEST_REGISTRATION(CT,uint64,type_id_t::UINT64);\
-    CTEST_REGISTRATION(CT,int64,type_id_t::INT64);\
-    CTEST_REGISTRATION(CT,float32,type_id_t::FLOAT32);\
-    CTEST_REGISTRATION(CT,float64,type_id_t::FLOAT64);\
-    CTEST_REGISTRATION(CT,float128,type_id_t::FLOAT128);\
-    CTEST_REGISTRATION(CT,complex32,type_id_t::COMPLEX32);\
-    CTEST_REGISTRATION(CT,complex64,type_id_t::COMPLEX64);\
-    CTEST_REGISTRATION(CT,complex128,type_id_t::COMPLEX128);\
-    CTEST_REGISTRATION(CT,string,type_id_t::STRING);\
-    CTEST_REGISTRATION(CT,binary,type_id_t::BINARY)
+#define TEST_FOR_CONTAINER(cont)\
+    CTEST_REGISTRATION(cont,uint8,type_id_t::UINT8);\
+    CTEST_REGISTRATION(cont,int8,type_id_t::INT8);\
+    CTEST_REGISTRATION(cont,uint16,type_id_t::UINT16);\
+    CTEST_REGISTRATION(cont,int16,type_id_t::INT16);\
+    CTEST_REGISTRATION(cont,uint32,type_id_t::UINT32);\
+    CTEST_REGISTRATION(cont,int32,type_id_t::INT32);\
+    CTEST_REGISTRATION(cont,uint64,type_id_t::UINT64);\
+    CTEST_REGISTRATION(cont,int64,type_id_t::INT64);\
+    CTEST_REGISTRATION(cont,float32,type_id_t::FLOAT32);\
+    CTEST_REGISTRATION(cont,float64,type_id_t::FLOAT64);\
+    CTEST_REGISTRATION(cont,float128,type_id_t::FLOAT128);\
+    CTEST_REGISTRATION(cont,complex32,type_id_t::COMPLEX32);\
+    CTEST_REGISTRATION(cont,complex64,type_id_t::COMPLEX64);\
+    CTEST_REGISTRATION(cont,complex128,type_id_t::COMPLEX128);\
+    CTEST_REGISTRATION(cont,string,type_id_t::STRING);\
+    CTEST_REGISTRATION(cont,binary,type_id_t::BINARY)
 
-//TEST_FOR_CONTAINER(std::vector);
+TEST_FOR_CONTAINER(vector);
 //=========================vector test=========================================
+/*
 CTEST_REGISTRATION(std::vector,uint8,type_id_t::UINT8);
 CTEST_REGISTRATION(std::vector,int8,type_id_t::INT8);
 CTEST_REGISTRATION(std::vector,uint16,type_id_t::UINT16);
@@ -76,6 +78,7 @@ CTEST_REGISTRATION(std::vector,complex128,type_id_t::COMPLEX128);
 
 CTEST_REGISTRATION(std::vector,string,type_id_t::STRING);
 CTEST_REGISTRATION(std::vector,binary,type_id_t::BINARY);
+*/
 
 //====================list test================================================
 CTEST_REGISTRATION(std::list,uint8,type_id_t::UINT8);
@@ -177,3 +180,4 @@ CTEST_REGISTRATION(dnarray,complex128,type_id_t::COMPLEX128);
 
 CTEST_REGISTRATION(dnarray,string,type_id_t::STRING);
 CTEST_REGISTRATION(dnarray,binary,type_id_t::BINARY);
+

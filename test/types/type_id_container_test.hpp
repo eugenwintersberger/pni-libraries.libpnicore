@@ -27,6 +27,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <pni/core/types.hpp>
 #include <pni/core/type_utils.hpp>
+#include <pni/core/array.hpp>
 
 
 using namespace pni::core;
@@ -60,3 +61,4 @@ void type_id_container_test<CTYPE,ID>::test_type_id()
     CTYPE instance;
     CPPUNIT_ASSERT(type_id(instance)==ID);
 }
+
