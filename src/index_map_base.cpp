@@ -26,6 +26,7 @@
 namespace pni{
 namespace core{
 
+    //--------------------------------------------------------------------------
     void index_map_base::_size_update()
     {
         size_t tmp = 0;

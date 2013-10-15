@@ -47,9 +47,12 @@ void index_map_base_test::test_construction()
     CPPUNIT_ASSERT(im1.rank()==0);
 
     //construction from initializer list
+    std::vector<size_t> v{1,2,3,4,5};
     index_map_base im2{1,2,3,4,5};
     CPPUNIT_ASSERT(im2.size()==2*3*4*5);
     CPPUNIT_ASSERT(im2.rank()==5);
+    CPPUNIT_ASSERT(std::equal(im2.shape().begin(),im2.shape().end(),
+                              v.begin()));
 
     //construction from a container
     std::list<size_t> s{3,2,5,6};
@@ -107,6 +110,21 @@ void index_map_base_test::test_access()
 
     //this is trivial
     CPPUNIT_ASSERT(std::equal(s.begin(),s.end(),im1.shape().begin()));
+}
 
+
+//-----------------------------------------------------------------------------
+void index_map_base_test::test_reshape()
+{
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+
+    std::vector<size_t> s{3,2,5,7};
+    index_map_base im1(s);
+
+    s = {4,2,2};
+    im1.shape(s);
+    CPPUNIT_ASSERT(im1.rank() == 3);
+    CPPUNIT_ASSERT(im1.size() == 4*2*2);
+    CPPUNIT_ASSERT(std::equal(im1.shape().begin(),im1.shape().end(),s.begin()));
 
 }

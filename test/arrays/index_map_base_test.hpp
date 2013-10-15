@@ -35,6 +35,7 @@ class index_map_base_test: public CppUnit::TestFixture
         CPPUNIT_TEST(test_construction);
         CPPUNIT_TEST(test_assignment);
         CPPUNIT_TEST(test_access);
+        CPPUNIT_TEST(test_reshape);
         CPPUNIT_TEST_SUITE_END();
     public:
         void setUp();
@@ -43,5 +44,6 @@ class index_map_base_test: public CppUnit::TestFixture
         void test_construction();
         void test_assignment();
         void test_access();
+        void test_reshape();
 
 };

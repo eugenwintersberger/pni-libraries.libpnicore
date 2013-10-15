@@ -7,6 +7,7 @@ set(TEST_SOURCES pnicoretest.cpp
                  types/type_id_scalar_test.cpp
                  types/type_id_container_test.cpp
                  types/type_str_id_test.cpp
+                 arrays/index_map_base_test.cpp
                  )
 #add_operator_test.cpp
 #array_selection_test.cpp
@@ -20,7 +21,6 @@ set(TEST_SOURCES pnicoretest.cpp
 #div_operator_test.cpp
 #EqualityCheck.cpp
 #index_iterator_test.cpp
-#index_map_base_test.cpp
 #index_map_test.cpp
 #iterator_test.cpp
 #mult_operator_test.cpp
