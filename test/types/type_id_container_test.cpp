@@ -57,9 +57,8 @@ static CPPUNIT_NS::AutoRegisterSuite< type_id_container_test<ct<type>,tid > >  \
     CTEST_REGISTRATION(cont,string,type_id_t::STRING);\
     CTEST_REGISTRATION(cont,binary,type_id_t::BINARY)
 
-TEST_FOR_CONTAINER(vector);
+//TEST_FOR_CONTAINER(vector);
 //=========================vector test=========================================
-/*
 CTEST_REGISTRATION(std::vector,uint8,type_id_t::UINT8);
 CTEST_REGISTRATION(std::vector,int8,type_id_t::INT8);
 CTEST_REGISTRATION(std::vector,uint16,type_id_t::UINT16);
@@ -78,7 +77,6 @@ CTEST_REGISTRATION(std::vector,complex128,type_id_t::COMPLEX128);
 
 CTEST_REGISTRATION(std::vector,string,type_id_t::STRING);
 CTEST_REGISTRATION(std::vector,binary,type_id_t::BINARY);
-*/
 
 //====================list test================================================
 CTEST_REGISTRATION(std::list,uint8,type_id_t::UINT8);

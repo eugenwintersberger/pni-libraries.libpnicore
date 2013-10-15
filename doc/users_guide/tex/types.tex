@@ -32,7 +32,7 @@ data type & description \\
 \dtype{binary}      & binary type                     \\
 \hline
 \end{tabular}
-\caption{\small\label{tab:types:baisc_types} An overview of the basic POD data
+\caption{\small\label{tab:types:basic_types} An overview of the basic POD data
 types provided by \libpnicore.}
 \end{table}
 %%%===================================================================================
@@ -42,7 +42,7 @@ and data structures in order to manage data types. These types are ensured to
 have the same size on every platform and architecture the library is
 compiled\footnote{This is not true for the 128 Bit long double type which is
 different on some RISC architectures.}.
-Table~\ref{tab:types:basic_types_str} gives an overview over all types defined in {\tt
+Table~\ref{tab:types:basic_types} gives an overview over all types defined in {\tt
 pni/core/types.hpp}. Most of these types are just {\tt typedef} statements to
 existing plain old data (POD) types. The complex types use the {\tt
 std::complex} template provided by the C++ standard library. This is also true
@@ -117,71 +117,46 @@ representations.}
 \end{table}
 
 %%%============================================================================
-At some point in time a program might has to determin the element type of
-containers at runtime. The information might come from user input or any other
-source. 
-\libpnicore\ provides i.e. two mechanisms to identify types: they can be either
-identified via the {\tt type\_id\_t} enumerations or from a string
-representation. 
-The former ones are shown in Tab.~\ref{tab:types:type_ids} while the latter ones
-in Tab.~\ref{tab:types:type_str}. Enumerations are most probably the most
-applicable mechanism when a type has to be identified by a program. However,
-users will prefer the string representation. 
-
-The IDs of types can be used with type maps provided by \libpnicore
-\begin{description}
-\item[\typeidmap] maps a type to its ID value defined in {\tt
-pni/core/type\_id\_map.hpp}
-\item[\idtypemap] maps from an ID to a type defined in {\tt
-pni/core/id\_type\_map}
-\end{description}
-The usage of these maps is rather simple. Consider for instance a function that
-returns the ID of the element type of a container. A possible implementation
-would be the following
+The recommended way of how to deal with type information at runtime is are the
+{\tt type\_id\_t} enumerations.
+At some point in time a program might has to determine the type ID of a variable
+type or of the element type of a container.  The basic facility to achieve this
+is the {\tt type\_id} function defined in {\tt pni/core/type\_utils.hpp}.  The
+usage of this function is rather simple as shown here
 \begin{minted}[frame=lines]{cpp}
 #incldue<pni/core/types.hpp>
-#include<pni/core/type_id_map.hpp>
+#include<pni/core/type_utils.hpp>
 
 using namespace pni::core;
-
-template<typename CTYPE> type_id_t type_id(const CTYPE &c)
-{
-    typedef typename CTYPE::value_type value_type;
-    return type_id_map<value_type>::type_id;
-}
 
 //one could use this with 
 auto data = get_data(...);
 
 std::cout<<type_id(data)<<std::endl;
 \end{minted}
-As follows from this example the {\tt std::ostream} operator is overloaded for
-type ids. Type IDs are enumerations and thus can be used as template parameters. 
-This allows for the implementation of a type map from ID values to types. 
-\begin{minted}[frame=lines]{cpp}
-#incldue<pni/core/types.hpp>
-#include<pni/core/id_type_map.hpp>
+The important thing to notice here is that no matter what type the {\tt
+get\_data} function returns, {\tt type\_id} will give you the type ID.
 
-using namespace pni::core;
-
-
-\end{minted}
-
-There are several utilities available to work with string representations of
-types. They are basically all contained in the {\tt pni/io/nx/utils/types.hpp}
-header file. The most important ones are two maps, one from stings to type IDs
-and one vice verse. Their usage is rather simple
+Another important scenario is the situation where a user uses the string
+representation to tell a program with which type it should work. 
+In such a situation you either want to convert the string representation of a
+type into a value of {\tt type\_id\_t} or vica verse. The library provides two
+functions for this purpose {\tt type\_id\_from\_str} which converts the string
+representation of a type to a value of {\tt type\_id\_t} and 
+{\tt str\_from\_type\_id} which performs the opposite operation. 
+The usage of this two guys is again straight forward.
 \begin{minted}{cpp}
+    #include <pni/core/types.hpp>
     #include <pni/core/type_utils.hpp>
 
     using namespace pni::core;
 
     //get a type id from a string
-    String rep = "string";
-    type_id_t id = str2type_id["str"];
+    string rep = "string";
+    type_id_t id = type_id_from_str("str");
 
     //get a string from a type id
-    rep = type_id2str[type_id_t::FLOAT32];
+    rep = str_from_type_id(type_id_t::FLOAT32);
 \end{minted}
 
 

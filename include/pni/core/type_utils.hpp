@@ -29,85 +29,93 @@
 
 namespace pni{
 namespace core{
-
-    /*!
-    \ingroup type_classes
-    \brief get type id of element type
-
-    Returns the type id of the data stored in a contianer. The container can be
-    an array or any other STL container having a public value_type member type. 
-    This is the default implementation. However, types that provide other means
-    of providing its data type can provide an overloaded version of this
-    function. 
-    \tparam CTYPE container type 
-    \tparam CPARAMS types of the container template parameter list
-    \param c const reference to the container
-    \return type ID of the stored elements.
-    */
-    template<template<typename...> class CTYPE,typename ...CPARAMS> 
-        type_id_t type_id(const CTYPE<CPARAMS...> &c)
-    {
-        typedef typename CTYPE<CPARAMS...>::value_type value_type;
-        return type_id_map<value_type>::type_id;
-    }
-
-    //-------------------------------------------------------------------------
-    /*!
-    \ingroup type_classes
-    \brief get type id of a POD
-
-    Return the ID of the type of an instance of a primitve data type. The value
-    passed to the function is not of importance it just provides the type
-    information.
-    \tparam T primitive type
-    \param v reference to an instance of T 
-    \return type ID 
-    \
-    */
-    template<typename T> type_id_t type_id(const T &v)
-    {
-        return type_id_map<T>::type_id;
-    }
-
+    
     //------------------------------------------------------------------------
-    /*!
-    \ingroup type_classes
-    \brief get type id of complex numbers
-
-    Return the ID of a complex number. We need this special overload otherwise
-    the container version would be loaded. 
-    \tparam T base type of the complex type
-    \param v reference to instance
-    \return type id of the complex type
-    */
-    template<typename T> type_id_t type_id(const std::complex<T> &v)
+    //call this to obtain the type id of a complex value
+    template<typename T> type_id_t get_type_id(const std::complex<T> &v)
     {
         return type_id_map<std::complex<T> >::type_id;
     }
 
     //------------------------------------------------------------------------
+    //call this to obtain the type ID of a binary value
+    type_id_t get_type_id(const binary &v);
+
+    //-------------------------------------------------------------------------
+    //call this to obtain the type ID of a string value
+    type_id_t get_type_id(const string &v);
+
+
+    //-------------------------------------------------------------------------
+    //if T is POD this is the one you use
+    template<typename T > 
+    type_id_t get_type_id(const T &v,
+                          typename std::enable_if<
+                          std::is_pod<T>::value
+                          >::type* = 0)
+    {
+        return type_id_map<T>::type_id;
+    }
+
+    //-------------------------------------------------------------------------
+    // if T is a container type use this function
+    template<typename T> 
+    type_id_t get_type_id(const T &v,
+                          typename std::enable_if<
+                          !std::is_pod<T>::value
+                          >::type* = 0)
+    {
+        return type_id_map<typename T::value_type>::type_id;
+    }
+    
+    //-------------------------------------------------------------------------
     /*!
     \ingroup type_classes
-    \brief get type id of binary 
+    \brief get type id of an object
 
-    This is an overload for the type_id template for scalar values for the
-    binary type. As this is a template the compiler would choose the wrong
-    version (the one for containers). 
-    \param v instance of binary
-    \return type_id_t::BOOL
+    This function returns the type ID of an instance of an object. In the case
+    of scalar data the type if a variable is returned. If the argument passed is
+    a container the type id of the element type is returned.
+    \tparam T type if the object
+    \param v instance of T 
+    \return type ID 
+    \
     */
-    type_id_t type_id(const binary &v);
+    template<typename T> type_id_t type_id(T v)
+    {
+        typedef typename std::remove_const<
+            typename std::remove_pointer<T>::type
+            >::type  type;
+        return get_type_id(type());
+    }
 
     //-------------------------------------------------------------------------
     /*!
     \ingroup type_classes
-    \brief get string type id
+    \brief get a type ID from a string
 
-    This returns the type id for a string.
-    \param v ref to string instance
-    \return type id of a string
+    Returns the type ID for a particular string representation of a type. If the
+    string passed is not a valid type representation an exception will be
+    thrown.
+    \throws key_error if the string does not describe a type
+    \param s string representation of the type
+    \return corresponding type ID
     */
-    type_id_t type_id(const string &v);
+    type_id_t type_id_from_str(const string &s);
+
+    //-------------------------------------------------------------------------
+    /*!
+    \ingroup type_classes
+    \brief get the string rep. for a type
+
+    Returns the string representation for a type determined by its type id. If
+    the type determined by the ID does not have a string representation an
+    exception will be thrown. 
+    \throws key_error if the type has no string representation
+    \param id type ID of the type
+    \return string representation of the type
+    */
+    string str_from_type_id(type_id_t id);
 
 
     //-------------------------------------------------------------------------

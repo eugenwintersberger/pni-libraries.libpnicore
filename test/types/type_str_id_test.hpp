@@ -17,7 +17,7 @@
  * along with libpnicore.  If not, see <http://www.gnu.org/licenses/>.
  *************************************************************************
  *
- *  Created on: Sep 30, 2013
+ *  Created on: Oct 15, 2013
  *      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
  */
 #pragma once
@@ -25,54 +25,22 @@
 #include <boost/current_function.hpp>
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
+
 #include <pni/core/types.hpp>
 #include <pni/core/type_utils.hpp>
-#include <pni/core/array.hpp>
-
 
 using namespace pni::core;
 
-
-/*!
-\brief testing type_id for containers
-
-*/
-template<typename CTYPE,type_id_t ID>
-class type_id_container_test : public CppUnit::TestFixture
+//testing the two functions for id2str conversion and back
+class type_str_id_test : public CppUnit::TestFixture
 {
-        CPPUNIT_TEST_SUITE(type_id_container_test);
-        CPPUNIT_TEST(test_type_id);
+        CPPUNIT_TEST_SUITE(type_str_id_test);
+        CPPUNIT_TEST(test_id_to_str);
+        CPPUNIT_TEST(test_str_to_id);
         CPPUNIT_TEST_SUITE_END();
     public:
-        void setUp() {}
-        void tearDown() {}
-        
-        void test_type_id();
-
-
+        void setUp();
+        void tearDown();
+        void test_id_to_str();
+        void test_str_to_id();
 };
-
-
-//-----------------------------------------------------------------------------
-template<typename CTYPE,type_id_t ID> 
-void type_id_container_test<CTYPE,ID>::test_type_id()
-{
-    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
-    CTYPE instance;
-    CPPUNIT_ASSERT(type_id(instance)==ID);
-
-    //check references
-    CTYPE &reference = instance;
-    CPPUNIT_ASSERT(type_id(reference)==ID);
-    const CTYPE &const_reference = instance;
-    CPPUNIT_ASSERT(type_id(const_reference)==ID);
-
-    //check pointers
-    CTYPE *pointer = &instance;
-    CPPUNIT_ASSERT(type_id(pointer)==ID);
-    const CTYPE *const_pointer = &instance;
-    CPPUNIT_ASSERT(type_id(const_pointer) == ID);
-
-    
-}
-

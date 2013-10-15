@@ -83,4 +83,13 @@ template<typename T,type_id_t ID> void type_id_scalar_test::test_type_id()
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
     T instance;
     CPPUNIT_ASSERT(type_id(instance)==ID);
+    T &reference = instance;
+    CPPUNIT_ASSERT(type_id(reference)==ID);
+    T *pointer = &instance;
+    CPPUNIT_ASSERT(type_id(pointer)==ID);
+
+    const T &const_reference = instance;
+    CPPUNIT_ASSERT(type_id(const_reference)==ID);
+    const T *const_pointer = &instance;
+    CPPUNIT_ASSERT(type_id(const_pointer) == ID);
 }
