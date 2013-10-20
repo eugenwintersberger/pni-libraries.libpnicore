@@ -294,6 +294,14 @@ namespace core{
         template<typename ITYPE>
             void cindex_map::index(size_t offset,ITYPE &index) const
         {
+            if(index.size() != this->rank())
+            {
+                std::stringstream ss;
+                ss<<"Shape of index ("<<index.size()<<") does not match map";
+                ss<<"rank ("<<this->rank()<<")!";
+                throw shape_mismatch_error(EXCEPTION_RECORD,ss.str());
+            }
+
             if(offset>=size())
             {
                 std::stringstream ss;
