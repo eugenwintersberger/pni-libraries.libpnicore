@@ -28,6 +28,8 @@
 #include <vector>
 #include <list>
 #include <array>
+#include <functional>
+#include <algorithm>
 
 #include <pni/core/cindex_map.hpp>
 #include <pni/core/static_cindex_map.hpp>
@@ -72,6 +74,7 @@ class index_map_test_common: public CppUnit::TestFixture
 {
         typedef index_map_test_common<TPARAM,IMAP,offset,indexes...> test_type;
         CPPUNIT_TEST_SUITE(test_type);
+        CPPUNIT_TEST(test_creation);
         CPPUNIT_TEST(test_offset_from_container<std::vector<size_t> >);
         CPPUNIT_TEST(test_offset_from_container<std::vector<ssize_t> >);
         CPPUNIT_TEST(test_offset_from_container<std::vector<int> >);
@@ -88,11 +91,20 @@ class index_map_test_common: public CppUnit::TestFixture
         CPPUNIT_TEST(test_index_from_offset<std::list<ssize_t> >);
         CPPUNIT_TEST(test_index_from_offset<std::list<int> >);
         CPPUNIT_TEST(test_index_from_offset<std::list<unsigned int> >);
+        CPPUNIT_TEST(test_inquery<std::vector<size_t> >);
+        CPPUNIT_TEST(test_inquery<std::vector<ssize_t> >);
+        CPPUNIT_TEST(test_inquery<std::vector<int> >);
+        CPPUNIT_TEST(test_inquery<std::vector<unsigned int> >);
+        CPPUNIT_TEST(test_inquery<std::list<size_t> >);
+        CPPUNIT_TEST(test_inquery<std::list<ssize_t> >);
+        CPPUNIT_TEST(test_inquery<std::list<int> >);
+        CPPUNIT_TEST(test_inquery<std::list<unsigned int> >);
         CPPUNIT_TEST_SUITE_END();
     private:
         shape_t _shape;
         IMAP _map;
 
+        //---------------------------------------------------------------------
         template<typename MAPT> void create_map(MAPT &map)
         {
             _shape = shape_t(TPARAM::rank);
@@ -100,19 +112,32 @@ class index_map_test_common: public CppUnit::TestFixture
             map = IMAP(_shape);
         }
 
+        //---------------------------------------------------------------------
         template<size_t... DIMS> 
-        void create_map(static_cindex_map<DIMS...> &map)
-        {
+        void create_map(static_cindex_map<DIMS...> &map) 
+        { 
+            _shape = shape_t(TPARAM::rank);
+            std::copy(TPARAM::shape.begin(),TPARAM::shape.end(),_shape.begin());
         }
 
-        
     public:
+        //---------------------------------------------------------------------
         void setUp()
         {
             create_map(_map);
         }
+
+        //---------------------------------------------------------------------
         void tearDown(){}
 
+        //---------------------------------------------------------------------
+        void test_creation()
+        {
+            IMAP m;
+            creation_test(m);
+        }
+
+        //---------------------------------------------------------------------
         /*!
         \brief test offset computation
 
@@ -187,6 +212,20 @@ class index_map_test_common: public CppUnit::TestFixture
             
             CPPUNIT_ASSERT_THROW(_map.template index<CTYPE>(_map.size()),size_mismatch_error);
 
+        }
+
+        //---------------------------------------------------------------------
+        template<typename CTYPE> void test_inquery()
+        {
+            std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+
+            CPPUNIT_ASSERT(_map.rank() == _shape.size());
+            CPPUNIT_ASSERT(_map.size() ==
+                    std::accumulate(_shape.begin(),_shape.end(),
+                        1,std::multiplies<size_t>()));
+
+            auto s =_map.template shape<CTYPE>();
+            CPPUNIT_ASSERT(std::equal(s.begin(),s.end(),_shape.begin()));
         }
 };
 
