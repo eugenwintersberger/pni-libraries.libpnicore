@@ -74,7 +74,6 @@ class index_map_test_common: public CppUnit::TestFixture
 {
         typedef index_map_test_common<TPARAM,IMAP,offset,indexes...> test_type;
         CPPUNIT_TEST_SUITE(test_type);
-        CPPUNIT_TEST(test_creation);
         CPPUNIT_TEST(test_offset_from_container<std::vector<size_t> >);
         CPPUNIT_TEST(test_offset_from_container<std::vector<ssize_t> >);
         CPPUNIT_TEST(test_offset_from_container<std::vector<int> >);
@@ -130,12 +129,6 @@ class index_map_test_common: public CppUnit::TestFixture
         //---------------------------------------------------------------------
         void tearDown(){}
 
-        //---------------------------------------------------------------------
-        void test_creation()
-        {
-            IMAP m;
-            creation_test(m);
-        }
 
         //---------------------------------------------------------------------
         /*!
