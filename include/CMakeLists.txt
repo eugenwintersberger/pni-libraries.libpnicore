@@ -12,9 +12,7 @@ endif()
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/pni/core/config.hpp"
         DESTINATION "${CMAKE_INSTALL_FULL_INCLUDEDIR}/pni/core")
 
-#install the header files
-install(DIRECTORY . DESTINATION "${CMAKE_INSTALL_FULL_INCLUDEDIR}" 
-        FILES_MATCHING PATTERN "*.hpp")
+add_subdirectory("pni")
 
 
 
