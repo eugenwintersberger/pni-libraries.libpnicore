@@ -28,13 +28,17 @@
 #include <array>
 #include <sstream>
 #include <stdexcept>
+#include <memory>
 #include "types.hpp"
 #include "type_id_map.hpp"
-#include "static_cindex_map.hpp"
+#include "index_map/index_maps.hpp"
 #include "exceptions.hpp"
 #include "slice.hpp"
 #include "array_view.hpp"
 #include "array_view_selector.hpp"
+#include <boost/mpl/times.hpp>
+#include <boost/mpl/arithmetic.hpp>
+#include <boost/mpl/size_t.hpp>
 
 namespace pni{
 namespace core{
@@ -72,7 +76,11 @@ namespace core{
     {
         private:
             //! static array holding the data
-            std::array<T,size_type<DIMS...>::size > _data;    
+            typedef typename boost::mpl::times<
+                boost::mpl::size_t<1>,
+                boost::mpl::size_t<DIMS>...
+                >::type size_type;
+            std::array<T,size_type::value> _data;    
             //! static shape describing the arrays dimensionality
             static const static_cindex_map<DIMS...> _shape; 
 
@@ -194,7 +202,7 @@ namespace core{
             //! type of the arrya view
             typedef array_view<array_type> view_type;
             //! storage type
-            typedef std::array<T,size_type<DIMS...>::size > storage_type;
+            typedef std::array<T,size_type::value > storage_type;
             //! shared pointer to this type
             typedef std::shared_ptr<array_type> shared_ptr;
             //! unique pointer to this type

@@ -26,8 +26,8 @@
 
 #pragma once
 
-
-#include "cindex_map.hpp"
+#include <memory>
+#include "index_map/index_maps.hpp"
 #include "container_iterator.hpp"
 #include "array_selection.hpp"
 

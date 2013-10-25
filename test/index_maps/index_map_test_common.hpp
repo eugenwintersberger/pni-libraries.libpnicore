@@ -25,31 +25,8 @@
 #include <boost/current_function.hpp>
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
-#include <vector>
-#include <list>
-#include <array>
-#include <functional>
-#include <algorithm>
 
-#include <pni/core/cindex_map.hpp>
-#include <pni/core/static_cindex_map.hpp>
-
-using namespace pni::core;
-
-template<size_t... DIMS>
-struct index_test_params
-{
-    typedef std::array<size_t,sizeof...(DIMS)> index_t;
-    constexpr static index_t shape{{DIMS...}};
-    constexpr static size_t rank = sizeof...(DIMS);
-};
-
-template<size_t... DIMS> 
-constexpr typename index_test_params<DIMS...>::index_t index_test_params<DIMS...>::shape;
-template<size_t... DIMS>
-constexpr size_t index_test_params<DIMS...>::rank; 
-
-
+#include "common.hpp"
 
 /*!
 \brief general test
@@ -104,31 +81,52 @@ class index_map_test_common: public CppUnit::TestFixture
         IMAP _map;
 
         //---------------------------------------------------------------------
-        template<typename MAPT> void create_map(MAPT &map)
+        template<typename CTYPE> void copy_storage(CTYPE &c)
         {
-            _shape = shape_t(TPARAM::rank);
-            std::copy(TPARAM::shape.begin(),TPARAM::shape.end(),_shape.begin());
-            map = IMAP(_shape);
+            c = CTYPE(TPARAM::rank);
+            std::copy(TPARAM::shape.begin(),TPARAM::shape.end(),c.begin());
         }
 
         //---------------------------------------------------------------------
-        template<size_t... DIMS> 
-        void create_map(static_cindex_map<DIMS...> &map) 
-        { 
-            _shape = shape_t(TPARAM::rank);
-            std::copy(TPARAM::shape.begin(),TPARAM::shape.end(),_shape.begin());
+        template<typename T,size_t... DIMS> 
+        void copy_storage(std::array<T,DIMS...> &c) 
+        {
+            std::copy(TPARAM::shape.begin(),TPARAM::shape.end(),c.begin());
+        }
+
+        //---------------------------------------------------------------------
+        template<typename MAPT> void create_index_map(MAPT &m)
+        {
+            typedef typename MAPT::storage_type storage_type;
+            
+            //copy shape to storage
+            storage_type storage;
+            copy_storage(storage);
+    
+            _map = IMAP(storage);
+        }
+
+        //---------------------------------------------------------------------
+        template<typename POL,size_t... DIMS> 
+        void create_index_map(static_index_map<POL,DIMS...> &m)
+        {
+            //there is nothing we would have to do here
         }
 
     public:
         //---------------------------------------------------------------------
         void setUp()
         {
-            create_map(_map);
+            //create the shape
+            _shape = shape_t(TPARAM::rank);
+            std::copy(TPARAM::shape.begin(),TPARAM::shape.end(),_shape.begin());
+
+            create_index_map(_map);
+            
         }
 
         //---------------------------------------------------------------------
         void tearDown(){}
-
 
         //---------------------------------------------------------------------
         /*!
@@ -155,23 +153,6 @@ class index_map_test_common: public CppUnit::TestFixture
             CTYPE index{indexes...};
 
             CPPUNIT_ASSERT(_map.offset(index) == offset);
-
-            //check for exceptions
-            //check if larger rank
-            shape_t s{indexes...};
-            s.push_back(10);
-            CPPUNIT_ASSERT_THROW(_map.offset(s),shape_mismatch_error);
-            //check if smaller rank
-            s = shape_t{indexes...};
-            s.pop_back();
-            CPPUNIT_ASSERT_THROW(_map.offset(s),shape_mismatch_error);
-
-            for(size_t i=0;i<TPARAM::rank;++i)
-            {
-                s = shape_t{indexes...};
-                s[i] = TPARAM::shape[i];
-                CPPUNIT_ASSERT_THROW(_map.offset(s),index_error);
-            }
         }
 
         //---------------------------------------------------------------------
@@ -187,24 +168,9 @@ class index_map_test_common: public CppUnit::TestFixture
             std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
             CTYPE index_ref{indexes...};
-            CTYPE index1(index_ref.size());
            
-            _map.index(offset,index1);
-            CPPUNIT_ASSERT(index1.size() == index_ref.size());
-            CPPUNIT_ASSERT(std::equal(index_ref.begin(),index_ref.end(),
-                                      index1.begin()));
-
-            CPPUNIT_ASSERT_THROW(_map.index(_map.size(),index1),size_mismatch_error);
-            index1.push_back(10);
-            CPPUNIT_ASSERT_THROW(_map.index(offset,index1),shape_mismatch_error);
-            index1.pop_back();index1.pop_back();
-            CPPUNIT_ASSERT_THROW(_map.index(offset,index1),shape_mismatch_error);
-
-            index1 = _map.template index<CTYPE>(offset);
+            auto index1 = _map.template index<CTYPE>(offset);
             CPPUNIT_ASSERT(std::equal(index1.begin(),index1.end(),index_ref.begin()));
-            
-            CPPUNIT_ASSERT_THROW(_map.template index<CTYPE>(_map.size()),size_mismatch_error);
-
         }
 
         //---------------------------------------------------------------------
@@ -213,12 +179,11 @@ class index_map_test_common: public CppUnit::TestFixture
             std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
             CPPUNIT_ASSERT(_map.rank() == _shape.size());
-            CPPUNIT_ASSERT(_map.size() ==
+            CPPUNIT_ASSERT(_map.max_elements() ==
                     std::accumulate(_shape.begin(),_shape.end(),
                         1,std::multiplies<size_t>()));
 
-            auto s =_map.template shape<CTYPE>();
-            CPPUNIT_ASSERT(std::equal(s.begin(),s.end(),_shape.begin()));
+            CPPUNIT_ASSERT(std::equal(_map.begin(),_map.end(),_shape.begin()));
         }
 };
 

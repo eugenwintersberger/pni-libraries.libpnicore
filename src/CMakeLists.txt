@@ -5,14 +5,12 @@ set(SOURCES array.cpp
             benchmark_result.cpp
             benchmark_runner.cpp
             chrono_timer.cpp
-            cindex_map.cpp
             cli_args.cpp
             complex_utils.cpp
             config_parser.cpp
             configuration.cpp
             exceptions.cpp
             exception_utils.cpp
-            index_map_base.cpp
             library_config.cpp
             range_distributor.cpp
             service.cpp

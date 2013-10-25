@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2012 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
+ * (c) Copyright 2013 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
  *
  * This file is part of libpnicore.
  *
@@ -16,21 +16,27 @@
  * You should have received a copy of the GNU General Public License
  * along with libpnicore.  If not, see <http://www.gnu.org/licenses/>.
  *************************************************************************
- *
- *  Created on: Mar 11, 2012
- *      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
+ * Created on: Oct 25, 2013
+ *     Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
  */
 
-#include<cppunit/extensions/HelperMacros.h>
+#pragma once
+#include "index_map.hpp"
+#include "static_index_map.hpp"
+#include "index_policy.hpp"
+#include "c_index_policy_imp.hpp"
 
-#include <vector>
-#include <list>
+namespace pni{
+namespace core{
+    //define a C index policy
+    typedef index_policy<c_index_policy_imp> c_index_policy;
 
-#include <pni/core/cindex_map.hpp>
+    //this header file defines some default index maps
+    template<size_t... DIMS> using static_cindex_map = static_index_map<c_index_policy,DIMS...>;
 
-#include "index_map_test.hpp"
+    //define the default dynamic C-index map
+    typedef index_map<std::vector<size_t>,c_index_policy> cindex_map;
 
-CPPUNIT_TEST_SUITE_REGISTRATION(index_map_test<cindex_map>);
-
-
-
+//end of namespace
+}
+}

@@ -29,16 +29,17 @@
 #include <algorithm>
 #include <functional>
 
-#include "exceptions.hpp"
-#include "exception_utils.hpp"
+#include "../exceptions.hpp"
+#include "../exception_utils.hpp"
 
 namespace pni{
 namespace core{
     
     /*!
     \ingroup index_mapping_classes
-    \brief policy for C-order index computation
+    \brief general policy for index computation
 
+    This is the master template for managing index policies 
     Like any index policy this policy has to implement a function to compute the
     offset which will typically have the signature
 
@@ -57,63 +58,12 @@ namespace core{
 
     For performance reasons specializations of these methods can be provided for
     different containers. 
+    
+    \tparam POLIMP policy implementation
     */
-    class c_index_policy
+    template<typename POLIMP> class index_policy
     {
         private:
-            /*!
-            \brief compute the offset 
-
-            Compute the offset for an index range and a given shape.
-            \tparam IITERT index iterator type
-            \tparam SITERT shape iterator type
-            \param index_start start iterator for the index range
-            \param index_top   stop iterator for the index range
-            \param shape_start start iterator for the shape range
-            \return offset value
-            */
-            template<typename IITERT,
-                     typename SITERT> 
-            static size_t compute_offset(IITERT &&index_start,
-                                         IITERT &&index_stop, 
-                                         SITERT &&shape_start)
-            {
-                size_t offset = *index_start++,stride=1;
-
-                while(index_start!=index_stop)
-                {
-                    stride *= *shape_start++;
-                    offset += stride*(*index_start++);
-                }
-
-                return offset;
-            }
-
-            //------------------------------------------------------------------
-            /*!
-            \brief compute the index
-
-            */
-            template<typename IITERT,
-                     typename SITERT>
-            static void compute_index(SITERT &&shape_start,
-                                      SITERT &&shape_stop,
-                                      IITERT &&index_start,
-                                      size_t offset)
-            {
-                size_t stride,t;
-                while(shape_start != shape_stop)
-                {
-                    //increment here the shape_start iterator - we already start
-                    //with start+1 with the stride computation
-                    stride = std::accumulate(++shape_start,shape_stop,1,
-                                             std::multiplies<size_t>());
-                    t = offset%stride;
-                    *(index_start++) = (offset-t)/stride;
-                    offset = t;
-                }
-
-            }
 
             //-----------------------------------------------------------------
             template<typename CTYPE>
@@ -155,46 +105,14 @@ namespace core{
             \return offset value
             */
             template<typename CSHAPE,typename CINDEX> 
-            static size_t offset(const CSHAPE &shape,const CINDEX &index)
-            {
-                return compute_offset(index.rbegin(),index.rend(),
-                                      shape.rbegin());
-            }
-
-            //-----------------------------------------------------------------
-            /*!
-            \brief compute the offset
-
-            In this case we have an lvalue reference as an index which can be
-            moved. This will dramatically improve the performance of the code. 
-            
-            A typicall application would look like this
-            \code
-            std::vector<size_t> shape{3,3};
-
-            size_t offset = c_index_policy::offset(shape,{1,2});
-            \endcode
-
-            A SFINAE construction is used to determine whether or not the index
-            container is an rvalue or an lvalue reference.
-
-            \tparam CSHAPE container type for the shape
-            \tparam CINDEX container type for the index
-            \param shape container with shape information
-            \param index container with index information
-            \return linear offset of the data element
-            */
-            template<typename CSHAPE,
-                     typename CINDEX,
-                     typename = typename std::enable_if<
-                         !std::is_lvalue_reference<CINDEX>::value
-                         >::type
-                    >
             static size_t offset(const CSHAPE &shape,CINDEX &&index)
             {
-                return compute_offset(index.rbegin(),index.rend(),
-                                      shape.rbegin());
+                return POLIMP::offset(shape,
+                                      std::forward<
+                                      typename std::remove_const<CINDEX>::type
+                                      >(index));
             }
+
 
 
             //------------------------------------------------------------------
@@ -216,41 +134,11 @@ namespace core{
             \return linear offset of data element
             */
             template<typename ST,size_t N,typename CINDEX>
-            static size_t offset(std::array<ST,N> shape,const CINDEX &index)
-            {
-                return compute_offset(index.rbegin(),index.rend(),
-                                      shape.rbegin());
-            }
-
-            //-----------------------------------------------------------------
-            /*!
-            \brief compute the offset
-
-            Here we assume that the shape is held by an instance of std::array
-            (which should be passed by value) but the index container is an
-            rvalue reference. 
-
-            \tparam ST value type of the index 
-            \tparam N number of shape elements
-            \tparam CINDEX container type for index data
-            \param shape the std::array with the shape data
-            \param index instance of CINDEX with index data
-            \return linear offset of the data element
-            */
-            template<typename ST,
-                     size_t   N,
-                     typename CINDEX,
-                     typename = typename std::enable_if<
-                         !std::is_lvalue_reference<CINDEX>::value
-                         >::type
-                    >
             static size_t offset(std::array<ST,N> shape,CINDEX &&index)
             {
-                return compute_offset(index.rbegin(),index.rend(),
-                                      shape.rbegin());
+                return POLIMP::offset(std::forward<std::array<ST,N>>(shape),
+                                      std::forward<CINDEX>(index));
             }
-
-                     
 
             //-----------------------------------------------------------------
             /*!
@@ -271,8 +159,9 @@ namespace core{
             {
                 ICT index;
                 allocate_index(index,shape.size());
-
-                compute_index(shape.begin(),shape.end(),index.begin(),offset);
+            
+                POLIMP::index(shape,index,offset);
+                
                 return index;
             }
 
@@ -298,8 +187,9 @@ namespace core{
             {
                 ICT index;
                 allocate_index(index,shape.size());
-
-                compute_index(shape.begin(),shape.end(),index.begin(),offset);
+                
+                POLIMP::index(std::forward<std::array<T,N>>(shape),
+                              index,offset);
                 return index;
             }
     };

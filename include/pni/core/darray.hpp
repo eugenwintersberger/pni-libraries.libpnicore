@@ -33,13 +33,14 @@
 #include<complex>
 #include<cstdarg>
 #include<cstdio>
+#include<memory>
 
 #include "exception_utils.hpp"
 #include "types.hpp"
 #include "slice.hpp"
 #include "array_view.hpp"
 #include "array_view_selector.hpp"
-#include "cindex_map.hpp"
+#include "index_map/index_maps.hpp"
 
 #include "type_id_map.hpp"
 #include "type_conversion.hpp"
@@ -335,7 +336,8 @@ namespace core {
             template<typename CTYPE> void shape(const CTYPE &s)
             {
                 check_allocation_state(this->storage(),EXCEPTION_RECORD);
-                IMAP map(s);
+                IMAP map(s.size());
+                std::copy(s.begin(),s.end(),map.begin());
                 check_equal_size(this->_imap,map,EXCEPTION_RECORD);
                 this->_imap = map;
             }

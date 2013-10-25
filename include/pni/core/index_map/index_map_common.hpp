@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2012 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
+ * (c) Copyright 2013 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
  *
  * This file is part of libpnicore.
  *
@@ -16,32 +16,18 @@
  * You should have received a copy of the GNU General Public License
  * along with libpnicore.  If not, see <http://www.gnu.org/licenses/>.
  *************************************************************************
- *
- *  Created on: Jul 31, 2012
- *      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
+ * Created on: Oct 25, 2013
+ *     Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
  */
+
 #pragma once
 
-#include <cppunit/TestFixture.h>
-#include <cppunit/extensions/HelperMacros.h>
-#include <vector>
-#include <pni/core/static_cindex_map.hpp>
+#include "../exceptions.hpp"
 
-using namespace pni::core;
+namespace pni{
+namespace core{
 
-class static_cindex_map_test: public CppUnit::TestFixture 
-{
-        CPPUNIT_TEST_SUITE(static_cindex_map_test);
-        CPPUNIT_TEST(test_construction);
-        CPPUNIT_TEST(test_offset);
-        CPPUNIT_TEST(test_index);
-        CPPUNIT_TEST_SUITE_END();
-    private:
-    public:
-        void setUp();
-        void tearDown();
 
-        void test_construction();
-        void test_offset();
-        void test_index();
-};
+//enf of namespace
+}
+}
