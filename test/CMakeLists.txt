@@ -8,6 +8,7 @@ set(TEST_SOURCES pnicoretest.cpp
                  types/type_id_container_test.cpp
                  types/type_str_id_test.cpp
                  index_maps/index_map_test_common.cpp
+                 arrays/mdarray_test.cpp
                  )
 #add_operator_test.cpp
 #array_selection_test.cpp

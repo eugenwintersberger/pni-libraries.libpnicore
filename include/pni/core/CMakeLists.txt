@@ -1,4 +1,5 @@
-set(HEADER_FILES array_holder.hpp 
+set(HEADER_FILES mdarray.hpp
+                 array_holder.hpp 
                  array_holder_interface.hpp 
                  array.hpp 
                  array_iterator.hpp 
