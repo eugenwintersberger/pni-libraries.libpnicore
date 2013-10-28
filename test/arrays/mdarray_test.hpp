@@ -29,7 +29,6 @@
 #include "common.hpp"
 
 #include "../data_generator.hpp"
-#include "../uniform_distribution.hpp"
 #include "../EqualityCheck.hpp"
 
 using namespace pni::core;
@@ -88,6 +87,7 @@ template<typename ATYPE> void mdarray_test<ATYPE>::setUp()
 {
     shape = {2,3,5};
     ref_data = std::vector<value_type>(2*3*5);
+    std::generate(ref_data.begin(),ref_data.end(),random_generator<value_type>());
     
     //create reference data 
     std::iota(ref_data.begin(),ref_data.end(),0.);    

@@ -9,6 +9,7 @@ set(TEST_SOURCES pnicoretest.cpp
                  types/type_str_id_test.cpp
                  index_maps/index_map_test_common.cpp
                  arrays/mdarray_test.cpp
+                 EqualityCheck.cpp
                  )
 #add_operator_test.cpp
 #array_selection_test.cpp
@@ -20,7 +21,6 @@ set(TEST_SOURCES pnicoretest.cpp
 #counter_test.cpp
 #darray_test.cpp
 #div_operator_test.cpp
-#EqualityCheck.cpp
 #index_iterator_test.cpp
 #index_map_test.cpp
 #iterator_test.cpp
