@@ -69,10 +69,16 @@ template<typename T> class random_generator
         typename distribution_map<T,type_info<T>::is_integer>::distribution_type _distribution;
 
     public:
+        random_generator(T a,T b):
+            _engine(std::random_device()()),
+            _distribution(a,b)
+        {}
+
         random_generator():
-            _engine(),
+            _engine(std::random_device()()),
             _distribution(0.2*type_info<T>::min(),0.2*type_info<T>::max())
-        { }
+        { 
+        }
 
         T operator()()
         {
@@ -87,6 +93,11 @@ template<typename T> class random_generator<std::complex<T>>
         random_generator<T> _real_generator;
         random_generator<T> _imag_generator;
     public:
+        random_generator(T a,T b):
+            _real_generator(a,b),
+            _imag_generator(a,b)
+        {}
+
         random_generator():
             _real_generator(),
             _imag_generator()
@@ -105,6 +116,10 @@ template<> class random_generator<string>
     private:
         random_generator<unsigned long> _generator;
     public:
+        random_generator(unsigned long a,unsigned long b):
+            _generator(a,b)
+        {}
+
         random_generator(){}
 
         string operator()()

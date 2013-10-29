@@ -17,7 +17,7 @@
  * along with libpnicore.  If not, see <http://www.gnu.org/licenses/>.
  *************************************************************************
  *
- *  Created on: Oct 28, 2013
+ *  Created on: Oct 29, 2013
  *      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
  */
 #pragma once
@@ -25,11 +25,12 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <boost/current_function.hpp>
 #include <algorithm>
+#include <iomanip>
 
 #include "common.hpp"
 
 #include "../data_generator.hpp"
-#include "../EqualityCheck.hpp"
+#include "../compare.hpp"
 
 using namespace pni::core;
 
@@ -40,9 +41,9 @@ using namespace pni::core;
 \tparam MAPT index map type
  */
 template<typename ATYPE>
-class dynamic_mdarray_test : public CppUnit::TestFixture
+class static_mdarray_test : public CppUnit::TestFixture
 {
-        CPPUNIT_TEST_SUITE(dynamic_mdarray_test);
+        CPPUNIT_TEST_SUITE(static_mdarray_test);
         CPPUNIT_TEST(test_constructors);
         CPPUNIT_TEST(test_assignment);
         CPPUNIT_TEST_SUITE_END();
@@ -54,13 +55,6 @@ class dynamic_mdarray_test : public CppUnit::TestFixture
         ATYPE array;
         shape_t shape;
 
-        //---------------------------------------------------------------------
-        template<typename CTYPE> 
-        static void allocate_storage(CTYPE &s,size_t n)
-        {
-            s = CTYPE(n);
-        }
-
     public:
         void setUp();
         void tearDown();
@@ -70,7 +64,7 @@ class dynamic_mdarray_test : public CppUnit::TestFixture
 
 //------------------------------------------------------------------------------
 template<typename ATYPE> 
-void dynamic_mdarray_test<ATYPE>::setUp()
+void static_mdarray_test<ATYPE>::setUp()
 {
     shape = {2,3,5};
     ref_data = std::vector<value_type>(2*3*5);
@@ -79,25 +73,24 @@ void dynamic_mdarray_test<ATYPE>::setUp()
 
 //------------------------------------------------------------------------------
 template<typename ATYPE> 
-void dynamic_mdarray_test<ATYPE>::tearDown() { }
+void static_mdarray_test<ATYPE>::tearDown() { }
 
 //------------------------------------------------------------------------------
 template<typename ATYPE>
-void dynamic_mdarray_test<ATYPE>::test_constructors()
+void static_mdarray_test<ATYPE>::test_constructors()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
     //check parameters after default construction
     ATYPE array1;
-    CPPUNIT_ASSERT(array1.size() == 0);
-    CPPUNIT_ASSERT(array1.rank() == 0);
+    CPPUNIT_ASSERT(array1.size() == 30);
+    CPPUNIT_ASSERT(array1.rank() == 3);
 
     //check default construction
     //we construct the array from an map instance and a storage instance using 
     //copy construction of the objects
     auto map = map_utils<index_map_type>::create(shape);
     storage_type storage;
-    allocate_storage(storage,map.max_elements());
     ATYPE array2(map,storage);
    
     CPPUNIT_ASSERT(array2.rank() == 3);
@@ -108,26 +101,26 @@ void dynamic_mdarray_test<ATYPE>::test_constructors()
     ATYPE array3(std::move(map),std::move(storage));
     CPPUNIT_ASSERT(array3.size() == 30);
     CPPUNIT_ASSERT(array3.rank() == 3);
-    CPPUNIT_ASSERT(storage.size()==0);
-    CPPUNIT_ASSERT(map.rank() == 0);
+    CPPUNIT_ASSERT(storage.size()==30);
+    CPPUNIT_ASSERT(map.rank() == 3);
 
     //now lets do some move construction
     ATYPE array4 = std::move(array3);
     CPPUNIT_ASSERT(array4.rank() == array2.rank());
     CPPUNIT_ASSERT(array4.size() == array2.size());
-    CPPUNIT_ASSERT(array3.size() == 0);
-    CPPUNIT_ASSERT(array3.rank() == 0);
+    CPPUNIT_ASSERT(array3.size() == 30);
+    CPPUNIT_ASSERT(array3.rank() == 3);
 }
 
 //------------------------------------------------------------------------------
 template<typename ATYPE>
-void dynamic_mdarray_test<ATYPE>::test_assignment()
+void static_mdarray_test<ATYPE>::test_assignment()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
     auto map = map_utils<index_map_type>::create(shape);
     storage_type storage;
-    allocate_storage(storage,map.max_elements());
+    std::copy(ref_data.begin(),ref_data.end(),storage.begin());
     ATYPE array1(std::move(map),std::move(storage));
 
     ATYPE array2,array3;
@@ -136,16 +129,16 @@ void dynamic_mdarray_test<ATYPE>::test_assignment()
     array2 = array1;
     CPPUNIT_ASSERT(array2.rank() == array1.rank());
     CPPUNIT_ASSERT(array2.size() == array1.size());
-    CPPUNIT_ASSERT(std::equal(array1.begin(),array1.end(),array2.begin()));
+    CPPUNIT_ASSERT(std::equal(array1.begin(),array1.begin(),array2.begin()));
 
     //do move assignment
     array3 = std::move(array1);
     CPPUNIT_ASSERT(array2.rank() == array3.rank());
     CPPUNIT_ASSERT(array2.size() == array3.size());
-    CPPUNIT_ASSERT(std::equal(array1.begin(),array1.end(),array3.begin()));
+    CPPUNIT_ASSERT(std::equal(array2.begin(),array2.end(),array3.begin()));
 
     //check if the original is destroyed
-    CPPUNIT_ASSERT(array1.rank() == 0);
-    CPPUNIT_ASSERT(array1.size() == 0);
+    CPPUNIT_ASSERT(array1.rank() == 3);
+    CPPUNIT_ASSERT(array1.size() == 30);
 }
 

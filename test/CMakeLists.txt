@@ -11,7 +11,8 @@ set(TEST_SOURCES pnicoretest.cpp
                  arrays/mdarray_test.cpp
                  arrays/dynamic_mdarray_test.cpp
                  arrays/fix_mdarray_test.cpp
-                 EqualityCheck.cpp
+                 arrays/static_mdarray_test.cpp
+                 compare.cpp
                  )
 #add_operator_test.cpp
 #array_selection_test.cpp
@@ -40,7 +41,9 @@ set(TEST_SOURCES pnicoretest.cpp
 
 link_directories("${CMAKE_CURRENT_BINARY_DIR}/../src")
 add_executable(pnicoretest ${TEST_SOURCES})
+add_executable(rand_test "rand_test.cpp")
 target_link_libraries(pnicoretest pnicore)
+target_link_libraries(rand_test pnicore)
 
 if(CPPUNIT_FOUND)
     #add include directories

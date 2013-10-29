@@ -29,7 +29,7 @@
 #include "common.hpp"
 
 #include "../data_generator.hpp"
-#include "../EqualityCheck.hpp"
+#include "../compare.hpp"
 
 using namespace pni::core;
 
@@ -89,9 +89,6 @@ template<typename ATYPE> void mdarray_test<ATYPE>::setUp()
     ref_data = std::vector<value_type>(2*3*5);
     std::generate(ref_data.begin(),ref_data.end(),random_generator<value_type>());
     
-    //create reference data 
-    std::iota(ref_data.begin(),ref_data.end(),0.);    
-
     //create the target array
     auto map = map_utils<index_map_type>::create(shape);
     storage_type storage;
@@ -122,13 +119,13 @@ void mdarray_test<ATYPE>::test_linear_access_operator()
     for(size_t i=0;i<array.size();++i) array[i] = ref_data[i];
 
     //read data back
-    for(size_t i=0;i<array.size();++i) check_equality(array[i],ref_data[i]);
+    for(size_t i=0;i<array.size();++i) compare(array[i],ref_data[i]);
 
     //test with constant access
     const ATYPE &ca = array;
 
     //read data back
-    for(size_t i=0;i<array.size();++i) check_equality(array[i],ref_data[i]);
+    for(size_t i=0;i<array.size();++i) compare(array[i],ref_data[i]);
 }
 
 //------------------------------------------------------------------------------
@@ -142,7 +139,7 @@ void mdarray_test<ATYPE>::test_linear_access_at()
 
     //read data back
     for(size_t i=0;i<array.size();++i) 
-        check_equality(array.at(i),ref_data.at(i));
+        compare(array.at(i),ref_data.at(i));
 
     CPPUNIT_ASSERT_THROW(array.at(array.size()),index_error);
 
@@ -151,7 +148,7 @@ void mdarray_test<ATYPE>::test_linear_access_at()
 
     //read data back
     for(size_t i=0;i<ca.size();++i) 
-        check_equality(ca.at(i),ref_data.at(i));
+        compare(ca.at(i),ref_data.at(i));
     
     CPPUNIT_ASSERT_THROW(ca.at(array.size()),index_error);
 }
@@ -173,14 +170,14 @@ void mdarray_test<ATYPE>::test_linear_access_iterators()
     aiter = array.begin();
     viter = ref_data.begin();
     for(;aiter!=array.end();++aiter,++viter)
-        check_equality(*aiter,*viter);
+        compare(*aiter,*viter);
 
     //test with constant iterator
     const ATYPE &ca = array;
     auto caiter = ca.begin();
     viter = ref_data.begin();
     for(;caiter != ca.end();++caiter,++viter)
-        check_equality(*caiter,*viter);
+        compare(*caiter,*viter);
 }
 
 //------------------------------------------------------------------------------
@@ -200,14 +197,14 @@ void mdarray_test<ATYPE>::test_linear_access_reverse_iterators()
     aiter = array.rbegin();
     viter = ref_data.rbegin();
     for(;aiter!=array.rend();++aiter,++viter)
-        check_equality(*aiter,*viter);
+        compare(*aiter,*viter);
 
     //test with constant iterator
     const ATYPE &ca = array;
     auto caiter = ca.rbegin();
     viter = ref_data.rbegin();
     for(;caiter != ca.rend();++caiter,++viter)
-        check_equality(*caiter,*viter);
+        compare(*caiter,*viter);
 }
 
 //-----------------------------------------------------------------------------
@@ -228,7 +225,7 @@ void mdarray_test<ATYPE>::test_multiindex_access_operator()
     for(size_t i=0;i<shape[0];++i)
         for(size_t j=0;j<shape[1];++j)
             for(size_t k=0;k<shape[2];++k)
-                check_equality(array(i,j,k),*viter++);
+                compare(array(i,j,k),*viter++);
 
     //test with a const reference
     viter = ref_data.begin();
@@ -236,7 +233,7 @@ void mdarray_test<ATYPE>::test_multiindex_access_operator()
     for(size_t i=0;i<shape[0];++i)
         for(size_t j=0;j<shape[1];++j)
             for(size_t k=0;k<shape[2];++k)
-                check_equality(array(i,j,k),*viter++);
+                compare(array(i,j,k),*viter++);
 
 }
 
