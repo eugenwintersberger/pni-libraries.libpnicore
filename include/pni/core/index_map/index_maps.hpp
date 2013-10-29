@@ -21,6 +21,7 @@
  */
 
 #pragma once
+#include <sstream>
 #include "index_map.hpp"
 #include "static_index_map.hpp"
 #include "index_policy.hpp"
@@ -84,12 +85,20 @@ namespace core{
 
     template<typename MAPT> struct map_utils
     {
+        /*!
+        \brief create map from container
+
+        Create a new map from a container. In this case the map can do a full
+        resizeing. This would be the case when the map allows also resizeing its
+        internal storage.
+        */
         template<typename CTYPE> static MAPT create(const CTYPE &c)
         {
             typename MAPT::storage_type storage(c.size());
             std::copy(c.begin(),c.end(),storage.begin());
             return MAPT(storage); 
         }
+
     };
 
     //-------------------------------------------------------------------------
@@ -97,9 +106,32 @@ namespace core{
     struct map_utils<index_map<std::array<T,NDIMS>,POLTYPE> >
     {
         typedef index_map<std::array<T,NDIMS>,POLTYPE> map_type;
+        /*!
+        \brief create map from container
+    
+        In this case std::array is used as internal storage for the map. This
+        implies that the map can be resized but the numbers of dimensions cannot
+        be changed. If the number of elements in the container does not match
+        the number of elements in the map type an exception will be thrown.
+
+        \throw shape_mismatch_error map rank and container size do not match.
+        \tparam CTYPE container type 
+        \param c instance of CTYPE with the new shape information
+        \return new map type 
+        */
         template<typename CTYPE> static map_type create(const CTYPE &c)
         {
             typename map_type::storage_type storage;
+
+            if(map_type().rank() != c.size())
+            {
+                std::stringstream ss;
+                ss<<"The map supports only a fixed number of dimensions ("
+                    <<storage.size()<<")! However, the container you are "
+                    <<"passing has ("<<c.size()<<") elements!"<<std::endl;
+                throw shape_mismatch_error(EXCEPTION_RECORD,ss.str());
+            }
+
             std::copy(c.begin(),c.end(),storage.begin());
             return map_type(storage);
         }
@@ -110,9 +142,14 @@ namespace core{
     template<typename POLTYPE,size_t...DIMS>
     struct map_utils<static_index_map<POLTYPE,DIMS...> >
     {
+        /*!
+        \brief creat map from container
+
+        */
         typedef static_index_map<POLTYPE,DIMS...> map_type;
         template<typename CTYPE> static map_type create(const CTYPE &c)
         {
+            //static_assert(false,"You cannot create a new shape object");
         }
         
     };

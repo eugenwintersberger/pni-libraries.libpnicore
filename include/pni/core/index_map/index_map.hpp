@@ -59,8 +59,8 @@ namespace core{
         private:
             //! storage for shape information
             storage_type _shape;
+
         public:
-            //-----------------------------------------------------------------
             /*!
             \brief constructor
 

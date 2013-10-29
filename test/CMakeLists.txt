@@ -9,6 +9,7 @@ set(TEST_SOURCES pnicoretest.cpp
                  types/type_str_id_test.cpp
                  index_maps/index_map_test_common.cpp
                  arrays/mdarray_test.cpp
+                 arrays/dynamic_mdarray_test.cpp
                  EqualityCheck.cpp
                  )
 #add_operator_test.cpp

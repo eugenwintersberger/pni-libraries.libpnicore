@@ -125,6 +125,44 @@ namespace core {
                 return c;
             }
 
+            //-----------------------------------------------------------------
+            /*!
+            \brief change the shape 
+
+            Change the shape of an array if supported by the index map. 
+            In general, what is true for all arrays is that the number of
+            elements in the new shape must be equal to the original number of
+            elements. However, there are certain limitations depending on which
+            index map is used. 
+
+            \li in the case of a fully dynamic map rank and number of elements
+            can be changed 
+            \li for a map with fixed rank only the number of elements along each
+            dimension can be changed
+            \li finally for a static map this operation will always fail 
+
+            \throws shape_mismatch_error in case of any error
+            \tparam CTYPE container type 
+            \parma new_shape instance of CTYPE with the new shape of the array
+            */
+            /*
+            template<typename CTYPE> void shape(const CTYPE &new_shape)
+            {
+                //first let's create a new map - if the map type supports this
+                //operation (including possible resizeing of the maps internal
+                //storage) everything is fine so far.
+                auto new_map = map_utils<map_type>::create(new_shape);
+
+                //now we have to check if the total size would not change
+                if(new_map.max_elements() != _imap.max_elements())
+                {
+                    throw shape_mismatch_error(EXCEPTION_RECORD,"");
+                }
+
+                _imap = std::move(new_map);
+
+            }*/
+
 
             //-----------------------------------------------------------------
             /*! \brief obtain buffer reference
