@@ -53,27 +53,29 @@ namespace core{
     class array_selection
     {
         private:
+            typedef std::vector<size_t> index_t;
+
             //member variables describing the selection in the original array
             //all of these containers have the same size which is equal to the
             //rank of the original array
             //! shape of the selection in the original array
-            std::vector<size_t> _oshape;             
+            index_t _oshape;             
             //! offset in the original array
-            std::vector<size_t> _offset;
+            index_t _offset;
             //! stride in the original array
-            std::vector<size_t> _stride;
+            index_t _stride;
 
             //member variables describing the effective shape and rank of the 
             //selection
-            size_t _rank;   //!< effective rank of the selection
-            std::vector<size_t> _shape; //!< effective shape of the selection
-            size_t _size; //!< effective size of the selection
+            size_t  _rank;  //!< effective rank of the selection
+            index_t _shape; //!< effective shape of the selection
+            size_t  _size;  //!< effective size of the selection
 
             //! setup selection parameters
             void _set_local_params()
             {
                 _rank = 0;
-                _shape = std::vector<size_t>(0);
+                _shape = index_t(0);
                 _size = 1;
                 for(auto ositer=_oshape.begin(),
                          oiter=_offset.begin(),

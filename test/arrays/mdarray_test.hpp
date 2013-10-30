@@ -42,12 +42,42 @@ using namespace pni::core;
 template<typename ATYPE>
 class mdarray_test : public CppUnit::TestFixture
 {
+        typedef std::vector<size_t> vector_size_t;
+        typedef std::array<size_t,3> array_size_t;
+        typedef std::list<size_t> list_size_t;
+        typedef std::vector<uint8> vector_uint8_t;
+        typedef std::array<uint8,3> array_uint8_t;
+        typedef std::list<uint8>    list_uint8_t;
+        typedef std::vector<uint16> vector_uint16_t;
+        typedef std::array<uint16,3> array_uint16_t;
+        typedef std::list<uint16>    list_uint16_t;
+        typedef std::vector<uint32> vector_uint32_t;
+        typedef std::array<uint32,3> array_uint32_t;
+        typedef std::list<uint32>    list_uint32_t;
+        typedef std::vector<uint64> vector_uint64_t;
+        typedef std::array<uint64,3> array_uint64_t;
+        typedef std::list<uint64>    list_uint64_t;
         CPPUNIT_TEST_SUITE(mdarray_test);
         CPPUNIT_TEST(test_linear_access_operator);
         CPPUNIT_TEST(test_linear_access_at);
         CPPUNIT_TEST(test_linear_access_iterators);
         CPPUNIT_TEST(test_linear_access_reverse_iterators);
         CPPUNIT_TEST(test_multiindex_access_operator);
+        CPPUNIT_TEST(test_multiindex_access_container<vector_size_t>);
+        CPPUNIT_TEST(test_multiindex_access_container<array_size_t>);
+        CPPUNIT_TEST(test_multiindex_access_container<list_size_t>);
+        CPPUNIT_TEST(test_multiindex_access_container<vector_uint8_t>);
+        CPPUNIT_TEST(test_multiindex_access_container<array_uint8_t>);
+        CPPUNIT_TEST(test_multiindex_access_container<list_uint8_t>);
+        CPPUNIT_TEST(test_multiindex_access_container<vector_uint16_t>);
+        CPPUNIT_TEST(test_multiindex_access_container<array_uint16_t>);
+        CPPUNIT_TEST(test_multiindex_access_container<list_uint16_t>);
+        CPPUNIT_TEST(test_multiindex_access_container<vector_uint32_t>);
+        CPPUNIT_TEST(test_multiindex_access_container<array_uint32_t>);
+        CPPUNIT_TEST(test_multiindex_access_container<list_uint32_t>);
+        CPPUNIT_TEST(test_multiindex_access_container<vector_uint64_t>);
+        CPPUNIT_TEST(test_multiindex_access_container<array_uint64_t>);
+        CPPUNIT_TEST(test_multiindex_access_container<list_uint64_t>);
         CPPUNIT_TEST(test_inquery);
         CPPUNIT_TEST_SUITE_END();
     private:
@@ -70,6 +100,20 @@ class mdarray_test : public CppUnit::TestFixture
         static void allocate_storage(std::array<T,N> &c,size_t n)
         {
         }
+
+        //---------------------------------------------------------------------
+        template<typename CTYPE,typename...ITYPES>
+        static void create_index(CTYPE &index,ITYPES ...indexes)
+        {
+            index = CTYPE{indexes...};
+        }
+
+        template<typename T,size_t N,typename ...ITYPES>
+        static void create_index(std::array<T,N> &c,ITYPES ...indexes)
+        {
+            c = std::array<T,N>{{indexes...}};
+        }
+
     public:
         void setUp();
         void tearDown();
@@ -79,6 +123,43 @@ class mdarray_test : public CppUnit::TestFixture
         void test_linear_access_reverse_iterators();
         void test_reverse_iterators();
         void test_multiindex_access_operator();
+        template<typename ITYPE> void test_multiindex_access_container()
+        {
+            std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+           
+            ITYPE index;
+            
+            auto viter = ref_data.begin();
+            for(size_t i=0;i<shape[0];++i)
+                for(size_t j=0;j<shape[1];++j)
+                    for(size_t k=0;k<shape[2];++k)
+                    {
+                        create_index(index,i,j,k);
+                        array(index) = *viter++;
+                    }
+
+            //read data back
+            viter = ref_data.begin();
+            for(size_t i=0;i<shape[0];++i)
+                for(size_t j=0;j<shape[1];++j)
+                    for(size_t k=0;k<shape[2];++k)
+                    {
+                        create_index(index,i,j,k);
+                        compare(array(index),*viter++);
+                    }
+
+            //test with a const reference
+            viter = ref_data.begin();
+            const ATYPE &ca = array;
+            for(size_t i=0;i<shape[0];++i)
+                for(size_t j=0;j<shape[1];++j)
+                    for(size_t k=0;k<shape[2];++k)
+                    {
+                        create_index(index,i,j,k);
+                        compare(array(index),*viter++);
+                    }
+        }
+
         void test_inquery();
 };
 
@@ -236,5 +317,6 @@ void mdarray_test<ATYPE>::test_multiindex_access_operator()
                 compare(array(i,j,k),*viter++);
 
 }
+
 
 
