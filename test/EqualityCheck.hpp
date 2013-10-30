@@ -60,7 +60,7 @@ template<typename T> class EqualityCheck<T,true,false>
         \param a instance of T
         \param b instnace of T 
         */
-        static void check(const T &a,const T &b)
+        static void check( T a, T b)
         {
             CPPUNIT_ASSERT(a == b);
         }
@@ -84,7 +84,7 @@ template<typename T> class EqualityCheck<T,false,false>
         \param a instance of T
         \param b instnace of T 
         */
-        static void check(const T &a,const T &b)
+        static void check(T a, T b)
         {
             CPPUNIT_ASSERT_DOUBLES_EQUAL(a,b,1.e-8);
         }
@@ -109,7 +109,7 @@ template<typename T> class EqualityCheck<T,false,true>
         \param a instance of T
         \param b instnace of T 
         */
-        static void check(const T &a,const T &b)
+        static void check(T a,T b)
         {
             CPPUNIT_ASSERT_DOUBLES_EQUAL(a.real(),b.real(),1.e-8);
             CPPUNIT_ASSERT_DOUBLES_EQUAL(a.imag(),b.imag(),1.e-8);
@@ -127,11 +127,11 @@ configuration is required.
 \param a instance of T
 \param b instance of T 
 */
-template<typename T> void check_equality(const T &a,const T &b)
+template<typename T> void check_equality( T a, T b)
 {
     EqualityCheck<T,type_info<T>::is_integer,type_info<T>::is_complex>::check(a,b);
 }
 
-void check_equality(const string &a,const string &b);
-void check_equality(const Bool &a,const Bool &b);
+void check_equality(string a, string b);
+void check_equality(bool a, bool b);
 

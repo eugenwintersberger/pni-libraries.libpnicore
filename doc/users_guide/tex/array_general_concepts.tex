@@ -1,0 +1,131 @@
+
+\libpnicore\ currently provides two array templates 
+%%%----------------------------------------------------------------------------
+\begin{center}
+\begin{tabular}{m{0.1\linewidth}p{0.7\linewidth}}
+\sdarray &  
+static arrays whose complete shape and type is know at compile time\\
+\darray & 
+a dynamic array for which the type must be determined at compile
+time but its shape (and thus size) can be configured at runtime \\
+\end{tabular}
+\end{center}
+%%%----------------------------------------------------------------------------
+In addition to this two basic templates there are several utility classes and
+templates like
+%%%----------------------------------------------------------------------------
+\begin{center}
+\begin{tabular}{m{0.15\linewidth}p{0.7\linewidth}}
+\arrayview &  a template providing a particular view on an array (see
+Sec.~\ref{sec:array:array_slicing}) \\
+\numarray &  an adapter template for arrays providing arithmetic operations
+(see Sec.~\ref{sec:array:numeric_arrays}) \\
+\arrayerasure & a type erasure that can be used with any instance of an array
+template (see Sec.~\ref{sec:array:type_erasure})
+\end{tabular}
+\end{center}
+%%%----------------------------------------------------------------------------
+
+\subsection{Common array interface}
+
+All array templates share the following common implicit interface
+\begin{minted}{cpp}
+template<typename T> class array_interface
+{
+public:
+//==================public types===========================================
+typedef ... value_type;             // element type
+typedef ... shared_ptr;             // a shared pointer to the array
+typedef ... unique_ptr;             // a unique pointer to the array
+typedef ... iterator;               // iterator
+typedef ... const_iterator;         // constant iterator
+typedef ... reverse_iterator;       // reverse iterator type
+typedef ... const_reverse_iterator; //const reverse iterator type
+typedef ... array_type;             // array type
+typedef ... storage_type;           // type of the storage
+typedef ... view_type;              // type of the view
+typedef ... map_type;               // type of the index map
+//================public members===========================================
+static const type_id_t type_id = type_id_map<value_type>::type_id;
+
+//==================constructor and destructor=============================
+array_interface();                         //need default constructor
+array_interface(const array_interface &a); //copy constructor
+
+//=======================assignment operator===============================
+array_type &operator=(const array_type &a); //copy assignment operator
+
+//======================methods for multiindex data access=================
+//if all arguments are integer numbers return a reference to the
+template<typename ...ITYPES> 
+typename array_view_selector<array_type,ITYPES...>::reftype 
+operator()(ITYPES ...indices);
+
+template<typename ...ITYPES> 
+typename array_view_selector<array_type,ITYPES...>::viewtype 
+operator()(ITYPES ...indices);
+
+template<template<typename ...> class CTYPE,typename ...OTS> 
+typename array_view_selector<array_type,typename CTYPE::value_type>::reftype
+operator()(const CTYPE<OTS...> &index);
+
+template<template<typename ...> class CTYPE,typename ...OTS> 
+typename array_view_selector<array_type,typename CTYPE::value_type>::viewtype
+operator()(const CTYPE<OTS...> &index) const;
+
+//================methods for linear data access===========================
+//operators for linear data access - these operators are assumed not to
+//throw any exception
+value_type &operator[](size_t i);
+value_type  operator[](size_t i) const;
+
+//methods for linear data access with index checking - these methods are
+//assumed to throw IndexError if the index exceeds the size of the array
+value_type &at(size_t i);        //reference to the element at index i
+value_type  at(size_t i) const;  //value of the element at index i
+
+//insert an element at index i
+void        insert(size_t pos,const value_type &v);
+
+value_type &front();       //reference to the first element
+value_type  front() const; //value of the first element
+value_type &back();        //reference to the last element
+value_type  back() const;  //value of the last element
+
+//get a const. reference to the storage object
+const storage_type &storage() const;
+
+//===============methods for array inquery==================================
+size_t size() const; //return number of elements of type T
+size_t rank() const; //number of dimensions
+
+//return a container of type CTYPE with the number of elements along each
+//dimension
+template<typename CTYPE> shape() const;
+
+const map_type &map() const; //return reference to the index map
+
+//===================iterator related methods==============================
+iterator begin();              //iterator on the first element
+iterator end();                //iterator on the last+1 element
+const_iterator begin() const;  //const iterator on the first element
+const_iterator end()   const;  //const iterator on the last+1 element
+
+reverse_iterator rbegin();     //reverse iterator on the last element
+reverse_iterator rend();       //reverse iterator on the 0-1 element
+
+//const reverse iterator on the last element
+const_reverse_iterator rbegin() const; 
+//const reverse iterator on the 0-1 element
+const_reverse_iterator rend()   const;
+};
+\end{minted}
+
+This interface is quite similar to the interface of {\tt std::vector} or other
+STL containers. Thus, all instances of array templates can be used with STL
+algorithms. There is one important note concerning array construction and
+assignment: all arrays have to provide a default constructor and a copy
+constructor as well as a copy assignment operator. However, static and dynamic
+arrays and some of their derived types also provide a move constructor and
+assignment operator. Hence, they can be returned by functions without additional
+copy operations.

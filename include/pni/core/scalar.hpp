@@ -29,10 +29,10 @@
 #pragma once
 
 #include <iostream>
+#include <array>
 
 #include "types.hpp"
 #include "type_id_map.hpp"
-#include "sbuffer.hpp"
 #include "array_view.hpp"
 
 namespace pni {
@@ -52,7 +52,7 @@ namespace core {
     {
         private:
             //! static buffer holding the data value
-            sbuffer<T,1> _data; 
+            std::array<T,1> _data; 
         public:
             //================public data types================================
             //! native data type of the scalar
@@ -60,7 +60,7 @@ namespace core {
             //! type of the scalar itself
             typedef scalar<T> array_type;
             //! storage type
-            typedef sbuffer<T,1> storage_type;
+            typedef std::array<T,1> storage_type;
             //! shared pointer typ
             typedef std::shared_ptr<array_type> shared_ptr;
             //! unique pointer type
@@ -86,7 +86,7 @@ namespace core {
             
             //-----------------------------------------------------------------
             //! constructor from a scalar value
-            scalar(const value_type &r):_data({r}) {}
+            scalar(const value_type &r):_data(storage_type{r}) {}
 
             //-----------------------------------------------------------------
 

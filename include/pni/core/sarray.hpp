@@ -25,13 +25,20 @@
 
 #pragma once
 
+#include <array>
+#include <sstream>
+#include <stdexcept>
+#include <memory>
 #include "types.hpp"
-#include "sbuffer.hpp"
-#include "static_cindex_map.hpp"
+#include "type_id_map.hpp"
+#include "index_map/index_maps.hpp"
 #include "exceptions.hpp"
 #include "slice.hpp"
 #include "array_view.hpp"
 #include "array_view_selector.hpp"
+#include <boost/mpl/times.hpp>
+#include <boost/mpl/arithmetic.hpp>
+#include <boost/mpl/size_t.hpp>
 
 namespace pni{
 namespace core{
@@ -68,8 +75,12 @@ namespace core{
     template<typename T,size_t ...DIMS> class sarray
     {
         private:
-            //! static buffer holding the data
-            sbuffer<T,size_type<DIMS...>::size > _data;    
+            //! static array holding the data
+            typedef typename boost::mpl::times<
+                boost::mpl::size_t<1>,
+                boost::mpl::size_t<DIMS>...
+                >::type size_type;
+            std::array<T,size_type::value> _data;    
             //! static shape describing the arrays dimensionality
             static const static_cindex_map<DIMS...> _shape; 
 
@@ -191,7 +202,7 @@ namespace core{
             //! type of the arrya view
             typedef array_view<array_type> view_type;
             //! storage type
-            typedef sbuffer<T,size_type<DIMS...>::size > storage_type;
+            typedef std::array<T,size_type::value > storage_type;
             //! shared pointer to this type
             typedef std::shared_ptr<array_type> shared_ptr;
             //! unique pointer to this type
@@ -200,6 +211,11 @@ namespace core{
             typedef typename storage_type::iterator iterator; 
             //! const iterator
             typedef typename storage_type::const_iterator const_iterator; 
+            //! reverse iterator
+            typedef typename storage_type::reverse_iterator reverse_iterator;
+            //! const reverse iterator
+            typedef typename storage_type::const_reverse_iterator
+                const_reverse_iterator;
             //! type of the index map
             typedef static_cindex_map<DIMS...> map_type;
             //===============public members====================================
@@ -449,10 +465,18 @@ namespace core{
             */
             value_type at(size_t i) const
             {
-                check_index(i,this->size(),EXCEPTION_RECORD);
-
-                return (*this)[i];
+                try
+                {
+                    return _data.at(i);
+                }
+                catch(std::out_of_range &error)
+                {
+                    std::stringstream ss;
+                    ss<<"Array index "<<i<<" out of range ("<<size()<<")!";
+                    throw index_error(EXCEPTION_RECORD,ss.str());
+                }
             }
+
 
             //-----------------------------------------------------------------
             /*! 
@@ -466,9 +490,17 @@ namespace core{
             */
             value_type &at(size_t i) 
             {
-                check_index(i,this->size(),EXCEPTION_RECORD);
+                try
+                {
+                    return _data.at(i);
+                }
+                catch(std::out_of_range &error)
+                {
+                    std::stringstream ss;
+                    ss<<"Array index "<<i<<" out of range ("<<size()<<")!";
+                    throw index_error(EXCEPTION_RECORD,ss.str());
+                }
 
-                return (*this)[i];
             }
 
             //-----------------------------------------------------------------
@@ -476,17 +508,64 @@ namespace core{
             \brief insert value
 
             Insert a data value at linear position i. Method throws an exception
-            if i exceeds the size of the array.
+            if i exceeds the size of the array. This method is basically here
+            for future multithreading applications.
             \throws index_error if i exceeds the arrays size
             \param i index where to insert the value
             \param v value to insert
             */
             void insert(size_t i,const value_type &v)
             {
-                check_index(i,this->size(),EXCEPTION_RECORD);
+                try
+                {
+                    _data.at(i) = v;
+                }
+                catch(std::out_of_range &error)
+                {
+                    std::stringstream ss;
+                    ss<<"Array index "<<i<<" out of range ("<<size()<<")!";
+                    throw index_error(EXCEPTION_RECORD,ss.str());
+                }
 
-                (*this)[i] = v;
             }
+
+            //-----------------------------------------------------------------
+            /*!
+            \brief reference to first element
+
+            Return a reference to the first element in the linear view of the
+            array. 
+            \return reference to first element
+            */
+            value_type &front() { return _data.front(); }
+
+            //-----------------------------------------------------------------
+            /*!
+            \brief first element
+
+            Return the first element in the linear view of the array.
+            \return value of first element
+            */
+            value_type front() const { return _data.front(); }
+
+            //-----------------------------------------------------------------
+            /*!
+            \brief reference to last value
+
+            Return a reference to the last value of in the linear view of the
+            array.
+            \return reference to last value
+            */
+            value_type &back() { return _data.back(); }
+
+            //-----------------------------------------------------------------
+            /*!
+            \brief return last value
+
+            Return the last value in the linear view of the array. 
+            \return value of last element
+            */
+            value_type back() const { return _data.back(); }
 
             //-----------------------------------------------------------------
             //! get iterator to first element
@@ -503,6 +582,28 @@ namespace core{
             //-----------------------------------------------------------------
             //! get const iterator to last element
             const_iterator end() const   { return this->_data.end(); }
+
+            //-----------------------------------------------------------------
+            //! get reverse iterator to last element
+            reverse_iterator rbegin() { return this->_data.rbegin(); }
+
+            //-----------------------------------------------------------------
+            //! get const reverse iterator to last element
+            const_reverse_iterator rbegin() const 
+            { 
+                return this->_data.rbegin();
+            }
+
+            //-----------------------------------------------------------------
+            //! get reverse iterator to 0-1 element
+            reverse_iterator rend() { return this->_data.rend(); }
+
+            //-----------------------------------------------------------------
+            //! get const reverse iterator to 0-1 element
+            const_reverse_iterator rend() const 
+            {
+                return this->_data.rend();
+            }
 
             //=======================inquery methods===========================
             //! get number of elements
@@ -545,7 +646,7 @@ namespace core{
             \brief get reference to storage
 
             Return a constant reference to the storage of the array. 
-            \return reference to static buffer
+            \return reference to static array
             */
             const storage_type &storage() const
             {
@@ -556,6 +657,26 @@ namespace core{
 
     template<typename T,size_t ...DIMS> const
         static_cindex_map<DIMS...> sarray<T,DIMS...>::_shape = static_cindex_map<DIMS...>();
+    
+    //-------------------------------------------------------------------------
+    /*!
+    \ingroup type_classes
+    \brief get type id of an sarray
+
+    Return the type id of an static array type. The default container template
+    cannot be used as the template contains size_t parameters and not only
+    types.
+    \tparam T primitive type
+    \tparam INDICES indices of the static array type
+    \param v reference to an instance of a static array
+    \return type ID 
+    \
+    */
+    template<typename T,size_t ...INDICES> 
+        type_id_t type_id(const sarray<T,INDICES...> &v)
+    {
+        return type_id_map<T>::type_id;
+    }
 
     //-------------------------------------------------------------------------
     /*!

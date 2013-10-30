@@ -1,0 +1,54 @@
+\documentclass[a4paper]{scrbook}
+\usepackage{a4wide,amsmath,graphics}
+\usepackage{hyperref}  %% need this for links and references in the document
+\usepackage{array}     %% need this for more table formating (m{} and p{})
+\usepackage{url}       %% support for URLs
+\usepackage{float}     %% required for extra float placement
+\usepackage{placeins}
+\usepackage{subfig}
+\usepackage{lscape}    %% landscape figures
+\usepackage[disable]{todonotes}
+\usepackage{color}
+\usepackage[figuresright]{rotating}
+\usepackage{minted}    %% excellent source code formating
+
+\hypersetup{pdftitle={libpniio API review 2013 },
+				pdfborder=0 0 0,
+				colorlinks=false}
+
+\setcapindent{0em}
+
+\title{{\Huge{\tt libpnicore} Users Guide}}
+\author{Eugen Wintersberger}
+
+\newcommand{\libpnicore}{{\tt libpnicore}}
+\newcommand{\sdarray}{{\tt sdarray}}
+\newcommand{\darray}{{\tt darray}}
+\newcommand{\arrayview}{{\tt array\_view}}
+\newcommand{\arrayerasure}{{\tt array}}
+\newcommand{\numarray}{{\tt numeric\_array}}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\chapter{Data types}
+\input{tex/types.tex}
+\FloatBarrier
+
+\chapter{Arrays}
+\input{tex/arrays.tex}
+\FloatBarrier
+
+\chapter{Program configuration utilities}
+\FloatBarrier
+
+\chapter{Benchmark utilities}
+\FloatBarrier
+
+\appendix
+\chapter{Some internals on multidimensional arrays}
+\input{tex/appendix_multidim_arrays.tex}
+\FloatBarrier
+
+\end{document}

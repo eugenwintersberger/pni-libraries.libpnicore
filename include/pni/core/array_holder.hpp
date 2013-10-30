@@ -37,7 +37,7 @@ namespace core{
     */
     template<typename ATYPE> const void *get_pointer(const ATYPE &a)
     {
-        return (void *)(a.storage().ptr());
+        return (void *)(a.storage().data());
     }
 
     //-------------------------------------------------------------------------
@@ -52,7 +52,7 @@ namespace core{
     */
     template<typename ATYPE> const void *get_pointer(const numarray<ATYPE> &a)
     {
-        return (void *)(a.storage().storage().ptr());
+        return (void *)(a.storage().storage().data());
     }
 
     /*!

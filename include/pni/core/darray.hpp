@@ -27,23 +27,23 @@
 
 //#include<memory>
 #include<iostream>
+#include<sstream>
+#include<stdexcept>
 #include<utility>
 #include<complex>
 #include<cstdarg>
 #include<cstdio>
-//#include<typeinfo>
+#include<memory>
 
 #include "exception_utils.hpp"
 #include "types.hpp"
 #include "slice.hpp"
 #include "array_view.hpp"
 #include "array_view_selector.hpp"
-#include "cindex_map.hpp"
+#include "index_map/index_maps.hpp"
 
-//#include "type_info.hpp"
 #include "type_id_map.hpp"
 #include "type_conversion.hpp"
-#include "container_iterator.hpp"
 
 namespace pni {
 namespace core {
@@ -57,7 +57,7 @@ namespace core {
     \tparam IMAP the index map 
     */
     template<typename T,
-             typename STORAGE=dbuffer<T,new_allocator>,
+             typename STORAGE=std::vector<T>,
              typename IMAP=cindex_map > 
     class darray
     {
@@ -180,6 +180,11 @@ namespace core {
             typedef typename STORAGE::iterator iterator;
             //! const iterator type
             typedef typename STORAGE::const_iterator const_iterator; 
+            //! reverse iterator
+            typedef typename STORAGE::reverse_iterator reverse_iterator;
+            //! const reverse iterator
+            typedef typename STORAGE::const_reverse_iterator
+                const_reverse_iterator;
             //! map type
             typedef IMAP map_type;
             
@@ -262,8 +267,10 @@ namespace core {
             template<typename ATYPE> 
             explicit darray(const array_view<ATYPE> &a):
                 _imap(a.shape<std::vector<size_t> >()),
-                _data(a)
-            { }
+                _data(a.size())
+            { 
+                std::copy(a.begin(),a.end(),_data.begin());
+            }
 
 
             //-----------------------------------------------------------------
@@ -329,7 +336,8 @@ namespace core {
             template<typename CTYPE> void shape(const CTYPE &s)
             {
                 check_allocation_state(this->storage(),EXCEPTION_RECORD);
-                IMAP map(s);
+                IMAP map(s.size());
+                std::copy(s.begin(),s.end(),map.begin());
                 check_equal_size(this->_imap,map,EXCEPTION_RECORD);
                 this->_imap = map;
             }
@@ -348,7 +356,7 @@ namespace core {
             Return a constant reference to the array shape. 
             \return array shape const reference
             */
-            const dbuffer<size_t> &shape() const 
+            const std::vector<size_t> &shape() const 
             { 
                 return this->_imap.shape(); 
             }
@@ -414,7 +422,20 @@ namespace core {
             \param i linear index of element
             \return reference to the value at i
             */
-            value_type &at(size_t i) { return this->_data.at(i); } 
+            value_type &at(size_t i) 
+            { 
+                try
+                {
+                    return this->_data.at(i); 
+                }
+                catch(std::out_of_range &error)
+                {
+                    std::stringstream ss;
+                    ss<<"Index "<<i<<" is out of range ("<<size()<<")!";
+                    throw index_error(EXCEPTION_RECORD,ss.str());
+                }
+            
+            } 
 
             //-----------------------------------------------------------------
             /*! \brief get value at i
@@ -425,7 +446,20 @@ namespace core {
             \param i linear index of element
             \return value at i
             */
-            value_type at(size_t i) const { return this->_data.at(i); } 
+            value_type at(size_t i) const 
+            { 
+                try
+                {
+                    return this->_data.at(i); 
+                }
+                catch(std::out_of_range &error)
+                {
+                    std::stringstream ss;
+                    ss<<"Index "<<i<<" is out of range ("<<size()<<")!";
+                    throw index_error(EXCEPTION_RECORD,ss.str());
+                }
+            
+            } 
 
             //-----------------------------------------------------------------
             /*!
@@ -440,6 +474,46 @@ namespace core {
             {
                 this->at(i)=value;
             }
+
+            //-----------------------------------------------------------------
+            /*!
+            \brief reference to first element
+
+            Return a reference to the first element in the linear view of the
+            array.
+            \return reference to first element
+            */
+            value_type &front() { return this->_data.front(); }
+
+            //-----------------------------------------------------------------
+            /*!
+            \brief value of first element
+
+            Return the value of the first element in the linear view of the
+            array.
+            \return value of the first element
+            */
+            value_type front() const { return this->_data.front(); }
+
+            //-----------------------------------------------------------------
+            /*!
+            \brief reference to last element
+
+            Return a reference to the last element in the linear view of the
+            array.
+            \return reference to last element
+            */
+            value_type &back() { return this->_data.back(); }
+
+            //-----------------------------------------------------------------
+            /*!
+            \brief value of last element
+
+            Return the value of the last element in the linear view of the
+            array. 
+            \return value of last element
+            */
+            value_type back() const { return this->_data.back(); }
 
 
             //-----------------------------------------------------------------
@@ -562,6 +636,28 @@ namespace core {
             \return iterator to last element
             */
             const_iterator end() const { return this->_data.end(); }
+
+            //-----------------------------------------------------------------
+            //! return reverse iterator to last element
+            reverse_iterator rbegin() { return this->_data.rbegin(); }
+
+            //-----------------------------------------------------------------
+            //! return const reverse iterator to last element
+            const_reverse_iterator rbegin() const
+            {
+                return this->_data.rbegin(); 
+            }
+
+            //-----------------------------------------------------------------
+            //! return reverse iterator to 0-1 element
+            reverse_iterator rend() { return this->_data.rend(); }
+
+            //-----------------------------------------------------------------
+            //! return const reverse iterator to 0-1 element
+            const_reverse_iterator rend() const
+            {
+                return this->_data.rend();
+            }
 
 
     };

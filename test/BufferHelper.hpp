@@ -22,23 +22,16 @@
  */
 #pragma once
 
-#include <pni/core/dbuffer.hpp>
-#include <pni/core/rbuffer.hpp>
-#include <pni/core/new_allocator.hpp>
+#include <vector>
+#include <array>
 
 using namespace pni::core;
 
 //-----------------------------------------------------------------------------
-template<typename T,typename Allocator>
-    void allocate_buffer(dbuffer<T,Allocator> &b,size_t n)
-{
-    b =  dbuffer<T,Allocator>(n);
-}
-
-
-//-----------------------------------------------------------------------------
 template<typename T>
-    void allocate_buffer(rbuffer<T> &b,size_t n)
+    void allocate_buffer(std::vector<T> &b,size_t n)
 {
-    b = rbuffer<T>(n,new T[n]);
+    b =  std::vector<T>(n);
 }
+
+

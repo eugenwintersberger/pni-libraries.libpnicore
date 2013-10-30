@@ -1,6 +1,25 @@
 
 #gather all source files for the library
-file(GLOB SOURCES *.cpp)
+set(SOURCES array.cpp
+            array_selection.cpp
+            benchmark_result.cpp
+            benchmark_runner.cpp
+            chrono_timer.cpp
+            cli_args.cpp
+            complex_utils.cpp
+            config_parser.cpp
+            configuration.cpp
+            exceptions.cpp
+            exception_utils.cpp
+            library_config.cpp
+            range_distributor.cpp
+            service.cpp
+            slice.cpp
+            types.cpp
+            type_utils.cpp
+            value.cpp
+            value_ref.cpp)
+
 
 #set up the library target
 add_library(pnicore SHARED ${SOURCES})

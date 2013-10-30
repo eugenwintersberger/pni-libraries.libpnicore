@@ -26,8 +26,9 @@
 
 #pragma once
 
-
-#include "cindex_map.hpp"
+#include <memory>
+#include <functional>
+#include "index_map/index_maps.hpp"
 #include "container_iterator.hpp"
 #include "array_selection.hpp"
 
@@ -58,14 +59,6 @@ namespace core{
     */
     template<typename ATYPE> class array_view
     {
-        private:
-            //! parent array from which to draw data
-            ATYPE *_parray; 
-            //! selection object for index transformation 
-            array_selection _selection;
-            //! index map to produce the original selection index
-            cindex_map _imap;
-
         public:
             //====================public types=================================
             //! type of the data values
@@ -85,13 +78,25 @@ namespace core{
             //! view type
             typedef array_view<array_type> view_type;
             //! map type
-            typedef cindex_map map_type;
+            typedef typename ATYPE::map_type map_type;
             //========================public members===========================
             //! type id of the value_type
             static const size_t type_id = ATYPE::type_id;
+        private:
+            //! parent array from which to draw data
+            std::reference_wrapper<ATYPE> _parray; 
+            //! selection object for index transformation 
+            array_selection _selection;
+            //! index map to produce the original selection index
+            map_type _imap;
+
+            //! a local index type
+            typedef std::vector<size_t> index_t;
+
+        public:
             //=============constructors and destructor=========================
 
-            array_view():_parray(nullptr),_selection() {}
+            array_view():_parray(),_selection() {}
 
             //-----------------------------------------------------------------
             /*! \brief constructor
@@ -100,19 +105,19 @@ namespace core{
             \param a reference to the original array
             */
             array_view(storage_type &a):
-                _parray(&a),
+                _parray(std::ref(a)),
                 _selection(),
-                _imap()
+                _imap(a.map())
             {
-                std::vector<size_t> shape(a->shape<std::vector<size_t>());
-                std::vector<size_t> offset(a->rank());
-                std::vector<size_t> stride(a->rank());
+                index_t shape(a.shape<index_t>());
+                index_t offset(a.rank());
+                index_t stride(a.rank());
 
                 std::fill(offset.begin(),offset.end(),0);
                 std::fill(stride.begin(),stride.end(),1);
 
-                this->_selection = array_selection(shape,offset,stride);
-                this->_imap = cindex_map(this->_selection.shape());
+                _selection = array_selection(shape,offset,stride);
+                _imap = map_utils<map_type>::create(_selection.shape());
             }
 
             //-----------------------------------------------------------------
@@ -125,9 +130,9 @@ namespace core{
             dimension
             */
             array_view(storage_type &a,const array_selection &s):
-                _parray(&a),
+                _parray(std::ref(a)),
                 _selection(s),
-                _imap(_selection.shape())
+                _imap(map_utils<map_type>::create(_selection.shape()))
             { 
                 //wee need to check if all the lists and shapes do match the 
                 //rank of the array
@@ -149,28 +154,6 @@ namespace core{
                 _selection(std::move(o._selection)),
                 _imap(std::move(o._imap))
             {}
-            //====================assignment operators=========================
-            //! copy assignment
-            array_type &operator=(const array_type &o)
-            {
-                if(this == &o) return *this;
-                this->_parray = o._parray;
-                this->_selection = o._selection;
-                this->_imap = o._imap;
-                return *this;
-            }
-
-            //-----------------------------------------------------------------
-            //! move assignment
-            array_type &operator=(array_type &&o)
-            {
-                if(this == &o) return *this;
-                this->_parray = o._parray;
-                this->_selection = std::move(o._selection);
-                this->_imap = std::move(o._imap);
-                o._parray = nullptr;
-                return *this;
-            }
 
             //==================public member functions========================
             /*! \brief access with container index 
@@ -185,8 +168,7 @@ namespace core{
             template<template<typename...> class CTYPE,typename ...OTS>
                 value_type &operator()(const CTYPE<OTS...> &index)
             {
-                return (*(this->_parray))(this->_selection.template
-                        index<std::vector<size_t> >(index));
+                return _parray(_selection.template index<index_t>(index));
             }
 
             //-----------------------------------------------------------------
@@ -202,8 +184,7 @@ namespace core{
             template<template<typename ...> class CTYPE,typename ...OTS>
                 value_type operator()(const CTYPE<OTS...> &index) const
             {
-                return (*(this->_parray))(this->_selection.template
-                        index<std::vector<size_t> >(index));
+                return _parray(_selection.template index<index_t>(index));
             }
 
 
@@ -222,10 +203,11 @@ namespace core{
             \param indices instances of ITypes determining the index
             \return reference to the value at multidimensional index
              */
-            template<typename ...ITypes> value_type &
-                operator()(ITypes ...indices)
+            template<typename ...ITypes> 
+                value_type & operator()(ITypes ...indices)
             {
-                return (*this)(std::vector<size_t>{size_t(indices)...});
+                typedef std::array<size_t,sizeof...(ITypes)> array_t;
+                return (*this)(array_t{{size_t(indices)...}});
             }
 
             //-----------------------------------------------------------------
@@ -244,10 +226,11 @@ namespace core{
             index
             \return value at multidimensional index
              */
-            template<typename ...ITypes> value_type 
-                operator()(ITypes ...indices) const
+            template<typename ...ITypes> 
+            value_type operator()(ITypes ...indices) const
             {
-                return (*this)(std::vector<size_t>{size_t(indices)...});
+                typedef std::array<size_t,sizeof...(ITypes)> array_t;
+                return (*this)(array_t{{size_t(indices)...}});
             }
 
 
@@ -262,9 +245,9 @@ namespace core{
             */
             template<typename CTYPE> CTYPE shape() const
             {
-                CTYPE s(this->rank());
-                std::copy(this->_selection.shape().begin(),
-                          this->_selection.shape().end(),
+                CTYPE s(rank());
+                std::copy(_selection.shape().begin(),
+                          _selection.shape().end(),
                           s.begin());
                 return s;
             }
@@ -276,7 +259,7 @@ namespace core{
             Return a const reference to the index map used.
             \return index map
             */
-            const map_type &map() const { return this->_imap; }
+            const map_type &map() const { return _imap; }
 
             //-----------------------------------------------------------------
             /*! \brief linearzed access
@@ -290,7 +273,9 @@ namespace core{
             */
             value_type &operator[](size_t i)
             {
-                auto index = this->_imap.template index<std::vector<size_t> >(i);
+                //compute the multidimensional index in the original array for
+                //the linear index i in the view
+                auto index = _imap.template index<index_t>(i);
                 return (*this)(index); 
             }
 
@@ -306,24 +291,47 @@ namespace core{
             */
             value_type operator[](size_t i) const
             {
-                auto index = this->_imap.template index<std::vector<size_t> >(i);
+                //compute the multidimensional index in the original array for
+                //the linear index i in the view
+                auto index = _imap.template index<index_t>(i);
                 return (*this)(index); 
             }
 
             //-----------------------------------------------------------------
+            value_type &at(size_t i) { return (*this)[i]; }
+
+            //-----------------------------------------------------------------
+            value_type at(size_t i) const { return (*this)[i]; }
+
+            //-----------------------------------------------------------------
+            void insert(size_t i,const value_type &v) { at(i) = v; }
+
+            //-----------------------------------------------------------------
+            value_type &front() { return at(0); }
+
+            //-----------------------------------------------------------------
+            value_type front() const { return at(0); }
+
+            //-----------------------------------------------------------------
+            value_type &back() { return at(size()-1); }
+
+            //-----------------------------------------------------------------
+            value_type back() const { return at(size()-1); }
+
+            //-----------------------------------------------------------------
             /*! \brief get size
 
-            Return the total number of elements referenced by this view.
+            Return the total number of elements referenced by this view. 
             \return total number of elements
             */
             size_t size() const
             {
-                return this->_selection.size();
+                return _selection.size();
             }
 
             //-----------------------------------------------------------------
             //! get rank of the view
-            size_t rank()  const { return this->_selection.rank(); }
+            size_t rank()  const { return _selection.rank(); }
 
             //-----------------------------------------------------------------
             /*! \brief iterator to first element
@@ -347,10 +355,7 @@ namespace core{
             Return an const interator to the first element of the array view. 
             \return iterator to the first element
             */
-            const_iterator begin() const
-            {
-                return const_iterator(this,0);
-            }
+            const_iterator begin() const { return const_iterator(this,0); }
 
             //-----------------------------------------------------------------
             /*! \brief const iterator to last element
@@ -359,10 +364,7 @@ namespace core{
             The iterator is thus invalid.
             \return iterator to last element
             */
-            const_iterator end() const
-            {
-                return const_iterator(this,this->size());
-            }
+            const_iterator end() const { return const_iterator(this,size()); }
     };
 
 

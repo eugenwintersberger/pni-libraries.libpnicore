@@ -22,29 +22,112 @@
  */
 #pragma once
 
-struct data_generator
-{
-    template<typename ITTARGET,typename ITARG,typename GENERATOR>
-    static void fill(ITTARGET &begin,ITTARGET &end,const ITARG &arg,
-                       const GENERATOR &gen);
+#include <sstream>
+#include <pni/core/types.hpp>
+#include <pni/core/type_info.hpp>
 
-    template<typename ITTARGET,typename GENERATOR>
-    static void fill(ITTARGET &&begin,ITTARGET &&end,GENERATOR &&gen);
+#ifdef NOCPPRAND
+#include <boost/random/uniform_int.hpp>
+#include <boost/random/uniform_real.hpp>
+#include <boost/random/mersenne_twister.hpp>
+#endif
+
+using namespace pni::core;
+
+//=============we need different distributions for integer and float============
+template<typename T,bool is_int> struct distribution_map;
+
+//------------distribution for integral types-----------------------------------
+template<typename T> struct distribution_map<T,true>
+{
+#ifdef NOCPPRAND
+    typedef boost::uniform_int<T> distribution_type;
+#else
+    typedef std::uniform_int_distribution<T> distribution_type;
+#endif
 };
 
-template<typename ITTARGET,typename ITARG,typename GENERATOR>
-void data_generator::fill(ITTARGET &begin,ITTARGET &end,
-                               const ITARG &arg,const GENERATOR &gen)
+//------------------distribution for floating point types-----------------------
+template<typename T> struct distribution_map<T,false>
 {
-    for(auto iter=begin;iter!=end;++iter)
-        *iter = gen(*arg++);
-}
+#ifdef NOCPPRAND
+    typedef boost::uniform_real<T> distribution_type;
+#else
+    typedef std::uniform_real_distribution<T> distribution_type;
+#endif
+};
 
-template<typename ITTARGET,typename GENERATOR>
-void data_generator::fill(ITTARGET &&begin,ITTARGET &&end,
-                               GENERATOR &&gen)
+//=================the default generator=======================================
+template<typename T> class random_generator
 {
-    for(auto iter = begin;iter!=end;++iter)
-        *iter = gen();
-}
+    private:
+#ifdef NOCPPRAND
+        boost::mt19937 _engine;
+#else
+        std::mt19937_64 _engine;
+#endif
+        typename distribution_map<T,type_info<T>::is_integer>::distribution_type _distribution;
+
+    public:
+        random_generator(T a,T b):
+            _engine(std::random_device()()),
+            _distribution(a,b)
+        {}
+
+        random_generator():
+            _engine(std::random_device()()),
+            _distribution(0.2*type_info<T>::min(),0.2*type_info<T>::max())
+        { 
+        }
+
+        T operator()()
+        {
+            return _distribution(_engine);
+        }
+};
+
+//-----------------------------------------------------------------------------
+template<typename T> class random_generator<std::complex<T>>
+{
+    private:
+        random_generator<T> _real_generator;
+        random_generator<T> _imag_generator;
+    public:
+        random_generator(T a,T b):
+            _real_generator(a,b),
+            _imag_generator(a,b)
+        {}
+
+        random_generator():
+            _real_generator(),
+            _imag_generator()
+        {}
+        
+        std::complex<T> operator()()
+        {
+            return std::complex<T>(_real_generator(),
+                                   _imag_generator());
+        }
+};
+
+//-----------------------------------------------------------------------------
+template<> class random_generator<string>
+{
+    private:
+        random_generator<unsigned long> _generator;
+    public:
+        random_generator(unsigned long a,unsigned long b):
+            _generator(a,b)
+        {}
+
+        random_generator(){}
+
+        string operator()()
+        {
+            std::stringstream ss;
+            ss<<_generator();
+            return ss.str();
+        }
+};
+
     

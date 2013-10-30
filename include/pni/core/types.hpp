@@ -41,8 +41,8 @@ namespace core{
       @{
      */
 
-    //! 8Bit signed integer type
-    typedef int8_t   int8;   
+    //---------------------integer types---------------------------------------
+    typedef int8_t   int8;   //!< 8Bit signed integer type
     typedef uint8_t  uint8;  //!< 8Bit unsigned integer type
     typedef int16_t  int16;  //!< 16Bit signed integer type
     typedef uint16_t uint16; //!< 16Bit unsigned integer type
@@ -51,20 +51,23 @@ namespace core{
     typedef int64_t  int64;  //!< 64Bit signed integer type
     typedef uint64_t uint64; //!< 64Bit unsigned integer type
 
-    //floating point numbers
-    typedef double float64;         //!< 64Bit IEEE floating point type
-    typedef float float32;          //!< 32Bit IEEE floating point type
-    typedef long double float128;   //!< 128Bit IEEE floating point type
+    //-------------------floating point types----------------------------------
+    typedef double      float64;   //!< 64Bit IEEE floating point type
+    typedef float       float32;   //!< 32Bit IEEE floating point type
+    typedef long double float128;  //!< 128Bit IEEE floating point type
 
-    //complex numbers
-    typedef std::complex<float> complex32;  //!< 32Bit complex floating point type
-    typedef std::complex<double> complex64; //!< 64Bit complex floating point type
-    typedef std::complex<long double> complex128; //!< 128Bit complex floating point type
+    //-----------------------complex types--------------------------------------
+    //! 32Bit complex floating point type
+    typedef std::complex<float>       complex32; 
+    //! 64Bit complex floating point type 
+    typedef std::complex<double>      complex64; 
+    //! 128Bit complex floating point type
+    typedef std::complex<long double> complex128; 
 
-    typedef std::string string; //!< String type
-
+    //-----------------------utility types-------------------------------------
+    typedef std::string     string; //!< String type
     typedef binary_t<uint8> binary; //!< data type for binary data
-    typedef bool Bool;    //!< data type for boolean expressions
+    typedef bool            Bool;   //!< data type for boolean expressions
     /*! @} */
 
 
