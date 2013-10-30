@@ -15,6 +15,11 @@ include(UseLATEX.cmake)
 add_latex_document(libpnicore_ug.tex
     INPUTS tex/arrays.tex tex/types.tex tex/array_general_concepts.tex 
     tex/appendix_multidim_arrays.tex
+    pics/md_array_basic_structure.png
+    pics/array_3d.pdf
+    pics/array_3d_corder.pdf
+    pics/array_3d_forder.pdf
+    pics/array_3d_aorder.pdf
     CONFIGURE libpnicore_ug.tex
     USE_PDF
     )
