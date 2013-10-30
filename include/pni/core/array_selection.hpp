@@ -25,6 +25,10 @@
 #include <vector>
 #include <algorithm>
 
+#ifdef NOFOREACH
+#include <boost/foreach.hpp>
+#endif
+
 #include "exception_utils.hpp"
 #include "slice.hpp"
 
@@ -97,17 +101,6 @@ namespace core{
 
         public:
             //===================constructors and destructor====================
-            //! default constructor
-            array_selection():
-                _oshape(0),
-                _offset(0),
-                _stride(0),
-                _rank(0),
-                _shape(0),
-                _size(0)
-            {}
-
-            //------------------------------------------------------------------
             //! standard constructor
             template<template<typename ...> class CTYPE,typename ...OTS>
             explicit array_selection(const CTYPE<OTS...> &oshape,
@@ -124,25 +117,104 @@ namespace core{
                 _set_local_params();
             }
 
-            //-----------------------------------------------------------------
-            //! copy constructor
-            array_selection(const array_selection &s);
+            explicit array_selection():
+                _oshape(0),
+                _offset(0),
+                _stride(0),
+                _rank(0),
+                _shape(0),
+                _size(0)
+            {}
 
             //-----------------------------------------------------------------
-            //! move constructor
-            array_selection(array_selection &&s);
+            explicit array_selection(index_t &&oshape,index_t &ooffset,
+                                     index_t &&ostride):
+                _oshape(std::move(oshape)),
+                _offset(std::move(ooffset)),
+                _stride(std::move(ostride))
+            {
+                _set_local_params();
+            }
+
+            //-----------------------------------------------------------------
+            explicit array_selection(const array_selection &s):
+                _oshape(s._oshape),
+                _offset(s._offset),
+                _stride(s._stride),
+                _rank(s._rank),
+                _shape(s._shape),
+                _size(s._size)
+            { }
+
+            array_selection(array_selection &&s):
+                _oshape(std::move(s._oshape)),
+                _offset(std::move(s._offset)),
+                _stride(std::move(s._stride)),
+                _rank(std::move(s._rank)),
+                _shape(std::move(s._shape)),
+                _size(std::move(s._size))
+            {
+                s._rank = 0;
+                s._size = 0;
+            }
+
+            //-----------------------------------------------------------------
+            array_selection &operator=(const array_selection &s)
+            {
+                if(this == &s) return *this;
+
+                _oshape = s._oshape;
+                _offset = s._offset;
+                _stride = s._stride;
+                _rank   = s._rank;
+                _shape  = s._shape;
+                _size   = s._size;
+
+                return *this;
+            }
+
+            array_selection &operator=(array_selection &&s)
+            {
+                if(this == &s) return *this;
+
+                _oshape = std::move(s._oshape);
+                _offset = std::move(s._offset);
+                _stride = std::move(s._stride);
+                _rank   = s._rank; s._rank = 0;
+                _shape  = std::move(s._shape);
+                _size   = s._size; s._size = 0;
+
+                return *this;
+            }
+
 
             //-----------------------------------------------------------------
             //! static creation function
-            static array_selection create(const std::vector<slice> &s);
+            template<typename CTYPE,
+                     typename = typename std::enable_if<
+                     std::is_same<typename CTYPE::value_type,pni::core::slice>::value
+                     >::type
+                    >
+            static array_selection create(const CTYPE &s)
+            {
+                std::vector<size_t> shape, offset, stride;
 
-            //=====================assignment operators========================
-            //! copy assignment operator
-            array_selection &operator=(const array_selection &s);
+#ifdef NOFOREACH
+                BOOST_FOREACH(auto sl,s)
+#else
+                for(auto sl: s)
+#endif
+                {
+                    offset.push_back(sl.first());
+                    stride.push_back(sl.stride());
+                    shape.push_back(pni::core::size(sl));
+                }
 
-            //-----------------------------------------------------------------
-            //! move assignment operator
-            array_selection &operator=(array_selection &&s);
+                return array_selection(std::move(shape),
+                                       std::move(offset),
+                                       std::move(stride));
+            }
+
            
             //=================inquery methods=================================
             /*! 

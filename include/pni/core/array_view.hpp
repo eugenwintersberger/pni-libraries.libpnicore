@@ -77,8 +77,10 @@ namespace core{
             typedef container_iterator<array_type,1> const_iterator; 
             //! view type
             typedef array_view<array_type> view_type;
+            //! index type
+            typedef std::vector<size_t> index_type;
             //! map type
-            typedef typename ATYPE::map_type map_type;
+            typedef index_map<index_type,typename ATYPE::map_type::policy_type> map_type;
             //========================public members===========================
             //! type id of the value_type
             static const size_t type_id = ATYPE::type_id;
@@ -87,39 +89,13 @@ namespace core{
             std::reference_wrapper<ATYPE> _parray; 
             //! selection object for index transformation 
             array_selection _selection;
-            //! index map to produce the original selection index
+            //! local index map - only used internally
             map_type _imap;
 
             //! a local index type
             typedef std::vector<size_t> index_t;
 
         public:
-            //=============constructors and destructor=========================
-
-            array_view():_parray(),_selection() {}
-
-            //-----------------------------------------------------------------
-            /*! \brief constructor
-
-            This constructor creates a view which includes the entire array.
-            \param a reference to the original array
-            */
-            array_view(storage_type &a):
-                _parray(std::ref(a)),
-                _selection(),
-                _imap(a.map())
-            {
-                index_t shape(a.shape<index_t>());
-                index_t offset(a.rank());
-                index_t stride(a.rank());
-
-                std::fill(offset.begin(),offset.end(),0);
-                std::fill(stride.begin(),stride.end(),1);
-
-                _selection = array_selection(shape,offset,stride);
-                _imap = map_utils<map_type>::create(_selection.shape());
-            }
-
             //-----------------------------------------------------------------
             /*! \brief constructor
 
@@ -132,28 +108,10 @@ namespace core{
             array_view(storage_type &a,const array_selection &s):
                 _parray(std::ref(a)),
                 _selection(s),
-                _imap(map_utils<map_type>::create(_selection.shape()))
+                _imap(map_utils<map_type>::create(_selection.template shape<index_t>()))
             { 
-                //wee need to check if all the lists and shapes do match the 
-                //rank of the array
             
             }
-
-            //-----------------------------------------------------------------
-            //! copy constructor
-            array_view(const array_type &o):
-                _parray(o._parray),
-                _selection(o._selection),
-                _imap(o._imap)
-            {}
-
-            //-----------------------------------------------------------------
-            //! move constructor
-            array_view(array_type &&o):
-                _parray(o._parray),
-                _selection(std::move(o._selection)),
-                _imap(std::move(o._imap))
-            {}
 
             //==================public member functions========================
             /*! \brief access with container index 
@@ -251,15 +209,6 @@ namespace core{
                           s.begin());
                 return s;
             }
-
-            //-----------------------------------------------------------------
-            /*!
-            \brief get index map
-
-            Return a const reference to the index map used.
-            \return index map
-            */
-            const map_type &map() const { return _imap; }
 
             //-----------------------------------------------------------------
             /*! \brief linearzed access

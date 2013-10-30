@@ -59,6 +59,8 @@ namespace core{
             typedef std::array<size_t,sizeof...(DIMS)> storage_type;
             //! policy type
             typedef MAP_POL     policy_type;
+            //! index type 
+            typedef storage_type index_type;
             //! constant iterator over the map
             typedef typename storage_type::const_iterator const_iterator;
         private:

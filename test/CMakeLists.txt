@@ -12,6 +12,7 @@ set(TEST_SOURCES pnicoretest.cpp
                  arrays/dynamic_mdarray_test.cpp
                  arrays/fix_mdarray_test.cpp
                  arrays/static_mdarray_test.cpp
+                 arrays/array_selection_test.cpp
                  compare.cpp
                  )
 #add_operator_test.cpp

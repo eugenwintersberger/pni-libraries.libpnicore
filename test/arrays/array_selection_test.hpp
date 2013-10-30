@@ -33,6 +33,7 @@ class array_selection_test: public CppUnit::TestFixture
 {
 	CPPUNIT_TEST_SUITE(array_selection_test);
 	CPPUNIT_TEST(test_construction);
+    CPPUNIT_TEST(test_create);
 	CPPUNIT_TEST(test_assignment);
 	CPPUNIT_TEST(test_index);
 	CPPUNIT_TEST_SUITE_END();
@@ -45,5 +46,6 @@ public:
 	void test_construction();
 	void test_assignment();
 	void test_index();
+    void test_create();
 
 };

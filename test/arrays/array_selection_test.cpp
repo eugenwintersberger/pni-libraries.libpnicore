@@ -24,6 +24,10 @@
 #include<cppunit/extensions/HelperMacros.h>
 #include<boost/current_function.hpp>
 
+#ifdef NOFOREACH
+#include <boost/foreach.hpp>
+#endif
+
 #include <list>
 
 #include "array_selection_test.hpp"
@@ -94,6 +98,22 @@ void array_selection_test::test_construction()
 
 }
 
+//------------------------------------------------------------------------------
+void array_selection_test::test_create()
+{
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+   
+    std::vector<slice> slices{slice(0,10),slice(1,30,2),slice(2)};
+    array_selection s = array_selection::create(slices);
+
+    CPPUNIT_ASSERT(s.size() == 10*15);
+    CPPUNIT_ASSERT(s.rank() == 2);
+    itype ref_shape{10,15};
+    auto shape = s.shape<itype>();
+    CPPUNIT_ASSERT(std::equal(shape.begin(),shape.end(),ref_shape.begin()));
+
+}
+
 //-----------------------------------------------------------------------------
 void array_selection_test::test_assignment()
 {
@@ -102,9 +122,7 @@ void array_selection_test::test_assignment()
     CPPUNIT_ASSERT(sel.rank() == 2);
     itype s{100,200};
 #ifdef NOFOREACH
-    for(auto iter= sel.shape().begin();iter!=sel.shape().end();++iter)
-    {
-        auto v = *iter;
+    BOOST_FOREACH(auto v,sel)
 #else
     for(auto v: sel.shape()) 
     {
@@ -117,6 +135,7 @@ void array_selection_test::test_assignment()
     std::cout<<sel.size()<<std::endl;
     CPPUNIT_ASSERT(sel.size() == 100*200);
 
+    //------------------------test copy assignment------------------------------
     array_selection s1;
 
     s1 = sel;
@@ -125,6 +144,7 @@ void array_selection_test::test_assignment()
     CPPUNIT_ASSERT(std::equal(s1.shape().begin(),s1.shape().end(),
                               sel.shape().begin()));
 
+    //-----------------test move assignment------------------------------------
     array_selection s2;
     s2 = std::move(s1);
     CPPUNIT_ASSERT(s2.rank() == sel.rank());
