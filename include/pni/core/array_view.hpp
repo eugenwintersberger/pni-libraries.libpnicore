@@ -92,9 +92,6 @@ namespace core{
             //! local index map - only used internally
             map_type _imap;
 
-            //! a local index type
-            typedef std::vector<size_t> index_t;
-
         public:
             //-----------------------------------------------------------------
             /*! \brief constructor
@@ -108,10 +105,24 @@ namespace core{
             array_view(storage_type &a,const array_selection &s):
                 _parray(std::ref(a)),
                 _selection(s),
-                _imap(map_utils<map_type>::create(_selection.template shape<index_t>()))
-            { 
-            
-            }
+                _imap(map_utils<map_type>::create(_selection.template
+                            shape<index_type>()))
+            { }
+
+            //-----------------------------------------------------------------
+            //! copy constructor
+            array_view(const array_type &c):
+                _parray(c._parray),_selection(c._selection),
+                _imap(c._imap)
+            {}
+
+            //-----------------------------------------------------------------
+            //! move constructor
+            array_view(array_type &&c):
+                _parray(std::move(c._parray)),
+                _selection(std::move(c._selection)),
+                _imap(std::move(c._imap))
+            {}
 
             //==================public member functions========================
             /*! \brief access with container index 
@@ -123,10 +134,14 @@ namespace core{
             \param index container with multidimensional index
             \return reference to value at index
             */
-            template<template<typename...> class CTYPE,typename ...OTS>
-                value_type &operator()(const CTYPE<OTS...> &index)
+            template<typename CTYPE,
+                     typename = typename std::enable_if<
+                     std::is_unsigned<typename CTYPE::value_type>::value
+                     >::type
+                    >
+            value_type &operator()(const CTYPE &index)
             {
-                return _parray(_selection.template index<index_t>(index));
+                return _parray(_selection.template index<index_type>(index));
             }
 
             //-----------------------------------------------------------------
@@ -139,10 +154,14 @@ namespace core{
             \param index container with multidimensional index
             \return value at index
             */
-            template<template<typename ...> class CTYPE,typename ...OTS>
-                value_type operator()(const CTYPE<OTS...> &index) const
+            template<typename CTYPE,
+                     typename = typename std::enable_if<
+                     std::is_unsigned<typename CTYPE::value_type>::value 
+                     >::type
+                    >
+            value_type operator()(const CTYPE &index) const
             {
-                return _parray(_selection.template index<index_t>(index));
+                return _parray(_selection.template index<index_type>(index));
             }
 
 
@@ -162,7 +181,7 @@ namespace core{
             \return reference to the value at multidimensional index
              */
             template<typename ...ITypes> 
-                value_type & operator()(ITypes ...indices)
+            value_type & operator()(ITypes ...indices)
             {
                 typedef std::array<size_t,sizeof...(ITypes)> array_t;
                 return (*this)(array_t{{size_t(indices)...}});
@@ -191,8 +210,6 @@ namespace core{
                 return (*this)(array_t{{size_t(indices)...}});
             }
 
-
-
             //-----------------------------------------------------------------
             /*! \brief get shape of the view
 
@@ -203,11 +220,7 @@ namespace core{
             */
             template<typename CTYPE> CTYPE shape() const
             {
-                CTYPE s(rank());
-                std::copy(_selection.shape().begin(),
-                          _selection.shape().end(),
-                          s.begin());
-                return s;
+                return _selection.template shape<CTYPE>();
             }
 
             //-----------------------------------------------------------------
@@ -224,7 +237,7 @@ namespace core{
             {
                 //compute the multidimensional index in the original array for
                 //the linear index i in the view
-                auto index = _imap.template index<index_t>(i);
+                auto index = _imap.template index<index_type>(i);
                 return (*this)(index); 
             }
 
@@ -242,7 +255,7 @@ namespace core{
             {
                 //compute the multidimensional index in the original array for
                 //the linear index i in the view
-                auto index = _imap.template index<index_t>(i);
+                auto index = _imap.template index<index_type>(i);
                 return (*this)(index); 
             }
 

@@ -24,7 +24,7 @@
 
 #include <vector>
 #include "arrays.hpp"
-#include "cindex_map.hpp"
+//#include "cindex_map.hpp"
 
 namespace pni{
 namespace core{
@@ -44,7 +44,7 @@ namespace core{
     \tparam INDEXT type of the index container
     \tparam IMT index map type
     */
-    template<typename INDEXT,typename IMT=cindex_map> class index_iterator
+    template<typename INDEXT,typename IMT> class index_iterator
     {
         private:
             //! the index map used to compute the indices
@@ -81,7 +81,7 @@ namespace core{
             \param state iterator state at creation
             */
             index_iterator(const shape_t &shape,size_t state=0):
-                _index_map(shape),
+                _index_map(map_utils<IMT>::create(shape)),
                 _state(state),
                 _index(shape.size())
             {}
@@ -112,9 +112,8 @@ namespace core{
             */
             static iterator_type end(const shape_t &shape)
             {
-                size_t size=1;
-                for(auto iter=shape.begin();iter!=shape.end();++iter)
-                    size *= *iter;
+                size_t size=std::accumulate(shape.begin(),shape.end(),1,
+                            std::multiplies<size_t>());;
 
                 return index_iterator(shape,size);
             }
@@ -135,16 +134,16 @@ namespace core{
             //! pointer access operator
             pointer operator->()
             {
-                return &(this->_index);
+                return &_index;
             }
 
             //-----------------------------------------------------------------
             //! increment operator
             iterator_type &operator++()
             {
-                this->_state++;
-                if(this->_state<ssize_t(this->_index_map.size()))
-                    this->_index_map.index(this->_state,this->_index);
+                _state++;
+                if(_state < ssize_t(_index_map.max_elements()))
+                    _index = _index_map.template index<INDEXT>(_state);
                 return *this;
             }
 
@@ -161,9 +160,9 @@ namespace core{
             //! decrement operator
             iterator_type &operator--()
             {
-                this->_state--;
+                _state--;
                 if(this->_state>=0)
-                    this->_index_map.index(this->_state,this->_index);
+                    _index = _index_map.template index<INDEXT>(_state);
 
                 return *this;
             }

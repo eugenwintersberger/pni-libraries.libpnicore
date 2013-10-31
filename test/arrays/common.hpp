@@ -30,14 +30,59 @@
 using namespace pni::core;
 
 //---------------------a dynamic array type------------------------------------
+/*!
+\brief a dynamic array type
+
+Usage
+\code
+typedef dyn_array<float64> array_type;
+\endcode
+
+\tparam T element type
+*/
 template<typename T> 
 using dyn_array = mdarray<std::vector<T>,dynamic_cindex_map>;
 
 //------------an array type with fixed number of dimensions--------------------
+/*!
+\brief a fixed dimension array type
+
+This is the array type most probably used the most. You have to fix the number
+of dimensions at compile time
+
+\code
+typedef fix_array<uint32,2> image_type;
+\endcode
+
+alternatively one could us it with an additional template alias to define a more
+versatile image type
+
+\code
+template<typename T> using image_type = fix_array<T,2>;
+\endcode
+
+\tparam T element type
+\tparam NDIMS number of dimensions
+*/
 template<typename T,size_t NDIMS> 
 using fix_array = mdarray<std::vector<T>,fixed_dim_cindex_map<NDIMS> >;
 
 //--------------------------a static array type--------------------------------
+/*!
+\brief a static array type
+
+The number of dimensions as well as the number of elements along each dimension
+must be fixed at compile time. This is a particularly useful type for small
+objects  as they are allocated on the stack rather than on the heap. 
+
+\code
+typedef static_array<float64,3> vector3_type;
+typedef static_array<float64,3,3> matrix3_type;
+\endcode
+
+\tparam T element type
+\tparam DIMS number of elements along each dimension
+*/
 template<typename T,size_t... DIMS>
 using static_array = mdarray<std::array<T,
                              boost::mpl::times<

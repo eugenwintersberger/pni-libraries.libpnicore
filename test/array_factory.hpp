@@ -22,21 +22,31 @@
  */
 #pragma once
 
+#include "arrays/common.hpp"
 #include <pni/core/arrays.hpp>
 
 using namespace pni::core;
 
-template<typename ATYPE> class array_factory
+//---------------general factory for dynamic arrays-----------------------------
+template<typename ATYPE> struct array_factory
 {
-    public:
-        template<typename CTYPE> static ATYPE create(const CTYPE &s)
-        {
-            return ATYPE(s);
-        }
+    typedef typename ATYPE::storage_type storage_type;
+    typedef typename ATYPE::value_type value_type;
+    typedef typename ATYPE::map_type map_type;
+
+    template<typename CTYPE> static ATYPE create(const CTYPE &s)
+    {
+        map_type map(s.size());
+        std::copy(s.begin(),s.end(),map.begin());
+        return ATYPE(map,storage_type(map.size()));
+    }
 
 };
 
-template<typename T,size_t ...DIMS> class array_factory<sarray<T,DIMS...> >
+
+//------------------static arrays----------------------------------------------
+template<typename T,size_t ...DIMS> 
+struct array_factory<static_array<T,DIMS...> >
 {
     public:
         template<typename CTYPE> static sarray<T,DIMS...> create(const CTYPE &s)

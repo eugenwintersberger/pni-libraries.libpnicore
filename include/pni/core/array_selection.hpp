@@ -71,32 +71,15 @@ namespace core{
 
             //member variables describing the effective shape and rank of the 
             //selection
-            size_t  _rank;  //!< effective rank of the selection
             index_t _shape; //!< effective shape of the selection
-            size_t  _size;  //!< effective size of the selection
 
             //! setup selection parameters
             void _set_local_params()
             {
-                _rank = 0;
-                _shape = index_t(0);
-                _size = 1;
-                for(auto ositer=_oshape.begin(),
-                         oiter=_offset.begin(),
-                         siter=_stride.begin();
-                    ositer != _oshape.end();
-                    ++ositer,++oiter,++siter)
-                {
-                    if((*ositer)!=1)
-                    {
-                        _rank++;
-                        
-                        //need to determine the number of indices here
-                        size_t s = *ositer;
-                        _shape.push_back(s);
-                        _size *= s;
-                    }
-                }
+                _shape = index_t(_oshape);
+                //we have to remove all entries where the number of elements is
+                //1 
+                _shape.erase(std::remove(_shape.begin(),_shape.end(),1),_shape.end());
             }
 
         public:
@@ -117,13 +100,12 @@ namespace core{
                 _set_local_params();
             }
 
+            //------------------------------------------------------------------
             explicit array_selection():
                 _oshape(0),
                 _offset(0),
                 _stride(0),
-                _rank(0),
-                _shape(0),
-                _size(0)
+                _shape(0)
             {}
 
             //-----------------------------------------------------------------
@@ -141,22 +123,15 @@ namespace core{
                 _oshape(s._oshape),
                 _offset(s._offset),
                 _stride(s._stride),
-                _rank(s._rank),
-                _shape(s._shape),
-                _size(s._size)
+                _shape(s._shape)
             { }
 
             array_selection(array_selection &&s):
                 _oshape(std::move(s._oshape)),
                 _offset(std::move(s._offset)),
                 _stride(std::move(s._stride)),
-                _rank(std::move(s._rank)),
-                _shape(std::move(s._shape)),
-                _size(std::move(s._size))
-            {
-                s._rank = 0;
-                s._size = 0;
-            }
+                _shape(std::move(s._shape))
+            { }
 
             //-----------------------------------------------------------------
             array_selection &operator=(const array_selection &s)
@@ -166,9 +141,7 @@ namespace core{
                 _oshape = s._oshape;
                 _offset = s._offset;
                 _stride = s._stride;
-                _rank   = s._rank;
                 _shape  = s._shape;
-                _size   = s._size;
 
                 return *this;
             }
@@ -180,9 +153,7 @@ namespace core{
                 _oshape = std::move(s._oshape);
                 _offset = std::move(s._offset);
                 _stride = std::move(s._stride);
-                _rank   = s._rank; s._rank = 0;
                 _shape  = std::move(s._shape);
-                _size   = s._size; s._size = 0;
 
                 return *this;
             }
@@ -223,7 +194,7 @@ namespace core{
             Return the effective rank of the selection.
             \return effective rank
             */
-            size_t rank() const { return _rank; }
+            size_t rank() const { return _shape.size(); }
 
             //-----------------------------------------------------------------
             /*! 
@@ -257,7 +228,11 @@ namespace core{
             Get the number of elements stored in the selection.
             \return number of elements
             */
-            size_t size() const { return _size; }
+            size_t size() const 
+            { 
+                return _shape.size() != 0? std::accumulate(_shape.begin(),_shape.end(),1,
+                                     std::multiplies<index_t::value_type>()): 0;
+            }
 
             //=========methods to retrieve full selection information==========
             /*!
@@ -369,30 +344,28 @@ namespace core{
             \param sindex original index of the selection
             \param oindex new index with the rank of the original array
             */
-            template<typename ITYPE> 
-                void index(const ITYPE &sindex,ITYPE &oindex) const
+            template<typename ITYPE,typename OITYPE> 
+                void index(const ITYPE &sindex,OITYPE &oindex) const
             {
-                //check size
+                //check size - maybe move this one level up
                 check_equal_size(_oshape,oindex,EXCEPTION_RECORD);
                 check_equal_size(_shape,sindex,EXCEPTION_RECORD);
 
-                typename ITYPE::iterator oiter = oindex.begin();
-                typename ITYPE::const_iterator siter = sindex.begin();
+                //first copy the offsets to the oindex 
+                std::copy(_offset.begin(),_offset.end(),oindex.begin());
 
-                for(auto shape=_oshape.begin(), //iterator over original shape
-                         offset=_offset.begin(),  //iterator over offset
-                         stride=_stride.begin();  //iterator over stride
-                    shape != _oshape.end();
-                    ++shape,++offset,++stride)
+                //now we have to add index*stride from the selection index too
+                //the appropriate locations
+                auto os_iter = _oshape.begin(); //iter. over original shape
+                auto st_iter = _stride.begin(); //iter. over selection strides
+                auto si_iter = sindex.begin();  //iter. over selection index
+
+                //loop over output index
+                for(auto &oi: oindex)
                 {
-                    //add offset
-                    *oiter = *offset;
-                    if(*shape != 1)
-                        *oiter += (*stride)*(*siter++);
-
-                    ++oiter;
+                    if(*os_iter++ != 1) oi += (*st_iter)*(*si_iter++);
+                    ++st_iter;  //need to increment this guy in any case
                 }
-
             }
 
             //-----------------------------------------------------------------
@@ -403,15 +376,17 @@ namespace core{
             &oindex) except that one does not have to take care about allocating
             the container for the original index.
             \tparam ITYPE container type (determined by the argument)
+            \tparam OITYPE container type for the original index
             \param sindex selection index
             \return instance of ITYPE with the index in the original array
             \sa template<typename ITYPE> index(const ITYPE &sindex,const ITYPE
             &oindex) const
             */
-            template<typename ITYPE> ITYPE index(const ITYPE &sindex) const
+            template<typename ITYPE,typename OITYPE> 
+            ITYPE index(const OITYPE &sindex) const
             {
                 ITYPE oindex(_oshape.size());
-                try{ this->index(sindex,oindex); }
+                try{ index(sindex,oindex); }
                 EXCEPTION_FORWARD(size_mismatch_error);
 
                 return oindex;

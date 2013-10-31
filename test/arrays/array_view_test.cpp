@@ -26,50 +26,49 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/current_function.hpp>
 
-#include <pni/core/darray.hpp>
-
+#include "common.hpp"
 #include "array_view_test.hpp"
 
 
 typedef sarray<uint16,NX,NY> sarray_type;
 
-CPPUNIT_TEST_SUITE_REGISTRATION(array_view_test<darray<uint8> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_view_test<darray<int8> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_view_test<darray<uint16> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_view_test<darray<int16> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_view_test<darray<uint32> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_view_test<darray<int32> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_view_test<darray<uint64> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_view_test<darray<int64> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_view_test<darray<float32> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_view_test<darray<float64> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_view_test<darray<float128> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_view_test<darray<complex32> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_view_test<darray<complex64> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_view_test<darray<complex128> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_view_test<darray<string> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(array_view_test<dyn_array<uint8> >);
+//CPPUNIT_TEST_SUITE_REGISTRATION(array_view_test<darray<int8> >);
+//CPPUNIT_TEST_SUITE_REGISTRATION(array_view_test<darray<uint16> >);
+//CPPUNIT_TEST_SUITE_REGISTRATION(array_view_test<darray<int16> >);
+//CPPUNIT_TEST_SUITE_REGISTRATION(array_view_test<darray<uint32> >);
+//CPPUNIT_TEST_SUITE_REGISTRATION(array_view_test<darray<int32> >);
+//CPPUNIT_TEST_SUITE_REGISTRATION(array_view_test<darray<uint64> >);
+//CPPUNIT_TEST_SUITE_REGISTRATION(array_view_test<darray<int64> >);
+//CPPUNIT_TEST_SUITE_REGISTRATION(array_view_test<darray<float32> >);
+//CPPUNIT_TEST_SUITE_REGISTRATION(array_view_test<darray<float64> >);
+//CPPUNIT_TEST_SUITE_REGISTRATION(array_view_test<darray<float128> >);
+//CPPUNIT_TEST_SUITE_REGISTRATION(array_view_test<darray<complex32> >);
+//CPPUNIT_TEST_SUITE_REGISTRATION(array_view_test<darray<complex64> >);
+//CPPUNIT_TEST_SUITE_REGISTRATION(array_view_test<darray<complex128> >);
+//CPPUNIT_TEST_SUITE_REGISTRATION(array_view_test<darray<string> >);
 //CPPUNIT_TEST_SUITE_REGISTRATION(array_view_test<darray<bool> >);
 
 
 #define SARRAY_VIEW_TEST_REG(T,NX,NY)\
 static CPPUNIT_NS::AutoRegisterSuite< array_view_test<sarray<T,NX,NY> > >  \
              CPPUNIT_MAKE_UNIQUE_NAME(autoRegisterRegistry__ )
-
-SARRAY_VIEW_TEST_REG(uint8,NX,NY);
-SARRAY_VIEW_TEST_REG(int8,NX,NY);
-SARRAY_VIEW_TEST_REG(uint16,NX,NY);
-SARRAY_VIEW_TEST_REG(int16,NX,NY);
-SARRAY_VIEW_TEST_REG(uint32,NX,NY);
-SARRAY_VIEW_TEST_REG(int32,NX,NY);
-SARRAY_VIEW_TEST_REG(uint64,NX,NY);
-SARRAY_VIEW_TEST_REG(int64,NX,NY);
-SARRAY_VIEW_TEST_REG(float32,NX,NY);
-SARRAY_VIEW_TEST_REG(float64,NX,NY);
-SARRAY_VIEW_TEST_REG(float128,NX,NY);
-SARRAY_VIEW_TEST_REG(complex32,NX,NY);
-SARRAY_VIEW_TEST_REG(complex64,NX,NY);
-SARRAY_VIEW_TEST_REG(complex128,NX,NY);
-SARRAY_VIEW_TEST_REG(string,NX,NY);
+//
+//SARRAY_VIEW_TEST_REG(uint8,NX,NY);
+//SARRAY_VIEW_TEST_REG(int8,NX,NY);
+//SARRAY_VIEW_TEST_REG(uint16,NX,NY);
+//SARRAY_VIEW_TEST_REG(int16,NX,NY);
+//SARRAY_VIEW_TEST_REG(uint32,NX,NY);
+//SARRAY_VIEW_TEST_REG(int32,NX,NY);
+//SARRAY_VIEW_TEST_REG(uint64,NX,NY);
+//SARRAY_VIEW_TEST_REG(int64,NX,NY);
+//SARRAY_VIEW_TEST_REG(float32,NX,NY);
+//SARRAY_VIEW_TEST_REG(float64,NX,NY);
+//SARRAY_VIEW_TEST_REG(float128,NX,NY);
+//SARRAY_VIEW_TEST_REG(complex32,NX,NY);
+//SARRAY_VIEW_TEST_REG(complex64,NX,NY);
+//SARRAY_VIEW_TEST_REG(complex128,NX,NY);
+//SARRAY_VIEW_TEST_REG(string,NX,NY);
 //SARRAY_VIEW_TEST_REG(bool,NX,NY);
 
 

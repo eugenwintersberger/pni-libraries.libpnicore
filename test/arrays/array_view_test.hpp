@@ -28,10 +28,9 @@
 #include <pni/core/array_view.hpp>
 #include <pni/core/arrays.hpp>
 #include <pni/core/index_iterator.hpp>
-#include "uniform_distribution.hpp"
-#include "array_factory.hpp"
-#include "data_generator.hpp"
-#include "EqualityCheck.hpp"
+#include "../array_factory.hpp"
+#include "../data_generator.hpp"
+#include "../compare.hpp"
 
 using namespace pni::core;
 
@@ -48,11 +47,30 @@ template<typename ATYPE> class array_view_test : public CppUnit::TestFixture
         CPPUNIT_TEST(test_multiindex_access);
         CPPUNIT_TEST(test_assignment);
         CPPUNIT_TEST_SUITE_END();
+
+        typedef array_view<ATYPE> view_type;
+        typedef typename ATYPE::value_type value_type;
+        typedef typename std::vector<slice> slice_container;
+        typedef typename ATYPE::map_type map_type;
     private:
-        typedef std::vector<size_t> Shape;
-        Shape s1,s2;
+        shape_t s1,s2;
         size_t r1,r2;
         shape_t _shape;
+        ATYPE array;
+
+        void check_view(const view_type &view,const shape_t &ref)
+        {
+            size_t ref_size = std::accumulate(ref.begin(),ref.end(),1,
+                    std::multiplies<size_t>());
+            size_t ref_rank = ref.size();
+
+            CPPUNIT_ASSERT(view.rank() == ref_rank);
+            CPPUNIT_ASSERT(view.size() == ref_size);
+
+            auto shape = view.template shape<shape_t>();
+            CPPUNIT_ASSERT(std::equal(shape.begin(),shape.end(),ref.begin()));
+
+        }
     public:
         void setUp();
         void tearDown();
@@ -99,6 +117,9 @@ template<typename ATYPE> class array_view_test : public CppUnit::TestFixture
 template<typename ATYPE> void array_view_test<ATYPE>::setUp() 
 { 
     _shape = shape_t({NX,NY});
+   array = array_factory<ATYPE>::create(_shape);
+   std::generate(array.begin(),array.end(),
+                 random_generator<typename ATYPE::value_type>());
 }
 
 //-----------------------------------------------------------------------------
@@ -108,56 +129,38 @@ template<typename ATYPE> void array_view_test<ATYPE>::tearDown() { }
 template<typename ATYPE> void array_view_test<ATYPE>::test_construction()
 {
    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
-   ATYPE  a = array_factory<ATYPE>::create(_shape);
 
    //select a 2D array from the original 2D array
-   auto v1 = a(slice(0,3),slice(3,7));
-   CPPUNIT_ASSERT(v1.rank() == 2);
-   CPPUNIT_ASSERT(v1.size() == 3*4);
-   shape_t v1_shape{3,4};
-
-   auto view_shape = v1.template shape<shape_t>();
-   CPPUNIT_ASSERT(view_shape.size() == 2);
-   CPPUNIT_ASSERT(std::equal(view_shape.begin(),view_shape.end(),
-                             v1_shape.begin()));
+   view_type v1(array,
+                array_selection::create(slice_container{slice(0,3),slice(3,7)}));
+   check_view(v1,shape_t{3,4});
 
    //select a 1D strip from the 2D array
-   auto v2 = a(1,slice(3,7));
-   CPPUNIT_ASSERT(v2.rank() == 1);
-   CPPUNIT_ASSERT(v2.size() == 4);
-   shape_t v2_shape{4};
-
-   view_shape = v2.template shape<shape_t>();
-   CPPUNIT_ASSERT(view_shape.size() == 1);
-   CPPUNIT_ASSERT(std::equal(view_shape.begin(),view_shape.end(),
-                             v2_shape.begin()));                             
+   view_type v2(array,array_selection::create(slice_container{1,slice(3,7)}));
+   check_view(v2,shape_t{4});
 }
 
 //-----------------------------------------------------------------------------
 template<typename ATYPE> void array_view_test<ATYPE>::test_linear_access()
 { 
-    typedef typename ATYPE::value_type value_type;
     typedef std::vector<value_type> ctype;
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
-    //create an array and fill it with random data
-    ATYPE  a = array_factory<ATYPE>::create(_shape);
-    data_generator::fill(a.begin(),a.end(),
-                         uniform_distribution<typename ATYPE::value_type>());
-
     //create a selection
-    auto view = a(slice(0,1),slice(2,7));
-    for(size_t i=0;i<view.size();++i)
-        check_equality(view[i],a(0,2+i));
+    view_type view(array,
+                   array_selection::create(slice_container{slice(0,1),slice(2,7)}));
+    check_view(view,shape_t{5});
+
+    for(size_t i=0;i<view.size();++i) compare(view[i],array(0,2+i));
 
     //-----------------check for front-----------------------------------------
-    value_type v = a.front();
+    value_type v = array.front();
     CPPUNIT_ASSERT_NO_THROW(view.front() = v);
-    check_equality(view.front(),v);
+    compare(view.front(),v);
 
     //-----------------check for back------------------------------------------
     CPPUNIT_ASSERT_NO_THROW(view.back()=v);
-    check_equality(view.back(),v);
+    compare(view.back(),v);
 
 }
 
@@ -165,85 +168,81 @@ template<typename ATYPE> void array_view_test<ATYPE>::test_linear_access()
 template<typename ATYPE> void array_view_test<ATYPE>::test_iterator_access()
 {
     typedef std::vector<typename ATYPE::value_type> ctype;
-    typedef uniform_distribution<typename ATYPE::value_type> udist_type;
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
-    ATYPE a = array_factory<ATYPE>::create(shape_t{NX,NY});
-    data_generator::fill(a.begin(),a.end(),udist_type());
 
     //create the view
-    auto v = a(slice(10,35,2),slice(100,125,3));
-    shape_t view_shape{13,9};
-    CPPUNIT_ASSERT(v.size() == 13*9);
-    CPPUNIT_ASSERT(v.rank() == 2);
-
-    //check shape
-    auto s = v.template shape<shape_t>();
-    CPPUNIT_ASSERT(std::equal(view_shape.begin(),view_shape.end(),
-                              s.begin()));
+    view_type v(array,
+                array_selection::create(slice_container{slice(10,35,2),slice(100,125,3)}));
+    check_view(v,shape_t{13,9});
 
     //create data for the selection
     ctype data(v.size());
-    data_generator::fill(data.begin(),data.end(),udist_type());
+    std::generate(data.begin(),data.end(),random_generator<value_type>());
 
-    //check write access == set a constant value to all selected views
+    //---------------------check write access----------------------------------
     auto diter = data.begin();
     for(auto iter = v.begin();iter!=v.end();++iter)
         *iter = *diter++;
 
-    //read data back by an iterator
-    //now we have to check data access
+    //----------------------check read access----------------------------------
     diter = data.begin();
     for(auto iter = v.begin();iter!=v.end();++iter)
-        check_equality(*iter,*diter++);
+        compare(*iter,*diter++);
 
-    //check if the data has been transfered to the original array
-    array_selection  selection(view_shape,shape_t{10,100},shape_t{2,3});
-    index_iterator<shape_t> index_iter(view_shape,0);
+    //-----now we need to check if the data arrived at the original array------
+    array_selection  selection(shape_t{13,9},shape_t{10,100},shape_t{2,3});
+    index_iterator<shape_t,map_type> index_iter(shape_t{13,9},0);
     for(auto iter = data.begin();iter!=data.end();++iter)
-        check_equality(*iter,a(selection.index(*index_iter++)));
-
+        compare(*iter,array(selection.template index<shape_t>(*index_iter++)));
 }
 
 //-----------------------------------------------------------------------------
 template<typename ATYPE> void array_view_test<ATYPE>::test_assignment()
 {
-    typedef uniform_distribution<typename ATYPE::value_type> udist_type;
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl; 
-   
-    //create initial frame and fill it with data
-    ATYPE frame = array_factory<ATYPE>::create(_shape);
-    data_generator::fill(frame.begin(),frame.end(),udist_type());
 
     //select roi
-    auto roi = frame(slice(1,10),slice(0,100));
+    view_type roi(array,
+                  array_selection::create(slice_container{slice(1,10),slice(0,100)}));
    
     //allocate new array for a roi - we have to use a DArray here as for a
     //static array we would have to know the shape of the array
+    /*
     darray<typename ATYPE::value_type> roia(roi);
     auto roi_s = roi.template shape<shape_t>();
     auto roia_s = roia.template shape<shape_t>();
     CPPUNIT_ASSERT(roia_s.size() == roi_s.size());
     CPPUNIT_ASSERT(std::equal(roia_s.begin(),roia_s.end(),roi_s.begin()));
+    */
 
 }
 
 //-----------------------------------------------------------------------------
 template<typename ATYPE> void array_view_test<ATYPE>::test_multiindex_access()
 {
-    typedef uniform_distribution<typename ATYPE::value_type> udist_type;
     typedef std::vector<typename ATYPE::value_type> ctype;
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+     
+    slice_container slices{slice(10,40),slice(0,100)};
+    view_type view(array,array_selection::create(slices));
+    check_view(view,shape_t{30,100});
+    auto shape = view.template shape<shape_t>();
 
-    //create array 
-    ATYPE a = array_factory<ATYPE>::create(_shape);
-    data_generator::fill(a.begin(),a.end(),udist_type());
-
-    auto view = a(1,slice(0,100));
     ctype data(view.size());
-    data_generator::fill(data.begin(),data.end(),udist_type());
-    std::copy(data.begin(),data.end(),view.begin());
+    std::generate(data.begin(),data.end(),random_generator<value_type>());
+    //-----------------writing data----------------------------
     auto diter = data.begin();
-    for(size_t i=0;i<view.size();++i) check_equality(*diter++,view(i));
+    for(size_t i=0;i<shape[0];++i)
+        for(size_t j=0;j<shape[1];++j)
+        {
+            //std::cout<<i<<" "<<j<<std::endl;
+            view(i,j) = *diter++;
+        }
 
+    //----------------reading data-----------------------------
+    diter = data.begin();
+    for(size_t i=0;i<shape[0];++i)
+        for(size_t j=0;j<shape[1];++j)
+            compare(view(i,j),*diter++);
 }
 
