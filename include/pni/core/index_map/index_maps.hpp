@@ -30,6 +30,7 @@
 namespace pni{
 namespace core{
     /*!
+    \ingroup index_mapping_classes
     \brief a C index policy
     
     This is the default C index policy. Use this to define index maps which
@@ -40,6 +41,7 @@ namespace core{
 
     //-------------------------------------------------------------------------
     /*!
+    \ingroup index_mapping_classes
     \brief template for  a static C map
    
     A template alias for a static index map with c ordering. To define the index
@@ -55,6 +57,7 @@ namespace core{
 
     //-------------------------------------------------------------------------
     /*!
+    \ingroup index_mapping_classes
     \brief definition of a dynamic C index map
     
     Type definition of a fully dynamic C index map. The structure of the map can
@@ -65,6 +68,7 @@ namespace core{
 
     //-------------------------------------------------------------------------
     /*!
+    \ingroup index_mapping_classes
     \brief fixed dimension dynamic C index map
 
     For such a map the number of elements along each dimension can be changed,
@@ -83,6 +87,18 @@ namespace core{
 
     //=================define some convienance function========================
 
+    /*!
+    \ingroup index_mapping_classes
+    \brief utility class for index maps
+
+    This template provides static utility member functions to create index maps.
+    Several specializations exist for this template to handle different index
+    map types. The major difference between the different types is the storage
+    container used to hold the shape information. 
+    This is the default implementation for STL compliant containers.
+
+    \tparam MAPT index map type
+    */
     template<typename MAPT> struct map_utils
     {
         /*!
@@ -91,6 +107,10 @@ namespace core{
         Create a new map from a container. In this case the map can do a full
         resizeing. This would be the case when the map allows also resizeing its
         internal storage.
+
+        \tparam CTYPE container type
+        \param c instance of CTYPE with shape information
+        \return instance of MAPT
         */
         template<typename CTYPE> static MAPT create(const CTYPE &c)
         {
@@ -102,6 +122,17 @@ namespace core{
     };
 
     //-------------------------------------------------------------------------
+    /*!
+    \ingroup index_mapping_classes
+    \brief utility class for maps with std::array storage
+
+    This is a specialization of the map_utils template for index maps using the
+    std::array template as storage facility. 
+
+    \param T element type of the std::array template
+    \param NDIMS number of dimensions
+    \param POLTYPE policy type
+    */
     template<typename T,size_t NDIMS,typename POLTYPE> 
     struct map_utils<index_map<std::array<T,NDIMS>,POLTYPE> >
     {
@@ -139,6 +170,17 @@ namespace core{
     };
 
     //-------------------------------------------------------------------------
+    /*!
+    \ingroup index_mapping_classes
+    \brief utility class for static index maps
+
+    Static index maps are quite special as they cannot be altered after
+    instantiation (all information is fixed at compile time. 
+    
+    
+    \tparam POLTYPE policy type
+    \tparam DIMS number of elements along each dimension
+    */
     template<typename POLTYPE,size_t...DIMS>
     struct map_utils<static_index_map<POLTYPE,DIMS...> >
     {

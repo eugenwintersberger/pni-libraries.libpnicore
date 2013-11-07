@@ -348,8 +348,8 @@ namespace core{
                 void index(const ITYPE &sindex,OITYPE &oindex) const
             {
                 //check size - maybe move this one level up
-                check_equal_size(_oshape,oindex,EXCEPTION_RECORD);
-                check_equal_size(_shape,sindex,EXCEPTION_RECORD);
+                //check_equal_size(_oshape,oindex,EXCEPTION_RECORD);
+                //check_equal_size(_shape,sindex,EXCEPTION_RECORD);
 
                 //first copy the offsets to the oindex 
                 std::copy(_offset.begin(),_offset.end(),oindex.begin());

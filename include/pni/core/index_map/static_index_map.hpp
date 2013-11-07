@@ -46,7 +46,8 @@ namespace core{
     \endcode
 
     This class has no special constructors as it is ready to use just be using
-    the default constructor.
+    the default constructor. Unlike index_map this template provides only const
+    iterators (as its dimensions cannot be changed once declared).
 
     \tparam MAP_POL policy to compute the index and offset data
     \tparam DIMS number of elements along each dimension

@@ -16,24 +16,37 @@ uses guide or the administrators guide.
     Utility classes used throughout the entire code.
 */
 
-/*! \defgroup buffer_classes Data buffer templates
-*/
-/*! \defgroup index_mapping_classes Index mapper types
-*/
-
-/*! \defgroup multidim_array_classes Multidimensional array classes
+//=============================================================================
+/*! 
+\defgroup mdim_array_classes Multidimensional arrays
 */
 
-/*! \defgroup iterator_types Iterators types of libpnicore
+/*!
+\ingroup mdim_array_classes
+\defgroup mdim_basic_array_classes Basic arrays
 */
 
-/*! \defgroup numeric_array_classes Numeric array classes
+/*! 
+\ingroup mdim_array_classes 
+\defgroup index_mapping_classes Index mapper types
+
+Index mappers compute the linear offset from a multidimensional index and vica
+versa.
+*/
+
+/*! 
+\ingroup mdim_array_classes
+\defgroup numeric_array_classes Numeric arrays
 */
 
 /*!
 \ingroup numeric_array_classes 
 \defgroup expression_templates Expression templates
 
+*/
+
+//=============================================================================
+/*! \defgroup iterator_types Iterators types of libpnicore
 */
 
 /*! \defgroup error_classes Exception classes
