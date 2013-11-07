@@ -11,6 +11,7 @@ set(HEADER_FILES mdarray.hpp
                  binary.hpp 
                  complex_utils.hpp 
                  container_iterator.hpp 
+                 container_utils.hpp
                  counter.hpp 
                  darray.hpp 
                  exceptions.hpp 

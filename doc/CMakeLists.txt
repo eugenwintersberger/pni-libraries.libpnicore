@@ -10,6 +10,7 @@ set(HEADER_FILES ../include/pni/core/array_view_selector.hpp
                  ../include/pni/core/index_map/index_map.hpp
                  ../include/pni/core/index_map/static_index_map.hpp
                  ../include/pni/core/index_map/index_map_common.hpp
+                 ../include/pni/core/container_utils.hpp
                  ../include/pni/core/counter.hpp
                  ../include/pni/core/exception_utils.hpp
                  ../include/pni/core/numarray_tags.hpp
