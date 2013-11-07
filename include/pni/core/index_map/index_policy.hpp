@@ -31,6 +31,7 @@
 
 #include "../exceptions.hpp"
 #include "../exception_utils.hpp"
+#include "../container_utils.hpp"
 
 namespace pni{
 namespace core{
@@ -63,22 +64,6 @@ namespace core{
     */
     template<typename POLIMP> class index_policy
     {
-        private:
-
-            //-----------------------------------------------------------------
-            template<typename CTYPE>
-            static void allocate_index(CTYPE &c,size_t size)
-            {
-                c = CTYPE(size);
-            }
-
-            //-----------------------------------------------------------------
-            template<typename T,size_t N>
-            static void allocate_index(std::array<T,N> &c,size_t size)
-            {
-                //do nothing here
-            }
-
         public:
 
             //------------------------------------------------------------------
@@ -157,12 +142,11 @@ namespace core{
                      typename SCT> 
             static ICT index(const SCT &shape,size_t offset)
             {
-                ICT index;
-                allocate_index(index,shape.size());
+                auto idx = container_utils<ICT>::create(shape.size());
             
-                POLIMP::index(shape,index,offset);
+                POLIMP::index(shape,idx,offset);
                 
-                return index;
+                return idx;
             }
 
             //-----------------------------------------------------------------
@@ -185,12 +169,11 @@ namespace core{
                      size_t N>
             static ICT index(std::array<T,N> shape,size_t offset)
             {
-                ICT index;
-                allocate_index(index,shape.size());
+                auto idx = container_utils<ICT>::create(shape.size());
                 
                 POLIMP::index(std::forward<std::array<T,N>>(shape),
-                              index,offset);
-                return index;
+                              idx,offset);
+                return idx;
             }
     };
 

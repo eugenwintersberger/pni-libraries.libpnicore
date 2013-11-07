@@ -94,16 +94,32 @@ namespace core {
             static const type_id_t type_id; 
 
             //=================constructors and destructor=====================
+            //! default constructor
             mdarray():_imap(),_data() {}
 
             //-----------------------------------------------------------------
-            mdarray(const IMAP &map,const STORAGE &s):
+            /*!
+            \brief construct from map and storage
+
+            Construct an array from an index map and a storage. 
+            \param map the index map instance
+            \param s array storage
+            */
+            explicit mdarray(const map_type &map,const storage_type &s):
                 _imap(map),
                 _data(s)
             {}
 
             //-----------------------------------------------------------------
-            mdarray(IMAP &&map,STORAGE &&s):
+            /*!
+            \brief move construct from map and storage 
+        
+            Move construct an array from rvalue refernces to an index map and a
+            storage. 
+            \param map rvalue reference to the index map
+            \param s rvalue reference to the storage
+            */
+            explicit mdarray(map_type &&map,storage_type &&s):
                 _imap(std::move(map)),
                 _data(std::move(s))
             {}

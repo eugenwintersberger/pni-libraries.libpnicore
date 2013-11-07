@@ -89,11 +89,35 @@ namespace core{
             typedef typename storage_type::iterator iterator;
             //! constant iterator over the map
             typedef typename storage_type::const_iterator const_iterator;
+            //! map type
+            typedef index_map<storage_type,policy_type> map_type;
         private:
             //! storage for shape information
             storage_type _shape;
 
         public:
+            //-----------------------------------------------------------------
+            /*!
+            \brief default constructor
+            */
+            index_map():_shape() {}
+
+            //-----------------------------------------------------------------
+            /*!
+            \brief copy constructor
+           
+            \param m const reference to the original index map
+            */
+            index_map(const map_type &m):_shape(m._shape) {}
+
+            //-----------------------------------------------------------------
+            /*!
+            \brief move constructor
+
+            \param m rvalue reference to the original index map.
+            */
+            index_map(map_type &&m):_shape(std::move(m._shape)) {}
+
             //-----------------------------------------------------------------
             /*!
             \brief constructor
@@ -111,7 +135,7 @@ namespace core{
 
             \param s instance of storage_type
             */
-            index_map(const storage_type &s):_shape(s) {}
+            explicit index_map(const storage_type &s):_shape(s) {}
 
             //-----------------------------------------------------------------
             /*!
@@ -128,7 +152,37 @@ namespace core{
 
             \param s rvalue reference to storage_type
             */
-            index_map(storage_type &&s):_shape(std::move(s)) {}
+            explicit index_map(storage_type &&s):_shape(std::move(s)) {}
+
+            //-----------------------------------------------------------------
+            /*!
+            \brief copy assignment operator
+
+            \param m const reference to the original map
+            \return reference ot the new map
+            */
+            map_type &operator=(const map_type &m)
+            {
+                if(this == &m) return *this;
+                _shape = m._shape;
+
+                return *this;
+            }
+
+            //-----------------------------------------------------------------
+            /*!
+            \brief move assignment operator
+
+            \param m rvalue reference to the original index map
+            \return reference to the new map
+            */
+            map_type &operator=(map_type &&m)
+            {
+                if(this == &m) return *this;
+                _shape = std::move(m._shape);
+
+                return *this;
+            }
 
             //-----------------------------------------------------------------
             /*!
