@@ -25,6 +25,7 @@
 #include <sstream>
 #include <pni/core/types.hpp>
 #include <pni/core/type_info.hpp>
+#include <boost/lexical_cast.hpp>
 
 #ifdef NOCPPRAND
 #include <boost/random/uniform_int.hpp>
@@ -126,9 +127,7 @@ template<> class random_generator<string>
 
         string operator()()
         {
-            std::stringstream ss;
-            ss<<_generator();
-            return ss.str();
+            return boost::lexical_cast<string>(_generator());
         }
 };
 

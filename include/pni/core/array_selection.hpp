@@ -39,6 +39,17 @@ namespace core{
     \ingroup index_mapping_classes
     \brief selection from a multidimensional array
 
+    The array_selection class is a utility class for selecting subranges of
+    multidimensional arrays. The effective rank of such a selection can be
+    smaller than that of the original array. Thus the number of indices used to
+    address an element in a selection might be smaller than for the original
+    array. 
+    This class has to major purposes
+
+    \li compute the original index of the array for a
+    \li compute the original offset for a given offset
+
+
     This type represents the selection of elements from a multidimensional
     array and is primarily used by the ArrayView template. 
     Its primary purpose is to map selection indices to indices of the
@@ -69,19 +80,6 @@ namespace core{
             //! stride in the original array
             index_t _stride;
 
-            //member variables describing the effective shape and rank of the 
-            //selection
-            index_t _shape; //!< effective shape of the selection
-
-            //! setup selection parameters
-            void _set_local_params()
-            {
-                _shape = index_t(_oshape);
-                //we have to remove all entries where the number of elements is
-                //1 
-                _shape.erase(std::remove(_shape.begin(),_shape.end(),1),_shape.end());
-            }
-
         public:
             //===================constructors and destructor====================
             //! standard constructor
@@ -96,16 +94,13 @@ namespace core{
                 std::copy(oshape.begin(),oshape.end(),_oshape.begin());
                 std::copy(ooffset.begin(),ooffset.end(),_offset.begin());
                 std::copy(ostride.begin(),ostride.end(),_stride.begin());
-
-                _set_local_params();
             }
 
             //------------------------------------------------------------------
             explicit array_selection():
                 _oshape(0),
                 _offset(0),
-                _stride(0),
-                _shape(0)
+                _stride(0)
             {}
 
             //-----------------------------------------------------------------
@@ -115,22 +110,20 @@ namespace core{
                 _offset(std::move(ooffset)),
                 _stride(std::move(ostride))
             {
-                _set_local_params();
             }
 
             //-----------------------------------------------------------------
             explicit array_selection(const array_selection &s):
                 _oshape(s._oshape),
                 _offset(s._offset),
-                _stride(s._stride),
-                _shape(s._shape)
+                _stride(s._stride)
             { }
 
+            //-----------------------------------------------------------------
             array_selection(array_selection &&s):
                 _oshape(std::move(s._oshape)),
                 _offset(std::move(s._offset)),
-                _stride(std::move(s._stride)),
-                _shape(std::move(s._shape))
+                _stride(std::move(s._stride))
             { }
 
             //-----------------------------------------------------------------
@@ -141,11 +134,11 @@ namespace core{
                 _oshape = s._oshape;
                 _offset = s._offset;
                 _stride = s._stride;
-                _shape  = s._shape;
 
                 return *this;
             }
 
+            //-----------------------------------------------------------------
             array_selection &operator=(array_selection &&s)
             {
                 if(this == &s) return *this;
@@ -153,7 +146,6 @@ namespace core{
                 _oshape = std::move(s._oshape);
                 _offset = std::move(s._offset);
                 _stride = std::move(s._stride);
-                _shape  = std::move(s._shape);
 
                 return *this;
             }
@@ -168,7 +160,7 @@ namespace core{
                     >
             static array_selection create(const CTYPE &s)
             {
-                std::vector<size_t> shape, offset, stride;
+                index_t shape, offset, stride;
 
 #ifdef NOFOREACH
                 BOOST_FOREACH(auto sl,s)
@@ -191,33 +183,36 @@ namespace core{
             /*! 
             \brief get effective rank
 
-            Return the effective rank of the selection.
+            Return the effective rank of the selection. If a single element is
+            selected the element count along each of the dimensions of the
+            selection will be 1. As a result the rank will be zero. 
+            For scalar selections the rank is 0. 
+
             \return effective rank
             */
-            size_t rank() const { return _shape.size(); }
-
-            //-----------------------------------------------------------------
-            /*! 
-            \brief get effective shape reference
-
-            Return a reference to the effective shape of the selection. 
-            \return reference to effective shape
-            */
-            const std::vector<size_t> &shape() const { return _shape; }
+            size_t rank() const 
+            { 
+                return _oshape.size() - std::count(_oshape.begin(),_oshape.end(),1);
+            }
 
             //-----------------------------------------------------------------
             /*!
             \brief get effective shape
 
             Return the effective shape of the selection in an arbitary
-            container.
+            container. If a single scalar element is selected the return value
+            will be an empty container. 
+
             \tparam CTYPE container type
             \return instance of CTYPE with effective shape
             */
             template<typename CTYPE> CTYPE shape() const
             {
-                CTYPE c(_shape.size());
-                std::copy(_shape.begin(),_shape.end(),c.begin());
+                CTYPE c(rank());
+                //now we have to copy only those values from the original shape
+                //that are not equal 1
+                std::copy_if(_oshape.begin(),_oshape.end(),c.begin(),
+                             [](size_t i){ return i!=1; });
                 return c;
             }
 
@@ -225,13 +220,21 @@ namespace core{
             /*! 
             \brief get selection size
 
-            Get the number of elements stored in the selection.
+            Get the number of elements stored in the selection. If a single
+            element is selected the size is 1. If the selection is not
+            initialized the size is 0;
+
             \return number of elements
             */
             size_t size() const 
             { 
-                return _shape.size() != 0? std::accumulate(_shape.begin(),_shape.end(),1,
-                                     std::multiplies<index_t::value_type>()): 0;
+                if(_oshape.empty()) return 0; //not initialized 
+
+                if(rank() == 0) return 1; //scalar element selected 
+
+                //compute the size and return it
+                return std::accumulate(_oshape.begin(),_oshape.end(),1,
+                                     std::multiplies<index_t::value_type>());
             }
 
             //=========methods to retrieve full selection information==========
@@ -242,7 +245,7 @@ namespace core{
             selection. 
             \return reference to full shape
             */
-            const std::vector<size_t> &full_shape() const { return _oshape; }
+            const index_t &full_shape() const { return _oshape; }
 
             //-----------------------------------------------------------------
             /*! 
@@ -267,7 +270,7 @@ namespace core{
             Return a reference to the offset container of the selection object.
             \return reference to offsets
             */
-            const std::vector<size_t> &offset() const { return _offset; }
+            const index_t &offset() const { return _offset; }
 
             //-----------------------------------------------------------------
             /*! 
@@ -291,7 +294,7 @@ namespace core{
             Return a reference to the stride container of the selection.
             \return stride reference
             */
-            const std::vector<size_t> &stride() const { return _stride; }
+            const index_t &stride() const { return _stride; }
 
             //-----------------------------------------------------------------
             /*! 

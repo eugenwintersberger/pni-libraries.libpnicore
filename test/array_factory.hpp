@@ -37,7 +37,7 @@ template<typename ATYPE> struct array_factory
     template<typename CTYPE> static ATYPE create(const CTYPE &s)
     {
         map_type map=map_utils<map_type>::create(s);
-        return ATYPE(map,storage_type(map.size()));
+        return ATYPE(std::move(map),storage_type(map.size()));
     }
 
 };

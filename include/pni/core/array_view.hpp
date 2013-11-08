@@ -235,6 +235,9 @@ namespace core{
             */
             value_type &operator[](size_t i)
             {
+#ifdef DEBUG
+                check_index(i,size(),EXCEPTION_RECORD);
+#endif
                 //compute the multidimensional index in the original array for
                 //the linear index i in the view
                 auto index = _imap.template index<index_type>(i);
@@ -253,6 +256,9 @@ namespace core{
             */
             value_type operator[](size_t i) const
             {
+#ifdef DEBUG
+                check_index(i,size(),EXCEPTION_RECORD);
+#endif
                 //compute the multidimensional index in the original array for
                 //the linear index i in the view
                 auto index = _imap.template index<index_type>(i);
@@ -260,10 +266,42 @@ namespace core{
             }
 
             //-----------------------------------------------------------------
-            value_type &at(size_t i) { return (*this)[i]; }
+            /*!
+            \brief get value at index i
+
+            Return a reference to the element at linear index i within the view. 
+            Unlike the [] operators this member function will throw an exception
+            if the index exceeds the size of the view.
+
+            \throws index_error in case that the index exceeds the size of the
+            view
+            \param i index at which to get the data
+            \return reference to the element at index i
+            */
+            value_type &at(size_t i) 
+            { 
+                check_index(i,size(),EXCEPTION_RECORD); 
+                return (*this)[i]; 
+            }
 
             //-----------------------------------------------------------------
-            value_type at(size_t i) const { return (*this)[i]; }
+            /*!
+            \brief get value at index i
+
+            Return the value of the element at linear index i within the view. 
+            Unlike the [] operators this member function will throw an exception
+            if the index exceeds the size of the view.
+
+            \throws index_error in case that the index exceeds the size of the
+            view
+            \param i index at which to get the data
+            \return reference to the element at index i
+            */
+            value_type at(size_t i) const 
+            { 
+                check_index(i,size(),EXCEPTION_RECORD);
+                return (*this)[i]; 
+            }
 
             //-----------------------------------------------------------------
             void insert(size_t i,const value_type &v) { at(i) = v; }

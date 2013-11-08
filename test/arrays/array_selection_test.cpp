@@ -49,8 +49,9 @@ void array_selection_test::test_construction()
     //testing default constructor
     array_selection sel1;
     CPPUNIT_ASSERT(sel1.rank() == 0);
-    CPPUNIT_ASSERT(sel1.shape() == std::vector<size_t>());
+    CPPUNIT_ASSERT(sel1.shape<shape_t>() == shape_t());
     CPPUNIT_ASSERT(sel1.size() == 0);
+    auto sel1_shape = sel1.shape<shape_t>();
 
     //testing standard constructor
     itype shape({1,100,100}); itype offset({0,0,0}); itype stride({1,1,1});
@@ -59,7 +60,8 @@ void array_selection_test::test_construction()
     CPPUNIT_ASSERT(sel2.rank() == 2);
     CPPUNIT_ASSERT(sel2.size() == 100*100);
     itype s{100,100};
-    CPPUNIT_ASSERT(std::equal(s.begin(),s.end(),sel2.shape().begin()));
+    auto sel2_shape = sel2.shape<itype>();
+    CPPUNIT_ASSERT(std::equal(s.begin(),s.end(),sel2_shape.begin()));
 
     //check full parameters
     CPPUNIT_ASSERT(std::equal(sel2.full_shape().begin(),
@@ -83,19 +85,19 @@ void array_selection_test::test_construction()
     array_selection sel3(sel2);
     CPPUNIT_ASSERT(sel3.rank() == sel2.rank());
     CPPUNIT_ASSERT(sel3.size() == sel2.size());
-    s = sel3.shape();
-    CPPUNIT_ASSERT(std::equal(s.begin(),s.end(),sel2.shape().begin()));
+    s = sel3.shape<itype>();
+    CPPUNIT_ASSERT(std::equal(s.begin(),s.end(),sel2_shape.begin()));
 
     //! move construction
     array_selection sel4(std::move(sel3));
     CPPUNIT_ASSERT(sel4.rank() == sel2.rank());
     CPPUNIT_ASSERT(sel4.size() == sel2.size());
-    s = sel4.shape();
-    CPPUNIT_ASSERT(std::equal(s.begin(),s.end(),sel2.shape().begin()));
+    s = sel4.shape<itype>();
+    CPPUNIT_ASSERT(std::equal(s.begin(),s.end(),sel2_shape.begin()));
 
     CPPUNIT_ASSERT(sel3.size() == 0);
     CPPUNIT_ASSERT(sel3.rank() == 0);
-    CPPUNIT_ASSERT(sel3.shape() == itype());
+    CPPUNIT_ASSERT(sel3.shape<itype>() == itype());
 
 }
 
@@ -122,17 +124,18 @@ void array_selection_test::test_assignment()
     array_selection sel(itype({100,1,200}),itype({1,1,1}),itype({1,1,2}));
     CPPUNIT_ASSERT(sel.rank() == 2);
     itype s{100,200};
+    auto sel_shape = sel.shape<itype>();
 #ifdef NOFOREACH
     BOOST_FOREACH(auto v,sel)
 #else
-    for(auto v: sel.shape()) 
+    for(auto v: sel_shape) 
     {
 #endif
         std::cout<<v<<" ";
     }
 
     std::cout<<std::endl;
-    CPPUNIT_ASSERT(std::equal(s.begin(),s.end(),sel.shape().begin()));
+    CPPUNIT_ASSERT(std::equal(s.begin(),s.end(),sel_shape.begin()));
     std::cout<<sel.size()<<std::endl;
     CPPUNIT_ASSERT(sel.size() == 100*200);
 
@@ -142,20 +145,22 @@ void array_selection_test::test_assignment()
     s1 = sel;
     CPPUNIT_ASSERT(s1.rank() == sel.rank());
     CPPUNIT_ASSERT(s1.size() == sel.size());
-    CPPUNIT_ASSERT(std::equal(s1.shape().begin(),s1.shape().end(),
-                              sel.shape().begin()));
+    auto s1_shape = s1.shape<itype>();
+    CPPUNIT_ASSERT(std::equal(s1_shape.begin(),s1_shape.end(),
+                              sel_shape.begin()));
 
     //-----------------test move assignment------------------------------------
     array_selection s2;
     s2 = std::move(s1);
     CPPUNIT_ASSERT(s2.rank() == sel.rank());
     CPPUNIT_ASSERT(s2.size() == sel.size());
-    CPPUNIT_ASSERT(std::equal(s2.shape().begin(),s2.shape().end(),
-                              sel.shape().begin()));
+    auto s2_shape  = s2.shape<itype>();
+    CPPUNIT_ASSERT(std::equal(s2_shape.begin(),s2_shape.end(),
+                              sel_shape.begin()));
 
     CPPUNIT_ASSERT(s1.size() == 0);
     CPPUNIT_ASSERT(s1.rank() == 0);
-    CPPUNIT_ASSERT(s1.shape() == itype());
+    CPPUNIT_ASSERT(s1.shape<itype>() == itype());
 
 }
 
@@ -165,7 +170,8 @@ void array_selection_test::test_index()
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
     array_selection sel(itype({10,20}),itype({1,2}),itype({3,2}));
     itype s{10,20};
-    CPPUNIT_ASSERT(std::equal(s.begin(),s.end(),sel.shape().begin()));
+    auto sshape = sel.shape<itype>();
+    CPPUNIT_ASSERT(std::equal(s.begin(),s.end(),sshape.begin()));
     CPPUNIT_ASSERT(sel.rank()==2);
     CPPUNIT_ASSERT(sel.size() == 10*20);
         

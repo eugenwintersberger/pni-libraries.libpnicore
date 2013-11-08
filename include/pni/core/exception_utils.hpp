@@ -80,6 +80,45 @@ namespace core{
     */
     void check_index(size_t index,size_t maxindex,const exception_record &i);
 
+    //-------------------------------------------------------------------------
+    /*!
+    \ingroup error_classes
+    \brief check indexes
+
+    Checks if all indexes stored in a container lie within a given range
+    determined by the shape. In addition the function checks if the number of
+    indexes matches the number of elements in the shape. 
+
+    \throws index_error if one of the indexes exceeds the number of elements in
+    its dimension
+    \throws shape_mismatch_error if the number of indexes does not match the
+    number of dimensions (elements in the shape)
+    \tparam ITYPE index container type
+    \tparam STYPE shape container type
+    \param index container with index data
+    \param shape container with shape data
+    \param record the exception record of the calling function
+    */
+    template<typename ITYPE,typename STYPE>
+    void check_indexes(const ITYPE &index,const STYPE &shape,
+                       const exception_record &record)
+    {
+        //check size
+        if(index.size() != shape.size())
+        {
+            std::stringstream ss;
+            ss<<"Number of indexes ("<<index.size()<<") does not match ";
+            ss<<"the rank of the shape ("<<shape.size()<<")!";
+            throw shape_mismatch_error(record,ss.str());
+        }
+
+        auto iiter = index.begin();
+        auto siter = shape.begin();
+        for(;iiter!=index.end();++iiter,++siter)
+            check_index(*iiter,*siter,record);
+
+    }
+
 
     //-------------------------------------------------------------------------
     /*!

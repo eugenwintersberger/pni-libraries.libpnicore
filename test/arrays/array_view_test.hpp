@@ -151,7 +151,12 @@ template<typename ATYPE> void array_view_test<ATYPE>::test_linear_access()
                    array_selection::create(slice_container{slice(0,1),slice(2,7)}));
     check_view(view,shape_t{5});
 
-    for(size_t i=0;i<view.size();++i) compare(view[i],array(0,2+i));
+    for(size_t i=0;i<view.size();++i) 
+    {
+        value_type v1 = array(0,2+i);
+        value_type v2 = view[i];
+        compare(view[i],array(0,2+i));
+    }
 
     //-----------------check for front-----------------------------------------
     value_type v = array.front();
@@ -167,7 +172,7 @@ template<typename ATYPE> void array_view_test<ATYPE>::test_linear_access()
 //-----------------------------------------------------------------------------
 template<typename ATYPE> void array_view_test<ATYPE>::test_iterator_access()
 {
-    typedef std::vector<typename ATYPE::value_type> ctype;
+    typedef std::vector<value_type> ctype;
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
     //create the view
@@ -181,19 +186,23 @@ template<typename ATYPE> void array_view_test<ATYPE>::test_iterator_access()
 
     //---------------------check write access----------------------------------
     auto diter = data.begin();
-    for(auto iter = v.begin();iter!=v.end();++iter)
-        *iter = *diter++;
+
+    for(auto iter = v.begin();iter!=v.end();++iter,++diter)
+        *iter = *diter;
 
     //----------------------check read access----------------------------------
     diter = data.begin();
-    for(auto iter = v.begin();iter!=v.end();++iter)
-        compare(*iter,*diter++);
+    for(auto iter = v.begin();iter!=v.end();++iter,++diter)
+        compare(*iter,*diter);
 
     //-----now we need to check if the data arrived at the original array------
     array_selection  selection(shape_t{13,9},shape_t{10,100},shape_t{2,3});
     index_iterator<shape_t,map_type> index_iter(shape_t{13,9},0);
     for(auto iter = data.begin();iter!=data.end();++iter)
-        compare(*iter,array(selection.template index<shape_t>(*index_iter++)));
+    {
+        auto index = selection.template index<shape_t>(*index_iter++);
+        compare(*iter,array(index));
+    }
 }
 
 //-----------------------------------------------------------------------------
@@ -202,8 +211,10 @@ template<typename ATYPE> void array_view_test<ATYPE>::test_assignment()
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl; 
 
     //select roi
+    /*
     view_type roi(array,
                   array_selection::create(slice_container{slice(1,10),slice(0,100)}));
+                  */
    
     //allocate new array for a roi - we have to use a DArray here as for a
     //static array we would have to know the shape of the array

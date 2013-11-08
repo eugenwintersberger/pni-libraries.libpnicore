@@ -118,54 +118,6 @@ namespace core{
     string str_from_type_id(type_id_t id);
 
 
-    //-------------------------------------------------------------------------
-    /*!
-    \ingroup type_classes
-    \brief string to id map
-    
-    A map instance mapping the string representations of types to type IDs.
-    */
-    static const std::map<string,type_id_t> str2type_id =
-    {{"uint8",type_id_t::UINT8},{"ui8",type_id_t::UINT8},
-     {"int8",type_id_t::INT8},{"i8",type_id_t::INT8},
-     {"uint16",type_id_t::UINT16},{"ui16",type_id_t::UINT16},
-     {"int16",type_id_t::INT16},{"i16",type_id_t::INT16},
-     {"uint32",type_id_t::UINT32},{"ui32",type_id_t::UINT32},
-     {"int32",type_id_t::INT32},{"i32",type_id_t::INT32},
-     {"uint64",type_id_t::UINT64},{"ui64",type_id_t::UINT64},
-     {"int64",type_id_t::INT64},{"i64",type_id_t::INT64},
-     {"float32",type_id_t::FLOAT32},{"f32",type_id_t::FLOAT32},
-     {"float64",type_id_t::FLOAT64},{"f64",type_id_t::FLOAT64},
-     {"float128",type_id_t::FLOAT128},{"f128",type_id_t::FLOAT128},
-     {"complex32",type_id_t::COMPLEX32},{"c32",type_id_t::COMPLEX32},
-     {"complex64",type_id_t::COMPLEX64},{"c64",type_id_t::COMPLEX64},
-     {"complex128",type_id_t::COMPLEX128},{"c128",type_id_t::COMPLEX128},
-     {"string",type_id_t::STRING},{"str",type_id_t::STRING},
-     {"binary",type_id_t::BINARY}
-    };
-
-    //-------------------------------------------------------------------------
-    /*!
-    \ingroup type_classes
-    \brief type ID to string map
-
-    This map provides mapping from type_id to the string representations of a
-    type.
-    */
-    static const std::map<type_id_t,string> type_id2str =
-    {{type_id_t::UINT8,"uint8"},   {type_id_t::INT8,"int8"},
-     {type_id_t::UINT16,"uint16"}, {type_id_t::INT16,"int16"},
-     {type_id_t::UINT32,"uint32"}, {type_id_t::INT32,"int32"},
-     {type_id_t::UINT64,"uint64"}, {type_id_t::INT64,"int64"},
-     {type_id_t::FLOAT32,"float32"},
-     {type_id_t::FLOAT64,"float64"},
-     {type_id_t::FLOAT128,"float128"},
-     {type_id_t::COMPLEX32,"complex32"},
-     {type_id_t::COMPLEX64,"complex64"},
-     {type_id_t::COMPLEX128,"complex128"},
-     {type_id_t::STRING,"string"},
-     {type_id_t::BINARY,"binary"}
-    };
 
 //end of namespace
 }

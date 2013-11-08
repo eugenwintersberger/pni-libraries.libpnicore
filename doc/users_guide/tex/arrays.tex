@@ -22,16 +22,17 @@ Internally an instance of the {\tt std::array<T,N>} template (provided by the
 STL) is used to store the data. A static array can be created from every other
 array type or container type (a list or a vector).
 
-\begin{minted}{cpp}
-//construction from initializer list
-sarray<float64,3> v1 = {1.0,2.0,3.0}; 
-//copy construction from an already existing instance 
-sarray<float64,3> v2(v1);
+%\begin{minted}{cpp}
+%//construction from initializer list
+%sarray<float64,3> v1 = {1.0,2.0,3.0}; 
+%//copy construction from an already existing instance 
+%sarray<float64,3> v2(v1);
+%
+%std::vector<float64> data{-1.2,4.0,-5.4,10.8};
+%sarray<float64,2,2> matrix(data);
+%\end{minted}
 
-std::vector<float64> data{-1.2,4.0,-5.4,10.8};
-sarray<float64,2,2> matrix(data);
-\end{minted}
-
+\section{Arrays with fixed dimensions}
 
 
 \section{Dynamic arrays}\label{sec:array:dynamic_arrays}
