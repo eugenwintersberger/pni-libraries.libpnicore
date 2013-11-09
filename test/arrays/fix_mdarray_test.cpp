@@ -29,7 +29,7 @@
 
 
 #define FIXARRAY_TEST_REGISTRATION(type,ndims)\
-static CPPUNIT_NS::AutoRegisterSuite< fix_mdarray_test<fix_array<type,ndims> > >  \
+static CPPUNIT_NS::AutoRegisterSuite< fix_mdarray_test<fixed_dim_array<type,ndims> > >  \
              CPPUNIT_MAKE_UNIQUE_NAME(autoRegisterRegistry__ )
 
 

@@ -16,7 +16,7 @@ if(CMAKE_COMPILER_IS_GNUCXX)
         add_definitions(-O3 -g)
     elseif(CMAKE_BUILD_TYPE MATCHES DEBUG)
         message("setup for debug build ...")
-        add_definitions(-O0 -g -fno-inline -DDEBUG -DGLIBCXX_FORCE_NEW)
+        add_definitions(-O0 -g -fno-inline -DDEBUG)
     endif()
 endif()
 

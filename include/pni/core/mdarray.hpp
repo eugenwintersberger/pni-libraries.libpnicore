@@ -279,7 +279,8 @@ namespace core {
                 check_indexes(buffer,_imap,EXCEPTION_RECORD);
 #endif
 
-                return _data[_imap.offset(buffer)];
+                size_t offset = _imap.offset(buffer);
+                return _data[offset];
             }
 
             //-----------------------------------------------------------------
@@ -304,8 +305,8 @@ namespace core {
 #ifdef DEBUG
                 check_indexes(buffer,_imap,EXCEPTION_RECORD);
 #endif
-
-                return _data[_imap.offset(buffer)];
+                size_t offset = _imap.offset(buffer);
+                return _data[offset];
             }
 
             //-----------------------------------------------------------------

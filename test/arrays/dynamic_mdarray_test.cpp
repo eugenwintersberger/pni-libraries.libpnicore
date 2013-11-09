@@ -30,7 +30,7 @@
 
 
 #define DYNARRAY_TEST_REGISTRATION(type)\
-static CPPUNIT_NS::AutoRegisterSuite< dynamic_mdarray_test<dyn_array<type> > >  \
+static CPPUNIT_NS::AutoRegisterSuite< dynamic_mdarray_test<dynamic_array<type> > >  \
              CPPUNIT_MAKE_UNIQUE_NAME(autoRegisterRegistry__ )
 
 

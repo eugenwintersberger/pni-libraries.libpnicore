@@ -30,11 +30,11 @@
 
 
 #define DYNARRAY_TEST_REGISTRATION(type)\
-static CPPUNIT_NS::AutoRegisterSuite< mdarray_test<dyn_array<type> > >  \
+static CPPUNIT_NS::AutoRegisterSuite< mdarray_test<dynamic_array<type> > >  \
              CPPUNIT_MAKE_UNIQUE_NAME(autoRegisterRegistry__ )
 
 #define FIXARRAY_TEST_REGISTRATION(type,ndims)\
-static CPPUNIT_NS::AutoRegisterSuite< mdarray_test<fix_array<type,ndims> > >  \
+static CPPUNIT_NS::AutoRegisterSuite< mdarray_test<fixed_dim_array<type,ndims> > >  \
              CPPUNIT_MAKE_UNIQUE_NAME(autoRegisterRegistry__ )
 
 template<typename T> using static_a = static_array<T,2,3,5>;
