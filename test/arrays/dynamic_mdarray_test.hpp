@@ -26,7 +26,7 @@
 #include <boost/current_function.hpp>
 #include <algorithm>
 
-#include "common.hpp"
+#include <pni/core/arrays.hpp>
 
 #include "../data_generator.hpp"
 #include "../EqualityCheck.hpp"

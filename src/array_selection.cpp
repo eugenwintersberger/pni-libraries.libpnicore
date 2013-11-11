@@ -36,11 +36,12 @@ namespace core{
             o<<i<<":\t"<<s._oshape[i]<<"\t"<<s._offset[i]<<"\t"<<s._stride[i];
             o<<std::endl;
         }
+        shape_t shape = s.shape<shape_t>();
         o<<"effective shape: ( ";
 #ifdef NOFOREACH
-        BOOST_FOREACH(auto v,s._shape)
+        BOOST_FOREACH(auto v,shape)
 #else
-        for(auto v: s._shape)
+        for(auto v: shape)
 #endif
             o<<v<<" ";
         

@@ -26,7 +26,7 @@
 #include <boost/current_function.hpp>
 #include <algorithm>
 
-#include "common.hpp"
+#include <pni/core/arrays.hpp>
 
 #include "../data_generator.hpp"
 #include "../compare.hpp"
@@ -66,15 +66,6 @@ class mdarray_test : public CppUnit::TestFixture
         CPPUNIT_TEST(test_multiindex_access_container<vector_size_t>);
         CPPUNIT_TEST(test_multiindex_access_container<array_size_t>);
         CPPUNIT_TEST(test_multiindex_access_container<list_size_t>);
-        CPPUNIT_TEST(test_multiindex_access_container<vector_uint8_t>);
-        CPPUNIT_TEST(test_multiindex_access_container<array_uint8_t>);
-        CPPUNIT_TEST(test_multiindex_access_container<list_uint8_t>);
-        CPPUNIT_TEST(test_multiindex_access_container<vector_uint16_t>);
-        CPPUNIT_TEST(test_multiindex_access_container<array_uint16_t>);
-        CPPUNIT_TEST(test_multiindex_access_container<list_uint16_t>);
-        CPPUNIT_TEST(test_multiindex_access_container<vector_uint32_t>);
-        CPPUNIT_TEST(test_multiindex_access_container<array_uint32_t>);
-        CPPUNIT_TEST(test_multiindex_access_container<list_uint32_t>);
         CPPUNIT_TEST(test_multiindex_access_container<vector_uint64_t>);
         CPPUNIT_TEST(test_multiindex_access_container<array_uint64_t>);
         CPPUNIT_TEST(test_multiindex_access_container<list_uint64_t>);

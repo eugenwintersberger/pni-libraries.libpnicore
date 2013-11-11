@@ -23,8 +23,12 @@
 #pragma once
 
 #include <vector>
-#include "darray.hpp"
-#include "sarray.hpp"
+#include <boost/mpl/arithmetic.hpp>
+#include <boost/mpl/times.hpp>
+#include <boost/mpl/vector.hpp>
+#include <boost/mpl/size_t.hpp>
+#include <boost/lexical_cast.hpp>
+#include "mdarray.hpp"
 #include "numarray.hpp"
 #include "types.hpp"
 #include "slice.hpp"
@@ -33,111 +37,155 @@
 namespace pni{
 namespace core{
 
+    //define here a new set of array templates using aliases
     /*!
-    \addtogroup multidim_array_classes
-    @{
-    */
-    typedef darray<uint8> u8darray; //!< 8Bit unsigned integer dynamic array
-    typedef darray<int8>  i8darray; //!< 8Bit signed integer dynamic array
-    typedef darray<uint16> u16darray; //!< 16Bit unsigned integer dynamic array
-    typedef darray<int16>  i16darray; //!< 16Bit signed integer dynamic array
-    typedef darray<uint32> u32darray; //!< 32Bit unsigned integer dynamic array
-    typedef darray<int32>  i32darray; //!< 32Bit signed integer dynamic array
-    typedef darray<uint64> u64darray; //!< 64Bit unsigned integer dynamic array
-    typedef darray<int64>  i64darray; //!< 64Bit signed integer dynamic array
-
-    //! 32Bit IEEE floating point dynamic array
-    typedef darray<float32> f32darray; 
-    //! 64Bit IEEE floating oint dynamic array
-    typedef darray<float64> f64darray;
-    //! 128Bit IEEE floating point dynamic array
-    typedef darray<float128> f128darray;
-
-    //! 32Bit IEEE complex floating point dynamic array
-    typedef darray<complex32> c32darray;
-    //! 64Bit IEEE complex floating point dynamic array
-    typedef darray<complex64> c64darray;
-    //! 128Bit IEEE complex floating point dynamic array
-    typedef darray<complex128> c128darray;
-    /*! @}*/
-
-    //define some static arrays
-#ifndef NOTMPALIAS
-    template<size_t ...DIMS> using u8sarray = sarray<uint8,DIMS...>;
-    template<size_t ...DIMS> using i8sarray = sarray<int8,DIMS...>;
-    template<size_t ...DIMS> using u16sarray = sarray<uint16,DIMS...>;
-    template<size_t ...DIMS> using i16sarray = sarray<int16,DIMS...>;
-    template<size_t ...DIMS> using u32sarray = sarray<uint32,DIMS...>;
-    template<size_t ...DIMS> using i32sarray = sarray<int32,DIMS...>;
-    template<size_t ...DIMS> using u64sarray = sarray<uint64,DIMS...>;
-    template<size_t ...DIMS> using i64sarray = sarray<int64,DIMS...>;
-
-    template<size_t ...DIMS> using f32sarray = sarray<float32,DIMS...>;
-    template<size_t ...DIMS> using f64sarray = sarray<float64,DIMS...>;
-    template<size_t ...DIMS> using f128sarray = sarray<float128,DIMS...>;
+    \ingroup multidim_array_classes
+    \brief a dynamic array template
     
-    template<size_t ...DIMS> using c32sarray = sarray<complex32,DIMS...>;
-    template<size_t ...DIMS> using c64sarray = sarray<complex64,DIMS...>;
-    template<size_t ...DIMS> using c128sarray = sarray<complex128,DIMS...>;
-#endif
+    This template creates a fully dynamic array type. Its rank as well as its
+    number of elements along each dimension (the shape) can be created
+    dynamically. Use this type if all decisions have to be made at runtime. 
 
-    /*! \addtogroup numeric_array_classes
-      @{
-     */
-    //define some numeric arrays based on a dynamic array
-    //! 8Bit unsinged integer numeric array with a dynamic container array
-    typedef numarray<u8darray> nu8darray;
-    //! 8Bit signed integer numeric array with a dynamic container array
-    typedef numarray<i8darray> ni8darray;
-    //! 16Bit unsigned integer numeric array with a dynamic container array
-    typedef numarray<u16darray> nu16darray;
-    //! 16Bit signed integer numeric array with a dynamic container array
-    typedef numarray<i16darray> ni16darray;
-    //! 32Bit unsigned integer numeric array with a dynamic container array
-    typedef numarray<u32darray> nu32darray;
-    //! 32Bit singed integer numeric array with a dynamic container array
-    typedef numarray<i32darray> ni32darray;
-    //! 64Bit unsigned integer numeric array with a dynamic container array
-    typedef numarray<u64darray> nu64darray;
-    //! 64Bit signed integer numeric array with a dynamic container array
-    typedef numarray<i64darray> ni64darray;
+    \code
+    typedef dynamic_array<float64> array_type; 
+
+    array_type a = ...;
+    \endcode
+
+
+    \tparam T element type
+    */
+    template<typename T> 
+    using dynamic_array = mdarray<std::vector<T>,dynamic_cindex_map>;
+
+    //-------------------------------------------------------------------------
+    /*!
+    \ingroup multidim_array_classes
+    \brief array template with fixed dimension 
+
+    This array template fixes the number of dimensions for an array type at
+    compile time. It will be the appropriate type for most applications. 
+    The following code defines an image type (we know that images have always
+    2 dimensions): 
+
+    \code
+    typedef fixed_dim_array<uint32,2> image_type;
+    \endcode
+
+    \tparam T element data type
+    \tparam D number of dimensions
+    */
+    template<typename T,size_t D>
+    using fixed_dim_array = mdarray<std::vector<T>,fixed_dim_cindex_map<D>>;
+
+    //-------------------------------------------------------------------------
+    /*!
+    \ingroup multidim_array_classes
+    \brief static array template 
+
+    This template can be used for static array types. These are types where
+    the number of dimensions as well as the total number of elements along each
+    dimension are known at compile time. A typical application would be matrices
+    and vectors for 3D operations. 
+
+    \code
+    typedef static_array<float64,3> vector_type;
+    typedef static_array<float64,3,3> matrix_type; 
+    typedef static_array<float64,6,6> elasticity_tensor;
+    \endcode
+
+    Instances of such types usually reside on the stack which makes access to
+    their data elements extremely fast. 
+
+    \tparam T element data type
+    \tparam NDIMS number of elements along each dimension
+    */
+    template<typename T,size_t... NDIMS>
+    using static_array = mdarray<std::array<T,boost::mpl::times<
+                                              boost::mpl::size_t<1>,
+                                              boost::mpl::size_t<NDIMS>...
+                                              >::value
+                                           >,
+                                 static_cindex_map<NDIMS...>
+                                >;
+
+
+    //-------------------------------------------------------------------------
+    template<typename ATYPE> struct array_factory
+    {
+        typedef ATYPE array_type;
+        typedef typename array_type::value_type value_type;
+        typedef typename array_type::map_type map_type;
+        typedef typename array_type::storage_type storage_type;
+
+
+        //---------------------------------------------------------------------
+        /*!
+        \brief create array from shape
+
+        Create an array from a container with shape data and initialize all its
+        elements with a default value.
+
+        \tparam STYPE container type for shape information
+        \param s shape of the array
+        \param dev_val default value for data
+        \return instance of array_type
+        */
+        template<typename STYPE> 
+        static array_type create(const STYPE &s,value_type def_val = value_type())
+        {
+            //create the index map
+            auto map = map_utils<map_type>::create(s);
+            storage_type storage(map.max_elements());
+            std::fill(storage.begin(),storage.end(),def_val);
+            
+            return array_type(std::move(map),std::move(storage));
+        }
+
+        //---------------------------------------------------------------------
+        /*!
+        \brief create array from shape and data
+
+        */
+        template<typename STYPE,
+                 typename DTYPE
+                >
+        static array_type create(const STYPE &s,const DTYPE &data)
+        {
+            auto map = map_utils<map_type>::create(s);
+            if(map.max_elements() != data.size())
+                throw size_mismatch_error(EXCEPTION_RECORD,
+                        "Total number of elements from map ("
+                        +boost::lexical_cast<string>(map.max_elements())+
+                        ") does not match data size ("
+                        +boost::lexical_cast<string>(data.size())+")!");
+
+            storage_type storage(data.size());
+            std::copy(data.begin(),data.end(),storage.begin());
+            return array_type(std::move(map),std::move(storage));
+        }
+
+        //---------------------------------------------------------------------
+        template<typename IT,
+                 typename DT>
+        static array_type create(std::initializer_list<IT> shape,
+                                 std::initializer_list<DT> data)
+        {
+            auto map = map_utils<map_type>::create(shape);
+            if(map.max_elements() != data.size())
+                throw size_mismatch_error(EXCEPTION_RECORD,
+                        "Total number of elements from map ("
+                        +boost::lexical_cast<string>(map.max_elements())+
+                        "does not match data size ("
+                        +boost::lexical_cast<string>(data.size())+")!");
+
+            storage_type storage(data.size());
+            std::copy(data.begin(),data.end(),storage.begin());
+            return array_type(std::move(map),std::move(storage));
+        }
+        
+    };
    
-    //! 32Bit IEEE floating point numeric array with a dynamic container type
-    typedef numarray<f32darray> nf32darray;
-    //! 64Bit IEEE floating point numeric array with a dynamic container type
-    typedef numarray<f64darray> nf64darray;
-    //! 128Bit IEEE floating point numeric array with a dynamic container type
-    typedef numarray<f128darray> nf128darray;
-   
-    //! 32Bit IEEE complex floating point numeric array with a dynamic container type
-    typedef numarray<c32darray> nc32darray;
-    //! 64Bit IEEE complex floating point numeric array with a dynamic container type
-    typedef numarray<c64darray> nc64darray;
-    //! 128Bit IEEE complex floating point numeric array with a dynamic container type
-    typedef numarray<c128darray> nc128darray;
-    /*! @} */
-
-    //define some numeric array templates based on static arrays
-#ifndef NOTMPALIAS
-    template<size_t ...DIMS> using nu8sarray = numarray<u8sarray<DIMS...> >;
-    template<size_t ...DIMS> using ni8sarray = numarray<i8sarray<DIMS...> >;
-    template<size_t ...DIMS> using nu16sarray = numarray<u16sarray<DIMS...> >;
-    template<size_t ...DIMS> using ni16sarray = numarray<i16sarray<DIMS...> >;
-    template<size_t ...DIMS> using nu32sarray = numarray<u32sarray<DIMS...> >;
-    template<size_t ...DIMS> using ni32sarray = numarray<i32sarray<DIMS...> >;
-    template<size_t ...DIMS> using nu64sarray = numarray<u64sarray<DIMS...> >;
-    template<size_t ...DIMS> using ni64sarray = numarray<i64sarray<DIMS...> >;
-
-    template<size_t ...DIMS> using nf32sarray = numarray<f32sarray<DIMS...> >;
-    template<size_t ...DIMS> using nf64sarray = numarray<f64sarray<DIMS...> >;
-    template<size_t ...DIMS> using nf128sarray = numarray<f128sarray<DIMS...> >;
-
-    template<size_t ...DIMS> using nc32sarray = numarray<c32sarray<DIMS...> >;
-    template<size_t ...DIMS> using nc64sarray = numarray<c64sarray<DIMS...> >;
-    template<size_t ...DIMS> using nc128sarray = numarray<c128sarray<DIMS...> >;
-#endif
-
-
 //end of namespace
 }
 }

@@ -26,13 +26,13 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/current_function.hpp>
 
-#include "common.hpp"
 #include "array_view_test.hpp"
 
 
-typedef sarray<uint16,NX,NY> sarray_type;
 
-CPPUNIT_TEST_SUITE_REGISTRATION(array_view_test<dyn_array<uint8> >);
+template<typename T> using dyn_array_view_test = array_view_test<dynamic_array<T> >;
+
+CPPUNIT_TEST_SUITE_REGISTRATION(dyn_array_view_test<uint16>);
 //CPPUNIT_TEST_SUITE_REGISTRATION(array_view_test<darray<int8> >);
 //CPPUNIT_TEST_SUITE_REGISTRATION(array_view_test<darray<uint16> >);
 //CPPUNIT_TEST_SUITE_REGISTRATION(array_view_test<darray<int16> >);

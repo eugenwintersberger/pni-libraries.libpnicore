@@ -27,7 +27,7 @@
 #include <algorithm>
 #include <iomanip>
 
-#include "common.hpp"
+#include <pni/core/arrays.hpp>
 
 #include "../data_generator.hpp"
 #include "../compare.hpp"

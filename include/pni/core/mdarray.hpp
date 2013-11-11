@@ -169,7 +169,14 @@ namespace core {
             \param i linear index 
             \return reference to the element at linear index i
             */
-            value_type& operator[](size_t i) { return _data[i]; }
+            value_type& operator[](size_t i) 
+            { 
+#ifdef DEBUG
+                return at(i);
+#else
+                return _data[i]; 
+#endif
+            }
 
             //-----------------------------------------------------------------
             /*! \brief get value at i
@@ -179,7 +186,14 @@ namespace core {
             \param i linear index of the element
             \return value of the element at linear index i
             */
-            value_type operator[](size_t i) const { return _data[i]; }
+            value_type operator[](size_t i) const 
+            { 
+#ifdef DEBUG
+                return at(i);
+#else
+                return _data[i]; 
+#endif
+            }
 
             //-----------------------------------------------------------------
             /*! \brief get value at i
@@ -261,8 +275,12 @@ namespace core {
             value_type &operator()(ITYPES... indexes)
             {
                 std::array<size_t,sizeof...(ITYPES)> buffer{{indexes...}};
+#ifdef DEBUG
+                check_indexes(buffer,_imap,EXCEPTION_RECORD);
+#endif
 
-                return _data[_imap.offset(buffer)];
+                size_t offset = _imap.offset(buffer);
+                return _data[offset];
             }
 
             //-----------------------------------------------------------------
@@ -284,8 +302,11 @@ namespace core {
             value_type operator()(ITYPES ...indexes) const
             {
                 std::array<size_t,sizeof...(ITYPES)> buffer{{indexes...}};
-
-                return _data[_imap.offset(buffer)];
+#ifdef DEBUG
+                check_indexes(buffer,_imap,EXCEPTION_RECORD);
+#endif
+                size_t offset = _imap.offset(buffer);
+                return _data[offset];
             }
 
             //-----------------------------------------------------------------
@@ -300,6 +321,9 @@ namespace core {
                     >
             value_type operator()(const CTYPE<PARAMS...> &c) const
             {
+#ifdef DEBUG
+                check_indexes(c,_imap,EXCEPTION_RECORD);
+#endif
                 return _data[_imap.offset(c)];
             }
            
@@ -311,6 +335,9 @@ namespace core {
                     >
             value_type &operator()(const CTYPE<PARAMS...> &c) 
             {
+#ifdef DEBUG
+                check_indexes(c,_imap,EXCEPTION_RECORD);
+#endif
                 return _data[_imap.offset(c)];
             }
 
@@ -322,6 +349,9 @@ namespace core {
                     >
             value_type &operator()(std::array<T,N> index)
             {
+#ifdef DEBUG
+                check_indexes(index,_imap,EXCEPTION_RECORD);
+#endif
                 return _data[_imap.offset(index)];
 
             }
@@ -334,14 +364,12 @@ namespace core {
                     >
             value_type operator()(std::array<T,N> index) const
             {
+#ifdef DEBUG
+                check_indexes(index,_imap,EXCEPTION_RECORD);
+#endif
                 return _data[_imap.offset(index)];
 
             }
-
-            //-----------------------------------------------------------------
-
-            //-----------------------------------------------------------------
-
 
             //-----------------------------------------------------------------
             /*!

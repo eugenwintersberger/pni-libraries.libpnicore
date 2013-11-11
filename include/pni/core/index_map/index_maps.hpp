@@ -22,6 +22,7 @@
 
 #pragma once
 #include <sstream>
+#include <boost/lexical_cast.hpp>
 #include "index_map.hpp"
 #include "static_index_map.hpp"
 #include "index_policy.hpp"
@@ -116,7 +117,15 @@ namespace core{
         {
             typename MAPT::storage_type storage(c.size());
             std::copy(c.begin(),c.end(),storage.begin());
-            return MAPT(storage); 
+            return MAPT(std::move(storage)); 
+        }
+
+        template<typename IT> 
+        static MAPT create(std::initializer_list<IT> shape)
+        {
+            typename MAPT::storage_type storage(shape.size());
+            std::copy(shape.begin(),shape.end(),storage.begin());
+            return MAPT(std::move(storage));
         }
 
     };
@@ -167,6 +176,22 @@ namespace core{
             return map_type(storage);
         }
 
+        //---------------------------------------------------------------------
+        template<typename IT> 
+        static map_type create(std::initializer_list<IT> shape)
+        {
+            if(map_type().rank() != shape.size())
+                throw shape_mismatch_error(EXCEPTION_RECORD,
+                    "Rank of user shape ("
+                    +boost::lexical_cast<string>(shape.size())+
+                    ") does not match the map rank ("
+                    +boost::lexical_cast<string>(map_type().rank())+")!");
+
+            typename map_type::storage_type storage;
+            std::copy(shape.begin(),shape.end(),storage.begin());
+            return map_type(std::move(storage));
+        }
+
     };
 
     //-------------------------------------------------------------------------
@@ -184,14 +209,22 @@ namespace core{
     template<typename POLTYPE,size_t...DIMS>
     struct map_utils<static_index_map<POLTYPE,DIMS...> >
     {
+        typedef static_index_map<POLTYPE,DIMS...> map_type;
         /*!
         \brief creat map from container
 
         */
-        typedef static_index_map<POLTYPE,DIMS...> map_type;
         template<typename CTYPE> static map_type create(const CTYPE &c)
         {
             //static_assert(false,"You cannot create a new shape object");
+            return map_type();
+        }
+
+        //---------------------------------------------------------------------
+        template<typename IT> 
+        static map_type create(std::initializer_list<IT> shape)
+        {
+            return map_type();
         }
         
     };
