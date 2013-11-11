@@ -1,21 +1,21 @@
 
 #need to define the version of the library
 set(TEST_SOURCES pnicoretest.cpp
-                 types/type_class_test.cpp
-                 types/type_info_test.cpp
-                 types/type_maps_test.cpp
-                 types/type_id_scalar_test.cpp
-                 types/type_id_container_test.cpp
-                 types/type_str_id_test.cpp
-                 container_utils_std_test.cpp
-                 container_utils_array_test.cpp
-                 index_maps/index_map_test_common.cpp
-                 arrays/mdarray_test.cpp
-                 arrays/dynamic_mdarray_test.cpp
-                 arrays/fix_mdarray_test.cpp
-                 arrays/static_mdarray_test.cpp
-                 arrays/array_selection_test.cpp
-#                 arrays/array_view_test.cpp
+#                 types/type_class_test.cpp
+#                 types/type_info_test.cpp
+#                 types/type_maps_test.cpp
+#                 types/type_id_scalar_test.cpp
+#                 types/type_id_container_test.cpp
+#                 types/type_str_id_test.cpp
+#                 container_utils_std_test.cpp
+#                 container_utils_array_test.cpp
+#                 index_maps/index_map_test_common.cpp
+#                 arrays/mdarray_test.cpp
+#                 arrays/dynamic_mdarray_test.cpp
+#                 arrays/fix_mdarray_test.cpp
+#                 arrays/static_mdarray_test.cpp
+#                 arrays/array_selection_test.cpp
+                 arrays/array_view_test.cpp
                  compare.cpp
                  )
 #add_operator_test.cpp
