@@ -40,141 +40,149 @@ namespace core{
     \ingroup index_mapping_classes
     \brief general policy for index computation
 
-    This is the master template for managing index policies 
-    Like any index policy this policy has to implement a function to compute the
-    offset which will typically have the signature
+    Index policies are types used by index maps (dynamic or static) to compute
+    the linear offset for a particular multidimensional index vector and vica
+    verse. All computational work in done in the implementation type POLIMP. 
+    This template just ensures that all arguments to the functions are passed in
+    their most effective way to the numerical routines. As index computations
+    are performed nearly everywhere when working with multidimensional arrays
+    their performance is cirtical to an application. One performance critical
+    aspect is how containers are passed to the functions. 
+
+    In its most simplest case an index policy provides two functions where the
+    first one has the signature
 
     \code
-    template<typename SCTYPE,typename ICTYPE> 
-    size_t offset(const SCTYPE &shape,const ICTYPE &index);
+    template<typename SHAPET,typename INDEXT>
+    size_t offset(const SHAPET &shape,const INDEXT &index);
     \endcode
 
-    and a static member function to compute the index for a given offset with
-    the signature
+    computing the linear offset for a mulitindex stored in index in an
+    array whose shape (number of elements along each dimension) is stored in
+    shape. And the second one 
 
-    \code 
-    template<typename ICTYPE,typename SCTYPE> 
-    CTYPE index(const SCTYPE &shape,size_t offset);
+    \code
+    template<typename ITYPE,typename STYPE> 
+    ITYPE index(const STYPE &shape,size_t offset);
     \endcode
 
-    For performance reasons specializations of these methods can be provided for
-    different containers. 
+    computing the index for a given linear offset in an array of shape shape. 
+
+    For the performance of these functions it is crucial how the container types
+    are passed. The call by references as shown in the above example slows down
+    the performance dramatically in particular if the index container passed is
+    an rvalue reference.
     
     \tparam POLIMP policy implementation
     */
-    template<typename POLIMP> class index_policy
+    template<typename POLIMP> struct index_policy
     {
-        public:
 
-            //------------------------------------------------------------------
-            /*!
-            \brief compute the offset
+        //---------------------------------------------------------------------
+        /*!
+        \brief compute the offset
 
-            This is the default variant of the offset calculator. The shape as
-            well as the index container are passed as const references. Though
-            being rather general this method is also the slowest (this is due to
-            the required dereferencing of the containers).
+        Here the shape container is passed by a const reference while the index
+        container by a universal reference (matches everything). 
 
-            A typical application would look like this
-            \code
-            std::vector<size_t> shape{3,3};
-            std::vector<size_t> index{2,1};
+        A typical application would look like this
+        \code
+        std::vector<size_t> shape{3,3};
+        std::vector<size_t> index{2,1};
 
-            size_t c_index_policy::offset(shape,index);
-            \endcode
+        size_t c_index_policy::offset(shape,index);
+        \endcode
 
-            \tparam CSHAPE container type for the shape
-            \tparam CINDEX container type for the index
-            \param shape container with shape
-            \param index container with index values
-            \return offset value
-            */
-            template<typename CSHAPE,typename CINDEX> 
-            static size_t offset(const CSHAPE &shape,CINDEX &&index)
-            {
-                return POLIMP::offset(shape,
-                                      std::forward<
-                                      typename std::remove_const<CINDEX>::type
-                                      >(index));
-            }
+        \tparam CSHAPE container type for the shape
+        \tparam CINDEX container type for the index
+        \param shape container with shape
+        \param index container with index values
+        \return offset value
+        */
+        template<typename CSHAPE,typename CINDEX> 
+        static size_t offset(const CSHAPE &shape,CINDEX &&index)
+        {
+            return POLIMP::offset(shape,
+                                  std::forward<
+                                  typename std::remove_const<CINDEX>::type
+                                  >(index));
+        }
 
+        //---------------------------------------------------------------------
+        /*!
+        \brief compute the offset
 
+        Typically we cannot move the container holding the shape as it is the
+        primary data object in an index mape. However, in the case of std::array
+        it would be feasible to pass the container by value rather than by
+        reference. This particular overload provides the special case where the
+        index is a reference to a container but the shape an instance of
+        std::array.
 
-            //------------------------------------------------------------------
-            /*!
-            \brief compute the offset
+        \tparam ST element type of the shape array
+        \tparam N number of elements of the shape array
+        \tparam CINDEX container type for the index
+        \param shape std::array with shape data
+        \param index CINDEX  instance with index data
+        \return linear offset of data element
+        */
+        template<typename ST,size_t N,typename CINDEX>
+        static size_t offset(std::array<ST,N> shape,CINDEX &&index)
+        {
+            return POLIMP::offset(std::forward<std::array<ST,N>>(shape),
+                                  std::forward<CINDEX>(index));
+        }
 
-            Typically we cannot move the container holding the shape as it is
-            the primary data object in an index mape. However, in the case of
-            std::array it would be feasible to pass the container by value
-            rather than by reference. This particular overload provides the
-            special case where the index is a reference to a container but the
-            shape an instance of std::array.
+        //---------------------------------------------------------------------
+        /*!
+        \brief compute the index
 
-            \tparam ST element type of the shape array
-            \tparam N number of elements of the shape array
-            \tparam CINDEX container type for the index
-            \param shape std::array with shape data
-            \param index CINDEX  instance with index data
-            \return linear offset of data element
-            */
-            template<typename ST,size_t N,typename CINDEX>
-            static size_t offset(std::array<ST,N> shape,CINDEX &&index)
-            {
-                return POLIMP::offset(std::forward<std::array<ST,N>>(shape),
-                                      std::forward<CINDEX>(index));
-            }
+        Take a shape and an offset and compute the corresponding index value.
+        For this version the shape data is passed by reference. 
 
-            //-----------------------------------------------------------------
-            /*!
-            \brief compute the index
-
-            Take a shape and an offset and compute the corresponding index
-            value. For this version the shape data is passed by reference. 
-
-            \tparam ICT container type for the new index
-            \tparam SCT container type for the shape data
-            \param shape instance of SCT holding the shape information
-            \param offset linear offset
-            \return instance of ICT with index data
-            */
-            template<typename ICT,
-                     typename SCT> 
-            static ICT index(const SCT &shape,size_t offset)
-            {
-                auto idx = container_utils<ICT>::create(shape.size());
+        \tparam ICT container type for the new index
+        \tparam SCT container type for the shape data
+        \param shape instance of SCT holding the shape information
+        \param offset linear offset
+        \return instance of ICT with index data
+        */
+        template<typename ICT,
+                 typename SCT> 
+        static ICT index(const SCT &shape,size_t offset)
+        {
+            auto idx = container_utils<ICT>::create(shape.size());
+        
+            POLIMP::index(shape,idx,offset);
             
-                POLIMP::index(shape,idx,offset);
-                
-                return idx;
-            }
+            return idx;
+        }
 
-            //-----------------------------------------------------------------
-            /*!
-            \brief compute the index 
+        //---------------------------------------------------------------------
+        /*!
+        \brief compute the index 
 
-            Compute the multidimensional index corresponding to a linear offset
-            value. The shape here is assumed to be an instance of std::array and
-            is thus passed by value to the index computing function. 
+        Compute the multidimensional index corresponding to a linear offset
+        value. The shape here is assumed to be an instance of std::array and is
+        thus passed by value to the index computing function. 
 
-            \tparam ICT index container type
-            \tparam T element type of the std::array instance
-            \tparam N number of elements for the std::array instance
-            \param shape std::array with shape data
-            \param offset the linear offset
-            \return instance of ICT holding the index data
-            */
-            template<typename ICT,
-                     typename T,
-                     size_t N>
-            static ICT index(std::array<T,N> shape,size_t offset)
-            {
-                auto idx = container_utils<ICT>::create(shape.size());
-                
-                POLIMP::index(std::forward<std::array<T,N>>(shape),
-                              idx,offset);
-                return idx;
-            }
+        \tparam ICT index container type
+        \tparam T element type of the std::array instance
+        \tparam N number of elements for the std::array instance
+        \param shape std::array with shape data
+        \param offset the linear offset
+        \return instance of ICT holding the index data
+        */
+        template<typename ICT,
+                 typename T,
+                 size_t N>
+        static ICT index(std::array<T,N> shape,size_t offset)
+        {
+            auto idx = container_utils<ICT>::create(shape.size());
+            
+            POLIMP::index(std::forward<std::array<T,N>>(shape),
+                          idx,offset);
+            return idx;
+        }
     };
 
 

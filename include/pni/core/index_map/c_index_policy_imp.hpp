@@ -84,6 +84,15 @@ namespace core{
             /*!
             \brief compute the index
 
+            Compute the index for a given linear offset according to C-ordering
+            rules. 
+
+            \tparam IITERT index iterator type
+            \tparam SITERT shape iterator type
+            \param shape_start iterator to first shape element
+            \param shape_stop iterator to last shape element
+            \param index_start iterator to first index
+            \param offset the linear offset for which to compute the index
             */
             template<typename IITERT,
                      typename SITERT>
