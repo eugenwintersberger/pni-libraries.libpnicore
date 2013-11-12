@@ -148,6 +148,8 @@ namespace core{
             \return linear offset
             */
             template<typename CTYPE,
+                     //the SFINAE construction here ensures that only rvalue
+                     //references are passed to this function
                      typename = typename std::enable_if<
                      !std::is_lvalue_reference<CTYPE>::value
                          >::type
