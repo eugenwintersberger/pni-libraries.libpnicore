@@ -30,7 +30,6 @@ set(HEADER_FILES ../include/pni/core/array_view_selector.hpp
                  ../include/pni/core/benchmark/chrono_timer.hpp
                  ../include/pni/core/benchmark/benchmark_result.hpp
                  ../include/pni/core/benchmark/clock_timer.hpp
-                 ../include/pni/core/sarray.hpp
                  ../include/pni/core/container_iterator.hpp
                  ../include/pni/core/type_class_map.hpp
                  ../include/pni/core/index_iterator.hpp
@@ -42,7 +41,6 @@ set(HEADER_FILES ../include/pni/core/array_view_selector.hpp
                  ../include/pni/core/array_iterator.hpp
                  ../include/pni/core/value_holder.hpp
                  ../include/pni/core/binary.hpp
-                 ../include/pni/core/darray.hpp
                  ../include/pni/core/type_utils.hpp
                  ../include/pni/core/value_holder_interface.hpp
                  ../include/pni/core/array_selection.hpp

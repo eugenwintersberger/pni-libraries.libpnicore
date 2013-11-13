@@ -13,7 +13,6 @@ set(HEADER_FILES mdarray.hpp
                  container_iterator.hpp 
                  container_utils.hpp
                  counter.hpp 
-                 darray.hpp 
                  exceptions.hpp 
                  exception_utils.hpp 
                  id_type_map.hpp 
@@ -21,7 +20,6 @@ set(HEADER_FILES mdarray.hpp
                  numarray.hpp 
                  numarray_tags.hpp 
                  range_distributor.hpp 
-                 sarray.hpp 
                  scalar.hpp 
                  service.hpp 
                  slice.hpp 
