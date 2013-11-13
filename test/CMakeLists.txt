@@ -10,6 +10,7 @@ set(TEST_SOURCES pnicoretest.cpp
                  container_utils_std_test.cpp
                  container_utils_array_test.cpp
                  index_maps/index_map_test_common.cpp
+                 index_maps/index_policy_implementation_test.cpp
                  arrays/mdarray_test.cpp
                  arrays/dynamic_mdarray_test.cpp
                  arrays/fix_mdarray_test.cpp
