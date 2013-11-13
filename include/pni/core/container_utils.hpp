@@ -166,8 +166,6 @@ namespace core{
             std::copy(list.begin(),list.end(),c.begin());
             return c;
         }
-
-
     };
 
     //-------------------------------------------------------------------------
@@ -250,7 +248,8 @@ namespace core{
         */
         template<typename ITERT,
                  typename = typename std::enable_if<
-                 !std::is_pod<ITERT>::value
+                 (!std::is_pod<ITERT>::value)||
+                 (std::is_pointer<ITERT>::value)
                  >::type
                 >
         static container_type create(ITERT begin,ITERT end)
