@@ -61,10 +61,10 @@ namespace core{
     {
         public:
             //====================public types=================================
-            //! type of the data values
-            typedef typename ATYPE::value_type value_type;             
             //! storage type
             typedef ATYPE storage_type;
+            //! type of the data values
+            typedef typename ATYPE::value_type value_type;             
             //! type of the view 
             typedef array_view<storage_type> array_type;
             //! shared pointer type

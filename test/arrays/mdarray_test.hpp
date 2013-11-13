@@ -58,6 +58,7 @@ class mdarray_test : public CppUnit::TestFixture
         typedef std::array<uint64,3> array_uint64_t;
         typedef std::list<uint64>    list_uint64_t;
         CPPUNIT_TEST_SUITE(mdarray_test);
+        CPPUNIT_TEST(test_is_view_index);
         CPPUNIT_TEST(test_linear_access_operator);
         CPPUNIT_TEST(test_linear_access_at);
         CPPUNIT_TEST(test_linear_access_iterators);
@@ -108,6 +109,7 @@ class mdarray_test : public CppUnit::TestFixture
     public:
         void setUp();
         void tearDown();
+        void test_is_view_index();
         void test_linear_access_operator();
         void test_linear_access_at();
         void test_linear_access_iterators();
@@ -170,6 +172,18 @@ template<typename ATYPE> void mdarray_test<ATYPE>::setUp()
 
 //------------------------------------------------------------------------------
 template<typename ATYPE> void mdarray_test<ATYPE>::tearDown() { }
+
+//------------------------------------------------------------------------------
+template<typename ATYPE> void mdarray_test<ATYPE>::test_is_view_index()
+{
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+    
+    CPPUNIT_ASSERT((is_view_index<size_t,size_t,size_t>::value==false));
+    CPPUNIT_ASSERT((is_view_index<slice,size_t,size_t>::value==true));
+    CPPUNIT_ASSERT((is_view_index<size_t,slice,size_t>::value==true));
+    CPPUNIT_ASSERT((is_view_index<size_t,size_t,slice>::value==true));
+
+}
 
 //------------------------------------------------------------------------------
 template<typename ATYPE> void mdarray_test<ATYPE>::test_inquery()

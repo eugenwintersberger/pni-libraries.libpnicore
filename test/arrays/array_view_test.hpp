@@ -41,6 +41,7 @@ template<typename ATYPE> class array_view_test : public CppUnit::TestFixture
 {
         CPPUNIT_TEST_SUITE(array_view_test<ATYPE>);
         CPPUNIT_TEST(test_construction);
+        CPPUNIT_TEST(test_construction_from_array);
         CPPUNIT_TEST(test_linear_access);
         CPPUNIT_TEST(test_iterator_access);
         CPPUNIT_TEST(test_multiindex_access);
@@ -48,6 +49,7 @@ template<typename ATYPE> class array_view_test : public CppUnit::TestFixture
         CPPUNIT_TEST_SUITE_END();
 
         typedef array_view<ATYPE> view_type;
+        typedef ATYPE array_type;
         typedef typename ATYPE::value_type value_type;
         typedef typename std::vector<slice> slice_container;
         typedef typename ATYPE::map_type map_type;
@@ -57,7 +59,8 @@ template<typename ATYPE> class array_view_test : public CppUnit::TestFixture
         shape_t _shape;
         ATYPE array;
 
-        void check_view(const view_type &view,const shape_t &ref)
+        template<typename VTYPE>
+        void check_view(const VTYPE &view,const shape_t &ref)
         {
             size_t ref_size = std::accumulate(ref.begin(),ref.end(),1,
                     std::multiplies<size_t>());
@@ -82,6 +85,14 @@ template<typename ATYPE> class array_view_test : public CppUnit::TestFixture
         has proper parameters.
         */
         void test_construction();
+
+        //---------------------------------------------------------------------
+        /*!
+        \brief test construction from an array
+
+        Test the construction of a view from an array. 
+        */
+        void test_construction_from_array();
 
         //---------------------------------------------------------------------
         /*! 
@@ -136,6 +147,24 @@ template<typename ATYPE> void array_view_test<ATYPE>::test_construction()
    //select a 1D strip from the 2D array
    view_type v2(array,array_selection::create(slice_container{1,slice(3,7)}));
    check_view(v2,shape_t{4});
+}
+
+//-----------------------------------------------------------------------------
+template<typename ATYPE> 
+void array_view_test<ATYPE>::test_construction_from_array()
+{
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+
+    slice_container selection{slice(0,3),slice(3,7)};
+    shape_t view_shape{3,4};
+
+    view_type v = array(selection);
+    check_view(v,view_shape);
+    
+    //check construction from a const array
+    const array_type &carray = array;
+    auto v2 = carray(selection);
+    check_view(v2,view_shape);
 }
 
 //-----------------------------------------------------------------------------

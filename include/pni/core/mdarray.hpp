@@ -33,11 +33,13 @@
 #include<cstdio>
 #include<memory>
 
+#include <boost/mpl/contains.hpp>
+#include <boost/mpl/vector.hpp>
+
 #include "exception_utils.hpp"
 #include "types.hpp"
 #include "slice.hpp"
-//#include "array_view.hpp"
-//#include "array_view_selector.hpp"
+#include "array_view.hpp"
 #include "index_map/index_maps.hpp"
 
 #include "type_id_map.hpp"
@@ -45,6 +47,32 @@
 
 namespace pni {
 namespace core {
+    
+    template<typename ...ITYPES> struct is_view_index
+    {
+        typedef typename boost::mpl::contains<
+                                   typename boost::mpl::vector<ITYPES...>::type,
+                                   slice
+                                  >::type type;
+        static const bool value = type::value;
+    };
+
+    template<typename ATYPE,bool is_view> struct array_view_trait;
+
+    //want a view type
+    template<typename ATYPE> struct array_view_trait<ATYPE,true>    
+    {
+        typedef array_view<ATYPE> type;
+        typedef array_view<const ATYPE> const_type;
+    };
+
+    //want an element type
+    template<typename ATYPE> struct array_view_trait<ATYPE,false>
+    {
+        typedef typename ATYPE::value_type& type;
+        typedef typename ATYPE::value_type  const_type;
+
+    };
 
     /*! 
     \ingroup multidim_array_classes
@@ -57,12 +85,6 @@ namespace core {
              typename IMAP=cindex_map > 
     class mdarray
     {
-        private:
-            //! Index map of the array 
-            IMAP _imap;  
-            //! instance of STORAGE
-            STORAGE _data;  
-
         public:
             //================public types=====================================
             //! type of the buffer object
@@ -92,6 +114,13 @@ namespace core {
             //==================public members=================================
             //! type ID of the element type
             static const type_id_t type_id; 
+        private:
+            //! Index map of the array 
+            IMAP _imap;  
+            //! instance of STORAGE
+            STORAGE _data;  
+
+        public:
 
             //=================constructors and destructor=====================
             //! default constructor
@@ -272,7 +301,8 @@ namespace core {
             \return reference to the value at the given index
             */
             template<typename... ITYPES>
-            value_type &operator()(ITYPES... indexes)
+            typename array_view_trait<array_type,is_view_index<ITYPES...>::value>::type
+            operator()(ITYPES... indexes)
             {
                 std::array<size_t,sizeof...(ITYPES)> buffer{{indexes...}};
 #ifdef DEBUG
@@ -299,7 +329,8 @@ namespace core {
             */
             //-----------------------------------------------------------------
             template<typename... ITYPES>
-            value_type operator()(ITYPES ...indexes) const
+            typename array_view_trait<const array_type,is_view_index<ITYPES...>::value>::type
+            operator()(ITYPES ...indexes) const
             {
                 std::array<size_t,sizeof...(ITYPES)> buffer{{indexes...}};
 #ifdef DEBUG
@@ -369,6 +400,35 @@ namespace core {
 #endif
                 return _data[_imap.offset(index)];
 
+            }
+
+            //-----------------------------------------------------------------
+            /*!
+            \brief get a view on an array
+
+            */
+            template<typename CTYPE,
+                     typename = typename std::enable_if<
+                     std::is_same<typename CTYPE::value_type,slice>::value
+                     >::type
+                    >
+            array_view<array_type> operator()(const CTYPE &slices)
+            {
+
+                array_selection sel = array_selection::create(slices);
+                return array_view<array_type>(*this,sel);
+            }
+
+            //-----------------------------------------------------------------
+            template<typename CTYPE,
+                     typename = typename std::enable_if<
+                     std::is_same<typename CTYPE::value_type,slice>::value
+                     >::type
+                    >
+            array_view<const array_type> operator()(const CTYPE &slices) const
+            {
+                array_selection sel = array_selection::create(slices);
+                return array_view<const array_type>(*this,sel);
             }
 
             //-----------------------------------------------------------------
