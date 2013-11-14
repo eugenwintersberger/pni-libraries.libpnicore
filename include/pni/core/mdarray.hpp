@@ -73,6 +73,41 @@ namespace core {
         typedef typename ATYPE::value_type  const_type;
 
     };
+    
+    template<typename RTYPE,bool is_view> struct view_provider;
+
+    template<typename ATYPE> struct view_provider<ATYPE,false>
+    {
+        typedef typename array_view_trait<ATYPE,false>::type ref_type;
+        typedef typename array_view_trait<ATYPE,false>::const_type type;
+        
+        template<typename CTYPE,typename MAP,typename... ITYPES> 
+        static ref_type get_reference(CTYPE &c,MAP &map,ITYPES ...indexes)
+        {
+            
+            std::array<size_t,sizeof...(ITYPES)> buffer{{indexes...}};
+#ifdef DEBUG
+            check_indexes(buffer,map,EXCEPTION_RECORD);
+#endif
+
+            size_t offset = map.offset(buffer);
+            return c[offset];
+        }
+
+        template<typename CTYPE,typename MAP,typename ...ITYPES>
+        static type get_value(const CTYPE &c,MAP &map,ITYPES ...indexes)
+        {
+            std::array<size_t,sizeof...(ITYPES)> buffer{{indexes...}};
+#ifdef DEBUG
+            check_indexes(buffer,map,EXCEPTION_RECORD);
+#endif
+
+            size_t offset = map.offset(buffer);
+            return c[offset];
+        }
+         
+
+    };
 
     /*! 
     \ingroup multidim_array_classes
@@ -301,17 +336,15 @@ namespace core {
             \return reference to the value at the given index
             */
             template<typename... ITYPES>
-            typename array_view_trait<array_type,is_view_index<ITYPES...>::value>::type
+            typename
+            array_view_trait<array_type,is_view_index<ITYPES...>::value>::type
             operator()(ITYPES... indexes)
             {
-                std::array<size_t,sizeof...(ITYPES)> buffer{{indexes...}};
-#ifdef DEBUG
-                check_indexes(buffer,_imap,EXCEPTION_RECORD);
-#endif
-
-                size_t offset = _imap.offset(buffer);
-                return _data[offset];
+                typedef view_provider<array_type,is_view_index<ITYPES...>::value>
+                    provider_type;
+                return provider_type::get_reference(_data,_imap,indexes...);
             }
+
 
             //-----------------------------------------------------------------
             /*!
@@ -329,15 +362,12 @@ namespace core {
             */
             //-----------------------------------------------------------------
             template<typename... ITYPES>
-            typename array_view_trait<const array_type,is_view_index<ITYPES...>::value>::type
+            typename array_view_trait<const array_type,is_view_index<ITYPES...>::value>::const_type
             operator()(ITYPES ...indexes) const
             {
-                std::array<size_t,sizeof...(ITYPES)> buffer{{indexes...}};
-#ifdef DEBUG
-                check_indexes(buffer,_imap,EXCEPTION_RECORD);
-#endif
-                size_t offset = _imap.offset(buffer);
-                return _data[offset];
+                typedef view_provider<array_type,is_view_index<ITYPES...>::value>
+                    provider_type;
+                return provider_type::get_value(_data,_imap,indexes...);
             }
 
             //-----------------------------------------------------------------
