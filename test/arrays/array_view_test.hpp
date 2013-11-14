@@ -42,6 +42,7 @@ template<typename ATYPE> class array_view_test : public CppUnit::TestFixture
         CPPUNIT_TEST_SUITE(array_view_test<ATYPE>);
         CPPUNIT_TEST(test_construction);
         CPPUNIT_TEST(test_construction_from_array);
+        CPPUNIT_TEST(test_construction_from_array_variadic);
         CPPUNIT_TEST(test_linear_access);
         CPPUNIT_TEST(test_iterator_access);
         CPPUNIT_TEST(test_multiindex_access);
@@ -93,6 +94,8 @@ template<typename ATYPE> class array_view_test : public CppUnit::TestFixture
         Test the construction of a view from an array. 
         */
         void test_construction_from_array();
+
+        void test_construction_from_array_variadic();
 
         //---------------------------------------------------------------------
         /*! 
@@ -165,6 +168,22 @@ void array_view_test<ATYPE>::test_construction_from_array()
     const array_type &carray = array;
     auto v2 = carray(selection);
     check_view(v2,view_shape);
+}
+
+//-----------------------------------------------------------------------------
+template<typename ATYPE> 
+void array_view_test<ATYPE>::test_construction_from_array_variadic()
+{
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+
+    auto view = array(slice(0,3),slice(3,7));
+    shape_t view_shape{3,4};
+    check_view(view,view_shape);
+
+    const array_type &carray = array;
+    auto view2 = carray(slice(0,3),slice(3,7));
+    check_view(view2,view_shape);
+    
 }
 
 //-----------------------------------------------------------------------------

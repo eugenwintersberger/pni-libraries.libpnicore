@@ -108,6 +108,31 @@ namespace core {
          
 
     };
+    
+    template<typename ATYPE> struct view_provider<ATYPE,true>
+    {
+        typedef typename array_view_trait<ATYPE,true>::type ref_type;
+        typedef typename array_view_trait<ATYPE,true>::const_type type;
+        
+        template<typename CTYPE,typename MAP,typename... ITYPES> 
+        static ref_type get_reference(CTYPE &c,MAP &map,ITYPES ...indexes)
+        {
+            
+            std::vector<slice> buffer{indexes...};
+
+            return ref_type(c,array_selection::create(buffer));
+        }
+
+        template<typename CTYPE,typename MAP,typename ...ITYPES>
+        static type get_value(const CTYPE &c,MAP &map,ITYPES ...indexes)
+        {
+            std::vector<slice> buffer{indexes...};
+
+            return type(c,array_selection::create(buffer));
+        }
+         
+
+    };
 
     /*! 
     \ingroup multidim_array_classes
@@ -342,7 +367,7 @@ namespace core {
             {
                 typedef view_provider<array_type,is_view_index<ITYPES...>::value>
                     provider_type;
-                return provider_type::get_reference(_data,_imap,indexes...);
+                return provider_type::get_reference(*this,_imap,indexes...);
             }
 
 
@@ -367,7 +392,7 @@ namespace core {
             {
                 typedef view_provider<array_type,is_view_index<ITYPES...>::value>
                     provider_type;
-                return provider_type::get_value(_data,_imap,indexes...);
+                return provider_type::get_value(*this,_imap,indexes...);
             }
 
             //-----------------------------------------------------------------
