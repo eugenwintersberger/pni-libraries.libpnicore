@@ -6,8 +6,8 @@ set(HEADER_FILES mdarray.hpp
                  array_operations.hpp 
                  array_selection.hpp 
                  arrays.hpp 
+                 array_view_utils.hpp
                  array_view.hpp 
-                 array_view_selector.hpp 
                  binary.hpp 
                  complex_utils.hpp 
                  container_iterator.hpp 
