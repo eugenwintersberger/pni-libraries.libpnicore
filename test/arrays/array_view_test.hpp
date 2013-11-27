@@ -231,9 +231,11 @@ template<typename ATYPE> void array_view_test<ATYPE>::test_iterator_access()
 
     //---------------------check write access----------------------------------
     auto diter = data.begin();
-
+    std::copy(data.begin(),data.end(),v.begin());
+    /*
     for(auto iter = v.begin();iter!=v.end();++iter,++diter)
         *iter = *diter;
+        */
 
     //----------------------check read access----------------------------------
     diter = data.begin();

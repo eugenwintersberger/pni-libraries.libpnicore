@@ -29,9 +29,9 @@
 #include <boost/mpl/size_t.hpp>
 #include <boost/lexical_cast.hpp>
 #include "mdarray.hpp"
-#include "numarray.hpp"
 #include "types.hpp"
 #include "slice.hpp"
+#include "container_utils.hpp"
 
 
 namespace pni{
@@ -39,7 +39,7 @@ namespace core{
 
     //define here a new set of array templates using aliases
     /*!
-    \ingroup multidim_array_classes
+    \ingroup mdim_array_classes
     \brief a dynamic array template
     
     This template creates a fully dynamic array type. Its rank as well as its
@@ -60,7 +60,7 @@ namespace core{
 
     //-------------------------------------------------------------------------
     /*!
-    \ingroup multidim_array_classes
+    \ingroup mdim_array_classes
     \brief array template with fixed dimension 
 
     This array template fixes the number of dimensions for an array type at
@@ -80,7 +80,7 @@ namespace core{
 
     //-------------------------------------------------------------------------
     /*!
-    \ingroup multidim_array_classes
+    \ingroup mdim_array_classes
     \brief static array template 
 
     This template can be used for static array types. These are types where
@@ -112,7 +112,7 @@ namespace core{
 
     //-------------------------------------------------------------------------
     /*!
-    \ingroup multidim_array_classes
+    \ingroup mdim_array_classes
     \brief array factory 
 
     This utility template provides static functions for array construction. 
@@ -156,7 +156,7 @@ namespace core{
         {
             //create the index map
             auto map = map_utils<map_type>::create(s);
-            storage_type storage(map.max_elements());
+            auto storage = container_utils<storage_type>::create(map.max_elements());
             std::fill(storage.begin(),storage.end(),def_val);
             
             return array_type(std::move(map),std::move(storage));
@@ -202,7 +202,7 @@ namespace core{
                         ") does not match data size ("
                         +boost::lexical_cast<string>(data.size())+")!");
 
-            storage_type storage(data.size());
+            auto storage = container_utils<storage_type>::create(data.size());
             std::copy(data.begin(),data.end(),storage.begin());
             return array_type(std::move(map),std::move(storage));
         }
@@ -242,7 +242,7 @@ namespace core{
                         "does not match data size ("
                         +boost::lexical_cast<string>(data.size())+")!");
 
-            storage_type storage(data.size());
+            auto storage = container_utils<storage_type>::create(data.size());
             std::copy(data.begin(),data.end(),storage.begin());
             return array_type(std::move(map),std::move(storage));
         }

@@ -39,11 +39,6 @@ versa.
 \defgroup numeric_array_classes Numeric arrays
 */
 
-/*!
-\ingroup numeric_array_classes 
-\defgroup expression_templates Expression templates
-
-*/
 
 //=============================================================================
 /*! \defgroup iterator_types Iterators types of libpnicore

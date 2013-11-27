@@ -2,8 +2,7 @@
 include(FindDoxygen)
 
 #list of sources for the documentation
-set(HEADER_FILES ../include/pni/core/array_view_selector.hpp
-                 ../include/pni/core/value.hpp
+set(HEADER_FILES ../include/pni/core/value.hpp
                  ../include/pni/core/index_map/index_policy.hpp
                  ../include/pni/core/index_map/index_maps.hpp
                  ../include/pni/core/index_map/c_index_policy_imp.hpp
@@ -12,7 +11,6 @@ set(HEADER_FILES ../include/pni/core/array_view_selector.hpp
                  ../include/pni/core/container_utils.hpp
                  ../include/pni/core/counter.hpp
                  ../include/pni/core/exception_utils.hpp
-                 ../include/pni/core/numarray_tags.hpp
                  ../include/pni/core/id_type_map.hpp
                  ../include/pni/core/array_operations.hpp
                  ../include/pni/core/utilties.hpp
@@ -54,7 +52,6 @@ set(HEADER_FILES ../include/pni/core/array_view_selector.hpp
                  ../include/pni/core/config/config_option.hpp
                  ../include/pni/core/array.hpp
                  ../include/pni/core/array_holder.hpp
-                 ../include/pni/core/numarray.hpp
                  ../include/pni/core/service.hpp
                  ../include/pni/core/array_view.hpp
                  ../include/pni/core/complex_utils.hpp

@@ -32,6 +32,30 @@
 namespace pni{
 namespace core{
 
+    /*!
+    \ingroup type_classes
+    \brief checks if a type is complex 
+
+    Checks whether a type is a complex number type. 
+    \tparam T type to check
+    */
+    template<typename T> struct is_complex
+    {
+        static const bool value = false;
+    };
+
+    //--------------------------------------------------------------------------
+    /*!
+    \ingroup type_classes
+    \brief checks if a type is complex 
+
+    This specialization provides true for complex numbers.
+    */
+    template<typename T> struct is_complex<std::complex<T>>
+    {
+        static const bool value = true;
+    };
+
     //-------------------------------------------------------------------------
     template<typename C,typename O> C __convert(const O &v)
     {

@@ -365,6 +365,182 @@ namespace core{
             \return iterator to last element
             */
             const_iterator end() const { return const_iterator(this,size()); }
+            
+            //==========implementation of unary arithmetic operators===========
+            // these function will be only available if the value types of all
+            // involved containers are numeric
+
+            /*!
+            \brief unary addition of a scalar
+
+            \code
+            array_type a = ...;
+            array_type::value_type s = ...;
+            auto view = a(0,slice(0,100),slice(3,23));
+
+            view += s;
+            \endcode
+            \param s the scalar value to add
+            \return view reference
+            */
+            array_type &operator+=(value_type s) 
+            { 
+                storage_type::inplace_arithmetic::add(*this,s); 
+                return *this;
+            }
+
+            //-----------------------------------------------------------------
+            /*!
+            \brief unary addition of an array 
+
+            \code
+            array_type1 a = ...;
+            array_tyep2 b = ...;
+            auto view = a(1,slice(0,100),slice(3,23));
+
+            view += b;
+            \endcode
+
+            \tparam RTYPE type of the array to add
+            \param v reference to the array to add 
+            \return reference to the original view
+            */
+            template<typename RTYPE> 
+            array_type &operator+=(const RTYPE &v) 
+            { 
+                storage_type::inplace_arithmetic::add(*this,v); 
+                return *this;
+            }
+
+            //-----------------------------------------------------------------
+            /*!
+            \brief unary subtraction of a scalar
+
+            \code
+            array_type a = ...;
+            array_type::value_type s = ...;
+            auto view = a(0,slice(0,100),slice(3,23));
+
+            view -= s;
+            \endcode
+            \param s the scalar value to subtract
+            \return view reference
+            */
+            array_type &operator-=(value_type s) 
+            { 
+                storage_type::inplace_arithmetic::sub(*this,s); 
+                return *this;
+            }
+
+            //-----------------------------------------------------------------
+            /*!
+            \brief unary subtraction of an array
+
+            \code
+            array_type1 a = ...;
+            array_tyep2 b = ...;
+
+            auto view = a(0,slice(0,100),slice(2,23));
+
+            view -= b;
+            \endcode
+
+            \tparam RTYPE type of the array to subtract
+            \param v reference to the array to subtract 
+            \return reference to the original view
+            */
+            template<typename RTYPE> 
+            array_type &operator-=(const RTYPE &v) 
+            { 
+                storage_type::inplace_arithmetic::sub(*this,v); 
+                return *this;
+            }
+
+            //-----------------------------------------------------------------
+            /*!
+            \brief unary multiplication of a scalar
+
+            \code
+            array_type a = ...;
+            array_type::value_type s = ...;
+            auto view = a(slice(0,100),10,slice(2,23));
+
+            view *= s;
+            \endcode
+            \param s the scalar value to multiply with
+            \return view reference
+            */
+            array_type &operator*=(value_type s) 
+            { 
+                storage_type::inplace_arithmetic::mult(*this,s); 
+                return *this;
+            }
+
+            //-----------------------------------------------------------------
+            /*!
+            \brief unary multiplication of an array
+
+            \code
+            array_type1 a = ...;
+            array_tyep2 b = ...;
+            auto view = a(slice(0,100),100,slice(2,102));
+
+            view *= b;
+            \endcode
+
+            \tparam RTYPE type of the array to multiply 
+            \param v reference to the array to multiply 
+            \return reference to the original view
+            */
+            template<typename RTYPE>
+            array_type &operator*=(const RTYPE &v) 
+            { 
+                storage_type::inplace_arithmetic::mult(*this,v); 
+                return *this;
+            }
+
+            //-----------------------------------------------------------------
+            /*!
+            \brief unary division of a scalar
+
+            \code
+            array_type a = ...;
+            array_type::value_type s = ...;
+            auto view = a(slice(0,100),slice(2,3),slice(4,10));
+
+            view /= s;
+            \endcode
+            \param s the scalar value to divide by
+            \return array reference
+            */
+            array_type &operator/=(value_type s) 
+            {
+                storage_type::inplace_arithmetic::div(*this,s); 
+                return *this;
+            }
+
+            //-----------------------------------------------------------------
+            /*!
+            \brief unary division of an array
+
+            \code
+            array_type1 a = ...;
+            array_tyep2 b = ...;
+            auto view = a(slice(0,100),10,10);
+
+            view /= b;
+            \endcode
+
+            \tparam RTYPE type of the array to divide by  
+            \param v reference to the array to divide by 
+            \return reference to the original view
+            */
+            template<typename RTYPE>
+            array_type &operator/=(const RTYPE &v) 
+            { 
+                storage_type::inplace_arithmetic::div(*this,v); 
+                return *this;
+            }
     };
 
 

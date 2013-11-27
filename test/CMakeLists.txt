@@ -12,11 +12,14 @@ set(TEST_SOURCES pnicoretest.cpp
                  index_maps/index_map_test_common.cpp
                  index_maps/index_policy_implementation_test.cpp
                  arrays/mdarray_test.cpp
+                 arrays/mdarray_unary_arithmetic_test.cpp
                  arrays/dynamic_mdarray_test.cpp
                  arrays/fix_mdarray_test.cpp
                  arrays/static_mdarray_test.cpp
                  arrays/array_selection_test.cpp
                  arrays/array_view_test.cpp
+                 arrays/array_view_unary_arithmetic_test.cpp
+                 math/inplace_arithmetics_test.cpp
                  compare.cpp
                  )
 #add_operator_test.cpp

@@ -134,7 +134,7 @@ namespace core{
         static ref_type get_reference(CTYPE &c,MAP &map,ITYPES ...indexes)
         {
             
-            std::array<size_t,sizeof...(ITYPES)> buffer{{indexes...}};
+            std::array<size_t,sizeof...(ITYPES)> buffer{{size_t(indexes)...}};
 #ifdef DEBUG
             check_indexes(buffer,map,EXCEPTION_RECORD);
 #endif
@@ -146,7 +146,7 @@ namespace core{
         template<typename CTYPE,typename MAP,typename ...ITYPES>
         static type get_value(const CTYPE &c,MAP &map,ITYPES ...indexes)
         {
-            std::array<size_t,sizeof...(ITYPES)> buffer{{indexes...}};
+            std::array<size_t,sizeof...(ITYPES)> buffer{{size_t(indexes)...}};
 #ifdef DEBUG
             check_indexes(buffer,map,EXCEPTION_RECORD);
 #endif
@@ -172,7 +172,7 @@ namespace core{
         static ref_type get_reference(CTYPE &c,MAP &map,ITYPES ...indexes)
         {
             
-            std::vector<slice> buffer{indexes...};
+            std::vector<slice> buffer{slice(indexes)...};
 
             return ref_type(c,array_selection::create(buffer));
         }
@@ -180,7 +180,7 @@ namespace core{
         template<typename CTYPE,typename MAP,typename ...ITYPES>
         static type get_value(const CTYPE &c,MAP &map,ITYPES ...indexes)
         {
-            std::vector<slice> buffer{indexes...};
+            std::vector<slice> buffer{slice(indexes)...};
 
             return type(c,array_selection::create(buffer));
         }

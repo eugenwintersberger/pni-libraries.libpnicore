@@ -58,6 +58,7 @@ class mdarray_test : public CppUnit::TestFixture
         typedef std::array<uint64,3> array_uint64_t;
         typedef std::list<uint64>    list_uint64_t;
         CPPUNIT_TEST_SUITE(mdarray_test);
+        CPPUNIT_TEST(test_construction_from_view);
         CPPUNIT_TEST(test_is_view_index);
         CPPUNIT_TEST(test_linear_access_operator);
         CPPUNIT_TEST(test_linear_access_at);
@@ -109,6 +110,7 @@ class mdarray_test : public CppUnit::TestFixture
     public:
         void setUp();
         void tearDown();
+        void test_construction_from_view();
         void test_is_view_index();
         void test_linear_access_operator();
         void test_linear_access_at();
@@ -172,6 +174,24 @@ template<typename ATYPE> void mdarray_test<ATYPE>::setUp()
 
 //------------------------------------------------------------------------------
 template<typename ATYPE> void mdarray_test<ATYPE>::tearDown() { }
+
+template<typename ATYPE> void mdarray_test<ATYPE>::test_construction_from_view()
+{
+    typedef dynamic_array<value_type> darray_type;
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+    std::generate(array.begin(),array.end(),random_generator<value_type>());
+
+    auto view = array(0,slice(0,3),slice(0,5));
+    auto view_shape = view.template shape<shape_t>();
+    darray_type a(view);
+    auto array_shape = a.template shape<shape_t>();
+
+    CPPUNIT_ASSERT(std::equal(array_shape.begin(),array_shape.end(),
+                              view_shape.begin()));
+    CPPUNIT_ASSERT(view.size() == a.size());
+    CPPUNIT_ASSERT(std::equal(view.begin(),view.end(),a.begin()));
+
+}
 
 //------------------------------------------------------------------------------
 template<typename ATYPE> void mdarray_test<ATYPE>::test_is_view_index()

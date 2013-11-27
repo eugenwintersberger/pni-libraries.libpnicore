@@ -40,20 +40,6 @@ namespace core{
         return (void *)(a.storage().data());
     }
 
-    //-------------------------------------------------------------------------
-    /*!
-    \brief get array pointer
-
-    This is an overloaded version of the get_pointer template function. It
-    returns the pointer to the data stored in an numarray instance.
-    \tparam ATYPE base type of the numarray template
-    \param a instance of numarray<ATYPE>
-    \return pointer to the array data
-    */
-    template<typename ATYPE> const void *get_pointer(const numarray<ATYPE> &a)
-    {
-        return (void *)(a.storage().storage().data());
-    }
 
     /*!
     \brief array holder template 

@@ -40,7 +40,9 @@
 #include "types.hpp"
 #include "slice.hpp"
 #include "array_view.hpp"
+#include "array_view_utils.hpp"
 #include "index_map/index_maps.hpp"
+#include "math/inplace_arithmetics.hpp"
 
 #include "type_id_map.hpp"
 #include "type_conversion.hpp"
@@ -58,7 +60,8 @@ namespace core {
     \tparam IMAP the index map 
     */
     template<typename STORAGE,
-             typename IMAP=cindex_map > 
+             typename IMAP=cindex_map,
+             typename IPA =inplace_arithmetics> 
     class mdarray
     {
         public:
@@ -70,7 +73,7 @@ namespace core {
             //! index map type
             typedef IMAP map_type;
             //! type of the array
-            typedef mdarray<storage_type,map_type> array_type;
+            typedef mdarray<storage_type,map_type,IPA> array_type;
             //! shared pointer to array_type
             typedef std::shared_ptr<array_type> shared_ptr;
             //! unique pointer to array type
@@ -86,6 +89,8 @@ namespace core {
             //! const reverse iterator
             typedef typename storage_type::const_reverse_iterator
                 const_reverse_iterator;
+            //! inplace arithmetics type
+            typedef IPA inplace_arithmetic;
             
             //==================public members=================================
             //! type ID of the element type
@@ -128,6 +133,21 @@ namespace core {
                 _imap(std::move(map)),
                 _data(std::move(s))
             {}
+
+            //-----------------------------------------------------------------
+            /*!
+            \brief constrcut from a view
+
+            This constructor creates a new array from an array view instance. 
+            */
+            template<typename ATYPE>
+            explicit mdarray(const array_view<ATYPE> &view):
+                _imap(map_utils<map_type>::create(view.template
+                            shape<shape_t>())),
+                _data(container_utils<storage_type>::create(view.size()))
+            {
+                std::copy(view.begin(),view.end(),_data.begin());
+            }
 
             //================public methods===================================
             /*! \brief get index map
@@ -319,7 +339,7 @@ namespace core {
             template<template<typename...> class CTYPE,typename... PARAMS,
                      typename = typename std::enable_if<
                                 std::is_unsigned<typename CTYPE<PARAMS...>::value_type>::value
-                                >::type
+                          >::type      
                     >
             value_type operator()(const CTYPE<PARAMS...> &c) const
             {
@@ -490,12 +510,179 @@ namespace core {
             //! return const reverse iterator to 0-1 element
             const_reverse_iterator rend() const { return _data.rend(); }
 
+            //==========implementation of unary arithmetic operators===========
+            // these function will be only available if the value types of all
+            // involved containers are numeric
+
+            /*!
+            \brief unary addition of a scalar
+
+            \code
+            array_type a = ...;
+            array_type::value_type s = ...;
+
+            a += s;
+            \endcode
+            \param s the scalar value to add
+            \return array reference
+            */
+            array_type &operator+=(value_type s) 
+            { 
+                IPA::add(*this,s); 
+                return *this;
+            }
+
+            //-----------------------------------------------------------------
+            /*!
+            \brief unary addition of an array 
+
+            \code
+            array_type1 a = ...;
+            array_tyep2 b = ...;
+
+            a += b;
+            \endcode
+
+            \tparam ATYPE type of the array to add
+            \param v reference to the array to add 
+            \return reference to the original array
+            */
+            template<typename ATYPE> 
+            array_type &operator+=(const ATYPE &v) 
+            { 
+                IPA::add(*this,v); 
+                return *this;
+            }
+
+            //-----------------------------------------------------------------
+            /*!
+            \brief unary subtraction of a scalar
+
+            \code
+            array_type a = ...;
+            array_type::value_type s = ...;
+
+            a -= s;
+            \endcode
+            \param s the scalar value to subtract
+            \return array reference
+            */
+            array_type &operator-=(value_type s) 
+            { 
+                IPA::sub(*this,s); 
+                return *this;
+            }
+
+            //-----------------------------------------------------------------
+            /*!
+            \brief unary subtraction of an array
+
+            \code
+            array_type1 a = ...;
+            array_tyep2 b = ...;
+
+            a -= b;
+            \endcode
+
+            \tparam ATYPE type of the array to subtract
+            \param v reference to the array to subtract 
+            \return reference to the original array
+            */
+            template<typename ATYPE> 
+            array_type &operator-=(const ATYPE &v) 
+            { 
+                IPA::sub(*this,v); 
+                return *this; 
+            }
+
+            //-----------------------------------------------------------------
+            /*!
+            \brief unary multiplication of a scalar
+
+            \code
+            array_type a = ...;
+            array_type::value_type s = ...;
+
+            a *= s;
+            \endcode
+            \param s the scalar value to multiply with
+            \return array reference
+            */
+            array_type &operator*=(value_type s) 
+            { 
+                IPA::mult(*this,s); 
+                return *this; 
+            }
+
+            //-----------------------------------------------------------------
+            /*!
+            \brief unary multiplication of an array
+
+            \code
+            array_type1 a = ...;
+            array_tyep2 b = ...;
+
+            a *= b;
+            \endcode
+
+            \tparam ATYPE type of the array to multiply 
+            \param v reference to the array to multiply 
+            \return reference to the original array
+            */
+            template<typename ATYPE>
+            array_type &operator*=(const ATYPE &v) 
+            { 
+                IPA::mult(*this,v); 
+                return *this;
+            }
+
+            //-----------------------------------------------------------------
+            /*!
+            \brief unary division of a scalar
+
+            \code
+            array_type a = ...;
+            array_type::value_type s = ...;
+
+            a /= s;
+            \endcode
+            \param s the scalar value to divide by
+            \return array reference
+            */
+            array_type &operator/=(value_type s) 
+            { 
+                IPA::div(*this,s); 
+                return *this;
+            }
+
+            //-----------------------------------------------------------------
+            /*!
+            \brief unary division of an array
+
+            \code
+            array_type1 a = ...;
+            array_tyep2 b = ...;
+
+            a /= b;
+            \endcode
+
+            \tparam ATYPE type of the array to divide by  
+            \param v reference to the array to divide by 
+            \return reference to the original array
+            */
+            template<typename ATYPE>
+            array_type &operator/=(const ATYPE &v) 
+            { 
+                IPA::div(*this,v); 
+                return *this;
+            }
+
 
     };
 
     //set data for static member attribute
-    template<typename STORAGE,typename IMAP>
-    const type_id_t mdarray<STORAGE,IMAP>::type_id = 
+    template<typename STORAGE,typename IMAP,typename IPA>
+    const type_id_t mdarray<STORAGE,IMAP,IPA>::type_id = 
     type_id_map<typename STORAGE::value_type>::type_id;
     //=====================non-member operators================================
 
@@ -507,8 +694,8 @@ namespace core {
     \param a array to output
     \return output stream
     */
-    template<typename STORAGE,typename IMAP>
-    std::ostream &operator<<(std::ostream &o,const mdarray<STORAGE,IMAP> &a)
+    template<typename STORAGE,typename IMAP,typename IPA>
+    std::ostream &operator<<(std::ostream &o,const mdarray<STORAGE,IMAP,IPA> &a)
     {
         for(auto iter = a.begin();iter!=a.end();++iter)
             o<<*iter<<" ";
@@ -525,8 +712,8 @@ namespace core {
     \param a array where to store the data
     \return reference to input stream
     */
-    template<typename STORAGE,typename IMAP>
-    std::istream &operator>>(std::istream &is,mdarray<STORAGE,IMAP> &a)
+    template<typename STORAGE,typename IMAP,typename IPA>
+    std::istream &operator>>(std::istream &is,mdarray<STORAGE,IMAP,IPA> &a)
     {
         for(auto iter=a.begin();iter!=a.end();++iter)
             is>>*iter;
@@ -535,17 +722,17 @@ namespace core {
     }
    
     //-------------------------------------------------------------------------
-    template<typename STORAGE,typename IMAP>
-    bool operator==(const mdarray<STORAGE,IMAP> &b1, 
-                    const mdarray<STORAGE,IMAP> &b2) 
+    template<typename STORAGE,typename IMAP,typename IPA>
+    bool operator==(const mdarray<STORAGE,IMAP,IPA> &b1, 
+                    const mdarray<STORAGE,IMAP,IPA> &b2) 
     {
         return std::equal(b1.begin(),b1.end(),b2.begin());
     }
 
     //-------------------------------------------------------------------------
-    template<typename STORAGE,typename IMAP>
-    bool operator!=(const mdarray<STORAGE,IMAP> &b1, 
-                    const mdarray<STORAGE,IMAP> &b2) 
+    template<typename STORAGE,typename IMAP,typename IPA>
+    bool operator!=(const mdarray<STORAGE,IMAP,IPA> &b1, 
+                    const mdarray<STORAGE,IMAP,IPA> &b2) 
     {
         if (!(b1 == b2)) return true;
 

@@ -28,50 +28,62 @@
 
 #include "../exception_utils.hpp"
 #include "../type_info.hpp"
+#include "../complex_utils.hpp"
 
 namespace pni{
 namespace core{
+
+#define CHECK_ARITHMETIC_SINGLE(type)\
+    static_assert(std::is_arithmetic<typename type::value_type>::value || \
+                  is_complex<typename type::value_type>::value,\
+            "Arithemtic operations can only be used with arithmetic types!")
+
+#define CHECK_ARITHMETIC_DOUBLE(type1,type2)\
+    static_assert(\
+            (std::is_arithmetic<typename type1::value_type>::value || \
+             is_complex<typename type1::value_type>::value) && \
+            (std::is_arithmetic<typename type2::value_type>::value || \
+             is_complex<typename type2::value_type>::value), \
+            "Arithemtic operations can only be used with arithmetic types!")
 
     /*! 
     \ingroup numeric_array_classes
     \brief single threaded inplace arithmetics
 
-    This class provides single threaded arithmetic operations for numeric
-    arrays. It is used for inplace arithmetic operators (*=,+=,-=,/=). 
-    All member functions provided are static. See the NumArray template for how
-    this class is used in inplace arithmetics. This is the single threaded
-    version for inplace arithmetics.
-    \tparam ATYPE array type
+    This class provides static template functions used for inplace arithmetics.
+    The first argument of all functions is the reference to the original
+    container (typically an array). 
     */
-    template<typename ATYPE> class inplace_arithmetics
+    class inplace_arithmetics
     {
                  
         public:
-            //===================public types==================================
-            //! value type of the array type
-            typedef typename ATYPE::value_type value_type;
-            //! array type iterator type
-            typedef typename ATYPE::iterator iterator;
-            //! array type const iterator type
-            typedef typename ATYPE::const_iterator const_iterator;
             //==================inplace addition===============================
             /*!
             \brief add scalar to array
 
-            Adds a scalar value of the value_type of the array to the array. 
+            Element wise inplace addition of a scalar to an array
             \code
-            ATYPE array(...);
-            typename ATYPE::value_type scalar(5);
+            array_type array(...);
+            typename array_type::value_type scalar(5);
             
             //performe something like array += scalar
-
-            inplace_arithmetics<ATYPE>::add(array,scalar);
+            inplace_arithmetics::add(array,scalar);
             \endcode
-            \param a array of type ATYPE
-            \param b scalar value of type ATYPE::value_type
+            \tparam LTYPE array type
+            \param a reference to an instance of LTYPE
+            \param b scalar value of type LTYPE::value_type
             */
-            static void add(ATYPE &a,value_type b)
+            template<typename LTYPE,
+                     typename T,
+                     typename = typename std::enable_if<
+                     (std::is_pod<T>::value || is_complex<T>::value)
+                     >::type
+                    > 
+            static void add(LTYPE &a,T b)
             {
+                CHECK_ARITHMETIC_SINGLE(LTYPE);
+
                 size_t n = a.size();
                 for(size_t i = 0;i<n;++i) a[i] += b;
             }
@@ -80,65 +92,60 @@ namespace core{
             /*!
             \brief add array to array
 
-            Special method for inplace addition of two arrays of same type. 
-            No iterators are used for this operation thus one can expect higher
-            performance of this operation. 
-            \param a array of type ATYPE (LHS)
-            \param b array of type ATYPE (RHS)
+            Element wise inplace addition of two arrays
+            \code
+            array_type1 a = ...;
+            array_type2 b = ...;
+
+            //computes a+=b;
+            inplace_arithmetics::add(a,b);
+
+            \endcode
+
+            \tparam LTYPE l.h.s. type 
+            \tparam RTYPE r.h.s. type
+            \param a reference to an array of type LTYPE 
+            \param b reference to an array of type RTYPE
             */
-            static void add(ATYPE &a,const ATYPE &b)
+            template<typename LTYPE,
+                     typename RTYPE,
+                     typename = typename std::enable_if<
+                      !(std::is_pod<RTYPE>::value || 
+                        is_complex<RTYPE>::value)
+                      >::type
+                     >
+            static void add(LTYPE &a,const RTYPE &b)
             {
+                CHECK_ARITHMETIC_DOUBLE(LTYPE,RTYPE);
                 size_t n = a.size();
                 for(size_t i=0;i<n;++i) a[i] += b[i];
-            }
-
-            //-----------------------------------------------------------------
-            /*!
-            \brief add container to array
-            
-            Add a container to an array of type ATYPE.
-            \code
-            ATYPE array(...);
-            std::vector<typename ATYPE::value_type> v(array.size());
-
-            inplace_arithmetics<ATYPE>::add(array,v);
-            \endcode
-            \tparam CTYPE container template
-            \tparam OTS template parameters of the container template
-            \param a instance of ATYPE
-            \param b instance of CTYPE<OTS...>
-            */
-            template<typename CTYPE> static void add(ATYPE &a,const CTYPE &b)
-            {
-                typename CTYPE::const_iterator iter = b.begin();
-#ifdef NOFOREACH
-                for(auto viter = a.begin();viter!=a.end();++viter)
-                {
-                    value_type &v = *viter;
-#else
-                for(value_type &v: a)
-                {
-#endif
-                    v += (*iter);
-                    ++iter;
-                }
             }
 
             //==================inplace subtraction===============================
             /*!
             \brief subtract scalar from array
 
-            Subtract a scalar value from an array. 
+            Element wise subtraction of a scalar from an array
             \code
-            ATYPE array(...);
-            typename ATYPE::value_type scalar(5);
-            inplace_arithmetics<ATYPE>::sub(array,scalar);
+            array_type a = ...;
+            typename array_type::value_type s(1.);
+
+            //compuate a+=scalar;
+            inplace_arithmetics::sub(a,s);
             \endcode
-            \param a instance of ATYPE
-            \param b scalar value
+            \tparam LTYPE l.h.s. array type
+            \param a reference to the l.h.s.
+            \param b scalar value on the r.h.s.
             */
-            static void sub(ATYPE &a,value_type b)
+            template<typename LTYPE,
+                     typename T,
+                     typename = typename std::enable_if<
+                      std::is_pod<T>::value || is_complex<T>::value
+                      >::type
+                     >
+            static void sub(LTYPE &a,T b)
             {
+                CHECK_ARITHMETIC_SINGLE(LTYPE);
                 size_t n = a.size();
                 for(size_t i=0;i<n;++i) a[i] -= b;
             }
@@ -147,63 +154,58 @@ namespace core{
             /*!
             \brief subtract array from array
 
-            Special method for inplace subtraction of two arrays of same type. 
-            No iterators are used for this operation thus one can expect higher
-            performance of this operation. 
-            \param a array of type ATYPE (LHS)
-            \param b array of type ATYPE (RHS)
+            Element wise inplace subtraction of a scalar from an array.
+            \code
+            array_type1 a = ...;
+            array_type2 b = ...;
+
+            //compute a-=b;
+            inplace_arithmetics::sub(a,b);
+            \endcode
+            \tparam LTYPE l.h.s. array type
+            \tparam RTYPE r.h.s. array type
+            \param a reference to the l.h.s.
+            \param b reference to the r.h.s.
             */
-            static void sub(ATYPE &a,const ATYPE &b)
+            template<typename LTYPE,
+                     typename RTYPE,
+                     typename = typename std::enable_if<
+                        !(std::is_pod<RTYPE>::value || is_complex<RTYPE>::value)
+                        >::type
+                    >
+            static void sub(LTYPE &a,const RTYPE &b)
             {
+                CHECK_ARITHMETIC_DOUBLE(LTYPE,RTYPE);
                 size_t n = a.size();
                 for(size_t i=0;i<n;++i) a[i] -= b[i];
             }
 
-            //-----------------------------------------------------------------
-            /*!
-            \brief subtract a container from an array
-
-            Subtract an arbitrary container from an array.
-            \code
-            ATYPE array(...);
-            std::vector<typename ATYPE::value_type> v(array.size());
-            inplace_arithmetics<ATYPE>::sub(array,v);
-            \endcode
-            \tparam CTYPE container template
-            \tparam OTS container templat parameters
-            \param a instance of ATYPE
-            \param b instance of CTYPE<OTS...>
-            */
-            template<typename CTYPE> static void sub(ATYPE &a,const CTYPE &b)
-            {
-                typename CTYPE::const_iterator iter = b.begin();
-#ifdef NOFOREACH
-                for(auto viter = a.begin();viter!=a.end();++viter)
-                {
-                    value_type &v = *viter;
-#else
-                for(value_type &v: a)
-                {
-#endif
-                    v -= (*iter);
-                    ++iter;
-                }
-            }
 
             //=====================inplace multiplication======================
             /*!
             \brief multiply array with scalar
 
+            Element wise inplace multiplication of an array with a scalar
             \code
-            ATYPE array(...);
-            typename ATYPE::value_type scalar(5);
-            inplace_arithmetics<ATYPE>::mult(array,scalar);
+            array_type1 a = ...;
+            typename array_type1::value_type s(5);
+          
+            //compute a *= s;
+            inplace_arithmetics::mult(array,scalar);
             \endcode
-            \param a instance of ATYPE
-            \param b scalar value
+            \tparam LTYPE l.h.s. array type
+            \param a reference to the l.h.s.
+            \param b scalar r.h.s. value
             */
-            static void mult(ATYPE &a,value_type b)
+            template<typename LTYPE,
+                     typename T,
+                     typename = typename std::enable_if<
+                         std::is_pod<T>::value || is_complex<T>::value
+                         >::type
+                    >
+            static void mult(LTYPE &a,T b)
             {
+                CHECK_ARITHMETIC_SINGLE(LTYPE);
                 size_t n=a.size();
                 for(size_t i=0;i<n;++i) a[i] *= b;
             }
@@ -212,64 +214,57 @@ namespace core{
             /*!
             \brief multiply array by array
 
-            Special method for inplace multiplication of two arrays of same
-            type.  No iterators are used for this operation thus one can expect
-            higher performance of this operation. 
-            \param a array of type ATYPE (LHS)
-            \param b array of type ATYPE (RHS)
+            Element wise inplace multiplication of two arrays
+            \code
+            array_type1 a = ...;
+            array_type2 b = ...;
+
+            //compuate a *= b;
+            inplace_arithemtics::mult(a,b);
+            \endcode
+            \tparam LTYPE l.h.s. array type
+            \tparam RTYPE r.h.s. array type
+            \param a reference to the l.h.s.
+            \param b reference to the r.h.s.
             */
-            static void mult(ATYPE &a,const ATYPE &b)
+            template<typename LTYPE,
+                     typename RTYPE,
+                     typename = typename std::enable_if<
+                         !(std::is_pod<RTYPE>::value || is_complex<RTYPE>::value)
+                         >::type
+                    >
+            static void mult(LTYPE &a,const RTYPE &b)
             {
+                CHECK_ARITHMETIC_DOUBLE(LTYPE,RTYPE);
                 size_t n=a.size();
                 for(size_t i=0;i<n;++i) a[i] *= b[i];
-            }
-
-            //-----------------------------------------------------------------
-            /*!
-            \brief multiply container with array
-
-            Multiply an arbitrary container with an array. 
-            \code
-            ATYPE array(...);
-            std::vector<typename ATYPE::value_type> v(array.size());
-            inplace_arithmetics<ATYPE>::mult(array,v);
-            \endcode
-            \tparam CTYPE container template
-            \tparam OTS CTYPE parameters
-            \param a instance of ATYPE
-            \param b instance of CTYPE<OTS...>
-            */
-            template<typename CTYPE> static void mult(ATYPE &a,const CTYPE &b)
-            {
-                typename CTYPE::const_iterator iter = b.begin();
-#ifdef NOFOREACH
-                for(auto viter = a.begin();viter!=a.end();++viter)
-                {
-                    value_type &v = *viter;
-#else
-                for(value_type &v: a)
-                {
-#endif
-                    v *= (*iter);
-                    ++iter;
-                }
             }
             
             //=====================inplace division============================
             /*!
             \brief divide array with scalar
 
-            Divide each element of an array by a scalar value.
+            Element wise inplace division of an array with a scalar
             \code
-            ATYPE array(...);
-            typename ATYPE::value_type scalar(5);
-            inplace_arithmetics<ATYPE>::div(array,scalar);
+            array_type a = ...;
+            typename array_type::value_type s(4.);
+
+            //compute a /= s;
+            inplace_arithmetics::div(a,s);
             \endcode
-            \param a instance of ATYPE
-            \param b scalar value
+            \tpararm LTYPE l.h.s. array type
+            \param a reference to the l.h.s.
+            \param b scalar r.h.s. value
             */
-            static void div(ATYPE &a,value_type b)
+            template<typename LTYPE,
+                     typename T,
+                     typename = typename std::enable_if<
+                         std::is_pod<T>::value || is_complex<T>::value
+                         >::type
+                    >
+            static void div(LTYPE &a,T b)
             {
+                CHECK_ARITHMETIC_SINGLE(LTYPE);
                 size_t n = a.size();
                 for(size_t i=0;i<n;++i) a[i] /= b;
             }
@@ -278,50 +273,32 @@ namespace core{
             /*!
             \brief divide array by array
 
-            Special method for inplace division of two arrays of same type.  No
-            iterators are used for this operation thus one can expect higher
-            performance of this operation. 
-            \param a array of type ATYPE (LHS)
-            \param b array of type ATYPE (RHS)
+            Element wise inplace division of two arrays. 
+            \code
+            array_type1 a = ...;
+            array_type2 b = ...;
+
+            //compuate a /= b;
+            inplace_arithemtics::div(a,b);
+            \endcode
+
+            \tparma LTYPE l.h.s. array type
+            \tparam RTYPE r.h.s. array type
+            \param a reference to the l.h.s.
+            \param b reference to the r.h.s.
             */
-            static void div(ATYPE &a,const ATYPE &b)
+            template<typename LTYPE,
+                     typename RTYPE,
+                     typename = typename std::enable_if<
+                     !(std::is_pod<RTYPE>::value || is_complex<RTYPE>::value)
+                     >::type
+                    >
+            static void div(LTYPE &a,const RTYPE &b)
             {
+                CHECK_ARITHMETIC_DOUBLE(LTYPE,RTYPE);
                 size_t n = a.size();
                 for(size_t i=0;i<n;++i) a[i] /= b[i];
             }
-
-            //-----------------------------------------------------------------
-            /*!
-            \brief divde array with container
-
-            Divides each element of an array by the corresponding element of a
-            container. 
-            \code
-            ATYPE array(...);
-            std::vector<typename ATYPE::value_type> v(array.size());
-            inplace_arithmetics<ATYPE>::div(array,v);
-            \endcode
-            \tparam CTYPE container template
-            \tparam OTS container template parameters
-            \param a instance of ATYPE
-            \param b instance of CTYPE<OTS..>
-            */
-            template<typename CTYPE> static void div(ATYPE &a,const CTYPE &b)
-            {
-                typename CTYPE::const_iterator iter = b.begin();
-#ifdef NOFOREACH
-                for(auto viter = a.begin();viter!=a.end();++viter)
-                {
-                    value_type &v = *viter;
-#else
-                for(value_type &v: a)
-                {
-#endif
-                    v /= (*iter);
-                    ++iter;
-                }
-            }
-            
     };
 
 //end namespace

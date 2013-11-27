@@ -25,7 +25,6 @@
 #include <vector>
 #include <list>
 #include <pni/core/arrays.hpp>
-#include <pni/core/numarray.hpp>
 
 #include "type_id_container_test.hpp"
 using namespace std;
