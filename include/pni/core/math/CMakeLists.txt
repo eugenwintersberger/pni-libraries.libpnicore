@@ -1,10 +1,10 @@
-set(HEADER_FILES add.hpp 
+set(HEADER_FILES add_op.hpp 
                 div_op.hpp 
                 inplace_arithmetics.hpp 
                 mt_inplace_arithmetics.hpp 
-                mult.hpp 
+                mult_op.hpp 
                 op_traits.hpp 
-                sub.hpp)
+                sub_op.hpp)
 
 install(FILES ${HEADER_FILES}
         DESTINATION  ${CMAKE_INSTALL_FULL_INCLUDEDIR}/pni/core/math)

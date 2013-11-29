@@ -27,6 +27,7 @@
 #include "static_index_map.hpp"
 #include "index_policy.hpp"
 #include "c_index_policy_imp.hpp"
+#include "../container_utils.hpp"
 
 namespace pni{
 namespace core{
@@ -65,7 +66,6 @@ namespace core{
     be fully determined at runtime. The structure of an array.
     */
     typedef index_map<std::vector<size_t>,c_index_policy> dynamic_cindex_map;
-    typedef index_map<std::vector<size_t>,c_index_policy> cindex_map;
 
     //-------------------------------------------------------------------------
     /*!
@@ -96,12 +96,19 @@ namespace core{
     Several specializations exist for this template to handle different index
     map types. The major difference between the different types is the storage
     container used to hold the shape information. 
-    This is the default implementation for STL compliant containers.
+    This is the default implementation for STL compliant containers and
+    maps using std::array as a storage. In the latter case an exception is
+    thrown if one tries to construct a map of a rank which does not match the
+    size of the std::array storage.
 
     \tparam MAPT index map type
     */
     template<typename MAPT> struct map_utils
     {
+        typedef MAPT map_type;
+        //! storage type for MAPT
+        typedef typename map_type::storage_type storage_type;
+
         /*!
         \brief create map from container
 
@@ -109,61 +116,31 @@ namespace core{
         resizeing. This would be the case when the map allows also resizeing its
         internal storage.
 
+        A typicall application would be 
+        \code
+        typedef .... index_map_type;
+        std::vector<size_t> shape{3,2,4};
+        auto map = map_utils<index_map_type>::create(shape);
+        \endcode
+
+        If the index map type has a constant rank which cannot be changed an
+        exception will be thrown. 
+
+        \throws shape_mismatch_error in case of shape problems.
         \tparam CTYPE container type
         \param c instance of CTYPE with shape information
         \return instance of MAPT
         */
         template<typename CTYPE> static MAPT create(const CTYPE &c)
         {
-            typename MAPT::storage_type storage(c.size());
-            std::copy(c.begin(),c.end(),storage.begin());
-            return MAPT(std::move(storage)); 
-        }
+            storage_type storage; 
 
-        template<typename IT> 
-        static MAPT create(std::initializer_list<IT> shape)
-        {
-            typename MAPT::storage_type storage(shape.size());
-            std::copy(shape.begin(),shape.end(),storage.begin());
-            return MAPT(std::move(storage));
-        }
-
-    };
-
-    //-------------------------------------------------------------------------
-    /*!
-    \ingroup index_mapping_classes
-    \brief utility class for maps with std::array storage
-
-    This is a specialization of the map_utils template for index maps using the
-    std::array template as storage facility. 
-
-    \param T element type of the std::array template
-    \param NDIMS number of dimensions
-    \param POLTYPE policy type
-    */
-    template<typename T,size_t NDIMS,typename POLTYPE> 
-    struct map_utils<index_map<std::array<T,NDIMS>,POLTYPE> >
-    {
-        typedef index_map<std::array<T,NDIMS>,POLTYPE> map_type;
-        /*!
-        \brief create map from container
-    
-        In this case std::array is used as internal storage for the map. This
-        implies that the map can be resized but the numbers of dimensions cannot
-        be changed. If the number of elements in the container does not match
-        the number of elements in the map type an exception will be thrown.
-
-        \throw shape_mismatch_error map rank and container size do not match.
-        \tparam CTYPE container type 
-        \param c instance of CTYPE with the new shape information
-        \return new map type 
-        */
-        template<typename CTYPE> static map_type create(const CTYPE &c)
-        {
-            typename map_type::storage_type storage;
-
-            if(map_type().rank() != c.size())
+            //try to create a storage type
+            try
+            {
+                storage = container_utils<storage_type>::create(c.size());
+            }
+            catch(size_mismatch_error &error)
             {
                 std::stringstream ss;
                 ss<<"The map supports only a fixed number of dimensions ("
@@ -171,27 +148,39 @@ namespace core{
                     <<"passing has ("<<c.size()<<") elements!"<<std::endl;
                 throw shape_mismatch_error(EXCEPTION_RECORD,ss.str());
             }
-
             std::copy(c.begin(),c.end(),storage.begin());
-            return map_type(storage);
+            return MAPT(std::move(storage)); 
         }
 
         //---------------------------------------------------------------------
+        /*!
+        \brief create map from initializer list
+
+        Create anew map from an initializer list. 
+        \throws shape_mismatch_error
+        \param shape initializer list with shape data
+        \return instance of MAPT
+        */
         template<typename IT> 
-        static map_type create(std::initializer_list<IT> shape)
+        static MAPT create(std::initializer_list<IT> shape)
         {
-            if(map_type().rank() != shape.size())
+            storage_type storage;
+
+            try
+            {
+                storage = container_utils<storage_type>::create(shape);
+            }
+            catch(size_mismatch_error &error)
+            {
                 throw shape_mismatch_error(EXCEPTION_RECORD,
                     "Rank of user shape ("
                     +boost::lexical_cast<string>(shape.size())+
                     ") does not match the map rank ("
                     +boost::lexical_cast<string>(map_type().rank())+")!");
-
-            typename map_type::storage_type storage;
+            }
             std::copy(shape.begin(),shape.end(),storage.begin());
-            return map_type(std::move(storage));
+            return MAPT(std::move(storage));
         }
-
     };
 
     //-------------------------------------------------------------------------

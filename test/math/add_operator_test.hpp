@@ -29,15 +29,18 @@
 #include <boost/current_function.hpp>
 
 #include <pni/core/arrays.hpp>
-#include "EqualityCheck.hpp"
-#include <pni/core/darray.hpp>
+#include <pni/core/math/add_op.hpp>
+#include "../compare.hpp"
+#include "../data_generator.hpp"
 #include <pni/core/scalar.hpp>
-#include <pni/core/numarray.hpp>
-#include "array_factory.hpp"
+
+#ifdef NOFOREACH
+#include <boost/foreach.hpp>
+#endif
 
 using namespace pni::core;
 
-/*!
+/*
  Do testing only for DArray - all array types provide the same interface and
  thus can be considered as equivalent. However, we have to check ArrayView
  wether or not it works.
@@ -52,13 +55,14 @@ template<typename ATYPE> class add_operator_test: public CppUnit::TestFixture
         CPPUNIT_TEST_SUITE_END();
     private:
         //==========private types==============================================
-        typedef numarray<ATYPE> na_type;
-        typedef scalar<typename ATYPE::value_type> s_type;
+        typedef ATYPE array_type;
         typedef typename ATYPE::value_type value_type;
+        typedef scalar<value_type> scalar_type;
 
         //===================private memebers==================================
-        na_type a1;
-        na_type a2;
+        array_type a1;
+        array_type a2;
+        scalar_type s1;
         shape_t shape;
 
     public:
@@ -76,11 +80,13 @@ template<typename ATYPE> class add_operator_test: public CppUnit::TestFixture
 template<typename ATYPE> void add_operator_test<ATYPE>::setUp()
 {
     shape = shape_t({2,3,4});
-    a1 = na_type(array_factory<ATYPE>::create(shape));
-    a2 = na_type(array_factory<ATYPE>::create(shape));
-    
-    std::fill(a1.begin(),a1.end(),value_type(100));
-    std::fill(a2.begin(),a2.end(),value_type(5));
+    a1 = array_factory<array_type>::create(shape);
+    a2 = array_factory<array_type>::create(shape);
+
+    std::generate(a1.begin(),a1.end(),random_generator<value_type>());
+    std::generate(a2.begin(),a2.end(),random_generator<value_type>());
+
+    s1 = random_generator<value_type>()();
 }
 
 //-----------------------------------------------------------------------------
@@ -90,15 +96,14 @@ template<typename ATYPE> void add_operator_test<ATYPE>::tearDown() { }
 template<typename ATYPE> void add_operator_test<ATYPE>::test_construction()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
-    add<na_type,na_type> op(a1,a2);
+    add_op<array_type,array_type> op(a1,a2);
     CPPUNIT_ASSERT(a1.size() == op.size());
    
-    s_type s(10);
-    add<na_type,s_type> op2(a1,s);
+    add_op<array_type,scalar_type> op2(a1,s1);
     CPPUNIT_ASSERT(op2.size() == a1.size());
 
-    add<s_type,s_type> op3(s,s);
-    CPPUNIT_ASSERT(s.size() == op3.size());
+    add_op<scalar_type,scalar_type> op3(s1,s1);
+    CPPUNIT_ASSERT(s1.size() == op3.size());
 
 }
 
@@ -106,101 +111,77 @@ template<typename ATYPE> void add_operator_test<ATYPE>::test_construction()
 template<typename ATYPE> void add_operator_test<ATYPE>::test_access()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
-    add<na_type,na_type> op1(a1,a2);
+    add_op<array_type,array_type> op1(a1,a2);
 
-    for(size_t i=0;i<op1.size();i++)
-        check_equality(op1[i],value_type(105));
+    for(size_t i=0;i<op1.size();i++) compare(op1[i],a1[i]+a2[i]);
 
-    s_type s(10);
-    add<na_type,s_type> op2(a1,s);
+    add_op<array_type,scalar_type> op2(a1,s1);
 
-    for(size_t i=0;i<op2.size();i++)
-        check_equality(op2[i],value_type(110));
+    for(size_t i=0;i<op2.size();i++) compare(op2[i],a1[i]+s1[i]);
 }
 
 //-----------------------------------------------------------------------------
 template<typename ATYPE> void add_operator_test<ATYPE>::test_iterator()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
-    add<na_type,na_type> op1(a1,a2);
+    add_op<array_type,array_type> op1(a1,a2);
+    auto iter1 = a1.begin();
+    auto iter2 = a2.begin();
 #ifdef NOFOREACH
-    for(auto iter = op1.begin();iter!=op1.end();++iter)
-    {
-        auto v = *iter;
+    BOOST_FOREACH(auto v,op1)
 #else
     for(auto v: op1) 
-    {
 #endif 
-        check_equality(v,value_type(105));
-    }
+        compare(v,(*iter1++)+(*iter2));
 
-    s_type s(10);
-    add<na_type,s_type> op2(a1,s);
+    add_op<array_type,scalar_type> op2(a1,s1);
+    iter1 = a1.begin();
+    auto siter1 = s1.begin();
 #ifdef NOFOREACH
-    for(auto iter = op2.begin();iter!=op2.end();++iter)
-    {
-        auto v = *iter;
+    BOOST_FOREACH(auto v,op2)
 #else
     for(auto v: op2) 
-    {
 #endif 
-        check_equality(v,value_type(110));
-    }
+        compare(v,(*iter1++)+(*siter1++));
 }
 
 //-----------------------------------------------------------------------------
 template<typename ATYPE> void add_operator_test<ATYPE>::test_operator()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
-    na_type r = array_factory<ATYPE>::create(shape);
+    auto r = array_factory<ATYPE>::create(shape);
     r = a1+a2;
 #ifdef NOFOREACH
-    for(auto iter = r.begin();iter!=r.end();++iter)
-    {
-        auto v = *iter;
+    BOOST_FOREACH(auto v,r)
 #else
     for(auto v: r) 
-    {
 #endif 
-        check_equality(v,value_type(105));
-    }
+        compare(v,value_type(105));
 
     r = a1+10;
 #ifdef NOFOREACH
-    for(auto iter = r.begin();iter!=r.end();++iter)
-    {
-        auto v = *iter;
+    BOOST_FOREACH(auto v,r)
 #else
     for(auto v: r) 
-    {
 #endif 
-        check_equality(v,value_type(110));
-    }
+        compare(v,value_type(110));
 
     r = 95 + a1;
 #ifdef NOFOREACH
-    for(auto iter = r.begin();iter!=r.end();++iter)
-    {
-        auto v = *iter;
+    BOOST_FOREACH(auto v,r)
 #else
     for(auto v: r) 
-    {
 #endif 
-        check_equality(v,value_type(195));
-    }
+        compare(v,value_type(195));
 
     //put it all together
 
     r = a1 + 10 + a2;
 #ifdef NOFOREACH
-    for(auto iter = r.begin();iter!=r.end();++iter)
-    {
-        auto v = *iter;
+    BOOST_FOREACH(auto v,r)
 #else
     for(auto v: r) 
-    {
 #endif 
-        check_equality(v,value_type(115));
-    }
+        compare(v,value_type(115));
 
 }

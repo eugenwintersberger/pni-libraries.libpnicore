@@ -59,7 +59,7 @@ namespace core{
 
         Create a new container with a size of n elements.
         \code
-        typedef std::list<string> list_type;
+        typedef std::list<int32> list_type;
         typedef std::vector<float64> vector_type;
 
         auto v = container_utils<vector_type>::create(20);
@@ -83,14 +83,15 @@ namespace core{
 
         Create a new container from a pair of iterators. 
         \code
-        typedef std::list<string> list_type;
+        typedef std::list<int32> list_type;
         typedef std::vector<float64> vector_type;
 
         .... c = ....; //an arbitrary STL compliant container
         auto v = container_utils<vector_type>::create(c.begin(),c.end());
         auto l = container_utils<list_type>::create(c.begin(),c.end());
         \endcode
-
+        
+        The range can be passed either as a pair of iterators or pointers.
         \tparam ITERT iterator type
         \param begin iterator to the first element
         \param end iterator to the last element
@@ -115,7 +116,7 @@ namespace core{
 
         Create a new container from an arbitrary container provided by the use. 
         \code
-        typedef std::list<string> list_type;
+        typedef std::list<int32> list_type;
         typedef std::vector<float64> vector_type;
 
         .... c = ....; //an arbitrary STL compliant container
@@ -148,7 +149,7 @@ namespace core{
         convienance in order to expose a common interface.
 
         \code 
-        typedef std::list<string> list_type;
+        typedef std::list<int32> list_type;
         typedef std::vector<float64> vector_type;
 
         auto v = container_utils<vector_type>::create({1,2,3,4});
@@ -176,8 +177,8 @@ namespace core{
     While std::vector and std::list are dynamic types whose size can be set at
     compile time, the size of std::array is fixed at compile time. 
     Therefore, std::array requires some special treatment for array
-    construction. This specialization of the container_utils takes care about
-    all the peculiarities of std::array.
+    construction. This specialization of the container_utils template takes care
+    about all the peculiarities of std::array.
     */
     template<typename T,size_t N> struct container_utils<std::array<T,N>>
     {

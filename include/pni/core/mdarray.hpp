@@ -58,9 +58,10 @@ namespace core {
 
     \tparam STORAGE storage object to use to keep the data
     \tparam IMAP the index map 
+    \tparam IPA unary (inplace) arithmetics implementation
     */
     template<typename STORAGE,
-             typename IMAP=cindex_map,
+             typename IMAP=dynamic_cindex_map,
              typename IPA =inplace_arithmetics> 
     class mdarray
     {
@@ -139,6 +140,9 @@ namespace core {
             \brief constrcut from a view
 
             This constructor creates a new array from an array view instance. 
+            The resulting array object has the same shape as the view. 
+            \tparam ATYPE storage type of the view
+            \param view reference to the view
             */
             template<typename ATYPE>
             explicit mdarray(const array_view<ATYPE> &view):
@@ -148,6 +152,65 @@ namespace core {
             {
                 std::copy(view.begin(),view.end(),_data.begin());
             }
+
+
+            //-----------------------------------------------------------------
+            /*!
+            \brief construction from an other array
+
+            This constructor can be used for instance along with expression
+            templates in order to construct an array from an expression. 
+            \tparam MDARGS template parameters of mdarray
+            \param array reference to the source array
+            */
+            template<typename ...MDARGS>
+            explicit mdarray(const mdarray<MDARGS...> &array):
+                _imap(map_utils<map_type>::create(array.template
+                            shape<shape_t>())),
+                _data(container_utils<storage_type>::create(array.size()))
+            {
+                //copy data
+                std::copy(array.begin(),array.end(),this->begin());
+            }
+
+            //====================assignment operations========================
+            /*!
+            \brief assignment from a different array type
+
+            Assign the data from a different array type to this one. 
+            \throws size_mismatch_error if array sizes do not match
+            \throws shape_mismatch_error if shapes do not match
+            \tparam MDARGS template parameters of the source type
+            \param array reference to the source array
+            \return reference to the updated array
+            */
+            template<typename ...MDARGS>
+            array_type &operator=(const mdarray<MDARGS...> &array)
+            {
+                if((void*)this == (void*)&array) return *this;
+
+                if((array.size() == this->size())&&
+                   (array.rank() == this->rank()))
+                {
+                    auto source_shape = array.template shape<shape_t>();
+                    auto this_shape   = this->template shape<shape_t>();
+
+                    //different ordering of dimensions only need to construct a
+                    //new index map
+                    if(!std::equal(source_shape.begin(),source_shape.end(),
+                                 this_shape.begin()))
+                        _imap = map_utils<map_type>::create(source_shape);
+
+                    //copy the data 
+                    std::copy(array.begin(),array.end(),this->begin());
+                }
+                else
+                    //construct a new array
+                    *this = array_type(array);
+
+                return *this;
+            }
+            
 
             //================public methods===================================
             /*! \brief get index map

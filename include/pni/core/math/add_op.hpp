@@ -38,7 +38,7 @@ namespace core{
     \tparam OP1T type of left operand
     \tparam OP2T type of right operand
     */
-    template<typename OP1T,typename OP2T> class add
+    template<typename OP1T,typename OP2T> class add_op
     {
         private:
             //! reference to the left operand
@@ -52,7 +52,7 @@ namespace core{
             //! result type of the operation
             typedef typename OP1T::value_type value_type;
             //! type of the expression template
-            typedef add<OP1T,OP2T> array_type;
+            typedef add_op<OP1T,OP2T> array_type;
             //! storage type
             typedef void storage_type;
             //! non-const iterator type - just for interface
@@ -68,7 +68,7 @@ namespace core{
             \param o1 left operand
             \param o2 right operand
             */
-            add(const OP1T &o1,const OP2T &o2):
+            add_op(const OP1T &o1,const OP2T &o2):
                 _op1(o1),
                 _op2(o2),
                 _size(_op1.size()>_op2.size() ? _op1.size() : _op2.size())

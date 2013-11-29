@@ -44,14 +44,21 @@ class dynamic_mdarray_test : public CppUnit::TestFixture
 {
         CPPUNIT_TEST_SUITE(dynamic_mdarray_test);
         CPPUNIT_TEST(test_constructors);
+        CPPUNIT_TEST(test_constructor_from_other);
         CPPUNIT_TEST(test_assignment);
+        CPPUNIT_TEST(test_assignment_from_other);
         CPPUNIT_TEST_SUITE_END();
     private:
-        typedef typename ATYPE::map_type     index_map_type;
-        typedef typename ATYPE::storage_type storage_type;
-        typedef typename ATYPE::value_type   value_type;
+        typedef ATYPE array_type;
+        typedef typename array_type::map_type     index_map_type;
+        typedef typename array_type::storage_type storage_type;
+        typedef typename array_type::value_type   value_type;
+        typedef fixed_dim_array<value_type,3>     farray_type;
+        typedef static_array<value_type,4,2>      sarray_type;
         std::vector<value_type> ref_data; //buffer with reference data
-        ATYPE array;
+        array_type array;
+        farray_type farray;
+        sarray_type sarray;
         shape_t shape;
 
         //---------------------------------------------------------------------
@@ -65,7 +72,9 @@ class dynamic_mdarray_test : public CppUnit::TestFixture
         void setUp();
         void tearDown();
         void test_constructors();
+        void test_constructor_from_other();
         void test_assignment();
+        void test_assignment_from_other();
 };
 
 //------------------------------------------------------------------------------
@@ -75,6 +84,11 @@ void dynamic_mdarray_test<ATYPE>::setUp()
     shape = {2,3,5};
     ref_data = std::vector<value_type>(2*3*5);
     std::generate(ref_data.begin(),ref_data.end(),random_generator<value_type>());
+    
+    farray = array_factory<farray_type>::create(shape_t{3,4,5});
+    sarray = array_factory<sarray_type>::create(shape_t{4,2});
+    std::generate(farray.begin(),farray.end(),random_generator<value_type>());
+    std::generate(sarray.begin(),sarray.end(),random_generator<value_type>());
 }
 
 //------------------------------------------------------------------------------
@@ -117,6 +131,50 @@ void dynamic_mdarray_test<ATYPE>::test_constructors()
     CPPUNIT_ASSERT(array4.size() == array2.size());
     CPPUNIT_ASSERT(array3.size() == 0);
     CPPUNIT_ASSERT(array3.rank() == 0);
+}
+
+//------------------------------------------------------------------------------
+template<typename ATYPE>
+void dynamic_mdarray_test<ATYPE>::test_constructor_from_other()
+{
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+   
+    //--------------------construct from fixed dim array-----------------------
+    ATYPE array(farray);
+    CPPUNIT_ASSERT(farray.size() == array.size());
+    CPPUNIT_ASSERT(farray.rank() == array.rank());
+    auto array_shape = array.template shape<shape_t>();
+    auto farray_shape = farray.template shape<shape_t>();
+    CPPUNIT_ASSERT(std::equal(array_shape.begin(),array_shape.end(),
+                              farray_shape.begin()));
+    CPPUNIT_ASSERT(std::equal(array.begin(),array.end(),farray.begin()));
+
+    //--------------------construct from static array---------------------------
+    ATYPE array2(sarray);
+    CPPUNIT_ASSERT(sarray.size() == array2.size());
+    CPPUNIT_ASSERT(sarray.rank() == array2.rank());
+    auto array2_shape = array2.template shape<shape_t>();
+    auto sarray_shape = sarray.template shape<shape_t>();
+    CPPUNIT_ASSERT(std::equal(array2_shape.begin(),array2_shape.end(),
+                              sarray_shape.begin()));
+    CPPUNIT_ASSERT(std::equal(array2.begin(),array2.end(),sarray.begin()));
+}
+
+//------------------------------------------------------------------------------
+template<typename ATYPE>
+void dynamic_mdarray_test<ATYPE>::test_assignment_from_other()
+{
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+
+    auto array1 = array_factory<array_type>::create(shape_t{3,4,5});
+    auto array2 = array_factory<array_type>::create(shape_t{4,2});
+
+    array1 = farray;
+    CPPUNIT_ASSERT(std::equal(array1.begin(),array1.end(),farray.begin()));
+    array2 = sarray;
+    CPPUNIT_ASSERT(std::equal(array2.begin(),array2.end(),sarray.begin()));
+
+
 }
 
 //------------------------------------------------------------------------------

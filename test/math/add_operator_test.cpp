@@ -25,6 +25,7 @@
 #include "add_operator_test.hpp"
 
 
+/*
 CPPUNIT_TEST_SUITE_REGISTRATION(add_operator_test<darray<uint8> >);
 CPPUNIT_TEST_SUITE_REGISTRATION(add_operator_test<darray<int8> >);
 CPPUNIT_TEST_SUITE_REGISTRATION(add_operator_test<darray<uint16> >);
@@ -40,11 +41,13 @@ CPPUNIT_TEST_SUITE_REGISTRATION(add_operator_test<darray<float128> >);
 CPPUNIT_TEST_SUITE_REGISTRATION(add_operator_test<darray<complex32> >);
 CPPUNIT_TEST_SUITE_REGISTRATION(add_operator_test<darray<complex64> >);
 CPPUNIT_TEST_SUITE_REGISTRATION(add_operator_test<darray<complex128> >);
+*/
 
 #define SARRAY_ADD_TEST_REG(T,NX,NY,NZ)\
 static CPPUNIT_NS::AutoRegisterSuite< add_operator_test<sarray<T,NX,NY,NZ> > >  \
              CPPUNIT_MAKE_UNIQUE_NAME(autoRegisterRegistry__ )
 
+/*
 SARRAY_ADD_TEST_REG(uint8,2,3,4);
 SARRAY_ADD_TEST_REG(int8,2,3,4);
 SARRAY_ADD_TEST_REG(uint16,2,3,4);
@@ -61,5 +64,5 @@ SARRAY_ADD_TEST_REG(float128,2,3,4);
 SARRAY_ADD_TEST_REG(complex32,2,3,4);
 SARRAY_ADD_TEST_REG(complex64,2,3,4);
 SARRAY_ADD_TEST_REG(complex128,2,3,4);
-
+*/
 
