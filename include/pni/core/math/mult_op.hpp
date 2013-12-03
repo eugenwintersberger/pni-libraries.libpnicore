@@ -36,7 +36,7 @@ namespace core{
     \brief Multiplication expression template
 
     */
-    template<typename OP1T,typename OP2T> class mult
+    template<typename OP1T,typename OP2T> class mult_op
     {
         private:
             //! left operand
@@ -48,15 +48,22 @@ namespace core{
             //! value type of the multiplication
             typedef typename OP1T::value_type value_type;
             //! type of the operation class
-            typedef mult<OP1T,OP2T> array_type;
+            typedef mult_op<OP1T,OP2T> array_type;
             //! storage type
             typedef void storage_type;
             //! non-const iterator type - this is only to satsify the interaface
-            typedef container_iterator<array_type,0> iterator; 
+            typedef container_iterator<array_type> iterator; 
             //! const iterator type
-            typedef container_iterator<array_type,1> const_iterator;
+            typedef container_iterator<const array_type> const_iterator;
+
+            typedef container_iterator<array_type> reverse_iterator;
+            typedef container_iterator<const array_type> const_reverse_iterator;
             //! view type
             typedef array_view<array_type> view_type;
+
+            typedef typename array_trait<OP1T,OP2T>::map_type map_type;
+            typedef typename array_trait<OP1T,OP2T>::inplace_arithmetic
+                inplace_arithmetic;
 
             //===================constructors==================================
             /*! 
@@ -66,7 +73,7 @@ namespace core{
             \param o1 left operand
             \param o2 right operand
             */
-            mult(const OP1T &o1,const OP2T &o2):
+            mult_op(const OP1T &o1,const OP2T &o2):
                 _op1(o1),
                 _op2(o2)
             {}

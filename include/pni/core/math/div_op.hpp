@@ -54,11 +54,18 @@ namespace core{
             //! storage type
             typedef void storage_type;
             //! non-const iterator - just for interface
-            typedef container_iterator<array_type,0> iterator;
+            typedef container_iterator<array_type> iterator;
             //! const iterator type
-            typedef container_iterator<array_type,1> const_iterator;
+            typedef container_iterator<const array_type> const_iterator;
+
+            typedef container_iterator<array_type> reverse_iterator;
+            typedef container_iterator<const array_type> const_reverse_iterator;
             //! view type
             typedef array_view<array_type> view_type;
+
+            typedef typename array_trait<OP1T,OP2T>::map_type map_type;
+            typedef typename array_trait<OP1T,OP2T>::inplace_arithmetic
+                inplace_arithmetic;
 
             //===================constructors==================================
             /*!
