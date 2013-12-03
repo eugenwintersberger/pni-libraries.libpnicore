@@ -83,7 +83,7 @@ class mdarray_unary_arithmetic_test : public CppUnit::TestFixture
         {
             auto data = array_factory<RTYPE>::create(shape);
             std::generate(data.begin(),data.end(),
-                          random_generator<typename RTYPE::value_type>());
+                          random_generator<typename RTYPE::value_type>(1,10));
 
             return data;
         }
@@ -155,7 +155,7 @@ void mdarray_unary_arithmetic_test<ATYPE>::setUp()
 {
     shape = {2,3,5};
     ref_data = std::vector<value_type>(2*3*5);
-    std::generate(ref_data.begin(),ref_data.end(),random_generator<value_type>());
+    std::generate(ref_data.begin(),ref_data.end(),random_generator<value_type>(0,10));
     
     //create the target array
     array = array_factory<ATYPE>::create(shape);
@@ -172,7 +172,7 @@ void mdarray_unary_arithmetic_test<ATYPE>::test_add_scalar()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
-    auto s = random_generator<value_type>()();
+    auto s = random_generator<value_type>(1,10)();
     array += s;
     auto riter = ref_data.begin();
     for(auto v: array) compare(v,(*riter++) + s);
@@ -184,7 +184,7 @@ void mdarray_unary_arithmetic_test<ATYPE>::test_sub_scalar()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
-    auto s = random_generator<value_type>()();
+    auto s = random_generator<value_type>(1,10)();
     array -= s;
     auto riter = ref_data.begin();
     for(auto v: array) compare(v,(*riter++) - s);
@@ -196,10 +196,11 @@ void mdarray_unary_arithmetic_test<ATYPE>::test_mult_scalar()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
-    auto s = random_generator<value_type>()();
+    auto s = random_generator<value_type>(1,10)();
     array *= s;
     auto riter = ref_data.begin();
-    for(auto v: array) compare(v,(*riter++) * s);
+    for(auto v: array) 
+        compare(v,(*riter++) * s);
 }
 
 //------------------------------------------------------------------------------
@@ -208,7 +209,7 @@ void mdarray_unary_arithmetic_test<ATYPE>::test_div_scalar()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
-    auto s = random_generator<value_type>()();
+    auto s = random_generator<value_type>(1,10)();
     array /= s;
     auto riter = ref_data.begin();
     for(auto v: array) compare(v,(*riter++) / s);

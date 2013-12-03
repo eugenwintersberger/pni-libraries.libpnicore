@@ -37,9 +37,11 @@ using namespace pni::core;
 
 This template function compares two values which are integers and strings. 
 */
-template<typename T> 
-void compare(T &&a,T &&b,
-             typename std::enable_if<!std::is_floating_point<T>::value,T>::type* =0)
+template<typename T > 
+ typename std::enable_if<
+ std::is_pod<T>::value && !std::is_floating_point<T>::value
+ >::type
+compare(const T &a,const T &b)
 {
     CPPUNIT_ASSERT(a==b);
 }
@@ -51,17 +53,19 @@ void compare(T &&a,T &&b,
 This function compares floating points values.
 */
 template<typename T > 
-void compare(T &&a,T &&b,
-        typename std::enable_if<std::is_floating_point<T>::value,T>::type* =0)
+typename  std::enable_if<
+std::is_pod<T>::value && std::is_floating_point<T>::value
+>::type
+compare(const T &a,const T &b)
 {
     CPPUNIT_ASSERT_DOUBLES_EQUAL(a,b,1.e-12);
 }
 
 template<typename T>
-void compare(std::complex<T> &&a,std::complex<T> &&b)
+void compare(const std::complex<T> &a,const std::complex<T> &b)
 {
-    compare(a.real,b.real);
-    compare(a.imag,b.imag);
+    compare(a.real(),b.real());
+    compare(a.imag(),b.imag());
 }
 
 
