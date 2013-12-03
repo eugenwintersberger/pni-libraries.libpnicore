@@ -6,11 +6,13 @@ set(HEADER_FILES mdarray.hpp
                  array_operations.hpp 
                  array_selection.hpp 
                  arrays.hpp 
+                 array_arithmetic.hpp
                  array_view_utils.hpp
                  array_view.hpp 
                  binary.hpp 
                  complex_utils.hpp 
                  container_iterator.hpp 
+                 infinite_iterator.hpp
                  container_utils.hpp
                  counter.hpp 
                  exceptions.hpp 

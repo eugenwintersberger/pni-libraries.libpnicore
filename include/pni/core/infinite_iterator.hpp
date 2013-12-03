@@ -40,15 +40,15 @@ namespace core{
     {
         private:
             //! pointer to the container object
-            std::reference_wrapper<ITERABLE> _container;
+            ITERABLE* _container;
 
-            //! actual position state of the iterator
-            ssize_t _state;                    
+            //! the internal state of the iterator
+            ssize_t _state;
 
             typedef typename std::remove_const<ITERABLE>::type container_type;
-            typedef infinite_iterator<ITERABLE> iterator_type;
         public:
             //====================public types==================================
+            typedef infinite_iterator<ITERABLE> iterator_type;
             //! value type of the container
             typedef typename container_type::value_type value_type;
             //! pointer type the iterator provides
@@ -70,8 +70,8 @@ namespace core{
             \param container pointer to the container object
             \param state initial position of the iterator
             */
-            infinite_iterator(ITERABLE container,size_t state=0):
-                _container(std::reference_wrapper<ITERABLE>(container)),
+            infinite_iterator(ITERABLE *container,size_t state=0):
+                _container(container),
                 _state(state)
             { }
 
@@ -101,7 +101,7 @@ namespace core{
             \throws IteratorError if the iterator is invalid
             \return reference or value of the actual object
             */
-            reference operator*() { return _container.get()[_state]; }
+            reference operator*() { return (*_container)[_state]; }
 
             //------------------------------------------------------------------
             /*! \brief pointer access operator
@@ -111,7 +111,7 @@ namespace core{
             \throws IteratorError if the iterator is invalid
             \return pointer to actual object
             */
-            pointer operator->() { return &(_container.get()[_state]); }
+            pointer operator->() { return &((*_container)[_state]); }
 
             //------------------------------------------------------------------
             //! increment iterator position
@@ -125,7 +125,7 @@ namespace core{
             //! increment iterator position
             iterator_type operator++(int i)
             {
-                iterator_type temp = *this;
+                iterator_type temp(*this);
                 ++(*this);
                 return temp;
             }

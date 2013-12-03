@@ -30,6 +30,7 @@
 
 #include <pni/core/arrays.hpp>
 #include <pni/core/math/add_op.hpp>
+#include <pni/core/array_arithmetic.hpp>
 #include "../compare.hpp"
 #include "../data_generator.hpp"
 #include <pni/core/scalar.hpp>
@@ -101,10 +102,6 @@ template<typename ATYPE> void add_operator_test<ATYPE>::test_construction()
    
     add_op<array_type,scalar_type> op2(a1,s1);
     CPPUNIT_ASSERT(op2.size() == a1.size());
-
-    add_op<scalar_type,scalar_type> op3(s1,s1);
-    CPPUNIT_ASSERT(s1.size() == op3.size());
-
 }
 
 //-----------------------------------------------------------------------------
@@ -132,7 +129,9 @@ template<typename ATYPE> void add_operator_test<ATYPE>::test_iterator()
 #else
     for(auto v: op1) 
 #endif 
-        compare(v,(*iter1++)+(*iter2));
+    {
+        compare(v,(*iter1++)+(*iter2++));
+    }
 
     add_op<array_type,scalar_type> op2(a1,s1);
     iter1 = a1.begin();
@@ -142,7 +141,10 @@ template<typename ATYPE> void add_operator_test<ATYPE>::test_iterator()
 #else
     for(auto v: op2) 
 #endif 
+    {
+        std::cout<<v<<"\t"<<*iter1<<"+"<<*siter1<<"="<<*iter1+*siter1<<std::endl;
         compare(v,(*iter1++)+(*siter1++));
+    }
 }
 
 //-----------------------------------------------------------------------------
@@ -151,37 +153,30 @@ template<typename ATYPE> void add_operator_test<ATYPE>::test_operator()
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
     auto r = array_factory<ATYPE>::create(shape);
     r = a1+a2;
-#ifdef NOFOREACH
-    BOOST_FOREACH(auto v,r)
-#else
-    for(auto v: r) 
-#endif 
-        compare(v,value_type(105));
+    auto iter1 = a1.begin();
+    auto iter2 = a2.begin();
+    auto riter = r.begin();
 
-    r = a1+10;
-#ifdef NOFOREACH
-    BOOST_FOREACH(auto v,r)
-#else
-    for(auto v: r) 
-#endif 
-        compare(v,value_type(110));
+    for(;riter!=r.end();++riter)
+        compare(*riter,*iter1++ + *iter2++);
 
-    r = 95 + a1;
-#ifdef NOFOREACH
-    BOOST_FOREACH(auto v,r)
-#else
-    for(auto v: r) 
-#endif 
-        compare(v,value_type(195));
+    r = a1+value_type(10);
+    riter = r.begin();
+    iter1 = a1.begin();
+    for(;riter!=r.end();++riter)
+        compare(*riter,*iter1++ + value_type(10));
+
+    r = value_type(95) + a1;
+    riter = r.begin();
+    iter1 = a1.begin();
+    for(;riter!=r.end();++riter)
+        compare(*riter,value_type(95)+*iter1++);
 
     //put it all together
-
-    r = a1 + 10 + a2;
-#ifdef NOFOREACH
-    BOOST_FOREACH(auto v,r)
-#else
-    for(auto v: r) 
-#endif 
-        compare(v,value_type(115));
-
+    r = a1 + value_type(10) + a2;
+    riter = r.begin();
+    iter1 = a1.begin();
+    iter2 = a2.begin();
+    for(;riter!=r.end();++riter)
+        compare(*riter,*iter1++ + value_type(10) + *iter2++);
 }

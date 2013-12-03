@@ -188,25 +188,10 @@ namespace core {
             array_type &operator=(const mdarray<MDARGS...> &array)
             {
                 if((void*)this == (void*)&array) return *this;
+                check_equal_size(*this,array,EXCEPTION_RECORD);
+                check_equal_shape(*this,array,EXCEPTION_RECORD);
 
-                if((array.size() == this->size())&&
-                   (array.rank() == this->rank()))
-                {
-                    auto source_shape = array.template shape<shape_t>();
-                    auto this_shape   = this->template shape<shape_t>();
-
-                    //different ordering of dimensions only need to construct a
-                    //new index map
-                    if(!std::equal(source_shape.begin(),source_shape.end(),
-                                 this_shape.begin()))
-                        _imap = map_utils<map_type>::create(source_shape);
-
-                    //copy the data 
-                    std::copy(array.begin(),array.end(),this->begin());
-                }
-                else
-                    //construct a new array
-                    *this = array_type(array);
+                std::copy(array.begin(),array.end(),this->begin());
 
                 return *this;
             }

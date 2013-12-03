@@ -31,6 +31,24 @@ namespace core{
 
     template<typename ATYPE> class array_view;
 
+    template<typename OP1,typename OPT2> struct array_trait
+    {
+        typedef typename OP1::map_type map_type;
+        typedef typename OP1::inplace_arithmetic inplace_arithmetic;
+    };
+
+    template<typename OP1,typename T> struct array_trait<OP1,scalar<T>>
+    {
+        typedef typename OP1::map_type map_type;
+        typedef typename OP1::inplace_arithmetic inplace_arithmetic;
+    };
+
+    template<typename T,typename OP1> struct array_trait<scalar<T>,OP1>
+    {
+        typedef typename OP1::map_type map_type;
+        typedef typename OP1::inplace_arithmetic inplace_arithmetic;
+    };
+
     /*!
     \ingroup expression_templates
     \brief Addition expression template
@@ -59,8 +77,16 @@ namespace core{
             typedef container_iterator<array_type,0> iterator;
             //! const iterator type
             typedef container_iterator<array_type,1> const_iterator;
+
+            //! 
+            typedef container_iterator<array_type,0> reverse_iterator;
+            typedef container_iterator<array_type,1> const_reverse_iterator;
             //! view type
             typedef array_view<array_type> view_type;
+
+            typedef typename array_trait<OP1T,OP2T>::map_type map_type;
+            typedef typename array_trait<OP1T,OP2T>::inplace_arithmetic
+                inplace_arithmetic;
 
             //===================constructors==================================
             /*!
@@ -85,6 +111,12 @@ namespace core{
             value_type operator[](size_t i) const
             {
                 return this->_op1[i]+this->_op2[i];
+      
+            }
+
+            value_type at(size_t i) const
+            {
+                return (*this)[i];
             }
 
             //-----------------------------------------------------------------

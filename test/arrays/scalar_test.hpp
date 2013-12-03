@@ -27,7 +27,8 @@
 
 #include <boost/current_function.hpp>
 #include <pni/core/scalar.hpp>
-#include "EqualityCheck.hpp"
+#include "../compare.hpp"
+#include "../data_generator.hpp"
 
 #define DOUBLE_PREC 1.e-3
 
@@ -43,8 +44,11 @@ template<typename T> class scalar_test : public CppUnit::TestFixture
         CPPUNIT_TEST(test_access_iterator);
         CPPUNIT_TEST(test_conversion);
         CPPUNIT_TEST_SUITE_END();
+
+        typedef scalar<T> scalar_type;
+        scalar_type s;
+        T v;
     public:
-        typedef scalar<T> scalar_t;
         void tearDown();
         void setUp();
         
@@ -58,7 +62,10 @@ template<typename T> class scalar_test : public CppUnit::TestFixture
 };
 
 //-----------------------------------------------------------------------------
-template<typename T> void scalar_test<T>::setUp(){ }
+template<typename T> void scalar_test<T>::setUp()
+{ 
+    v = random_generator<T>(1,10)();
+}
 
 //-----------------------------------------------------------------------------
 template<typename T> void scalar_test<T>::tearDown(){ }
@@ -68,17 +75,18 @@ template<typename T> void scalar_test<T>::test_constructors()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
-    scalar_t s; 
-
+    //check the default constructed scalar
     CPPUNIT_ASSERT(s.rank() == 0);
     CPPUNIT_ASSERT(s.template shape<shape_t>().size() == 0);
     CPPUNIT_ASSERT(s.size() == 1);
 
-    scalar_t s1 = T(100);
-    check_equality(T(s1),T(100));
+    //standard construction
+    scalar_type s1(v);
+    compare(T(s1),T(v));
 
-    scalar_t s2 = s1;
-    check_equality(T(s2),T(s1));
+    //copy construction
+    scalar_type s2 = s1;
+    compare(T(s2),T(s1));
 }
 
 //-----------------------------------------------------------------------------
@@ -86,14 +94,12 @@ template<typename T> void scalar_test<T>::test_assignment()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
     
-    scalar_t s; 
+    s = v;
+    compare(T(s),v);
 
-    s = T(20);
-    check_equality(T(s),T(20));
-
-    scalar_t s2;
+    scalar_type s2;
     s2 = s;
-    check_equality(T(s2),T(20));
+    compare(T(s2),v);
 }
 
 //-----------------------------------------------------------------------------
@@ -101,10 +107,9 @@ template<typename T> void scalar_test<T>::test_access_unchecked()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
-    scalar_t s(T(100));
-
-    check_equality(s[0],T(100));
-    check_equality(s[1],T(100));
+    s = v;
+    compare(s[0],v);
+    compare(s[1],v);
 }
 
 //-----------------------------------------------------------------------------
@@ -112,19 +117,27 @@ template<typename T> void scalar_test<T>::test_access_checked()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
-    scalar_t s(T(3));
-    check_equality(s.at(10),T(3));
-    check_equality(s.at(0),T(3));
+    s = v;
+    compare(s.at(10),v);
+    compare(s.at(0),v);
 }
 
 //-----------------------------------------------------------------------------
 template<typename T> void scalar_test<T>::test_access_iterator()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
-
-    scalar_t s(T(10));
-    for(auto iter = s.begin();iter!=s.end();++iter)
-        check_equality(*iter,T(10));
+   
+    s = v;
+    auto iter = s.begin();
+    iter++;
+    std::cout<<*iter<<"\t"<<v<<std::endl;
+    std::cout<<*iter++<<"\t"<<v<<std::endl;
+    std::cout<<*iter++<<"\t"<<v<<std::endl;
+    std::cout<<*iter++<<"\t"<<v<<std::endl;
+    for(size_t n=0;n<20;++n)
+    {
+        compare(T(*iter++),v);
+    }
 
 }
 

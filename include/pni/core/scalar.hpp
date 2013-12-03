@@ -34,6 +34,7 @@
 #include "types.hpp"
 #include "type_id_map.hpp"
 #include "array_view.hpp"
+#include "infinite_iterator.hpp"
 
 namespace pni {
 namespace core {
@@ -66,9 +67,9 @@ namespace core {
             //! unique pointer type
             typedef std::unique_ptr<array_type> unique_ptr; 
             //! iterator
-            typedef typename storage_type::iterator iterator;
+            typedef infinite_iterator<array_type> iterator;
             //! const iterator
-            typedef typename storage_type::const_iterator const_iterator;
+            typedef infinite_iterator<const array_type> const_iterator;
             //! view type
             typedef array_view<array_type> view_type;
             
@@ -306,28 +307,28 @@ namespace core {
             //! get iterator to first element
             iterator begin() 
             { 
-                return this->_data.begin(); 
+                return iterator(this,0);
             }
 
             //------------------------------------------------------------------
             //! get iterator to last+1 element
             iterator end() 
-            { 
-                return this->_data.end();
+            {
+                return iterator(this,0);
             }
 
             //------------------------------------------------------------------
             //! get const iterator to first element
             const_iterator begin() const 
             { 
-                return this->_data.begin(); 
+                const_iterator(this,0);
             }
 
             //------------------------------------------------------------------
             //! get const iterator to last+1 element
             const_iterator end() const 
-            { 
-                return this->_data.end();
+            {
+                return const_iterator(this,0);
             }
 
     };
