@@ -129,9 +129,7 @@ template<typename ATYPE> void add_operator_test<ATYPE>::test_iterator()
 #else
     for(auto v: op1) 
 #endif 
-    {
         compare(v,(*iter1++)+(*iter2++));
-    }
 
     add_op<array_type,scalar_type> op2(a1,s1);
     iter1 = a1.begin();
@@ -141,10 +139,7 @@ template<typename ATYPE> void add_operator_test<ATYPE>::test_iterator()
 #else
     for(auto v: op2) 
 #endif 
-    {
-        std::cout<<v<<"\t"<<*iter1<<"+"<<*siter1<<"="<<*iter1+*siter1<<std::endl;
         compare(v,(*iter1++)+(*siter1++));
-    }
 }
 
 //-----------------------------------------------------------------------------

@@ -32,11 +32,25 @@ namespace core{
 
     /*! 
     \ingroup iterator_types   
-    \brief infinite iterator
+    \brief scalar iterator
 
-    This iterator circles forever.
+    This iterator is specifically designed to loop infinitely over a scalar
+    value. As there is no end of sequence and thus no 'end' iterator one cannot
+    use this to loop over a range like this
+    \code
+    auto start = infinite_iterator<...>(...);
+    auto end   = infinite_iterator<...>(...);
+
+    for(;start != end; ++start)
+    {
+        .....
+    }
+    \endcode
+
+    Although the iterator implements the interface of a bidirectional iterator
+    (including all operators) it always refers to the same scalar value. 
     */
-    template<typename ITERABLE> class infinite_iterator
+    template<typename ITERABLE> class scalar_iterator
     {
         private:
             //! pointer to the container object
@@ -45,10 +59,13 @@ namespace core{
             //! the internal state of the iterator
             ssize_t _state;
 
+            //! extract the container type from the template argument (by
+            //removing a possible const-ness
             typedef typename std::remove_const<ITERABLE>::type container_type;
         public:
             //====================public types==================================
-            typedef infinite_iterator<ITERABLE> iterator_type;
+            //! type of the iterator
+            typedef scalar_iterator<ITERABLE> iterator_type;
             //! value type of the container
             typedef typename container_type::value_type value_type;
             //! pointer type the iterator provides
@@ -70,12 +87,18 @@ namespace core{
             \param container pointer to the container object
             \param state initial position of the iterator
             */
-            infinite_iterator(ITERABLE *container,size_t state=0):
+            scalar_iterator(ITERABLE *container,size_t state=0):
                 _container(container),
                 _state(state)
             { }
 
-            infinite_iterator(const iterator_type &i):
+            //-----------------------------------------------------------------
+            /*!
+            \brief copy constructor
+
+            \param i reference to an existing iterator
+            */
+            scalar_iterator(const iterator_type &i):
                 _container(i._container),
                 _state(i._state)
             {}
@@ -227,10 +250,10 @@ namespace core{
     \return new iterator 
     */
     template<typename ITERABLE>
-    infinite_iterator<ITERABLE> 
-    operator+(const infinite_iterator<ITERABLE> &a, ssize_t b)
+    scalar_iterator<ITERABLE> 
+    operator+(const scalar_iterator<ITERABLE> &a, ssize_t b)
     {
-        infinite_iterator<ITERABLE> iter = a;
+        scalar_iterator<ITERABLE> iter = a;
         iter += b;
         return iter;
     }
@@ -245,8 +268,8 @@ namespace core{
     \param b original iterator
     \return new iterator
     */
-    template<typename ITERABLE> infinite_iterator<ITERABLE>
-        operator+(ssize_t a, const infinite_iterator<ITERABLE> &b)
+    template<typename ITERABLE> scalar_iterator<ITERABLE>
+        operator+(ssize_t a, const scalar_iterator<ITERABLE> &b)
     {
         return b+a;
     }
@@ -261,10 +284,10 @@ namespace core{
     \param b offset
     \return new iterator to new position
     */
-    template<typename ITERABLE> infinite_iterator<ITERABLE>
-        operator-(const infinite_iterator<ITERABLE> &a, ssize_t b)
+    template<typename ITERABLE> scalar_iterator<ITERABLE>
+        operator-(const scalar_iterator<ITERABLE> &a, ssize_t b)
     {
-        infinite_iterator<ITERABLE> iter = a;
+        scalar_iterator<ITERABLE> iter = a;
         iter -= b;
         return iter;
     }
@@ -280,8 +303,8 @@ namespace core{
     \return offset difference
     */
     template<typename ITERABLE> 
-    ssize_t operator-(const infinite_iterator<ITERABLE> &a, 
-                      const infinite_iterator<ITERABLE> &b)
+    ssize_t operator-(const scalar_iterator<ITERABLE> &a, 
+                      const scalar_iterator<ITERABLE> &b)
     {
         return a.state() - b.state();
     }

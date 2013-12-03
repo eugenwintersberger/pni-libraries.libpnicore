@@ -40,11 +40,9 @@ CPPUNIT_TEST_SUITE_REGISTRATION(scalar_test<float32>);
 CPPUNIT_TEST_SUITE_REGISTRATION(scalar_test<float64>);
 CPPUNIT_TEST_SUITE_REGISTRATION(scalar_test<float128>);
 
-/*
 CPPUNIT_TEST_SUITE_REGISTRATION(scalar_test<complex32>);
 CPPUNIT_TEST_SUITE_REGISTRATION(scalar_test<complex64>);
 CPPUNIT_TEST_SUITE_REGISTRATION(scalar_test<complex128>);
-*/
 
 
 

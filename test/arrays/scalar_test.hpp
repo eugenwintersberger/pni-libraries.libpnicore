@@ -129,15 +129,8 @@ template<typename T> void scalar_test<T>::test_access_iterator()
    
     s = v;
     auto iter = s.begin();
-    iter++;
-    std::cout<<*iter<<"\t"<<v<<std::endl;
-    std::cout<<*iter++<<"\t"<<v<<std::endl;
-    std::cout<<*iter++<<"\t"<<v<<std::endl;
-    std::cout<<*iter++<<"\t"<<v<<std::endl;
     for(size_t n=0;n<20;++n)
-    {
         compare(T(*iter++),v);
-    }
 
 }
 

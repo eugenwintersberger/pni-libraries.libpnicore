@@ -34,7 +34,7 @@
 #include "types.hpp"
 #include "type_id_map.hpp"
 #include "array_view.hpp"
-#include "infinite_iterator.hpp"
+#include "scalar_iterator.hpp"
 
 namespace pni {
 namespace core {
@@ -67,9 +67,9 @@ namespace core {
             //! unique pointer type
             typedef std::unique_ptr<array_type> unique_ptr; 
             //! iterator
-            typedef infinite_iterator<array_type> iterator;
+            typedef scalar_iterator<array_type> iterator;
             //! const iterator
-            typedef infinite_iterator<const array_type> const_iterator;
+            typedef scalar_iterator<const array_type> const_iterator;
             //! view type
             typedef array_view<array_type> view_type;
             
@@ -133,11 +133,7 @@ namespace core {
             type T.
             \return value of type T
             */
-            operator T() const
-            {
-                return this->_data[0];
-            }
-
+            operator T() const { return this->_data[0]; }
 
             //===================linear access operators========================
             /*!
@@ -269,7 +265,6 @@ namespace core {
                 return this->_data[0];
             }
 
-
             //===================inquery methods===============================
             /*!
             \brief get size
@@ -298,41 +293,26 @@ namespace core {
             value 1.
             \return container with 1
             */
-            template<typename CTYPE> CTYPE shape() const
-            {
-                return CTYPE();
-            }
+            template<typename CTYPE> CTYPE shape() const { return CTYPE(); }
 
             //------------------------------------------------------------------
             //! get iterator to first element
-            iterator begin() 
-            { 
-                return iterator(this,0);
-            }
+            iterator begin() { return iterator(this,0); }
 
             //------------------------------------------------------------------
             //! get iterator to last+1 element
-            iterator end() 
-            {
-                return iterator(this,0);
-            }
+            iterator end() { return iterator(this,0); }
 
             //------------------------------------------------------------------
             //! get const iterator to first element
-            const_iterator begin() const 
-            { 
-                const_iterator(this,0);
-            }
+            const_iterator begin() const { const_iterator(this,0); }
 
             //------------------------------------------------------------------
             //! get const iterator to last+1 element
-            const_iterator end() const 
-            {
-                return const_iterator(this,0);
-            }
-
+            const_iterator end() const { return const_iterator(this,0); }
     };
 
+    //-------------------------------------------------------------------------
     /*!
     \brief stream output operator
 
