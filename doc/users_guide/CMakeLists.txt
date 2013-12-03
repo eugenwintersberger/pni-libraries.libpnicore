@@ -20,11 +20,12 @@ set(SOURCES libpnicore_ug.tex
 
 
 #run doxygen
-file(COPY tex pics libpnicore_ug.tex DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+#file(COPY tex pics libpnicore_ug.tex DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 add_custom_command(OUTPUT libpnicore_ug.pdf 
                    COMMAND ${PDFLATEX_COMPILER} -shell-escape libpnicore_ug.tex
                    COMMAND ${PDFLATEX_COMPILER} -shell-escape libpnicore_ug.tex
                    DEPENDS ${SOURCES}
+                   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
                    )
 #add_latex_document(libpnicore_ug.tex
 #    INPUTS tex/arrays.tex tex/types.tex tex/array_general_concepts.tex 
@@ -39,6 +40,6 @@ add_custom_command(OUTPUT libpnicore_ug.pdf
 #    )
 add_custom_target(users_guide ALL DEPENDS "libpnicore_ug.pdf" )
 
-install(FILES "${CMAKE_CURRENT_BINARY_DIR}/libpnicore_ug.pdf" 
+install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/libpnicore_ug.pdf" 
         DESTINATION "${CMAKE_INSTALL_FULL_DOCDIR}")
 

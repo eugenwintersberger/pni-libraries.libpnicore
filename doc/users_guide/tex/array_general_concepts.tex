@@ -1,30 +1,4 @@
 
-\libpnicore\ currently provides two array templates 
-%%%----------------------------------------------------------------------------
-\begin{center}
-\begin{tabular}{m{0.1\linewidth}p{0.7\linewidth}}
-\sdarray &  
-static arrays whose complete shape and type is know at compile time\\
-\darray & 
-a dynamic array for which the type must be determined at compile
-time but its shape (and thus size) can be configured at runtime \\
-\end{tabular}
-\end{center}
-%%%----------------------------------------------------------------------------
-In addition to this two basic templates there are several utility classes and
-templates like
-%%%----------------------------------------------------------------------------
-\begin{center}
-\begin{tabular}{m{0.15\linewidth}p{0.7\linewidth}}
-\arrayview &  a template providing a particular view on an array (see
-Sec.~\ref{sec:array:array_slicing}) \\
-\numarray &  an adapter template for arrays providing arithmetic operations
-(see Sec.~\ref{sec:array:numeric_arrays}) \\
-\arrayerasure & a type erasure that can be used with any instance of an array
-template (see Sec.~\ref{sec:array:type_erasure})
-\end{tabular}
-\end{center}
-%%%----------------------------------------------------------------------------
 
 \subsection{Common array interface}
 

@@ -16,12 +16,12 @@ set(HEADER_FILES ../include/pni/core/value.hpp
                  ../include/pni/core/utilties.hpp
                  ../include/pni/core/array_holder_interface.hpp
                  ../include/pni/core/math/mt_inplace_arithmetics.hpp
-                 ../include/pni/core/math/add.hpp
+                 ../include/pni/core/math/add_op.hpp
                  ../include/pni/core/math/inplace_arithmetics.hpp
                  ../include/pni/core/math/op_traits.hpp
-                 ../include/pni/core/math/sub.hpp
+                 ../include/pni/core/math/sub_op.hpp
                  ../include/pni/core/math/div_op.hpp
-                 ../include/pni/core/math/mult.hpp
+                 ../include/pni/core/math/mult_op.hpp
                  ../include/pni/core/exceptions.hpp
                  ../include/pni/core/types.hpp
                  ../include/pni/core/benchmark/benchmark_runner.hpp

@@ -38,8 +38,7 @@ later.
 
 \section{Basic concepts of multidimensional arrays}
 
-Before we continue with the technical description of how MD arrays are
-implemented we first need to define some terminology 
+Lets start with a definition of terms:
 \begin{description}
 \item[rank] the number of dimensions of an MD array, typically abbreviated with
 $r$
@@ -110,15 +109,17 @@ Index maps serve two purposes
 It is indeed the implementation of the index map which determines whether or not
 an array is in row- or column-major ordering (see also
 sections~\ref{sec:c_ordering} and \ref{sec:f_ordering} for details on this).
-In particular the first procedure is the core of all MD array implementation.
 When an element of a MD array is addressed by a multidimensional index
 $(i,j,k,\hdots)$ this index must be converted (uniquely) to a linear offset in
 the storage. There are currently two standard schemas how MD indexes are mapped
 to linear memory
 \begin{itemize}
-\item row-major ordering (this is how all C-like languages are doing it)
-\item and column-major ordering (the Fortran way).
+\item {\em row-major ordering} (this is how all C-like languages are doing it) where
+the last index varies fastest and is thus continuous in memory
+\item and {\em column-major ordering} (the Fortran way) where the first index
+varies fastest and is thus continuous in memory.
 \end{itemize}
+
 In more general terms the question reads: which index varies fastest or which
 index is contiguous in memory. In row-major this is true for the last index
 while for column-major ordering the first index is contiguous in memory.
@@ -211,7 +212,41 @@ last.
 \end{figure}
 %%-----------------------------------------------------------------------------
 
-\subsection{The basic interface}
+\subsection{Index maps in \libpnicore}
+
+After having discussed now all the theoretical background about index maps lets
+have a look how these objects are implemented in \libpnicore.
+
+\subsubsection{Classes and their relationships}
+
+\begin{figure}[tb]
+\centering
+\begin{minipage}[c]{0.49\linewidth}
+\centering
+\resizebox{\linewidth}{!}{\includegraphics{pics/index_map_diagram.png}}
+\caption{{\small\label{fig:array_app:index_map_diagram}
+An ordinary index map consists of an instance of {\tt index\_policy}
+(transforming indexes to offsets and vice verse) and a
+storage for the number of elements along each dimension. 
+}}
+\end{minipage}
+\hfill
+\begin{minipage}[c]{0.49\linewidth}
+\centering
+\resizebox{\linewidth}{!}{\includegraphics{pics/static_index_map_diagram.png}}
+\caption{{\small\label{fig:array_app:static_index_map_diagram}
+Static index maps have a static storage whose content cannot be altered. They
+are entirely defined at compile time.
+}}
+\end{minipage}
+\end{figure}
+There are two fundamental templates for index maps available: {\tt index\_map}
+and {\tt static\_index\_map}. The former one can be used to for general index
+maps while the latter one considers the special case for a static index map
+for which the rank and the number of elements along each dimension are fixed at
+compile time. 
+
+\subsubsection{The basic interface}
 
 \begin{minted}{cpp}
 class index_map

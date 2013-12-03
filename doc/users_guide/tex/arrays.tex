@@ -1,5 +1,61 @@
 %%%documentation on arrays
 
+C++ has no multidimensional array type (MDA) in its standard library. 
+However, MDAs are crucial for the developmemt of scientific applications.
+One of the reasons for the continuing sucess of languages like Fortran or Python
+is their excellent support for MDAs\footnote{For Python arrays are introduced by
+the {\tt numpy} package.}. The lack of multidimensional array support for C++
+was indeed the spark that initiated the developement of \libpnicore.  Before
+discussing \libpnicore s array facilities some terminology should be defined: 
+%%%----------------------------------------------------------------------------
+\begin{center}
+\begin{tabular}{m{0.2\linewidth}p{0.7\linewidth}}
+    element type (ET) &  referes to the data type of the elements stored in an
+    MDA. For MDAs this will typically be a numeric type like an integer or a
+    floating point number.\\
+    rank $r$ & denotes the number of dimensions of an MDA \\
+    shape $\mathbf{s}$ & is a vector of dimension $r$ whose elements are the
+    number of elements along each dimension. The elements of $\mathbf{s}$ are
+    denoted as $s_i$ with $i=0,\hdots,r$ \\
+\end{tabular}
+\end{center}
+%%%----------------------------------------------------------------------------
+\libpnicore\ provides a powerfull template {\tt mdarray} to create all kind of
+multidimensional arrays. However, using {\tt mdarray} directly is highly
+discouraged as long as you are not a very skilled C++ developer. To simplify
+the usage of multidimensional arrays the library provides three templates
+derived form {\tt mdarray} which can easily. These three templates are  
+\libpnicore\ currently provides three array templates 
+%%%----------------------------------------------------------------------------
+\begin{center}
+\begin{tabular}{m{0.2\linewidth}p{0.7\linewidth}}
+\sdarray &  
+static arrays whose complete shape and type is know at compile time. Use this
+type for standard mathematical objects like $3$ dimensional vectors an matrices.\\
+\farray &
+a template with fixed number of dimensions but the number of elements along each
+dimension can be changed at compile time. \\
+\darray & 
+a fully dynamic array type where only the data type must be known at compile
+time. The rank as well as the number of elements along each dimension can be
+changed at runtime\\
+\end{tabular}
+\end{center}
+%%%----------------------------------------------------------------------------
+In addition to this two basic templates there are several utility classes and
+templates like
+%%%----------------------------------------------------------------------------
+\begin{center}
+\begin{tabular}{m{0.15\linewidth}p{0.7\linewidth}}
+\arrayview &  a template providing a particular view on an array (see
+Sec.~\ref{sec:array:array_slicing}) \\
+\numarray &  an adapter template for arrays providing arithmetic operations
+(see Sec.~\ref{sec:array:numeric_arrays}) \\
+\arrayerasure & a type erasure that can be used with any instance of an array
+template (see Sec.~\ref{sec:array:type_erasure})
+\end{tabular}
+\end{center}
+%%%----------------------------------------------------------------------------
 \section{General concepts}\label{sec:array:general_concepts}
 \input{tex/array_general_concepts.tex}
 

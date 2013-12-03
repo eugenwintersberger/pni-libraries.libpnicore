@@ -1,0 +1,142 @@
+%%% some documentation on the configuration facility 
+
+One of the most tedious tasks when writing applications is how to handle its
+configuration. There are several possibilities how a user can tell a program
+about input arguments and parameters 
+\begin{itemize}
+\item via command line options and arguments
+\item via environment variables of the calling shell
+\item and via configuration files.
+\end{itemize}
+It is important to note that this is information the program has only read-only
+access too. \libpnicore\ provides some simple functions to make programs aware
+of command line options and arguments as well as of configuration files. The
+facility provided by \libpnicore\ is based on the {\tt boost::program\_options}
+library. However, its interface is much easier to use.  
+What makes this facility so interesting for scientific applications is the fact
+that every option or argument can be given a distinct data type. 
+
+\section{Command line options and arguments}
+
+One possibility to provide information to a program is by means of command line
+arguments and options which are passed to the program when called from a shell
+by the user. This is particularly true for Unix systems where many programs are
+called via the command line rather than via a Desktop. 
+
+In this section we will deal with all the basics required to use \libpnicore s
+configuration facilities. Read this in any case even if you only want to use a
+configuration file as many of the things written is true also for configuration
+files. 
+
+\subsection{Unix conventions}
+
+
+In the Unix world we have to distinguish between command line {\em arguments}
+and {\em options}. The former ones are strings which can typically appear
+anywhere in the command calling the program from the shell. The meaning of a
+particular option depends only on its position within the command used to run a
+program. 
+The latter ones, {\em options}, are introduced by special tokens in the calling
+command. This token determines the meaning of a particular option. Thus options
+can appear in any order after the name of the program. 
+To get a better feeling about arguments and options lets have a look on a
+typical command line call on a Unix or Linux system
+\begin{minted}{ps1}
+> program -oresult.dat --wavelength=1.234 in1.dat in2.dat in3.dat
+\end{minted}
+The three input files at the end of the call ({\tt in1.dat}, {\tt in2.dat}, and
+{\tt in3.dat}) are passed as arguments. They can appear in any order and there
+is no way to distinguish one from the other and will be processed in the order
+of their appearance. This is in contrast to {\tt result.dat} and {\tt 1.234}
+which are passed as options. An option can be identified by a {\em short name} (by
+convention this must be a single character) as it is the case for {\tt
+result.dat} or by a {\em long name}, like for {\tt 1.234}, which must be a
+string without whitespaces. Short names are are introduced by a single '{\tt -}'
+and followed immediately by the value of the option. Long names start with '{\tt
+--}' followed by a '{\tt =}' and the value of the option. An option can have both,
+a long and a short name. While short names are typically used when a program is
+called interactively by a user to minimize the typing effort, long names are
+mostly used when a program is called from a script. As they are not limited to a
+single character long names can be chosen much more descriptive than short
+names. Being restricted to a single character short names are sometimes only
+used for options which are frequently used in interactive calls while scarcely
+used options have only a long name.
+
+\subsection{Creating a simple program configuration}
+
+Creating a configuration for a program involves three classes
+\begin{itemize}
+\item {\tt configuration} which, in the end, will hold the configuration data
+and provide access to it
+\item {\tt config\_option} describing a single command line option
+\item {\tt config\_argument} which we will use to describe command line arguments 
+\end{itemize}
+Lets start with the above example. The source code of the program would maybe
+look like this
+
+\begin{minted}{cpp}
+#include <vector>
+#include <pni/core/types.hpp>
+#include <pni/core/config/configuration.hpp>
+#include <pni/core/config/config_parser.hpp>
+
+using namespace pni::core;
+
+typedef std::vector<string> input_files;
+
+int main(int argc,char **argv)
+{
+    configuration config;
+    config.add_option(config_option<string>("output","o","output file"));
+    config.add_option(config_option<float64>("wavelength","w"));
+    config.add_argument(config_argument<input_files>("input",-1));
+
+    parse(config,cliargs2vector(argc,argv));
+
+    return 0;
+}
+\end{minted}
+
+\section{Configuration files}
+
+Configuration files handled by \libpnicore\ follow the {\tt INI}-file syntax as
+used by Windows. 
+An example file would look like this
+\begin{minted}{ini}
+#experiment.cfg
+[beam]
+wavelength = 1.543
+divergence = 0.12
+diameter   = 1.23
+
+[sample]
+name = sample1
+description = first sample in the series
+\end{minted}
+To read this file create the following configuration in the program
+\begin{minted}{cpp}
+#include <pni/core/types.hpp>
+#include <pni/core/configuration.hpp>
+#include <pni/core/config_parser.hpp>
+
+using namespace pni::core;
+
+int main(int argc,char **argv)
+{
+    configuration config;
+
+    config.add_option(config_option<float64>("beam.wavelength",""));
+    config.add_option(config_option<float64>("beam.divergence",""));
+    config.add_option(config_option<float64>("beam.diameter",""));
+    config.add_option(config_option<string>("sample.name",""));
+    config.add_option(config_option<string>("sample.description",""));
+
+    parse(config,"experiment.cfg");
+
+    //use the options
+}
+\end{minted}
+
+
+\section{Using configuration files and command line options together}
+
