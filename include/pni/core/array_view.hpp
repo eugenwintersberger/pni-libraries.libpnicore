@@ -79,6 +79,8 @@ namespace core{
             typedef array_view<array_type> view_type;
             //! index type
             typedef std::vector<size_t> index_type;
+            //! inplace arithetic type
+            typedef typename ATYPE::inplace_arithmetic inplace_arithmetic;
             //! map type
             typedef index_map<index_type,typename ATYPE::map_type::policy_type> map_type;
             //========================public members===========================
@@ -89,7 +91,8 @@ namespace core{
             std::reference_wrapper<ATYPE> _parray; 
             //! selection object for index transformation 
             array_selection _selection;
-            //! local index map - only used internally
+            //! local index map - only used internally, this map describes the
+            //view not the original array.
             map_type _imap;
 
         public:
@@ -540,6 +543,12 @@ namespace core{
             { 
                 storage_type::inplace_arithmetic::div(*this,v); 
                 return *this;
+            }
+
+            //-----------------------------------------------------------------
+            map_type map() const
+            {
+                return _imap;
             }
     };
 

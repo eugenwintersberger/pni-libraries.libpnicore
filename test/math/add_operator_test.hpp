@@ -53,6 +53,7 @@ template<typename ATYPE> class add_operator_test: public CppUnit::TestFixture
         CPPUNIT_TEST(test_access);
         CPPUNIT_TEST(test_iterator);
         CPPUNIT_TEST(test_operator);
+        CPPUNIT_TEST(test_operator_on_view);
         CPPUNIT_TEST_SUITE_END();
     private:
         //==========private types==============================================
@@ -74,6 +75,7 @@ template<typename ATYPE> class add_operator_test: public CppUnit::TestFixture
         void test_access();
         void test_iterator();
         void test_operator();
+        void test_operator_on_view();
 
 };
 
@@ -172,6 +174,42 @@ template<typename ATYPE> void add_operator_test<ATYPE>::test_operator()
     riter = r.begin();
     iter1 = a1.begin();
     iter2 = a2.begin();
+    for(;riter!=r.end();++riter)
+        compare(*riter,*iter1++ + value_type(10) + *iter2++);
+}
+
+//-----------------------------------------------------------------------------
+template<typename ATYPE> void add_operator_test<ATYPE>::test_operator_on_view()
+{
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+    auto r = array_factory<ATYPE>::create(shape_t{3,4});
+    auto v1 = a1(0,slice(0,3),slice(0,4));
+    auto v2 = a2(0,slice(0,3),slice(0,4));
+    r = v1 + v2;
+    auto iter1 = v1.begin();
+    auto iter2 = v2.begin();
+    auto riter = r.begin();
+
+    for(;riter!=r.end();++riter)
+        compare(*riter,*iter1++ + *iter2++);
+
+    r = v1+value_type(10);
+    riter = r.begin();
+    iter1 = v1.begin();
+    for(;riter!=r.end();++riter)
+        compare(*riter,*iter1++ + value_type(10));
+
+    r = value_type(95) + v1;
+    riter = r.begin();
+    iter1 = v1.begin();
+    for(;riter!=r.end();++riter)
+        compare(*riter,value_type(95)+*iter1++);
+
+    //put it all together
+    r = v1 + value_type(10) + v2;
+    riter = r.begin();
+    iter1 = v1.begin();
+    iter2 = v2.begin();
     for(;riter!=r.end();++riter)
         compare(*riter,*iter1++ + value_type(10) + *iter2++);
 }

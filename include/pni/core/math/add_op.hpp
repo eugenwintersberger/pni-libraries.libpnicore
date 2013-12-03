@@ -31,23 +31,6 @@ namespace core{
 
     template<typename ATYPE> class array_view;
 
-    template<typename OP1,typename OPT2> struct array_trait
-    {
-        typedef typename OP1::map_type map_type;
-        typedef typename OP1::inplace_arithmetic inplace_arithmetic;
-    };
-
-    template<typename OP1,typename T> struct array_trait<OP1,scalar<T>>
-    {
-        typedef typename OP1::map_type map_type;
-        typedef typename OP1::inplace_arithmetic inplace_arithmetic;
-    };
-
-    template<typename T,typename OP1> struct array_trait<scalar<T>,OP1>
-    {
-        typedef typename OP1::map_type map_type;
-        typedef typename OP1::inplace_arithmetic inplace_arithmetic;
-    };
 
     /*!
     \ingroup expression_templates
