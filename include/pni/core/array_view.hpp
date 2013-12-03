@@ -72,9 +72,9 @@ namespace core{
             //! unique pointer type
             typedef std::unique_ptr<array_type> unique_ptr; 
             //! iterator type
-            typedef container_iterator<array_type,0> iterator;      
+            typedef container_iterator<array_type> iterator;      
             //! const iterator type
-            typedef container_iterator<array_type,1> const_iterator; 
+            typedef container_iterator<const array_type> const_iterator; 
             //! view type
             typedef array_view<array_type> view_type;
             //! index type

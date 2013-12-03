@@ -255,8 +255,8 @@ void iterator_test::test_ptr_access()
 
     std::vector<string> v{"hello","world","this","is","a text"};
 
-    typedef container_iterator<std::vector<string>,0> iterator_t;
-    typedef container_iterator<std::vector<string>,1> const_iterator_t;
+    typedef container_iterator<std::vector<string>> iterator_t;
+    typedef container_iterator<const std::vector<string>> const_iterator_t;
 
     iterator_t first(&v,0);
     CPPUNIT_ASSERT(first->size() == 5);

@@ -43,8 +43,8 @@ class iterator_test: public CppUnit::TestFixture
         CPPUNIT_TEST_SUITE_END();
     private:
         typedef std::vector<double> iterable;
-        typedef container_iterator<iterable,1> const_iterator;
-        typedef container_iterator<iterable,0> iterator;
+        typedef container_iterator<iterable> const_iterator;
+        typedef container_iterator<const iterable> iterator;
         iterable vector;
     public:
         void setUp();

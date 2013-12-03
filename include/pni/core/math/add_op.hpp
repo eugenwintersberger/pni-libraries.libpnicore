@@ -57,13 +57,13 @@ namespace core{
             //! storage type
             typedef void storage_type;
             //! non-const iterator type - just for interface
-            typedef container_iterator<array_type,0> iterator;
+            typedef container_iterator<array_type> iterator;
             //! const iterator type
-            typedef container_iterator<array_type,1> const_iterator;
+            typedef container_iterator<const array_type> const_iterator;
 
             //! 
-            typedef container_iterator<array_type,0> reverse_iterator;
-            typedef container_iterator<array_type,1> const_reverse_iterator;
+            typedef container_iterator<array_type> reverse_iterator;
+            typedef container_iterator<const array_type> const_reverse_iterator;
             //! view type
             typedef array_view<array_type> view_type;
 

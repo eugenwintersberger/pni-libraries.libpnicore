@@ -27,72 +27,6 @@
 namespace pni{
 namespace core{
    
-    //=========================================================================
-    /*! 
-    \ingroup iterator_types
-    \brief iterator return type map
-
-    One of the difficult tasks in creating an iterator is to determine the
-    return type for the dereferencing-operator (*). In the case of a read/write
-    iterator the return type is a reference to the element the iterator actually
-    points to. For const iterators this should be the value_type of the
-    iterable (the const iterator returns by value to avoid modification of the
-    element). 
-    This is the default template without data members. Have a look on its
-    specializations to for a particular return type
-    \sa iter_types<ITERABLE,0>
-    \sa iter_types<ITERABLE,1>
-    \tparam ITERABLE container type over which to iterate
-    \tparam const_flag 1 if the iterator is a const iterator.
-    */
-    template<typename ITERABLE,int const_flag> class iter_types
-    {};
-
-    //=========================================================================
-    /*! \ingroup iterator_types
-    \brief return types for non-const iterators
-
-    Specialization of the IterTypes template for non-const iterators.
-    In this case the return_type member type is a reference to the value_type of
-    the ITERABLE.
-    \tparam ITERABLE container over which the iterator should run
-    \sa iter_types<ITERABLE,const_flag>
-    */
-    template<typename ITERABLE> class iter_types<ITERABLE,0>
-    {
-        public:
-            typedef ITERABLE *cont_ptr; //!< container pointer
-            //! return type for the dereferencing operator
-            typedef typename ITERABLE::value_type& return_type;
-            //! pointer type for -> operator
-            typedef typename ITERABLE::value_type* ptr_type;    
-            //! reference type 
-            typedef typename ITERABLE::value_type& ref_type;
-    };
-
-
-
-    //=========================================================================
-    /*! \ingroup iterator_types
-    \brief return types for const iterators
-
-    Specialization of the IterReturnType template for const iterators. Here the
-    return type of the dereferencing operator is just value_type. 
-    \tparam ITERABLE type over which the iterator should run
-    \sa iter_types<ITERABLE,const_flag>
-    */
-    template<typename ITERABLE> class iter_types<ITERABLE,1>
-    {
-        public:
-            typedef const ITERABLE *cont_ptr; //!< container pointer
-            //! return type for dereferencing operator
-            typedef typename ITERABLE::value_type return_type;    
-            //! pointer type for -> operator
-            typedef const typename ITERABLE::value_type *ptr_type; 
-            //! reference type
-            typedef const typename ITERABLE::value_type &ref_type;
-    };
-   
 
     //=========================================================================
 
@@ -117,26 +51,21 @@ namespace core{
     that this iterator, unlike the standard C++ iterators, throws an exception
     if one tries to dereference an invalid iterator.
     */
-    template<typename ITERABLE,int const_flag> class container_iterator
+    template<typename ITERABLE> class container_iterator
     {
         private:
+            //! type of the container object
+            typedef typename std::remove_const<ITERABLE>::type container_type;
+            //! pointer type of the container
+            typedef ITERABLE *cptr_type;
             //! pointer to the container object
-            typename iter_types<ITERABLE,const_flag>::cont_ptr _container; 
+            ITERABLE *_container; 
 
             //! actual position state of the iterator
             ssize_t _state;                    
 
             //! maximum number of elements in the container
             ssize_t _maxsize;
-
-            //! set the item pointer
-            void _set_item()
-            {
-                if(*this) 
-                    this->_item = &(*(this->_container))[this->_state];
-                else
-                    this->_item = nullptr;
-            }
 
 #ifdef NOEXPLICITCONV 
             typedef void (container_iterator<ITERABLE,const_flag>::*bool_type)() const;
@@ -146,19 +75,19 @@ namespace core{
         public:
             //====================public types==================================
             //! value type of the container
-            typedef typename ITERABLE::value_type value_type;
+            typedef typename container_type::value_type value_type;
             //! pointer type the iterator provides
-            typedef typename iter_types<ITERABLE,const_flag>::ptr_type pointer;
+            typedef typename std::conditional<std::is_const<ITERABLE>::value,
+                                             const value_type*,value_type*>::type pointer;
             //! reference type the iterator provides
-            typedef typename iter_types<ITERABLE,const_flag>::ref_type reference;
-            //! pointer type of the container
-            typedef typename iter_types<ITERABLE,const_flag>::cont_ptr cptr_type;
+            typedef typename std::conditional<std::is_const<ITERABLE>::value,
+                                              const value_type&,value_type&>::type reference;
             //! difference type of the iterator
             typedef ssize_t difference_type;
             //! type of iterator
             typedef std::random_access_iterator_tag iterator_category;
             //! iterator type
-            typedef container_iterator<ITERABLE,const_flag> iterator_type;
+            typedef container_iterator<ITERABLE> iterator_type;
             //================constructor and destructor========================
             //! default constructor
             container_iterator():_container(nullptr),_state(0),_maxsize(0) {}
@@ -259,7 +188,9 @@ namespace core{
             \throws IteratorError if the iterator is invalid
             \return reference or value of the actual object
             */
-            typename iter_types<ITERABLE,const_flag>::return_type operator*()
+            typename std::conditional<std::is_const<ITERABLE>::value,
+                                      value_type,reference>::type
+            operator*()
             {
                 if(!(*this))
                     throw iterator_error(EXCEPTION_RECORD,"Iterator invalid!");
@@ -295,7 +226,7 @@ namespace core{
             //! increment iterator position
             iterator_type operator++(int i)
             {
-                container_iterator<ITERABLE,const_flag> temp = *this;
+                iterator_type temp = *this;
                 ++(*this);
                 return temp;
             }
@@ -312,7 +243,7 @@ namespace core{
             //! decrement operators
             iterator_type operator--(int i)
             {
-                container_iterator<ITERABLE,const_flag> tmp = *this;
+                iterator_type tmp = *this;
                 --(*this);
                 return tmp;
             }
@@ -400,10 +331,10 @@ namespace core{
     \param b offset to add
     \return new iterator 
     */
-    template<typename ITERABLE,int const_flag> container_iterator<ITERABLE,const_flag> 
-        operator+(const container_iterator<ITERABLE,const_flag> &a, ssize_t b)
+    template<typename ITERABLE> container_iterator<ITERABLE> 
+        operator+(const container_iterator<ITERABLE> &a, ssize_t b)
     {
-        container_iterator<ITERABLE,const_flag> iter = a;
+        container_iterator<ITERABLE> iter = a;
         iter += b;
         return iter;
     }
@@ -418,8 +349,8 @@ namespace core{
     \param b original iterator
     \return new iterator
     */
-    template<typename ITERABLE,int const_flag> container_iterator<ITERABLE,const_flag>
-        operator+(ssize_t a, const container_iterator<ITERABLE,const_flag> &b)
+    template<typename ITERABLE> container_iterator<ITERABLE>
+        operator+(ssize_t a, const container_iterator<ITERABLE> &b)
     {
         return b+a;
     }
@@ -434,10 +365,10 @@ namespace core{
     \param b offset
     \return new iterator to new position
     */
-    template<typename ITERABLE,int const_flag> container_iterator<ITERABLE,const_flag>
-        operator-(const container_iterator<ITERABLE,const_flag> &a, ssize_t b)
+    template<typename ITERABLE> container_iterator<ITERABLE>
+        operator-(const container_iterator<ITERABLE> &a, ssize_t b)
     {
-        container_iterator<ITERABLE,const_flag> iter = a;
+        container_iterator<ITERABLE> iter = a;
         iter -= b;
         return iter;
     }
@@ -452,9 +383,9 @@ namespace core{
     \param b second iterator
     \return offset difference
     */
-    template<typename ITERABLE,int const_flag> ssize_t
-        operator-(const container_iterator<ITERABLE,const_flag> &a, 
-                const container_iterator<ITERABLE,const_flag> &b)
+    template<typename ITERABLE> ssize_t
+        operator-(const container_iterator<ITERABLE> &a, 
+                const container_iterator<ITERABLE> &b)
     {
         return a.state() - b.state();
     }
