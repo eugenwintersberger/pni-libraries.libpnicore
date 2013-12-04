@@ -26,6 +26,7 @@
 #include<boost/current_function.hpp>
 
 #include <pni/core/index_iterator.hpp>
+#include <pni/core/index_map/index_maps.hpp>
 #include <functional>
 
 using namespace pni::core;
@@ -66,7 +67,7 @@ template<typename IT> void index_iterator_test<IT>::tearDown()
 template<typename IT> void index_iterator_test<IT>::test_forward()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
-    typedef index_iterator<IT> iterator_t;
+    typedef index_iterator<IT,dynamic_cindex_map> iterator_t;
 
     for(auto iter = iterator_t::begin(shape_t{2,4});
              iter!= iterator_t::end(shape_t{2,4});

@@ -24,7 +24,6 @@
 
 #include <vector>
 #include "arrays.hpp"
-//#include "cindex_map.hpp"
 
 namespace pni{
 namespace core{

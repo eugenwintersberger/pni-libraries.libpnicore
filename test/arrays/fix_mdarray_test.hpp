@@ -29,7 +29,6 @@
 #include <pni/core/arrays.hpp>
 
 #include "../data_generator.hpp"
-#include "../EqualityCheck.hpp"
 
 using namespace pni::core;
 

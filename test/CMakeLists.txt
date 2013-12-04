@@ -26,15 +26,14 @@ set(TEST_SOURCES pnicoretest.cpp
                  math/sub_operator_test.cpp
                  math/mult_operator_test.cpp
                  iterator_test.cpp
+                 slice_test.cpp
+                 binary_test.cpp
+                 configuration_test.cpp
+                 counter_test.cpp
+                 index_iterator_test.cpp
                  compare.cpp
                  )
 #array_test.cpp
-#binary_test.cpp
-#configuration_test.cpp
-#counter_test.cpp
-#index_iterator_test.cpp
-#size_type_test.cpp
-#slice_test.cpp
 #value_ref_test.cpp
 #value_test.cpp
 
