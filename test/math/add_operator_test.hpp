@@ -33,7 +33,6 @@
 #include <pni/core/array_arithmetic.hpp>
 #include "../compare.hpp"
 #include "../data_generator.hpp"
-#include <pni/core/scalar.hpp>
 
 #ifdef NOFOREACH
 #include <boost/foreach.hpp>
@@ -86,10 +85,10 @@ template<typename ATYPE> void add_operator_test<ATYPE>::setUp()
     a1 = array_factory<array_type>::create(shape);
     a2 = array_factory<array_type>::create(shape);
 
-    std::generate(a1.begin(),a1.end(),random_generator<value_type>());
-    std::generate(a2.begin(),a2.end(),random_generator<value_type>());
+    std::generate(a1.begin(),a1.end(),random_generator<value_type>(1,10));
+    std::generate(a2.begin(),a2.end(),random_generator<value_type>(1,10));
 
-    s1 = random_generator<value_type>()();
+    s1 = random_generator<value_type>(1,10)();
 }
 
 //-----------------------------------------------------------------------------
@@ -104,6 +103,9 @@ template<typename ATYPE> void add_operator_test<ATYPE>::test_construction()
    
     add_op<array_type,scalar_type> op2(a1,s1);
     CPPUNIT_ASSERT(op2.size() == a1.size());
+    
+    add_op<scalar_type,array_type> op3(s1,a1);
+    CPPUNIT_ASSERT(op3.size() == a1.size());
 }
 
 //-----------------------------------------------------------------------------
@@ -182,10 +184,10 @@ template<typename ATYPE> void add_operator_test<ATYPE>::test_operator()
 template<typename ATYPE> void add_operator_test<ATYPE>::test_operator_on_view()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
-    auto r = array_factory<ATYPE>::create(shape_t{3,4});
+    typedef dynamic_array<value_type> result_type;
     auto v1 = a1(0,slice(0,3),slice(0,4));
     auto v2 = a2(0,slice(0,3),slice(0,4));
-    r = v1 + v2;
+    result_type r(v1 + v2);
     auto iter1 = v1.begin();
     auto iter2 = v2.begin();
     auto riter = r.begin();

@@ -24,6 +24,9 @@
 #pragma once
 
 #include "mdarray.hpp"
+#include "arrays.hpp"
+#include "complex_utils.hpp"
+#include "scalar.hpp"
 #include "math/add_op.hpp"
 #include "math/sub_op.hpp"
 #include "math/mult_op.hpp"
@@ -55,7 +58,10 @@ namespace core{
     */
     template<typename LHS,typename RHS,
             typename = typename std::enable_if<
-            (!std::is_pod<LHS>::value) && (!std::is_pod<RHS>::value)
+            (!std::is_pod<LHS>::value) && 
+            (!is_complex<LHS>::value) && 
+            (!std::is_pod<RHS>::value) &&
+            (!is_complex<RHS>::value)
             >::type
             >
     mdarray<add_op<LHS,RHS>,typename LHS::map_type,typename LHS::inplace_arithmetic>
@@ -91,7 +97,8 @@ namespace core{
     template<typename LHS,
              typename T,
              typename = typename std::enable_if<
-              (!std::is_pod<LHS>::value) && std::is_pod<T>::value
+              (!std::is_pod<LHS>::value) && (!is_complex<LHS>::value)  && 
+              (std::is_pod<T>::value || is_complex<T>::value)
               >::type
              >
     mdarray<add_op<LHS,scalar<T>>,typename LHS::map_type,typename LHS::inplace_arithmetic>
@@ -127,7 +134,8 @@ namespace core{
     template<typename T,
              typename RHS,
              typename = typename std::enable_if<
-             std::is_pod<T>::value && (!std::is_pod<RHS>::value)
+             (std::is_pod<T>::value || is_complex<T>::value) && 
+             (!std::is_pod<RHS>::value) && (!is_complex<RHS>::value)
                  >::type
             >
     mdarray<add_op<scalar<T>,RHS>,typename RHS::map_type,typename RHS::inplace_arithmetic>
@@ -273,8 +281,11 @@ namespace core{
     template<typename LHS,
              typename RHS,
              typename = typename std::enable_if<
-             !std::is_pod<LHS>::value && !std::is_pod<RHS>::value
-             >::type
+             (!std::is_pod<LHS>::value) &&
+             (!is_complex<LHS>::value) &&
+             (!is_complex<RHS>::value) && 
+             (!std::is_pod<RHS>::value)
+            >::type
             >
     mdarray<div_op<LHS,RHS>,typename LHS::map_type,typename LHS::inplace_arithmetic>
     operator/(const LHS &a, const RHS &b)
@@ -309,7 +320,8 @@ namespace core{
     template<typename LHS,
              typename T,
              typename = typename std::enable_if<
-             !std::is_pod<LHS>::value && std::is_pod<T>::value
+             (!std::is_pod<LHS>::value) && (!is_complex<LHS>::value) 
+             && (std::is_pod<T>::value || is_complex<T>::value)
              >::type
             >
     mdarray<div_op<LHS,scalar<T>>,typename LHS::map_type,typename LHS::inplace_arithmetic>
@@ -345,7 +357,8 @@ namespace core{
     template<typename T,
              typename RHS,
              typename = typename std::enable_if<
-             std::is_pod<T>::value && !std::is_pod<RHS>::value
+             (std::is_pod<T>::value || is_complex<T>::value) && 
+             (!std::is_pod<RHS>::value) && (!is_complex<RHS>::value)
              >::type
             >
     mdarray<div_op<scalar<T>,RHS>,typename RHS::map_type,typename RHS::inplace_arithmetic>
@@ -354,7 +367,7 @@ namespace core{
         typedef div_op<scalar<T>,RHS> operator_type;
         typedef mdarray<operator_type,typename RHS::map_type,typename RHS::inplace_arithmetic> result_type;
 
-        return return_type(b.map(),operator_type(a,b));
+        return result_type(b.map(),operator_type(a,b));
     }
     
     //===================Multiplication operator================================

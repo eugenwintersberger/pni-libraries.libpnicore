@@ -110,6 +110,23 @@ namespace core{
                                 >;
 
 
+    
+    //-------------------------------------------------------------------------
+    template<typename ATYPE> struct is_array
+    {
+        static const bool value = false;
+    };
+
+    template<typename ...ARGS> struct is_array<mdarray<ARGS...>>
+    {
+        static const bool value = true;
+    };
+
+    template<typename ...ARGS> struct is_array<array_view<ARGS...>>
+    {
+        static const bool value = true;
+    };
+
     //-------------------------------------------------------------------------
     /*!
     \ingroup mdim_array_classes

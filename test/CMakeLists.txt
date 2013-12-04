@@ -22,6 +22,7 @@ set(TEST_SOURCES pnicoretest.cpp
                  arrays/scalar_test.cpp
                  math/inplace_arithmetics_test.cpp
                  math/add_operator_test.cpp
+                 math/div_operator_test.cpp
                  iterator_test.cpp
                  compare.cpp
                  )

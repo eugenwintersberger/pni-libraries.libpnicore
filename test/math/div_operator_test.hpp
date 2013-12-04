@@ -27,9 +27,14 @@
 #include <vector>
 #include <algorithm>
 
-#include "array_factory.hpp"
+#include <pni/core/arrays.hpp>
+#include <pni/core/array_arithmetic.hpp>
+#include "../compare.hpp"
+#include "../data_generator.hpp"
 
-#include "EqualityCheck.hpp"
+#ifdef NOFOREACH
+#include <boost/foreach.hpp>
+#endif
 
 using namespace pni::core;
 
@@ -45,15 +50,16 @@ template<typename ATYPE> class div_operator_test: public CppUnit::TestFixture
         CPPUNIT_TEST(test_access);
         CPPUNIT_TEST(test_iterator);
         CPPUNIT_TEST(test_operator);
+        CPPUNIT_TEST(test_operator_on_view);
         CPPUNIT_TEST_SUITE_END();
     private:
         //==========private types==============================================
-        typedef numarray<ATYPE> na_type;
+        typedef ATYPE array_type;
         typedef typename ATYPE::value_type value_type;
-        typedef scalar<value_type> s_type;
+        typedef scalar<value_type> scalar_type;
         //===================private memebers==================================
-        na_type a1;
-        na_type a2;
+        array_type a1,a2;
+        scalar_type s1;
         shape_t shape;
 
     public:
@@ -64,6 +70,7 @@ template<typename ATYPE> class div_operator_test: public CppUnit::TestFixture
         void test_access();
         void test_iterator();
         void test_operator();
+        void test_operator_on_view();
 
 };
 
@@ -71,11 +78,13 @@ template<typename ATYPE> class div_operator_test: public CppUnit::TestFixture
 template<typename ATYPE> void div_operator_test<ATYPE>::setUp()
 {
     shape = shape_t({2,3,4});
-    a1 = na_type(array_factory<ATYPE>::create(shape));
-    a2 = na_type(array_factory<ATYPE>::create(shape));
+    a1 = array_factory<array_type>::create(shape);
+    a2 = array_factory<array_type>::create(shape);
+
+    std::generate(a1.begin(),a1.end(),random_generator<value_type>(1,10));
+    std::generate(a2.begin(),a2.end(),random_generator<value_type>(1,10));
     
-    std::fill(a1.begin(),a1.end(),value_type(10));
-    std::fill(a2.begin(),a2.end(),value_type(5));
+    s1 = random_generator<value_type>(1,10)();
 }
 
 //-----------------------------------------------------------------------------
@@ -86,16 +95,14 @@ template<typename ATYPE> void div_operator_test<ATYPE>::test_construction()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
-    div_op<na_type,na_type> op(a1,a2);
+    div_op<array_type,array_type> op(a1,a2);
     CPPUNIT_ASSERT(a1.size() == op.size());
    
-    s_type s(10);
-    div_op<na_type,s_type> op2(a1,s);
+    div_op<array_type,scalar_type> op2(a1,s1);
     CPPUNIT_ASSERT(op2.size() == a1.size());
 
-    div_op<s_type,s_type> op3(s,s);
-    CPPUNIT_ASSERT(s.size() == op3.size());
-
+    div_op<scalar_type,array_type> op3(s1,a1);
+    CPPUNIT_ASSERT(op3.size() == a1.size());
 }
 
 //-----------------------------------------------------------------------------
@@ -103,16 +110,13 @@ template<typename ATYPE> void div_operator_test<ATYPE>::test_access()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
-    div_op<na_type,na_type> op1(a1,a2);
+    div_op<array_type,array_type> op1(a1,a2);
 
-    for(size_t i=0;i<op1.size();i++)
-        check_equality(op1[i],value_type(2));
+    for(size_t i=0;i<op1.size();i++) compare(op1[i],a1[i]/a2[i]);
 
-    s_type s(2);
-    div_op<na_type,s_type> op2(a1,s);
+    div_op<array_type,scalar_type> op2(a1,s1);
 
-    for(size_t i=0;i<op2.size();i++)
-        check_equality(op2[i],value_type(5));
+    for(size_t i=0;i<op2.size();i++) compare(op2[i],a1[i]/s1[i]);
 }
 
 //-----------------------------------------------------------------------------
@@ -120,30 +124,25 @@ template<typename ATYPE> void div_operator_test<ATYPE>::test_iterator()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
-    div_op<na_type,na_type> op1(a1,a2);
+    div_op<array_type,array_type> op1(a1,a2);
+    auto iter1 = a1.begin();
+    auto iter2 = a2.begin();
 #ifdef NOFOREACH
-    for(auto iter = op1.begin();iter!=op1.end();++iter)
-    {
-        auto v = *iter;
+    BOOST_FOREACH(auto v,op1)
 #else
     for(auto v: op1) 
-    {
 #endif
-        check_equality(v,value_type(2));
-    }
+        compare(v,(*iter1++)/(*iter2++));
 
-    s_type s(2);
-    div_op<na_type,s_type> op2(a1,s);
+    div_op<scalar_type,array_type> op2(s1,a1);
+    auto siter = s1.begin();
+    iter1 = a1.begin();
 #ifdef NOFOREACH
-    for(auto iter = op2.begin();iter!=op2.end();++iter)
-    {
-        auto v = *iter;
+    BOOST_FOREACH(auto v,op2)
 #else
     for(auto v: op2) 
-    {
 #endif 
-        check_equality(v,value_type(5));
-    }
+        compare(v,(*siter++)/(*iter1++));
 }
 
 //-----------------------------------------------------------------------------
@@ -151,55 +150,79 @@ template<typename ATYPE> void div_operator_test<ATYPE>::test_operator()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
-    na_type r = na_type(array_factory<ATYPE>::create(shape));
-    r = a1/a2;
+    array_type r (a1/a2);
+    auto iter1 = a1.begin();
+    auto iter2 = a2.begin();
 #ifdef NOFOREACH
-    for(auto iter = r.begin();iter!=r.end();++iter)
-    {
-        auto v = *iter;
+    BOOST_FOREACH(auto v,r)
 #else
     for(auto v: r) 
-    {
 #endif 
-        check_equality(v,value_type(2));
-    }
+        compare(v,(*iter1++)/(*iter2++));
 
     r = a1/value_type(2);
+    iter1 = a1.begin();
 #ifdef NOFOREACH
-    for(auto iter = r.begin();iter!=r.end();++iter)
-    {
-        auto v = *iter;
+    BOOST_FOREACH(auto v,r)
 #else
     for(auto v: r) 
-    {
 #endif
-        check_equality(v,value_type(5));
-    }
+        compare(v,(*iter1++)/value_type(2));
 
     r = value_type(100)/a1;
+    iter1 = a1.begin();
 #ifdef NOFOREACH
-    for(auto iter = r.begin();iter!=r.end();++iter)
-    {
-        auto v = *iter;
+    BOOST_FOREACH(auto v,r)
 #else
     for(auto v: r) 
-    {
 #endif
-        check_equality(v,value_type(10));
-    }
+        compare(v,value_type(100)/(*iter1++));
 
     //put it all together
-
     r = value_type(100)/a1/a2;
+    iter1 = a1.begin();
+    iter2 = a2.begin();
 #ifdef NOFOREACH
-    for(auto iter = r.begin();iter!=r.end();++iter)
-    {
-        auto v = *iter;
+    BOOST_FOREACH(auto v,r)
 #else
     for(auto v: r) 
-    {
 #endif 
-        check_equality(v,value_type(2));
-    }
+        compare(v,value_type(100)/(*iter1++)/(*iter2++));
 
+}
+
+//-----------------------------------------------------------------------------
+template<typename ATYPE> void div_operator_test<ATYPE>::test_operator_on_view()
+{
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+    typedef dynamic_array<value_type> result_type;
+    auto v1 = a1(0,slice(0,3),slice(0,4));
+    auto v2 = a2(0,slice(0,3),slice(0,4));
+    result_type r(v1 / v2);
+    auto iter1 = v1.begin();
+    auto iter2 = v2.begin();
+    auto riter = r.begin();
+
+    for(;riter!=r.end();++riter)
+        compare(*riter,*iter1++ / *iter2++);
+
+    r = v1/value_type(10);
+    riter = r.begin();
+    iter1 = v1.begin();
+    for(;riter!=r.end();++riter)
+        compare(*riter,*iter1++ / value_type(10));
+
+    r = value_type(95) / v1;
+    riter = r.begin();
+    iter1 = v1.begin();
+    for(;riter!=r.end();++riter)
+        compare(*riter,value_type(95)/(*iter1++));
+
+    //put it all together
+    r = v1 / value_type(10) / v2;
+    riter = r.begin();
+    iter1 = v1.begin();
+    iter2 = v2.begin();
+    for(;riter!=r.end();++riter)
+        compare(*riter,*iter1++ / value_type(10) / *iter2++);
 }

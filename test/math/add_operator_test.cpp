@@ -25,8 +25,8 @@
 #include "add_operator_test.hpp"
 
 
-//CPPUNIT_TEST_SUITE_REGISTRATION(add_operator_test<dynamic_array<uint8> >);
-//CPPUNIT_TEST_SUITE_REGISTRATION(add_operator_test<dynamic_array<int8> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(add_operator_test<dynamic_array<uint8> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(add_operator_test<dynamic_array<int8> >);
 CPPUNIT_TEST_SUITE_REGISTRATION(add_operator_test<dynamic_array<uint16> >);
 CPPUNIT_TEST_SUITE_REGISTRATION(add_operator_test<dynamic_array<int16> >);
 CPPUNIT_TEST_SUITE_REGISTRATION(add_operator_test<dynamic_array<uint32> >);
@@ -34,35 +34,48 @@ CPPUNIT_TEST_SUITE_REGISTRATION(add_operator_test<dynamic_array<int32> >);
 CPPUNIT_TEST_SUITE_REGISTRATION(add_operator_test<dynamic_array<uint64> >);
 CPPUNIT_TEST_SUITE_REGISTRATION(add_operator_test<dynamic_array<int64> >);
 
-/*
 CPPUNIT_TEST_SUITE_REGISTRATION(add_operator_test<dynamic_array<float32> >);
 CPPUNIT_TEST_SUITE_REGISTRATION(add_operator_test<dynamic_array<float64> >);
 CPPUNIT_TEST_SUITE_REGISTRATION(add_operator_test<dynamic_array<float128> >);
-*/
-//CPPUNIT_TEST_SUITE_REGISTRATION(add_operator_test<dynamic_array<complex32> >);
-//CPPUNIT_TEST_SUITE_REGISTRATION(add_operator_test<dynamic_array<complex64> >);
-//CPPUNIT_TEST_SUITE_REGISTRATION(add_operator_test<dynamic_array<complex128> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(add_operator_test<dynamic_array<complex32> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(add_operator_test<dynamic_array<complex64> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(add_operator_test<dynamic_array<complex128> >);
 
 #define SARRAY_ADD_TEST_REG(T,NX,NY,NZ)\
 static CPPUNIT_NS::AutoRegisterSuite< add_operator_test<sarray<T,NX,NY,NZ> > >  \
              CPPUNIT_MAKE_UNIQUE_NAME(autoRegisterRegistry__ )
 
-/*
-SARRAY_ADD_TEST_REG(uint8,2,3,4);
-SARRAY_ADD_TEST_REG(int8,2,3,4);
-SARRAY_ADD_TEST_REG(uint16,2,3,4);
-SARRAY_ADD_TEST_REG(int16,2,3,4);
-SARRAY_ADD_TEST_REG(uint32,2,3,4);
-SARRAY_ADD_TEST_REG(int32,2,3,4);
-SARRAY_ADD_TEST_REG(uint64,2,3,4);
-SARRAY_ADD_TEST_REG(int64,2,3,4);
+template<typename T> using farray = fixed_dim_array<T,3>;
+CPPUNIT_TEST_SUITE_REGISTRATION(add_operator_test<farray<uint8> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(add_operator_test<farray<int8> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(add_operator_test<farray<uint16> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(add_operator_test<farray<int16> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(add_operator_test<farray<uint32> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(add_operator_test<farray<int32> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(add_operator_test<farray<uint64> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(add_operator_test<farray<int64> >);
 
-SARRAY_ADD_TEST_REG(float32,2,3,4);
-SARRAY_ADD_TEST_REG(float64,2,3,4);
-SARRAY_ADD_TEST_REG(float128,2,3,4);
+CPPUNIT_TEST_SUITE_REGISTRATION(add_operator_test<farray<float32> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(add_operator_test<farray<float64> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(add_operator_test<farray<float128> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(add_operator_test<farray<complex32> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(add_operator_test<farray<complex64> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(add_operator_test<farray<complex128> >);
 
-SARRAY_ADD_TEST_REG(complex32,2,3,4);
-SARRAY_ADD_TEST_REG(complex64,2,3,4);
-SARRAY_ADD_TEST_REG(complex128,2,3,4);
-*/
+template<typename T> using sarray = static_array<T,2,3,4>;
+CPPUNIT_TEST_SUITE_REGISTRATION(add_operator_test<sarray<uint8> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(add_operator_test<sarray<int8> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(add_operator_test<sarray<uint16> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(add_operator_test<sarray<int16> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(add_operator_test<sarray<uint32> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(add_operator_test<sarray<int32> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(add_operator_test<sarray<uint64> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(add_operator_test<sarray<int64> >);
+
+CPPUNIT_TEST_SUITE_REGISTRATION(add_operator_test<sarray<float32> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(add_operator_test<sarray<float64> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(add_operator_test<sarray<float128> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(add_operator_test<sarray<complex32> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(add_operator_test<sarray<complex64> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(add_operator_test<sarray<complex128> >);
 
