@@ -92,10 +92,14 @@ namespace core{
             }
 
             //-----------------------------------------------------------------
-            value_type at(size_t i) const
-            {
-                return (*this)[i];
-            }
+            /*!
+            \brief return value at i
+
+            Return the result of the operation for index i. 
+            \param i index at which to perform the operation
+            \return result of the operation
+            */
+            value_type at(size_t i) const { return (*this)[i]; }
 
             //-----------------------------------------------------------------
             /*! 

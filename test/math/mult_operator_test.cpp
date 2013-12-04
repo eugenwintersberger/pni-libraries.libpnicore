@@ -25,41 +25,21 @@
 #include "mult_operator_test.hpp"
 
 
-CPPUNIT_TEST_SUITE_REGISTRATION(mult_operator_test<darray<uint8> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(mult_operator_test<darray<int8> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(mult_operator_test<darray<uint16> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(mult_operator_test<darray<int16> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(mult_operator_test<darray<uint32> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(mult_operator_test<darray<int32> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(mult_operator_test<darray<uint64> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(mult_operator_test<darray<int64> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(mult_operator_test<dynamic_array<uint8> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(mult_operator_test<dynamic_array<int8> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(mult_operator_test<dynamic_array<uint16> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(mult_operator_test<dynamic_array<int16> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(mult_operator_test<dynamic_array<uint32> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(mult_operator_test<dynamic_array<int32> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(mult_operator_test<dynamic_array<uint64> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(mult_operator_test<dynamic_array<int64> >);
 
-CPPUNIT_TEST_SUITE_REGISTRATION(mult_operator_test<darray<float32> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(mult_operator_test<darray<float64> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(mult_operator_test<darray<float128> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(mult_operator_test<darray<complex32> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(mult_operator_test<darray<complex64> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(mult_operator_test<darray<complex128> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(mult_operator_test<dynamic_array<float32> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(mult_operator_test<dynamic_array<float64> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(mult_operator_test<dynamic_array<float128> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(mult_operator_test<dynamic_array<complex32> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(mult_operator_test<dynamic_array<complex64> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(mult_operator_test<dynamic_array<complex128> >);
 
 
-#define SARRAY_MULT_TEST_REG(T,NX,NY,NZ)\
-static CPPUNIT_NS::AutoRegisterSuite< mult_operator_test<sarray<T,NX,NY,NZ> > >  \
-             CPPUNIT_MAKE_UNIQUE_NAME(autoRegisterRegistry__ )
-
-SARRAY_MULT_TEST_REG(uint8,2,3,4);
-SARRAY_MULT_TEST_REG(int8,2,3,4);
-SARRAY_MULT_TEST_REG(uint16,2,3,4);
-SARRAY_MULT_TEST_REG(int16,2,3,4);
-SARRAY_MULT_TEST_REG(uint32,2,3,4);
-SARRAY_MULT_TEST_REG(int32,2,3,4);
-SARRAY_MULT_TEST_REG(uint64,2,3,4);
-SARRAY_MULT_TEST_REG(int64,2,3,4);
-
-SARRAY_MULT_TEST_REG(float32,2,3,4);
-SARRAY_MULT_TEST_REG(float64,2,3,4);
-SARRAY_MULT_TEST_REG(float128,2,3,4);
-
-SARRAY_MULT_TEST_REG(complex32,2,3,4);
-SARRAY_MULT_TEST_REG(complex64,2,3,4);
-SARRAY_MULT_TEST_REG(complex128,2,3,4);
 

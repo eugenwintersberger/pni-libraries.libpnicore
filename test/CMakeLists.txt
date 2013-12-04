@@ -23,6 +23,8 @@ set(TEST_SOURCES pnicoretest.cpp
                  math/inplace_arithmetics_test.cpp
                  math/add_operator_test.cpp
                  math/div_operator_test.cpp
+                 math/sub_operator_test.cpp
+                 math/mult_operator_test.cpp
                  iterator_test.cpp
                  compare.cpp
                  )
@@ -30,12 +32,9 @@ set(TEST_SOURCES pnicoretest.cpp
 #binary_test.cpp
 #configuration_test.cpp
 #counter_test.cpp
-#div_operator_test.cpp
 #index_iterator_test.cpp
-#mult_operator_test.cpp
 #size_type_test.cpp
 #slice_test.cpp
-#sub_operator_test.cpp
 #value_ref_test.cpp
 #value_test.cpp
 

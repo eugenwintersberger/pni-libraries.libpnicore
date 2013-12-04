@@ -41,9 +41,6 @@ CPPUNIT_TEST_SUITE_REGISTRATION(add_operator_test<dynamic_array<complex32> >);
 CPPUNIT_TEST_SUITE_REGISTRATION(add_operator_test<dynamic_array<complex64> >);
 CPPUNIT_TEST_SUITE_REGISTRATION(add_operator_test<dynamic_array<complex128> >);
 
-#define SARRAY_ADD_TEST_REG(T,NX,NY,NZ)\
-static CPPUNIT_NS::AutoRegisterSuite< add_operator_test<sarray<T,NX,NY,NZ> > >  \
-             CPPUNIT_MAKE_UNIQUE_NAME(autoRegisterRegistry__ )
 
 template<typename T> using farray = fixed_dim_array<T,3>;
 CPPUNIT_TEST_SUITE_REGISTRATION(add_operator_test<farray<uint8> >);

@@ -92,6 +92,19 @@ namespace core{
             }
 
             //-----------------------------------------------------------------
+            /*!
+            \brief get value at index i
+
+            Return the result of the operation at index i.
+            \param i index for which to perform the operation
+            \return result of the operation
+            */
+            value_type at(size_t i) const 
+            {
+                return (*this)[i];
+            }
+
+            //-----------------------------------------------------------------
             /*! 
             \brief return size of the operator
 

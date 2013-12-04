@@ -84,12 +84,26 @@ namespace core{
             }
 
             //-----------------------------------------------------------------
+            /*!
+            \brief get result at i
+
+            Return the result of the operation computed at index i.
+            \param i index for which to compute the operation
+            \return result of operation
+            */
+            value_type at(size_t i) const
+            {
+                return (*this)[i];
+            }
+
+            //-----------------------------------------------------------------
             //! get size of the 
             size_t size() const
             {
                 return _op1.size()>_op2.size() ? _op1.size() : _op2.size();
             }
 
+            //-----------------------------------------------------------------
             /*! 
             \brief get the shape
 

@@ -112,18 +112,44 @@ namespace core{
 
     
     //-------------------------------------------------------------------------
+    /*!
+    \ingroup mdim_array_classes
+    \brief array identifier 
+
+    This type has a value of true if the template parameter ATYPE is an array
+    type. In order to be an array a type has to be an instance of mdarray or
+    array_view. 
+    This is the default version and provides a false value.
+    */
     template<typename ATYPE> struct is_array
     {
+        //! type is not an array
         static const bool value = false;
     };
 
+    //-------------------------------------------------------------------------
+    /*!
+    \ingroup mdim_array_classes
+    \brief array identifier 
+
+    Specialization of the is_array template for instances of mdarray.
+    */
     template<typename ...ARGS> struct is_array<mdarray<ARGS...>>
     {
+        //! type is an array type
         static const bool value = true;
     };
 
+    //-------------------------------------------------------------------------
+    /*!
+    \ingroup mdim_array_classes
+    \brief array identifier
+
+    Specialization of the is_array template for array_view instances. 
+    */
     template<typename ...ARGS> struct is_array<array_view<ARGS...>>
     {
+        //! type is an array type
         static const bool value = true;
     };
 
