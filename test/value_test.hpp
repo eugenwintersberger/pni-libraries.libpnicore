@@ -25,7 +25,8 @@
 #include<cppunit/TestFixture.h>
 #include<cppunit/extensions/HelperMacros.h>
 #include<boost/current_function.hpp>
-#include "EqualityCheck.hpp"
+#include "compare.hpp"
+#include "data_generator.hpp"
 
 #include <pni/core/value.hpp>
 #include <functional>
@@ -42,6 +43,10 @@ template<typename T> class value_test : public CppUnit::TestFixture
         CPPUNIT_TEST(test_stream);
         CPPUNIT_TEST_SUITE_END();
 
+        random_generator<T> generator;
+        T value_1;
+        T value_2;
+
     public:
         void setUp();
         void tearDown();
@@ -53,7 +58,12 @@ template<typename T> class value_test : public CppUnit::TestFixture
 };
 
 //-----------------------------------------------------------------------------
-template<typename T> void value_test<T>::setUp() { }
+template<typename T> void value_test<T>::setUp() 
+{ 
+    generator = random_generator<T>(1,10);
+    value_1 = generator();
+    value_2 = generator();
+}
 
 //-----------------------------------------------------------------------------
 template<typename T> void value_test<T>::tearDown() { }
@@ -63,11 +73,11 @@ template<typename T> void value_test<T>::test_construction()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
-    value v1 = T(1);
-    value v2 = T(2);
+    value v1 = value_1;
+    value v2 = value_2;
 
-    CPPUNIT_ASSERT(v1.as<T>()==T(1));
-    CPPUNIT_ASSERT(v2.as<T>()==T(2));
+    CPPUNIT_ASSERT(v1.as<T>()==value_1);
+    CPPUNIT_ASSERT(v2.as<T>()==value_2);
 
 }
 
@@ -76,16 +86,15 @@ template<typename T> void value_test<T>::test_copy_and_move()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
-    value v1 = T(1);
+    value v1 = value_1;
     
     value v2(v1);
-    CPPUNIT_ASSERT(v1.as<T>() == T(1));
-    CPPUNIT_ASSERT(v2.as<T>() == T(1));
+    CPPUNIT_ASSERT(v1.as<T>() == value_1);
+    CPPUNIT_ASSERT(v2.as<T>() == value_1);
 
     value v3(std::move(v2));
     CPPUNIT_ASSERT(v3.as<T>() == v1.as<T>());
     CPPUNIT_ASSERT_THROW(v2.as<T>(),memory_not_allocated_error);
-    CPPUNIT_ASSERT_THROW(v3.as<complex128>(),type_error);
 
 }
 
@@ -97,8 +106,8 @@ template<typename T> void value_test<T>::test_assignment()
     value v1;
     CPPUNIT_ASSERT_THROW(v1.as<T>(),memory_not_allocated_error);
 
-    v1 = T(1);
-    CPPUNIT_ASSERT(v1.as<T>() == T(1));
+    v1 = value_1;
+    CPPUNIT_ASSERT(v1.as<T>() == value_1);
 
     value v2;
     v2 = v1;
@@ -113,12 +122,11 @@ template<typename T> void value_test<T>::test_assignment()
 //-----------------------------------------------------------------------------
 template<typename T> void value_test<T>::test_stream()
 {
-    std::stringstream ss("12343.4");
+    std::stringstream ss("12");
 
-    value v=value::create<float32>();
+    value v=value::create<T>();
     ss>>v;
     std::cout<<v<<std::endl;
-    CPPUNIT_ASSERT(v.type_id() == type_id_t::FLOAT32);
 }
 
 

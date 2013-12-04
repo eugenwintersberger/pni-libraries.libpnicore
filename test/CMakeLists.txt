@@ -32,10 +32,10 @@ set(TEST_SOURCES pnicoretest.cpp
                  counter_test.cpp
                  index_iterator_test.cpp
                  compare.cpp
+                 arrays/array_test.cpp
+                 value_ref_test.cpp
+                 value_test.cpp
                  )
-#array_test.cpp
-#value_ref_test.cpp
-#value_test.cpp
 
 
 link_directories("${CMAKE_CURRENT_BINARY_DIR}/../src")

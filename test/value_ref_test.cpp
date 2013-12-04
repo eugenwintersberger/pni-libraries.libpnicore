@@ -27,4 +27,23 @@
 #include <pni/core/arrays.hpp>
 #include "value_ref_test.hpp"
 
+/*
+CPPUNIT_TEST_SUITE_REGISTRATION(value_ref_test<uint8>);
+CPPUNIT_TEST_SUITE_REGISTRATION(value_ref_test<int8>);
+CPPUNIT_TEST_SUITE_REGISTRATION(value_ref_test<uint16>);
+CPPUNIT_TEST_SUITE_REGISTRATION(value_ref_test<int16>);
+CPPUNIT_TEST_SUITE_REGISTRATION(value_ref_test<uint32>);
+CPPUNIT_TEST_SUITE_REGISTRATION(value_ref_test<int32>);
+CPPUNIT_TEST_SUITE_REGISTRATION(value_ref_test<uint64>);
+CPPUNIT_TEST_SUITE_REGISTRATION(value_ref_test<int64>);
+
 CPPUNIT_TEST_SUITE_REGISTRATION(value_ref_test<float32>);
+CPPUNIT_TEST_SUITE_REGISTRATION(value_ref_test<float64>);
+CPPUNIT_TEST_SUITE_REGISTRATION(value_ref_test<float128>);
+
+CPPUNIT_TEST_SUITE_REGISTRATION(value_ref_test<complex32>);
+CPPUNIT_TEST_SUITE_REGISTRATION(value_ref_test<complex64>);
+CPPUNIT_TEST_SUITE_REGISTRATION(value_ref_test<complex128>);
+*/
+
+CPPUNIT_TEST_SUITE_REGISTRATION(value_ref_test<string>);

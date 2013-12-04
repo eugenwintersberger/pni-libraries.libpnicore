@@ -42,7 +42,6 @@ set(HEADER_FILES ../include/pni/core/value.hpp
                  ../include/pni/core/type_utils.hpp
                  ../include/pni/core/value_holder_interface.hpp
                  ../include/pni/core/array_selection.hpp
-                 ../include/pni/core/range_distributor.hpp
                  ../include/pni/core/type_id_map.hpp
                  ../include/pni/core/config/cli_args.hpp
                  ../include/pni/core/config/library_config.hpp

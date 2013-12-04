@@ -25,9 +25,9 @@
 #include<cppunit/extensions/HelperMacros.h>
 #include<boost/current_function.hpp>
 
-#include "EqualityCheck.hpp"
-#include "array_factory.hpp"
-#include "data_factory.hpp"
+#include <pni/core/arrays.hpp>
+#include "../data_generator.hpp"
+#include "../compare.hpp"
 #include <pni/core/array.hpp>
 #include <functional>
 #include <sstream>
@@ -48,10 +48,11 @@ template<typename OT> class array_test : public CppUnit::TestFixture
         CPPUNIT_TEST(test_assignment);
         CPPUNIT_TEST_SUITE_END();
 
+        typedef typename OT::value_type value_type;
         shape_t _shape;
         OT _object1;
         OT _object2;
-        std::vector<typename OT::value_type> _data;
+        std::vector<value_type> _data;
 
     public:
         void setUp();
@@ -71,9 +72,10 @@ template<typename OT> class array_test : public CppUnit::TestFixture
 template<typename OT> void array_test<OT>::setUp()
 {
     _shape = shape_t({3,2});
-    data_factory<typename OT::value_type>::create(3*2,_data);
     _object1 = array_factory<OT>::create(_shape);
     _object2 = array_factory<OT>::create(_shape);
+    _data = std::vector<value_type>(_object1.size());
+    std::generate(_data.begin(),_data.end(),random_generator<value_type>());
 }
 
 //-----------------------------------------------------------------------------
@@ -170,7 +172,7 @@ template<typename OT> void array_test<OT>::test_element_access()
 
     //reading data back
     for(size_t i=0;i<o.size();++i)
-        check_equality(_data[i],o[i].as<typename OT::value_type>());
+        compare(_data[i],o[i].as<value_type>());
 
 }
 
@@ -189,8 +191,7 @@ template<typename OT> void array_test<OT>::test_iterator()
 
     index =0;
     for(auto iter = o.begin();iter!=o.end();++iter)
-        check_equality(iter->as<typename OT::value_type>(),
-                       _data[index++]); 
+        compare(iter->as<value_type>(),_data[index++]); 
 }
 
 //-----------------------------------------------------------------------------
@@ -206,8 +207,7 @@ template<typename OT> void array_test<OT>::test_at_access()
 
     //reading data back
     for(size_t i=0;i<o.size();++i)
-        check_equality(_data[i],
-                       o.at(i).as<typename OT::value_type>());
+        compare(_data[i],o.at(i).as<value_type>());
 
 }
 

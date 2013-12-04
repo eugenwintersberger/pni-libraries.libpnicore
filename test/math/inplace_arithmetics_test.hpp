@@ -94,13 +94,13 @@ void inplace_arithmetics_test<IPT,ATYPE>::setUp()
     std::fill(lhs.begin(),lhs.end(),1);
 
     //generate random data
-    std::generate(data.begin(),data.end(),random_generator<value_type>());
+    std::generate(data.begin(),data.end(),random_generator<value_type>(1,10));
 
     //copy data
     std::copy(data.begin(),data.end(),rhs_array.begin());
 
     //initialize scalar data
-    rhs_scalar = random_generator<value_type>()();
+    rhs_scalar = random_generator<value_type>(1,10)();
     
 }
 

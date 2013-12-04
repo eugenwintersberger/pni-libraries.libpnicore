@@ -29,6 +29,7 @@
 #include <pni/core/types.hpp>
 #include <pni/core/array.hpp>
 #include <pni/core/id_type_map.hpp>
+#include <pni/core/type_id_map.hpp>
 
 using namespace pni::core;
 
@@ -68,6 +69,32 @@ void compare(const std::complex<T> &a,const std::complex<T> &b)
     compare(a.imag(),b.imag());
 }
 
+/*!
+\brief comparison of value_ref instances
+*/
+#define COMPARE_VALUE_WITH_REF(a,b,tid)\
+    if((a.type_id() == tid) &&\
+       (b.type_id() == tid)) \
+    {\
+        compare(a.as<id_type_map<tid>::type>(),\
+                b.as<id_type_map<tid>::type>());\
+        return; \
+    }
+
+template<typename T> void compare(const value_ref &a, const T &b)
+{
+    type_id_t t_id = type_id_map<T>::type_id;
+    type_id_t r_id = a.type_id();
+
+    if(t_id == r_id) compare(a.as<T>(),b);
+    
+}
+
+
+template<typename T> void compare(const T &a,const value_ref &b)
+{
+    compare(b,a);
+}
 
 void compare(const value_ref &a,const value_ref &b);
 void compare(const value &a,const value &b);

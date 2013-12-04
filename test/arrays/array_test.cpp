@@ -28,19 +28,26 @@
 #include <pni/core/scalar.hpp>
 #include "array_test.hpp"
 
-typedef sarray<uint32,3,2> sarray_t;
-typedef numarray<darray<float64> > narray_t;
+typedef static_array<uint32,3,2> sarray_t;
 typedef scalar<int64> scalar_t;
 
-CPPUNIT_TEST_SUITE_REGISTRATION(array_test<darray<float32> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_test<darray<string> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_test<sarray_t> );
-CPPUNIT_TEST_SUITE_REGISTRATION(array_test<narray_t> );
-CPPUNIT_TEST_SUITE_REGISTRATION(array_test<scalar_t>);
+CPPUNIT_TEST_SUITE_REGISTRATION(array_test<dynamic_array<uint8> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(array_test<dynamic_array<int8> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(array_test<dynamic_array<uint16> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(array_test<dynamic_array<int16> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(array_test<dynamic_array<uint32> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(array_test<dynamic_array<int32> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(array_test<dynamic_array<uint64> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(array_test<dynamic_array<int64> >);
 
-//-------------------------------------------------------------
-void create_object(darray<string> &o)
-{
-    o = darray<string>(shape_t{2});
-    o[0] = "hello"; o[1] = "world";
-}
+CPPUNIT_TEST_SUITE_REGISTRATION(array_test<dynamic_array<float32> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(array_test<dynamic_array<float64> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(array_test<dynamic_array<float128> >);
+
+CPPUNIT_TEST_SUITE_REGISTRATION(array_test<dynamic_array<complex32> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(array_test<dynamic_array<complex64> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(array_test<dynamic_array<complex128> >);
+
+//CPPUNIT_TEST_SUITE_REGISTRATION(array_test<dynamic_array<string> >);
+//CPPUNIT_TEST_SUITE_REGISTRATION(array_test<sarray_t> );
+
