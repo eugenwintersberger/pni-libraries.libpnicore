@@ -1,8 +1,9 @@
-set(HEADER_FILES c_index_policy_imp.hpp 
-                 index_map.hpp 
-                 index_maps.hpp 
-                 index_policy.hpp 
-                 static_index_map.hpp
+set(HEADER_FILES 
+                c_index_policy_imp.hpp
+                index_map.hpp
+                index_maps.hpp
+                index_policy.hpp
+                static_index_map.hpp
                  )
 
 install(FILES ${HEADER_FILES} 
