@@ -28,8 +28,8 @@
 #include <pni/core/scalar.hpp>
 #include "array_test.hpp"
 
-typedef static_array<uint32,3,2> sarray_t;
-typedef scalar<int64> scalar_t;
+template<typename T> using sarray = static_array<T,3,2>;
+template<typename T> using farray = fixed_dim_array<T,2>;
 
 CPPUNIT_TEST_SUITE_REGISTRATION(array_test<dynamic_array<uint8> >);
 CPPUNIT_TEST_SUITE_REGISTRATION(array_test<dynamic_array<int8> >);
@@ -48,6 +48,42 @@ CPPUNIT_TEST_SUITE_REGISTRATION(array_test<dynamic_array<complex32> >);
 CPPUNIT_TEST_SUITE_REGISTRATION(array_test<dynamic_array<complex64> >);
 CPPUNIT_TEST_SUITE_REGISTRATION(array_test<dynamic_array<complex128> >);
 
-//CPPUNIT_TEST_SUITE_REGISTRATION(array_test<dynamic_array<string> >);
-//CPPUNIT_TEST_SUITE_REGISTRATION(array_test<sarray_t> );
+CPPUNIT_TEST_SUITE_REGISTRATION(array_test<dynamic_array<string> >);
 
+CPPUNIT_TEST_SUITE_REGISTRATION(array_test<sarray<uint8> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(array_test<sarray<int8> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(array_test<sarray<uint16> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(array_test<sarray<int16> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(array_test<sarray<uint32> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(array_test<sarray<int32> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(array_test<sarray<uint64> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(array_test<sarray<int64> >);
+
+CPPUNIT_TEST_SUITE_REGISTRATION(array_test<sarray<float32> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(array_test<sarray<float64> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(array_test<sarray<float128> >);
+
+CPPUNIT_TEST_SUITE_REGISTRATION(array_test<sarray<complex32> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(array_test<sarray<complex64> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(array_test<sarray<complex128> >);
+
+CPPUNIT_TEST_SUITE_REGISTRATION(array_test<sarray<string> >);
+
+CPPUNIT_TEST_SUITE_REGISTRATION(array_test<farray<uint8> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(array_test<farray<int8> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(array_test<farray<uint16> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(array_test<farray<int16> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(array_test<farray<uint32> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(array_test<farray<int32> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(array_test<farray<uint64> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(array_test<farray<int64> >);
+
+CPPUNIT_TEST_SUITE_REGISTRATION(array_test<farray<float32> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(array_test<farray<float64> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(array_test<farray<float128> >);
+
+CPPUNIT_TEST_SUITE_REGISTRATION(array_test<farray<complex32> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(array_test<farray<complex64> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(array_test<farray<complex128> >);
+
+CPPUNIT_TEST_SUITE_REGISTRATION(array_test<farray<string> >);

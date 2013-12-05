@@ -99,3 +99,5 @@ template<typename T> void compare(const T &a,const value_ref &b)
 void compare(const value_ref &a,const value_ref &b);
 void compare(const value &a,const value &b);
 
+void compare(const string &a,const string &b);
+

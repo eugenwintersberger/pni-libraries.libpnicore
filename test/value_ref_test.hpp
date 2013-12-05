@@ -75,7 +75,6 @@ template<typename T> void value_ref_test<T>::test_construction()
     value_ref v1 = std::ref(value_1);
     value_ref v2 = std::ref(value_2);
 
-    v1.as<T>();
     compare(v1.as<T>(),value_1);
     compare(v2.as<T>(),value_2);
 
@@ -130,7 +129,6 @@ template<typename T> void value_ref_test<T>::test_stream()
     T data;
     value_ref v=std::ref(data);
     ss>>v;
-    std::cout<<v<<std::endl;
 }
 
 

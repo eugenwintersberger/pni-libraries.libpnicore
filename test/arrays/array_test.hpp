@@ -156,7 +156,6 @@ template<typename OT> void array_test<OT>::test_io()
     std::stringstream s("1 2 3 4 5 6");
 
     s>>o;
-    std::cout<<o<<std::endl;
 }
 
 //-----------------------------------------------------------------------------

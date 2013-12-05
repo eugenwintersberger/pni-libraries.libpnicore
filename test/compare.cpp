@@ -67,3 +67,8 @@ void compare(const value &a,const value &b)
     COMPARE_VALUE_REF(a,b,type_id_t::FLOAT128);
     COMPARE_VALUE_REF(a,b,type_id_t::STRING);
 }
+
+void compare(const string &a,const string &b)
+{
+    CPPUNIT_ASSERT(a == b);
+}

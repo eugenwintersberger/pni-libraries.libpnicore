@@ -126,7 +126,6 @@ template<typename T> void value_test<T>::test_stream()
 
     value v=value::create<T>();
     ss>>v;
-    std::cout<<v<<std::endl;
 }
 
 
