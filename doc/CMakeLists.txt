@@ -15,7 +15,6 @@ set(HEADER_FILES ../include/pni/core/value.hpp
                  ../include/pni/core/array_operations.hpp
                  ../include/pni/core/utilties.hpp
                  ../include/pni/core/array_holder_interface.hpp
-                 ../include/pni/core/math/mt_inplace_arithmetics.hpp
                  ../include/pni/core/math/add_op.hpp
                  ../include/pni/core/math/inplace_arithmetics.hpp
                  ../include/pni/core/math/op_traits.hpp

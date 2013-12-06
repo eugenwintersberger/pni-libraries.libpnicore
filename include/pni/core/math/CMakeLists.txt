@@ -2,7 +2,6 @@ set(HEADER_FILES
 add_op.hpp
 div_op.hpp
 inplace_arithmetics.hpp
-mt_inplace_arithmetics.hpp
 mult_op.hpp
 op_traits.hpp
 sub_op.hpp

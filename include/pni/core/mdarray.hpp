@@ -170,7 +170,8 @@ namespace core {
                 _data(container_utils<storage_type>::create(array.size()))
             {
                 //copy data
-                std::copy(array.begin(),array.end(),this->begin());
+                for(size_t i=0;i<array.size();++i) (*this)[i] = array[i];
+                //std::copy(array.begin(),array.end(),this->begin());
             }
 
             //====================assignment operations========================
@@ -191,7 +192,8 @@ namespace core {
                 check_equal_size(*this,array,EXCEPTION_RECORD);
                 check_equal_shape(*this,array,EXCEPTION_RECORD);
 
-                std::copy(array.begin(),array.end(),this->begin());
+                for(size_t i=0;i<array.size();++i) (*this)[i] = array[i];
+                //std::copy(array.begin(),array.end(),this->begin());
 
                 return *this;
             }
