@@ -189,8 +189,8 @@ namespace core {
             array_type &operator=(const mdarray<MDARGS...> &array)
             {
                 if((void*)this == (void*)&array) return *this;
-                check_equal_size(*this,array,EXCEPTION_RECORD);
-                check_equal_shape(*this,array,EXCEPTION_RECORD);
+                //check_equal_size(*this,array,EXCEPTION_RECORD);
+                //check_equal_shape(*this,array,EXCEPTION_RECORD);
 
                 for(size_t i=0;i<array.size();++i) (*this)[i] = array[i];
                 //std::copy(array.begin(),array.end(),this->begin());
