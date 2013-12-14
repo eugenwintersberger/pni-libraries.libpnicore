@@ -127,6 +127,35 @@ namespace core{
                 _imap(std::move(c._imap))
             {}
 
+            //-----------------------------------------------------------------
+            /*!
+            \brief copy assignment operator
+
+            */
+            array_type &operator=(const array_type &a)
+            {
+                if(this == &a) return *this;
+
+                _parray = a._parray;
+                _selection = a._selection;
+                _imap = a._imap;
+
+                return *this;
+            }
+
+            array_type &operator=(array_type &&a)
+            {
+                if(this == &a) return *this;
+
+                _parray = std::move(a._parray);
+                _selection = std::move(a._selection);
+                _imap = std::move(a._imap);
+
+                return *this;
+            }
+
+
+
             //==================public member functions========================
             /*! \brief access with container index 
 
