@@ -12,7 +12,6 @@ set(SOURCES array.cpp
             exceptions.cpp
             exception_utils.cpp
             library_config.cpp
-            range_distributor.cpp
             service.cpp
             slice.cpp
             types.cpp

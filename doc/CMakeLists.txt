@@ -57,7 +57,6 @@ set(HEADER_FILES ../include/pni/core/value.hpp
                  ../include/pni/core/mdarray.hpp
                  ../include/pni/core/value_ref.hpp
                  ../include/pni/core/type_conversion.hpp
-                 mainpage
                  mainpage.cmake
     )
 
