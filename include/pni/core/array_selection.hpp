@@ -355,17 +355,19 @@ namespace core{
                 //check_equal_size(_shape,sindex,EXCEPTION_RECORD);
 
                 //first copy the offsets to the oindex 
-                std::copy(_offset.begin(),_offset.end(),oindex.begin());
+                //std::copy(_offset.begin(),_offset.end(),oindex.begin());
 
                 //now we have to add index*stride from the selection index too
                 //the appropriate locations
                 auto os_iter = _oshape.begin(); //iter. over original shape
                 auto st_iter = _stride.begin(); //iter. over selection strides
                 auto si_iter = sindex.begin();  //iter. over selection index
+                auto of_iter = _offset.begin(); //iter. over the offset
 
                 //loop over output index
                 for(auto &oi: oindex)
                 {
+                    oi = *of_iter++;
                     if(*os_iter++ != 1) oi += (*st_iter)*(*si_iter++);
                     ++st_iter;  //need to increment this guy in any case
                 }
