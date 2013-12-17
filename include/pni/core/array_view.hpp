@@ -94,6 +94,8 @@ namespace core{
             //! local index map - only used internally, this map describes the
             //view not the original array.
             map_type _imap;
+            //! local index buffer for index calculations
+            mutable index_type _index;
 
         public:
             //-----------------------------------------------------------------
@@ -109,14 +111,16 @@ namespace core{
                 _parray(std::ref(a)),
                 _selection(s),
                 _imap(map_utils<map_type>::create(_selection.template
-                            shape<index_type>()))
+                            shape<index_type>())),
+                _index(a.rank())
             { }
 
             //-----------------------------------------------------------------
             //! copy constructor
             array_view(const array_type &c):
                 _parray(c._parray),_selection(c._selection),
-                _imap(c._imap)
+                _imap(c._imap),
+                _index(c._index)
             {}
 
             //-----------------------------------------------------------------
@@ -124,7 +128,8 @@ namespace core{
             array_view(array_type &&c):
                 _parray(std::move(c._parray)),
                 _selection(std::move(c._selection)),
-                _imap(std::move(c._imap))
+                _imap(std::move(c._imap)),
+                _index(std::move(c._index))
             {}
 
             //-----------------------------------------------------------------
@@ -139,6 +144,7 @@ namespace core{
                 _parray = a._parray;
                 _selection = a._selection;
                 _imap = a._imap;
+                _index = a._index;
 
                 return *this;
             }
@@ -150,6 +156,7 @@ namespace core{
                 _parray = std::move(a._parray);
                 _selection = std::move(a._selection);
                 _imap = std::move(a._imap);
+                _index = std::move(a._index);
 
                 return *this;
             }
@@ -173,7 +180,8 @@ namespace core{
                     >
             value_type &operator()(const CTYPE &index)
             {
-                return _parray(_selection.template index<index_type>(index));
+                _selection.index(index,_index);
+                return _parray(_index);
             }
 
             //-----------------------------------------------------------------
@@ -193,7 +201,8 @@ namespace core{
                     >
             value_type operator()(const CTYPE &index) const
             {
-                return _parray(_selection.template index<index_type>(index));
+                _selection.index(index,_index);
+                return _parray(_index);
             }
 
 
