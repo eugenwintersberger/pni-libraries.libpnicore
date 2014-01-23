@@ -35,6 +35,7 @@
 namespace pni{
 namespace core{
 
+
     /*! 
     \ingroup index_mapping_classes
     \brief selection from a multidimensional array
@@ -367,9 +368,11 @@ namespace core{
                 //loop over output index
                 for(auto &oi: oindex)
                 {
-                    oi = *of_iter++;
-                    if(*os_iter++ != 1) oi += (*st_iter)*(*si_iter++);
+                    size_t index = *of_iter++;
+                    //oi = *of_iter++;
+                    if(*os_iter++ != 1) index += (*st_iter)*(*si_iter++);
                     ++st_iter;  //need to increment this guy in any case
+                    oi = index;
                 }
             }
 

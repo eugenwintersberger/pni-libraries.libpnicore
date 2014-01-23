@@ -101,13 +101,17 @@ namespace core{
                               IITERT &&index_start,
                               size_t offset)
             {
-                size_t stride,t;
+                size_t t;
+                size_t stride = std::accumulate(++shape_start,shape_stop,1,
+                                                std::multiplies<size_t>());
+                t = offset%stride;
+                *(index_start++) = (offset-t)/stride;
+                offset = t;
                 while(shape_start != shape_stop)
                 {
                     //increment here the shape_start iterator - we already start
                     //with start+1 with the stride computation
-                    stride = std::accumulate(++shape_start,shape_stop,1,
-                                             std::multiplies<size_t>());
+                    stride /= *shape_start++;
                     t = offset%stride;
                     *(index_start++) = (offset-t)/stride;
                     offset = t;
