@@ -18,4 +18,9 @@ Todo for the next release so1 - 0.9.4
     4.2.) review object behavior
     4.3.) provide utility functions for the array type erasure
 
+5.) Performance issues with array views
+    -> linear iterator access is about a factor of 100 slower
+    -> multiindex access is about a a factor of 10 slower
+    
+
 
