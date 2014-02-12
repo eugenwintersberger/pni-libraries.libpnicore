@@ -90,7 +90,7 @@ namespace core{
             //! parent array from which to draw data
             std::reference_wrapper<ATYPE> _parray; 
             //! selection object for index transformation 
-            array_selection _selection;
+            array_selection<typename ATYPE::map_type::storage_type> _selection;
             //! local index map - only used internally, this map describes the
             //view not the original array.
             map_type _imap;
@@ -107,7 +107,8 @@ namespace core{
             \param s selection object defining the description
             dimension
             */
-            array_view(storage_type &a,const array_selection &s):
+            template<typename INDEXT>
+            array_view(storage_type &a,const array_selection<INDEXT> &s):
                 _parray(std::ref(a)),
                 _selection(s),
                 _imap(map_utils<map_type>::create(_selection.template

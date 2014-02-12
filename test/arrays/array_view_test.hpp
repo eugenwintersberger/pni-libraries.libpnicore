@@ -140,15 +140,16 @@ template<typename ATYPE> void array_view_test<ATYPE>::tearDown() { }
 //-----------------------------------------------------------------------------
 template<typename ATYPE> void array_view_test<ATYPE>::test_construction()
 {
+    typedef typename ATYPE::map_type::storage_type index_type;
+    typedef array_selection<index_type> selection_type;
    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
    //select a 2D array from the original 2D array
-   view_type v1(array,
-                array_selection::create(slice_container{slice(0,3),slice(3,7)}));
+   view_type v1(array, selection_type::create(slice_container{slice(0,3),slice(3,7)}));
    check_view(v1,shape_t{3,4});
 
    //select a 1D strip from the 2D array
-   view_type v2(array,array_selection::create(slice_container{1,slice(3,7)}));
+   view_type v2(array,selection_type::create(slice_container{1,slice(3,7)}));
    check_view(v2,shape_t{4});
 }
 
@@ -188,12 +189,14 @@ void array_view_test<ATYPE>::test_construction_from_array_variadic()
 
 //-----------------------------------------------------------------------------
 template<typename ATYPE> void array_view_test<ATYPE>::test_linear_access()
-{ 
+{
+    typedef typename ATYPE::map_type::storage_type index_type;
+    typedef array_selection<index_type> selection_type;
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
     //create a selection
     view_type view(array,
-                   array_selection::create(slice_container{slice(0,1),slice(2,7)}));
+                   selection_type::create(slice_container{slice(0,1),slice(2,7)}));
     check_view(view,shape_t{5});
 
     for(size_t i=0;i<view.size();++i) 
@@ -217,12 +220,14 @@ template<typename ATYPE> void array_view_test<ATYPE>::test_linear_access()
 //-----------------------------------------------------------------------------
 template<typename ATYPE> void array_view_test<ATYPE>::test_iterator_access()
 {
+    typedef typename ATYPE::map_type::storage_type index_type;
+    typedef array_selection<index_type> selection_type;
     typedef std::vector<value_type> ctype;
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
     //create the view
     view_type v(array,
-                array_selection::create(slice_container{slice(10,35,2),slice(100,125,3)}));
+                selection_type::create(slice_container{slice(10,35,2),slice(100,125,3)}));
     check_view(v,shape_t{13,9});
 
     //create data for the selection
@@ -243,7 +248,7 @@ template<typename ATYPE> void array_view_test<ATYPE>::test_iterator_access()
         compare(*iter,*diter);
 
     //-----now we need to check if the data arrived at the original array------
-    array_selection  selection(shape_t{13,9},shape_t{10,100},shape_t{2,3});
+    selection_type  selection(shape_t{13,9},shape_t{10,100},shape_t{2,3});
     index_iterator<shape_t,map_type> index_iter(shape_t{13,9},0);
     for(auto iter = data.begin();iter!=data.end();++iter)
     {
@@ -280,10 +285,13 @@ template<typename ATYPE> void array_view_test<ATYPE>::test_assignment()
 template<typename ATYPE> void array_view_test<ATYPE>::test_multiindex_access()
 {
     typedef std::vector<value_type> ctype;
+    typedef typename ATYPE::map_type::storage_type index_type;
+    typedef array_selection<index_type> selection_type;
+
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
      
     slice_container slices{slice(10,40),slice(0,100)};
-    view_type view(array,array_selection::create(slices));
+    view_type view(array,selection_type::create(slices));
     check_view(view,shape_t{30,100});
     auto shape = view.template shape<shape_t>();
 

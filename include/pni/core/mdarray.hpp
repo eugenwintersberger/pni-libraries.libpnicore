@@ -455,8 +455,8 @@ namespace core {
                     >
             array_view<array_type> operator()(const CTYPE &slices)
             {
-
-                array_selection sel = array_selection::create(slices);
+                typedef typename map_type::storage_type index_type;
+                array_selection<index_type> sel = array_selection<index_type>::create(slices);
                 return array_view<array_type>(*this,sel);
             }
 
@@ -468,7 +468,8 @@ namespace core {
                     >
             array_view<const array_type> operator()(const CTYPE &slices) const
             {
-                array_selection sel = array_selection::create(slices);
+                typedef typename map_type::storage_type index_type;
+                array_selection<index_type> sel = array_selection<index_type>::create(slices);
                 return array_view<const array_type>(*this,sel);
             }
 

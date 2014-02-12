@@ -29,6 +29,7 @@
 #include <boost/foreach.hpp>
 #endif
 
+#include "container_utils.hpp"
 #include "exception_utils.hpp"
 #include "slice.hpp"
 
@@ -66,10 +67,11 @@ namespace core{
     element in the selection. However, to get the data from the original array
     this must be modified to (1,i,j) which is the major purpose of this type.
     */
+    template<typename INDEXT=std::vector<size_t>>
     class array_selection
     {
         private:
-            typedef std::vector<size_t> index_t;
+            typedef INDEXT index_t;
 
             //member variables describing the selection in the original array
             //all of these containers have the same size which is equal to the
@@ -107,6 +109,15 @@ namespace core{
             //-----------------------------------------------------------------
             explicit array_selection(index_t &&oshape,index_t &ooffset,
                                      index_t &&ostride):
+                _oshape(std::move(oshape)),
+                _offset(std::move(ooffset)),
+                _stride(std::move(ostride))
+            {
+            }
+            
+            //-----------------------------------------------------------------
+            explicit array_selection(const index_t &oshape,const index_t &ooffset,
+                                     const index_t &ostride):
                 _oshape(std::move(oshape)),
                 _offset(std::move(ooffset)),
                 _stride(std::move(ostride))
@@ -159,9 +170,12 @@ namespace core{
                      std::is_same<typename CTYPE::value_type,pni::core::slice>::value
                      >::type
                     >
-            static array_selection create(const CTYPE &s)
+            static array_selection<INDEXT> create(const CTYPE &s)
             {
-                index_t shape, offset, stride;
+                typedef container_utils<INDEXT> cutils_type;
+                auto shape = cutils_type::create(s.size());
+                auto offset = cutils_type::create(s.size());
+                auto stride = cutils_type::create(s.size());
 
 #ifdef NOFOREACH
                 BOOST_FOREACH(auto sl,s)
@@ -169,12 +183,12 @@ namespace core{
                 for(auto sl: s)
 #endif
                 {
-                    offset.push_back(sl.first());
-                    stride.push_back(sl.stride());
-                    shape.push_back(pni::core::size(sl));
+                    offset[sl.first()];
+                    stride[sl.stride()];
+                    shape[pni::core::size(sl)];
                 }
 
-                return array_selection(std::move(shape),
+                return array_selection<INDEXT>(std::move(shape),
                                        std::move(offset),
                                        std::move(stride));
             }
@@ -235,7 +249,7 @@ namespace core{
 
                 //compute the size and return it
                 return std::accumulate(_oshape.begin(),_oshape.end(),1,
-                                     std::multiplies<index_t::value_type>());
+                                     std::multiplies<typename index_t::value_type>());
             }
 
             //=========methods to retrieve full selection information==========
@@ -400,12 +414,38 @@ namespace core{
                 return oindex;
             }
             //! output operator
+            /*
             friend std::ostream &
-                operator<<(std::ostream &o,const array_selection &s);
+                operator<< <>(std::ostream &o,const array_selection<INDEXT> &s);
+                */
     };
 
-            
+    //--------------------------------------------------------------------------
+    template<typename INDEXT>
+    std::ostream &operator<<(std::ostream &o,const array_selection<INDEXT> &s)
+    {
+        o<<"original data:"<<std::endl;
+        auto oshape = s.template full_shape();
+        auto offset = s.offset();
+        auto stride = s.stride();
+        for(size_t i=0;i<s._oshape.size();i++)
+        {
+            o<<i<<":\t"<<oshape[i]<<"\t"<<offset[i]<<"\t"<<stride[i];
+            o<<std::endl;
+        }
+        shape_t shape = s.template shape<shape_t>();
+        o<<"effective shape: ( ";
+#ifdef NOFOREACH
+        BOOST_FOREACH(auto v,shape)
+#else
+        for(auto v: shape)
+#endif
+            o<<v<<" ";
+        
+        o<<")"<<std::endl;
 
+        return o;
+    }
 //end of namespace
 }
 }

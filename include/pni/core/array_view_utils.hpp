@@ -174,7 +174,7 @@ namespace core{
             
             std::vector<slice> buffer{slice(indexes)...};
 
-            return ref_type(c,array_selection::create(buffer));
+            return ref_type(c,array_selection<typename ATYPE::map_type::storage_type>::create(buffer));
         }
 
         template<typename CTYPE,typename MAP,typename ...ITYPES>
@@ -182,7 +182,7 @@ namespace core{
         {
             std::vector<slice> buffer{slice(indexes)...};
 
-            return type(c,array_selection::create(buffer));
+            return type(c,array_selection<typename ATYPE::map_type::storage_type>::create(buffer));
         }
          
 

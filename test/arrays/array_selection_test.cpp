@@ -47,7 +47,7 @@ void array_selection_test::test_construction()
 
     typedef std::vector<size_t> itype;
     //testing default constructor
-    array_selection sel1;
+    array_selection<itype> sel1;
     CPPUNIT_ASSERT(sel1.rank() == 0);
     CPPUNIT_ASSERT(sel1.shape<shape_t>() == shape_t());
     CPPUNIT_ASSERT(sel1.size() == 0);
@@ -55,7 +55,7 @@ void array_selection_test::test_construction()
 
     //testing standard constructor
     itype shape({1,100,100}); itype offset({0,0,0}); itype stride({1,1,1});
-    array_selection sel2(shape,offset,stride);
+    array_selection<itype> sel2(shape,offset,stride);
     std::cout<<sel2.rank()<<std::endl;
     CPPUNIT_ASSERT(sel2.rank() == 2);
     CPPUNIT_ASSERT(sel2.size() == 100*100);
@@ -82,14 +82,14 @@ void array_selection_test::test_construction()
     CPPUNIT_ASSERT(std::equal(stride.begin(),stride.end(),lstride.begin()));
 
     //! copy constructor
-    array_selection sel3(sel2);
+    array_selection<itype> sel3(sel2);
     CPPUNIT_ASSERT(sel3.rank() == sel2.rank());
     CPPUNIT_ASSERT(sel3.size() == sel2.size());
     s = sel3.shape<itype>();
     CPPUNIT_ASSERT(std::equal(s.begin(),s.end(),sel2_shape.begin()));
 
     //! move construction
-    array_selection sel4(std::move(sel3));
+    array_selection<itype> sel4(std::move(sel3));
     CPPUNIT_ASSERT(sel4.rank() == sel2.rank());
     CPPUNIT_ASSERT(sel4.size() == sel2.size());
     s = sel4.shape<itype>();
@@ -105,9 +105,10 @@ void array_selection_test::test_construction()
 void array_selection_test::test_create()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
-   
+    typedef std::vector<size_t> index_type;
+    
     std::vector<slice> slices{slice(0,10),slice(1,30,2),slice(2)};
-    array_selection s = array_selection::create(slices);
+    array_selection<index_type> s = array_selection<index_type>::create(slices);
 
     CPPUNIT_ASSERT(s.size() == 10*15);
     CPPUNIT_ASSERT(s.rank() == 2);
@@ -120,8 +121,10 @@ void array_selection_test::test_create()
 //-----------------------------------------------------------------------------
 void array_selection_test::test_assignment()
 {
+    typedef std::vector<size_t> index_type;
+
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
-    array_selection sel(itype({100,1,200}),itype({1,1,1}),itype({1,1,2}));
+    array_selection<index_type> sel(itype({100,1,200}),itype({1,1,1}),itype({1,1,2}));
     CPPUNIT_ASSERT(sel.rank() == 2);
     itype s{100,200};
     auto sel_shape = sel.shape<itype>();
@@ -140,7 +143,7 @@ void array_selection_test::test_assignment()
     CPPUNIT_ASSERT(sel.size() == 100*200);
 
     //------------------------test copy assignment------------------------------
-    array_selection s1;
+    array_selection<index_type> s1;
 
     s1 = sel;
     CPPUNIT_ASSERT(s1.rank() == sel.rank());
@@ -150,7 +153,7 @@ void array_selection_test::test_assignment()
                               sel_shape.begin()));
 
     //-----------------test move assignment------------------------------------
-    array_selection s2;
+    array_selection<index_type> s2;
     s2 = std::move(s1);
     CPPUNIT_ASSERT(s2.rank() == sel.rank());
     CPPUNIT_ASSERT(s2.size() == sel.size());
@@ -167,8 +170,10 @@ void array_selection_test::test_assignment()
 //-----------------------------------------------------------------------------
 void array_selection_test::test_index()
 {
+    typedef std::vector<size_t> index_type;
+
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
-    array_selection sel(itype({10,20}),itype({1,2}),itype({3,2}));
+    array_selection<index_type> sel(itype({10,20}),itype({1,2}),itype({3,2}));
     itype s{10,20};
     auto sshape = sel.shape<itype>();
     CPPUNIT_ASSERT(std::equal(s.begin(),s.end(),sshape.begin()));
@@ -180,7 +185,7 @@ void array_selection_test::test_index()
     itype r{4,8};
     CPPUNIT_ASSERT(std::equal(r.begin(),r.end(),i.begin()));
 
-    array_selection sel2(itype({10,1,20}),itype({1,1,2}),itype({3,1,2}));
+    array_selection<index_type> sel2(itype({10,1,20}),itype({1,1,2}),itype({3,1,2}));
     i = itype(3);
     sel2.index(itype({1,3}),i);
     r = itype{4,1,8};
