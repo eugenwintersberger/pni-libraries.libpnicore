@@ -177,15 +177,17 @@ namespace core{
                 auto offset = cutils_type::create(s.size());
                 auto stride = cutils_type::create(s.size());
 
+                size_t index = 0;
 #ifdef NOFOREACH
                 BOOST_FOREACH(auto sl,s)
 #else
                 for(auto sl: s)
 #endif
                 {
-                    offset[sl.first()];
-                    stride[sl.stride()];
-                    shape[pni::core::size(sl)];
+                    offset[index] = sl.first();
+                    stride[index] = sl.stride();
+                    shape[index]  = pni::core::size(sl);
+                    index++;
                 }
 
                 return array_selection<INDEXT>(std::move(shape),
