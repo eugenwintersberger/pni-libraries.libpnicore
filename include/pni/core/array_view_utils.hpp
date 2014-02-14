@@ -87,6 +87,7 @@ namespace core{
         typedef array_view<const ATYPE> const_type;
     };
 
+    //-------------------------------------------------------------------------
     /*!
     \ingroup multidim_array_classes
     \brief trait for single elements 
@@ -112,6 +113,7 @@ namespace core{
     */
     template<typename RTYPE,bool is_view> struct view_provider;
 
+    //-------------------------------------------------------------------------
     /*!
     \ingroup multidim_array_classes
     \brief single value view_provider 
@@ -125,10 +127,19 @@ namespace core{
         //! const type (value type)
         typedef typename array_view_trait<ATYPE,false>::const_type type;
        
+        //---------------------------------------------------------------------
         /*!
         \brief get reference
 
-        Return the reference to a single element.
+        Return the reference to a single element. The function computes the
+        offset for a particular container by means of an index map. 
+
+        \tparam CTYPE container type 
+        \tparam MAP index map type
+        \tparam ITYPES indices of the element
+        \param c reference to the data container 
+        \param map reference to the index map
+        \param indexes index values
         */
         template<typename CTYPE,typename MAP,typename... ITYPES> 
         static ref_type get_reference(CTYPE &c,MAP &map,ITYPES ...indexes)
@@ -143,6 +154,21 @@ namespace core{
             return c[offset];
         }
 
+        //---------------------------------------------------------------------
+        /*!
+        \brief get value
+
+        Return a single value from a container. The function computes the
+        linear offset. 
+
+        \tparam CTYPE data container type
+        \tparam MAP index map type
+        \tparam ITYPES index types
+        \param c reference to the data container
+        \param map reference to the index map
+        \param indexes index values as variadic arguments
+        \return value of the referenced data element.
+        */
         template<typename CTYPE,typename MAP,typename ...ITYPES>
         static type get_value(const CTYPE &c,MAP &map,ITYPES ...indexes)
         {
@@ -157,32 +183,61 @@ namespace core{
          
 
     };
-   
+  
+    //-------------------------------------------------------------------------
     /*!
     \ingroup multidim_array_classes
     \brief array view view_provider
 
+    Return an array view. 
     */
     template<typename ATYPE> struct view_provider<ATYPE,true>
     {
         typedef typename array_view_trait<ATYPE,true>::type ref_type;
         typedef typename array_view_trait<ATYPE,true>::const_type type;
-        
+        typedef typename ATYPE::map_type::storage_type index_type;
+       
+        //---------------------------------------------------------------------
+        /*!
+        \brief get element reference
+
+        Return the reference to a data element of a container. 
+
+        \tparam CTYPE container type
+        \tparam MAP index map type
+        \tparam ITYPES index types
+        \param c reference to the data container
+        \param map reference to the index map
+        \param indexes variadic argument list
+        \return array view on the data container.
+        */
         template<typename CTYPE,typename MAP,typename... ITYPES> 
         static ref_type get_reference(CTYPE &c,MAP &map,ITYPES ...indexes)
         {
             
-            std::vector<slice> buffer{slice(indexes)...};
+            std::array<slice,sizeof...(ITYPES)> buffer{slice(indexes)...};
 
-            return ref_type(c,array_selection<typename ATYPE::map_type::storage_type>::create(buffer));
+            return ref_type(c,array_selection<index_type>::create(buffer));
         }
 
+        //---------------------------------------------------------------------
+        /*!
+        \brief get const view
+
+        \tparam CTYPE data container type
+        \tparam MAP index map type
+        \tparam ITYPES index types
+        \param c reference to the data container
+        \param map reference to the index map
+        \param indexes variadic argument list
+        \return const array view
+        */
         template<typename CTYPE,typename MAP,typename ...ITYPES>
         static type get_value(const CTYPE &c,MAP &map,ITYPES ...indexes)
         {
-            std::vector<slice> buffer{slice(indexes)...};
+            std::array<slice,sizeof...(ITYPES)> buffer{slice(indexes)...};
 
-            return type(c,array_selection<typename ATYPE::map_type::storage_type>::create(buffer));
+            return type(c,array_selection<index_type>::create(buffer));
         }
          
 

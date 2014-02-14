@@ -150,6 +150,13 @@ namespace core{
                 return *this;
             }
 
+            //-----------------------------------------------------------------
+            /*!
+            \brief move assignment operator
+
+            \param a rvalue reference to the rhs side of the assignment operator
+            \return reference to the new array view
+            */
             array_type &operator=(array_type &&a)
             {
                 if(this == &a) return *this;
@@ -161,8 +168,6 @@ namespace core{
 
                 return *this;
             }
-
-
 
             //==================public member functions========================
             /*! \brief access with container index 
