@@ -22,22 +22,33 @@
  */
 
 #pragma once
+#include <iterator>
+#include <stdexcept>
 
 namespace pni{
 namespace core{
 
 
+    /*!
+    \brief vector_adapter
+
+    */
     template<typename T> class vector_adapter
     {
         public:
             typedef T value_type;
-            typedef T* pointer;
-            typedef T& reference;
-            typedef const T* const_pointer;
-            typedef const T& const_reference;
+            typedef void allocator_type;
             typedef size_t size_type;
+            typedef std::ptrdiff_t difference_type;
+            typedef T& reference;
+            typedef const T& const_reference;
+            typedef T* pointer;
+            typedef const T* const_pointer;
             typedef pointer iterator;
             typedef const_pointer const_iterator;
+            typedef std::reverse_iterator<iterator> reverse_iterator;
+            typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
+            
         private:
             pointer _data;
             size_type _size; 
@@ -79,6 +90,140 @@ namespace core{
                 a._data = nullptr;
                 a._size = 0;
             }
+
+            //===============assignment operators==============================
+            /*!
+            \brief copy assignment operator
+
+            */
+            vector_adapter<T> &operator=(const vector_adapter<T> &o)
+            {
+                if(this == &o) return *this;
+
+                _data = o._data;
+                _size = o._size;
+                return *this;
+            }
+
+            //-----------------------------------------------------------------
+            /*!
+            \brief move assignment operator
+
+            */
+            vector_adapter<T> &operator=(vector_adapter<T> &&o)
+            {
+                if(this == &o) return *this;
+
+                _data = o._data;
+                _size = o._size;
+
+                o._data = nullptr;
+                o._size = 0;
+            }
+
+            //=============element access======================================
+            reference at(size_type pos)
+            {
+                if(pos>=size())
+                    throw std::out_of_range();
+
+                return _data[pos];
+            }
+
+            //-----------------------------------------------------------------
+            const_reference at(size_type pos) const
+            {
+                if(pos>=size())
+                    throw std::out_of_range();
+
+                return _data[pos];
+            }
+
+            //-----------------------------------------------------------------
+            reference operator[](size_type pos) { return _data[pos]; }
+
+            //-----------------------------------------------------------------
+            const_reference operator[](size_type pos) const 
+            { 
+                return _data[pos]; 
+            }
+
+            //-----------------------------------------------------------------
+            reference front() { return _data[0]; }
+
+            //-----------------------------------------------------------------
+            const_reference front() const { return _data[0]; }
+
+            //-----------------------------------------------------------------
+            reference back() { return _data[size()-1]; }
+
+            //-----------------------------------------------------------------
+            const_reference back() const { return _data[size()-1]; }
+
+            //-----------------------------------------------------------------
+            pointer data() { return _data; }
+
+            //-----------------------------------------------------------------
+            const_pointer data() const { return _data; }
+
+           
+            //-----------------------------------------------------------------
+            /*!
+            \brief get number of elements
+            */
+            size_type size() const
+            {
+                return _size;
+            }
+
+            //-----------------------------------------------------------------
+            bool empty() const
+            {
+                return _data == nullptr;
+            }
+
+            //-----------------------------------------------------------------
+            size_type capacity() const
+            {
+                return size();
+            }
+
+            //=================iterators=======================================
+            iterator begin() { return &_data[0]; }
+
+            //-----------------------------------------------------------------
+            iterator end() { return &_data[size()]; }
+
+            //-----------------------------------------------------------------
+            const_iterator begin() const { return &_data[0]; }
+
+            //-----------------------------------------------------------------
+            const_iterator end() const { return &_data[size()]; }
+
+            //-----------------------------------------------------------------
+            reverse_iterator rbegin() 
+            { 
+                return reverse_iterator(end());  
+            }
+
+            //-----------------------------------------------------------------
+            reverse_iterator rend() 
+            {
+                return reverse_iterator(begin()); 
+            }
+
+            //-----------------------------------------------------------------
+            const_reverse_iterator rbegin() const 
+            {
+                return const_reverse_iterator(end()); 
+            }
+
+            //-----------------------------------------------------------------
+            const_reverse_iterator rend() const 
+            {
+                return const_reverse_iterator(begin()); 
+            }
+
 
     };
 

@@ -35,6 +35,7 @@ set(TEST_SOURCES pnicoretest.cpp
                  arrays/array_test.cpp
                  value_ref_test.cpp
                  value_test.cpp
+                 vector_adapter_test.cpp
                  )
 
 
