@@ -165,7 +165,39 @@ namespace core{
                 index(shape.begin(),shape.end(),idx.begin(),offset); 
             }
 
+            //-----------------------------------------------------------------
+            /*!
+            \brief identify a contiguous selection
 
+            In order to be contiguous the shape of a selection (in the original
+            array) has to satisfy several conditions. The number of elements of
+            the selection must be either 1 or match the number of elements in
+            the original array. In addition, once an index other than one has
+            been found all subsequent element numbers must match those of the
+            original array.
+
+            \tparam CTYPE container type for the array shape
+            \tparam SELTYPE selection type
+            \param shape reference to the original array shape
+            \param sel reference to the selection
+            \return true of the selection is contiguous
+            */
+            template<typename CTYPE,typename SELTYPE>
+            static bool is_contiguous(const CTYPE &shape,const SELTYPE &sel)
+            {
+                auto oshape = sel.template full_shape<CTYPE>();
+                
+                auto oiter = oshape.begin();
+                auto siter = shape.begin();
+
+                for(;siter != shape.end(); ++oiter,++siter)
+                {
+                    if((*oiter!=1)&&(*oiter!=*siter)) return false;
+                }
+
+                return true;
+
+            }
 
     };
 //end of namespace

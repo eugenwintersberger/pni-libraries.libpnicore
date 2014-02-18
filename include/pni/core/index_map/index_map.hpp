@@ -343,6 +343,18 @@ namespace core{
             }
 
             //-----------------------------------------------------------------
+            /*!
+            \brief check contiguous selection
+
+            Returns true if a selection is contiguous or not. 
+            */
+            template<typename SELTYPE>
+            bool is_contiguous(const SELTYPE &selection)
+            {
+                return MAP_POL::template is_contiguous(_shape,selection);
+            }
+
+            //-----------------------------------------------------------------
             //! return iterator to first element
             iterator begin() { return _shape.begin(); }
 

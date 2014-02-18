@@ -183,6 +183,13 @@ namespace core{
                           idx,offset);
             return idx;
         }
+
+        //---------------------------------------------------------------------
+        template<typename CTYPE,typename SELTYPE>
+        static bool is_contiguous(const CTYPE &s,const SELTYPE &sel) 
+        {
+            return POLIMP::is_contiguous(s,sel);
+        }
     };
 
 
