@@ -100,6 +100,9 @@ namespace core{
             }
 
             //------------------------------------------------------------------
+            /*!
+            \brief default constructor
+            */
             explicit array_selection():
                 _oshape(0),
                 _offset(0),
@@ -107,6 +110,15 @@ namespace core{
             {}
 
             //-----------------------------------------------------------------
+            /*!
+            \brief constructor
+
+            This constructor does not require any memory allocation as all
+            parameters are passed as rvalue references.
+            \param oshape the original array shape
+            \param ooffset original offset 
+            \param ostride strides of the selection in the original array
+            */
             explicit array_selection(index_t &&oshape,index_t &ooffset,
                                      index_t &&ostride):
                 _oshape(std::move(oshape)),
@@ -116,15 +128,26 @@ namespace core{
             }
             
             //-----------------------------------------------------------------
+            /*!
+            \brief constructor
+
+            Copy construct from parameters. 
+            \param oshape selection shape in the original array
+            \param ooffset offset of the selection in the original shape
+            \param ostride selection stride in the original array
+            */
             explicit array_selection(const index_t &oshape,const index_t &ooffset,
                                      const index_t &ostride):
-                _oshape(std::move(oshape)),
-                _offset(std::move(ooffset)),
-                _stride(std::move(ostride))
+                _oshape(oshape),
+                _offset(ooffset),
+                _stride(ostride)
             {
             }
 
             //-----------------------------------------------------------------
+            /*!
+            \brief copy constructor
+            */
             explicit array_selection(const array_selection &s):
                 _oshape(s._oshape),
                 _offset(s._offset),
@@ -132,6 +155,9 @@ namespace core{
             { }
 
             //-----------------------------------------------------------------
+            /*!
+            \brief move constructor
+            */
             array_selection(array_selection &&s):
                 _oshape(std::move(s._oshape)),
                 _offset(std::move(s._offset)),
@@ -139,6 +165,9 @@ namespace core{
             { }
 
             //-----------------------------------------------------------------
+            /*!
+            \brief copy assignment operator
+            */
             array_selection &operator=(const array_selection &s)
             {
                 if(this == &s) return *this;
@@ -151,6 +180,9 @@ namespace core{
             }
 
             //-----------------------------------------------------------------
+            /*!
+            \brief move asignment operator
+            */
             array_selection &operator=(array_selection &&s)
             {
                 if(this == &s) return *this;
@@ -173,7 +205,7 @@ namespace core{
             static array_selection<INDEXT> create(const CTYPE &s)
             {
                 typedef container_utils<INDEXT> cutils_type;
-                auto shape = cutils_type::create(s.size());
+                auto shape  = cutils_type::create(s.size());
                 auto offset = cutils_type::create(s.size());
                 auto stride = cutils_type::create(s.size());
 
