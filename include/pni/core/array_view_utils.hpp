@@ -156,6 +156,20 @@ namespace core{
 
         //---------------------------------------------------------------------
         /*!
+        \brief get reference to container value
+
+        */
+        template<typename CTYPE,typename MAP,typename ITYPE>
+        static ref_type get_reference(CTYPE &c,MAP &map,const ITYPE &index)
+        {
+#ifdef DEBUG
+            check_indexes(index,map,EXCEPTION_RECORD);
+#endif
+            return c[map.offset(index)];
+        }
+
+        //---------------------------------------------------------------------
+        /*!
         \brief get value
 
         Return a single value from a container. The function computes the
@@ -179,6 +193,16 @@ namespace core{
 
             size_t offset = map.offset(buffer);
             return c[offset];
+        }
+
+        //---------------------------------------------------------------------
+        template<typename CTYPE,typename MAP,typename ITYPE>
+        static type get_value(const CTYPE &c,MAP &map,const ITYPE &index)
+        {
+#ifdef DEBUG
+            check_indexes(index,map,EXCEPTION_RECORD);
+#endif
+            return c[map.offset(index)];
         }
          
 
@@ -220,6 +244,12 @@ namespace core{
             return ref_type(c,array_selection<index_type>::create(buffer));
         }
 
+        template<typename CTYPE,typename MAP,typename ITYPE>
+        static ref_type get_reference(CTYPE &c,MAP &map,const ITYPE &i)
+        {
+            return ref_type(c,array_selection<index_type>::create(i));
+        }
+
         //---------------------------------------------------------------------
         /*!
         \brief get const view
@@ -238,6 +268,12 @@ namespace core{
             std::array<slice,sizeof...(ITYPES)> buffer{slice(indexes)...};
 
             return type(c,array_selection<index_type>::create(buffer));
+        }
+
+        template<typename CTYPE,typename MAP,typename ITYPE>
+        static type get_value(const CTYPE &c,MAP &map,const ITYPE &i)
+        {
+            return type(c,array_selection<index_type>::create(i));
         }
          
 

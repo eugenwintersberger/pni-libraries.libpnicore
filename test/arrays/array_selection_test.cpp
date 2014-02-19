@@ -56,7 +56,6 @@ void array_selection_test::test_construction()
     //testing standard constructor
     itype shape({1,100,100}); itype offset({0,0,0}); itype stride({1,1,1});
     array_selection<itype> sel2(shape,offset,stride);
-    std::cout<<sel2.rank()<<std::endl;
     CPPUNIT_ASSERT(sel2.rank() == 2);
     CPPUNIT_ASSERT(sel2.size() == 100*100);
     itype s{100,100};
@@ -128,18 +127,8 @@ void array_selection_test::test_assignment()
     CPPUNIT_ASSERT(sel.rank() == 2);
     itype s{100,200};
     auto sel_shape = sel.shape<itype>();
-#ifdef NOFOREACH
-    BOOST_FOREACH(auto v,sel)
-#else
-    for(auto v: sel_shape) 
-    {
-#endif
-        std::cout<<v<<" ";
-    }
 
-    std::cout<<std::endl;
     CPPUNIT_ASSERT(std::equal(s.begin(),s.end(),sel_shape.begin()));
-    std::cout<<sel.size()<<std::endl;
     CPPUNIT_ASSERT(sel.size() == 100*200);
 
     //------------------------test copy assignment------------------------------
@@ -189,9 +178,6 @@ void array_selection_test::test_index()
     i = itype(3);
     sel2.index(itype({1,3}),i);
     r = itype{4,1,8};
-    for(auto n:i)
-        std::cout<<n<<" ";
-    std::cout<<std::endl;
     CPPUNIT_ASSERT(std::equal(r.begin(),r.end(),i.begin()));
 }
 

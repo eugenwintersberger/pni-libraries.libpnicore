@@ -302,7 +302,6 @@ template<typename ATYPE> void array_view_test<ATYPE>::test_multiindex_access()
     for(size_t i=0;i<shape[0];++i)
         for(size_t j=0;j<shape[1];++j)
         {
-            //std::cout<<i<<" "<<j<<std::endl;
             value_type v = *diter++;
             view(i,j) = v;
         }

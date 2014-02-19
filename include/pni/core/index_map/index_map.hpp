@@ -258,6 +258,7 @@ namespace core{
             \param index instance of CTYPE with container data
             \return linear offset
             */
+            /*
             template<typename CTYPE,
                      typename = typename std::enable_if<
                      !std::is_lvalue_reference<CTYPE>::value
@@ -267,7 +268,7 @@ namespace core{
             {
                 return MAP_POL::template offset(_shape,
                                                 std::forward<CTYPE>(index));
-            }
+            }*/
 
             //-----------------------------------------------------------------
             /*!
@@ -292,12 +293,13 @@ namespace core{
             \param index index for which to compute the offset
             \return linear offset
             */
+            /*
             template<typename T,size_t N> 
             size_t offset(std::array<T,N> index) const
             {
                 return MAP_POL::template offset(_shape,
                                                 std::forward<std::array<T,N>>(index));
-            }
+            }*/
 
             //-----------------------------------------------------------------
             /*!

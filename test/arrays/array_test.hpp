@@ -186,7 +186,6 @@ template<typename OT> void array_test<OT>::test_iterator()
     for(array::iterator iter = o.begin();iter!=o.end();++iter)
         CPPUNIT_ASSERT_NO_THROW(*iter = _data[index++]);
 
-    std::cout<<o<<std::endl;
 
     index =0;
     for(auto iter = o.begin();iter!=o.end();++iter)

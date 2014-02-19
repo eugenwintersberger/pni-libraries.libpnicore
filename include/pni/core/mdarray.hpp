@@ -386,6 +386,7 @@ namespace core {
             \brief multiindex by container
 
             */
+            /*
             template<template<typename...> class CTYPE,typename... PARAMS,
                      typename = typename std::enable_if<
                                 std::is_unsigned<typename CTYPE<PARAMS...>::value_type>::value
@@ -398,8 +399,10 @@ namespace core {
 #endif
                 return _data[_imap.offset(c)];
             }
+            */
            
             //-----------------------------------------------------------------
+            /*
             template<template<typename...> class CTYPE,typename... PARAMS,
                      typename = typename std::enable_if<
                                 std::is_unsigned<typename CTYPE<PARAMS...>::value_type>::value
@@ -412,6 +415,7 @@ namespace core {
 #endif
                 return _data[_imap.offset(c)];
             }
+            */
 
             //-----------------------------------------------------------------
             template<typename T,size_t N,
@@ -450,27 +454,46 @@ namespace core {
             */
             template<typename CTYPE,
                      typename = typename std::enable_if<
-                     std::is_same<typename CTYPE::value_type,slice>::value
+                     std::is_same<typename CTYPE::value_type,slice>::value || 
+                     std::is_unsigned<typename CTYPE::value_type>::value
                      >::type
                     >
-            array_view<array_type> operator()(const CTYPE &slices)
+            typename array_view_trait<array_type,
+                                      !std::is_unsigned<typename
+                                          CTYPE::value_type>::value>::type
+            operator()(const CTYPE &slices)
             {
+                /*
                 typedef typename map_type::storage_type index_type;
                 array_selection<index_type> sel = array_selection<index_type>::create(slices);
                 return array_view<array_type>(*this,sel);
+                */
+                
+                typedef view_provider<array_type,!std::is_unsigned<typename CTYPE::value_type>::value>
+                    provider_type;
+                return provider_type::get_reference(*this,_imap,slices);
             }
 
             //-----------------------------------------------------------------
             template<typename CTYPE,
                      typename = typename std::enable_if<
-                     std::is_same<typename CTYPE::value_type,slice>::value
+                     std::is_same<typename CTYPE::value_type,slice>::value || 
+                     std::is_unsigned<typename CTYPE::value_type>::value
                      >::type
                     >
-            array_view<const array_type> operator()(const CTYPE &slices) const
+            typename array_view_trait<const array_type,
+                                      !std::is_unsigned<typename CTYPE::value_type>::value>::const_type
+            operator()(const CTYPE &slices) const
             {
+                /*
                 typedef typename map_type::storage_type index_type;
                 array_selection<index_type> sel = array_selection<index_type>::create(slices);
                 return array_view<const array_type>(*this,sel);
+                */
+                
+                typedef view_provider<array_type,!std::is_unsigned<typename CTYPE::value_type>::value>
+                    provider_type;
+                return provider_type::get_value(*this,_imap,slices);
             }
 
             //-----------------------------------------------------------------

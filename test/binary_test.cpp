@@ -122,11 +122,8 @@ void binary_test::test_io_operator()
     bvalue = b;
     CPPUNIT_ASSERT(bvalue == 'x');
     
-    std::cout<<"value = "<<bvalue<<std::endl;
-    std::cout<<"value = "<<b<<std::endl;
     int8 ivalue = 'z';
     b = ivalue;
-    std::cout<<"value = "<<b<<std::endl;
 }
 
 //-----------------------------------------------------------------------------
