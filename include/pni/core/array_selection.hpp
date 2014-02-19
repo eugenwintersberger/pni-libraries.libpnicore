@@ -67,21 +67,20 @@ namespace core{
     element in the selection. However, to get the data from the original array
     this must be modified to (1,i,j) which is the major purpose of this type.
     */
-    template<typename INDEXT=std::vector<size_t>>
     class array_selection
     {
         private:
-            typedef INDEXT index_t;
+            typedef std::vector<size_t> index_type;
 
             //member variables describing the selection in the original array
             //all of these containers have the same size which is equal to the
             //rank of the original array
             //! shape of the selection in the original array
-            index_t _oshape;             
+            index_type _oshape;             
             //! offset in the original array
-            index_t _offset;
+            index_type _offset;
             //! stride in the original array
-            index_t _stride;
+            index_type _stride;
 
         public:
             //===================constructors and destructor====================
@@ -119,8 +118,8 @@ namespace core{
             \param ooffset original offset 
             \param ostride strides of the selection in the original array
             */
-            explicit array_selection(index_t &&oshape,index_t &ooffset,
-                                     index_t &&ostride):
+            explicit array_selection(index_type &&oshape,index_type &ooffset,
+                                     index_type &&ostride):
                 _oshape(std::move(oshape)),
                 _offset(std::move(ooffset)),
                 _stride(std::move(ostride))
@@ -136,8 +135,9 @@ namespace core{
             \param ooffset offset of the selection in the original shape
             \param ostride selection stride in the original array
             */
-            explicit array_selection(const index_t &oshape,const index_t &ooffset,
-                                     const index_t &ostride):
+            explicit array_selection(const index_type &oshape,
+                                     const index_type &ooffset,
+                                     const index_type &ostride):
                 _oshape(oshape),
                 _offset(ooffset),
                 _stride(ostride)
@@ -202,9 +202,9 @@ namespace core{
                      std::is_same<typename CTYPE::value_type,pni::core::slice>::value
                      >::type
                     >
-            static array_selection<INDEXT> create(const CTYPE &s)
+            static array_selection create(const CTYPE &s)
             {
-                typedef container_utils<INDEXT> cutils_type;
+                typedef container_utils<index_type> cutils_type;
                 auto shape  = cutils_type::create(s.size());
                 auto offset = cutils_type::create(s.size());
                 auto stride = cutils_type::create(s.size());
@@ -222,7 +222,7 @@ namespace core{
                     index++;
                 }
 
-                return array_selection<INDEXT>(std::move(shape),
+                return array_selection(std::move(shape),
                                        std::move(offset),
                                        std::move(stride));
             }
@@ -257,7 +257,9 @@ namespace core{
             */
             template<typename CTYPE> CTYPE shape() const
             {
-                CTYPE c(rank());
+                typedef container_utils<CTYPE>  cutils_type;
+                auto c = cutils_type::create(rank());
+
                 //now we have to copy only those values from the original shape
                 //that are not equal 1
                 std::copy_if(_oshape.begin(),_oshape.end(),c.begin(),
@@ -277,13 +279,15 @@ namespace core{
             */
             size_t size() const 
             { 
+                typedef typename index_type::value_type value_type;
                 if(_oshape.empty()) return 0; //not initialized 
 
                 if(rank() == 0) return 1; //scalar element selected 
 
                 //compute the size and return it
-                return std::accumulate(_oshape.begin(),_oshape.end(),1,
-                                     std::multiplies<typename index_t::value_type>());
+                return std::accumulate(_oshape.begin(),_oshape.end(),
+                                      value_type(1),
+                                      std::multiplies<value_type>());
             }
 
             //=========methods to retrieve full selection information==========
@@ -294,7 +298,7 @@ namespace core{
             selection. 
             \return reference to full shape
             */
-            const index_t &full_shape() const { return _oshape; }
+            const index_type &full_shape() const { return _oshape; }
 
             //-----------------------------------------------------------------
             /*! 
@@ -307,7 +311,8 @@ namespace core{
             */
             template<typename CTYPE> CTYPE full_shape() const 
             {
-                CTYPE c(_oshape.size());
+                typedef container_utils<CTYPE> cutils_type; 
+                auto c = cutils_type::create(_oshape.size());
                 std::copy(_oshape.begin(),_oshape.end(),c.begin());
                 return c;
             }
@@ -319,7 +324,7 @@ namespace core{
             Return a reference to the offset container of the selection object.
             \return reference to offsets
             */
-            const index_t &offset() const { return _offset; }
+            const index_type &offset() const { return _offset; }
 
             //-----------------------------------------------------------------
             /*! 
@@ -331,7 +336,8 @@ namespace core{
             */
             template<typename CTYPE> CTYPE offset() const
             {
-                CTYPE c(_offset.size());
+                typedef container_utils<CTYPE> cutils_type;
+                auto c = cutils_type::create(_offset.size());
                 std::copy(_offset.begin(),_offset.end(),c.begin());
                 return c;
             }
@@ -343,7 +349,7 @@ namespace core{
             Return a reference to the stride container of the selection.
             \return stride reference
             */
-            const index_t &stride() const { return _stride; }
+            const index_type &stride() const { return _stride; }
 
             //-----------------------------------------------------------------
             /*! 
@@ -356,7 +362,9 @@ namespace core{
             */
             template<typename CTYPE> CTYPE stride() const
             {
-                CTYPE c(_stride.size());
+                typedef container_utils<CTYPE> cutils_type;
+                auto c = cutils_type::create(_stride.size());
+
                 std::copy(_stride.begin(),_stride.end(),c.begin());
                 return c;
             }
@@ -438,48 +446,113 @@ namespace core{
             \sa template<typename ITYPE> index(const ITYPE &sindex,const ITYPE
             &oindex) const
             */
-            template<typename ITYPE,typename OITYPE> 
-            ITYPE index(const OITYPE &sindex) const
+            template<typename OITYPE,typename ITYPE> 
+            OITYPE index(const ITYPE &sindex) const
             {
-                ITYPE oindex(_oshape.size());
+                typedef container_utils<OITYPE> cutils_type;
+                auto oindex = cutils_type::create(_oshape.size());
+
                 try{ index(sindex,oindex); }
                 EXCEPTION_FORWARD(size_mismatch_error);
 
                 return oindex;
             }
-            //! output operator
-            /*
-            friend std::ostream &
-                operator<< <>(std::ostream &o,const array_selection<INDEXT> &s);
-                */
     };
 
-    //--------------------------------------------------------------------------
-    template<typename INDEXT>
-    std::ostream &operator<<(std::ostream &o,const array_selection<INDEXT> &s)
-    {
-        o<<"original data:"<<std::endl;
-        auto oshape = s.template full_shape();
-        auto offset = s.offset();
-        auto stride = s.stride();
-        for(size_t i=0;i<s._oshape.size();i++)
-        {
-            o<<i<<":\t"<<oshape[i]<<"\t"<<offset[i]<<"\t"<<stride[i];
-            o<<std::endl;
-        }
-        shape_t shape = s.template shape<shape_t>();
-        o<<"effective shape: ( ";
-#ifdef NOFOREACH
-        BOOST_FOREACH(auto v,shape)
-#else
-        for(auto v: shape)
-#endif
-            o<<v<<" ";
-        
-        o<<")"<<std::endl;
+    
+    //-------------------------------------------------------------------------
+    /*!
+    \brief compute offset 
 
-        return o;
+    Compute the offset of a selection element in the original array. The
+    original array is not required but only its index map. 
+
+    \tparam MAPT map type of the original array
+    \tparam CTYPE index type for the selection index 
+    \param map reference to the original index map
+    \param s reference to the selection object
+    \param index reference to the selection index 
+    \return linear offset of the element in the original array
+    */
+    template<typename MAPT,typename CTYPE>
+    size_t offset(const MAPT &map,const array_selection &s,
+                  const CTYPE &index)
+    {
+        //compute the original index of the selection index 
+        auto orig_index = container_utils<CTYPE>::create(map.rank());
+        s.index(index,orig_index);
+
+        return map.offset(orig_index);
     }
+  
+    //-------------------------------------------------------------------------
+    /*!
+    \brief compute first element offset 
+
+    Compute the offset in the original array of the first element in the
+    selection. 
+
+    \tparam MAPT original index map type
+    \tparam INDEXT index type of the selection
+    \param map reference to the original index map
+    \param s reference to the selection 
+    \return offset of the first selection element
+    */
+    template<typename MAPT>
+    size_t start_offset(const MAPT &map,const array_selection &s)
+    {
+        typedef std::vector<size_t> index_type;
+
+        auto index = s.template shape<index_type>();
+        //set all elements to zero
+        std::fill(index.begin(),index.end(),size_t(0));
+
+        return offset(map,s,index);
+    }
+
+    //-------------------------------------------------------------------------
+    /*!
+    \brief compute last element offset 
+
+    Compute the linear offset in the original array for the last element in a
+    selection. 
+
+    \tparam MAPT index map type of the original array
+    \tparam INDEXT index type of the array selection
+    \param map reference to the original index map
+    \param s reference to the selection object
+    \return offset of the last element
+    */
+    template<typename MAPT>
+    size_t last_offset(const MAPT &map,const array_selection &s)
+    {
+        typedef std::vector<size_t> index_type;
+
+        auto index = s.template shape<index_type>();
+        std::transform(index.begin(),index.end(),index.begin(),
+                       [](const size_t &i){ return i-size_t(1); });
+
+        return offset(map,s,index);
+
+    }
+
+    //-------------------------------------------------------------------------
+    template<typename MAPT>
+    bool is_contiguous(const MAPT &map,const array_selection &s)
+    {
+
+        size_t orig_first_offset = start_offset(map,s);
+        size_t orig_last_offset  = last_offset(map,s);
+
+        //check if the size of the selection matches the offset-difference in
+        //the original array - in this case we have a contiguous selection.
+        if( (orig_last_offset - orig_first_offset + 1) == s.size())
+            return true;
+
+        return false;
+    }
+    
+
 //end of namespace
 }
 }

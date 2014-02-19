@@ -31,6 +31,7 @@
 #include "index_map/index_maps.hpp"
 #include "container_iterator.hpp"
 #include "array_selection.hpp"
+#include "array_view_utils.hpp"
 
 namespace pni{
 namespace core{
@@ -90,12 +91,17 @@ namespace core{
             //! parent array from which to draw data
             std::reference_wrapper<ATYPE> _parray; 
             //! selection object for index transformation 
-            array_selection<typename ATYPE::map_type::storage_type> _selection;
+            array_selection _selection;
             //! local index map - only used internally, this map describes the
             //view not the original array.
             map_type _imap;
             //! local index buffer for index calculations
             mutable index_type _index;
+            //! check if selection is contiguous
+            bool _is_contiguous;
+
+            //! offset of the first element
+            size_t _start_offset;
 
         public:
             //-----------------------------------------------------------------
@@ -107,21 +113,44 @@ namespace core{
             \param s selection object defining the description
             dimension
             */
-            template<typename INDEXT>
-            array_view(storage_type &a,const array_selection<INDEXT> &s):
+            array_view(storage_type &a,const array_selection &s):
                 _parray(std::ref(a)),
                 _selection(s),
-                _imap(map_utils<map_type>::create(_selection.template
-                            shape<index_type>())),
-                _index(a.rank())
+                _imap(map_utils<map_type>::create(_selection.shape<index_type>())),
+                _index(a.rank()),
+                _is_contiguous(is_contiguous(a.map(),_selection)),
+                _start_offset(start_offset(a.map(),_selection))
             { }
+
+            //------------------------------------------------------------------
+            /*!
+            \brief constructor
+
+            This constructor accepts an rvalue reference for the selection. In
+            some cases this might be more efficient than copy construction. 
+
+            \param a reference to the original array
+            \param s rvalue reference to the selection object
+            */
+            array_view(storage_type &a,array_selection &&s):
+                _parray(std::ref(a)),
+                _selection(std::move(s)),
+                _imap(map_utils<map_type>::create(_selection.shape<index_type>())),
+                _index(a.rank()),
+                _is_contiguous(is_contiguous(a.map(),_selection)),
+                _start_offset(start_offset(a.map(),_selection))
+            {}
+
 
             //-----------------------------------------------------------------
             //! copy constructor
             array_view(const array_type &c):
-                _parray(c._parray),_selection(c._selection),
+                _parray(c._parray),
+                _selection(c._selection),
                 _imap(c._imap),
-                _index(c._index)
+                _index(c._index),
+                _is_contiguous(c._is_contiguous),
+                _start_offset(c._start_offset)
             {}
 
             //-----------------------------------------------------------------
@@ -130,7 +159,9 @@ namespace core{
                 _parray(std::move(c._parray)),
                 _selection(std::move(c._selection)),
                 _imap(std::move(c._imap)),
-                _index(std::move(c._index))
+                _index(std::move(c._index)),
+                _is_contiguous(c._is_contiguous),
+                _start_offset(c._start_offset)
             {}
 
             //-----------------------------------------------------------------
@@ -146,6 +177,8 @@ namespace core{
                 _selection = a._selection;
                 _imap = a._imap;
                 _index = a._index;
+                _is_contiguous = a._is_contiguous;
+                _start_offset  = a._start_offset;
 
                 return *this;
             }
@@ -165,6 +198,8 @@ namespace core{
                 _selection = std::move(a._selection);
                 _imap = std::move(a._imap);
                 _index = std::move(a._index);
+                _is_contiguous = a._is_contiguous;
+                _start_offset  = a._start_offset;
 
                 return *this;
             }
@@ -179,15 +214,24 @@ namespace core{
             \param index container with multidimensional index
             \return reference to value at index
             */
-            template<typename CTYPE,
-                     typename = typename std::enable_if<
-                     std::is_unsigned<typename CTYPE::value_type>::value
-                     >::type
-                    >
+            template<typename CTYPE,typename = ENABLE_ELEMENT_CONT(CTYPE)>
             value_type &operator()(const CTYPE &index)
             {
+                typedef typename ATYPE::map_type omap_type;
+                /*
                 _selection.index(index,_index);
                 return _parray(_index);
+                */
+                auto &ref = _parray.get();
+
+                if(_is_contiguous)
+                    return ref[_start_offset + _imap.offset(index)];
+                else
+                {
+                    auto  map = const_cast<omap_type&>(ref.map());
+                    size_t o = map.offset(_selection,index);
+                    return ref[o];
+                }
             }
 
             //-----------------------------------------------------------------
@@ -200,15 +244,24 @@ namespace core{
             \param index container with multidimensional index
             \return value at index
             */
-            template<typename CTYPE,
-                     typename = typename std::enable_if<
-                     std::is_unsigned<typename CTYPE::value_type>::value 
-                     >::type
-                    >
+            template<typename CTYPE,typename = ENABLE_ELEMENT_CONT(CTYPE)>
             value_type operator()(const CTYPE &index) const
             {
+                typedef typename ATYPE::map_type omap_type;
+                /*
                 _selection.index(index,_index);
                 return _parray(_index);
+                */
+                auto &ref = _parray.get();
+
+                if(_is_contiguous)
+                    return ref[_start_offset + _imap.offset(index)];
+                else
+                {
+                    auto  map = const_cast<omap_type&>(ref.map());
+                    size_t o = map.offset(_selection,index);
+                    return ref[o];
+                }
             }
 
 
@@ -230,8 +283,21 @@ namespace core{
             template<typename ...ITypes> 
             value_type & operator()(ITypes ...indices)
             {
-                typedef std::array<size_t,sizeof...(ITypes)> array_t;
-                return (*this)(array_t{{size_t(indices)...}});
+                typedef typename ATYPE::map_type omap_type;
+                auto &ref = _parray.get();
+
+                if(_is_contiguous)
+                {
+                    return ref[_start_offset +
+                               _imap.offset(IDX_ARRAY(ITypes,indices))];
+                }
+                else
+                {
+                    auto  map = const_cast<omap_type&>(ref.map());
+                    size_t o = map.offset(_selection,IDX_ARRAY(ITypes,indices));
+                    return ref[o];
+                }
+
             }
 
             //-----------------------------------------------------------------
@@ -253,8 +319,24 @@ namespace core{
             template<typename ...ITypes> 
             value_type operator()(ITypes ...indices) const
             {
+                typedef typename ATYPE::map_type omap_type;
+                /*
                 typedef std::array<size_t,sizeof...(ITypes)> array_t;
                 return (*this)(array_t{{size_t(indices)...}});
+                */
+                auto &ref = _parray.get();
+
+                if(_is_contiguous)
+                {
+                    return ref[_start_offset + 
+                               _imap.offset(IDX_ARRAY(ITypes,indices))];
+                }
+                else
+                {
+                    //have to do some more work here
+                    auto map = const_cast<omap_type&>(ref.map());
+                    return ref[map.offset(_selection,IDX_ARRAY(ITypes,indices))];
+                }
             }
 
             //-----------------------------------------------------------------
@@ -287,8 +369,15 @@ namespace core{
 #endif
                 //compute the multidimensional index in the original array for
                 //the linear index i in the view
-                auto index = _imap.template index<index_type>(i);
-                return (*this)(index); 
+                if(_is_contiguous)
+                {
+                    return _parray.get()[i+_start_offset];
+                }
+                else
+                {
+                    auto index = _imap.template index<index_type>(i);
+                    return (*this)(index); 
+                }
             }
 
             //-----------------------------------------------------------------
@@ -306,10 +395,15 @@ namespace core{
 #ifdef DEBUG
                 check_index(i,size(),EXCEPTION_RECORD);
 #endif
-                //compute the multidimensional index in the original array for
-                //the linear index i in the view
-                auto index = _imap.template index<index_type>(i);
-                return (*this)(index); 
+                if(_is_contiguous)
+                    return _parray.get()[i+_start_offset];
+                else
+                {
+                    //compute the multidimensional index in the original array for
+                    //the linear index i in the view
+                    auto index = _imap.template index<index_type>(i);
+                    return (*this)(index); 
+                }
             }
 
             //-----------------------------------------------------------------
@@ -590,7 +684,7 @@ namespace core{
             }
 
             //-----------------------------------------------------------------
-            map_type map() const
+            const map_type &map() const
             {
                 return _imap;
             }

@@ -60,9 +60,9 @@ namespace core{
             */
             template<typename IITERT,
                      typename SITERT> 
-            static size_t offset(IITERT &&index_start,
-                                 IITERT &&index_stop, 
-                                 SITERT &&shape_start)
+            static size_t offset(IITERT index_start,
+                                 IITERT index_stop, 
+                                 SITERT shape_start)
             {
                 //initialize the offset and the stride variable
                 size_t offset = *index_start++,stride=1;
@@ -75,6 +75,57 @@ namespace core{
                     stride *= *shape_start++;
                     //compute the offset contribution
                     offset += stride*(*index_start++);
+                }
+
+                return offset;
+            }
+            
+            //------------------------------------------------------------------
+            /*!
+            \brief compute selection offset 
+
+            Compute the linear offset for an index range and a particular
+            selection. This private member function actually implements this
+            feature.  The index passed is the effective index of the selection
+            and must not have the same rank as the original array.
+
+            \tparam SELITER selection iterator
+            \tparam SITER   iterator type of the original shape
+            \tparam IITER   index container iterator
+            \param sel_shape_start begin of selection shape
+            \param sel_shape_end   end of selection shape
+            \param sel_offset begin of selection offset
+            \param sel_stride begin of selection stride
+            \param shape_start begin of original shape
+            \param sel_index begin of selection index
+            */
+            template<typename SELITER,
+                     typename SITER,
+                     typename IITER> 
+            static size_t offset(SELITER sel_shape_start,
+                                 SELITER sel_shape_end,
+                                 SELITER sel_offset, 
+                                 SELITER sel_stride,
+                                 SITER   shape_start,
+                                 IITER   sel_index)
+            {
+                //loop over all indices - remember that the iterators are
+                //reverse iterators
+                size_t index = 0,dim_stride = 1,offset=0;
+                while(sel_shape_start!=sel_shape_end)
+                {
+                    //compute the index from the selection
+                    index = *sel_offset++;
+                    if(*sel_shape_start++ != 1) 
+                        index += (*sel_index++)*(*sel_stride);
+
+                    ++sel_stride; //increment the selection stride in any case
+
+                    //compute the offset contribution
+                    offset += dim_stride*index;
+                    
+                    //compute the new dimension stride stride 
+                    dim_stride *= *shape_start++;
                 }
 
                 return offset;
@@ -96,9 +147,9 @@ namespace core{
             */
             template<typename IITERT,
                      typename SITERT>
-            static void index(SITERT &&shape_start,
-                              SITERT &&shape_stop,
-                              IITERT &&index_start,
+            static void index(SITERT shape_start,
+                              SITERT shape_stop,
+                              IITERT index_start,
                               size_t offset)
             {
                 size_t t;
@@ -136,10 +187,38 @@ namespace core{
             template<typename CSHAPE,
                      typename CINDEX
                     >
-            static size_t offset(CSHAPE &&shape,CINDEX &&index)
+            static size_t offset(const CSHAPE &shape,const CINDEX &index)
             {
                 //use here reverse iterators as required by the c-ordering
                 return offset(index.rbegin(),index.rend(),shape.rbegin());
+            }
+            
+            //-----------------------------------------------------------------
+            /*!
+            \brief compute offset for selection
+
+            Computes the linear offset for a given selection index. The
+            selection index is not required to have the same rank as the
+            original array. 
+
+            \tpararm SELTYPE selection type
+            \tparam CSHAPE original shape of the array
+            \tparam SINDEX selection index type
+            \param sel reference to the selection
+            \param shape the original shape
+            \param index selection index
+            */
+            template<typename SELTYPE,
+                     typename CSHAPE,
+                     typename SINDEX>
+            static size_t offset(const SELTYPE &sel,const CSHAPE &shape,const SINDEX &index)
+            {
+                return offset(sel.full_shape().rbegin(), //original selection shape
+                              sel.full_shape().rend(),   //
+                              sel.offset().rbegin(), //selection offset
+                              sel.stride().rbegin(), //selection stride
+                              shape.rbegin(), //original shape begin
+                              index.rbegin()); //selection index start
             }
 
             //-----------------------------------------------------------------

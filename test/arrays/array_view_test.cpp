@@ -32,22 +32,22 @@
 
 template<typename T> using dyn_array_view_test = array_view_test<dynamic_array<T> >;
 
+CPPUNIT_TEST_SUITE_REGISTRATION(dyn_array_view_test<uint8>);
+CPPUNIT_TEST_SUITE_REGISTRATION(dyn_array_view_test<int8>);
 CPPUNIT_TEST_SUITE_REGISTRATION(dyn_array_view_test<uint16>);
-//CPPUNIT_TEST_SUITE_REGISTRATION(array_view_test<darray<int8> >);
-//CPPUNIT_TEST_SUITE_REGISTRATION(array_view_test<darray<uint16> >);
-//CPPUNIT_TEST_SUITE_REGISTRATION(array_view_test<darray<int16> >);
-//CPPUNIT_TEST_SUITE_REGISTRATION(array_view_test<darray<uint32> >);
-//CPPUNIT_TEST_SUITE_REGISTRATION(array_view_test<darray<int32> >);
-//CPPUNIT_TEST_SUITE_REGISTRATION(array_view_test<darray<uint64> >);
-//CPPUNIT_TEST_SUITE_REGISTRATION(array_view_test<darray<int64> >);
-//CPPUNIT_TEST_SUITE_REGISTRATION(array_view_test<darray<float32> >);
-//CPPUNIT_TEST_SUITE_REGISTRATION(array_view_test<darray<float64> >);
-//CPPUNIT_TEST_SUITE_REGISTRATION(array_view_test<darray<float128> >);
-//CPPUNIT_TEST_SUITE_REGISTRATION(array_view_test<darray<complex32> >);
-//CPPUNIT_TEST_SUITE_REGISTRATION(array_view_test<darray<complex64> >);
-//CPPUNIT_TEST_SUITE_REGISTRATION(array_view_test<darray<complex128> >);
-//CPPUNIT_TEST_SUITE_REGISTRATION(array_view_test<darray<string> >);
-//CPPUNIT_TEST_SUITE_REGISTRATION(array_view_test<darray<bool> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(dyn_array_view_test<int16>);
+CPPUNIT_TEST_SUITE_REGISTRATION(dyn_array_view_test<uint32>);
+CPPUNIT_TEST_SUITE_REGISTRATION(dyn_array_view_test<int32>);
+CPPUNIT_TEST_SUITE_REGISTRATION(dyn_array_view_test<uint64>);
+CPPUNIT_TEST_SUITE_REGISTRATION(dyn_array_view_test<int64>);
+CPPUNIT_TEST_SUITE_REGISTRATION(dyn_array_view_test<float32>);
+CPPUNIT_TEST_SUITE_REGISTRATION(dyn_array_view_test<float64>);
+CPPUNIT_TEST_SUITE_REGISTRATION(dyn_array_view_test<float128>);
+CPPUNIT_TEST_SUITE_REGISTRATION(dyn_array_view_test<complex32>);
+CPPUNIT_TEST_SUITE_REGISTRATION(dyn_array_view_test<complex64>);
+CPPUNIT_TEST_SUITE_REGISTRATION(dyn_array_view_test<complex128>);
+CPPUNIT_TEST_SUITE_REGISTRATION(dyn_array_view_test<string>);
+//CPPUNIT_TEST_SUITE_REGISTRATION(dyn_array_view_test<bool> >);
 
 
 #define SARRAY_VIEW_TEST_REG(T,NX,NY)\

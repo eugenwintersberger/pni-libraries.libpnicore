@@ -26,6 +26,8 @@
 namespace pni{
 namespace core{
 
+    template<typename ATYPE> class array_view;
+
     /*!
     \ingroup multidim_array_classes
     \brief checks for view index
@@ -52,6 +54,72 @@ namespace core{
         //! true if ITYPES represent a view
         static const bool value = type::value;
     };
+
+#define IS_VIEW(IT)\
+    is_view_index<IT...>::value
+
+#define IDX_ARRAY(IT,i)\
+    std::array<size_t,sizeof...(IT)>{{size_t(i)...}}
+
+    //-------------------------------------------------------------------------
+    /*!
+    \ingroup multidim_array_classes
+    \brief check if valid index
+
+    Checks if a list of variadic arguments are a valid view or element index. 
+    This is the case if the arguments are either of an unsigned integer type or
+    instances of slice.
+
+    \code
+    is_valid_index<size_t,size_t,slice>::value;  //would be true
+    is_valid_index<size_t,size_t,size_t>::value; //would be true
+    is_valid_index<slice,slice>::value;          //true either
+    is_valid_index<slice,string>::value;         //definitely false
+    \endcode
+
+    \tparam ITYPES index types
+    */
+    template<typename ...ITYPES> struct is_valid_index
+    {
+        typedef typename boost::mpl::contains<
+            typename boost::mpl::vector<ITYPES...>::type,slice>::type has_slice;
+        typedef typename boost::mpl::contains<
+            typename boost::mpl::vector<ITYPES...>::type,size_t>::type
+            has_size_t;
+
+        //! true if the types are valid index types
+        static const bool value = has_slice::value || has_size_t::value;
+    };
+
+#define IS_INDEX(IT)\
+    is_valid_index<IT...>::value
+
+#define ENABLE_VALID_INDEX(IT)\
+    typename std::enable_if<IS_INDEX(IT)>::type
+
+
+    //-------------------------------------------------------------------------
+    /*!
+    \ingroup multidim_array_classes
+    \brief check if view container 
+
+    This template checks if a container identifies a view. This is the case if
+    its value_type is slice. 
+    */
+    template<typename CTYPE> struct is_view_cont
+    {
+        typedef typename CTYPE::value_type value_type;
+        static const bool value = 
+            is_valid_index<value_type>::value &&
+            is_view_index<value_type>::value;
+    };
+
+#define ENABLE_VIEW_CONT(TYPE)\
+    typename std::enable_if<is_view_cont<TYPE>::value >::type
+
+#define ENABLE_ELEMENT_CONT(TYPE)\
+    typename std::enable_if<!is_view_cont<TYPE>::value >::type
+
 
   
     //-------------------------------------------------------------------------
@@ -103,6 +171,12 @@ namespace core{
 
     };
 
+#define VIEW_TYPE(AT,IT)\
+    typename array_view_trait<AT,IS_VIEW(ITYPES)>::type
+
+#define CONST_VIEW_TYPE(AT,IT)\
+    typename array_view_trait<const AT,IS_VIEW(ITYPES)>::const_type
+
     //-------------------------------------------------------------------------
     /*!
     \ingroup multidim_array_classes
@@ -150,7 +224,8 @@ namespace core{
             check_indexes(buffer,map,EXCEPTION_RECORD);
 #endif
 
-            size_t offset = map.offset(buffer);
+            size_t offset =
+                map.offset(std::array<size_t,sizeof...(ITYPES)>{{size_t(indexes)...}});
             return c[offset];
         }
 
@@ -191,7 +266,8 @@ namespace core{
             check_indexes(buffer,map,EXCEPTION_RECORD);
 #endif
 
-            size_t offset = map.offset(buffer);
+            size_t offset =
+                map.offset(std::array<size_t,sizeof...(ITYPES)>{{size_t(indexes)...}});
             return c[offset];
         }
 
@@ -219,7 +295,6 @@ namespace core{
     {
         typedef typename array_view_trait<ATYPE,true>::type ref_type;
         typedef typename array_view_trait<ATYPE,true>::const_type type;
-        typedef typename ATYPE::map_type::storage_type index_type;
        
         //---------------------------------------------------------------------
         /*!
@@ -241,13 +316,13 @@ namespace core{
             
             std::array<slice,sizeof...(ITYPES)> buffer{slice(indexes)...};
 
-            return ref_type(c,array_selection<index_type>::create(buffer));
+            return ref_type(c,array_selection::create(buffer));
         }
 
         template<typename CTYPE,typename MAP,typename ITYPE>
         static ref_type get_reference(CTYPE &c,MAP &map,const ITYPE &i)
         {
-            return ref_type(c,array_selection<index_type>::create(i));
+            return ref_type(c,array_selection::create(i));
         }
 
         //---------------------------------------------------------------------
@@ -267,13 +342,13 @@ namespace core{
         {
             std::array<slice,sizeof...(ITYPES)> buffer{slice(indexes)...};
 
-            return type(c,array_selection<index_type>::create(buffer));
+            return type(c,array_selection::create(buffer));
         }
 
         template<typename CTYPE,typename MAP,typename ITYPE>
         static type get_value(const CTYPE &c,MAP &map,const ITYPE &i)
         {
-            return type(c,array_selection<index_type>::create(i));
+            return type(c,array_selection::create(i));
         }
          
 

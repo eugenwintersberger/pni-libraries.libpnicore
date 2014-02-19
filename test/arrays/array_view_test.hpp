@@ -141,7 +141,7 @@ template<typename ATYPE> void array_view_test<ATYPE>::tearDown() { }
 template<typename ATYPE> void array_view_test<ATYPE>::test_construction()
 {
     typedef typename ATYPE::map_type::storage_type index_type;
-    typedef array_selection<index_type> selection_type;
+    typedef array_selection selection_type;
    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
    //select a 2D array from the original 2D array
@@ -191,7 +191,7 @@ void array_view_test<ATYPE>::test_construction_from_array_variadic()
 template<typename ATYPE> void array_view_test<ATYPE>::test_linear_access()
 {
     typedef typename ATYPE::map_type::storage_type index_type;
-    typedef array_selection<index_type> selection_type;
+    typedef array_selection selection_type;
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
     //create a selection
@@ -203,7 +203,13 @@ template<typename ATYPE> void array_view_test<ATYPE>::test_linear_access()
     {
         value_type v1 = array(0,2+i);
         value_type v2 = view[i];
+        value_type r = v1+v2;
+        if(array(0,2+i) == view[i]) 
+        {
+            std::cout<<"Values equal"<<std::endl;
+        }
         compare(view[i],array(0,2+i));
+        //compare(v1,v2);
     }
 
     //-----------------check for front-----------------------------------------
@@ -221,7 +227,7 @@ template<typename ATYPE> void array_view_test<ATYPE>::test_linear_access()
 template<typename ATYPE> void array_view_test<ATYPE>::test_iterator_access()
 {
     typedef typename ATYPE::map_type::storage_type index_type;
-    typedef array_selection<index_type> selection_type;
+    typedef array_selection selection_type;
     typedef std::vector<value_type> ctype;
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
@@ -252,7 +258,7 @@ template<typename ATYPE> void array_view_test<ATYPE>::test_iterator_access()
     index_iterator<shape_t,map_type> index_iter(shape_t{13,9},0);
     for(auto iter = data.begin();iter!=data.end();++iter)
     {
-        auto index = selection.template index<shape_t>(*index_iter++);
+        auto index = selection.index<shape_t>(*index_iter++);
         value_type v1 = *iter;
         value_type v2 = array(index);
         compare(v1,v2);
@@ -286,7 +292,7 @@ template<typename ATYPE> void array_view_test<ATYPE>::test_multiindex_access()
 {
     typedef std::vector<value_type> ctype;
     typedef typename ATYPE::map_type::storage_type index_type;
-    typedef array_selection<index_type> selection_type;
+    typedef array_selection selection_type;
 
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
      

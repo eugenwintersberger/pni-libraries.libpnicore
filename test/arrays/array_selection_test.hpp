@@ -26,6 +26,7 @@
 #include<cppunit/extensions/HelperMacros.h>
 #include<vector>
 #include <pni/core/array_selection.hpp>
+#include <pni/core/index_map/index_maps.hpp>
 
 using namespace pni::core;
 
@@ -36,9 +37,22 @@ class array_selection_test: public CppUnit::TestFixture
     CPPUNIT_TEST(test_create);
 	CPPUNIT_TEST(test_assignment);
 	CPPUNIT_TEST(test_index);
+    CPPUNIT_TEST(test_offset);
+    CPPUNIT_TEST(test_start_offset);
+    CPPUNIT_TEST(test_end_offset);
+    CPPUNIT_TEST(test_is_contiguous);
 	CPPUNIT_TEST_SUITE_END();
 private:
-    typedef std::vector<size_t> itype;
+    typedef std::vector<size_t> index_type;
+    typedef std::vector<slice>  vslice_type;
+    typedef dynamic_cindex_map map_type;
+
+    map_type m1;
+    map_type m2;
+    vslice_type slices_1;
+    vslice_type slices_2;
+    array_selection sel_1;
+    array_selection sel_2;
 public:
 	void setUp();
 	void tearDown();
@@ -47,5 +61,9 @@ public:
 	void test_assignment();
 	void test_index();
     void test_create();
+    void test_offset();
+    void test_start_offset();
+    void test_end_offset();
+    void test_is_contiguous();
 
 };

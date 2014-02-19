@@ -100,37 +100,18 @@ namespace core{
         \return offset value
         */
         template<typename CSHAPE,typename CINDEX> 
-        static size_t offset(const CSHAPE &shape,CINDEX &&index)
+        static size_t offset(const CSHAPE &shape,const CINDEX &index)
         {
-            return POLIMP::offset(shape,
-                                  std::forward<
-                                  typename std::remove_const<CINDEX>::type
-                                  >(index));
+            return POLIMP::offset(shape,index);
         }
 
         //---------------------------------------------------------------------
-        /*!
-        \brief compute the offset
-
-        Typically we cannot move the container holding the shape as it is the
-        primary data object in an index mape. However, in the case of std::array
-        it would be feasible to pass the container by value rather than by
-        reference. This particular overload provides the special case where the
-        index is a reference to a container but the shape an instance of
-        std::array.
-
-        \tparam ST element type of the shape array
-        \tparam N number of elements of the shape array
-        \tparam CINDEX container type for the index
-        \param shape std::array with shape data
-        \param index CINDEX  instance with index data
-        \return linear offset of data element
-        */
-        template<typename ST,size_t N,typename CINDEX>
-        static size_t offset(std::array<ST,N> shape,CINDEX &&index)
+        template<typename SELTYPE,
+                 typename CSHAPE,
+                 typename CINDEX>
+        static size_t offset(const SELTYPE &sel,const CSHAPE &s,const CINDEX &index)
         {
-            return POLIMP::offset(std::forward<std::array<ST,N>>(shape),
-                                  std::forward<CINDEX>(index));
+            return POLIMP::offset(sel,s,index);
         }
 
         //---------------------------------------------------------------------

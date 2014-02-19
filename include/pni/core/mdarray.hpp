@@ -205,7 +205,7 @@ namespace core {
             Returns a const reference to the index map of the array.
             \return reference to index map
             */
-            map_type map() const { return this->_imap; }
+            const map_type &map() const { return this->_imap; }
 
             //----------------------------------------------------------------
             //! shape to container
@@ -346,10 +346,8 @@ namespace core {
             \param indexes list of index values
             \return reference to the value at the given index
             */
-            template<typename... ITYPES>
-            typename
-            array_view_trait<array_type,is_view_index<ITYPES...>::value>::type
-            operator()(ITYPES... indexes)
+            template<typename... ITYPES,typename = ENABLE_VALID_INDEX(ITYPES)>
+            VIEW_TYPE(array_type,ITYPES) operator()(ITYPES... indexes)
             {
                 typedef view_provider<array_type,is_view_index<ITYPES...>::value>
                     provider_type;
@@ -372,8 +370,8 @@ namespace core {
             \return value at the given index
             */
             //-----------------------------------------------------------------
-            template<typename... ITYPES>
-            typename array_view_trait<const array_type,is_view_index<ITYPES...>::value>::const_type
+            template<typename... ITYPES,typename = ENABLE_VALID_INDEX(ITYPES)>
+            CONST_VIEW_TYPE(array_type,ITYPES) 
             operator()(ITYPES ...indexes) const
             {
                 typedef view_provider<array_type,is_view_index<ITYPES...>::value>
@@ -383,117 +381,80 @@ namespace core {
 
             //-----------------------------------------------------------------
             /*!
-            \brief multiindex by container
+            \brief return array view
 
+            Return a view on the array determined by a set of slices stored in a
+            container type CTYPE. 
+
+            \tparam CTYPE slice container type
+            \param slices reference to the container
+            \return array_view instance
             */
-            /*
-            template<template<typename...> class CTYPE,typename... PARAMS,
-                     typename = typename std::enable_if<
-                                std::is_unsigned<typename CTYPE<PARAMS...>::value_type>::value
-                          >::type      
-                    >
-            value_type operator()(const CTYPE<PARAMS...> &c) const
+            template<typename CTYPE,typename = ENABLE_VIEW_CONT(CTYPE)>
+            array_view<array_type> operator()(const CTYPE &slices)
             {
-#ifdef DEBUG
-                check_indexes(c,_imap,EXCEPTION_RECORD);
-#endif
-                return _data[_imap.offset(c)];
-            }
-            */
-           
-            //-----------------------------------------------------------------
-            /*
-            template<template<typename...> class CTYPE,typename... PARAMS,
-                     typename = typename std::enable_if<
-                                std::is_unsigned<typename CTYPE<PARAMS...>::value_type>::value
-                                >::type
-                    >
-            value_type &operator()(const CTYPE<PARAMS...> &c) 
-            {
-#ifdef DEBUG
-                check_indexes(c,_imap,EXCEPTION_RECORD);
-#endif
-                return _data[_imap.offset(c)];
-            }
-            */
+                typedef typename map_type::storage_type index_type;
+                typedef array_view<array_type> view_type;
 
-            //-----------------------------------------------------------------
-            template<typename T,size_t N,
-                     typename = typename std::enable_if<
-                         std::is_unsigned<T>::value
-                         >::type
-                    >
-            value_type &operator()(std::array<T,N> index)
-            {
-#ifdef DEBUG
-                check_indexes(index,_imap,EXCEPTION_RECORD);
-#endif
-                return _data[_imap.offset(index)];
-
-            }
-
-            //-----------------------------------------------------------------
-            template<typename T,size_t N,
-                     typename = typename std::enable_if<
-                         std::is_unsigned<T>::value
-                         >::type
-                    >
-            value_type operator()(std::array<T,N> index) const
-            {
-#ifdef DEBUG
-                check_indexes(index,_imap,EXCEPTION_RECORD);
-#endif
-                return _data[_imap.offset(index)];
-
+                return view_type(*this, array_selection::create(slices));
+                
             }
 
             //-----------------------------------------------------------------
             /*!
-            \brief get a view on an array
+            \brief return element reference
 
+            Returns the reference to a single elemnt of the array determined by
+            a multidimensional index of unsigned integers stored in a container
+            of type CTYPE. This method performs no range checking. 
+
+            \tparam CTYPE index container type
+            \param index reference to index container
+            \return reference to the element
             */
-            template<typename CTYPE,
-                     typename = typename std::enable_if<
-                     std::is_same<typename CTYPE::value_type,slice>::value || 
-                     std::is_unsigned<typename CTYPE::value_type>::value
-                     >::type
-                    >
-            typename array_view_trait<array_type,
-                                      !std::is_unsigned<typename
-                                          CTYPE::value_type>::value>::type
-            operator()(const CTYPE &slices)
+            template<typename CTYPE,typename = ENABLE_ELEMENT_CONT(CTYPE)>
+            value_type &operator()(const CTYPE &index)
             {
-                /*
+               return _data[_imap.offset(index)]; 
+            }
+            
+            //-----------------------------------------------------------------
+            /*!
+            \brief return array view
+
+            Return a view on the array determined by a set of slices stored in a
+            container type CTYPE. 
+
+            \tparam CTYPE slice container type
+            \param slices reference to the container
+            \return array_view instance
+            */
+            template<typename CTYPE,typename = ENABLE_VIEW_CONT(CTYPE)>
+            array_view<const array_type> operator()(const CTYPE &slices) const
+            {
                 typedef typename map_type::storage_type index_type;
-                array_selection<index_type> sel = array_selection<index_type>::create(slices);
-                return array_view<array_type>(*this,sel);
-                */
+                typedef array_view<const array_type> view_type;
+
+                return view_type(*this,array_selection::create(slices));
                 
-                typedef view_provider<array_type,!std::is_unsigned<typename CTYPE::value_type>::value>
-                    provider_type;
-                return provider_type::get_reference(*this,_imap,slices);
             }
 
             //-----------------------------------------------------------------
-            template<typename CTYPE,
-                     typename = typename std::enable_if<
-                     std::is_same<typename CTYPE::value_type,slice>::value || 
-                     std::is_unsigned<typename CTYPE::value_type>::value
-                     >::type
-                    >
-            typename array_view_trait<const array_type,
-                                      !std::is_unsigned<typename CTYPE::value_type>::value>::const_type
-            operator()(const CTYPE &slices) const
+            /*!
+            \brief return element value
+
+            Returns the value of a single elemnt of the array determined by
+            a multidimensional index of unsigned integers stored in a container
+            of type CTYPE. This method performs no range checking. 
+
+            \tparam CTYPE index container type
+            \param index reference to index container
+            \return value of the element
+            */
+            template<typename CTYPE,typename = ENABLE_ELEMENT_CONT(CTYPE)>
+            value_type operator()(const CTYPE &index) const
             {
-                /*
-                typedef typename map_type::storage_type index_type;
-                array_selection<index_type> sel = array_selection<index_type>::create(slices);
-                return array_view<const array_type>(*this,sel);
-                */
-                
-                typedef view_provider<array_type,!std::is_unsigned<typename CTYPE::value_type>::value>
-                    provider_type;
-                return provider_type::get_value(*this,_imap,slices);
+                return _data[_imap.offset(index)];
             }
 
             //-----------------------------------------------------------------

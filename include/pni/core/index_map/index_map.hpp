@@ -24,8 +24,11 @@
 #include <algorithm>
 #include <numeric>
 
+
 namespace pni{
 namespace core{
+
+    class array_selection;
 
     /*!
     \ingroup index_mapping_classes
@@ -223,28 +226,6 @@ namespace core{
 
             //-----------------------------------------------------------------
             /*!
-            \brief compute the offset 
-
-            This method will be used when the index is passed as an lvalue
-            reference. 
-            \code
-            std::list<size_t> index{3,2,1};
-            index_map map(...);
-            size_t offset = map.offset(index);
-            \endcode
-            
-            \tparam CTYPE index container type
-            \param index instance of CTYPE with the index data
-            \return linear offset
-            */
-            template<typename CTYPE> 
-            size_t offset(const CTYPE &index) const
-            {
-                return MAP_POL::template offset(_shape,index);
-            }
-
-            //-----------------------------------------------------------------
-            /*!
             \brief compute the offset
 
             This method is used in the case where the index is passed as an
@@ -258,48 +239,35 @@ namespace core{
             \param index instance of CTYPE with container data
             \return linear offset
             */
-            /*
             template<typename CTYPE,
                      typename = typename std::enable_if<
-                     !std::is_lvalue_reference<CTYPE>::value
-                         >::type
+                     std::is_compound<
+                     typename std::remove_reference<CTYPE>::type
+                     >::value
+                     >::type
                     >
-            size_t offset(CTYPE &&index)
+            size_t offset(const CTYPE &index) const
             {
-                return MAP_POL::template offset(_shape,
-                                                std::forward<CTYPE>(index));
-            }*/
+                return MAP_POL::template offset(_shape,index);
+            }
 
             //-----------------------------------------------------------------
             /*!
-            \brief compute offset 
+            \brief compute offset with selection
 
-            In the special case that the index is passed as an instance of
-            std::array pass by value is the prefered method. 
-
-            \code
-            std::array<size_t,3> index{{3,2,1}};
-            size_t offset = map.offset(index);
-            \endcode
-            alternatively one could use
-            \code
-            typedef std::array<size_t,3> index_type;
-
-            size_t offset = map.offset(index_type{{3,2,1}});
-            \endcode
-
-            \tparam T data type of std::array 
-            \tparam N number of elements of std::array
-            \param index index for which to compute the offset
-            \return linear offset
             */
-            /*
-            template<typename T,size_t N> 
-            size_t offset(std::array<T,N> index) const
+            template<typename CTYPE,
+                     typename = typename std::enable_if<
+                     std::is_compound<
+                     typename std::remove_reference<CTYPE>::type
+                     >::value
+                     >::type
+                    >
+            size_t offset(const array_selection &s,const CTYPE &index)
             {
-                return MAP_POL::template offset(_shape,
-                                                std::forward<std::array<T,N>>(index));
-            }*/
+                return MAP_POL::template offset(s,_shape,index);
+            }
+
 
             //-----------------------------------------------------------------
             /*!
@@ -315,12 +283,22 @@ namespace core{
             \parm index the index values
             \return linear offset
             */
+            /*
             template<typename... ITYPES>
             size_t offset(ITYPES ...index) const
             {
                 return MAP_POL::template offset(_shape,
                         std::array<size_t,sizeof...(ITYPES)>{{index...}});
             }
+
+            template<typename SCTYPE,
+                     typename... ITYPES>
+            size_t offset(const array_selection<SCTYPE> &s,ITYPES ...index) const
+            {
+                return MAP_POL::template offset(s,_shape,
+                        std::array<size_t,sizeof...(ITYPES)>{{index...}});
+            }
+            */
 
             //-----------------------------------------------------------------
             /*!
@@ -344,17 +322,6 @@ namespace core{
                 return MAP_POL::template index<CTYPE>(_shape,offset);
             }
 
-            //-----------------------------------------------------------------
-            /*!
-            \brief check contiguous selection
-
-            Returns true if a selection is contiguous or not. 
-            */
-            template<typename SELTYPE>
-            bool is_contiguous(const SELTYPE &selection)
-            {
-                return MAP_POL::template is_contiguous(_shape,selection);
-            }
 
             //-----------------------------------------------------------------
             //! return iterator to first element

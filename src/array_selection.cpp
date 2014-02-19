@@ -26,7 +26,30 @@
 namespace pni{
 namespace core{
     //======================implementation of general purpose methods===========
+    std::ostream &operator<<(std::ostream &o,const array_selection &s)
+    {
+        o<<"original data:"<<std::endl;
+        auto oshape = s.full_shape();
+        auto offset = s.offset();
+        auto stride = s.stride();
+        for(size_t i=0;i<oshape.size();i++)
+        {
+            o<<i<<":\t"<<oshape[i]<<"\t"<<offset[i]<<"\t"<<stride[i];
+            o<<std::endl;
+        }
+        shape_t shape = s.shape<shape_t>();
+        o<<"effective shape: ( ";
+#ifdef NOFOREACH
+        BOOST_FOREACH(auto v,shape)
+#else
+        for(auto v: shape)
+#endif
+            o<<v<<" ";
+        
+        o<<")"<<std::endl;
 
+        return o;
+    }
 //end of namespace
 }
 }

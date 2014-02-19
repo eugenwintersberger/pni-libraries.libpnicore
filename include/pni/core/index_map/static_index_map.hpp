@@ -105,23 +105,6 @@ namespace core{
             */
             size_t size() const { return rank(); }
 
-            //-----------------------------------------------------------------
-            /*!
-            \brief compute the offset 
-
-            This method will be used when the index is passed as an lvalue
-            reference. 
-            
-            \tparam CTYPE index container type
-            \param index instance of CTYPE with the index data
-            \return linear offset
-            */
-            template<typename CTYPE> 
-            size_t offset(const CTYPE &index) const
-            {
-                //here we forward the index container to the policy class
-                return MAP_POL::template offset(_shape,index);
-            }
 
             //-----------------------------------------------------------------
             /*!
@@ -148,44 +131,37 @@ namespace core{
             \return linear offset
             */
             template<typename CTYPE,
-                     //the SFINAE construction here ensures that only rvalue
-                     //references are passed to this function
                      typename = typename std::enable_if<
-                     !std::is_lvalue_reference<CTYPE>::value
+                     std::is_compound<
+                     typename std::remove_const<
+                     typename std::remove_reference<CTYPE>::type
+                     >::type
+                     >::value
                          >::type
-                    >
-            size_t offset(CTYPE &&index)
+                    > 
+            size_t offset(const CTYPE &index) const
             {
-                return MAP_POL::template offset(_shape,
-                                                std::forward<CTYPE>(index));
+                return MAP_POL::template offset(_shape,index);
             }
-
+            
             //-----------------------------------------------------------------
             /*!
-            \brief compute offset 
+            \brief compute offset with selection
 
-            In the special case that the index is passed as an instance of
-            std::array pass by value is the prefered method. 
-
-            \code
-            typedef ... static_map;
-            typedef std::array<size_t,3> index_t;
-
-            static_map map;
-            index_t index{{1,3,2}};
-
-            size_t offset = map.offset(index);
-            \endcode
-
-            \tparam T data type of std::array 
-            \tparam N number of elements of std::array
-            \return linear offset
             */
-            template<typename T,size_t N> 
-            size_t offset(std::array<T,N> index) const
+            template<typename CTYPE,
+                     typename = typename std::enable_if<
+                     std::is_compound<
+                     typename std::remove_const<
+                     typename std::remove_reference<CTYPE>::type 
+                     >::type
+                     >::value
+                        >::type
+                     >
+            size_t offset(const array_selection &s,const CTYPE &index) 
+            const
             {
-                return MAP_POL::template offset(_shape,
-                                                std::forward<std::array<T,N>>(index));
+                return MAP_POL::template offset(s,_shape,index);
             }
 
             //-----------------------------------------------------------------
@@ -204,12 +180,22 @@ namespace core{
             \tparam ITYPES index types
             \return linear offset
             */
+            /*
             template<typename... ITYPES>
             size_t offset(ITYPES ...index) const
             {
                 return MAP_POL::template offset(_shape,
                         std::array<size_t,sizeof...(ITYPES)>{{index...}});
             }
+            
+            template<typename SCTYPE,
+                     typename... ITYPES>
+            size_t offset(const array_selection<SCTYPE> &s,ITYPES ...index) const
+            {
+                return MAP_POL::template offset(s,_shape,
+                        std::array<size_t,sizeof...(ITYPES)>{{index...}});
+            }
+            */
 
             //-----------------------------------------------------------------
             /*!
