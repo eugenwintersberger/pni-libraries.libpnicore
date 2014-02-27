@@ -34,6 +34,14 @@ Index mappers compute the linear offset from a multidimensional index and vica
 versa.
 */
 
+/*!
+\ingroup mdim_array_classes
+\defgroup dim_layout_classes Dimension layout classes
+
+Dimension layouts describe the logical structure of a multidimensional array.
+
+*/
+
 /*! 
 \ingroup mdim_array_classes
 \defgroup numeric_array_classes Numeric arrays

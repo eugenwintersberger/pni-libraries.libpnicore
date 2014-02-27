@@ -38,12 +38,18 @@ set(TEST_SOURCES pnicoretest.cpp
                  vector_adapter_test.cpp
                  )
 
+set(DIM_LAYOUT_TEST_SRC dim_layout_test.cpp
+                 dim_layout_test/default_dim_layout_test.cpp)
+
 
 link_directories("${CMAKE_CURRENT_BINARY_DIR}/../src")
 add_executable(pnicoretest  ${TEST_SOURCES})
 add_executable(rand_test "rand_test.cpp")
 target_link_libraries(pnicoretest pnicore)
 target_link_libraries(rand_test pnicore)
+
+add_executable(dim_layout_test ${DIM_LAYOUT_TEST_SRC})
+target_link_libraries(dim_layout_test pnicore)
 
 if(CPPUNIT_FOUND)
     #add include directories
