@@ -24,6 +24,7 @@
 
 #include <iostream>
 #include <sstream>
+#include <tuple>
 #include "exceptions.hpp"
 
 namespace pni{
@@ -344,9 +345,40 @@ namespace core{
             std::copy(list.begin(),list.end(),v.begin());
             return v;
         }
-
-        
     };
+
+    //=========================================================================
+    // implementation of a variadic function template to check the size of a set
+    // of containers passed as variadic input arguments
+    //=========================================================================
+    
+    template<typename STYPE>
+    bool check_size(STYPE s)
+    {
+        return true;
+    }
+
+    template<typename STYPE,typename CTYPE,typename ...CTYPES>
+    bool check_size(STYPE s,const CTYPE &c,const CTYPES& ...cs)
+    {
+        return s!=c.size()?false:check_size(c.size(),cs...);
+    }
+
+
+    /*!
+    \ingroup util_classes
+    \brief check container sizes
+
+    This variadic function template checks the size of all containers passed as
+    arguments. If they all have the same size the function returns true. 
+    Otherwise it returns false. 
+    */
+    template<typename CTYPE,typename ...CTYPES> 
+    bool check_equal_size(const CTYPE &c,const CTYPES& ...cs)
+    {
+        return check_size(c.size(),cs...);
+    }
+
 
 
 //end of namespace

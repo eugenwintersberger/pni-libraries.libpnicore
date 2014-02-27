@@ -41,6 +41,7 @@ class container_utils_std_test : public CppUnit::TestFixture
         CPPUNIT_TEST(test_create_from_range);
         CPPUNIT_TEST(test_create_from_container);
         CPPUNIT_TEST(test_create_from_init_list);
+        CPPUNIT_TEST(test_check_equal_size);
         CPPUNIT_TEST_SUITE_END();
 
         typedef container_utils<CTYPE> cutils;
@@ -59,6 +60,7 @@ class container_utils_std_test : public CppUnit::TestFixture
         void test_create_from_range();
         void test_create_from_container();
         void test_create_from_init_list();
+        void test_check_equal_size();
 
 };
 
@@ -120,4 +122,25 @@ void container_utils_std_test<CTYPE>::test_create_from_init_list()
     auto c1 = cutils::create({1,2,3,4});
     CPPUNIT_ASSERT(c1.size() == c.size());
     CPPUNIT_ASSERT(std::equal(c1.begin(),c1.end(),c.begin()));
+}
+
+//-----------------------------------------------------------------------------
+template<typename CTYPE>
+void container_utils_std_test<CTYPE>::test_check_equal_size()
+{
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+
+    container_type v1(100);
+    container_type v2(200);
+
+    auto c1 = cutils::create(100);
+    auto c2 = cutils::create(200);
+    auto c3 = cutils::create(100);
+
+    CPPUNIT_ASSERT(check_equal_size(v1,c1,c3));
+    CPPUNIT_ASSERT(!check_equal_size(v1,c1,c2));
+    CPPUNIT_ASSERT(check_equal_size(v1,c1));
+    CPPUNIT_ASSERT(check_equal_size(v1));
+    CPPUNIT_ASSERT(check_equal_size(v2));
+
 }
