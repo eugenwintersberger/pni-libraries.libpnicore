@@ -40,7 +40,8 @@ set(TEST_SOURCES pnicoretest.cpp
 
 set(DIM_LAYOUT_TEST_SRC dim_layout_test.cpp
                  dim_layout_test/default_dim_layout_test.cpp
-                 dim_layout_test/fixed_rank_dim_layout_test.cpp)
+                 dim_layout_test/fixed_rank_dim_layout_test.cpp
+                 dim_layout_test/static_dim_layout.cpp)
 
 
 link_directories("${CMAKE_CURRENT_BINARY_DIR}/../src")
