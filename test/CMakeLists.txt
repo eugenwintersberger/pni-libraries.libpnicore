@@ -1,12 +1,6 @@
 
 #need to define the version of the library
 set(TEST_SOURCES pnicoretest.cpp
-                 types/type_class_test.cpp
-                 types/type_info_test.cpp
-                 types/type_maps_test.cpp
-                 types/type_id_scalar_test.cpp
-                 types/type_id_container_test.cpp
-                 types/type_str_id_test.cpp
                  container_utils_std_test.cpp
                  container_utils_array_test.cpp
                  index_maps/index_map_test_common.cpp
@@ -43,6 +37,14 @@ set(DIM_LAYOUT_TEST_SRC dim_layout_test.cpp
                  dim_layout_test/fixed_rank_dim_layout_test.cpp
                  dim_layout_test/static_dim_layout.cpp)
 
+set(TYPES_TEST_SRC types_test.cpp
+                   types/type_class_test.cpp
+                   types/type_info_test.cpp
+                   types/type_maps_test.cpp
+                   types/type_id_scalar_test.cpp
+                   types/type_id_container_test.cpp
+                   types/type_str_id_test.cpp)
+
 
 link_directories("${CMAKE_CURRENT_BINARY_DIR}/../src")
 add_executable(pnicoretest  ${TEST_SOURCES})
@@ -53,6 +55,9 @@ target_link_libraries(rand_test pnicore)
 add_executable(dim_layout_test ${DIM_LAYOUT_TEST_SRC})
 target_link_libraries(dim_layout_test pnicore)
 
+add_executable(types_test ${TYPES_TEST_SRC})
+target_link_libraries(types_test pnicore)
+
 if(CPPUNIT_FOUND)
     #add include directories
     include_directories(${CPPUNIT_INCLUDE_DIRS})
@@ -60,6 +65,7 @@ if(CPPUNIT_FOUND)
     #add libraries
     target_link_libraries(pnicoretest ${CPPUNIT_LIBRARIES})
     target_link_libraries(dim_layout_test ${CPPUNIT_LIBRARIES})
+    target_link_libraries(types_test ${CPPUNIT_LIBRARIES})
 
 endif()
 
