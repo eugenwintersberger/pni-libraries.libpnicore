@@ -62,6 +62,11 @@ namespace core{
 
         public:
             //!
+            //! \brief default constructor
+            //!
+            explicit dynamic_dim_layout(): _counts(),_stride(),_offset() {}
+
+            //!
             //! \brief constructor
             //! Construct the memory layout from arbitrary containers. 
             //! 

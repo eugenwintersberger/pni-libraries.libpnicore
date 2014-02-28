@@ -57,6 +57,7 @@ if(CPPUNIT_FOUND)
 
     #add libraries
     target_link_libraries(pnicoretest ${CPPUNIT_LIBRARIES})
+    target_link_libraries(dim_layout_test ${CPPUNIT_LIBRARIES})
 
 endif()
 
