@@ -49,6 +49,8 @@ namespace core{
         private:
             //! static container with count data
             constexpr static storage_type _counts = {DIMS...};
+            constexpr static storage_type _offset = {DIMS...};
+            constexpr static storage_type _stride = {DIMS...};
         public:
 
             //-----------------------------------------------------------------
@@ -67,10 +69,7 @@ namespace core{
             //! Return a new storage_type instance with the offset values. 
             //! 
             //! \return offset values
-            storage_type offset() const noexcept 
-            {
-                return storage_type().fill(value_type(0));
-            }
+            const storage_type &offset() const noexcept { return _offset; }
 
             //-----------------------------------------------------------------
             //!
@@ -79,16 +78,24 @@ namespace core{
             //! Return a new storage_type instance with the stride values. 
             //!
             //! \return stride values
-            storage_type stride() const  noexcept
-            {
-                return storage_type().fill(value_type(1));
-            }
+            const storage_type &stride() const  noexcept { return _stride; }
 
     };
 
+    //initialize the counts array
     template<size_t ...DIMS> 
     constexpr typename static_dim_layout<DIMS...>::storage_type
     static_dim_layout<DIMS...>::_counts;
+
+    //initialize the offset array
+    template<size_t ...DIMS> 
+    constexpr typename static_dim_layout<DIMS...>::storage_type
+    static_dim_layout<DIMS...>::_offset;
+   
+    //initialize the stride array
+    template<size_t ...DIMS> 
+    constexpr typename static_dim_layout<DIMS...>::storage_type
+    static_dim_layout<DIMS...>::_stride;
 
 //end of namespace
 }}
