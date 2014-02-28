@@ -28,8 +28,6 @@
 namespace pni{
 namespace core{
 
-
-
     //=========================================================================
     //!
     //! \ingroup dim_layout_classes
@@ -59,13 +57,13 @@ namespace core{
 
             //! offset along each dimension
             storage_type _offset;
-
         public:
             //!
             //! \brief default constructor
             //!
             explicit dynamic_dim_layout(): _counts(),_stride(),_offset() {}
 
+            //-----------------------------------------------------------------
             //!
             //! \brief constructor
             //! Construct the memory layout from arbitrary containers. 
@@ -78,14 +76,10 @@ namespace core{
             explicit dynamic_dim_layout(const CTYPE &counts,
                                         const CTYPE &stride,
                                         const CTYPE &offset):
-                _counts(cutils_type::create(counts.size())),
-                _stride(cutils_type::create(stride.size())),
-                _offset(cutils_type::create(offset.size()))
-            {
-                std::copy(counts.begin(),counts.end(),_counts.begin());
-                std::copy(stride.begin(),stride.end(),_stride.begin());
-                std::copy(offset.begin(),offset.end(),_offset.begin());
-            }
+                _counts(cutils_type::create(counts)),
+                _stride(cutils_type::create(stride)),
+                _offset(cutils_type::create(offset))
+            { }
 
             //-----------------------------------------------------------------
             //!
@@ -106,14 +100,28 @@ namespace core{
 
             //-----------------------------------------------------------------
             //!
+            //! \brief construct from init list 
+            //!
+            //! Construt the dimension layout from a set of initializer list 
+            //!
+            //! \param counts list with the count values
+            //! \param stride list with the stride values
+            //! \param offset list of offset values
+            explicit dynamic_dim_layout(std::initializer_list<size_t> counts,
+                                        std::initializer_list<size_t> stride,
+                                        std::initializer_list<size_t> offset):
+                _counts(cutils_type::create(counts)),
+                _stride(cutils_type::create(stride)),
+                _offset(cutils_type::create(offset))
+            {}
+
+            //-----------------------------------------------------------------
+            //!
             //! \brief get counts
             //!
             //! Returns a reference to the counts container. 
             //! \return counts container
-            const storage_type &counts() const noexcept 
-            { 
-                return _counts; 
-            }
+            const storage_type &counts() const noexcept { return _counts; }
 
             //-----------------------------------------------------------------
             //!
@@ -121,10 +129,7 @@ namespace core{
             //! 
             //! Return a reference to the stride container. 
             //! \return stride container
-            const storage_type &stride() const noexcept 
-            { 
-                return _stride; 
-            }
+            const storage_type &stride() const noexcept { return _stride; }
 
             //-----------------------------------------------------------------
             //!
@@ -132,10 +137,7 @@ namespace core{
             //!
             //! Return a reference to the offset container. 
             //! \return offset container reference
-            const storage_type &offset() const noexcept 
-            { 
-                return _offset; 
-            }
+            const storage_type &offset() const noexcept { return _offset; }
 
     };
 

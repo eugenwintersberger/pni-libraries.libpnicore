@@ -35,7 +35,8 @@ namespace core{
     //! 
     //! This is a static dimension layout. It is rather limited in comparison to
     //! dynamic_dim_layout. Its offset and stride values are always 0 and 1
-    //! respectively.
+    //! respectively. This class does not provide any custom constructor as
+    //! everything that can be configured is already done at compile time.
     //! 
     //! \tparam DIMS number of elements along each dimension
     template<size_t ...DIMS> class static_dim_layout
@@ -46,20 +47,39 @@ namespace core{
             //! value type
             typedef size_t value_type;
         private:
+            //! static container with count data
             constexpr static storage_type _counts = {DIMS...};
         public:
 
-            const storage_type &counts() const 
-            {
-                return _counts;
-            }
+            //-----------------------------------------------------------------
+            //!
+            //! \brief get counts
+            //! 
+            //! Return a reference to the container with count values. 
+            //! 
+            //! \return reference to count values
+            const storage_type &counts() const noexcept { return _counts; }
 
-            storage_type offset() const
+            //-----------------------------------------------------------------
+            //!
+            //! \brief get offset values
+            //! 
+            //! Return a new storage_type instance with the offset values. 
+            //! 
+            //! \return offset values
+            storage_type offset() const noexcept 
             {
                 return storage_type().fill(value_type(0));
             }
 
-            storage_type stride() const 
+            //-----------------------------------------------------------------
+            //!
+            //! \brief get stride values
+            //! 
+            //! Return a new storage_type instance with the stride values. 
+            //!
+            //! \return stride values
+            storage_type stride() const  noexcept
             {
                 return storage_type().fill(value_type(1));
             }

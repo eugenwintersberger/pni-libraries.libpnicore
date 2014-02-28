@@ -309,6 +309,20 @@ namespace core{
         }
 
         //---------------------------------------------------------------------
+        //!
+        //! \brief create from array
+        //!
+        //! Create a new array from the original instance of std::array as
+        //! passed by the user. 
+        //! 
+        //! \param c reference to the original array
+        //! \return new instance of the array
+        static container_type create(const std::array<T,N> &c)
+        {
+            return c;
+        }
+
+        //---------------------------------------------------------------------
         /*!
         \brief initialize std::array from an initializer list
 

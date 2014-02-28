@@ -23,6 +23,8 @@
 //
 #pragma once
 
+#include <vector>
+#include <array>
 #include "../container_utils.hpp"
 #include "dynamic_dim_layout.hpp"
 #include "static_dim_layout.hpp"
@@ -47,7 +49,7 @@ namespace core{
     //! cases where the  number of dimensions is known at compile time. 
     //! \tparam RANK number of dimensions
     template<size_t RANK>
-    using fixed_rank_dim_layout = dynamic_dim_layout<std::array<size_t,RANK>>;
+    using fixed_rank_dim_layout = dynamic_dim_layout<std::array<size_t,RANK> >;
 
 
 //end of namespace
