@@ -72,7 +72,7 @@ void static_dim_layout_test::test_stride_access()
     index3_type o = {0,0,0},c = {2,3,4},s = {1,1,1};
 
     layout3_type layout;
-
+    
     CPPUNIT_ASSERT(std::equal(layout.stride().begin(),
                               layout.stride().end(),
                               s.begin()));

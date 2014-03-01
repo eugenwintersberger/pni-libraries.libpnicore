@@ -28,6 +28,7 @@
 namespace pni{
 namespace core{
 
+
     //=========================================================================
     //!
     //! \ingroup dim_layout_classes
@@ -47,10 +48,19 @@ namespace core{
             //! value type
             typedef size_t value_type;
         private:
+            
+            //!
+            //! \brief utility class
+            //!
+            template<size_t O,size_t V> struct replace 
+            {
+                constexpr static size_t value = V;
+            };
+
             //! static container with count data
             constexpr static storage_type _counts = {DIMS...};
-            constexpr static storage_type _offset = {DIMS...};
-            constexpr static storage_type _stride = {DIMS...};
+            constexpr static storage_type _offset = {replace<DIMS,0>::value ...};
+            constexpr static storage_type _stride = {replace<DIMS,1>::value...};
         public:
 
             //-----------------------------------------------------------------

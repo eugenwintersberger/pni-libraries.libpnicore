@@ -136,12 +136,19 @@ namespace core{
     //! readable). However, for alter calculations the full index is required. 
     //! This function expands an index to this full index set. 
     //! 
+    //! \throws shape_mismatch_error if effective rank does not match
+    //! 
     //! 
     template<typename DIMLT,
              typename EFFIT,
              typename FULLIT>
     void expand_index(const DIMLT &layout,const EFFIT &eindex,FULLIT &findex)
     {
+        //check if the effective rank matches the rank of the original index
+        if(effective_rank(layout) != eindex.size())
+            throw shape_mismatch_error(EXCEPTION_RECORD,"");
+        
+        //take the code here from array selection
 
     }
 
@@ -171,4 +178,5 @@ namespace core{
     }
 
 //end of namespace
-}}
+}
+}
