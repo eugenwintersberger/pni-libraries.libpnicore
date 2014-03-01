@@ -42,6 +42,11 @@ class dim_algorithm_test : public CppUnit::TestFixture
         CPPUNIT_TEST_SUITE(dim_algorithm_test);
         CPPUNIT_TEST(test_span);
         CPPUNIT_TEST(test_size);
+        CPPUNIT_TEST(test_rank);
+        CPPUNIT_TEST(test_effective_rank);
+        CPPUNIT_TEST(test_is_compact);
+        CPPUNIT_TEST(test_effective_shape);
+        CPPUNIT_TEST(test_shape);
         CPPUNIT_TEST_SUITE_END();
 
         typedef default_dim_layout         layout_type;
@@ -63,6 +68,30 @@ class dim_algorithm_test : public CppUnit::TestFixture
         //! 
         void test_size();
 
+        //!
+        //! \brief test the rank algorithm
+        //! 
+        void test_rank();
+        
+        //!
+        //! \brief test the effective rank algorithm
+        //! 
+        void test_effective_rank();
+        
+        //!
+        //! \brief test is_compact
+        //! 
+        void test_is_compact();
+        
+        //!
+        //! \brief test effective shape
+        //! 
+        void test_effective_shape();
+        
+        //!
+        //! \brief test the shape algorithm
+        //! 
+        void test_shape();
 };
 
 

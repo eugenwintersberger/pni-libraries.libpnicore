@@ -140,7 +140,7 @@ namespace core{
     //! \param layout const reference to the layout instance
     //! \return number of dimensions with count value != 1
     //!
-    template<typename DIMLT> bool effective_rank(const DIMLT &layout)
+    template<typename DIMLT> size_t effective_rank(const DIMLT &layout)
     {
         typedef typename DIMLT::value_type value_type;
         return std::count_if(layout.counts().begin(),
@@ -192,14 +192,35 @@ namespace core{
     {
         typedef typename DIMLT::value_type value_type;
         
-        STYPE shape;
-        std::copy_if(layout.counts.begin(),
-                     layout.counts.end(),
-                     std::back_inserter(shape),
+        STYPE s;
+        std::copy_if(layout.counts().begin(),
+                     layout.counts().end(),
+                     std::back_inserter(s),
                      [](const value_type &x){return x!=value_type(1);});
-        return shape;
+        return s;
     }
 
+    //-------------------------------------------------------------------------
+    //!
+    //! \ingroup dim_layout_classes
+    //! \brief create shape
+    //! 
+    //! Returns a container with the number of elemenst along each dimension.
+    //!
+    //! \tparam STYPE shape container type
+    //! \tparam DIMLT dimension layout type
+    //! \param layout reference to the dimension layout instance
+    //! \return instance of STYPE with the effective shape
+    template<typename STYPE,typename DIMLT>
+    STYPE shape(const DIMLT &layout)
+    {
+        typedef typename DIMLT::value_type value_type;
+        
+        STYPE s;
+        std::copy(layout.counts().begin(),layout.counts().end(),
+                  std::back_inserter(s));
+        return s;
+    }
 //end of namespace
 }
 }

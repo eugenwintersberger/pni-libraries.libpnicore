@@ -57,3 +57,69 @@ void dim_algorithm_test::test_size()
     CPPUNIT_ASSERT(size(layout1) == 12);
     CPPUNIT_ASSERT(size(layout2) == 8);
 }
+
+//-----------------------------------------------------------------------------
+void dim_algorithm_test::test_rank()
+{
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+
+    CPPUNIT_ASSERT(rank(layout1) == 3);
+    CPPUNIT_ASSERT(rank(layout2) == 3);
+}
+
+//-----------------------------------------------------------------------------
+void dim_algorithm_test::test_effective_rank()
+{
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+
+    CPPUNIT_ASSERT(effective_rank(layout1) == 3);
+    CPPUNIT_ASSERT(effective_rank(layout2) == 2);
+}
+
+//-----------------------------------------------------------------------------
+void dim_algorithm_test::test_is_compact()
+{
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+
+    CPPUNIT_ASSERT(is_compact(layout1));
+    CPPUNIT_ASSERT(!is_compact(layout2));
+}
+
+//-----------------------------------------------------------------------------
+void dim_algorithm_test::test_effective_shape()
+{
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+
+    auto s1 = effective_shape<vector_type>(layout1);
+    auto s2 = effective_shape<vector_type>(layout2);
+
+    CPPUNIT_ASSERT(s1.size() == 3);
+    CPPUNIT_ASSERT(s1[0] == 2);
+    CPPUNIT_ASSERT(s1[1] == 2);
+    CPPUNIT_ASSERT(s1[2] == 3);
+
+    CPPUNIT_ASSERT(s2.size() == 2);
+    CPPUNIT_ASSERT(s2[0] == 4);
+    CPPUNIT_ASSERT(s2[1] == 2);
+
+}
+
+//-----------------------------------------------------------------------------
+void dim_algorithm_test::test_shape()
+{
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+    
+    auto s1 = shape<vector_type>(layout1);
+    auto s2 = shape<vector_type>(layout2);
+    
+    CPPUNIT_ASSERT(s1.size() == 3);
+    CPPUNIT_ASSERT(s1[0] == 2);
+    CPPUNIT_ASSERT(s1[1] == 2);
+    CPPUNIT_ASSERT(s1[2] == 3);
+    
+    CPPUNIT_ASSERT(s2.size() == 3);
+    CPPUNIT_ASSERT(s2[0] == 4);
+    CPPUNIT_ASSERT(s2[1] == 2);
+    CPPUNIT_ASSERT(s2[2] == 1);
+}
+
