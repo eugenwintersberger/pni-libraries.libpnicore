@@ -41,10 +41,33 @@ namespace core{
     //! \brief total elements 
     //!
     //! Returns the total number of elements that the layout spans. 
+    /*!
+    \f[
+        span = \prod_{i=1}^{r}\left(
+        c_i+(s_i-1)\left(c_i-1\right)
+        \right)
+    \f]
+    */
     //!
+    //! \tparam DMILT dimension layout type
+    //! \param layout reference to the dimension layout instance
+    //! \return teh total span
     template<typename DIMLT> size_t span(const DIMLT &layout)
     {
+        size_t s = 1;
 
+        auto s_iter = layout.stride().begin();
+        auto c_iter = layout.counts().begin();
+        auto c_iter_end = layout.counts().end();
+
+        while(c_iter != c_iter_end)
+        {
+            s *= *c_iter + (*s_iter - 1) * (*c_iter - 1); 
+            c_iter++;
+            s_iter++;
+        }
+
+        return s;
     }
 
     //-------------------------------------------------------------------------
