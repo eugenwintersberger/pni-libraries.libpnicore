@@ -160,7 +160,9 @@ namespace core{
     //! This function expands an index to this full index set. 
     //! 
     //! \throws shape_mismatch_error if effective rank does not match
-    //! 
+    //! \tparam DIMLT dimension layout type
+    //! \tparam EFFIT effective index container type
+    //! \tparam FULLIT full index type
     //! 
     template<typename DIMLT,
              typename EFFIT,
@@ -169,9 +171,28 @@ namespace core{
     {
         //check if the effective rank matches the rank of the original index
         if(effective_rank(layout) != eindex.size())
-            throw shape_mismatch_error(EXCEPTION_RECORD,"");
+            throw shape_mismatch_error(EXCEPTION_RECORD,
+                    "Input index size does not match the effective rank!");
+
+        if(rank(layout) != findex.size())
+            throw shape_mismatch_error(EXCEPTION_RECORD,
+                    "Output index size does not match the rank of the layout");
         
         //take the code here from array selection
+        auto os_iter = layout.counts().begin(); //iter. over original shape
+        auto st_iter = layout.stride().begin(); //iter. over selection strides
+        auto ei_iter = eindex.begin();  //iter. over selection index
+        auto of_iter = layout.offset().begin(); //iter. over the offset
+
+        //loop over output index
+        for(auto &oi: findex)
+        {
+            size_t index = *of_iter++;
+            //oi = *of_iter++;
+            if(*os_iter++ != 1) index += (*st_iter)*(*ei_iter++);
+            ++st_iter;  //need to increment this guy in any case
+            oi = index;
+        }
 
     }
 

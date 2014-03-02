@@ -123,3 +123,21 @@ void dim_algorithm_test::test_shape()
     CPPUNIT_ASSERT(s2[2] == 1);
 }
 
+//-----------------------------------------------------------------------------
+void dim_algorithm_test::test_expand_index()
+{
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+
+    vector_type i1{1,1,0};
+    vector_type e1(3);
+
+    expand_index(layout1,i1,e1);
+    CPPUNIT_ASSERT(e1[0] == 2);
+    CPPUNIT_ASSERT(e1[1] == 2);
+    CPPUNIT_ASSERT(e1[2] == 0);
+
+    e1 = vector_type(2);
+    CPPUNIT_ASSERT_THROW(expand_index(layout1,i1,e1),shape_mismatch_error);
+    i1 = vector_type(2);
+    CPPUNIT_ASSERT_THROW(expand_index(layout1,i1,e1),shape_mismatch_error);
+}

@@ -47,6 +47,7 @@ class dim_algorithm_test : public CppUnit::TestFixture
         CPPUNIT_TEST(test_is_compact);
         CPPUNIT_TEST(test_effective_shape);
         CPPUNIT_TEST(test_shape);
+        CPPUNIT_TEST(test_expand_index);
         CPPUNIT_TEST_SUITE_END();
 
         typedef default_dim_layout         layout_type;
@@ -92,6 +93,11 @@ class dim_algorithm_test : public CppUnit::TestFixture
         //! \brief test the shape algorithm
         //! 
         void test_shape();
+        
+        //!
+        //! \brief test index expansion
+        //! 
+        void test_expand_index();
 };
 
 
