@@ -42,7 +42,7 @@ namespace core{
 
     This class implements common functions for C index maps.
     */
-    class c_index_policy_imp
+    class c_index_map
     {
         private:
             /*!
