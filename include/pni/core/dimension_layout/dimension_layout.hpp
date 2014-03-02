@@ -28,7 +28,7 @@
 #include "../container_utils.hpp"
 #include "dynamic_dim_layout.hpp"
 #include "static_dim_layout.hpp"
-#include "dim_algorithms.hpp"
+#include "algorithms.hpp"
 
 namespace pni{
 namespace core{

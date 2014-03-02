@@ -39,6 +39,7 @@ install(FILES ${HEADER_FILES}
         DESTINATION ${CMAKE_INSTALL_FULL_INCLUDEDIR}/pni/core/)
 
 add_subdirectory("index_map")
+add_subdirectory("dimension_layout")
 add_subdirectory("benchmark")
 add_subdirectory("config")
 add_subdirectory("math")

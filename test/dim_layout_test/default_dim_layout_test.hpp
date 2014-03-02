@@ -26,7 +26,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <boost/current_function.hpp>
 
-#include <pni/core/index_map/dim_layout.hpp>
+#include <pni/core/dimension_layout/dimension_layout.hpp>
 #include <functional>
 
 using namespace pni::core;

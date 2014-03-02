@@ -8,9 +8,10 @@ set(HEADER_FILES ../include/pni/core/value.hpp
                  ../include/pni/core/index_map/c_index_policy_imp.hpp
                  ../include/pni/core/index_map/index_map.hpp
                  ../include/pni/core/index_map/static_index_map.hpp
-                 ../include/pni/core/index_map/dynamic_dim_layout.hpp
-                 ../include/pni/core/index_map/static_dim_layout.hpp
-                 ../include/pni/core/index_map/dim_algorithms.hpp
+                 ../include/pni/core/dimension_layout/dynamic_dim_layout.hpp
+                 ../include/pni/core/dimension_layout/static_dim_layout.hpp
+                 ../include/pni/core/dimension_layout/algorithms.hpp
+                 ../include/pni/core/dimension_layout/dimension_layout.hpp
                  ../include/pni/core/container_utils.hpp
                  ../include/pni/core/counter.hpp
                  ../include/pni/core/exception_utils.hpp
