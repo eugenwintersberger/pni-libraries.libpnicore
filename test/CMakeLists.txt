@@ -1,6 +1,6 @@
 
 #need to define the version of the library
-set(TEST_SOURCES pnicoretest.cpp
+set(TEST_SOURCES 
                  math/inplace_arithmetics_test.cpp
                  math/add_operator_test.cpp
                  math/div_operator_test.cpp
@@ -22,11 +22,7 @@ add_subdirectory(types)
 add_subdirectory(arrays)
 add_subdirectory(utils_test)
 add_subdirectory(type_erasures)
+add_subdirectory(config)
 
 
-if("${CMAKE_FAMILY_VERSION}" EQUAL "2.6")
-    configure_file(pni.cfg.cmake ./test/pni.cfg)
-else()
-    configure_file(pni.cfg.cmake pni.cfg)
-endif()
 
