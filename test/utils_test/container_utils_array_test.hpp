@@ -27,8 +27,8 @@
 
 #include <pni/core/container_utils.hpp>
 #include <functional>
-#include "data_generator.hpp"
-#include "compare.hpp"
+#include "../data_generator.hpp"
+#include "../compare.hpp"
 
 using namespace pni::core;
 
