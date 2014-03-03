@@ -60,6 +60,8 @@ target_link_libraries(dim_layout_test pnicore)
 add_executable(types_test ${TYPES_TEST_SRC})
 target_link_libraries(types_test pnicore)
 
+add_subdirectory(index_maps)
+
 if(CPPUNIT_FOUND)
     #add include directories
     include_directories(${CPPUNIT_INCLUDE_DIRS})
