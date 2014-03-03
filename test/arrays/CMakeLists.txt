@@ -1,7 +1,6 @@
 #need to define the version of the library
 set(SOURCES array_selection_test.cpp
             arrays_test.cpp
-            array_test.cpp
             array_view_test.cpp
             array_view_unary_arithmetic_test.cpp
             dynamic_mdarray_test.cpp

@@ -25,18 +25,18 @@
 #include<cppunit/TestFixture.h>
 #include<cppunit/extensions/HelperMacros.h>
 #include<boost/current_function.hpp>
-#include "compare.hpp"
-#include "data_generator.hpp"
+#include "../compare.hpp"
+#include "../data_generator.hpp"
 
-#include <pni/core/value_ref.hpp>
+#include <pni/core/value.hpp>
 #include <functional>
 
 using namespace pni::core;
 
 
-template<typename T> class value_ref_test : public CppUnit::TestFixture
+template<typename T> class value_test : public CppUnit::TestFixture
 {
-        CPPUNIT_TEST_SUITE(value_ref_test<T>);
+        CPPUNIT_TEST_SUITE(value_test<T>);
         CPPUNIT_TEST(test_construction);
         CPPUNIT_TEST(test_copy_and_move);
         CPPUNIT_TEST(test_assignment);
@@ -58,7 +58,7 @@ template<typename T> class value_ref_test : public CppUnit::TestFixture
 };
 
 //-----------------------------------------------------------------------------
-template<typename T> void value_ref_test<T>::setUp() 
+template<typename T> void value_test<T>::setUp() 
 { 
     generator = random_generator<T>(1,10);
     value_1 = generator();
@@ -66,68 +66,65 @@ template<typename T> void value_ref_test<T>::setUp()
 }
 
 //-----------------------------------------------------------------------------
-template<typename T> void value_ref_test<T>::tearDown() { }
+template<typename T> void value_test<T>::tearDown() { }
 
 //-----------------------------------------------------------------------------
-template<typename T> void value_ref_test<T>::test_construction()
+template<typename T> void value_test<T>::test_construction()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
-    value_ref v1 = std::ref(value_1);
-    value_ref v2 = std::ref(value_2);
 
-    compare(v1.as<T>(),value_1);
-    compare(v2.as<T>(),value_2);
+    value v1 = value_1;
+    value v2 = value_2;
+
+    CPPUNIT_ASSERT(v1.as<T>()==value_1);
+    CPPUNIT_ASSERT(v2.as<T>()==value_2);
 
 }
 
 //-----------------------------------------------------------------------------
-template<typename T> void value_ref_test<T>::test_copy_and_move()
+template<typename T> void value_test<T>::test_copy_and_move()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
-    
-    value_ref v1 = std::ref(value_1);
-    
-    value_ref v2(v1);
-    compare(v1.as<T>(),value_1);
-    compare(v2.as<T>(),value_1);
 
-    value_ref v3(std::move(v2));
+    value v1 = value_1;
+    
+    value v2(v1);
+    CPPUNIT_ASSERT(v1.as<T>() == value_1);
+    CPPUNIT_ASSERT(v2.as<T>() == value_1);
+
+    value v3(std::move(v2));
     CPPUNIT_ASSERT(v3.as<T>() == v1.as<T>());
     CPPUNIT_ASSERT_THROW(v2.as<T>(),memory_not_allocated_error);
 
 }
 
 //-----------------------------------------------------------------------------
-template<typename T> void value_ref_test<T>::test_assignment()
+template<typename T> void value_test<T>::test_assignment()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
-   
-    value_ref v1;
-    CPPUNIT_ASSERT_THROW(v1.as<T>(),memory_not_allocated_error); 
-    //assign a reference
-    v1 = std::ref(value_1);
+    
+    value v1;
+    CPPUNIT_ASSERT_THROW(v1.as<T>(),memory_not_allocated_error);
 
-    //assigning a simple value to the reference 
-    v1 = value_2;
-    compare(value_1,value_2);
+    v1 = value_1;
+    CPPUNIT_ASSERT(v1.as<T>() == value_1);
 
-    value_ref v2;
+    value v2;
     v2 = v1;
     CPPUNIT_ASSERT(v1.as<T>() == v2.as<T>());
 
-    value_ref v3;
+    value v3;
     v3 = std::move(v2);
     CPPUNIT_ASSERT(v3.as<T>() == v1.as<T>());
     CPPUNIT_ASSERT_THROW(v2.as<T>(),memory_not_allocated_error);
 }
 
 //-----------------------------------------------------------------------------
-template<typename T> void value_ref_test<T>::test_stream()
+template<typename T> void value_test<T>::test_stream()
 {
-    std::stringstream ss("12343.4");
+    std::stringstream ss("12");
 
-    T data;
-    value_ref v=std::ref(data);
+    value v=value::create<T>();
     ss>>v;
 }
 

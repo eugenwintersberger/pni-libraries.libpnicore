@@ -21,6 +21,7 @@ add_subdirectory(dim_layout_test)
 add_subdirectory(types)
 add_subdirectory(arrays)
 add_subdirectory(utils_test)
+add_subdirectory(type_erasures)
 
 
 if("${CMAKE_FAMILY_VERSION}" EQUAL "2.6")
