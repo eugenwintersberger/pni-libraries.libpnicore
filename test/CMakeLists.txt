@@ -1,12 +1,6 @@
 
 #need to define the version of the library
 set(TEST_SOURCES 
-                 math/inplace_arithmetics_test.cpp
-                 math/add_operator_test.cpp
-                 math/div_operator_test.cpp
-                 math/sub_operator_test.cpp
-                 math/mult_operator_test.cpp
-                 configuration_test.cpp
                  vector_adapter_test.cpp
                  )
 
@@ -23,6 +17,7 @@ add_subdirectory(arrays)
 add_subdirectory(utils_test)
 add_subdirectory(type_erasures)
 add_subdirectory(config)
+add_subdirectory(math)
 
 
 
