@@ -19,5 +19,6 @@ add_subdirectory(type_erasures)
 add_subdirectory(config)
 add_subdirectory(math)
 
+configure_file(run_tests.sh run_tests.sh COPYONLY)
 
 
