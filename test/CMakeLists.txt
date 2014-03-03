@@ -3,17 +3,6 @@
 set(TEST_SOURCES pnicoretest.cpp
                  container_utils_std_test.cpp
                  container_utils_array_test.cpp
-                 index_maps/index_map_test_common.cpp
-                 index_maps/index_policy_implementation_test.cpp
-                 arrays/mdarray_test.cpp
-                 arrays/mdarray_unary_arithmetic_test.cpp
-                 arrays/dynamic_mdarray_test.cpp
-                 arrays/fix_mdarray_test.cpp
-                 arrays/static_mdarray_test.cpp
-                 arrays/array_selection_test.cpp
-                 arrays/array_view_test.cpp
-                 arrays/array_view_unary_arithmetic_test.cpp
-                 arrays/scalar_test.cpp
                  math/inplace_arithmetics_test.cpp
                  math/add_operator_test.cpp
                  math/div_operator_test.cpp
@@ -21,25 +10,17 @@ set(TEST_SOURCES pnicoretest.cpp
                  math/mult_operator_test.cpp
                  iterator_test.cpp
                  slice_test.cpp
-                 binary_test.cpp
                  configuration_test.cpp
                  counter_test.cpp
                  index_iterator_test.cpp
                  compare.cpp
-                 arrays/array_test.cpp
                  value_ref_test.cpp
                  value_test.cpp
                  vector_adapter_test.cpp
                  )
 
-set(TYPES_TEST_SRC types_test.cpp
-                   types/type_class_test.cpp
-                   types/type_info_test.cpp
-                   types/type_maps_test.cpp
-                   types/type_id_scalar_test.cpp
-                   types/type_id_container_test.cpp
-                   types/type_str_id_test.cpp)
-
+set(COMMON_SOURCES compare.cpp)
+add_library(test_common OBJECT ${COMMON_SOURCES})
 
 link_directories("${CMAKE_CURRENT_BINARY_DIR}/../src")
 add_executable(pnicoretest  ${TEST_SOURCES})
@@ -47,11 +28,10 @@ add_executable(rand_test "rand_test.cpp")
 target_link_libraries(pnicoretest pnicore)
 target_link_libraries(rand_test pnicore)
 
-add_executable(types_test ${TYPES_TEST_SRC})
-target_link_libraries(types_test pnicore)
-
 add_subdirectory(index_maps)
 add_subdirectory(dim_layout_test)
+add_subdirectory(types)
+add_subdirectory(arrays)
 
 if(CPPUNIT_FOUND)
     #add include directories
@@ -59,7 +39,6 @@ if(CPPUNIT_FOUND)
 
     #add libraries
     target_link_libraries(pnicoretest ${CPPUNIT_LIBRARIES})
-    target_link_libraries(types_test ${CPPUNIT_LIBRARIES})
 
 endif()
 
