@@ -2,7 +2,6 @@ set(HEADER_FILES
                 c_index_map_imp.hpp
                 index_map.hpp
                 index_maps.hpp
-                index_policy.hpp
                 static_index_map.hpp
                  )
 

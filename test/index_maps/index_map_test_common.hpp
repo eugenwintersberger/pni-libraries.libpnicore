@@ -1,25 +1,26 @@
-/*
- * (c) Copyright 2012 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
- *
- * This file is part of libpnicore.
- *
- * libpnicore is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * libpnicore is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with libpnicore.  If not, see <http://www.gnu.org/licenses/>.
- *************************************************************************
- *
- *  Created on: Oct 18, 2013
- *      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
- */
+//!
+//! (c) Copyright 2012 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
+//!
+//! This file is part of libpnicore.
+//!
+//! libpnicore is free software: you can redistribute it and/or modify
+//! it under the terms of the GNU General Public License as published by
+//! the Free Software Foundation, either version 2 of the License, or
+//! (at your option) any later version.
+//!
+//! libpnicore is distributed in the hope that it will be useful,
+//! but WITHOUT ANY WARRANTY; without even the implied warranty of
+//! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//! GNU General Public License for more details.
+//!
+//! You should have received a copy of the GNU General Public License
+//! along with libpnicore.  If not, see <http://www.gnu.org/licenses/>.
+//!
+//! ===========================================================================
+//!
+//!  Created on: Oct 18, 2013
+//!      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
+//!
 #pragma once
 
 #include <boost/current_function.hpp>
@@ -28,24 +29,24 @@
 
 #include "common.hpp"
 
-/*!
-\brief general test
-
-This class provides all tests that a particular index map has to pass. The
-following functionality has to be provided by each index map class
-
-\li offset from  container
-\li offset from variadic template indices
-\li index from offset (index as a general container)
-
-All maps can be constructed from a container - thus this is the only
-construction method we are using. Special construction methods must be tested by
-other test fixtures.
-
-\tparam IMAP index map type
-\tparam offset the correct offset for the test
-\tparam indexes the indexes for the offset 
-*/
+//!
+//! \brief general test
+//! 
+//! This class provides all tests that a particular index map has to pass. The
+//! following functionality has to be provided by each index map class
+//! 
+//! \li offset from  container
+//! \li offset from variadic template indices
+//! \li index from offset (index as a general container)
+//! 
+//! All maps can be constructed from a container - thus this is the only
+//! construction method we are using. Special construction methods must be 
+//! tested by other test fixtures.
+//! 
+//! \tparam IMAP index map type
+//! \tparam offset the correct offset for the test
+//! \tparam indexes the indexes for the offset 
+//! 
 template<typename TPARAM,typename IMAP,size_t offset,size_t... indexes> 
 class index_map_test_common: public CppUnit::TestFixture 
 {

@@ -31,8 +31,6 @@
 #include <array>
 #include <functional>
 #include <algorithm>
-#include <pni/core/index_map/index_policy.hpp>
-#include <pni/core/index_map/c_index_policy_imp.hpp>
 #include <pni/core/index_map/index_map.hpp>
 #include <pni/core/index_map/static_index_map.hpp>
 
@@ -46,22 +44,6 @@ typedef std::list<size_t>   list_t;   //a list for index shapes
 //a new array template for static storage of index data
 template<size_t N> using array_t = std::array<size_t,N>;
 
-//--------------------assemble an index policy---------------------------------
-//we have only one index policy currently - one for c-ordering
-typedef index_policy<c_index_policy_imp> c_index_policy;
-
-//--------------------some index map templates---------------------------------
-//assemble some index map templates
-//a dynamic index map
-template<typename STORAGE> 
-using c_index_map = index_map<STORAGE,c_index_policy>;
-
-//a semi-dynamic index map template
-template<size_t N>
-    using sd_c_index_map = index_map<array_t<N>,c_index_policy>;
-//a static index map
-template<size_t... DIMS>
-using static_c_index_map = static_index_map<c_index_policy,DIMS...>;
 
 //------------------declare some types for test setup--------------------------
 /*!

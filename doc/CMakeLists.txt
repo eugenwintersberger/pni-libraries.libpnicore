@@ -3,9 +3,8 @@ include(FindDoxygen)
 
 #list of sources for the documentation
 set(HEADER_FILES ../include/pni/core/value.hpp
-                 ../include/pni/core/index_map/index_policy.hpp
                  ../include/pni/core/index_map/index_maps.hpp
-                 ../include/pni/core/index_map/c_index_policy_imp.hpp
+                 ../include/pni/core/index_map/c_index_map_imp.hpp
                  ../include/pni/core/index_map/index_map.hpp
                  ../include/pni/core/index_map/static_index_map.hpp
                  ../include/pni/core/dimension_layout/dynamic_dim_layout.hpp
