@@ -23,6 +23,7 @@
 #pragma once
 #include <algorithm>
 #include <numeric>
+#include "../container_utils.hpp"
 
 namespace pni{
 namespace core{
@@ -52,14 +53,14 @@ namespace core{
     \tparam MAP_POL policy to compute the index and offset data
     \tparam DIMS number of elements along each dimension
     */
-    template<typename MAP_POL,size_t... DIMS> class static_index_map
+    template<typename MAP_IMP,size_t... DIMS> class static_index_map
     {
         public:
             //=================public types====================================
             //! storage type
             typedef std::array<size_t,sizeof...(DIMS)> storage_type;
             //! policy type
-            typedef MAP_POL     policy_type;
+            typedef MAP_IMP     implementation_type;
             //! index type 
             typedef storage_type index_type;
             //! constant iterator over the map
@@ -141,7 +142,7 @@ namespace core{
                     > 
             size_t offset(const CTYPE &index) const
             {
-                return MAP_POL::template offset(_shape,index);
+                return implementation_type::template offset(_shape,index);
             }
             
             //-----------------------------------------------------------------
@@ -161,41 +162,8 @@ namespace core{
             size_t offset(const array_selection &s,const CTYPE &index) 
             const
             {
-                return MAP_POL::template offset(s,_shape,index);
+                return implementation_type::template offset(s,_shape,index);
             }
-
-            //-----------------------------------------------------------------
-            /*!
-            \brief compute the offset 
-
-            Compute the offset from indexes passed to a variadic function. 
-
-            \code
-            typedef .... static_map;
-    
-            static_map map;
-            size_t offset = map.offset(1,3,9);
-            \endcode
-
-            \tparam ITYPES index types
-            \return linear offset
-            */
-            /*
-            template<typename... ITYPES>
-            size_t offset(ITYPES ...index) const
-            {
-                return MAP_POL::template offset(_shape,
-                        std::array<size_t,sizeof...(ITYPES)>{{index...}});
-            }
-            
-            template<typename SCTYPE,
-                     typename... ITYPES>
-            size_t offset(const array_selection<SCTYPE> &s,ITYPES ...index) const
-            {
-                return MAP_POL::template offset(s,_shape,
-                        std::array<size_t,sizeof...(ITYPES)>{{index...}});
-            }
-            */
 
             //-----------------------------------------------------------------
             /*!
@@ -219,7 +187,9 @@ namespace core{
             */
             template<typename CTYPE> CTYPE index(size_t offset) const
             {
-                return MAP_POL::template index<CTYPE>(_shape,offset);
+                CTYPE index = container_utils<CTYPE>::create(rank()); 
+                implementation_type::template index(_shape,index,offset);
+                return index;
             }
 
             //-----------------------------------------------------------------
@@ -232,9 +202,9 @@ namespace core{
 
     };
     
-template<typename MAP_POL,size_t... DIMS> 
-    constexpr typename static_index_map<MAP_POL,DIMS...>::storage_type 
-    static_index_map<MAP_POL,DIMS...>::_shape;
+template<typename MAP_IMP,size_t... DIMS> 
+    constexpr typename static_index_map<MAP_IMP,DIMS...>::storage_type 
+    static_index_map<MAP_IMP,DIMS...>::_shape;
 //end of namespace
 }
 }

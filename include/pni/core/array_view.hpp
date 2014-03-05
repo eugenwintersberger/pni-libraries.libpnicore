@@ -83,7 +83,7 @@ namespace core{
             //! inplace arithetic type
             typedef typename ATYPE::inplace_arithmetic inplace_arithmetic;
             //! map type
-            typedef index_map<index_type,typename ATYPE::map_type::policy_type> map_type;
+            typedef index_map<index_type,typename ATYPE::map_type::implementation_type> map_type;
             //========================public members===========================
             //! type id of the value_type
             static const size_t type_id = ATYPE::type_id;

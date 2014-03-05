@@ -24,6 +24,8 @@
 #include <algorithm>
 #include <numeric>
 
+#include "../container_utils.hpp"
+
 
 namespace pni{
 namespace core{
@@ -78,7 +80,7 @@ namespace core{
     \tparam MAP_POL policy to compute the index and offset data
     \sa static_index_map
     */
-    template<typename SHAPE_STORE,typename MAP_POL> class index_map
+    template<typename SHAPE_STORE,typename MAP_IMP> class index_map
     {
         public:
             //=================public types====================================
@@ -87,13 +89,13 @@ namespace core{
             //! index type
             typedef typename storage_type::value_type value_type;
             //! policy type
-            typedef MAP_POL     policy_type;
+            typedef MAP_IMP     implementation_type;
             //! read write iterator
             typedef typename storage_type::iterator iterator;
             //! constant iterator over the map
             typedef typename storage_type::const_iterator const_iterator;
             //! map type
-            typedef index_map<storage_type,policy_type> map_type;
+            typedef index_map<storage_type,implementation_type> map_type;
         private:
             //! storage for shape information
             storage_type _shape;
@@ -248,7 +250,7 @@ namespace core{
                     >
             size_t offset(const CTYPE &index) const
             {
-                return MAP_POL::template offset(_shape,index);
+                return implementation_type::template offset(_shape,index);
             }
 
             //-----------------------------------------------------------------
@@ -265,40 +267,8 @@ namespace core{
                     >
             size_t offset(const array_selection &s,const CTYPE &index)
             {
-                return MAP_POL::template offset(s,_shape,index);
+                return implementation_type::template offset(s,_shape,index);
             }
-
-
-            //-----------------------------------------------------------------
-            /*!
-            \brief compute offset 
-
-            The index is passed as variadic arguments. 
-
-            \code
-            size_t offset = map.offset(1,2,3);
-            \endcode
-
-            \tparam ITYPES variadic index arguments
-            \parm index the index values
-            \return linear offset
-            */
-            /*
-            template<typename... ITYPES>
-            size_t offset(ITYPES ...index) const
-            {
-                return MAP_POL::template offset(_shape,
-                        std::array<size_t,sizeof...(ITYPES)>{{index...}});
-            }
-
-            template<typename SCTYPE,
-                     typename... ITYPES>
-            size_t offset(const array_selection<SCTYPE> &s,ITYPES ...index) const
-            {
-                return MAP_POL::template offset(s,_shape,
-                        std::array<size_t,sizeof...(ITYPES)>{{index...}});
-            }
-            */
 
             //-----------------------------------------------------------------
             /*!
@@ -319,7 +289,10 @@ namespace core{
             */
             template<typename CTYPE> CTYPE index(size_t offset) const
             {
-                return MAP_POL::template index<CTYPE>(_shape,offset);
+                CTYPE index = container_utils<CTYPE>::create(rank()); 
+                implementation_type::template index(_shape,index,offset);
+                return index;
+
             }
 
 

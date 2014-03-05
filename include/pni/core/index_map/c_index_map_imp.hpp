@@ -1,4 +1,3 @@
-
 /*
  * (c) Copyright 2013 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
  *
@@ -42,7 +41,7 @@ namespace core{
 
     This class implements common functions for C index maps.
     */
-    class c_index_map
+    class c_index_map_imp
     {
         private:
             /*!
@@ -110,7 +109,7 @@ namespace core{
             {
                 size_t index = *sel_offset++;
 
-                if(*sel_shape_start++ != 1) index += (*sel_index++)*(sel_stride);
+                if(*sel_shape_start++ != 1) index += (*sel_index++)*(*sel_stride);
                 ++sel_stride;
 
                 //initialize the offset and the stride variable
@@ -130,7 +129,7 @@ namespace core{
                     //compute the actuall stride 
                     dim_stride *= *shape_start++;
                     //compute the offset contribution
-                    offset += dim_sride*index;
+                    offset += dim_stride*index;
                 }
 
                 return offset;
@@ -244,7 +243,7 @@ namespace core{
             template<typename CINDEX,
                      typename CSHAPE
                     >
-            static void index(const CSHAPE &shape,const CINDEX &idx,size_t offset)
+            static void index(const CSHAPE &shape,CINDEX &idx,size_t offset)
             {
                 //for index computation we can use the forward iterators
                 index(shape.begin(),shape.end(),idx.begin(),offset); 

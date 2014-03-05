@@ -1,5 +1,5 @@
 set(HEADER_FILES 
-                c_index_policy_imp.hpp
+                c_index_map_imp.hpp
                 index_map.hpp
                 index_maps.hpp
                 index_policy.hpp
