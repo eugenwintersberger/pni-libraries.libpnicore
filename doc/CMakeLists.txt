@@ -2,64 +2,72 @@
 include(FindDoxygen)
 
 #list of sources for the documentation
-set(HEADER_FILES ../include/pni/core/value.hpp
-                 ../include/pni/core/index_map/index_maps.hpp
-                 ../include/pni/core/index_map/c_index_map_imp.hpp
-                 ../include/pni/core/index_map/index_map.hpp
-                 ../include/pni/core/index_map/static_index_map.hpp
-                 ../include/pni/core/dimension_layout/dynamic_dim_layout.hpp
-                 ../include/pni/core/dimension_layout/static_dim_layout.hpp
-                 ../include/pni/core/dimension_layout/algorithms.hpp
-                 ../include/pni/core/dimension_layout/dimension_layout.hpp
-                 ../include/pni/core/container_utils.hpp
-                 ../include/pni/core/counter.hpp
-                 ../include/pni/core/exception_utils.hpp
-                 ../include/pni/core/id_type_map.hpp
-                 ../include/pni/core/array_operations.hpp
-                 ../include/pni/core/utilties.hpp
-                 ../include/pni/core/array_holder_interface.hpp
-                 ../include/pni/core/math/add_op.hpp
-                 ../include/pni/core/math/inplace_arithmetics.hpp
-                 ../include/pni/core/math/op_traits.hpp
-                 ../include/pni/core/math/sub_op.hpp
-                 ../include/pni/core/math/div_op.hpp
-                 ../include/pni/core/math/mult_op.hpp
-                 ../include/pni/core/exceptions.hpp
-                 ../include/pni/core/types.hpp
-                 ../include/pni/core/benchmark/benchmark_runner.hpp
-                 ../include/pni/core/benchmark/chrono_timer.hpp
-                 ../include/pni/core/benchmark/benchmark_result.hpp
-                 ../include/pni/core/benchmark/clock_timer.hpp
-                 ../include/pni/core/container_iterator.hpp
-                 ../include/pni/core/type_class_map.hpp
-                 ../include/pni/core/index_iterator.hpp
-                 ../include/pni/core/slice.hpp
-                 ../include/pni/core/hardware/cpu.hpp
-                 ../include/pni/core/hardware/cpuinfo.hpp
-                 ../include/pni/core/scalar.hpp
-                 ../include/pni/core/arrays.hpp
-                 ../include/pni/core/array_iterator.hpp
-                 ../include/pni/core/value_holder.hpp
-                 ../include/pni/core/binary.hpp
-                 ../include/pni/core/type_utils.hpp
-                 ../include/pni/core/value_holder_interface.hpp
-                 ../include/pni/core/array_selection.hpp
-                 ../include/pni/core/type_id_map.hpp
-                 ../include/pni/core/config/cli_args.hpp
-                 ../include/pni/core/config/library_config.hpp
-                 ../include/pni/core/config/config_argument.hpp
-                 ../include/pni/core/config/configuration.hpp
-                 ../include/pni/core/config/config_parser.hpp
-                 ../include/pni/core/config/config_option.hpp
-                 ../include/pni/core/array.hpp
-                 ../include/pni/core/array_holder.hpp
-                 ../include/pni/core/service.hpp
-                 ../include/pni/core/array_view.hpp
-                 ../include/pni/core/complex_utils.hpp
-                 ../include/pni/core/type_info.hpp
-                 ../include/pni/core/mdarray.hpp
-                 ../include/pni/core/value_ref.hpp
-                 ../include/pni/core/type_conversion.hpp
+set(HDR_DIR ../include/pni/core)
+set(HEADER_FILES 
+                 ${HDR_DIR}/hardware/cpu.hpp
+                 ${HDR_DIR}/hardware/cpuinfo.hpp
+                 ${HDR_DIR}/arrays.hpp
+                 
+                 ${HDR_DIR}/error/exceptions.hpp
+                 ${HDR_DIR}/error/exception_utils.hpp
+
+                 ${HDR_DIR}/utilities/container_utils.hpp
+                 ${HDR_DIR}/utilities/counter.hpp
+                 ${HDR_DIR}/utilities/container_iterator.hpp
+                 ${HDR_DIR}/utilities/service.hpp
+
+                 ${HDR_DIR}/type_erasures/array_holder_interface.hpp
+                 ${HDR_DIR}/type_erasures/value.hpp
+                 ${HDR_DIR}/type_erasures/array_iterator.hpp
+                 ${HDR_DIR}/type_erasures/value_holder.hpp
+                 ${HDR_DIR}/type_erasures/value_holder_interface.hpp
+                 ${HDR_DIR}/type_erasures/array.hpp
+                 ${HDR_DIR}/type_erasures/array_holder.hpp
+                 ${HDR_DIR}/type_erasures/value_ref.hpp
+                 
+                 ${HDR_DIR}/arrays/array_selection.hpp
+                 ${HDR_DIR}/arrays/array_view.hpp
+                 ${HDR_DIR}/arrays/mdarray.hpp
+                 ${HDR_DIR}/arrays/scalar.hpp
+                 ${HDR_DIR}/arrays/index_iterator.hpp
+                 ${HDR_DIR}/arrays/slice.hpp
+                 ${HDR_DIR}/arrays/math/add_op.hpp
+                 ${HDR_DIR}/arrays/math/inplace_arithmetics.hpp
+                 ${HDR_DIR}/arrays/math/op_traits.hpp
+                 ${HDR_DIR}/arrays/math/sub_op.hpp
+                 ${HDR_DIR}/arrays/math/div_op.hpp
+                 ${HDR_DIR}/arrays/math/mult_op.hpp
+                 ${HDR_DIR}/arrays/array_operations.hpp
+                 ${HDR_DIR}/arrays/index_map/index_maps.hpp
+                 ${HDR_DIR}/arrays/index_map/c_index_map_imp.hpp
+                 ${HDR_DIR}/arrays/index_map/index_map.hpp
+                 ${HDR_DIR}/arrays/index_map/static_index_map.hpp
+                 ${HDR_DIR}/arrays/dimension_layout/dynamic_dim_layout.hpp
+                 ${HDR_DIR}/arrays/dimension_layout/static_dim_layout.hpp
+                 ${HDR_DIR}/arrays/dimension_layout/algorithms.hpp
+                 ${HDR_DIR}/arrays/dimension_layout/dimension_layout.hpp
+                 
+                 ${HDR_DIR}/types/type_conversion.hpp
+                 ${HDR_DIR}/types/id_type_map.hpp
+                 ${HDR_DIR}/types/type_info.hpp
+                 ${HDR_DIR}/types/complex_utils.hpp
+                 ${HDR_DIR}/types/type_id_map.hpp
+                 ${HDR_DIR}/types/binary.hpp
+                 ${HDR_DIR}/types/type_utils.hpp
+                 ${HDR_DIR}/types/type_class_map.hpp
+                 ${HDR_DIR}/types/types.hpp
+                 
+                 ${HDR_DIR}/configuration/cli_args.hpp
+                 ${HDR_DIR}/configuration/library_config.hpp
+                 ${HDR_DIR}/configuration/config_argument.hpp
+                 ${HDR_DIR}/configuration/configuration.hpp
+                 ${HDR_DIR}/configuration/config_parser.hpp
+                 ${HDR_DIR}/configuration/config_option.hpp
+                 
+                 ${HDR_DIR}/benchmark/benchmark_runner.hpp
+                 ${HDR_DIR}/benchmark/chrono_timer.hpp
+                 ${HDR_DIR}/benchmark/benchmark_result.hpp
+                 ${HDR_DIR}/benchmark/clock_timer.hpp
                  mainpage.cmake
     )
 

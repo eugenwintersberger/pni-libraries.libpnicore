@@ -20,7 +20,7 @@
 //!
 //!  Created on: Nov 13, 2013
 //!      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
-//!/
+//!
 #include <boost/current_function.hpp>
 #include<cppunit/extensions/HelperMacros.h>
 
@@ -28,7 +28,7 @@
 #include <list>
 #include <array>
 
-#include <pni/core/index_map/c_index_map_imp.hpp>
+#include <pni/core/arrays/index_map/c_index_map_imp.hpp>
 #include "cindex_implementation_test.hpp"
 #include "common.hpp"
 

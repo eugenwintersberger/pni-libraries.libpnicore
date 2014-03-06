@@ -24,7 +24,7 @@
 #include <boost/current_function.hpp>
 #include<cppunit/extensions/HelperMacros.h>
 
-#include <pni/core/index_map/index_maps.hpp>
+#include <pni/core/arrays/index_map/index_maps.hpp>
 #include "index_map_test_common.hpp"
 
 typedef fixed_dim_cindex_map<1> c_index_map_array_1;

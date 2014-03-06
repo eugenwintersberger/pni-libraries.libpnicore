@@ -11,7 +11,7 @@ add_executable(rand_test "rand_test.cpp")
 target_link_libraries(rand_test pnicore)
 
 add_subdirectory(index_maps)
-add_subdirectory(dim_layout_test)
+#add_subdirectory(dim_layout_test)
 add_subdirectory(types)
 add_subdirectory(arrays)
 add_subdirectory(utils_test)

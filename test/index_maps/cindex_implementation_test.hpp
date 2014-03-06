@@ -20,14 +20,14 @@
 //!
 //!  Created on: Nov 13, 2013
 //!      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
-//!/
+//!
 #pragma once
 
 #include <boost/current_function.hpp>
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
 
-#include <pni/core/container_utils.hpp>
+#include <pni/core/utilities/container_utils.hpp>
 
 using namespace pni::core;
 

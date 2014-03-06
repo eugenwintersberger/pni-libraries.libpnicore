@@ -27,9 +27,7 @@
 #include <boost/lexical_cast.hpp>
 
 #include <pni/core/types.hpp>
-#include <pni/core/type_utils.hpp>
-#include <pni/core/config/configuration.hpp>
-#include <pni/core/config/config_parser.hpp>
+#include <pni/core/configuration.hpp>
 
 
 #include "data_generator.hpp"
