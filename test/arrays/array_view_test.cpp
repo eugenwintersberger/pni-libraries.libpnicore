@@ -33,43 +33,57 @@
 template<typename T> using dyn_array_view_test = array_view_test<dynamic_array<T> >;
 
 CPPUNIT_TEST_SUITE_REGISTRATION(dyn_array_view_test<uint8>);
-CPPUNIT_TEST_SUITE_REGISTRATION(dyn_array_view_test<int8>);
-CPPUNIT_TEST_SUITE_REGISTRATION(dyn_array_view_test<uint16>);
-CPPUNIT_TEST_SUITE_REGISTRATION(dyn_array_view_test<int16>);
-CPPUNIT_TEST_SUITE_REGISTRATION(dyn_array_view_test<uint32>);
-CPPUNIT_TEST_SUITE_REGISTRATION(dyn_array_view_test<int32>);
-CPPUNIT_TEST_SUITE_REGISTRATION(dyn_array_view_test<uint64>);
-CPPUNIT_TEST_SUITE_REGISTRATION(dyn_array_view_test<int64>);
-CPPUNIT_TEST_SUITE_REGISTRATION(dyn_array_view_test<float32>);
-CPPUNIT_TEST_SUITE_REGISTRATION(dyn_array_view_test<float64>);
-CPPUNIT_TEST_SUITE_REGISTRATION(dyn_array_view_test<float128>);
-CPPUNIT_TEST_SUITE_REGISTRATION(dyn_array_view_test<complex32>);
-CPPUNIT_TEST_SUITE_REGISTRATION(dyn_array_view_test<complex64>);
-CPPUNIT_TEST_SUITE_REGISTRATION(dyn_array_view_test<complex128>);
-CPPUNIT_TEST_SUITE_REGISTRATION(dyn_array_view_test<string>);
-//CPPUNIT_TEST_SUITE_REGISTRATION(dyn_array_view_test<bool> >);
+//CPPUNIT_TEST_SUITE_REGISTRATION(dyn_array_view_test<int8>);
+//CPPUNIT_TEST_SUITE_REGISTRATION(dyn_array_view_test<uint16>);
+//CPPUNIT_TEST_SUITE_REGISTRATION(dyn_array_view_test<int16>);
+//CPPUNIT_TEST_SUITE_REGISTRATION(dyn_array_view_test<uint32>);
+//CPPUNIT_TEST_SUITE_REGISTRATION(dyn_array_view_test<int32>);
+//CPPUNIT_TEST_SUITE_REGISTRATION(dyn_array_view_test<uint64>);
+//CPPUNIT_TEST_SUITE_REGISTRATION(dyn_array_view_test<int64>);
+//CPPUNIT_TEST_SUITE_REGISTRATION(dyn_array_view_test<float32>);
+//CPPUNIT_TEST_SUITE_REGISTRATION(dyn_array_view_test<float64>);
+//CPPUNIT_TEST_SUITE_REGISTRATION(dyn_array_view_test<float128>);
+//CPPUNIT_TEST_SUITE_REGISTRATION(dyn_array_view_test<complex32>);
+//CPPUNIT_TEST_SUITE_REGISTRATION(dyn_array_view_test<complex64>);
+//CPPUNIT_TEST_SUITE_REGISTRATION(dyn_array_view_test<complex128>);
+//CPPUNIT_TEST_SUITE_REGISTRATION(dyn_array_view_test<string>);
 
+template<typename T>
+using fix_array_view_test = array_view_test<fixed_dim_array<T,2>>;
 
-#define SARRAY_VIEW_TEST_REG(T,NX,NY)\
-static CPPUNIT_NS::AutoRegisterSuite< array_view_test<sarray<T,NX,NY> > >  \
-             CPPUNIT_MAKE_UNIQUE_NAME(autoRegisterRegistry__ )
-//
-//SARRAY_VIEW_TEST_REG(uint8,NX,NY);
-//SARRAY_VIEW_TEST_REG(int8,NX,NY);
-//SARRAY_VIEW_TEST_REG(uint16,NX,NY);
-//SARRAY_VIEW_TEST_REG(int16,NX,NY);
-//SARRAY_VIEW_TEST_REG(uint32,NX,NY);
-//SARRAY_VIEW_TEST_REG(int32,NX,NY);
-//SARRAY_VIEW_TEST_REG(uint64,NX,NY);
-//SARRAY_VIEW_TEST_REG(int64,NX,NY);
-//SARRAY_VIEW_TEST_REG(float32,NX,NY);
-//SARRAY_VIEW_TEST_REG(float64,NX,NY);
-//SARRAY_VIEW_TEST_REG(float128,NX,NY);
-//SARRAY_VIEW_TEST_REG(complex32,NX,NY);
-//SARRAY_VIEW_TEST_REG(complex64,NX,NY);
-//SARRAY_VIEW_TEST_REG(complex128,NX,NY);
-//SARRAY_VIEW_TEST_REG(string,NX,NY);
-//SARRAY_VIEW_TEST_REG(bool,NX,NY);
+CPPUNIT_TEST_SUITE_REGISTRATION(fix_array_view_test<uint8>);
+//CPPUNIT_TEST_SUITE_REGISTRATION(fix_array_view_test<int8>);
+//CPPUNIT_TEST_SUITE_REGISTRATION(fix_array_view_test<uint16>);
+//CPPUNIT_TEST_SUITE_REGISTRATION(fix_array_view_test<int16>);
+//CPPUNIT_TEST_SUITE_REGISTRATION(fix_array_view_test<uint32>);
+//CPPUNIT_TEST_SUITE_REGISTRATION(fix_array_view_test<int32>);
+//CPPUNIT_TEST_SUITE_REGISTRATION(fix_array_view_test<uint64>);
+//CPPUNIT_TEST_SUITE_REGISTRATION(fix_array_view_test<int64>);
+//CPPUNIT_TEST_SUITE_REGISTRATION(fix_array_view_test<float32>);
+//CPPUNIT_TEST_SUITE_REGISTRATION(fix_array_view_test<float64>);
+//CPPUNIT_TEST_SUITE_REGISTRATION(fix_array_view_test<float128>);
+//CPPUNIT_TEST_SUITE_REGISTRATION(fix_array_view_test<complex32>);
+//CPPUNIT_TEST_SUITE_REGISTRATION(fix_array_view_test<complex64>);
+//CPPUNIT_TEST_SUITE_REGISTRATION(fix_array_view_test<complex128>);
+//CPPUNIT_TEST_SUITE_REGISTRATION(fix_array_view_test<string>);
+
+template<typename T> 
+using static_array_view_test = array_view_test<static_array<T,NX,NY>>;
+CPPUNIT_TEST_SUITE_REGISTRATION(static_array_view_test<uint8>);
+//CPPUNIT_TEST_SUITE_REGISTRATION(static_array_view_test<int8>);
+//CPPUNIT_TEST_SUITE_REGISTRATION(static_array_view_test<uint16>);
+//CPPUNIT_TEST_SUITE_REGISTRATION(static_array_view_test<int16>);
+//CPPUNIT_TEST_SUITE_REGISTRATION(static_array_view_test<uint32>);
+//CPPUNIT_TEST_SUITE_REGISTRATION(static_array_view_test<int32>);
+//CPPUNIT_TEST_SUITE_REGISTRATION(static_array_view_test<uint64>);
+//CPPUNIT_TEST_SUITE_REGISTRATION(static_array_view_test<int64>);
+//CPPUNIT_TEST_SUITE_REGISTRATION(static_array_view_test<float32>);
+//CPPUNIT_TEST_SUITE_REGISTRATION(static_array_view_test<float64>);
+//CPPUNIT_TEST_SUITE_REGISTRATION(static_array_view_test<float128>);
+//CPPUNIT_TEST_SUITE_REGISTRATION(static_array_view_test<complex32>);
+//CPPUNIT_TEST_SUITE_REGISTRATION(static_array_view_test<complex64>);
+//CPPUNIT_TEST_SUITE_REGISTRATION(static_array_view_test<complex128>);
+//CPPUNIT_TEST_SUITE_REGISTRATION(static_array_view_test<string>);
 
 
 

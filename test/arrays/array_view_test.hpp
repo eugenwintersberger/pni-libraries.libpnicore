@@ -149,7 +149,7 @@ template<typename ATYPE> void array_view_test<ATYPE>::test_construction()
    check_view(v1,shape_t{3,4});
 
    //select a 1D strip from the 2D array
-   view_type v2(array,selection_type::create(slice_container{1,slice(3,7)}));
+   view_type v2(array,selection_type::create(slice_container{slice(1),slice(3,7)}));
    check_view(v2,shape_t{4});
 }
 
@@ -243,25 +243,27 @@ template<typename ATYPE> void array_view_test<ATYPE>::test_iterator_access()
     //---------------------check write access----------------------------------
     auto diter = data.begin();
     std::copy(data.begin(),data.end(),v.begin());
-    /*
-    for(auto iter = v.begin();iter!=v.end();++iter,++diter)
-        *iter = *diter;
-        */
 
     //----------------------check read access----------------------------------
     diter = data.begin();
     for(auto iter = v.begin();iter!=v.end();++iter,++diter)
-        compare(*iter,*diter);
+        //compare(*iter,*diter);
+        CPPUNIT_ASSERT(*iter == *diter);
 
     //-----now we need to check if the data arrived at the original array------
     selection_type  selection(shape_t{13,9},shape_t{10,100},shape_t{2,3});
-    index_iterator<shape_t,map_type> index_iter(shape_t{13,9},0);
+    index_iterator<shape_t,dynamic_cindex_map> index_iter(shape_t{13,9},0);
+    value_type v1,v2;
+    size_t i = 0;
     for(auto iter = data.begin();iter!=data.end();++iter)
     {
-        auto index = selection.index<shape_t>(*index_iter++);
-        value_type v1 = *iter;
-        value_type v2 = array(index);
-        compare(v1,v2);
+        auto oindex = *index_iter++;
+        auto index = selection.index<shape_t>(oindex);
+        v1 = *iter;
+        v2 = array(index);
+        //compare(v1,v2);
+        CPPUNIT_ASSERT(v1 == v2);
+        i++;
     }
 }
 

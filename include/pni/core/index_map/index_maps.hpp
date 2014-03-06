@@ -199,15 +199,32 @@ namespace core{
         */
         template<typename CTYPE> static map_type create(const CTYPE &c)
         {
-            //static_assert(false,"You cannot create a new shape object");
-            return map_type();
+            map_type map;
+            if(c.size() != map.rank())
+                throw size_mismatch_error(EXCEPTION_RECORD,
+                        "rank does not match");
+
+            if(!std::equal(map.begin(),map.end(),c.begin()))
+                throw shape_mismatch_error(EXCEPTION_RECORD,
+                        "Elements counts do not match!");
+
+            return map;
         }
 
         //---------------------------------------------------------------------
         template<typename IT> 
         static map_type create(std::initializer_list<IT> shape)
         {
-            return map_type();
+            map_type map;
+            if(shape.size() != map.rank())
+                throw size_mismatch_error(EXCEPTION_RECORD,
+                        "rank does not match");
+
+            if(!std::equal(map.begin(),map.end(),shape.begin()))
+                throw shape_mismatch_error(EXCEPTION_RECORD,
+                        "Elements counts do not match!");
+
+            return map;
         }
         
     };
