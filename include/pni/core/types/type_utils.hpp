@@ -1,70 +1,113 @@
-//!
-//! (c) Copyright 2013 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
-//!
-//! This file is part of libpnicore.
-//!
-//! libpnicore is free software: you can redistribute it and/or modify
-//! it under the terms of the GNU General Public License as published by
-//! the Free Software Foundation, either version 2 of the License, or
-//! (at your option) any later version.
-//!
-//! libpnicore is distributed in the hope that it will be useful,
-//! but WITHOUT ANY WARRANTY; without even the implied warranty of
-//! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//! GNU General Public License for more details.
-//!
-//! You should have received a copy of the GNU General Public License
-//! along with libpnicore.  If not, see <http://www.gnu.org/licenses/>.
-//!
-//! ===========================================================================
-//!
-//! Created on: Sep 18, 2013
-//!     Author: Eugen Wintersberger
-//!
-//!
+//
+// (c) Copyright 2013 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
+//
+// This file is part of libpnicore.
+//
+// libpnicore is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+//
+// libpnicore is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with libpnicore.  If not, see <http://www.gnu.org/licenses/>.
+//
+// ============================================================================
+//
+// Created on: Sep 18, 2013
+//     Author: Eugen Wintersberger
+//
+//
 #pragma once
 
 #include <map>
 #include "type_id_map.hpp"
+#include "../utilities/sfinae_macros.hpp"
 
 
 namespace pni{
 namespace core{
     
     //------------------------------------------------------------------------
-    //call this to obtain the type id of a complex value
+    //!
+    //! \ingroup type_classes_internal
+    //! \brief get_type_id version for complex numbers
+    //! 
+    //! Overloaded version of get_type_id for complex numbers.
+    //!
+    //! \tparam T base type for std::complex
+    //! \param v instance of std::complex<T>
+    //! \return type ID of the complex type
+    //!
     template<typename T> type_id_t get_type_id(const std::complex<T> &v)
     {
         return type_id_map<std::complex<T> >::type_id;
     }
 
     //------------------------------------------------------------------------
-    //call this to obtain the type ID of a binary value
+    //!
+    //! \ingroup type_classes_internal
+    //! \brief get_type_id overload for binary data
+    //! 
+    //! Overloaded version of get_type_id for binary data.
+    //! 
+    //! \param v binary data 
+    //! \return type ID for binary 
+    //!
     type_id_t get_type_id(const binary &v);
 
     //-------------------------------------------------------------------------
     //call this to obtain the type ID of a string value
+    //! 
+    //! \ingroup type_classes_internal
+    //! \brief get_type_id overload for string data
+    //! 
+    //! Overloaded version of get_type_id for string data
+    //! 
+    //! \param v string data
+    //! \return type ID for string type
+    //! 
     type_id_t get_type_id(const string &v);
 
 
     //-------------------------------------------------------------------------
-    //if T is POD this is the one you use
+    //! 
+    //! \ingroup type_classes_internal
+    //! \brief get_type_id for POD data
+    //! 
+    //! This version of get_type_id is used for POD (Plain Old Data). 
+    //! 
+    //! \tparam T data type
+    //! \param v instance of T 
+    //! \return type ID of T
+    //!
     template<typename T > 
     type_id_t get_type_id(const T &v,
-                          typename std::enable_if<
-                          std::is_pod<T>::value
-                          >::type* = 0)
+                          typename std::enable_if< IS_POD(T) >::type* = 0)
     {
         return type_id_map<T>::type_id;
     }
 
     //-------------------------------------------------------------------------
     // if T is a container type use this function
+    //! 
+    //! \ingroup type_classes_internal
+    //! \brief get_type_id for containers
+    //! 
+    //! In the case of continaer types get_type_id returns the type ID of 
+    //! of the value_type. 
+    //! 
+    //! \tparam T container type
+    //! \param v reference to an instance of T
+    //! \return type ID of T::value_type
+    //!
     template<typename T> 
     type_id_t get_type_id(const T &v,
-                          typename std::enable_if<
-                          !std::is_pod<T>::value
-                          >::type* = 0)
+                          typename std::enable_if< !IS_POD(T) >::type* = 0)
     {
         return type_id_map<typename T::value_type>::type_id;
     }

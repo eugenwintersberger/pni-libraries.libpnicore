@@ -1,27 +1,27 @@
-//!
-//! (c) Copyright 2011 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
-//!
-//! This file is part of libpnicore.
-//!
-//! libpnicore is free software: you can redistribute it and/or modify
-//! it under the terms of the GNU General Public License as published by
-//! the Free Software Foundation, either version 2 of the License, or
-//! (at your option) any later version.
-//!
-//! libpnicore is distributed in the hope that it will be useful,
-//! but WITHOUT ANY WARRANTY; without even the implied warranty of
-//! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//! GNU General Public License for more details.
-//!
-//! You should have received a copy of the GNU General Public License
-//! along with libpnicore.  If not, see <http://www.gnu.org/licenses/>.
-//!
-//! ===========================================================================
-//!
-//! Created on: May 16, 2011
-//!     Author: Eugen Wintersberger
-//!
-//!/
+//
+// (c) Copyright 2011 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
+//
+// This file is part of libpnicore.
+//
+// libpnicore is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+//
+// libpnicore is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with libpnicore.  If not, see <http://www.gnu.org/licenses/>.
+//
+// ===========================================================================
+//
+// Created on: May 16, 2011
+//     Author: Eugen Wintersberger
+//
+//
 #pragma once
 
 #include <complex>
@@ -123,23 +123,91 @@ namespace core{
 //if the compiler does not provide comparison operators for typed enumerations
 //we have to do this by ourselves
 #ifdef ENUMBUG
-    /*!
-    \ingroup type_classes
-    \brief < operator for TypeID
-
-    gcc 4.4 does not implement the < operator for scoped enums. In such cases
-    this overloaded version is used. This operator will only be used if the code
-    is compiled with \c -DENUMBUG.
-    */
+    //!
+    //! \ingroup type_classes_internal
+    //! \brief < operator for type_id_t
+    //!
+    //! gcc 4.4 does not implement the < operator for scoped enums. In such 
+    //! cases this overloaded version is used. This operator will only be used 
+    //! if the code is compiled with \c -DENUMBUG.
+    //! 
     bool operator<(type_id_t a,type_id_t b);
 
+    //-------------------------------------------------------------------------
+    //!
+    //! \ingroup type_classes_internal
+    //! \brief > operator for type_id_t
+    //!
+    //! gcc 4.4 does not implement the > operator for scoped enums. In such 
+    //! cases this overloaded version is used. This operator will only be used 
+    //! if the code is compiled with \c -DENUMBUG.
+    //! 
     bool operator>(type_id_t a,type_id_t b);
+    
+    //-------------------------------------------------------------------------
+    //!
+    //! \ingroup type_classes_internal
+    //! \brief <= operator for type_id_t
+    //!
+    //! gcc 4.4 does not implement the <= operator for scoped enums. In such 
+    //! cases this overloaded version is used. This operator will only be used 
+    //! if the code is compiled with \c -DENUMBUG.
+    //! 
     bool operator<=(type_id_t a,type_id_t b);
+    
+    //-------------------------------------------------------------------------
+    //!
+    //! \ingroup type_classes_internal
+    //! \brief >= operator for type_id_t
+    //!
+    //! gcc 4.4 does not implement the >= operator for scoped enums. In such 
+    //! cases this overloaded version is used. This operator will only be used 
+    //! if the code is compiled with \c -DENUMBUG.
+    //! 
     bool operator>=(type_id_t a,type_id_t b);
 
+    //-------------------------------------------------------------------------
+    //!
+    //! \ingroup type_classes_internal
+    //! \brief < operator for type_class_t
+    //!
+    //! gcc 4.4 does not implement the < operator for scoped enums. In such 
+    //! cases this overloaded version is used. This operator will only be used 
+    //! if the code is compiled with \c -DENUMBUG.
+    //! 
     bool operator<(type_class_t a,type_class_t b);
+    
+    //-------------------------------------------------------------------------
+    //!
+    //! \ingroup type_classes_internal
+    //! \brief > operator for type_class_t
+    //!
+    //! gcc 4.4 does not implement the > operator for scoped enums. In such 
+    //! cases this overloaded version is used. This operator will only be used 
+    //! if the code is compiled with \c -DENUMBUG.
+    //! 
     bool operator>(type_class_t a,type_class_t b);
+    
+    //-------------------------------------------------------------------------
+    //!
+    //! \ingroup type_classes_internal
+    //! \brief <= operator for type_class_t
+    //!
+    //! gcc 4.4 does not implement the <= operator for scoped enums. In such 
+    //! cases this overloaded version is used. This operator will only be used 
+    //! if the code is compiled with \c -DENUMBUG.
+    //! 
     bool operator<=(type_class_t a,type_class_t b);
+    
+    //-------------------------------------------------------------------------
+    //!
+    //! \ingroup type_classes_internal
+    //! \brief >= operator for type_class_t
+    //!
+    //! gcc 4.4 does not implement the >= operator for scoped enums. In such 
+    //! cases this overloaded version is used. This operator will only be used 
+    //! if the code is compiled with \c -DENUMBUG.
+    //! 
     bool operator>=(type_class_t a,type_class_t b);
 #endif
     

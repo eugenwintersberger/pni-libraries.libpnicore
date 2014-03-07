@@ -168,7 +168,7 @@ namespace core{
         //! \endcode
         //! 
         //! \tparam T element type of the initializer list
-        //! \pararm list initializer list instance
+        //! \param list initializer list instance
         //! \return container with data from initializer list
         //!
         template<typename T>

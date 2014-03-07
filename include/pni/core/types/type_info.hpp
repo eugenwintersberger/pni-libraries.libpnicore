@@ -1,27 +1,27 @@
-//!
-//! (c) Copyright 2011 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
-//!
-//! This file is part of libpnicore.
-//!
-//! libpnicore is free software: you can redistribute it and/or modify
-//! it under the terms of the GNU General Public License as published by
-//! the Free Software Foundation, either version 2 of the License, or
-//! (at your option) any later version.
-//!
-//! libpnicore is distributed in the hope that it will be useful,
-//! but WITHOUT ANY WARRANTY; without even the implied warranty of
-//! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//! GNU General Public License for more details.
-//!
-//! You should have received a copy of the GNU General Public License
-//! along with libpnicore.  If not, see <http://www.gnu.org/licenses/>.
-//!
-//! ===========================================================================
-//!
-//! Created on: Sep 9, 2011
-//!     Author: Eugen Wintersberger
-//!
-//!/
+//
+// (c) Copyright 2011 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
+//
+// This file is part of libpnicore.
+//
+// libpnicore is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+//
+// libpnicore is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with libpnicore.  If not, see <http://www.gnu.org/licenses/>.
+//
+// ============================================================================
+//
+// Created on: Sep 9, 2011
+//     Author: Eugen Wintersberger
+//
+//
 #pragma once
 
 #include <limits>
@@ -35,9 +35,10 @@ namespace core{
     //! \ingroup type_classes
     //! \brief type information class
     //! 
-    //! class that describes a PNI type as defined in PNITypes.hpp.  This 
-    //! template is used to obtain information about types in other classes 
-    //! like arrays and scalars.
+    //! class that describes properties of a  PNI type as defined in types.hpp.
+    //! This template is used to obtain information about types in other 
+    //! classes like arrays and scalars. Special overloads for complex and bool 
+    //! types exist.
     //! 
     //! \tparam T data type for which information is required
     //!
@@ -132,87 +133,6 @@ namespace core{
             static T max() { return type_info<T>::max(); }
 
     };
-
-    /*
-    template<> class type_info<complex32>
-    {
-        public:
-
-            typedef complex32 type;
-            typedef float32 base_type;
-
-            static const size_t size = sizeof(complex32);
-            static const bool is_integer = std::numeric_limits<float32>::is_integer;
-            static const bool is_signed = std::numeric_limits<float32>::is_signed;
-            static const bool is_complex = true;
-
-            //---------------------------------------------------------------------
-            static bool is_negative(complex32 value){ return false; }
-
-
-            //---------------------------------------------------------------------
-            //! return the minimum value of the Complex32 type
-            static float32 min() { return -std::numeric_limits<float32>::max(); }
-
-            //---------------------------------------------------------------------
-            //! return the maximum value of the Complex32 type
-            static float32 max() { return std::numeric_limits<float32>::max(); }
-
-    };
-
-
-
-    //! \ingroup Data-objects
-    //! \brief PNITypes specialization for 64Bit IEEE floating point complex type
-    template<> class type_info<complex64>
-    {
-        public:
-
-            typedef complex64 type;
-            typedef float64 base_type;
-
-            static const size_t size = sizeof(complex64);
-            static const bool is_integer = std::numeric_limits<float64>::is_integer;
-            static const bool is_signed = std::numeric_limits<float64>::is_signed;
-            static const bool is_complex = true;
-
-            //-----------------------------------------------------------------
-            static bool is_negative(complex64 value){ return false; }
-
-            //-----------------------------------------------------------------
-            //! return the minimum value of the Complex64 type
-            static float64 min() { return -std::numeric_limits<float64>::max(); }
-
-            //-----------------------------------------------------------------
-            //! return the maximum value of the Complex64 type
-            static float64 max() { return std::numeric_limits<float64>::max(); }
-
-    };
-
-    //! \ingroup Data-objects
-    //! \brief PNITypes specialization for 128Bit IEEE floating point complex type
-    template<> class type_info<complex128>
-    {
-        public:
-            typedef complex128 type;
-            typedef float128 base_type;
-
-            static const size_t size = sizeof(complex128);
-            static const bool is_integer = std::numeric_limits<float128>::is_integer;
-            static const bool is_signed = std::numeric_limits<float128>::is_signed;
-            static const bool is_complex = true;
-
-            //-----------------------------------------------------------------
-            static bool is_negative() { return false; }
-
-            //-----------------------------------------------------------------
-            //! return the minimum value of the Complex128 type
-            static float128 min() { return -std::numeric_limits<float128>::max(); }
-
-            //-----------------------------------------------------------------
-            //! return the maximum value of the Complex128 type
-            static float128 max() { return std::numeric_limits<float128>::max(); }
-    };*/
 
     //! \ingroup Data-objects
     //! \brief type info for bool

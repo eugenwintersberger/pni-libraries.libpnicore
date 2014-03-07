@@ -1,26 +1,26 @@
-//!
-//! (c) Copyright 2011 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
-//!
-//! This file is part of libpnicore.
-//!
-//! libpnicore is free software: you can redistribute it and/or modify
-//! it under the terms of the GNU General Public License as published by
-//! the Free Software Foundation, either version 2 of the License, or
-//! (at your option) any later version.
-//!
-//! libpnicore is distributed in the hope that it will be useful,
-//! but WITHOUT ANY WARRANTY; without even the implied warranty of
-//! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//! GNU General Public License for more details.
-//!
-//! You should have received a copy of the GNU General Public License
-//! along with libpnicore.  If not, see <http://www.gnu.org/licenses/>.
-//! 
-//! ===========================================================================
-//!
-//! Created on: Feb 8, 2012
-//!     Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
-//!/
+//
+// (c) Copyright 2011 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
+//
+// This file is part of libpnicore.
+//
+// libpnicore is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+//
+// libpnicore is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with libpnicore.  If not, see <http://www.gnu.org/licenses/>.
+// 
+// ============================================================================
+//
+// Created on: Feb 8, 2012
+//     Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
+//
 
 #pragma once
 
@@ -50,6 +50,7 @@ namespace core{
     //! primary purpose is to hold uninterpreted binary data for transfer. 
     //! However it can be converted to the native type used to hold the data. 
     //! Stream operators are provided for IO operations using binary data. 
+    //! 
     //! \tparam NTYPE native type used to store binary data
     //!
     template<typename NTYPE> class binary_t
@@ -126,6 +127,17 @@ namespace core{
 
     
     //-------------------------------------------------------------------------
+    //!
+    //! \ingroup type_classes
+    //! \brief output stream operator for binary data
+    //! 
+    //! This is the overloaded output stream operator for binary data. 
+    //! 
+    //! \tparam NTYPE basic type for binary
+    //! \param os reference to the output stream
+    //! \param o reference to the binary object
+    //! \return reference to the modified output stream
+    //!
     template<typename NTYPE>
     std::ostream &operator<<(std::ostream &os,const binary_t<NTYPE> &o)
     {
@@ -135,6 +147,17 @@ namespace core{
     }
 
     //-------------------------------------------------------------------------
+    //!
+    //! \ingroup type_classes
+    //! \brief input stream operator for binary data
+    //! 
+    //! This is the overloaded input stream operator for binary data. 
+    //! 
+    //! \tparam NTYPE basic type for binary
+    //! \param is reference to the input  stream
+    //! \param o reference to the binary object
+    //! \return reference to the modified input stream
+    //!
     template<typename NTYPE>
     std::istream &operator>>(std::istream &is,binary_t<NTYPE> &o)
     {

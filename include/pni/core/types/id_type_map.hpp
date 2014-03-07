@@ -1,27 +1,27 @@
-//!
-//! (c) Copyright 2011 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
-//!
-//! This file is part of libpnicore.
-//!
-//! libpnicore is free software: you can redistribute it and/or modify
-//! it under the terms of the GNU General Public License as published by
-//! the Free Software Foundation, either version 2 of the License, or
-//! (at your option) any later version.
-//!
-//! libpnicore is distributed in the hope that it will be useful,
-//! but WITHOUT ANY WARRANTY; without even the implied warranty of
-//! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//! GNU General Public License for more details.
-//!
-//! You should have received a copy of the GNU General Public License
-//! along with libpnicore.  If not, see <http://www.gnu.org/licenses/>.
-//!
-//! ===========================================================================
-//!
-//! Created on: Oct 13, 2011
-//!     Author: Eugen Wintersberger
-//!
-//!
+//
+// (c) Copyright 2011 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
+//
+// This file is part of libpnicore.
+//
+// libpnicore is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+//
+// libpnicore is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with libpnicore.  If not, see <http://www.gnu.org/licenses/>.
+//
+// ============================================================================
+//
+// Created on: Oct 13, 2011
+//     Author: Eugen Wintersberger
+//
+//
 #pragma once
 
 #include "types.hpp"
@@ -30,7 +30,7 @@ namespace pni{
 namespace core{
 
 //!
-//! \ingroup type_classes
+//! \ingroup type_classes_internal
 //! \brief macro for ID to type map specialization
 //! 
 //! This macro is used to create a specialization of IDTypeMap.
@@ -46,8 +46,15 @@ namespace core{
     //! \ingroup type_classes
     //! \brief map from type_id_t to type
     //!
-    //! This template implements a map from a type_id_T to a specific data 
-    //! type.
+    //! This template implements a map from a type_id_t to a specific data 
+    //! type. The type map can be used in a template to determine the type of a 
+    //! variable by the ID rather than by its type:
+    //!
+    //! \code
+    //! id_type_map<ID>::type variable;
+    //! \endcode
+    //! 
+    //! \tparam id value of the type id
     //!
     template<type_id_t id> 
     struct id_type_map

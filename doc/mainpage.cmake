@@ -9,11 +9,22 @@ general discussion about the library and its components please read the
 uses guide or the administrators guide.  
 */
 
+//=============================================================================
 /*! \defgroup type_classes Data type related classes
+Description of data type related classes.
 */
 
+/*!
+\ingroup type_classes
+\defgroup type_classes_internal Internal classes for type management
+
+These classes are usually not intended to be used by library users. However, for
+library developers this information can be useful.
+*/
+
+//=============================================================================
 /*! \defgroup utility_classes Utility classes
-    Utility classes used throughout the entire code.
+This module contains utilty classes used throughout the entire code. 
 */
 
 //=============================================================================
