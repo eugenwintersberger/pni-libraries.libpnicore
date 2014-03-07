@@ -55,6 +55,13 @@ Type erasures exist for
 This section describes classes used by the type erasure classes internally and
 is thus only interesting for library developers.
 */
+
+//=============================================================================
+/*!
+\defgroup config_classes Configuration classes
+
+Utility classes for program configuration.
+*/
 //=============================================================================
 /*! 
 \defgroup mdim_array_classes Multidimensional arrays

@@ -1,25 +1,26 @@
-/*
- * (c) Copyright 2012 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
- *
- * This file is part of libpnicore.
- *
- * libpnicore is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * libpnicore is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with libpnicore.  If not, see <http://www.gnu.org/licenses/>.
- *************************************************************************
- *
- * Created on: Dec 27, 2012
- *     Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
- */
+//
+// (c) Copyright 2012 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
+//
+// This file is part of libpnicore.
+//
+// libpnicore is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+//
+// libpnicore is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with libpnicore.  If not, see <http://www.gnu.org/licenses/>.
+//
+// ============================================================================
+//
+// Created on: Dec 27, 2012
+//     Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
+//
 
 #pragma once
 
@@ -29,17 +30,21 @@
 namespace pni{
 namespace core{
     
-    /*!
-    \brief class describing a program option
-
-    Class holds all the information required for a command line option. Each
-    command line option has at least a long name. The short name, a single
-    letter, can be left empty. In addition every option is associated with a
-    value the user has to pass. The only exception from this rule are Bool
-    options. Such options are only considered as flags without taking any
-    argument.
-    */
-    template<typename T> class config_option
+    //!
+    //! \ingroup config_classes 
+    //! \brief class describing a program option
+    //!
+    //! Class holds all the information required for a command line option. 
+    //! Each command line option has at least a long name. The short name, a 
+    //! single letter, can be left empty. In addition every option is 
+    //! associated with a value the user has to pass. The only exception from 
+    //! this rule are Bool options. Such options are only considered as flags 
+    //! without taking any argument.
+    //! 
+    //! \tparam T data type of the option
+    //! 
+    template<typename T>
+    class config_option
     {
         private:
             //! long name of the option
@@ -66,29 +71,30 @@ namespace core{
             config_option();
 
             //------------------------------------------------------------------
-            /*!
-            \brief constructor
-
-            \param lname long name of the option
-            \param sname short name (single letter) of the option
-            \param description doc string of the option
-            \param exref optional external reference
-            */
-            config_option(const string &lname,const string &sname,const string
-                    &description,T *exref=nullptr);
+            //!
+            //! \brief constructor
+            //!
+            //! \param lname long name of the option
+            //! \param sname short name (single letter) of the option
+            //! \param description doc string of the option
+            //! \param exref optional external reference
+            //!
+            config_option(const string &lname,const string &sname,
+                          const string &description,T *exref=nullptr);
 
             //-----------------------------------------------------------------
-            /*!
-            \brief constructor
-           
-            \param lname long name of the option
-            \param sname short name (single letter) of the option
-            \param description doc string of the option
-            \param default_value the default value to use for this option
-            \param exref external reference
-            */
-            config_option(const string &lname,const string &sname,const string
-                    &description,T default_value,T *exref=nullptr);
+            //!
+            //! \brief constructor
+            //! 
+            //! \param lname long name of the option
+            //! \param sname short name (single letter) of the option
+            //! \param description doc string of the option
+            //! \param default_value the default value to use for this option
+            //! \param exref external reference
+            //!
+            config_option(const string &lname,const string &sname,
+                          const string &description,T default_value,
+                          T *exref=nullptr);
 
             //-----------------------------------------------------------------
             //! destructor
