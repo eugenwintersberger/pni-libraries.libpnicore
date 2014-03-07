@@ -1,7 +1,6 @@
 #need to define the version of the library
 set(SOURCES container_utils_array_test.cpp
             container_utils_std_test.cpp
-            counter_test.cpp
             index_iterator_test.cpp
             iterator_test.cpp
             slice_test.cpp

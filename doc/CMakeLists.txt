@@ -12,9 +12,9 @@ set(HEADER_FILES
                  ${HDR_DIR}/error/exception_utils.hpp
 
                  ${HDR_DIR}/utilities/container_utils.hpp
-                 ${HDR_DIR}/utilities/counter.hpp
                  ${HDR_DIR}/utilities/container_iterator.hpp
                  ${HDR_DIR}/utilities/service.hpp
+                 ${HDR_DIR}/utilities/sfinae_macros.hpp
 
                  ${HDR_DIR}/type_erasures/array_holder_interface.hpp
                  ${HDR_DIR}/type_erasures/value.hpp

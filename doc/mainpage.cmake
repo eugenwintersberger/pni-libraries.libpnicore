@@ -12,7 +12,7 @@ uses guide or the administrators guide.
 /*! \defgroup type_classes Data type related classes
 */
 
-/*! \defgroup util_classes Utility classes
+/*! \defgroup utility_classes Utility classes
     Utility classes used throughout the entire code.
 */
 

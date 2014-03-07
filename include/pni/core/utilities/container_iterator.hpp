@@ -1,26 +1,26 @@
-//!
-//! (c) Copyright 2012 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
-//!
-//! This file is part of libpnicore.
-//!
-//! libpnicore is free software: you can redistribute it and/or modify
-//! it under the terms of the GNU General Public License as published by
-//! the Free Software Foundation, either version 2 of the License, or
-//! (at your option) any later version.
-//!
-//! libpnicore is distributed in the hope that it will be useful,
-//! but WITHOUT ANY WARRANTY; without even the implied warranty of
-//! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//! GNU General Public License for more details.
-//!
-//! You should have received a copy of the GNU General Public License
-//! along with libpnicore.  If not, see <http://www.gnu.org/licenses/>.
-//!
-//! ===========================================================================
-//!
-//! Created on: May 16, 2012
-//!     Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
-//!
+//
+// (c) Copyright 2012 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
+//
+// This file is part of libpnicore.
+//
+// libpnicore is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+//
+// libpnicore is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with libpnicore.  If not, see <http://www.gnu.org/licenses/>.
+//
+// ============================================================================
+//
+// Created on: May 16, 2012
+//     Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
+//
 #pragma once
 
 #include "../error/exceptions.hpp" 
@@ -29,29 +29,33 @@ namespace pni{
 namespace core{
    
 
-    //=========================================================================
 
-    /*! 
-    \ingroup iterator_types   
-    \brief iterator type
-
-    This is the most generic iterator provided by libpnicore. It can be used
-    with all container types provided by the library. A container that wants to
-    use this iterator must implement the following interface
-    \code
-    template<typename T> class ITERABLE<T>
-    {
-        public:
-            typedef T value_type;
-            size_t size() const;
-            T &operator[](size_t i);
-            T operator[](size_t i) const;
-    };
-    \endcode
-    This template implements a simple forward iterator. It must be mentioned
-    that this iterator, unlike the standard C++ iterators, throws an exception
-    if one tries to dereference an invalid iterator.
-    */
+    //! 
+    //! \ingroup utility_classes   
+    //! \brief iterator type
+    //! 
+    //! This is the most generic iterator provided by libpnicore. It can be 
+    //! used with all container types provided by the library. A container 
+    //! that wants to use this iterator must implement the following 
+    //! interface
+    //!
+    //! \code
+    //! template<typename T> class Iterable<T>
+    //! {
+    //!     public:
+    //!         typedef T value_type;
+    //!         size_t size() const;
+    //!         T &operator[](size_t i);
+    //!         T operator[](size_t i) const;
+    //! };
+    //! \endcode
+    //! 
+    //! This template implements a simple forward iterator. Unlike STL 
+    //! iterators an exception is thrown if one tries to dereference an invalid 
+    //! iterator
+    //! 
+    //! \tparam ITERABLE iterable type 
+    //!
     template<typename ITERABLE> class container_iterator
     {
         private:
@@ -94,13 +98,14 @@ namespace core{
             container_iterator():_container(nullptr),_state(0),_maxsize(0) {}
 
             //------------------------------------------------------------------
-            /*! \brief standard constructor
-
-            This constructor takes a pointer to the container and an initial
-            position.
-            \param container pointer to the container object
-            \param state initial position of the iterator
-            */
+            //! \brief constructor
+            //!
+            //! This constructor takes a pointer to the container and an 
+            //! initial position.
+            //! 
+            //! \param container pointer to the container object
+            //! \param state initial position of the iterator
+            //!
             container_iterator(cptr_type container,size_t state=0):
                 _container(container),
                 _state(state),
@@ -157,38 +162,48 @@ namespace core{
             }
 
             //====================public methods and operators==================
-            /*! \brief conversion operator
-
-            This operator allows the conversion of an iterator to bool. It will
-            return true if the iterator is valid and false otherwise.
-            The iterator is consideres as invalid if its internal state is at
-            least one after the last element or smaller than 0. It is important
-            that this conversion operator is set \c explicit. Otherwise the
-            iterator would be implicitly convertible to integer (via bool).
-            \return boolean value
-            */
+            //! 
+            //! \brief conversion operator
+            //!
+            //! This operator allows the conversion of an iterator to bool. It 
+            //! will return true if the iterator is valid and false otherwise.
+            //! The iterator is consideres as invalid if its internal state is 
+            //! at least one after the last element or smaller than 0. It is 
+            //! important that this conversion operator is set \c explicit. 
+            //! Otherwise the iterator would be implicitly convertible to 
+            //! integer (via bool).
+            //! 
+            //! \return boolean value
+            //!
 #ifdef NOEXPLICITCONV
             operator bool_type() const
             {
-                return  !((!this->_container)||(this->_state >= this->_maxsize)||(this->_state<0)) ? &iterator_type::bool_operator_function : 0;
+                return  !( (!this->_container)||
+                           (this->_state >= this->_maxsize)||
+                           (this->_state<0)) ? 
+                          &iterator_type::bool_operator_function : 0;
             }
 #else
             explicit operator bool() const
             {
                 //if(!this->_container) return false;
                 //ssize_t size = (ssize_t)(this->_container->size());
-                return !((!this->_container)||(this->_state >= this->_maxsize)||(this->_state<0));
+                return !( (!this->_container)||
+                          (this->_state >= this->_maxsize)||
+                          (this->_state<0));
             }
 #endif
             //------------------------------------------------------------------
-            /*! \brief dereferencing operator
-
-            Returns a reference on the object the iterator is actually pointer
-            or the object by value. The return type depends if the iterator is
-            used as a standard iterator or a const iterator.
-            \throws IteratorError if the iterator is invalid
-            \return reference or value of the actual object
-            */
+            //! 
+            //! \brief dereferencing operator
+            //!
+            //! Returns a reference on the object the iterator is actually 
+            //! pointer or the object by value. The return type depends if the 
+            //! iterator is used as a standard iterator or a const iterator.
+            //!
+            //! \throws IteratorError if the iterator is invalid
+            //! \return reference or value of the actual object
+            //!
             typename std::conditional<std::is_const<ITERABLE>::value,
                                       value_type,reference>::type
             operator*()
@@ -200,13 +215,15 @@ namespace core{
             }
 
             //------------------------------------------------------------------
-            /*! \brief pointer access operator
-
-            Returns a const or non-const pointer to the object the iterator
-            actually points to. 
-            \throws IteratorError if the iterator is invalid
-            \return pointer to actual object
-            */
+            //!
+            //! \brief pointer access operator
+            //!
+            //! Returns a const or non-const pointer to the object the iterator
+            //! actually points to. 
+            //!
+            //! \throws IteratorError if the iterator is invalid
+            //! \return pointer to actual object
+            //!
             pointer operator->()
             {
                 if(!(*this))
@@ -319,74 +336,86 @@ namespace core{
     };
 
     //================binary arithmetic operators===============================
-    /*! 
-    \brief add scalar to iterator
-
-    Add an offset to the iterator and thus increment its internal state by this
-    offset.
-    \code
-    Iteartor<...> iter = ...'
-    Iteartor<...> iter2 = iter+2;
-    \endcode
-    \param a original iterator
-    \param b offset to add
-    \return new iterator 
-    */
-    template<typename ITERABLE> container_iterator<ITERABLE> 
-        operator+(const container_iterator<ITERABLE> &a, ssize_t b)
+    //! 
+    //! \brief add scalar to iterator
+    //! 
+    //! Add an offset to the iterator and thus increment its internal state by 
+    //! this offset.
+    //! 
+    //! \code
+    //! Iteartor<...> iter = ...'
+    //! Iteartor<...> iter2 = iter+2;
+    //! \endcode
+    //! 
+    //! \tparam ITER iterable type
+    //! \param a original iterator
+    //! \param b offset to add
+    //! \return new iterator 
+    //!
+    template<typename ITER> 
+    container_iterator<ITER> operator+(const container_iterator<ITER> &a, 
+                                       ssize_t b)
     {
-        container_iterator<ITERABLE> iter = a;
+        container_iterator<ITER> iter = a;
         iter += b;
         return iter;
     }
 
     //--------------------------------------------------------------------------
-    /*!
-    \brief add offset to iterator
-    
-    Add an offset to the iterator and thus increment its internal state by this
-    offset.
-    \param a offset to add
-    \param b original iterator
-    \return new iterator
-    */
-    template<typename ITERABLE> container_iterator<ITERABLE>
-        operator+(ssize_t a, const container_iterator<ITERABLE> &b)
+    //!
+    //! \brief add offset to iterator
+    //! 
+    //! Add an offset to the iterator and thus increment its internal state by 
+    //! this offset.
+    //! 
+    //! \tparam ITER iterable type
+    //! \param a offset to add
+    //! \param b original iterator
+    //! \return new iterator
+    //!
+    template<typename ITER> 
+    container_iterator<ITER> operator+(ssize_t a, 
+                                       const container_iterator<ITER> &b)
     {
         return b+a;
     }
 
     //--------------------------------------------------------------------------
-    /*!
-    \brief subtract offset from iterator
-
-    Subtract an integer offset from the iterator and thus decrement the internal
-    state of the iterator by this value. 
-    \param a original iterator
-    \param b offset
-    \return new iterator to new position
-    */
-    template<typename ITERABLE> container_iterator<ITERABLE>
-        operator-(const container_iterator<ITERABLE> &a, ssize_t b)
+    //!
+    //! \brief subtract offset from iterator
+    //!
+    //! Subtract an integer offset from the iterator and thus decrement the 
+    //! internal state of the iterator by this value. 
+    //!
+    //! \tparam ITER iterable type
+    //! \param a original iterator
+    //! \param b offset
+    //! \return new iterator to new position
+    //!
+    template<typename ITER> 
+    container_iterator<ITER> operator-(const container_iterator<ITER> &a, 
+                                       ssize_t b)
     {
-        container_iterator<ITERABLE> iter = a;
+        container_iterator<ITER> iter = a;
         iter -= b;
         return iter;
     }
 
     //--------------------------------------------------------------------------
-    /*!
-    \brief subtract two iterators
-
-    Subtract to iterators and return the offset difference between this
-    two iterators.
-    \param a first iterator
-    \param b second iterator
-    \return offset difference
-    */
-    template<typename ITERABLE> ssize_t
-        operator-(const container_iterator<ITERABLE> &a, 
-                const container_iterator<ITERABLE> &b)
+    //!
+    //! \brief subtract two iterators
+    //! 
+    //! Subtract to iterators and return the offset difference between this
+    //! two iterators.
+    //!
+    //! \tparam ITER iterable type
+    //! \param a first iterator
+    //! \param b second iterator
+    //! \return offset difference
+    //!
+    template<typename ITER> 
+    ssize_t operator-(const container_iterator<ITER> &a, 
+                      const container_iterator<ITER> &b)
     {
         return a.state() - b.state();
     }
