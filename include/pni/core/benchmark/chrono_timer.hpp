@@ -1,26 +1,26 @@
-//!
-//! (c) Copyright 2012 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
-//!
-//! This file is part of libpniio.
-//!
-//! libpniio is free software: you can redistribute it and/or modify
-//! it under the terms of the GNU General Public License as published by
-//! the Free Software Foundation, either version 2 of the License, or
-//! (at your option) any later version.
-//!
-//! libpniio is distributed in the hope that it will be useful,
-//! but WITHOUT ANY WARRANTY; without even the implied warranty of
-//! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//! GNU General Public License for more details.
-//!
-//! You should have received a copy of the GNU General Public License
-//! along with libpniio.  If not, see <http://www.gnu.org/licenses/>.
-//!
-//! ===========================================================================
-//!
-//!  Created on: Oct 24, 2012
-//!      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
-//!/
+//
+// (c) Copyright 2012 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
+//
+// This file is part of libpniio.
+//
+// libpniio is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+//
+// libpniio is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with libpniio.  If not, see <http://www.gnu.org/licenses/>.
+//
+// ============================================================================
+//
+//  Created on: Oct 24, 2012
+//      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
+//
 #pragma once
 
 #include "../types.hpp"
@@ -31,13 +31,15 @@
 namespace pni{
 namespace core{
 
-    /*!
-    \brief unit map
-
-    This template maps the name type of a chrono clock representing a time unit
-    on a string value.
-    \tparam DTYPE chrono duration time
-    */
+    //!
+    //! \ingroup benchmark_classes
+    //! \brief unit map
+    //!
+    //! This template maps the name type of a chrono clock representing a 
+    //! time unit on a string value.
+    //!
+    //! \tparam DTYPE chrono duration time
+    //!
     template<typename DTYPE> struct duration_unit_map;
 
 #define DURATIONUNITMAP(durationtype)\
@@ -60,34 +62,39 @@ namespace core{
     DURATIONUNITMAP(std::chrono::hours);
     //! \endcond NO_API_DOC
 
-    /*!
-    \brief timer class using chrono
-
-    This timer class is using the chrono framework of the C++ standard. 
-    To create a timer instance using the high_resolution_clock one could use 
-    the following code to obtain a result in nanoseconds
-    \code
-    #include<pni/core/benchmark/chrono>
-
-    ....
-    chrono_timer<std::chrono::high_resolution_clock,
-                std::chrono::nanoseconds> timer;
-
-    //start the timer
-    timer.start();
-
-    ......
-    //stop the timer
-    timer.stop();
-
-    std::cout<<timer.duration()<<" ("<<timer.unit()<<")"<<std::endl;
-
-    \endcode
-
-    \tparam CLKT clock type
-    \tparam DTYPE duration type
-    */
-    template<typename CLKT,typename DTYPE> class chrono_timer
+    //!
+    //! \ingroup benchmark_classes
+    //! \brief timer class using chrono
+    //!
+    //! This timer class is using the chrono framework of the C++ standard. 
+    //! To create a timer instance using the high_resolution_clock one 
+    //! could use the following code to obtain a result in nanoseconds
+    //! \code
+    //! #include<pni/core/benchmark/chrono_timer.hpp>
+    //!
+    //! ....
+    //! chrono_timer<std::chrono::high_resolution_clock,
+    //!             std::chrono::nanoseconds> timer;
+    //!
+    //! //start the timer
+    //! timer.start();
+    //! 
+    //! ......
+    //! //stop the timer
+    //! timer.stop();
+    //!
+    //! std::cout<<timer.duration()<<" ("<<timer.unit()<<")"<<std::endl;
+    //!
+    //! \endcode
+    //!
+    //! \tparam CLKT clock type
+    //! \tparam DTYPE duration type
+    //!
+    template<
+             typename CLKT,
+             typename DTYPE
+            > 
+    class chrono_timer
     {
         private:
             typename CLKT::time_point _start; //!< start time

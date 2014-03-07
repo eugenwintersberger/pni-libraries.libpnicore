@@ -62,6 +62,13 @@ is thus only interesting for library developers.
 
 Utility classes for program configuration.
 */
+
+//=============================================================================
+/*!
+\defgroup benchmark_classes Benchmark classes
+
+Classes to set up benchmarks.
+*/
 //=============================================================================
 /*! 
 \defgroup mdim_array_classes Multidimensional arrays

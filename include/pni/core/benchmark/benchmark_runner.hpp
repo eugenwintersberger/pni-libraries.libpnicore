@@ -1,26 +1,26 @@
-//!
-//! (c) Copyright 2012 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
-//!
-//! This file is part of libpniio.
-//!
-//! libpniio is free software: you can redistribute it and/or modify
-//! it under the terms of the GNU General Public License as published by
-//! the Free Software Foundation, either version 2 of the License, or
-//! (at your option) any later version.
-//!
-//! libpniio is distributed in the hope that it will be useful,
-//! but WITHOUT ANY WARRANTY; without even the implied warranty of
-//! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//! GNU General Public License for more details.
-//!
-//! You should have received a copy of the GNU General Public License
-//! along with libpniio.  If not, see <http://www.gnu.org/licenses/>.
-//!
-//! ===========================================================================
-//!
-//!  Created on: Oct 25, 2012
-//!      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
-//!/
+//
+// (c) Copyright 2012 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
+//
+// This file is part of libpniio.
+//
+// libpniio is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+//
+// libpniio is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with libpniio.  If not, see <http://www.gnu.org/licenses/>.
+//
+// ============================================================================
+//
+//  Created on: Oct 25, 2012
+//      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
+//
 #pragma once
 #include "benchmark_result.hpp"
 #include <list>
@@ -30,11 +30,12 @@
 namespace pni{
 namespace core{
 
-    /*!
-    \brief benchmark runner class
-
-    This class runs benchmark functions.
-    */
+    //!
+    //! \ingroup benchmark_classes
+    //! \brief benchmark runner class
+    //!
+    //! This class runs benchmark functions.
+    //!
     class benchmark_runner
     {
         private:
@@ -128,25 +129,29 @@ namespace core{
     }
 
     //--------------------------------------------------------------------------
-    /*!
-    \brief compute the average result
-
-    Computes the average of the results of each individual run. The result is
-    returned as an instance of benchmark_result.
-    \param bm benchmark run
-    \return average benchmark result
-    */
+    //!
+    //! \ingroup benchmark_classes
+    //! \brief compute the average result
+    //!
+    //! Computes the average of the results of each individual run. The result 
+    //! is returned as an instance of benchmark_result.
+    //! 
+    //! \param bm benchmark run
+    //! \return average benchmark result
+    //!
     benchmark_result average(const benchmark_runner &bm);
 
     //-------------------------------------------------------------------------
-    /*!
-    \brief compute result standard deviation
-
-    Computes the standard deviation for all individual results in the original
-    benchmark run. 
-    \param bm benchmark run
-    \return standard deviation of the result
-    */
+    //!
+    //! \ingroup benchmark_classes
+    //! \brief compute result standard deviation
+    //!
+    //! Computes the standard deviation for all individual results in the 
+    //! original benchmark run. 
+    //!
+    //! \param bm benchmark run
+    //! \return standard deviation of the result
+    //!
     benchmark_result standard_deviation(const benchmark_runner &bm);
 
 //end of namespace
