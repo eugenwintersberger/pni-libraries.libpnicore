@@ -1,26 +1,26 @@
-//!
-//! (c) Copyright 2013 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
-//!
-//! This file is part of libpnicore.
-//!
-//! libpnicore is free software: you can redistribute it and/or modify
-//! it under the terms of the GNU General Public License as published by
-//! the Free Software Foundation, either version 2 of the License, or
-//! (at your option) any later version.
-//!
-//! libpnicore is distributed in the hope that it will be useful,
-//! but WITHOUT ANY WARRANTY; without even the implied warranty of
-//! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//! GNU General Public License for more details.
-//!
-//! You should have received a copy of the GNU General Public License
-//! along with libpnicore.  If not, see <http://www.gnu.org/licenses/>.
-//!
-//! ===========================================================================
-//!
-//! Created on: 11 08, 2013
-//!     Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
-//!
+//
+// (c) Copyright 2013 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
+//
+// This file is part of libpnicore.
+//
+// libpnicore is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+//
+// libpnicore is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with libpnicore.  If not, see <http://www.gnu.org/licenses/>.
+//
+// ============================================================================
+//
+// Created on: 11 08, 2013
+//     Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
+//
 #pragma once
 
 #include "array_holder_interface.hpp"
@@ -28,27 +28,32 @@
 namespace pni{
 namespace core{
 
-    /*!
-    \brief get array pointer
-
-    Return a pointer to the data stored in an array. 
-    \tparam ATYPE array type
-    \param a instance of ATYPE
-    \return pointer to array data
-    */
-    template<typename ATYPE> const void *get_pointer(const ATYPE &a)
+    //!
+    //! \ingroup type_erasure_classes_internal  
+    //! \brief get array pointer
+    //! 
+    //! Return a pointer to the data stored in an array. 
+    //! \tparam ATYPE array type
+    //! \param a instance of ATYPE
+    //! \return pointer to array data
+    //! 
+    template<typename ATYPE> 
+    const void *get_pointer(const ATYPE &a)
     {
         return (void *)(a.storage().data());
     }
 
 
-    /*!
-    \brief array holder template 
-
-    Template for the array holder used in the array type erasure.
-    \tparam OT array type
-    */
-    template<typename OT> class array_holder:public array_holder_interface
+    //-------------------------------------------------------------------------
+    //!
+    //! \ingroup type_erasure_classes_internal
+    //! \brief array holder template 
+    //! 
+    //! Template for the array holder used in the array type erasure.
+    //! \tparam OT array type
+    //!
+    template<typename OT> 
+    class array_holder:public array_holder_interface
     {
         private:
             OT _object; //!< the original object 
@@ -74,12 +79,12 @@ namespace core{
             {}
 
             //-----------------------------------------------------------------
-            /*!
-            \brief clone the holder
-
-            Member function cloning the array holder.
-            \return pointer to an array holder class
-            */
+            //!
+            //! \brief clone the holder
+            //!
+            //! Member function cloning the array holder.
+            //! \return pointer to an array holder class
+            //!
             virtual array_holder_interface *clone() const 
             {
                 return new array_holder<OT>(_object);
@@ -105,63 +110,67 @@ namespace core{
             virtual size_t size() const { return _object.size(); }
 
             //-----------------------------------------------------------------
-            /*!
-            \brief get value
-
-            Get value at linear index i. As this is a const member the return
-            value uses the value type erasure to wrap the value returned.
-            This operator does not check the index. If the index is larger than
-            the total size of the array a segmentation fault will most probably
-            occur.
-            \param i linear index
-            \return instance of value with the data at i
-            */
+            //!
+            //! \brief get value
+            //! 
+            //! Get value at linear index i. As this is a const member the 
+            //! return value uses the value type erasure to wrap the value 
+            //! returned.  This operator does not check the index. If the index 
+            //! is larger than the total size of the array a segmentation 
+            //! fault will most probably occur.
+            //! 
+            //! \param i linear index
+            //! \return instance of value with the data at i
+            //!
             virtual value operator[](size_t i) const
             {
                 return value(_object[i]);
             }
 
             //-----------------------------------------------------------------
-            /*! 
-            \brief get value reference
-
-            Returns a reference to the element at linear index i. The reference
-            is wrapped in the value_ref type erasure. No index checking is
-            performed. If i exceeds the total size of the array a segmentation
-            fault will most probably occur.
-            \param i linear index
-            \return reference type erasure.
-            */
+            //! 
+            //! \brief get value reference
+            //! 
+            //! Returns a reference to the element at linear index i. The 
+            //! reference is wrapped in the value_ref type erasure. No index 
+            //! checking is performed. If i exceeds the total size of the 
+            //! array a segmentation fault will most probably occur.
+            //! 
+            //! \param i linear index
+            //! \return reference type erasure.
+            //!
             virtual value_ref operator[](size_t i) 
             {
                 return value_ref(std::ref(_object[i]));
             }
 
             //-----------------------------------------------------------------
-            /*! 
-            \brief get value 
-
-            Return the value at linear index i. Unlike the [] operator this
-            function performs index checking. 
-            \throws index_error if i exceeds the size of the array
-            \param i linear index
-            \return instance of value
-            */
+            //!
+            //! \brief get value 
+            //!
+            //! Return the value at linear index i. Unlike the [] operator this
+            //! function performs index checking. 
+            //! 
+            //! \throws index_error if i exceeds the size of the array
+            //! \param i linear index
+            //! \return instance of value
+            //!
             virtual value at(size_t i) const 
             {
                 return value(_object.at(i));
             }
 
             //-----------------------------------------------------------------
-            /*!
-            \brief get reference
-
-            Return a reference to the value at linear index i. Unlike the []
-            operator this function performs index checking.
-            \throws index_error if i exceeds the size of the array
-            \param i linear index 
-            \return reference to the value
-            */
+            //!
+            //!\brief get reference
+            //! 
+            //! Return a reference to the value at linear index i. Unlike the 
+            //! [] operator this function performs index checking.
+            //!
+            //! \throws index_error if i exceeds the size of the array
+            //! \param i linear index 
+            //! \return reference to the value
+            //!
             virtual value_ref at(size_t i) 
             {
                 return value_ref(std::ref(_object.at(i)));
@@ -198,7 +207,6 @@ namespace core{
             {
                 return get_pointer(_object);            
             }
-
     };
 
 //end of namespace

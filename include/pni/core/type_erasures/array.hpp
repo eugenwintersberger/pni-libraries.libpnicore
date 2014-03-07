@@ -1,26 +1,26 @@
-//!
-//! (c) Copyright 2013 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
-//!
-//! This file is part of libpnicore.
-//!
-//! libpnicore is free software: you can redistribute it and/or modify
-//! it under the terms of the GNU General Public License as published by
-//! the Free Software Foundation, either version 2 of the License, or
-//! (at your option) any later version.
-//!
-//! libpnicore is distributed in the hope that it will be useful,
-//! but WITHOUT ANY WARRANTY; without even the implied warranty of
-//! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//! GNU General Public License for more details.
-//!
-//! You should have received a copy of the GNU General Public License
-//! along with libpnicore.  If not, see <http://www.gnu.org/licenses/>.
-//!
-//! ===========================================================================
-//!
-//! Created on: Jan 11, 2013
-//!     Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
-//!
+//
+// (c) Copyright 2013 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
+//
+// This file is part of libpnicore.
+//
+// libpnicore is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+//
+// libpnicore is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with libpnicore.  If not, see <http://www.gnu.org/licenses/>.
+//
+// ============================================================================
+//
+// Created on: Jan 11, 2013
+//     Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
+//
 #pragma once
 #include<iostream>
 #include<memory>
@@ -36,45 +36,50 @@
 namespace pni{
 namespace core{
 
-    /*!
-    \brief type erasure array types
-
-    This type erasure can hold all kind of array types provides by libpnicore.
-    It takes entire ownership over the array it holds.
-    The construction is fairly easy
-    \code 
-    array a = darray<float32>(shape_t{104,200});
-    \endcode
-    as the DArray instance is a temporary move construction will be used. 
-    Alternatively, copy construction can be done with
-    \code
-    darray<float32> data(shape_t{104,200});
-    array a = data;
-    \endcode
-    in which case the copy constructor is used to copy the array's data. 
-    It is clear that in this latter case the two objects are entirely decoupled. 
-    Changing a value in a will not influence the original instance data. 
-
-    Like any other array in libpnicore an instance of array can be considered as
-    a one dimensional container providing linear access to the data stored in it
-    by means of iterators, the [] operator, and the at() method. Like standard
-    C++ container only the latter method ensures index checking. 
-    See code examples at the various member functions for more detail about the
-    methods.
-
-    */
+    //!
+    //! \ingroup type_erasure_classes
+    //! \brief type erasure array types
+    //!
+    //! This type erasure can hold all kind of array types provides by 
+    //! libpnicore.  It takes entire ownership over the array it holds.
+    //! The construction is fairly easy
+    //! \code 
+    //! array a = array_type::create({104,200});
+    //! \endcode
+    //! as the array_type instance is a temporary move construction will 
+    //! be used. 
+    //! 
+    //! Alternatively, copy construction can be done with
+    //! \code
+    //! auto data = array_type::create({104,200});
+    //! array a = data;
+    //! \endcode
+    //! in which case the copy constructor is used to copy the array's data. 
+    //! It is clear that in this latter case the two objects are entirely 
+    //! decoupled.  Changing a value in a will not influence the original 
+    //! instance data. 
+    //!
+    //! Like any other array in libpnicore an instance of array can be 
+    //! considered as a one dimensional container providing linear access to 
+    //! the data stored in it by means of iterators, the [] operator, and the 
+    //! at() method. Like standard C++ container only the latter method 
+    //! ensures index checking.  See code examples at the various member 
+    //! functions for more detail about the methods.
+    //!
     class array //the type erasure
     {
         private:
            
-            /*!
-            \brief throw exception
-
-            Static helper method that throws a MemoryNotAllcatedError if the
-            type erasure holds no data and data access is requested by the user.
-            \throw MemoryNotAllocatedError
-            \param r exception record where the error occured.
-            */
+            //!
+            //! \brief throw exception
+            //!
+            //! Static helper method that throws a MemoryNotAllcatedError if the
+            //! type erasure holds no data and data access is requested by the 
+            //! user.
+            //! 
+            //! \throw MemoryNotAllocatedError
+            //! \param r exception record where the error occured.
+            //!
             static void _throw_not_allocated_error(const exception_record &r)
             {
                 throw memory_not_allocated_error(r,
@@ -90,25 +95,27 @@ namespace core{
             typedef array_iterator<1> const_iterator; //!< read only iterator
             //===================constructors and destructor===================
             //! default constructor
-            array():_ptr(nullptr)
-            {}
-            //-----------------------------------------------------------------
-            /*!
-            \brief copy original object
+            array():_ptr(nullptr) {}
 
-            This constructor creates a type erasure by copying the original data
-            to the internal object. This constructor is called in a situation as
-            this one
-            \code 
-            SArray<Float32,10,3> data;
-            ....
-            array a = data;
-            \endcode
-            the content of the original array data is copied to the internal
-            array of type SArray<Float32,10,3> encapsulated by the type erasure.
-            \tparam T type of the object. 
-            \param o const reference to the original object
-            */
+            //-----------------------------------------------------------------
+            //!
+            //! \brief copy original object
+            //! 
+            //! This constructor creates a type erasure by copying the 
+            //! original data to the internal object. This constructor is 
+            //! called in a situation as this one
+            //! \code 
+            //! array_type data;
+            //! ....
+            //! array a = data;
+            //! \endcode
+            //! the content of the original array data is copied to the 
+            //! internal array of type array_type encapsulated by the type 
+            //! erasure.
+            //! 
+            //! \tparam T type of the object. 
+            //! \param o const reference to the original object
+            //!
             template<typename T,
                      //this template expression is necessary to avoid that this
                      //constructor is callend when data_object itself is to be
@@ -122,16 +129,18 @@ namespace core{
             { }
 
             //------------------------------------------------------------------
-            /*!
-            \brief move original object
-
-            Constructor moves the original object to the type erasure
-            \code
-            array a = DArray<UInt16>(shape_t{1024,1024});
-            \endcode
-            \tparam T original type
-            \param o rvalue reference to the original object
-            */
+            //!
+            //! \brief move original object
+            //!
+            //! Constructor moves the original object to the type erasure
+            //!
+            //! \code
+            //! array a = DArray<UInt16>(shape_t{1024,1024});
+            //! \endcode
+            //! 
+            //! \tparam T original type
+            //! \param o rvalue reference to the original object
+            //!
             template<typename T,
                      //this template expression is necessary to avoid that this
                      //constructor is used when a data_object by itself is to be
@@ -164,59 +173,66 @@ namespace core{
             array &operator=(array &&a);
 
             //=====================public member functions=====================
-            /*!
-            \brief get type id
-
-            Return the type id of the data held by an instance of array.
-            \return type id.
-            */
+            //!
+            //! \brief get type id
+            //!
+            //! Return the type id of the data held by an instance of array.
+            //! \return type id.
+            //!
             type_id_t type_id() const;
             
             //-----------------------------------------------------------------
-            /*! 
-            \brief return rank of array 
-
-            Return the number of dimensions the multidimensional array spans. 
-            In the case of a scalar the return value of this method is 0. 
-            \return number of dimensions
-            */
+            //! 
+            //! \brief return rank of array 
+            //!
+            //! Return the number of dimensions the multidimensional array 
+            //! spans.  In the case of a scalar the return value of this 
+            //! method is 0. 
+            //! 
+            //! \return number of dimensions
+            //!
             size_t rank() const;
 
             //-----------------------------------------------------------------
-            /*! 
-            \brief return shape 
-
-            Return the number of elements along each dimension of the array as
-            an instance of shape_t. In the case of a scalar value the return
-            value is empty (size=0).
-            \return shape of the array
-            */
+            //! 
+            //! \brief return shape 
+            //!
+            //! Return the number of elements along each dimension of the 
+            //! array as an instance of shape_t. In the case of a scalar value 
+            //! the return value is empty (size=0).
+            //!
+            //! \return shape of the array
+            //!
             shape_t shape() const;
 
             //-----------------------------------------------------------------
-            /*!
-            \brief return shape in an arbitrary container
-
-            Return the number of dimensions along each dimension as a container
-            type specified by the user. 
-            \code
-            auto s = array.shape<std::list<size_t> >();
-            \endcode
-            If the wrapped type is a scalar an empty instance of CTYPE is
-            returned.
-            \tparam CTYPE container type
-            \return instance of CTYPE
-            */
+            //!
+            //! \brief return shape in an arbitrary container
+            //!
+            //! Return the number of dimensions along each dimension as a 
+            //! container type specified by the user. 
+            //! 
+            //! \code
+            //! auto s = array.shape<std::list<size_t> >();
+            //! \endcode
+            //!
+            //! If the wrapped type is a scalar an empty instance of CTYPE is
+            //! returned.
+            //!
+            //! \tparam CTYPE container type
+            //! \return instance of CTYPE
+            //!
             template<typename CTYPE> CTYPE shape() const;
 
             //-----------------------------------------------------------------
-            /*! 
-            \brief return number of elements
-
-            Returns the total number of elements stored in the array. In the
-            case of a scalar the size is 1. 
-            \return number of elements
-            */
+            //! 
+            //! \brief return number of elements
+            //!
+            //! Returns the total number of elements stored in the array. 
+            //! In the case of a scalar the size is 1. 
+            //! 
+            //! \return number of elements
+            //!
             size_t size() const; 
 
             //-----------------------------------------------------------------
@@ -228,41 +244,45 @@ namespace core{
             std::istream &read(std::istream &is);
 
             //-----------------------------------------------------------------
-            /*! 
-            \brief get value at index i
-
-            This operator returns the content of the element with linear index i
-            as an instance of value by which one cannot alter the data stored in
-            the array. 
-            This operator performs no index checking. 
-            \param i linear index of the element
-            \return value holding the content of element i
-            */
+            //!
+            //! \brief get value at index i
+            //!
+            //! This operator returns the content of the element with linear 
+            //! index i as an instance of value by which one cannot alter the 
+            //! data stored in the array. 
+            //! This operator performs no index checking. 
+            //!
+            //! \param i linear index of the element
+            //! \return value holding the content of element i
+            //!
             value operator[](size_t i) const;
 
             //-----------------------------------------------------------------
-            /*!
-            \brief get value at index i 
-            
-            Return the content of the array at linear index i as an instance of
-            value (thus only read only access). This method performs index
-            checking. 
-            \throws IndexError if i exceeds the size of the array
-            \param i linear index of the element
-            \return element at index i as instance of value
-            */
+            //!
+            //! \brief get value at index i 
+            //! 
+            //! Return the content of the array at linear index i as an 
+            //! instance of value (thus only read only access). This method 
+            //! performs index checking. 
+            //!
+            //! \throws IndexError if i exceeds the size of the array
+            //! \param i linear index of the element
+            //! \return element at index i as instance of value
+            //!
             value at(size_t i) const;
 
             //-----------------------------------------------------------------
-            /*!
-            \brief get a reference to index i
-
-            Return a reference to the element at linear index i. The reference
-            is provided as an instance of value_ref via which the content of the
-            array can be altered. This operator performs no index checking. 
-            \param i linear index i 
-            \return reference to element i
-            */
+            //!
+            //! \brief get a reference to index i
+            //!
+            //! Return a reference to the element at linear index i. The 
+            //! reference is provided as an instance of value_ref via which 
+            //! the content of the array can be altered. This operator 
+            //! performs no index checking. 
+            //!
+            //! \param i linear index i 
+            //! \return reference to element i
+            //!
             value_ref operator[](size_t i);
 
             //-----------------------------------------------------------------
@@ -309,25 +329,29 @@ namespace core{
 
     //================declaration of stream operators==========================
 
-    /*!
-    \brief stream output
-
-    Writes the content of a data_object to an output stream.
-    \param os reference to output stream
-    \param o instance of data_object
-    \return reference to output stream
-    */
+    //!
+    //! \ingroup type_erasure_classes
+    //! \brief stream output
+    //!
+    //! Writes the content of a data_object to an output stream.
+    //!
+    //! \param os reference to output stream
+    //! \param o instance of data_object
+    //! \return reference to output stream
+    //!
     std::ostream &operator<<(std::ostream &os,const array &o);
 
     //-------------------------------------------------------------------------
-    /*!
-    \brief stream input
-
-    Store data from stream to data_object.
-    \param is reference to input stream
-    \param o reference to data object
-    \return reference to input stream
-    */
+    //!
+    //! \ingroup type_erasure_classes
+    //! \brief stream input
+    //!
+    //! Store data from stream to data_object.
+    //! 
+    //! \param is reference to input stream
+    //! \param o reference to data object
+    //! \return reference to input stream
+    //!
     std::istream &operator>>(std::istream &is,array &o);
 
 

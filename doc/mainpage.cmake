@@ -9,9 +9,21 @@ general discussion about the library and its components please read the
 uses guide or the administrators guide.  
 */
 
+
+//=============================================================================
+/*! \defgroup utility_classes Utility classes
+This module contains utilty classes used throughout the entire code. 
+*/
+
 //=============================================================================
 /*! \defgroup type_classes Data type related classes
-Description of data type related classes.
+    Data types and their correct handling plays an important role for 
+    experiment data. This module contains all type definitions and classes 
+    to obtain information from a type as well as converting types from one 
+    to each other. \c libpninx basically follows the type conversion strategies
+    of C++ with some exceptions. For instance, unlike in C++ conversion from
+    floating point type to integer types is prohibited. This should avoid
+    unintentional round-off errors that would occur during such a conversion. 
 */
 
 /*!
@@ -23,10 +35,26 @@ library developers this information can be useful.
 */
 
 //=============================================================================
-/*! \defgroup utility_classes Utility classes
-This module contains utilty classes used throughout the entire code. 
+/*!
+\defgroup type_erasure_classes Type Erasures
+
+In \c libpnicore all objects are strongly typed. Somtimes this is a problem. For
+this purpose several type erasures are provided to get around such situations. 
+Type erasures exist for 
+
+\li scalar values
+\li references to scalar values
+\li arrays 
+
 */
 
+/*!
+\ingroup type_erasure_classes
+\defgroup type_erasure_classes_internal Interal classes
+
+This section describes classes used by the type erasure classes internally and
+is thus only interesting for library developers.
+*/
 //=============================================================================
 /*! 
 \defgroup mdim_array_classes Multidimensional arrays
@@ -82,13 +110,4 @@ This should make it easier to identify the location where an exception occurred.
 
 
 
-/*! \defgroup type_classes Data type related classes
-    Data types and their correct handling plays an important role for 
-    experiment data. This module contains all type definitions and classes 
-    to obtain information from a type as well as converting types from one 
-    to each other. \c libpninx basically follows the type conversion strategies
-    of C++ with some exceptions. For instance, unlike in C++ conversion from
-    floating point type to integer types is prohibited. This should avoid
-    unintentional round-off errors that would occur during such a conversion. 
-*/
 

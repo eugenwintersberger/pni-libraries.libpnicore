@@ -1,26 +1,26 @@
-//!
-//! (c) Copyright 2013 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
-//!
-//! This file is part of libpnicore.
-//!
-//! libpnicore is free software: you can redistribute it and/or modify
-//! it under the terms of the GNU General Public License as published by
-//! the Free Software Foundation, either version 2 of the License, or
-//! (at your option) any later version.
-//!
-//! libpnicore is distributed in the hope that it will be useful,
-//! but WITHOUT ANY WARRANTY; without even the implied warranty of
-//! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//! GNU General Public License for more details.
-//!
-//! You should have received a copy of the GNU General Public License
-//! along with libpnicore.  If not, see <http://www.gnu.org/licenses/>.
-//!
-//! ===========================================================================
-//!
-//! Created on: Jan 16, 2013
-//!     Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
-//!
+//
+// (c) Copyright 2013 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
+//
+// This file is part of libpnicore.
+//
+// libpnicore is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+//
+// libpnicore is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with libpnicore.  If not, see <http://www.gnu.org/licenses/>.
+//
+// ============================================================================
+//
+// Created on: Jan 16, 2013
+//     Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
+//
 #pragma once
 
 #include "../error/exceptions.hpp" 
@@ -33,83 +33,91 @@ namespace core{
     class array;
    
     //=========================================================================
-    /*! 
-    \ingroup iterator_types
-    \brief type map for the array_iterator template
-
-    Provides the types required by the array_iterator template depending on the
-    state of the const_flag template parameter. This is only a stub. See the
-    specialized versions for the concrete types used for the iterator.
-    \sa array_iterator_types<0>
-    \sa array_iterator_types<1>
-    \tparam const_flag 1 if the iterator is a const iterator.
-    */
-    template<int const_flag> class array_iterator_types
+    //! 
+    //! \ingroup type_erasure_classes_internal
+    //! \brief type map for the array_iterator template
+    //!
+    //! Provides the types required by the array_iterator template depending 
+    //! on the state of the const_flag template parameter. This is only a 
+    //! stub. See the specialized versions for the concrete types used for 
+    //! the iterator.
+    //! 
+    //! \sa array_iterator_types<0>
+    //! \sa array_iterator_types<1>
+    //! \tparam const_flag 1 if the iterator is a const iterator.
+    //!
+    template<int const_flag> struct array_iterator_types
     {};
 
     //=========================================================================
-    /*! \ingroup iterator_types
-    \brief type map for a non-const array_iterator instance
-
-    Specialization of the array_iterator_types template for non-const iterators.
-    IN the case of a non-const iterator the value_ref instances are return which
-    refere to the particular data values in the array.
-    \sa array_iterator_types<const_flag>
-    */
-    template<> class array_iterator_types<0>
+    //! 
+    //! \ingroup type_erasure_classes_internal
+    //! \brief type map for a non-const array_iterator instance
+    //!
+    //! Specialization of the array_iterator_types template for non-const 
+    //! iterators.  IN the case of a non-const iterator the value_ref 
+    //! instances are return which refere to the particular data values in 
+    //! the array.
+    //!
+    //! \sa array_iterator_types<const_flag>
+    //!
+    template<> struct array_iterator_types<0>
     {
-        public:
-            typedef array *cont_ptr; //!< container pointer
-            //! reference type of the element
-            typedef value_ref value_type;
-            //! return type for the dereferencing operator
-            typedef value_ref return_type;
-            //! pointer type for -> operator
-            typedef value_ref* ptr_type;    
-            //! reference type 
-            typedef value_ref ref_type;
+        //! container pointer
+        typedef array *cont_ptr; 
+        //! reference type of the element
+        typedef value_ref value_type;
+        //! return type for the dereferencing operator
+        typedef value_ref return_type;
+        //! pointer type for -> operator
+        typedef value_ref* ptr_type;    
+        //! reference type 
+        typedef value_ref ref_type;
     };
 
 
 
     //=========================================================================
-    /*! \ingroup iterator_types
-    \brief type map for const array_iterator instance
-
-    Specialization of the array_iterator_types type map for const array_iterator
-    instances. For const iterators instances of value are returned holding
-    copies of the data values.
-    \sa array_iterator_types<const_flag>
-    */
-    template<> class array_iterator_types<1>
-    {
-        public:
-            typedef const array *cont_ptr; //!< container pointer
-            //! value type of the iterator
-            typedef value value_type;
-            //! return type for dereferencing operator
-            typedef value return_type;    
-            //! pointer type for -> operator
-            typedef const value *ptr_type; 
-            //! reference type
-            typedef const value &ref_type;
+    //!
+    //! \ingroup type_erasure_classes_internal
+    //! \brief type map for const array_iterator instance
+    //!
+    //! Specialization of the array_iterator_types type map for const 
+    //! array_iterator instances. For const iterators instances of value are 
+    //! returned holding copies of the data values.
+    //!
+    //! \sa array_iterator_types<const_flag>
+    //!
+    template<> struct array_iterator_types<1>
+    { 
+        //! container pointer
+        typedef const array *cont_ptr; 
+        //! value type of the iterator
+        typedef value value_type;
+        //! return type for dereferencing operator
+        typedef value return_type;    
+        //! pointer type for -> operator
+        typedef const value *ptr_type; 
+        //! reference type
+        typedef const value &ref_type;
     };
    
 
     //=========================================================================
 
-    /*! 
-    \ingroup iterator_types   
-    \brief array iterator
-
-    This is a special iterator template for the array type erasure. The template
-    parameter decides whether or not the iterator is const. The major difference
-    between this template and the default Iterator<ITERABLE,const_flag> template
-    is the fact that it stores the actual value of the iterator as a member
-    variable. This is necessary as the array type erasure does not provide
-    direct access to the array type it hides but rather creates new objects
-    providing access to this data.
-    */
+    //! 
+    //! \ingroup type_erasure_classes_internal   
+    //! \brief array iterator
+    //!
+    //! This is a special iterator template for the array type erasure. The 
+    //! template parameter decides whether or not the iterator is const. The 
+    //! major difference between this template and the default 
+    //! array_iterator<ITERABLE,const_flag> template is the fact that it 
+    //! stores the actual value of the iterator as a member variable. This is 
+    //! necessary as the array type erasure does not provide direct access to 
+    //! the array type it hides but rather creates new objects providing 
+    //! access to this data.
+    //!
     template<int const_flag> class array_iterator
     {
         private:
@@ -157,13 +165,15 @@ namespace core{
             array_iterator():_container(nullptr),_state(0) {}
 
             //------------------------------------------------------------------
-            /*! \brief standard constructor
-
-            This constructor takes a pointer to the container and an initial
-            position.
-            \param container pointer to the container object
-            \param state initial position of the iterator
-            */
+            //!
+            //! \brief constructor
+            //!
+            //! This constructor takes a pointer to the container and an 
+            //! initial position.
+            //!
+            //! \param container pointer to the container object
+            //! \param state initial position of the iterator
+            //!
             array_iterator(cptr_type container,size_t state=0):
                 _container(container),
                 _state(state)
@@ -221,16 +231,19 @@ namespace core{
             }
 
             //====================public methods and operators==================
-            /*! \brief conversion operator
-
-            This operator allows the conversion of an iterator to bool. It will
-            return true if the iterator is valid and false otherwise.
-            The iterator is consideres as invalid if its internal state is at
-            least one after the last element or smaller than 0. It is important
-            that this conversion operator is set \c explicit. Otherwise the
-            iterator would be implicitly convertible to integer (via bool).
-            \return boolean value
-            */
+            //! 
+            //! \brief conversion operator
+            //!
+            //! This operator allows the conversion of an iterator to bool. It 
+            //! will return true if the iterator is valid and false otherwise.
+            //! The iterator is consideres as invalid if its internal state is 
+            //! at least one after the last element or smaller than 0. It is 
+            //! important that this conversion operator is set \c explicit. 
+            //! Otherwise the iterator would be implicitly convertible to 
+            //! integer (via bool).
+            //! 
+            //! \return boolean value
+            //!
 #ifdef NOEXPLICITCONV
             operator bool_type() const
             {
@@ -250,14 +263,16 @@ namespace core{
             }
 #endif
             //------------------------------------------------------------------
-            /*! \brief dereferencing operator
-
-            Returns a reference on the object the iterator is actually pointer
-            or the object by value. The return type depends if the iterator is
-            used as a standard iterator or a const iterator.
-            \throws IteratorError if the iterator is invalid
-            \return reference or value of the actual object
-            */
+            //!
+            //! \brief dereferencing operator
+            //!
+            //! Returns a reference on the object the iterator is actually 
+            //! pointer or the object by value. The return type depends if the 
+            //! iterator is used as a standard iterator or a const iterator.
+            //!
+            //! \throws IteratorError if the iterator is invalid
+            //! \return reference or value of the actual object
+            //!
             typename array_iterator_types<const_flag>::return_type operator*()
             {
                 if(!(*this))
@@ -267,13 +282,15 @@ namespace core{
             }
 
             //------------------------------------------------------------------
-            /*! \brief pointer access operator
-
-            Returns a const or non-const pointer to the object the iterator
-            actually points to. 
-            \throws IteratorError if the iterator is invalid
-            \return pointer to actual object
-            */
+            //!
+            //! \brief pointer access operator
+            //!
+            //! Returns a const or non-const pointer to the object the iterator
+            //! actually points to. 
+            //!
+            //! \throws IteratorError if the iterator is invalid
+            //! \return pointer to actual object
+            //!
             pointer operator->()
             {
                 if(!(*this))
@@ -390,21 +407,25 @@ namespace core{
     };
 
     //================binary arithmetic operators===============================
-    /*! 
-    \brief add scalar to iterator
-
-    Add an offset to the iterator and thus increment its internal state by this
-    offset.
-    \code
-    Iteartor<...> iter = ...'
-    Iteartor<...> iter2 = iter+2;
-    \endcode
-    \param a original iterator
-    \param b offset to add
-    \return new iterator 
-    */
-    template<int const_flag> array_iterator<const_flag> 
-        operator+(const array_iterator<const_flag> &a, ssize_t b)
+    //! 
+    //! \ingroup type_erasure_classes_internal
+    //! \brief add scalar to iterator
+    //!
+    //! Add an offset to the iterator and thus increment its internal state by 
+    //! this offset.
+    //!
+    //! \code
+    //! array_iterator<...> iter = ...'
+    //! array_iteator<...> iter2 = iter+2;
+    //! \endcode
+    //!
+    //! \param a original iterator
+    //! \param b offset to add
+    //! \return new iterator 
+    //!
+    template<int const_flag> 
+    array_iterator<const_flag> operator+(const array_iterator<const_flag> &a, 
+                                         ssize_t b)
     {
         array_iterator<const_flag> iter = a;
         iter += b;
@@ -412,33 +433,39 @@ namespace core{
     }
 
     //--------------------------------------------------------------------------
-    /*!
-    \brief add offset to iterator
-    
-    Add an offset to the iterator and thus increment its internal state by this
-    offset.
-    \param a offset to add
-    \param b original iterator
-    \return new iterator
-    */
-    template<int const_flag> array_iterator<const_flag>
-        operator+(ssize_t a, const array_iterator<const_flag> &b)
+    //!
+    //! \ingroup type_erasure_classes_internal
+    //! \brief add offset to iterator
+    //! 
+    //! Add an offset to the iterator and thus increment its internal state by 
+    //! this offset.
+    //!
+    //! \param a offset to add
+    //! \param b original iterator
+    //! \return new iterator
+    //!
+    template<int const_flag> 
+    array_iterator<const_flag> operator+(ssize_t a, 
+                                         const array_iterator<const_flag> &b)
     {
         return b+a;
     }
 
     //--------------------------------------------------------------------------
-    /*!
-    \brief subtract offset from iterator
-
-    Subtract an integer offset from the iterator and thus decrement the internal
-    state of the iterator by this value. 
-    \param a original iterator
-    \param b offset
-    \return new iterator to new position
-    */
-    template<int const_flag> array_iterator<const_flag>
-        operator-(const array_iterator<const_flag> &a, ssize_t b)
+    //!
+    //! \ingroup type_erasure_classes_internal
+    //! \brief subtract offset from iterator
+    //!
+    //! Subtract an integer offset from the iterator and thus decrement the 
+    //! internal state of the iterator by this value. 
+    //! 
+    //! \param a original iterator
+    //! \param b offset
+    //! \return new iterator to new position
+    //!
+    template<int const_flag> 
+    array_iterator<const_flag> operator-(const array_iterator<const_flag> &a, 
+                                          ssize_t b)
     {
         array_iterator<const_flag> iter = a;
         iter -= b;
@@ -446,18 +473,20 @@ namespace core{
     }
 
     //--------------------------------------------------------------------------
-    /*!
-    \brief subtract two iterators
-
-    Subtract to iterators and return the offset difference between this
-    two iterators.
-    \param a first iterator
-    \param b second iterator
-    \return offset difference
-    */
-    template<int const_flag> ssize_t
-        operator-(const array_iterator<const_flag> &a, 
-                const array_iterator<const_flag> &b)
+    //!
+    //! \ingroup type_erasure_classes_internal
+    //! \brief subtract two iterators
+    //! 
+    //! Subtract to iterators and return the offset difference between this
+    //! two iterators.
+    //!
+    //! \param a first iterator
+    //! \param b second iterator
+    //! \return offset difference
+    //!
+    template<int const_flag>
+    ssize_t operator-(const array_iterator<const_flag> &a, 
+                      const array_iterator<const_flag> &b)
     {
         return a.state() - b.state();
     }
