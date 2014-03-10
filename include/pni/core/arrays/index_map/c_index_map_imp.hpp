@@ -1,26 +1,26 @@
-//!
-//! (c) Copyright 2013 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
-//!
-//! This file is part of libpnicore.
-//!
-//! libpnicore is free software: you can redistribute it and/or modify
-//! it under the terms of the GNU General Public License as published by
-//! the Free Software Foundation, either version 2 of the License, or
-//! (at your option) any later version.
-//!
-//! libpnicore is distributed in the hope that it will be useful,
-//! but WITHOUT ANY WARRANTY; without even the implied warranty of
-//! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//! GNU General Public License for more details.
-//!
-//! You should have received a copy of the GNU General Public License
-//! along with libpnicore.  If not, see <http://www.gnu.org/licenses/>.
-//!
-//! ===========================================================================
-//! 
-//! Created on: Oct 20, 2013
-//!     Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
-//!
+//
+// (c) Copyright 2013 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
+//
+// This file is part of libpnicore.
+//
+// libpnicore is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+//
+// libpnicore is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with libpnicore.  If not, see <http://www.gnu.org/licenses/>.
+//
+// ============================================================================
+// 
+// Created on: Oct 20, 2013
+//     Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
+//
 
 #pragma once
 
@@ -55,7 +55,7 @@ namespace core{
             //! \tparam IITERT index iterator type
             //! \tparam SITERT shape iterator type
             //! \param index_start start iterator for the index range
-            //! \param index_top   stop iterator for the index range
+            //! \param index_stop   stop iterator for the index range
             //! \param shape_start start iterator for the shape range
             //! \return offset value
             //! 
@@ -99,6 +99,7 @@ namespace core{
             //! \param sel_stride begin of selection stride
             //! \param shape_start begin of original shape
             //! \param sel_index begin of selection index
+            //! \return linear offset
             //!
             template<
                      typename SELITER,
@@ -215,12 +216,13 @@ namespace core{
             //! selection index is not required to have the same rank as the
             //! original array. 
             //! 
-            //! \tpararm SELTYPE selection type
+            //! \tparam SELTYPE selection type
             //! \tparam CSHAPE original shape of the array
             //! \tparam SINDEX selection index type
             //! \param sel reference to the selection
             //! \param shape the original shape
             //! \param index selection index
+            //! \return linear offset
             //!
             template<
                      typename SELTYPE,

@@ -56,3 +56,14 @@
 //! \param T type to check 
 //! 
 #define IS_PTR(T) std::is_pointer<T>::value
+
+//-----------------------------------------------------------------------------
+//! 
+//! \ingroup utility_classes
+//! \brief true if complex
+//! 
+//! evaluates to true if T is a complex type. 
+//! 
+//! \param T type to check 
+//! 
+#define IS_COMPLEX(T) is_complex<T>::value

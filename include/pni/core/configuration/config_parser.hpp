@@ -35,7 +35,7 @@ namespace core{
     //!
     //! This function stores CLI options and arguments in a vector. 
     //! \param argc number of arguments
-    //! \pararm argv argument values
+    //! \param argv argument values
     //!\return vector with arguments and options
     //!
     std::vector<string> cliargs2vector(int argc,char **argv);

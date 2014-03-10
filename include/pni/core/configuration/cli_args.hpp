@@ -113,6 +113,9 @@ namespace core{
     //! \brief cli_args output operator
     //! 
     //! Write an instance of cli_args to an output stream.
+    //! \param ostr reference to output stream
+    //! \param args reference to arguments
+    //! \return reference to output stream
     //!
     std::ostream &operator<<(std::ostream &ostr,const cli_args &args);
 

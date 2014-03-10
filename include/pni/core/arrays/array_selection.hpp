@@ -1,26 +1,26 @@
-//!
-//! (c) Copyright 2011 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
-//!
-//! This file is part of libpnicore.
-//!
-//! libpnicore is free software: you can redistribute it and/or modify
-//! it under the terms of the GNU General Public License as published by
-//! the Free Software Foundation, either version 2 of the License, or
-//! (at your option) any later version.
-//!
-//! libpnicore is distributed in the hope that it will be useful,
-//! but WITHOUT ANY WARRANTY; without even the implied warranty of
-//! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//! GNU General Public License for more details.
-//!
-//! You should have received a copy of the GNU General Public License
-//! along with libpnicore.  If not, see <http://www.gnu.org/licenses/>.
-//! 
-//! ===========================================================================
-//!
-//! Created on: Jun 1, 2012
-//!     Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
-//!
+//
+// (c) Copyright 2011 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
+//
+// This file is part of libpnicore.
+//
+// libpnicore is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+//
+// libpnicore is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with libpnicore.  If not, see <http://www.gnu.org/licenses/>.
+// 
+// ============================================================================
+//
+// Created on: Jun 1, 2012
+//     Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
+//
 #pragma once
 
 #include <vector>
@@ -39,7 +39,7 @@ namespace core{
 
 
     //! 
-    //! \ingroup index_mapping_classes
+    //! \ingroup mdim_array_internal_classes
     //! \brief selection from a multidimensional array
     //! 
     //! The array_selection class is a utility class for selecting subranges of
@@ -71,6 +71,7 @@ namespace core{
     class array_selection
     {
         private:
+            //! private index type
             typedef std::vector<size_t> index_type;
 
             //member variables describing the selection in the original array
@@ -484,6 +485,7 @@ namespace core{
     
     //-------------------------------------------------------------------------
     //!
+    //! \ingroup mdim_array_internal_classes
     //! \brief compute offset 
     //! 
     //! Compute the offset of a selection element in the original array. The
@@ -514,6 +516,7 @@ namespace core{
   
     //-------------------------------------------------------------------------
     //!
+    //! \ingroup mdim_array_internal_classes
     //! \brief compute first element offset 
     //!
     //! Compute the offset in the original array of the first element in the
@@ -539,6 +542,7 @@ namespace core{
 
     //-------------------------------------------------------------------------
     //!
+    //! \ingroup mdim_array_internal_classes
     //! \brief compute last element offset 
     //! 
     //! Compute the linear offset in the original array for the last element 
@@ -564,6 +568,18 @@ namespace core{
     }
 
     //-------------------------------------------------------------------------
+    //! 
+    //! \ingroup mdim_array_internal_classes
+    //! \brief check continuity of a selection
+    //! 
+    //! This function returns true if a selection is continuous within a
+    //! index map. A selection is considered as contiguous if the number of
+    //! it spans in the original array is equal to the size of the selection.
+    //!
+    //! \tparam MAPT index map type
+    //! \param map reference to the index mape
+    //! \param s reerence to the selection. 
+    //! \return true if contiguous, false otherwise
     template<typename MAPT>
     bool is_contiguous(const MAPT &map,const array_selection &s)
     {

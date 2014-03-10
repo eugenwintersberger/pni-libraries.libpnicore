@@ -1,26 +1,26 @@
-//!
-//! (c) Copyright 2011 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
-//!
-//! This file is part of libpnicore.
-//!
-//! libpnicore is free software: you can redistribute it and/or modify
-//! it under the terms of the GNU General Public License as published by
-//! the Free Software Foundation, either version 2 of the License, or
-//! (at your option) any later version.
-//!
-//! libpnicore is distributed in the hope that it will be useful,
-//! but WITHOUT ANY WARRANTY; without even the implied warranty of
-//! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//! GNU General Public License for more details.
-//!
-//! You should have received a copy of the GNU General Public License
-//! along with libpnicore.  If not, see <http://www.gnu.org/licenses/>.
-//!
-//! ===========================================================================
-//!
-//! Created on: May 14, 2012
-//!     Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
-//!
+//
+// (c) Copyright 2011 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
+//
+// This file is part of libpnicore.
+//
+// libpnicore is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+//
+// libpnicore is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with libpnicore.  If not, see <http://www.gnu.org/licenses/>.
+//
+// ============================================================================
+//
+// Created on: May 14, 2012
+//     Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
+//
 
 
 #pragma once
@@ -35,29 +35,29 @@
 namespace pni{
 namespace core{
     
-    /*! \ingroup multidim_array_classes
-    \brief provides a view on a part of an array
-
-    The ArrayView class provides a view on the part of an array. No new memory
-    is allocated. 
-    An array view can be obtained from an array using the () operator. 
-    \code
-    darray<float32> a(std::vector<size_t>{3,4,10});
-
-    //create a (4,10) view from the above array 
-    auto view = a(1,slice{0,4},Slice{0,10});
-
-    //the view can now be used like any other array - however, no new memory is
-    //allocated.
-
-    //create an array from the view
-    darray<float32> roi(view.shape<std::vector<size_t> >(),
-                        darray<float32>::storage_type(view));
-    \endcode
-
-    
-    */
-    template<typename ATYPE> class array_view
+    //! 
+    //! \ingroup mdim_array_classes
+    //! \brief provides a view on a part of an array
+    //!
+    //! The ArrayView class provides a view on the part of an array. No new 
+    //! memory is allocated.  An array view can be obtained from an array 
+    //! using the () operator. 
+    //! \code
+    //! darray<float32> a(std::vector<size_t>{3,4,10});
+    //!
+    //! //create a (4,10) view from the above array 
+    //! auto view = a(1,slice{0,4},Slice{0,10});
+    //! 
+    //! //the view can now be used like any other array - however, no new 
+    //! //memory isallocated.
+    //! 
+    //! //create an array from the view
+    //! darray<float32> roi(view.shape<std::vector<size_t> >(),
+    //!                  darray<float32>::storage_type(view));
+    //! \endcode
+    //!
+    template<typename ATYPE> 
+    class array_view
     {
         public:
             //====================public types=================================
@@ -104,14 +104,14 @@ namespace core{
 
         public:
             //-----------------------------------------------------------------
-            /*! \brief constructor
-
-            Constructs a new ArrayView from an existing array and some
-            additional information.
-            \param a reference to the original array
-            \param s selection object defining the description
-            dimension
-            */
+            //! 
+            //! \brief constructor
+            //!
+            //! Constructs a new ArrayView from an existing array and some
+            //! additional information.
+            //! \param a reference to the original array
+            //! \param s selection object defining the description dimension
+            //!
             array_view(storage_type &a,const array_selection &s):
                 _parray(std::ref(a)),
                 _selection(s),
@@ -122,15 +122,16 @@ namespace core{
             { }
 
             //------------------------------------------------------------------
-            /*!
-            \brief constructor
-
-            This constructor accepts an rvalue reference for the selection. In
-            some cases this might be more efficient than copy construction. 
-
-            \param a reference to the original array
-            \param s rvalue reference to the selection object
-            */
+            //!
+            //! \brief constructor
+            //!
+            //! This constructor accepts an rvalue reference for the 
+            //! selection. In some cases this might be more efficient than 
+            //! copy construction. 
+            //!
+            //! \param a reference to the original array
+            //! \param s rvalue reference to the selection object
+            //!
             array_view(storage_type &a,array_selection &&s):
                 _parray(std::ref(a)),
                 _selection(std::move(s)),
@@ -142,7 +143,7 @@ namespace core{
 
 
             //-----------------------------------------------------------------
-            //! copy constructor
+            //! \brief copy constructor
             array_view(const array_type &c):
                 _parray(c._parray),
                 _selection(c._selection),
@@ -153,7 +154,7 @@ namespace core{
             {}
 
             //-----------------------------------------------------------------
-            //! move constructor
+            //! \brief move constructor
             array_view(array_type &&c):
                 _parray(std::move(c._parray)),
                 _selection(std::move(c._selection)),
@@ -164,10 +165,7 @@ namespace core{
             {}
 
             //-----------------------------------------------------------------
-            /*!
-            \brief copy assignment operator
-
-            */
+            //! \brief copy assignment operator
             array_type &operator=(const array_type &a)
             {
                 if(this == &a) return *this;
@@ -183,12 +181,7 @@ namespace core{
             }
 
             //-----------------------------------------------------------------
-            /*!
-            \brief move assignment operator
-
-            \param a rvalue reference to the rhs side of the assignment operator
-            \return reference to the new array view
-            */
+            //! \brief move assignment operator
             array_type &operator=(array_type &&a)
             {
                 if(this == &a) return *this;
@@ -204,23 +197,24 @@ namespace core{
             }
 
             //==================public member functions========================
-            /*! \brief access with container index 
-
-            Using a container object to hold the multidimensional indices to
-            access view data. 
-            \throws shape_mismatch_error if size of container does not match
-            view rank
-            \param index container with multidimensional index
-            \return reference to value at index
-            */
-            template<typename CTYPE,typename = ENABLE_ELEMENT_CONT(CTYPE)>
+            //! 
+            //! \brief access with container index 
+            //!
+            //! Using a container object to hold the multidimensional indices 
+            //! to access view data. 
+            //! 
+            //! \throws shape_mismatch_error if size of container does not 
+            //! match view rank
+            //! \param index container with multidimensional index
+            //! \return reference to value at index
+            //!
+            template<
+                     typename CTYPE,
+                     typename = ENABLE_ELEMENT_CONT(CTYPE)
+                    >
             value_type &operator()(const CTYPE &index)
             {
                 typedef typename ATYPE::map_type omap_type;
-                /*
-                _selection.index(index,_index);
-                return _parray(_index);
-                */
                 auto &ref = _parray.get();
 
                 if(_is_contiguous)
@@ -234,23 +228,24 @@ namespace core{
             }
 
             //-----------------------------------------------------------------
-            /*! \brief access with container index 
-
-            Using a container object to hold the multidimensional indices to
-            access view data. 
-            \throws shape_mismatch_error if size of container does not match
-            view rank
-            \param index container with multidimensional index
-            \return value at index
-            */
-            template<typename CTYPE,typename = ENABLE_ELEMENT_CONT(CTYPE)>
+            //!
+            //! \brief access with container index 
+            //!
+            //! Using a container object to hold the multidimensional indices 
+            //! to access view data. 
+            //! 
+            //! \throws shape_mismatch_error if size of container does not 
+            //! match view rank
+            //! \param index container with multidimensional index
+            //! \return value at index
+            //!
+            template<
+                     typename CTYPE,
+                     typename = ENABLE_ELEMENT_CONT(CTYPE)
+                    >
             value_type operator()(const CTYPE &index) const
             {
                 typedef typename ATYPE::map_type omap_type;
-                /*
-                _selection.index(index,_index);
-                return _parray(_index);
-                */
                 auto &ref = _parray.get();
 
                 if(_is_contiguous)
@@ -265,20 +260,21 @@ namespace core{
 
 
             //-----------------------------------------------------------------
-            /*! \brief multidimensional access to data
-
-            () operator allows access to the data using a multidimensional
-            index represented by the arguments of the operator. 
-            \code 
-            darray<Float32> data({100,200,100});
-            auto view = data(slice(50,75),slice(0,200),slice(25,41));
-            std::cout<<view(3,34,10)<<std::endl;
-            \endcode
-            This works essentially the same as for the Array template.
-            \tparam ITypes index types
-            \param indices instances of ITypes determining the index
-            \return reference to the value at multidimensional index
-             */
+            //! 
+            //! \brief multidimensional access to data
+            //!
+            //! () operator allows access to the data using a multidimensional
+            //! index represented by the arguments of the operator. 
+            //! \code 
+            //! darray<Float32> data({100,200,100});
+            //! auto view = data(slice(50,75),slice(0,200),slice(25,41));
+            //! std::cout<<view(3,34,10)<<std::endl;
+            //! \endcode
+            //! This works essentially the same as for the Array template.
+            //! \tparam ITypes index types
+            //! \param indices instances of ITypes determining the index
+            //! \return reference to the value at multidimensional index
+            //!
             template<typename ...ITypes> 
             value_type & operator()(ITypes ...indices)
             {
@@ -286,10 +282,8 @@ namespace core{
                 auto &ref = _parray.get();
 
                 if(_is_contiguous)
-                {
                     return ref[_start_offset +
                                _imap.offset(IDX_ARRAY(ITypes,indices))];
-                }
                 else
                 {
                     auto  map = const_cast<omap_type&>(ref.map());
@@ -300,36 +294,31 @@ namespace core{
             }
 
             //-----------------------------------------------------------------
-            /*! \brief multidimensional access to data
-
-            () operator allows access to the data using a multidimensional
-            index represented by the arguments of the operator. 
-            \code 
-            darray<float32> data({100,200,100});
-            auto view = data(slice(50,75),slice(0,200),slice(25,41));
-            std::cout<<view(3,34,10)<<std::endl;
-            \endcode
-            This works essentially the same as for the Array template.
-            \tparam ITypes index types
-            \param indices instances of ITypes determining the multidimensional
-            index
-            \return value at multidimensional index
-             */
+            //!
+            //! \brief multidimensional access to data
+            //!
+            //! () operator allows access to the data using a multidimensional
+            //! index represented by the arguments of the operator. 
+            //! \code 
+            //! darray<float32> data({100,200,100});
+            //! auto view = data(slice(50,75),slice(0,200),slice(25,41));
+            //! std::cout<<view(3,34,10)<<std::endl;
+            //! \endcode
+            //! This works essentially the same as for the Array template.
+            //! \tparam ITypes index types
+            //! \param indices instances of ITypes determining the 
+            //! multidimensional index
+            //! \return value at multidimensional index
+            //!
             template<typename ...ITypes> 
             value_type operator()(ITypes ...indices) const
             {
                 typedef typename ATYPE::map_type omap_type;
-                /*
-                typedef std::array<size_t,sizeof...(ITypes)> array_t;
-                return (*this)(array_t{{size_t(indices)...}});
-                */
                 auto &ref = _parray.get();
 
                 if(_is_contiguous)
-                {
                     return ref[_start_offset + 
                                _imap.offset(IDX_ARRAY(ITypes,indices))];
-                }
                 else
                 {
                     //have to do some more work here
@@ -339,28 +328,31 @@ namespace core{
             }
 
             //-----------------------------------------------------------------
-            /*! \brief get shape of the view
-
-            This returns the shape of the array view. This shape includes only
-            those dimensions where the number of elements along the original
-            array is not equal 1. 
-            \return Shape object
-            */
+            //! 
+            //! \brief get shape of the view
+            //!
+            //! This returns the shape of the array view. This shape includes 
+            //! only those dimensions where the number of elements along the 
+            //! original array is not equal 1. 
+            //! 
+            //! \return Shape object
+            //!
             template<typename CTYPE> CTYPE shape() const
             {
                 return _selection.template shape<CTYPE>();
             }
 
             //-----------------------------------------------------------------
-            /*! \brief linearzed access
-
-            Provides access to the linearized data. With this operator
-            linear access is provided to the elements of the view.
-            \throws memory_access_error if some of the involved objects is not
-            allocated
-            \param i linear index of the element
-            \return reference to the value at index i 
-            */
+            //!
+            //! \brief linearzed access
+            //!
+            //! Provides access to the linearized data. With this operator
+            //! linear access is provided to the elements of the view.
+            //! \throws memory_access_error if some of the involved objects 
+            //! is not allocated
+            //! \param i linear index of the element
+            //! \return reference to the value at index i 
+            //!
             value_type &operator[](size_t i)
             {
 #ifdef DEBUG
@@ -368,10 +360,7 @@ namespace core{
 #endif
                 //compute the multidimensional index in the original array for
                 //the linear index i in the view
-                if(_is_contiguous)
-                {
-                    return _parray.get()[i+_start_offset];
-                }
+                if(_is_contiguous) return _parray.get()[i+_start_offset];
                 else
                 {
                     auto index = _imap.template index<index_type>(i);
@@ -380,22 +369,24 @@ namespace core{
             }
 
             //-----------------------------------------------------------------
-            /*! \brief linearized access
-
-            Provides const access to the linearized data. With this operator
-            linear access is provided to the elements of the view.
-            \throws memory_access_error if some of the involved objects is not
-            allocated
-            \param i linear index of the element
-            \return value at index i 
-            */
+            //! 
+            //! \brief linearized access
+            //!
+            //! Provides const access to the linearized data. With this 
+            //! operator linear access is provided to the elements of the 
+            //! view.
+            //! 
+            //! \throws memory_access_error if some of the involved objects 
+            //! is not allocated
+            //! \param i linear index of the element
+            //! \return value at index i 
+            
             value_type operator[](size_t i) const
             {
 #ifdef DEBUG
                 check_index(i,size(),EXCEPTION_RECORD);
 #endif
-                if(_is_contiguous)
-                    return _parray.get()[i+_start_offset];
+                if(_is_contiguous) return _parray.get()[i+_start_offset];
                 else
                 {
                     //compute the multidimensional index in the original array for
@@ -406,18 +397,18 @@ namespace core{
             }
 
             //-----------------------------------------------------------------
-            /*!
-            \brief get value at index i
-
-            Return a reference to the element at linear index i within the view. 
-            Unlike the [] operators this member function will throw an exception
-            if the index exceeds the size of the view.
-
-            \throws index_error in case that the index exceeds the size of the
-            view
-            \param i index at which to get the data
-            \return reference to the element at index i
-            */
+            //!
+            //! \brief get value at index i
+            //!
+            //! Return a reference to the element at linear index i within 
+            //! the view.  Unlike the [] operators this member function will 
+            //! throw an exception if the index exceeds the size of the view.  
+            //! 
+            //! \throws index_error in case that the index exceeds the size 
+            //! of the view
+            //! \param i index at which to get the data
+            //! \return reference to the element at index i
+            //!
             value_type &at(size_t i) 
             { 
                 check_index(i,size(),EXCEPTION_RECORD); 
@@ -425,18 +416,18 @@ namespace core{
             }
 
             //-----------------------------------------------------------------
-            /*!
-            \brief get value at index i
-
-            Return the value of the element at linear index i within the view. 
-            Unlike the [] operators this member function will throw an exception
-            if the index exceeds the size of the view.
-
-            \throws index_error in case that the index exceeds the size of the
-            view
-            \param i index at which to get the data
-            \return reference to the element at index i
-            */
+            //!
+            //! \brief get value at index i
+            //!
+            //! Return the value of the element at linear index i within the 
+            //! view.  Unlike the [] operators this member function will 
+            //! throw an exception if the index exceeds the size of the view.
+            //!
+            //! \throws index_error in case that the index exceeds the size of the
+            //! view
+            //! \param i index at which to get the data
+            //! \return reference to the element at index i
+            //!
             value_type at(size_t i) const 
             { 
                 check_index(i,size(),EXCEPTION_RECORD);
@@ -444,26 +435,48 @@ namespace core{
             }
 
             //-----------------------------------------------------------------
+            //! 
+            //! \brief insert value at i
+            //! 
+            //! Insert a new value at the linear index i of the view. 
+            //! 
+            //! \throws index_error if i exceeds total size
+            //! \param i linear index
+            //! \param v new value to insert
+            //! 
             void insert(size_t i,const value_type &v) { at(i) = v; }
 
             //-----------------------------------------------------------------
+            //! 
+            //! \brief return reference to the first element
+            //!
             value_type &front() { return at(0); }
 
             //-----------------------------------------------------------------
+            //! 
+            //! \brief return value of first element
+            //!
             value_type front() const { return at(0); }
 
             //-----------------------------------------------------------------
+            //! 
+            //! \brief return reference ot the last vlaue  
+            //!
             value_type &back() { return at(size()-1); }
 
             //-----------------------------------------------------------------
+            //! 
+            //! \brief return value of last element
+            //! 
             value_type back() const { return at(size()-1); }
 
             //-----------------------------------------------------------------
-            /*! \brief get size
-
-            Return the total number of elements referenced by this view. 
-            \return total number of elements
-            */
+            //!
+            //! \brief get size
+            //!
+            //! Return the total number of elements referenced by this view. 
+            //! \return total number of elements
+            //!
             size_t size() const
             {
                 return _selection.size();
@@ -474,55 +487,61 @@ namespace core{
             size_t rank()  const { return _selection.rank(); }
 
             //-----------------------------------------------------------------
-            /*! \brief iterator to first element
-
-            Return an interator to the first element of the array view. 
-            \return iterator to the first element
-            */
+            //! 
+            //! \brief iterator to first element
+            //!
+            //! Return an interator to the first element of the array view. 
+            //! \return iterator to the first element
+            //!
             iterator begin() { return iterator(this,0); }
 
             //-----------------------------------------------------------------
-            /*! \brief iterator to last element
-
-            Return an iterator to the last element of the array view.
-            \return iterator to last element
-            */
+            //! 
+            //! \brief iterator to last element
+            //!
+            //! Return an iterator to the last element of the array view.
+            //! \return iterator to last element
+            //!
             iterator end() { return iterator(this,this->size()); }
            
             //-----------------------------------------------------------------
-            /*! \brief const iterator to first element
-
-            Return an const interator to the first element of the array view. 
-            \return iterator to the first element
-            */
+            //! 
+            //! \brief const iterator to first element
+            //!
+            //! Return an const interator to the first element of the array 
+            //! view. 
+            //! 
+            //! \return iterator to the first element
+            //!
             const_iterator begin() const { return const_iterator(this,0); }
 
             //-----------------------------------------------------------------
-            /*! \brief const iterator to last element
-
-            Return an const iterator to the last+1 element of the array view.
-            The iterator is thus invalid.
-            \return iterator to last element
-            */
+            //! 
+            //! \brief const iterator to last element
+            //!
+            //! Return an const iterator to the last+1 element of the array 
+            //! view.
+            //! The iterator is thus invalid.
+            //! 
+            //! \return iterator to last element
+            //!
             const_iterator end() const { return const_iterator(this,size()); }
             
             //==========implementation of unary arithmetic operators===========
-            // these function will be only available if the value types of all
-            // involved containers are numeric
-
-            /*!
-            \brief unary addition of a scalar
-
-            \code
-            array_type a = ...;
-            array_type::value_type s = ...;
-            auto view = a(0,slice(0,100),slice(3,23));
-
-            view += s;
-            \endcode
-            \param s the scalar value to add
-            \return view reference
-            */
+            //!
+            //!
+            //! \brief unary addition of a scalar
+            //!
+            //! \code
+            //! array_type a = ...;
+            //! array_type::value_type s = ...;
+            //! auto view = a(0,slice(0,100),slice(3,23));
+            //!
+            //! view += s;
+            //! \endcode
+            //! \param s the scalar value to add
+            //! \return view reference
+            //!
             array_type &operator+=(value_type s) 
             { 
                 storage_type::inplace_arithmetic::add(*this,s); 
@@ -530,21 +549,21 @@ namespace core{
             }
 
             //-----------------------------------------------------------------
-            /*!
-            \brief unary addition of an array 
-
-            \code
-            array_type1 a = ...;
-            array_tyep2 b = ...;
-            auto view = a(1,slice(0,100),slice(3,23));
-
-            view += b;
-            \endcode
-
-            \tparam RTYPE type of the array to add
-            \param v reference to the array to add 
-            \return reference to the original view
-            */
+            //!
+            //! \brief unary addition of an array 
+            //!
+            //! \code
+            //! array_type1 a = ...;
+            //! array_tyep2 b = ...;
+            //! auto view = a(1,slice(0,100),slice(3,23));
+            //!
+            //! view += b;
+            //! \endcode
+            //!
+            //! \tparam RTYPE type of the array to add
+            //! \param v reference to the array to add 
+            //! \return reference to the original view
+            //!
             template<typename RTYPE> 
             array_type &operator+=(const RTYPE &v) 
             { 
@@ -553,19 +572,19 @@ namespace core{
             }
 
             //-----------------------------------------------------------------
-            /*!
-            \brief unary subtraction of a scalar
-
-            \code
-            array_type a = ...;
-            array_type::value_type s = ...;
-            auto view = a(0,slice(0,100),slice(3,23));
-
-            view -= s;
-            \endcode
-            \param s the scalar value to subtract
-            \return view reference
-            */
+            //!
+            //! \brief unary subtraction of a scalar
+            //!
+            //! \code
+            //! array_type a = ...;
+            //! array_type::value_type s = ...;
+            //! auto view = a(0,slice(0,100),slice(3,23));
+            //!
+            //! view -= s;
+            //! \endcode
+            //! \param s the scalar value to subtract
+            //! \return view reference
+            //!
             array_type &operator-=(value_type s) 
             { 
                 storage_type::inplace_arithmetic::sub(*this,s); 
@@ -573,22 +592,22 @@ namespace core{
             }
 
             //-----------------------------------------------------------------
-            /*!
-            \brief unary subtraction of an array
-
-            \code
-            array_type1 a = ...;
-            array_tyep2 b = ...;
-
-            auto view = a(0,slice(0,100),slice(2,23));
-
-            view -= b;
-            \endcode
-
-            \tparam RTYPE type of the array to subtract
-            \param v reference to the array to subtract 
-            \return reference to the original view
-            */
+            //!
+            //! \brief unary subtraction of an array
+            //!
+            //! \code
+            //! array_type1 a = ...;
+            //! array_tyep2 b = ...;
+            //!
+            //! auto view = a(0,slice(0,100),slice(2,23));
+            //!
+            //! view -= b;
+            //! \endcode
+            //!
+            //! \tparam RTYPE type of the array to subtract
+            //! \param v reference to the array to subtract 
+            //! \return reference to the original view
+            //!
             template<typename RTYPE> 
             array_type &operator-=(const RTYPE &v) 
             { 
@@ -597,19 +616,19 @@ namespace core{
             }
 
             //-----------------------------------------------------------------
-            /*!
-            \brief unary multiplication of a scalar
-
-            \code
-            array_type a = ...;
-            array_type::value_type s = ...;
-            auto view = a(slice(0,100),10,slice(2,23));
-
-            view *= s;
-            \endcode
-            \param s the scalar value to multiply with
-            \return view reference
-            */
+            //!
+            //! \brief unary multiplication of a scalar
+            //!
+            //! \code
+            //! array_type a = ...;
+            //! array_type::value_type s = ...;
+            //! auto view = a(slice(0,100),10,slice(2,23));
+            //!
+            //! view *= s;
+            //! \endcode
+            //! \param s the scalar value to multiply with
+            //! \return view reference
+            //!
             array_type &operator*=(value_type s) 
             { 
                 storage_type::inplace_arithmetic::mult(*this,s); 
@@ -617,21 +636,21 @@ namespace core{
             }
 
             //-----------------------------------------------------------------
-            /*!
-            \brief unary multiplication of an array
-
-            \code
-            array_type1 a = ...;
-            array_tyep2 b = ...;
-            auto view = a(slice(0,100),100,slice(2,102));
-
-            view *= b;
-            \endcode
-
-            \tparam RTYPE type of the array to multiply 
-            \param v reference to the array to multiply 
-            \return reference to the original view
-            */
+            //!
+            //! \brief unary multiplication of an array
+            //!
+            //! \code
+            //! array_type1 a = ...;
+            //! array_tyep2 b = ...;
+            //! auto view = a(slice(0,100),100,slice(2,102));
+            //!
+            //! view *= b;
+            //! \endcode
+            //!
+            //! \tparam RTYPE type of the array to multiply 
+            //! \param v reference to the array to multiply 
+            //! \return reference to the original view
+            //!
             template<typename RTYPE>
             array_type &operator*=(const RTYPE &v) 
             { 
@@ -640,19 +659,19 @@ namespace core{
             }
 
             //-----------------------------------------------------------------
-            /*!
-            \brief unary division of a scalar
-
-            \code
-            array_type a = ...;
-            array_type::value_type s = ...;
-            auto view = a(slice(0,100),slice(2,3),slice(4,10));
-
-            view /= s;
-            \endcode
-            \param s the scalar value to divide by
-            \return array reference
-            */
+            //!
+            //! \brief unary division of a scalar
+            //!
+            //! \code
+            //! array_type a = ...;
+            //! array_type::value_type s = ...;
+            //! auto view = a(slice(0,100),slice(2,3),slice(4,10));
+            //!
+            //! view /= s;
+            //! \endcode
+            //! \param s the scalar value to divide by
+            //! \return array reference
+            //!
             array_type &operator/=(value_type s) 
             {
                 storage_type::inplace_arithmetic::div(*this,s); 
@@ -660,21 +679,21 @@ namespace core{
             }
 
             //-----------------------------------------------------------------
-            /*!
-            \brief unary division of an array
-
-            \code
-            array_type1 a = ...;
-            array_tyep2 b = ...;
-            auto view = a(slice(0,100),10,10);
-
-            view /= b;
-            \endcode
-
-            \tparam RTYPE type of the array to divide by  
-            \param v reference to the array to divide by 
-            \return reference to the original view
-            */
+            //!
+            //! \brief unary division of an array
+            //!
+            //! \code
+            //! array_type1 a = ...;
+            //! array_tyep2 b = ...;
+            //! auto view = a(slice(0,100),10,10);
+            //!
+            //! view /= b;
+            //! \endcode
+            //!
+            //! \tparam RTYPE type of the array to divide by  
+            //! \param v reference to the array to divide by 
+            //! \return reference to the original view
+            //!
             template<typename RTYPE>
             array_type &operator/=(const RTYPE &v) 
             { 
@@ -683,6 +702,9 @@ namespace core{
             }
 
             //-----------------------------------------------------------------
+            //! 
+            //! \brief return reference to index map
+            //!
             const map_type &map() const
             {
                 return _imap;

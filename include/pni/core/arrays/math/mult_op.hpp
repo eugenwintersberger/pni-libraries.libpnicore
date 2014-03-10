@@ -1,26 +1,26 @@
-//!
-//! (c) Copyright 2011 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
-//!
-//! This file is part of libpnicore.
-//!
-//! libpnicore is free software: you can redistribute it and/or modify
-//! it under the terms of the GNU General Public License as published by
-//! the Free Software Foundation, either version 2 of the License, or
-//! (at your option) any later version.
-//!
-//! libpnicore is distributed in the hope that it will be useful,
-//! but WITHOUT ANY WARRANTY; without even the implied warranty of
-//! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//! GNU General Public License for more details.
-//!
-//! You should have received a copy of the GNU General Public License
-//! along with libpnicore.  If not, see <http://www.gnu.org/licenses/>.
-//!
-//! ===========================================================================
-//!
-//! Created on: Jul 25,2012
-//!     Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
-//!
+//
+// (c) Copyright 2011 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
+//
+// This file is part of libpnicore.
+//
+// libpnicore is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+//
+// libpnicore is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with libpnicore.  If not, see <http://www.gnu.org/licenses/>.
+//
+// ============================================================================
+//
+// Created on: Jul 25,2012
+//     Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
+//
 #pragma once
 
 #include "op_traits.hpp"
@@ -32,12 +32,19 @@ namespace core{
 
     
     template<typename ATYPE>  class array_view;
-    /*!
-    \ingroup expression_templates
-    \brief Multiplication expression template
 
-    */
-    template<typename OP1T,typename OP2T> class mult_op
+    //!
+    //! \ingroup mdim_array_internal_classes
+    //! \brief Multiplication expression template
+    //! 
+    //! \tparam OP1T left hand operand type
+    //! \tparam OP2T right hand operand type
+    //! 
+    template<
+             typename OP1T,
+             typename OP2T
+            > 
+    class mult_op
     {
         private:
             //! left operand
@@ -56,78 +63,90 @@ namespace core{
             typedef container_iterator<array_type> iterator; 
             //! const iterator type
             typedef container_iterator<const array_type> const_iterator;
-
+            //! reverse iterator type
             typedef container_iterator<array_type> reverse_iterator;
+            //! const reverse iterator type
             typedef container_iterator<const array_type> const_reverse_iterator;
             //! view type
             typedef array_view<array_type> view_type;
 
+            //! index map type
             typedef typename array_trait<OP1T,OP2T>::map_type map_type;
+            //! inplace arithmetic type
             typedef typename array_trait<OP1T,OP2T>::inplace_arithmetic
                 inplace_arithmetic;
 
             //===================constructors==================================
-            /*! 
-            \brief constructor
-
-            Set up the operator class.
-            \param o1 left operand
-            \param o2 right operand
-            */
+            //! 
+            //! \brief constructor
+            //!
+            //! Set up the operator class.
+            //! \param o1 left operand
+            //! \param o2 right operand
+            //!
             mult_op(const OP1T &o1,const OP2T &o2):
                 _op1(o1),
                 _op2(o2)
             {}
 
             //====================public methods===============================
-            /*! 
-            \brief get value at index i
-
-            Return the value of _op1[i]*_op2[i];
-            \param i index for which to reqest data
-            \return result of operation
-            */
+            //! 
+            //! \brief get value at index i
+            //!
+            //! Return the value of _op1[i]*_op2[i];
+            //! \param i index for which to reqest data
+            //! \return result of operation
+            //!
             value_type operator[](size_t i) const
             {
                 return this->_op1[i]*this->_op2[i];
             }
 
             //-----------------------------------------------------------------
-            /*!
-            \brief get value at index i
-
-            Return the result of the operation at index i.
-            \param i index for which to perform the operation
-            \return result of the operation
-            */
+            //!
+            //! \brief get value at index i
+            //!
+            //! Return the result of the operation at index i.
+            //! 
+            //! \throws index_error if i exceeds size
+            //! \param i index for which to perform the operation
+            //! \return result of the operation
+            //! 
             value_type at(size_t i) const 
             {
+                if(i>=size()) 
+                    throw index_error(EXCEPTION_RECORD,"index exceeds size!");
+
                 return (*this)[i];
             }
 
             //-----------------------------------------------------------------
-            /*! 
-            \brief return size of the operator
-
-            This is the maximum size of the two operands.
-            \return size of the operation
-            */
+            //! 
+            //! \brief return size of the operator
+            //!
+            //! This is the maximum size of the two operands.
+            //! \return size of the operation
+            //!
             size_t size() const
             {
                 return _op1.size()>_op2.size() ? _op1.size() : _op2.size();
             }
 
             //=======================inquery methods===========================
-            /*! 
-            \brief get the shape
-
-            Return the shape of the expression template. This both operands are
-            instances of NumArray we can return the shape of one of the arrys. 
-            If both are scalars we return the shape of the scalar. If one is
-            scalar and one is an array the array type wins.
-            \return shape of the operation
-            */
-            template<typename CTYPE> CTYPE shape() const
+            //! 
+            //! \brief get the shape
+            //!
+            //! Return the shape of the expression template. This both 
+            //! operands are instances of NumArray we can return the shape of 
+            //! one of the arrys.  If both are scalars we return the shape of 
+            //! the scalar. If one is scalar and one is an array the array 
+            //! type wins.w
+            //!
+            //! \tparam CTYPE requested container type
+            //! \return shape of the operation
+            //!
+            template<typename CTYPE> 
+            CTYPE shape() const
             {
 
                 //_op1  is a scalar
@@ -141,26 +160,24 @@ namespace core{
                 return  _op1.template shape<CTYPE>();
             }
 
-                
-
             //=====================iterators===================================
-            //! get iterator on first element
+            //! 
+            //! \brief get iterator on first element
+            //! 
             const_iterator begin() const
             {
                 return const_iterator(this,0);
             }
 
             //-----------------------------------------------------------------
-            //! get iterator on last+1 element
+            //! 
+            //! \brief get iterator on last+1 element
+            //! 
             const_iterator end() const
             {
                 return const_iterator(this,this->size());
             }
-
     };
-
-
-
 //end of namespace
 }
 }

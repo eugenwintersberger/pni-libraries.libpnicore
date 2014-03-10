@@ -99,6 +99,7 @@ namespace core{
     */
     template<typename MAPT> struct map_utils
     {
+        //! index map type
         typedef MAPT map_type;
         //! storage type for MAPT
         typedef typename map_type::storage_type storage_type;
@@ -192,11 +193,19 @@ namespace core{
     template<typename POLTYPE,size_t...DIMS>
     struct map_utils<static_index_map<POLTYPE,DIMS...> >
     {
+        //! index map type
         typedef static_index_map<POLTYPE,DIMS...> map_type;
-        /*!
-        \brief creat map from container
 
-        */
+        //!
+        //! \brief creat map from container
+        //! 
+        //! Create an index map from a container. The number of elements along
+        //! dimension are passed in a container of type CTYPE.
+        //! 
+        //! \tparam CTYPE shape container type
+        //! \param c container instance with shape information
+        //! \return instance of map_type
+        //! 
         template<typename CTYPE> static map_type create(const CTYPE &c)
         {
             map_type map;
@@ -212,6 +221,15 @@ namespace core{
         }
 
         //---------------------------------------------------------------------
+        //!
+        //! \brief create index map from initializer list
+        //! 
+        //! Uses an initializer list to build an index map.
+        //! 
+        //! \tparam IT index typ
+        //! \param shape initializer list with shape information
+        //! \return map_type instance
+        //!
         template<typename IT> 
         static map_type create(std::initializer_list<IT> shape)
         {
@@ -228,13 +246,6 @@ namespace core{
         }
         
     };
-
-
-
-
-
-
-     
 
 //end of namespace
 }

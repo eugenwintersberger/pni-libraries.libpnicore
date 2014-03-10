@@ -170,9 +170,13 @@ namespace core{
     */
     template<typename ATYPE> struct array_factory
     {
+        //! shortcut for the array type
         typedef ATYPE array_type;
+        //! value type of the array
         typedef typename array_type::value_type value_type;
+        //! map type of the array
         typedef typename array_type::map_type map_type;
+        //! storage type of the array
         typedef typename array_type::storage_type storage_type;
 
 
@@ -197,7 +201,7 @@ namespace core{
 
         \tparam STYPE container type for shape information
         \param s shape of the array
-        \param dev_val default value for data
+        \param def_val default value for data
         \return instance of array_type
         */
         template<typename STYPE> 

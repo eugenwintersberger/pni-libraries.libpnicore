@@ -74,31 +74,23 @@ Classes to set up benchmarks.
 \defgroup mdim_array_classes Multidimensional arrays
 */
 
-/*!
-\ingroup mdim_array_classes
-\defgroup mdim_basic_array_classes Basic arrays
-*/
 
-/*! 
+/*!
 \ingroup mdim_array_classes 
-\defgroup index_mapping_classes Index mapper types
+\defgroup mdim_array_internal_classes Internal classes 
 
-Index mappers compute the linear offset from a multidimensional index and vica
-versa.
+Internal classes used for the implementation of multidimensional arrays.
 */
+
 
 /*!
 \ingroup mdim_array_classes
-\defgroup dim_layout_classes Dimension layout classes
+\defgroup dim_array_arithmetic_classes Dimension layout classes
 
-Dimension layouts describe the logical structure of a multidimensional array.
+Arithmetic operations and templates for multidimensional arrays.
 
 */
 
-/*! 
-\ingroup mdim_array_classes
-\defgroup numeric_array_classes Numeric arrays
-*/
 
 
 //=============================================================================
