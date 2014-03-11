@@ -2,10 +2,10 @@
 
 #SET(PDFLATEX_COMPILER_FLAGS "-shell-escape"
 #    CACHE STRING "Flags passed to pdflatex")
-include(UseLATEX.cmake)
+#include(UseLATEX.cmake)
 
 #get all the sources for the documentation
-#set(PDFLATEX_COMPILER pdflatex)
+set(PDFLATEX_COMPILER pdflatex)
 set(SOURCES libpnicore_ug.tex
             tex/appendix_multidim_arrays.tex
             tex/array_general_concepts.tex
