@@ -29,21 +29,23 @@ endif()
 #store the original state of CMAKE_REQUIRED_FLAGS
 set(CMAKE_REQUIRED_FLAGS_ORIG "${CMAKE_REQUIRED_FLAGS}")
 
-set(CMAKE_REQUIRED_FLAGS "${CMAKE_REQUIRED_FLAGS_ORIG} -std=c++11")
-check_cxx_source_compiles("int main() { return 0; }" HAS_CXX11_FLAG)
-
-set(CMAKE_REQUIRED_FLAGS "${CMAKE_REQUIRED_FLAGS_ORIG} -std=c++0x")
-check_cxx_source_compiles("int main() { return 0; }" HAS_CXX0X_FLAG)
-
-if(HAS_CXX11_FLAG)
-    add_definitions(-std=c++11)
+if(CMAKE_COMPILER_IS_GNUCXX)
     set(CMAKE_REQUIRED_FLAGS "${CMAKE_REQUIRED_FLAGS_ORIG} -std=c++11")
-else()
-    if(HAS_CXX0X_FLAG)
-        add_definitions(-std=c++0x)
-        set(CMAKE_REQUIRED_FLAGS "${CMAKE_REQUIRED_FLAGS_ORIG} -std=c++0x")
+    check_cxx_source_compiles("int main() { return 0; }" HAS_CXX11_FLAG)
+
+    set(CMAKE_REQUIRED_FLAGS "${CMAKE_REQUIRED_FLAGS_ORIG} -std=c++0x")
+    check_cxx_source_compiles("int main() { return 0; }" HAS_CXX0X_FLAG)
+
+    if(HAS_CXX11_FLAG)
+        add_definitions(-std=c++11)
+        set(CMAKE_REQUIRED_FLAGS "${CMAKE_REQUIRED_FLAGS_ORIG} -std=c++11")
     else()
-        message(FATAL_ERROR,"Compiler does not support C++11 compiler flag")
+        if(HAS_CXX0X_FLAG)
+            add_definitions(-std=c++0x)
+            set(CMAKE_REQUIRED_FLAGS "${CMAKE_REQUIRED_FLAGS_ORIG} -std=c++0x")
+        else()
+            message(FATAL_ERROR,"Compiler does not support C++11 compiler flag")
+        endif()
     endif()
 endif()
 
