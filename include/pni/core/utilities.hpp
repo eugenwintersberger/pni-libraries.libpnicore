@@ -26,6 +26,4 @@
 
 #include "utilities/container_iterator.hpp"
 #include "utilities/container_utils.hpp"
-#include "utilities/counter.hpp"
 #include "utilities/service.hpp"
-#include "utilities/vector_adapter.hpp"

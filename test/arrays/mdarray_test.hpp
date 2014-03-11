@@ -185,13 +185,13 @@ template<typename ATYPE> void mdarray_test<ATYPE>::test_construction_from_view()
     std::generate(array.begin(),array.end(),random_generator<value_type>());
 
     auto view = array(0,slice(0,3),slice(0,5));
-    auto view_shape = view.template shape<shape_t>();
+    auto view_shape = pni::core::shape<shape_t>(view);
     darray_type a(view);
-    auto array_shape = a.template shape<shape_t>();
+    auto array_shape =pni::core::shape<shape_t>(a);
 
     CPPUNIT_ASSERT(std::equal(array_shape.begin(),array_shape.end(),
                               view_shape.begin()));
-    CPPUNIT_ASSERT(view.size() == a.size());
+    CPPUNIT_ASSERT(size(view) == size(a));
     CPPUNIT_ASSERT(std::equal(view.begin(),view.end(),a.begin()));
 
 }
@@ -213,8 +213,8 @@ template<typename ATYPE> void mdarray_test<ATYPE>::test_inquery()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
-    CPPUNIT_ASSERT(array.rank() == 3);
-    CPPUNIT_ASSERT(array.size() == 30);
+    CPPUNIT_ASSERT(rank(array) == 3);
+    CPPUNIT_ASSERT(size(array) == 30);
     CPPUNIT_ASSERT(ATYPE::type_id == type_id_map<value_type>::type_id);
 }
 
@@ -225,16 +225,16 @@ void mdarray_test<ATYPE>::test_linear_access_operator()
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
     //write data to the array
-    for(size_t i=0;i<array.size();++i) array[i] = ref_data[i];
+    for(size_t i=0;i<size(array);++i) array[i] = ref_data[i];
 
     //read data back
-    for(size_t i=0;i<array.size();++i) compare(array[i],ref_data[i]);
+    for(size_t i=0;i<size(array);++i) compare(array[i],ref_data[i]);
 
     //test with constant access
     const ATYPE &ca = array;
 
     //read data back
-    for(size_t i=0;i<array.size();++i) compare(array[i],ref_data[i]);
+    for(size_t i=0;i<size(array);++i) compare(array[i],ref_data[i]);
 }
 
 //------------------------------------------------------------------------------
@@ -257,22 +257,22 @@ void mdarray_test<ATYPE>::test_linear_access_at()
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
     
     //write data to the array
-    for(size_t i=0;i<array.size();++i) array.at(i) = ref_data.at(i);
+    for(size_t i=0;i<size(array);++i) array.at(i) = ref_data.at(i);
 
     //read data back
-    for(size_t i=0;i<array.size();++i) 
+    for(size_t i=0;i<size(array);++i) 
         compare(array.at(i),ref_data.at(i));
 
-    CPPUNIT_ASSERT_THROW(array.at(array.size()),index_error);
+    CPPUNIT_ASSERT_THROW(array.at(size(array)),index_error);
 
     //test with constant access
     const ATYPE &ca = array;
 
     //read data back
-    for(size_t i=0;i<ca.size();++i) 
+    for(size_t i=0;i<size(ca);++i) 
         compare(ca.at(i),ref_data.at(i));
     
-    CPPUNIT_ASSERT_THROW(ca.at(array.size()),index_error);
+    CPPUNIT_ASSERT_THROW(ca.at(size(array)),index_error);
 }
 
 //------------------------------------------------------------------------------

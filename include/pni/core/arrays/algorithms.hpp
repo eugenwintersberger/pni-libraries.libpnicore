@@ -65,6 +65,62 @@ namespace core{
         return v.data();
     }
 
+    //-------------------------------------------------------------------------
+    //! 
+    //! \ingroup mdim_array_classes
+    //! \brief get rank
+    //! 
+    //! Return the rank of an array or view.
+    //! 
+    //! \tparam ATYPE array or view type
+    //! \param a reference to the array or view
+    //! \return number of dimensions
+    //! 
+    template<typename ATYPE> 
+    size_t rank(const ATYPE &a)
+    {
+        return a.rank();
+    }
+
+    //-------------------------------------------------------------------------
+    //!
+    //! \ingroup mdim_array_classes
+    //! \brief get shape
+    //! 
+    //! Returns a container with the number of elements along each dimension of
+    //! an array or view. 
+    //! 
+    //! \tparam CTYPE container for the shape data
+    //! \tparam ATYPE array or view type
+    //! \param a reference to the array or view
+    //! 
+    template<
+             typename CTYPE,
+             typename ATYPE
+            >
+    CTYPE shape(const ATYPE &a)
+    {
+        return a.template shape<CTYPE>();     
+    }
+
+    //-------------------------------------------------------------------------
+    //!
+    //! \ingroup mdim_array_classes
+    //! \brief get size
+    //! 
+    //! Returns the number of elements stored in an array or view. 
+    //! 
+    //! \tparam ATYPE array or view type
+    //! \param a reference to the array or view
+    //! \return number of elements
+    //! 
+    template<typename ATYPE>
+    size_t size(const ATYPE &a)
+    {
+        return a.size();
+    }
+
+
 
 
 //end of namespace

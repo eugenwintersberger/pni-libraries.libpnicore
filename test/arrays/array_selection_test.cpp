@@ -58,73 +58,64 @@ void array_selection_test::test_construction()
 
     //testing default constructor
     array_selection sel1;
-    CPPUNIT_ASSERT(sel1.rank() == 0);
-    CPPUNIT_ASSERT(sel1.shape<shape_t>() == shape_t());
-    CPPUNIT_ASSERT(sel1.size() == 0);
-    auto sel1_shape = sel1.shape<shape_t>();
+    auto sel1_shape = shape<shape_t>(sel1);
+    CPPUNIT_ASSERT(rank(sel1) == 0);
+    CPPUNIT_ASSERT(shape<shape_t>(sel1) == shape_t());
+    CPPUNIT_ASSERT(size(sel1) == 0);
 
     //testing standard constructor
-    index_type shape({1,100,100}); 
-    index_type offset({0,0,0}); 
-    index_type stride({1,1,1});
-    array_selection sel2(shape,offset,stride);
-    CPPUNIT_ASSERT(sel2.rank() == 2);
-    CPPUNIT_ASSERT(sel2.size() == 100*100);
-    index_type s{100,100};
-    auto sel2_shape = sel2.shape<index_type>();
-    CPPUNIT_ASSERT(std::equal(s.begin(),s.end(),sel2_shape.begin()));
+    index_type s({1,100,100}); 
+    index_type o({0,0,0}); 
+    index_type str({1,1,1});
+    array_selection sel2(s,o,str);
+    CPPUNIT_ASSERT(rank(sel2) == 2);
+    CPPUNIT_ASSERT(size(sel2) == 100*100);
+    auto sel2_shape = shape<index_type>(sel2);
+    CPPUNIT_ASSERT(std::equal(s.begin()+1,s.end(),sel2_shape.begin()));
 
     //check full parameters
     CPPUNIT_ASSERT(std::equal(sel2.full_shape().begin(),
                               sel2.full_shape().end(),
-                              shape.begin()));
+                              s.begin()));
     CPPUNIT_ASSERT(std::equal(sel2.offset().begin(),
                               sel2.offset().end(),
-                              offset.begin()));
+                              o.begin()));
     CPPUNIT_ASSERT(std::equal(sel2.stride().begin(),
                               sel2.stride().end(),
-                              stride.begin()));
-    typedef std::list<size_t> ltype;
-    auto lshape = sel2.full_shape<ltype>();
-    auto loffset = sel2.offset<ltype>();
-    auto lstride = sel2.stride<ltype>();
-    CPPUNIT_ASSERT(std::equal(shape.begin(),shape.end(),lshape.begin()));
-    CPPUNIT_ASSERT(std::equal(offset.begin(),offset.end(),loffset.begin()));
-    CPPUNIT_ASSERT(std::equal(stride.begin(),stride.end(),lstride.begin()));
+                              str.begin()));
 
     //! copy constructor
     array_selection sel3(sel2);
-    CPPUNIT_ASSERT(sel3.rank() == sel2.rank());
-    CPPUNIT_ASSERT(sel3.size() == sel2.size());
-    s = sel3.shape<index_type>();
-    CPPUNIT_ASSERT(std::equal(s.begin(),s.end(),sel2_shape.begin()));
+    CPPUNIT_ASSERT(rank(sel3) == rank(sel2));
+    CPPUNIT_ASSERT(size(sel3) == size(sel2));
+    auto sel3_shape = shape<index_type>(sel3);
+    CPPUNIT_ASSERT(std::equal(sel3_shape.begin(),sel3_shape.end(),
+                              sel2_shape.begin()));
 
     //! move construction
     array_selection sel4(std::move(sel3));
-    CPPUNIT_ASSERT(sel4.rank() == sel2.rank());
-    CPPUNIT_ASSERT(sel4.size() == sel2.size());
-    s = sel4.shape<index_type>();
-    CPPUNIT_ASSERT(std::equal(s.begin(),s.end(),sel2_shape.begin()));
+    CPPUNIT_ASSERT(rank(sel4) == rank(sel2));
+    CPPUNIT_ASSERT(size(sel4) == size(sel2));
+    auto sel4_shape = shape<index_type>(sel4);
+    CPPUNIT_ASSERT(std::equal(sel4_shape.begin(),sel4_shape.end(),sel2_shape.begin()));
 
-    CPPUNIT_ASSERT(sel3.size() == 0);
-    CPPUNIT_ASSERT(sel3.rank() == 0);
-    CPPUNIT_ASSERT(sel3.shape<index_type>() == index_type());
+    CPPUNIT_ASSERT(size(sel3) == 0);
+    CPPUNIT_ASSERT(rank(sel3) == 0);
+    CPPUNIT_ASSERT(shape<index_type>(sel3) == index_type());
 
     //testing the default internal objects
-    CPPUNIT_ASSERT(sel_1.rank() == 1);
-    auto sel_1_shape = sel_1.shape<index_type>();
+    CPPUNIT_ASSERT(rank(sel_1) == 1);
+    auto sel_1_shape = shape<index_type>(sel_1);
     index_type sel_1_shape_ref = {8};
     CPPUNIT_ASSERT(std::equal(sel_1_shape.begin(),sel_1_shape.end(),
                               sel_1_shape_ref.begin()));
 
-    CPPUNIT_ASSERT(sel_2.rank() == 2);
-    auto sel_2_shape = sel_2.shape<index_type>();
+    CPPUNIT_ASSERT(rank(sel_2) == 2);
+    auto sel_2_shape = shape<index_type>(sel_2);
     index_type sel_2_shape_ref = {8,2};
     
     CPPUNIT_ASSERT(std::equal(sel_2_shape.begin(),sel_2_shape.end(),
                               sel_2_shape_ref.begin()));
-
-    
 
 }
 
@@ -136,11 +127,11 @@ void array_selection_test::test_create()
     std::vector<slice> slices{slice(0,10),slice(1,30,2),slice(2)};
     array_selection s = array_selection::create(slices);
 
-    CPPUNIT_ASSERT(s.size() == 10*15);
-    CPPUNIT_ASSERT(s.rank() == 2);
+    CPPUNIT_ASSERT(size(s) == 10*15);
+    CPPUNIT_ASSERT(rank(s) == 2);
     index_type ref_shape{10,15};
-    auto shape = s.shape<index_type>();
-    CPPUNIT_ASSERT(std::equal(shape.begin(),shape.end(),ref_shape.begin()));
+    auto ss = shape<index_type>(s);
+    CPPUNIT_ASSERT(std::equal(ss.begin(),ss.end(),ref_shape.begin()));
 
 }
 
@@ -149,35 +140,35 @@ void array_selection_test::test_assignment()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
     array_selection sel(index_type({100,1,200}),index_type({1,1,1}),index_type({1,1,2}));
-    CPPUNIT_ASSERT(sel.rank() == 2);
+    CPPUNIT_ASSERT(rank(sel) == 2);
     index_type s{100,200};
-    auto sel_shape = sel.shape<index_type>();
+    auto sel_shape = shape<index_type>(sel);
 
     CPPUNIT_ASSERT(std::equal(s.begin(),s.end(),sel_shape.begin()));
-    CPPUNIT_ASSERT(sel.size() == 100*200);
+    CPPUNIT_ASSERT(size(sel) == 100*200);
 
     //------------------------test copy assignment------------------------------
     array_selection s1;
 
     s1 = sel;
-    CPPUNIT_ASSERT(s1.rank() == sel.rank());
-    CPPUNIT_ASSERT(s1.size() == sel.size());
-    auto s1_shape = s1.shape<index_type>();
+    CPPUNIT_ASSERT(rank(s1) == rank(sel));
+    CPPUNIT_ASSERT(size(s1) == size(sel));
+    auto s1_shape = shape<index_type>(s1);
     CPPUNIT_ASSERT(std::equal(s1_shape.begin(),s1_shape.end(),
                               sel_shape.begin()));
 
     //-----------------test move assignment------------------------------------
     array_selection s2;
     s2 = std::move(s1);
-    CPPUNIT_ASSERT(s2.rank() == sel.rank());
-    CPPUNIT_ASSERT(s2.size() == sel.size());
-    auto s2_shape  = s2.shape<index_type>();
+    CPPUNIT_ASSERT(rank(s2) == rank(sel));
+    CPPUNIT_ASSERT(size(s2) == size(sel));
+    auto s2_shape  = shape<index_type>(s2);
     CPPUNIT_ASSERT(std::equal(s2_shape.begin(),s2_shape.end(),
                               sel_shape.begin()));
 
-    CPPUNIT_ASSERT(s1.size() == 0);
-    CPPUNIT_ASSERT(s1.rank() == 0);
-    CPPUNIT_ASSERT(s1.shape<index_type>() == index_type());
+    CPPUNIT_ASSERT(size(s1) == 0);
+    CPPUNIT_ASSERT(rank(s1) == 0);
+    CPPUNIT_ASSERT(shape<index_type>(s1) == index_type());
 
 }
 
@@ -187,12 +178,12 @@ void array_selection_test::test_index()
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
     array_selection sel(index_type({10,20}),index_type({1,2}),index_type({3,2}));
     index_type s{10,20};
-    auto sshape = sel.shape<index_type>();
+    auto sshape = shape<index_type>(sel);
     CPPUNIT_ASSERT(std::equal(s.begin(),s.end(),sshape.begin()));
-    CPPUNIT_ASSERT(sel.rank()==2);
-    CPPUNIT_ASSERT(sel.size() == 10*20);
+    CPPUNIT_ASSERT(rank(sel)==2);
+    CPPUNIT_ASSERT(size(sel) == 10*20);
         
-    index_type i(sel.rank());
+    index_type i(rank(sel));
     sel.index(index_type({1,3}),i);
     index_type r{4,8};
     CPPUNIT_ASSERT(std::equal(r.begin(),r.end(),i.begin()));

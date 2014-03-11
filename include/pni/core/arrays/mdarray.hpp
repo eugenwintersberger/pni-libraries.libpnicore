@@ -39,6 +39,7 @@
 
 #include "../error/exception_utils.hpp"
 #include "../types/types.hpp"
+#include "../utilities.hpp"
 #include "slice.hpp"
 #include "array_view.hpp"
 #include "array_view_utils.hpp"
@@ -206,9 +207,16 @@ namespace core {
             const map_type &map() const { return this->_imap; }
 
             //----------------------------------------------------------------
-            //! shape to container
+            //! 
+            //! \brief shape to container
+            //! 
+            //! \deprecated  This method is deprecated and will be replaced in 
+            //! one of the next versions of \c libpnicore. Use 
+            //!  pni::core::shape() instead!
+            //!
             template<typename CTYPE> CTYPE shape() const
             {
+                DEPRECATED_FUNCTION("pni::core::shape()");
                 CTYPE c(_imap.rank());
                 std::copy(_imap.begin(),_imap.end(),c.begin());
                 return c;
@@ -227,14 +235,32 @@ namespace core {
             //! 
             //! \brief get size of array
             //!
+            //! \deprecated This method is deprecated and will be removed in one
+            //! of the future versions of \c libpnicore. Use 
+            //! pni::core::size() instead.
+            //!
             //! Returns the total number of elements stored in the array.
             //! \return total number of elements
             //!
-            size_t size() const { return _data.size(); }
+            size_t size() const 
+            { 
+                DEPRECATED_FUNCTION("pni::core::size()");
+                return _data.size(); 
+            }
 
             //-----------------------------------------------------------------
-            //! get number of dimensions of the array
-            size_t rank() const { return _imap.rank(); }
+            //! 
+            //! \brief get number of dimensions 
+            //! 
+            //! \deprecated This method is deprecated and will be removed in 
+            //! one of the next versionso of \c libpnicore. Use
+            //! pni::core::rank() instead.
+            //!
+            size_t rank() const 
+            { 
+                DEPRECATED_FUNCTION("pni::core::rank()");
+                return _imap.rank(); 
+            }
 
             //=============operators and methods to access array data==========
             //!

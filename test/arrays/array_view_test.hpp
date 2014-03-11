@@ -330,14 +330,14 @@ template<typename ATYPE> void array_view_test<ATYPE>::test_multiindex_access()
     slice_container slices{slice(10,40),slice(0,100)};
     view_type view(array,selection_type::create(slices));
     check_view(view,shape_t{30,100});
-    auto shape = view.template shape<shape_t>();
+    auto s = shape<shape_t>(view);
 
     ctype data(view.size());
     std::generate(data.begin(),data.end(),random_generator<value_type>());
     //-----------------writing data----------------------------
     auto diter = data.begin();
-    for(size_t i=0;i<shape[0];++i)
-        for(size_t j=0;j<shape[1];++j)
+    for(size_t i=0;i<s[0];++i)
+        for(size_t j=0;j<s[1];++j)
         {
             value_type v = *diter++;
             view(i,j) = v;
@@ -345,8 +345,8 @@ template<typename ATYPE> void array_view_test<ATYPE>::test_multiindex_access()
 
     //----------------reading data-----------------------------
     diter = data.begin();
-    for(size_t i=0;i<shape[0];++i)
-        for(size_t j=0;j<shape[1];++j)
+    for(size_t i=0;i<s[0];++i)
+        for(size_t j=0;j<s[1];++j)
             compare(view(i,j),*diter++);
 }
 

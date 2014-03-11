@@ -28,7 +28,7 @@
 #include <memory>
 #include <functional>
 #include "index_map/index_maps.hpp"
-#include "../utilities/container_iterator.hpp"
+#include "../utilities.hpp"
 #include "array_selection.hpp"
 #include "array_view_utils.hpp"
 
@@ -330,6 +330,10 @@ namespace core{
             //-----------------------------------------------------------------
             //! 
             //! \brief get shape of the view
+            //! 
+            //! \deprecated This method is deprecated and will be removed in one 
+            //! of the future versions of \c libpnicore. Use 
+            //! pni::core::shape() instead.
             //!
             //! This returns the shape of the array view. This shape includes 
             //! only those dimensions where the number of elements along the 
@@ -339,6 +343,7 @@ namespace core{
             //!
             template<typename CTYPE> CTYPE shape() const
             {
+                DEPRECATED_FUNCTION("pni::core::shape()");
                 return _selection.template shape<CTYPE>();
             }
 
@@ -496,17 +501,32 @@ namespace core{
             //!
             //! \brief get size
             //!
+            //! \deprecated This method is deprecated and will be removed in one 
+            //! of the future versions of \c libpnicore. Use 
+            //! pni::core::size() instead.
+            //!
             //! Return the total number of elements referenced by this view. 
             //! \return total number of elements
             //!
             size_t size() const
             {
+                DEPRECATED_FUNCTION("pni::core::size()");
                 return _selection.size();
             }
 
             //-----------------------------------------------------------------
-            //! get rank of the view
-            size_t rank()  const { return _selection.rank(); }
+            //!
+            //! \brief get rank of the view
+            //!
+            //! \deprecated This method is deprecated and will be removed in 
+            //! one of the future versions of \c libpnicore. Use
+            //! pin::core::rank() instead. 
+            //! 
+            size_t rank()  const 
+            { 
+                DEPRECATED_FUNCTION("pni::core::rank()");
+                return _selection.rank(); 
+            }
 
             //-----------------------------------------------------------------
             //! 
