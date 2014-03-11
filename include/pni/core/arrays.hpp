@@ -30,9 +30,11 @@
 #include <boost/mpl/size_t.hpp>
 #include <boost/lexical_cast.hpp>
 #include "arrays/mdarray.hpp"
+#include "arrays/array_view.hpp"
 #include "types/types.hpp"
 #include "arrays/slice.hpp"
 #include "utilities/container_utils.hpp"
+#include "arrays/algorithms.hpp"
 
 
 namespace pni{

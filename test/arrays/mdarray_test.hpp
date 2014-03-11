@@ -65,6 +65,7 @@ class mdarray_test : public CppUnit::TestFixture
         CPPUNIT_TEST(test_linear_access_at);
         CPPUNIT_TEST(test_linear_access_iterators);
         CPPUNIT_TEST(test_linear_access_reverse_iterators);
+        CPPUNIT_TEST(test_linear_access_pointer);
         CPPUNIT_TEST(test_multiindex_access_operator);
         CPPUNIT_TEST(test_multiindex_access_container<vector_size_t>);
         CPPUNIT_TEST(test_multiindex_access_container<array_size_t>);
@@ -117,6 +118,7 @@ class mdarray_test : public CppUnit::TestFixture
         void test_linear_access_at();
         void test_linear_access_iterators();
         void test_linear_access_reverse_iterators();
+        void test_linear_access_pointer();
         void test_reverse_iterators();
         void test_multiindex_access_operator();
         template<typename ITYPE> void test_multiindex_access_container()
@@ -233,6 +235,19 @@ void mdarray_test<ATYPE>::test_linear_access_operator()
 
     //read data back
     for(size_t i=0;i<array.size();++i) compare(array[i],ref_data[i]);
+}
+
+//------------------------------------------------------------------------------
+template<typename ATYPE>
+void mdarray_test<ATYPE>::test_linear_access_pointer()
+{
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+    
+    std::copy(ref_data.begin(),ref_data.end(),array.begin());
+    auto ptr = data(array);
+
+    for(auto v: ref_data)
+        compare(v,*ptr++);
 }
 
 //------------------------------------------------------------------------------

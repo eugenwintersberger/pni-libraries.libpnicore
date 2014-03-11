@@ -29,6 +29,7 @@
 #include <pni/core/arrays/array_view.hpp>
 #include <pni/core/arrays.hpp>
 #include <pni/core/arrays/index_iterator.hpp>
+#include <pni/core/arrays/algorithms.hpp>
 #include "../data_generator.hpp"
 #include "../compare.hpp"
 
@@ -46,6 +47,7 @@ template<typename ATYPE> class array_view_test : public CppUnit::TestFixture
         CPPUNIT_TEST(test_construction_from_array_variadic);
         CPPUNIT_TEST(test_linear_access);
         CPPUNIT_TEST(test_iterator_access);
+        CPPUNIT_TEST(test_linear_access_pointer);
         CPPUNIT_TEST(test_multiindex_access);
         CPPUNIT_TEST(test_assignment);
         CPPUNIT_TEST_SUITE_END();
@@ -113,6 +115,14 @@ template<typename ATYPE> class array_view_test : public CppUnit::TestFixture
         Test read/write access with iterators
         */
         void test_iterator_access();
+
+        //---------------------------------------------------------------------
+        //! 
+        //! \brief test access by pointer
+        //! 
+        //! Test access to array view data from a view with pointer.
+        //!
+        void test_linear_access_pointer();
 
         //---------------------------------------------------------------------
         /*! 
@@ -222,6 +232,24 @@ template<typename ATYPE> void array_view_test<ATYPE>::test_linear_access()
     CPPUNIT_ASSERT_NO_THROW(view.back()=v);
     compare(view.back(),v);
 
+}
+
+template<typename ATYPE> 
+void array_view_test<ATYPE>::test_linear_access_pointer()
+{
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+
+    //create a selection
+    auto view1 = array(slice(0,50,2),slice(1,100,3));
+
+    //should not work
+    CPPUNIT_ASSERT_THROW(data(view1),shape_mismatch_error);
+
+    auto view2 = array(slice(0,5),slice(0,NY));
+    auto ptr = data(view2);
+    auto iter = view2.begin();
+    
+    for(size_t i=0;i<5*NY;++i) compare(*ptr++,*iter++);
 }
 
 //-----------------------------------------------------------------------------

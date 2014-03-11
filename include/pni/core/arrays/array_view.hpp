@@ -398,6 +398,28 @@ namespace core{
 
             //-----------------------------------------------------------------
             //!
+            //! \brief get pointer to data
+            //! 
+            //! This method returns a pointer to the storage covered by the 
+            //! view. However, this is only possible if the selection on which
+            //! the view is passed is contiguous. 
+            //! In the case of a non contiguous view an exception will be 
+            //! thrown. 
+            //! 
+            //! \throw shape_mismatch_error if selection not contiguous
+            //! \return const pointer to data
+            //! 
+            const value_type *data() const
+            {
+                if(_is_contiguous) 
+                    return &_parray.get()[_start_offset];
+                else
+                    throw shape_mismatch_error(EXCEPTION_RECORD,
+                            "Selection view is not contiguous!");
+            }
+
+            //-----------------------------------------------------------------
+            //!
             //! \brief get value at index i
             //!
             //! Return a reference to the element at linear index i within 

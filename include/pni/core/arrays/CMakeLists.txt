@@ -9,6 +9,7 @@ set(HEADER_FILES array_arithmetic.hpp
                  scalar.hpp
                  scalar_iterator.hpp
                  slice.hpp
+                 algorithms.hpp
                  )
 
 install(FILES ${HEADER_FILES} 
