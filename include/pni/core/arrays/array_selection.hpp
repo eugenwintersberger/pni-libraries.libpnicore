@@ -32,6 +32,7 @@
 
 #include "../utilities/container_utils.hpp"
 #include "../error/exception_utils.hpp"
+#include "algorithms.hpp"
 #include "slice.hpp"
 
 namespace pni{
@@ -624,17 +625,6 @@ namespace core{
         return s.template shape<CTYPE>();
     }
 
-    //------------------------------------------------------------------------
-    //! 
-    //! \ingroup mdim_array_internal_classes
-    //! \brief get selection size
-    //! 
-    //! Return the size of a selection.
-    //! 
-    //! \param s reference to array_selection 
-    //! \return number of addressable elements
-    //! 
-    size_t size(const array_selection &s);
 //end of namespace
 }
 }

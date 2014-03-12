@@ -117,7 +117,7 @@ namespace core{
                 _parray(std::ref(a)),
                 _selection(s),
                 _imap(map_utils<map_type>::create(_selection.shape<index_type>())),
-                _index(a.rank()),
+                _index(pni::core::rank(a)),
                 _is_contiguous(is_contiguous(a.map(),_selection)),
                 _start_offset(start_offset(a.map(),_selection))
             { }
@@ -137,7 +137,7 @@ namespace core{
                 _parray(std::ref(a)),
                 _selection(std::move(s)),
                 _imap(map_utils<map_type>::create(_selection.shape<index_type>())),
-                _index(a.rank()),
+                _index(pni::core::rank(a)),
                 _is_contiguous(is_contiguous(a.map(),_selection)),
                 _start_offset(start_offset(a.map(),_selection))
             {}
@@ -502,16 +502,11 @@ namespace core{
             //!
             //! \brief get size
             //!
-            //! \deprecated This method is deprecated and will be removed in one 
-            //! of the future versions of \c libpnicore. Use 
-            //! pni::core::size() instead.
-            //!
             //! Return the total number of elements referenced by this view. 
             //! \return total number of elements
             //!
             size_t size() const
             {
-                DEPRECATED_FUNCTION("pni::core::size()");
                 return _selection.size();
             }
 
@@ -786,6 +781,23 @@ namespace core{
     data(const array_view<ATYPE> &v)
     {
         return v.data();
+    }
+    
+    //-------------------------------------------------------------------------
+    //!
+    //! \ingroup mdim_array_classes
+    //! \brief get size
+    //! 
+    //! Returns the number of elements stored in an array or view. 
+    //! 
+    //! \tparam ATYPE array or view type
+    //! \param a reference to the array or view
+    //! \return number of elements
+    //! 
+    template<typename ATYPE>
+    size_t size(const array_view<ATYPE> &a)
+    {
+        return a.map().max_elements();
     }
 
 //end of namespace

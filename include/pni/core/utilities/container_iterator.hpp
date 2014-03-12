@@ -186,8 +186,6 @@ namespace core{
 #else
             explicit operator bool() const
             {
-                //if(!this->_container) return false;
-                //ssize_t size = (ssize_t)(this->_container->size());
                 return !( (!this->_container)||
                           (this->_state >= this->_maxsize)||
                           (this->_state<0));

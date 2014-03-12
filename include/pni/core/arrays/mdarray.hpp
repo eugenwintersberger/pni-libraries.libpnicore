@@ -234,16 +234,11 @@ namespace core {
             //! 
             //! \brief get size of array
             //!
-            //! \deprecated This method is deprecated and will be removed in one
-            //! of the future versions of \c libpnicore. Use 
-            //! pni::core::size() instead.
-            //!
             //! Returns the total number of elements stored in the array.
             //! \return total number of elements
             //!
             size_t size() const 
             { 
-                DEPRECATED_FUNCTION("pni::core::size()");
                 return _data.size(); 
             }
 
@@ -915,6 +910,6 @@ namespace core {
     {
         return a.storage().data();
     }
-
+    
 }
 }

@@ -68,12 +68,12 @@ template<typename ATYPE> class array_view_test : public CppUnit::TestFixture
         {
             size_t ref_size = std::accumulate(ref.begin(),ref.end(),1,
                     std::multiplies<size_t>());
-            size_t ref_rank = ref.size();
+            size_t ref_rank = pni::core::size(ref);
 
-            CPPUNIT_ASSERT(view.rank() == ref_rank);
-            CPPUNIT_ASSERT(view.size() == ref_size);
+            CPPUNIT_ASSERT(pni::core::rank(view) == ref_rank);
+            CPPUNIT_ASSERT(pni::core::size(view) == ref_size);
 
-            auto shape = view.template shape<shape_t>();
+            auto shape = pni::core::shape<shape_t>(view);
             CPPUNIT_ASSERT(std::equal(shape.begin(),shape.end(),ref.begin()));
 
         }
@@ -210,7 +210,7 @@ template<typename ATYPE> void array_view_test<ATYPE>::test_linear_access()
                    selection_type::create(slice_container{slice(0,1),slice(2,7)}));
     check_view(view,shape_t{5});
 
-    for(size_t i=0;i<view.size();++i) 
+    for(size_t i=0;i<pni::core::size(view);++i) 
     {
         value_type v1 = array(0,2+i);
         value_type v2 = view[i];
@@ -266,7 +266,7 @@ template<typename ATYPE> void array_view_test<ATYPE>::test_iterator_access()
     check_view(v,shape_t{13,9});
 
     //create data for the selection
-    ctype data(v.size());
+    ctype data(pni::core::size(v));
     std::generate(data.begin(),data.end(),random_generator<value_type>());
 
     //---------------------check write access----------------------------------
@@ -332,7 +332,7 @@ template<typename ATYPE> void array_view_test<ATYPE>::test_multiindex_access()
     check_view(view,shape_t{30,100});
     auto s = shape<shape_t>(view);
 
-    ctype data(view.size());
+    ctype data(pni::core::size(view));
     std::generate(data.begin(),data.end(),random_generator<value_type>());
     //-----------------writing data----------------------------
     auto diter = data.begin();

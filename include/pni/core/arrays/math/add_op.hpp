@@ -24,7 +24,6 @@
 #pragma once
 
 #include "op_traits.hpp"
-
 #include "../../utilities/container_iterator.hpp"
 
 namespace pni{
@@ -51,8 +50,6 @@ namespace core{
             typename op_trait<OP1T>::ref_type _op1;
             //! reference to the right operand
             typename op_trait<OP2T>::ref_type _op2;
-            //! size of the operator
-            size_t _size;
         public:
             //--------------------public types---------------------------------
             //! result type of the operation
@@ -88,8 +85,7 @@ namespace core{
             //!
             add_op(const OP1T &o1,const OP2T &o2):
                 _op1(o1),
-                _op2(o2),
-                _size(_op1.size()>_op2.size() ? _op1.size() : _op2.size())
+                _op2(o2)
             { }
 
             //====================public methods===============================
@@ -132,44 +128,24 @@ namespace core{
             //! Return the maximum of a.size() and b.size().
             //! \return number of elements of result
             //!
-            size_t size() const { return _size; }
-
-            //-----------------------------------------------------------------
-            //! 
-            //! \brief get the shape
-            //!
-            //! Return the shape of the expression template. This both 
-            //! operands are instances of NumArray we can return the shape of 
-            //! one of the arrys.  If both are scalars we return the shape of 
-            //! the scalar. If one is scalar and one is an array the array 
-            //! type wins.
-            //! 
-            //! \tparam CTYPE requested contianer type
-            //! \return shape of the operation
-            //!
-            template<typename CTYPE> 
-            CTYPE shape() const
-            {
-
-                //_op1  is a scalar
-                if(_op1.rank()==0)
-                {
-                    //if _op2 is an array 
-                    if(_op2.rank() != 0) return _op2.template shape<CTYPE>();
-                }
-                //in all other cases we do not care what type _op2 is 
-                //we just return the shape of _op1
-                return  _op1.template shape<CTYPE>();
+            size_t size() const 
+            { 
+                return _op1.size() > _op2.size() ? _op1.size() : _op2.size();
             }
+
             //=====================iterators===================================
-            //! get const iterator to first element
+            //! 
+            //! \brief get const iterator to the first element
+            //! 
             const_iterator begin() const
             {
                 return const_iterator(this,0);
             }
 
             //-----------------------------------------------------------------
-            //! get const iterator to last+1 element
+            //!
+            //! \brief get const iterator to last+1 element
+            //!
             const_iterator end() const
             {
                 return const_iterator(this,this->size());

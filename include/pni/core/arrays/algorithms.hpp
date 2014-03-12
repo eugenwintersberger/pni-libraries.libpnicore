@@ -86,25 +86,22 @@ namespace core{
     }
 
     //-------------------------------------------------------------------------
-    //!
+    //! 
     //! \ingroup mdim_array_classes
     //! \brief get size
     //! 
-    //! Returns the number of elements stored in an array or view. 
+    //! Return the number of elements stored in a container. The container can
+    //! either a STL container or one of the array types.
     //! 
-    //! \tparam ATYPE array or view type
-    //! \param a reference to the array or view
+    //! \tparam CTYPE container type
+    //! \param a reference to the container
     //! \return number of elements
     //! 
-    template<typename ATYPE>
-    size_t size(const ATYPE &a)
+    template<typename CTYPE> 
+    size_t size(const CTYPE &a)
     {
-        return a.map().max_elements();
+        return a.size();
     }
-
-
-
-
 //end of namespace
 }
 }
