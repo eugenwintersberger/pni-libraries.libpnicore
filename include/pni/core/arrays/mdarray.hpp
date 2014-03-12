@@ -51,6 +51,37 @@
 namespace pni {
 namespace core {
     
+    template<typename S,typename MAP,typename IPA> class mdarray; 
+    //-------------------------------------------------------------------------
+    //!
+    //! \ingroup mdim_array_classes
+    //! \brief array identifier 
+    //!
+    //! Specialization of the is_array template for instances of mdarray.
+    //!
+    template<typename ...ARGS> 
+    struct is_array<mdarray<ARGS...>>
+    {
+        //! type is an array type
+        static const bool value = true;
+    };
+
+    //-------------------------------------------------------------------------
+    //!
+    //! \ingroup mdim_array_classes
+    //! \brief get data pointer
+    //! 
+    //! Get the pointer to the data stored in an mdarray.
+    //! 
+    //! \tparam ARGS mdarray template arguments
+    //! \param a reference to the array
+    //! \return pointer to data
+    template<typename ...ARGS> 
+    const typename mdarray<ARGS...>::value_type* data(const mdarray<ARGS...> &a)
+    {
+        return a.storage().data();
+    }
+    
     //! 
     //! \ingroup mdim_array_classes
     //! \brief template for a multi-dimensional array class
@@ -143,8 +174,7 @@ namespace core {
             //!
             template<typename ATYPE>
             explicit mdarray(const array_view<ATYPE> &view):
-                _imap(map_utils<map_type>::create(view.template
-                            shape<shape_t>())),
+                _imap(map_utils<map_type>::create(pni::core::shape<shape_t>(view))),
                 _data(container_utils<storage_type>::create(view.size()))
             {
                 std::copy(view.begin(),view.end(),_data.begin());
@@ -164,8 +194,7 @@ namespace core {
             //!
             template<typename ...MDARGS>
             explicit mdarray(const mdarray<MDARGS...> &array):
-                _imap(map_utils<map_type>::create(array.template
-                            shape<shape_t>())),
+                _imap(map_utils<map_type>::create(pni::core::shape<shape_t>(array))),
                 _data(container_utils<storage_type>::create(array.size()))
             {
                 //copy data
@@ -881,35 +910,6 @@ namespace core {
         return !(b1==b2);
     }
 
-    //-------------------------------------------------------------------------
-    //!
-    //! \ingroup mdim_array_classes
-    //! \brief array identifier 
-    //!
-    //! Specialization of the is_array template for instances of mdarray.
-    //!
-    template<typename ...ARGS> 
-    struct is_array<mdarray<ARGS...>>
-    {
-        //! type is an array type
-        static const bool value = true;
-    };
-
-    //-------------------------------------------------------------------------
-    //!
-    //! \ingroup mdim_array_classes
-    //! \brief get data pointer
-    //! 
-    //! Get the pointer to the data stored in an mdarray.
-    //! 
-    //! \tparam ARGS mdarray template arguments
-    //! \param a reference to the array
-    //! \return pointer to data
-    template<typename ...ARGS> 
-    const typename mdarray<ARGS...>::value_type* data(const mdarray<ARGS...> &a)
-    {
-        return a.storage().data();
-    }
     
 }
 }

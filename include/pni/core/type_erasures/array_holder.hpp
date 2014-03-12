@@ -23,6 +23,7 @@
 //
 #pragma once
 
+#include "../arrays/algorithms.hpp"
 #include "array_holder_interface.hpp"
 
 namespace pni{
@@ -96,13 +97,13 @@ namespace core{
             
             //-----------------------------------------------------------------
             //! return the rank of the held array
-            virtual size_t rank() const { return _object.rank(); }
+            virtual size_t rank() const { return pni::core::rank(_object); }
 
             //-----------------------------------------------------------------
             //! return the shape of the held array
             virtual shape_t shape() const 
             {
-                return _object.template shape<shape_t>();
+                return pni::core::shape<shape_t>(_object);
             }
 
             //-----------------------------------------------------------------

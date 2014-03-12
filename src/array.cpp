@@ -205,6 +205,11 @@ namespace core{
         return o.read(is);
     }
 
+    //-------------------------------------------------------------------------
+    size_t rank(const array &a)
+    {
+        return a.rank();
+    }
 //end of namespace
 }
 }

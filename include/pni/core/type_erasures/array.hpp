@@ -31,6 +31,7 @@
 #include "../arrays.hpp"
 #include "array_holder.hpp"
 #include "array_iterator.hpp"
+#include "../arrays/algorithms.hpp"
 
 
 namespace pni{
@@ -355,6 +356,35 @@ namespace core{
     std::istream &operator>>(std::istream &is,array &o);
 
 
+    //-------------------------------------------------------------------------
+    //! 
+    //! \ingroup mdim_array_classes
+    //! \brief get rank
+    //! 
+    //! Return the rank of an array or view.
+    //! 
+    //! \param a reference to the array or view
+    //! \return number of dimensions
+    //! 
+    size_t rank(const array &a);
+
+    //-------------------------------------------------------------------------
+    //!
+    //! \ingroup mdim_array_classes
+    //! \brief get shape
+    //! 
+    //! Returns a container with the number of elements along each dimension of
+    //! an array or view. 
+    //! 
+    //! \tparam CTYPE container for the shape data
+    //! \tparam ATYPE array or view type
+    //! \param a reference to the array or view
+    //! 
+    template<typename CTYPE >
+    CTYPE shape(const array &a)
+    {
+        return a.shape<CTYPE>();
+    }
 
 //end of namespace
 }

@@ -93,7 +93,7 @@ class array_view_unary_arithmetic_test : public CppUnit::TestFixture
             std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
             auto view = array(1,slice(0,3),slice(0,5));
             darray orig(view);
-            auto rhs = create_random_array<darray>(view.template shape<shape_t>());
+            auto rhs = create_random_array<darray>(pni::core::shape<shape_t>(view));
 
             view += rhs;
 
@@ -109,7 +109,7 @@ class array_view_unary_arithmetic_test : public CppUnit::TestFixture
             std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
             auto view = array(1,slice(0,3),slice(0,5));
             darray orig(view);
-            auto rhs = create_random_array<darray>(view.template shape<shape_t>());
+            auto rhs = create_random_array<darray>(pni::core::shape<shape_t>(view));
 
             view -= rhs;
 
@@ -125,7 +125,7 @@ class array_view_unary_arithmetic_test : public CppUnit::TestFixture
             std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
             auto view = array(1,slice(0,3),slice(0,5));
             darray orig(view);
-            auto rhs = create_random_array<darray>(view.template shape<shape_t>());
+            auto rhs = create_random_array<darray>(pni::core::shape<shape_t>(view));
 
             view *= rhs;
 
@@ -141,7 +141,7 @@ class array_view_unary_arithmetic_test : public CppUnit::TestFixture
             std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
             auto view = array(1,slice(0,3),slice(0,5));
             darray orig(view);
-            auto rhs = create_random_array<darray>(view.template shape<shape_t>());
+            auto rhs = create_random_array<darray>(pni::core::shape<shape_t>(view));
 
             view /= rhs;
 

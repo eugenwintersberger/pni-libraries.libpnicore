@@ -98,13 +98,13 @@ template<typename ATYPE> void sub_operator_test<ATYPE>::test_construction()
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
     sub_op<array_type,array_type> op(a1,a2);
-    CPPUNIT_ASSERT(a1.size() == op.size());
+    CPPUNIT_ASSERT(size(a1) == size(op));
    
     sub_op<array_type,scalar_type> op2(a1,s1);
-    CPPUNIT_ASSERT(op2.size() == a1.size());
+    CPPUNIT_ASSERT(size(op2) == size(a1));
 
     sub_op<scalar_type,array_type> op3(s1,a1);
-    CPPUNIT_ASSERT(a1.size() == op3.size());
+    CPPUNIT_ASSERT(size(a1) == size(op3));
 
 }
 
