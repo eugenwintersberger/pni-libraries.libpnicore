@@ -31,6 +31,7 @@
 #include "arrays/slice.hpp"
 #include "arrays/algorithms.hpp"
 #include "arrays/array_arithmetic.hpp"
+#include "arrays/index_iterator.hpp"
 
 
 namespace pni{

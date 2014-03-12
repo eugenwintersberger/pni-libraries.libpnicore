@@ -26,10 +26,7 @@
 #include<cppunit/extensions/HelperMacros.h>
 
 #include<vector>
-#include <pni/core/arrays/array_view.hpp>
 #include <pni/core/arrays.hpp>
-#include <pni/core/arrays/index_iterator.hpp>
-#include <pni/core/arrays/algorithms.hpp>
 #include "../data_generator.hpp"
 #include "../compare.hpp"
 
@@ -57,6 +54,7 @@ template<typename ATYPE> class array_view_test : public CppUnit::TestFixture
         typedef typename ATYPE::value_type value_type;
         typedef typename std::vector<slice> slice_container;
         typedef typename ATYPE::map_type map_type;
+
     private:
         shape_t s1,s2;
         size_t r1,r2;
@@ -302,20 +300,27 @@ template<typename ATYPE> void array_view_test<ATYPE>::test_assignment()
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl; 
 
     //select roi
-    /*
     view_type roi(array,
                   array_selection::create(slice_container{slice(1,10),slice(0,100)}));
-                  */
    
     //allocate new array for a roi - we have to use a DArray here as for a
     //static array we would have to know the shape of the array
-    /*
-    darray<typename ATYPE::value_type> roia(roi);
-    auto roi_s = roi.template shape<shape_t>();
-    auto roia_s = roia.template shape<shape_t>();
+
+    dynamic_array<value_type> roia(roi);
+    auto roi_s = pni::core::shape<shape_t>(roi);
+    auto roia_s = pni::core::shape<shape_t>(roia);
+    CPPUNIT_ASSERT(pni::core::rank(roi) == pni::core::rank(roia));
     CPPUNIT_ASSERT(roia_s.size() == roi_s.size());
     CPPUNIT_ASSERT(std::equal(roia_s.begin(),roia_s.end(),roi_s.begin()));
-    */
+
+    //write new data to the array
+    std::generate(roia.begin(),roia.end(),random_generator<value_type>());
+    std::copy(roia.begin(),roia.end(),roi.begin());
+    auto roi_iter = roi.begin();
+    auto roia_iter = roia.begin();
+    while( roia_iter != roia.end())
+        compare(*roi_iter++,*roia_iter++);
+
 }
 
 //-----------------------------------------------------------------------------
