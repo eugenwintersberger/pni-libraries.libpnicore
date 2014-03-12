@@ -5,6 +5,7 @@ set(SOURCES array.cpp
             benchmark_result.cpp
             benchmark_runner.cpp
             chrono_timer.cpp
+            clock_timer.cpp
             cli_args.cpp
             complex_utils.cpp
             config_parser.cpp

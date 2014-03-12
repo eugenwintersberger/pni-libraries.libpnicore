@@ -115,7 +115,10 @@ namespace core{
             //!
             //! \param m rvalue reference to the original index map.
             //!
-            index_map(map_type &&m):_shape(std::move(m._shape)) {}
+            index_map(map_type &&m):_shape(std::move(m._shape)) 
+            {
+                std::fill(m._shape.begin(),m._shape.end(),0); 
+            }
 
             //-----------------------------------------------------------------
             //!
@@ -180,6 +183,7 @@ namespace core{
             {
                 if(this == &m) return *this;
                 _shape = std::move(m._shape);
+                std::fill(m._shape.begin(),m._shape.end(),0);
 
                 return *this;
             }
@@ -196,8 +200,10 @@ namespace core{
             //! 
             size_t max_elements() const
             {
-                return std::accumulate(_shape.begin(),_shape.end(),1,
-                                       std::multiplies<size_t>()); 
+                if(_shape.size() == 0) return 0;
+                else
+                    return std::accumulate(_shape.begin(),_shape.end(),1,
+                                           std::multiplies<size_t>()); 
             }
 
             //-----------------------------------------------------------------

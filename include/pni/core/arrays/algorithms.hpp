@@ -23,47 +23,27 @@
 //
 #pragma once
 
-#include "mdarray.hpp"
-#include "array_view.hpp"
-
 namespace pni{
 namespace core{
-
-
-    //!
-    //! \ingroup mdim_array_classes
-    //! \brief get data pointer
-    //! 
-    //! Get the pointer to the data stored in an mdarray.
-    //! 
-    //! \tparam ARGS mdarray template arguments
-    //! \param a reference to the array
-    //! \return pointer to data
-    template<typename ...ARGS> 
-    const typename mdarray<ARGS...>::value_type* data(const mdarray<ARGS...> &a)
-    {
-        return a.storage().data();
-    }
 
     //-------------------------------------------------------------------------
     //!
     //! \ingroup mdim_array_classes
-    //! \brief get data pointer
+    //! \brief array identifier 
     //! 
-    //! Get the pointer to the data of an array_view instance. This function
-    //! will only succeed if the selection on which the view is based on is 
-    //! contiguous. Otherwise an exception will be thrown.
+    //! This type has a value of true if the template parameter ATYPE is an 
+    //! array type. In order to be an array a type has to be an instance of 
+    //! mdarray or array_view. 
+    //! This is the default version and provides a false value.
     //! 
-    //! \tparam ATYPE array type of the view
-    //! \param v reference to the view
-    //! \return pointer to data
-    //! 
-    template<typename ATYPE>
-    const typename array_view<ATYPE>::value_type*
-    data(const array_view<ATYPE> &v)
+    //! \tparam ATYPE type of interest
+    //!
+    template<typename ATYPE> 
+    struct is_array
     {
-        return v.data();
-    }
+        //! type is not an array
+        static const bool value = false;
+    };
 
     //-------------------------------------------------------------------------
     //! 
@@ -79,7 +59,7 @@ namespace core{
     template<typename ATYPE> 
     size_t rank(const ATYPE &a)
     {
-        return a.rank();
+        return a.map().rank();
     }
 
     //-------------------------------------------------------------------------
@@ -100,7 +80,9 @@ namespace core{
             >
     CTYPE shape(const ATYPE &a)
     {
-        return a.template shape<CTYPE>();     
+        auto c = container_utils<CTYPE>::create(rank(a));
+        std::copy(a.map().begin(),a.map().end(),c.begin());
+        return c;
     }
 
     //-------------------------------------------------------------------------
@@ -117,7 +99,7 @@ namespace core{
     template<typename ATYPE>
     size_t size(const ATYPE &a)
     {
-        return a.size();
+        return a.map().max_elements();
     }
 
 

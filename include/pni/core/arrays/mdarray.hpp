@@ -45,13 +45,12 @@
 #include "array_view_utils.hpp"
 #include "index_map/index_maps.hpp"
 #include "math/inplace_arithmetics.hpp"
+#include "algorithms.hpp"
 
 
 namespace pni {
 namespace core {
     
-    
-
     //! 
     //! \ingroup mdim_array_classes
     //! \brief template for a multi-dimensional array class
@@ -887,7 +886,35 @@ namespace core {
         return !(b1==b2);
     }
 
+    //-------------------------------------------------------------------------
+    //!
+    //! \ingroup mdim_array_classes
+    //! \brief array identifier 
+    //!
+    //! Specialization of the is_array template for instances of mdarray.
+    //!
+    template<typename ...ARGS> 
+    struct is_array<mdarray<ARGS...>>
+    {
+        //! type is an array type
+        static const bool value = true;
+    };
 
+    //-------------------------------------------------------------------------
+    //!
+    //! \ingroup mdim_array_classes
+    //! \brief get data pointer
+    //! 
+    //! Get the pointer to the data stored in an mdarray.
+    //! 
+    //! \tparam ARGS mdarray template arguments
+    //! \param a reference to the array
+    //! \return pointer to data
+    template<typename ...ARGS> 
+    const typename mdarray<ARGS...>::value_type* data(const mdarray<ARGS...> &a)
+    {
+        return a.storage().data();
+    }
 
 }
 }

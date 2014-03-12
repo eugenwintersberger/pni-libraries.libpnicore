@@ -51,6 +51,18 @@ namespace core{
 
         return o;
     }
+
+    //-------------------------------------------------------------------------
+    size_t rank(const array_selection &s)
+    {
+        return s.rank();
+    }
+    
+    //-------------------------------------------------------------------------
+    size_t size(const array_selection &s)
+    {
+        return s.size();
+    }
 //end of namespace
 }
 }

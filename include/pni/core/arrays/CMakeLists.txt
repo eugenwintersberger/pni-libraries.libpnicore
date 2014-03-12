@@ -2,6 +2,7 @@
 set(HEADER_FILES array_arithmetic.hpp
                  array_operations.hpp
                  array_selection.hpp
+                 array_factory.hpp
                  array_view.hpp
                  array_view_utils.hpp
                  index_iterator.hpp

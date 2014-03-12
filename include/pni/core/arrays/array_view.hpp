@@ -31,6 +31,7 @@
 #include "../utilities.hpp"
 #include "array_selection.hpp"
 #include "array_view_utils.hpp"
+#include "algorithms.hpp"
 
 namespace pni{
 namespace core{
@@ -753,8 +754,39 @@ namespace core{
             }
     };
 
-
-
+    //-------------------------------------------------------------------------
+    //!
+    //! \ingroup mdim_array_classes
+    //! \brief array identifier
+    //! 
+    //! Specialization of the is_array template for array_view instances. 
+    //!
+    template<typename ...ARGS> 
+    struct is_array<array_view<ARGS...>>
+    {
+        //! type is an array type
+        static const bool value = true;
+    };
+    
+    //-------------------------------------------------------------------------
+    //!
+    //! \ingroup mdim_array_classes
+    //! \brief get data pointer
+    //! 
+    //! Get the pointer to the data of an array_view instance. This function
+    //! will only succeed if the selection on which the view is based on is 
+    //! contiguous. Otherwise an exception will be thrown.
+    //! 
+    //! \tparam ATYPE array type of the view
+    //! \param v reference to the view
+    //! \return pointer to data
+    //! 
+    template<typename ATYPE>
+    const typename array_view<ATYPE>::value_type*
+    data(const array_view<ATYPE> &v)
+    {
+        return v.data();
+    }
 
 //end of namespace
 }

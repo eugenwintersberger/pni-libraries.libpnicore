@@ -595,7 +595,46 @@ namespace core{
         return false;
     }
     
+    //-------------------------------------------------------------------------
+    //
+    //! \ingroup mdim_array_internal_classes
+    //! \brief get selection rank
+    //! 
+    //! Get the rank of an array selection object.
+    //! 
+    //! \param s reference to array_selection instance
+    //! \return number of dimensions
+    //! 
+    size_t rank(const array_selection &s);
 
+    //-------------------------------------------------------------------------
+    //! 
+    //! \ingroup mdim_array_internal_classes
+    //! \brief get selection shape
+    //! 
+    //! Get the shape of an array selection
+    //! 
+    //! \tparam CTYPE container for the shape
+    //! \param s reference to the array selection instance.
+    //! \return instance of CTYPE with shape data
+    //! 
+    template<typename CTYPE>
+    CTYPE shape(const array_selection &s)
+    {
+        return s.template shape<CTYPE>();
+    }
+
+    //------------------------------------------------------------------------
+    //! 
+    //! \ingroup mdim_array_internal_classes
+    //! \brief get selection size
+    //! 
+    //! Return the size of a selection.
+    //! 
+    //! \param s reference to array_selection 
+    //! \return number of addressable elements
+    //! 
+    size_t size(const array_selection &s);
 //end of namespace
 }
 }

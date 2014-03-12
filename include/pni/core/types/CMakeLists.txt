@@ -1,4 +1,5 @@
 set(HEADER_FILES binary.hpp
+                 complex_utils.hpp
                  id_type_map.hpp
                  type_class_map.hpp
                  type_conversion.hpp

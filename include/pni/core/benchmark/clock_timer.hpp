@@ -92,8 +92,6 @@ namespace core{
             }
     };
 
-    //setup the static name of the timer
-    const string clock_timer::name = string("ClockTimer");
 
 //end of namespace
 }
