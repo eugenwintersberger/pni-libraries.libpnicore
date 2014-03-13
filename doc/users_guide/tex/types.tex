@@ -10,26 +10,26 @@
 %%%==================================================================================
 \begin{table}[tb]
 \centering
-\begin{tabular}{c|p{0.5\linewidth}}
+\begin{tabular}{l|l|p{0.36\linewidth}}
 \hline
-data type & description \\
+data type & type ID & description \\
 \hline\hline
-\podt{uint}{8}      & 8Bit unsinged integer           \\
-\podt{int}{8}       & 8Bit signed integer             \\
-\podt{uint}{16}     & 16Bit unsigned integer          \\
-\podt{int}{16}      & 16Bit signed integer            \\
-\podt{uint}{32}     & 32Bit unsigned integer          \\
-\podt{int}{32}      & 32Bit signed integer            \\
-\podt{uint}{64}     & 64Bit unsigned integer          \\
-\podt{int}{64}      & 64Bit signed integer            \\
-\podt{float}{32}    & 32Bit IEEE floating point type  \\
-\podt{float}{64}    & 64Bit IEEE floating point type  \\
-\podt{float}{128}   & 128Bit IEEE floating point type \\
-\podt{complex}{32}  & 32Bit IEEE complex float type   \\
-\podt{complex}{64}  & 64Bit IEEE complex float type   \\
-\podt{complex}{128} & 128Bit IEEE complex float type  \\
-\dtype{string}      & string  type                    \\
-\dtype{binary}      & binary type                     \\
+\podt{uint}{8}      & \typeid{UINT8}  & 8Bit unsinged integer           \\
+\podt{int}{8}       & \typeid{INT8}   & 8Bit signed integer             \\
+\podt{uint}{16}     & \typeid{UINT16} & 16Bit unsigned integer          \\
+\podt{int}{16}      & \typeid{INT16}  & 16Bit signed integer            \\
+\podt{uint}{32}     & \typeid{UINT32} & 32Bit unsigned integer          \\
+\podt{int}{32}      & \typeid{INT32}  & 32Bit signed integer            \\
+\podt{uint}{64}     & \typeid{UINT64} & 64Bit unsigned integer          \\
+\podt{int}{64}      & \typeid{INT64}  & 64Bit signed integer            \\
+\podt{float}{32}    & \typeid{FLOAT32} & 32Bit IEEE floating point type  \\
+\podt{float}{64}    & \typeid{FLOAT64} & 64Bit IEEE floating point type  \\
+\podt{float}{128}   & \typeid{FLOAT128} & 128Bit IEEE floating point type \\
+\podt{complex}{32}  & \typeid{COMPLEX32} & 32Bit IEEE complex float type   \\
+\podt{complex}{64}  & \typeid{COMPLEX64} &64Bit IEEE complex float type   \\
+\podt{complex}{128} & \typeid{COMPLEX128} & 128Bit IEEE complex float type  \\
+\dtype{string}      & \typeid{STRING} & string  type                    \\
+\dtype{binary}      & \typeid{BINARY} & binary type                     \\
 \hline
 \end{tabular}
 \caption{\small\label{tab:types:basic_types} An overview of the basic POD data
@@ -38,22 +38,27 @@ types provided by \libpnicore.}
 %%%===================================================================================
 \libpnicore\ provides a set of primitive data types, defined in {\tt
 pni/core/types.hpp}, along with a set of utility functions
-and data structures in order to manage data types. These types are ensured to
-have the same size on every platform and architecture the library is
-compiled\footnote{This is not true for the 128 Bit long double type which is
-different on some RISC architectures.}.
-Table~\ref{tab:types:basic_types} gives an overview over all types defined in {\tt
-pni/core/types.hpp}. Most of these types are just {\tt typedef} statements to
+and data structures for type management. These types are ensured to
+have the same size on every platform and architecture supported by the library
+\footnote{The only exceptions are 128Bit floating point numbers which have a
+    different size on some RISC architectures.}.
+Table~\ref{tab:types:basic_types} shows an overview of all supported types as
+defined in  {\tt pni/core/types.hpp}. Most of them are just {\tt typedef}s to
 existing plain old data (POD) types. The complex types use the {\tt
 std::complex} template provided by the C++ standard library. This is also true
 for the {\tt string} type which is just a {\tt typedef} to {\tt std::string}. 
+Basically one can identify three classes of primitive types
+\begin{enumerate}
+\item numeric types with all their arithmetic operations
+\item string types (currently only one member)
+\item and utility types like {\tt binary} and {\tt bool} (the latter one is used
+from the C++ standard library).
+\end{enumerate}
 
-More interesting is the {\tt binary} type. The notion behind this type is to
-transfer purly uninterpreted byte data. Typically one would use {\tt uint8} for
-this purpose. However, {\tt uint8} carries numeric semantics and provides
-arithmetic operators that should not be applied to this kind of data. Thus the
-extra {\tt binary} type. Which is essentially a thin wrapper around an integer
-type with all numeric operators stipped away from it. 
+While most of these types are straight forward {\tt binary} requires a bit more
+attention. {\tt binary} is an 8Bit sized type mainly introduced to carry 
+uniterpreted binary data (usually for transfer purposes).  See
+Section~\ref{section:using_binary} for details.
 
 \section{Identifying types at runtime}
 %%%============================================================================
@@ -61,7 +66,7 @@ type with all numeric operators stipped away from it.
 \centering
 \begin{minipage}[t]{0.49\linewidth}
 \centering
-\begin{tabular}{c|p{0.48\linewidth}}
+\begin{tabular}{l|p{0.48\linewidth}}
 \hline
 data type & {\tt type\_id\_t} value \\
 \hline\hline
@@ -89,7 +94,7 @@ values.}
 \hfill
 \begin{minipage}[t]{0.49\linewidth}
 \centering
-\begin{tabular}{c|p{0.48\linewidth}}
+\begin{tabular}{l|p{0.48\linewidth}}
 \hline
 data type & string representation \\
 \hline\hline
@@ -117,7 +122,7 @@ representations.}
 \end{table}
 
 %%%============================================================================
-The recommended way of how to deal with type information at runtime is are the
+The recommended way to deal with type information at runtime are the
 {\tt type\_id\_t} enumerations.
 At some point in time a program might has to determine the type ID of a variable
 type or of the element type of a container.  The basic facility to achieve this
@@ -125,7 +130,6 @@ is the {\tt type\_id} function defined in {\tt pni/core/type\_utils.hpp}.  The
 usage of this function is rather simple as shown here
 \begin{minted}[frame=lines]{cpp}
 #incldue<pni/core/types.hpp>
-#include<pni/core/type_utils.hpp>
 
 using namespace pni::core;
 
@@ -145,7 +149,7 @@ functions for this purpose {\tt type\_id\_from\_str} which converts the string
 representation of a type to a value of {\tt type\_id\_t} and 
 {\tt str\_from\_type\_id} which performs the opposite operation. 
 The usage of this two guys is again straight forward.
-\begin{minted}{cpp}
+\begin{minted}[linenos,frame=lines]{cpp}
     #include <pni/core/types.hpp>
     #include <pni/core/type_utils.hpp>
 
@@ -160,5 +164,34 @@ The usage of this two guys is again straight forward.
 \end{minted}
 
 
-\section{Type erasures}
+\section{Using the {\tt binary} type}\label{section:using_binary}
 
+In many cases uninterpreted binary data should be transfered from one location
+to the other (a typical example would be to copy the content of one file to
+another).
+Typically one would use a {\tt typdef} to something like {\tt uint8} to realize
+such a type. However, this approach has two disadvantages
+\begin{enumerate}
+\item as {\tt uint8} is a numeric type with all arithmetic operators available
+which we do not want for uninterpreted binary data 
+\item a mere {\tt typedef} would make {\tt uint8} and {\tt binary} 
+indistinguishable and thus we could not specialize template classes for each of
+them.
+\end{enumerate}
+Consequently {\tt binary} was implemented as a thin wrapper around an
+appropriately sized integer type with all arithmetic operators stripped away.
+A short example of how to use binary is the {\tt copy\_file.cpp} example in the
+{\tt examples} directory of the source distribution of {\tt libpnicore}. 
+
+\inputminted[linenos,firstline=24,frame=lines]{cpp}{../examples/copy_file.cpp}
+
+In lines $8$ and $10$ we include the {\tt pni/core/types.hpp} header file and
+instruct the compiler to use the {\tt pni::core} namespace by default. In line
+$12$ a vector type with binary elements is defined and an instance of this type
+is allocated in line $24$. 
+In line $27$ data is read from the input file and stored in the vector. Now, it
+is clear from here that a vector of type  {\tt char} would have perfectly served
+the same purpose. The major difference is that unlike {\tt char} {\tt binary}
+has absolutely no semantics. In practice there is nothing much you can do
+without it rather than store it back to another stream as it is done in 
+line $33$.

@@ -47,7 +47,7 @@ int main(int argc,char **argv)
     binary_vector data(length); 
 
     //read data
-    i_stream.read(reinterpret_cast<char*>(data.data()),std::streamsize(length));
+    i_stream.read(reinterpret_cast<char*>(data.data()),length);
     //close input file
     i_stream.close();
 
