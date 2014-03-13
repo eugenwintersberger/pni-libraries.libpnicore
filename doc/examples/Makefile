@@ -1,7 +1,10 @@
 CPPFLAGS=-O2 -std=c++0x -fno-deduce-init-list $(shell pkg-config --cflags pnicore) 
 LDFLAGS=$(shell pkg-config --libs pnicore)
 
-all: example_buffer1 example_buffer2 example_buffer3 example_array1 example_array2 example_array3 example_array4
+all: copy_file
+
+copy_file: copy_file.cpp
+	$(CXX) -o copy_file copy_file.cpp $(CPPFLAGS) $(LDFLAGS)
 
 
 example_buffer1: example_buffer1.cpp
@@ -28,6 +31,7 @@ example_array4: example_array4.cpp
 .PHONY: clean
 	
 clean:
+	rm -f file_copy
 	rm -f example_buffer1
 	rm -f example_buffer2
 	rm -f example_buffer3

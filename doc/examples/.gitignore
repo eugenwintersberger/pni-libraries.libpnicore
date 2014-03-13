@@ -8,3 +8,5 @@ example_array4
 fio_reader
 cbf_reader
 tif_reader
+copy_file
+*.copy
