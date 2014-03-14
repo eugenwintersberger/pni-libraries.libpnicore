@@ -42,6 +42,7 @@
 #include "../utilities.hpp"
 #include "slice.hpp"
 #include "array_view.hpp"
+#include "array_factory.hpp"
 #include "array_view_utils.hpp"
 #include "index_map/index_maps.hpp"
 #include "math/inplace_arithmetics.hpp"
@@ -118,6 +119,7 @@ namespace core {
                 const_reverse_iterator;
             //! inplace arithmetics type
             typedef IPA inplace_arithmetic;
+
             
             //==================public members=================================
             //! type ID of the element type
@@ -200,6 +202,15 @@ namespace core {
                 //copy data
                 for(size_t i=0;i<array.size();++i) (*this)[i] = array[i];
                 //std::copy(array.begin(),array.end(),this->begin());
+            }
+
+            //====================static methods to create arrays==============
+            template<typename ...ARGS>
+            static array_type create(ARGS... arguments)
+            {
+                typedef array_factory<array_type> factory_type;
+
+                return factory_type::create(std::forward<ARGS>(arguments)...);
             }
 
             //====================assignment operations========================

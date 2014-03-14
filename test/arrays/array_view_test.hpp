@@ -139,7 +139,7 @@ template<typename ATYPE> class array_view_test : public CppUnit::TestFixture
 template<typename ATYPE> void array_view_test<ATYPE>::setUp() 
 { 
     _shape = shape_t({NX,NY});
-   array = array_factory<ATYPE>::create(_shape);
+    array = ATYPE::create(_shape);
    std::generate(array.begin(),array.end(),random_generator<value_type>());
 }
 

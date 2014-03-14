@@ -169,10 +169,7 @@ template<typename ATYPE> void mdarray_test<ATYPE>::setUp()
     std::generate(ref_data.begin(),ref_data.end(),random_generator<value_type>());
     
     //create the target array
-    auto map = map_utils<index_map_type>::create(shape);
-    storage_type storage;
-    allocate_storage(storage,map.max_elements());
-    array = ATYPE(map,storage);
+    array = ATYPE::create(shape);
 }
 
 //------------------------------------------------------------------------------
