@@ -167,6 +167,7 @@ namespace core{
 
             //-----------------------------------------------------------------
             //! \brief copy assignment operator
+            /*
             array_type &operator=(const array_type &a)
             {
                 if(this == &a) return *this;
@@ -180,6 +181,17 @@ namespace core{
 
                 return *this;
             }
+            */
+            template<typename ETYPE>
+            array_type &operator=(const ETYPE &e)
+            {
+                if((void*)this == (void*)&e) return *this;
+               
+                for(size_t i=0;i<size();++i) (*this)[i] = e[i];
+
+                return *this;
+            }
+
 
             //-----------------------------------------------------------------
             //! \brief move assignment operator

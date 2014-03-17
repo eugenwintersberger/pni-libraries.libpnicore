@@ -17,3 +17,5 @@ array_linear_access
 array_multiindex
 array_view
 array_view_container
+array_arithmetic1
+array_arithmetic2

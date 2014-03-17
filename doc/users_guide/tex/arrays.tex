@@ -138,18 +138,47 @@ multidimensional indexes either as a variadic argument list to the  {\tt ()}
 operator of the array type (as in line $36$) or you can use a container like 
 in line $37$. The former approach might look a bit more familiar, however, in
 some cases when decisions have to made at runtime the container approach might
-fits better.
+fits better. However, passing containers reduces access performance
+approximately by a factor of 2. Thus, as a rule of thumb you should always use
+the variadic form when you know the number of dimensions the array has and
+containers only in those cases where this information is only available at
+runtime.
 
 \section{Array views and slicing}
 
 In the previous example multiindex access was used to do work on only a small
 part of the image data. \libpnicore\ provides view types for arrays which would
-make these operations easier:
+make these operations easier. Views are created by passing instances of {\tt
+slice} to the {\tt ()} operator of an array type. Slices in \libpnicore\ work
+pretty much the same as in python. Lets have a look on the following example
 \inputminted[fontsize=\small,linenos,firstline=24,frame=lines]{cpp}
 {../examples/array_view.cpp}
+The view is created in line $30$ where the slices are passed instead of integer
+indices to the {\tt ()} operator. A slice selects an entire index range along a
+dimension. The first argument to the {\tt slice} constructor is the starting
+index and the last the stop index of the range. The stop index is not included
+(just as it is the case with Python slices). If the {\tt ()} operator of an
+array is called with any of its arguments being a slice a view object is
+returned instead of a single value or reference to a single value. 
+View objects are pretty much like arrays themselves. However, they do not hold
+data by themselves but only a reference to the original array. 
+Like arrays they are fully STL compliant containers and thus can be used with
+STL algorithms as shown in lines $31$ and $33$. 
 
+View types can be copied and moved and thus can be stored in STL containers as
+shown in the next example
 \inputminted[fontsize=\small,linenos,firstline=24,frame=lines]{cpp}
 {../examples/array_view_container.cpp}
+Here we apply the algorithms from the previous example not to a single but to
+several selections in the image. As shown in lines $32$ to $34$ we can safely
+store views in a container and later iterate over it.
+
+In general views make algorithm development much easier as we have to develop
+algorithms only for entire arrays. If it should be applied to only a part of an
+array we can use a view and pass it to the algorithm. As views expose the same
+interface as an array the algorithm should work on views too.
 
 \section{Arithmetic expressions}
+
+
 
