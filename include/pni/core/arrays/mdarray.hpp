@@ -119,6 +119,10 @@ namespace core {
                 const_reverse_iterator;
             //! inplace arithmetics type
             typedef IPA inplace_arithmetic;
+            //! view type
+            typedef array_view<array_type> view_type;
+            //! const view type
+            typedef array_view<const array_type> const_view_type;
 
             
             //==================public members=================================
@@ -205,6 +209,16 @@ namespace core {
             }
 
             //====================static methods to create arrays==============
+            //!
+            //! \brief generic construction function
+            //! 
+            //! This function can be used for easy array construction. It uses 
+            //! the array_factory template in the background. 
+            //!
+            //! \tparam ARGS variadic argument types
+            //! \param arguments variadic argument list
+            //! \return array instance
+            //!
             template<typename ...ARGS>
             static array_type create(ARGS... arguments)
             {
@@ -212,6 +226,28 @@ namespace core {
 
                 return factory_type::create(std::forward<ARGS>(arguments)...);
             }
+
+            //-----------------------------------------------------------------
+            //!
+            //! \brief construction from initializer list
+            //!
+            //! This version of the static create function uses an initializer 
+            //! list. 
+            //!
+            //! 
+            template<
+                     typename T1,
+                     typename T2
+                    >
+            static array_type create(const std::initializer_list<T1> &l1,
+                                     const std::initializer_list<T2> &l2)
+            {
+                typedef array_factory<array_type> factory_type;
+
+                return factory_type::create(l1,l2);
+            }
+
+
 
             //====================assignment operations========================
             //!

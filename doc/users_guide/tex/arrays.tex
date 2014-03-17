@@ -42,6 +42,7 @@ time. The rank as well as the shape can be altered at runtime\\
 \end{tabular}
 \end{center}
 %%%----------------------------------------------------------------------------
+These types are all defined in {\tt pni/core/arrays.hpp}.
 In addition to this two basic templates there are several utility classes and
 templates like
 %%%----------------------------------------------------------------------------
@@ -59,50 +60,96 @@ All array types derived from {\tt mdarray} provide the following features
 \begin{enumerate}
 \item unary and binary arithmetics if the element type is a numeric type.
 \item slicing to extract only a part of a large array
-\item simple access to data elements using varidic functions
+\item simple access to data elements using variadic operators.
+\item all array types are full STL compliant containers and thus can be used
+along with STL algorithms.
 \end{enumerate}
 
-\section{General concepts}\label{sec:array:general_concepts}
-\input{tex/array_general_concepts.tex}
+\section{Array construction and inquery}
+    
+Constructing arrays is rather simple by means of the {\tt ::create} function
+provided by the array templates. The next example shows how to create arrays 
+using this static function
 
-\section{Static arrays}\label{sec:array:static_arrays}
+\inputminted[fontsize=\small,linenos,firstline=24,frame=lines]{cpp}
+{../examples/array_create.cpp}
+In line $12$ a concrete array type is defined from the {\tt dynamic\_array}
+utility template.
+The {\tt::create} function comes in three flavors as shown in the previous
+example
+\begin{description}
+\item[line 17] it takes the shape of the array as a container and constructs the
+array from this. In this case the storage container is allocated internally. 
+\item[line 20] the storage container is passed along with the shape.
+\item[line 24] here the shape and the container are passed as initializer lists
+- this can make the syntax more readable in some cases.
+\end{description}
+After an array has been created we may want to retrieve some of its basic
+properties. In the next example we do exactly this 
 
-Static arrays are the most simple array objects provided by \libpnicore. Their
-data type as well as their complete shape is determined at compile time. Though
-they are not very flexible they are extremely fast as all the memory resides on
-the stack. They are primarily intended to be used for small objects like 3D
-vectors or matrices. 
-Instantiation of such a static array goes as simple as this
-\begin{minted}{cpp}
-#include <pni/core/sarray.hpp>
+\inputminted[fontsize=\small,linenos,firstline=24,frame=lines]{cpp}
+{../examples/array_inquery.cpp}
+The important part is the implementation of the {\tt show\_info} function
+template starting at line $14$. The function template {\tt type\_id} is used in
+line $17$ to retrieve the type ID of the arrays element type. {\tt rank} in line
+$18$ returns the number of dimension and {\tt size} in line $23$ the total
+number of elements stored in the array. 
+The {\tt shape} template function in line $20$ returns the number of elements
+along each dimension stored in a user provided container type.
 
-using namespace pni::core;
+\section{Linear access to data}
+As already mentioned in the first section of this chapter, the array types
+provided by \libpnicore\ are fully STL compliant containers. They provided all
+the iterators required by the STL. 
+Before we have a look on STL lets first investigate how to simply access data
+elements in an array
 
-sarray<float64,3,3> matrix;
-\end{minted}
-Internally an instance of the {\tt std::array<T,N>} template (provided by the
-STL) is used to store the data. A static array can be created from every other
-array type or container type (a list or a vector).
+\inputminted[fontsize=\small,linenos,firstline=24,frame=lines]{cpp}
+{../examples/array_linear_access.cpp}
+For all array types the new C++ {\em for-each} construction can be used as shown
+in lines $24$ and $34$. Unchecked access (no index bounds are checked) is
+provided via the {\tt []} operator as demonstrated in line $27$. Finally, in
+cases where the index should be checked use the {\tt at()} method like in lines 
+$30$ and $31$.
+Some of the operations in this example can be done much more efficient with STL
+algorithms as demonstrated in the next example
 
-%\begin{minted}{cpp}
-%//construction from initializer list
-%sarray<float64,3> v1 = {1.0,2.0,3.0}; 
-%//copy construction from an already existing instance 
-%sarray<float64,3> v2(v1);
-%
-%std::vector<float64> data{-1.2,4.0,-5.4,10.8};
-%sarray<float64,2,2> matrix(data);
-%\end{minted}
+\inputminted[fontsize=\small,linenos,firstline=24,frame=lines]{cpp}
+{../examples/array_stl.cpp}
+In line $19$ {\tt std::fill} is used to initialize the array to $0$ and 
+{\tt std::generate} in line $25$ fills it with random numbers using a lambda
+expression . The rest of the example should be trivial (if not, please lookup a
+good C++ STL reference).
 
-\section{Arrays with fixed dimensions}
+\section{Multidimensional access}
 
+Though being an important feature, linear access to multidimensional arrays is
+not always useful. In particular the last example where we pretended to work on
+image data implementing algorithms would be rather tedious if we would have had
+only linear access. It is natural for such objects to think in pixel coordinates
+$(i,j)$ rather than the linear offset in memory. 
+\libpnicore\ provides easy multidimensional access to the data stored in an
+array. The next example shows how to use this feature to work only on a small
+region of the image data as defined in the last example
+\inputminted[fontsize=\small,linenos,firstline=24,frame=lines]{cpp}
+{../examples/array_multiindex.cpp}
+The interesting part here are lines $36$ and $37$. You can pass the
+multidimensional indexes either as a variadic argument list to the  {\tt ()}
+operator of the array type (as in line $36$) or you can use a container like 
+in line $37$. The former approach might look a bit more familiar, however, in
+some cases when decisions have to made at runtime the container approach might
+fits better.
 
-\section{Dynamic arrays}\label{sec:array:dynamic_arrays}
+\section{Array views and slicing}
 
-\section{Array slicing}\label{sec:array:array_slicing}
+In the previous example multiindex access was used to do work on only a small
+part of the image data. \libpnicore\ provides view types for arrays which would
+make these operations easier:
+\inputminted[fontsize=\small,linenos,firstline=24,frame=lines]{cpp}
+{../examples/array_view.cpp}
 
-\section{Numeric arrays}\label{sec:array:numeric_arrays}
+\inputminted[fontsize=\small,linenos,firstline=24,frame=lines]{cpp}
+{../examples/array_view_container.cpp}
 
-\section{The \arrayerasure\ type erasure}\label{sec:array:type_erasure}
+\section{Arithmetic expressions}
 
-\section{Using arrays with low level libraries}

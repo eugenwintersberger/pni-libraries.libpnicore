@@ -1,41 +1,41 @@
-CPPFLAGS=-O2 -std=c++0x -fno-deduce-init-list $(shell pkg-config --cflags pnicore) 
+CPPFLAGS=-O3 -std=c++11 -fno-deduce-init-list $(shell pkg-config --cflags pnicore) 
 LDFLAGS=$(shell pkg-config --libs pnicore)
 
-all: copy_file
+all: copy_file array_create array_inquery array_stl array_linear_access \
+	array_multiindex array_view array_view_container
 
 copy_file: copy_file.cpp
 	$(CXX) -o copy_file copy_file.cpp $(CPPFLAGS) $(LDFLAGS)
 
+array_create: array_create.cpp
+	$(CXX) -o array_create array_create.cpp $(CPPFLAGS) $(LDFLAGS)
 
-example_buffer1: example_buffer1.cpp
-	$(CXX) -o example_buffer1 example_buffer1.cpp $(CPPFLAGS) $(LDFLAGS)
+array_inquery: array_inquery.cpp
+	$(CXX) -o array_inquery array_inquery.cpp $(CPPFLAGS) $(LDFLAGS)
 
-example_buffer2: example_buffer2.cpp
-	$(CXX) -o example_buffer2 example_buffer2.cpp $(CPPFLAGS) $(LDFLAGS)
+array_stl: array_stl.cpp
+	$(CXX) -o array_stl array_stl.cpp $(CPPFLAGS) $(LDFLAGS)
 
-example_buffer3: example_buffer3.cpp
-	$(CXX) -o example_buffer3 example_buffer3.cpp $(CPPFLAGS) $(LDFLAGS)
+array_linear_access: array_linear_access.cpp
+	$(CXX) -o array_linear_access array_linear_access.cpp $(CPPFLAGS) $(LDFLAGS)
 
-example_array1: example_array1.cpp
-	$(CXX) -o example_array1 example_array1.cpp $(CPPFLAGS) $(LDFLAGS)
+array_multiindex: array_multiindex.cpp
+	$(CXX) -o array_multiindex array_multiindex.cpp $(CPPFLAGS) $(LDFLAGS)
 
-example_array2: example_array2.cpp
-	$(CXX) -o example_array2 example_array2.cpp $(CPPFLAGS) $(LDFLAGS)
+array_view: array_view.cpp
+	$(CXX) -o array_view array_view.cpp $(CPPFLAGS) $(LDFLAGS)
 
-example_array3: example_array3.cpp
-	$(CXX) -o example_array3 example_array3.cpp $(CPPFLAGS) $(LDFLAGS)
-
-example_array4: example_array4.cpp
-	$(CXX) -o example_array4 example_array4.cpp $(CPPFLAGS) $(LDFLAGS)
+array_view_container: array_view_container.cpp
+	$(CXX) -o array_view_container array_view_container.cpp $(CPPFLAGS) $(LDFLAGS)
 
 .PHONY: clean
 	
 clean:
 	rm -f file_copy
-	rm -f example_buffer1
-	rm -f example_buffer2
-	rm -f example_buffer3
-	rm -f example_array1
-	rm -f example_array2
-	rm -f example_array3
-	rm -f example_array4
+	rm -f array_create
+	rm -f array_inquery
+	rm -f array_stl
+	rm -f array_linear_access
+	rm -f array_multiindex
+	rm -f array_view
+	rm -f array_view_container

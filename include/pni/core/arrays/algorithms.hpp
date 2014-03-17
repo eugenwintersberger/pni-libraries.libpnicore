@@ -23,6 +23,8 @@
 //
 #pragma once
 
+#include "../types.hpp"
+
 namespace pni{
 namespace core{
 
@@ -102,6 +104,7 @@ namespace core{
     {
         return a.size();
     }
+
 //end of namespace
 }
 }

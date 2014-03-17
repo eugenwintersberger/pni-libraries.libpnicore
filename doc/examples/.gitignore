@@ -10,3 +10,10 @@ cbf_reader
 tif_reader
 copy_file
 *.copy
+array_stl
+array_create
+array_inquery
+array_linear_access
+array_multiindex
+array_view
+array_view_container
