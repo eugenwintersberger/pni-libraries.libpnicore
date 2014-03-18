@@ -144,7 +144,9 @@ namespace core{
 
 
             //-----------------------------------------------------------------
+            //!
             //! \brief copy constructor
+            //!
             array_view(const array_type &c):
                 _parray(c._parray),
                 _selection(c._selection),
@@ -155,7 +157,9 @@ namespace core{
             {}
 
             //-----------------------------------------------------------------
+            //!
             //! \brief move constructor
+            //!
             array_view(array_type &&c):
                 _parray(std::move(c._parray)),
                 _selection(std::move(c._selection)),
@@ -166,35 +170,25 @@ namespace core{
             {}
 
             //-----------------------------------------------------------------
+            //!
             //! \brief copy assignment operator
-            /*
-            array_type &operator=(const array_type &a)
-            {
-                if(this == &a) return *this;
-
-                _parray = a._parray;
-                _selection = a._selection;
-                _imap = a._imap;
-                _index = a._index;
-                _is_contiguous = a._is_contiguous;
-                _start_offset  = a._start_offset;
-
-                return *this;
-            }
-            */
+            //!
             template<typename ETYPE>
             array_type &operator=(const ETYPE &e)
             {
                 if((void*)this == (void*)&e) return *this;
                
-                for(size_t i=0;i<size();++i) (*this)[i] = e[i];
+                //for(size_t i=0;i<size();++i) (*this)[i] = e[i];
+                std::copy(e.begin(),e.end(),this->begin());
 
                 return *this;
             }
 
 
             //-----------------------------------------------------------------
+            //!
             //! \brief move assignment operator
+            //!
             array_type &operator=(array_type &&a)
             {
                 if(this == &a) return *this;
@@ -218,6 +212,7 @@ namespace core{
             //! 
             //! \throws shape_mismatch_error if size of container does not 
             //! match view rank
+            //! \tparam CTYPE container type for index values
             //! \param index container with multidimensional index
             //! \return reference to value at index
             //!
@@ -249,6 +244,7 @@ namespace core{
             //! 
             //! \throws shape_mismatch_error if size of container does not 
             //! match view rank
+            //! \tparam CTYPE container type for index values
             //! \param index container with multidimensional index
             //! \return value at index
             //!

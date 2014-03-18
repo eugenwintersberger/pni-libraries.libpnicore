@@ -180,5 +180,12 @@ interface as an array the algorithm should work on views too.
 
 \section{Arithmetic expressions}
 
+Array and view types fully support the common arithmetic
+operators {\tt +}, {\tt *}, {\tt /}, and {\tt -} in their binary and unary
+forms. The binary versions are implemented as expression templates avoiding the
+allocation of unnecessary temporary and giving the compiler more possibilities
+to optimize the code. 
+Views, arrays and scalars can be mixed within all arithmetic expressions. 
+
 
 
