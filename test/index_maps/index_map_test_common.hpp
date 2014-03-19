@@ -96,6 +96,8 @@ class index_map_test_common: public CppUnit::TestFixture
         }
 
         //---------------------------------------------------------------------
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
         template<typename MAPT> void create_index_map(MAPT &m)
         {
             typedef typename MAPT::storage_type storage_type;
@@ -113,6 +115,7 @@ class index_map_test_common: public CppUnit::TestFixture
         {
             //there is nothing we would have to do here
         }
+#pragma GCC diagnostic pop
 
     public:
         //---------------------------------------------------------------------
@@ -151,7 +154,7 @@ class index_map_test_common: public CppUnit::TestFixture
         {
             std::cout<<BOOST_CURRENT_FUNCTION<<std::endl; 
             
-            CTYPE index{indexes...};
+            CTYPE index = {indexes...};
 
             CPPUNIT_ASSERT(_map.offset(index) == offset);
         }
@@ -182,7 +185,7 @@ class index_map_test_common: public CppUnit::TestFixture
             CPPUNIT_ASSERT(_map.rank() == _shape.size());
             CPPUNIT_ASSERT(_map.max_elements() ==
                     std::accumulate(_shape.begin(),_shape.end(),
-                        1,std::multiplies<size_t>()));
+                        size_t(1),std::multiplies<size_t>()));
 
             CPPUNIT_ASSERT(std::equal(_map.begin(),_map.end(),_shape.begin()));
         }

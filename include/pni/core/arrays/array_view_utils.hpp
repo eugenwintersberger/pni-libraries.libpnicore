@@ -392,6 +392,8 @@ namespace core{
         //! \param indexes variadic argument list
         //! \return array view on array
         //!
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
         template<
                  typename CTYPE,
                  typename MAP,
@@ -404,6 +406,7 @@ namespace core{
             return ref_type(c,array_selection::create(
                             array_type{{slice(indexes)...}}));
         }
+#pragma GCC diagnostic pop
 
         //---------------------------------------------------------------------
         //!
@@ -420,6 +423,8 @@ namespace core{
         //! \param i variadic argument list
         //! \return array view on the array
         //!
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
         template<
                  typename CTYPE,
                  typename MAP,
@@ -429,6 +434,7 @@ namespace core{
         {
             return ref_type(c,array_selection::create(i));
         }
+#pragma GCC diagnostic pop
 
         //---------------------------------------------------------------------
         //!
@@ -445,6 +451,8 @@ namespace core{
         //! \param indexes variadic argument list
         //! \return const array view
         //! 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
         template<
                  typename CTYPE,
                  typename MAP,
@@ -457,6 +465,7 @@ namespace core{
             return type(c,array_selection::create(
                         array_type{{slice(indexes)...}}));
         }
+#pragma GCC diagnostic pop
 
         //---------------------------------------------------------------------
         //!
@@ -473,6 +482,8 @@ namespace core{
         //! \param i variadic argument list
         //! \return const array view
         //! 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
         template<
                  typename CTYPE,
                  typename MAP,
@@ -482,6 +493,7 @@ namespace core{
         {
             return type(c,array_selection::create(i));
         }
+#pragma GCC diagnostic pop
          
 
     };

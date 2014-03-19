@@ -38,7 +38,10 @@
 #include<cppunit/ui/qt/TestRunner.h>
 
 
-int main(int argc,char **argv){
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+int main(int argc,char **argv)
+{
     //setup the test runner
     CppUnit::TextTestRunner runner;
     CppUnit::TextTestProgressListener progress;
@@ -54,4 +57,5 @@ int main(int argc,char **argv){
 
     return result ? 0 : 1;
 }
+#pragma GCC diagnostic pop
 

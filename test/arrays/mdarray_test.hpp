@@ -1,26 +1,26 @@
-//!
-//! (c) Copyright 2013 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
-//!
-//! This file is part of libpnicore.
-//!
-//! libpnicore is free software: you can redistribute it and/or modify
-//! it under the terms of the GNU General Public License as published by
-//! the Free Software Foundation, either version 2 of the License, or
-//! (at your option) any later version.
-//!
-//! libpnicore is distributed in the hope that it will be useful,
-//! but WITHOUT ANY WARRANTY; without even the implied warranty of
-//! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//! GNU General Public License for more details.
-//!
-//! You should have received a copy of the GNU General Public License
-//! along with libpnicore.  If not, see <http://www.gnu.org/licenses/>.
-//!
-//! ===========================================================================
-//!
-//!  Created on: Oct 28, 2013
-//!      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
-//!
+//
+// (c) Copyright 2013 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
+//
+// This file is part of libpnicore.
+//
+// libpnicore is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+//
+// libpnicore is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with libpnicore.  If not, see <http://www.gnu.org/licenses/>.
+//
+// ============================================================================
+//
+//  Created on: Oct 28, 2013
+//      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
+//
 #pragma once
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
@@ -154,7 +154,7 @@ class mdarray_test : public CppUnit::TestFixture
                     for(size_t k=0;k<shape[2];++k)
                     {
                         create_index(index,i,j,k);
-                        compare(array(index),*viter++);
+                        compare(ca(index),*viter++);
                     }
         }
 
@@ -231,7 +231,7 @@ void mdarray_test<ATYPE>::test_linear_access_operator()
     const ATYPE &ca = array;
 
     //read data back
-    for(size_t i=0;i<size(array);++i) compare(array[i],ref_data[i]);
+    for(size_t i=0;i<size(array);++i) compare(ca[i],ref_data[i]);
 }
 
 //------------------------------------------------------------------------------
@@ -352,7 +352,7 @@ void mdarray_test<ATYPE>::test_multiindex_access_operator()
     for(size_t i=0;i<shape[0];++i)
         for(size_t j=0;j<shape[1];++j)
             for(size_t k=0;k<shape[2];++k)
-                compare(array(i,j,k),*viter++);
+                compare(ca(i,j,k),*viter++);
 
 }
 

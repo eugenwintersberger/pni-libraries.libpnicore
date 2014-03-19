@@ -79,7 +79,7 @@ namespace core {
             
             //-----------------------------------------------------------------
             //! constructor from a scalar value
-            scalar(const value_type &r):_data(storage_type{r}) {}
+            scalar(const value_type &r):_data(storage_type{{r}}) {}
 
             //-----------------------------------------------------------------
 
@@ -126,6 +126,8 @@ namespace core {
             //! 
             //! \return value of type T
             //!
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
             operator T() const { return this->_data[0]; }
 
             //===================linear access operators========================
@@ -176,6 +178,7 @@ namespace core {
             //! \return reference to data
             //!
             T &at(size_t i) { return this->_data[0]; }
+#pragma GCC diagnostic pop
 
             //-----------------------------------------------------------------
             //! 

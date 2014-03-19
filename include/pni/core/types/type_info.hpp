@@ -73,7 +73,10 @@ namespace core{
         //! \param value value for which to check the sign
         //! \return true if value<0, false otherwise
         //!
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wtype-limits"
         static bool is_negative(T value) { return value<0; }
+#pragma GCC diagnostic pop
 
         //-----------------------------------------------------------------
         //! 

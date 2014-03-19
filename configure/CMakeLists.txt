@@ -11,6 +11,8 @@ endif()
 #setup for GNU CXX compiler
 if(CMAKE_COMPILER_IS_GNUCXX)
     message("found GNU compiler ...")
+    #setup some default compiler flags
+    add_definitions(-Wextra -pedantic -Wall)
     if(CMAKE_BUILD_TYPE MATCHES RELEASE)
         message("setup for release build ...")
         add_definitions(-O3 -g)

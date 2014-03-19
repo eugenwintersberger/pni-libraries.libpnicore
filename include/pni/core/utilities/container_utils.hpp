@@ -384,11 +384,14 @@ namespace core{
     //=========================================================================
    
     //-------------------------------------------------------------------------
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
     template<typename STYPE>
     bool check_size(STYPE s)
     {
         return true;
     }
+#pragma GCC diagnostic pop
 
     //-------------------------------------------------------------------------
     template<

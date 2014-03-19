@@ -43,10 +43,14 @@ namespace core{
     //! \param v instance of std::complex<T>
     //! \return type ID of the complex type
     //!
-    template<typename T> type_id_t get_type_id(const std::complex<T> &v)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+    template<typename T> 
+    type_id_t get_type_id(const std::complex<T> &v)
     {
         return type_id_map<std::complex<T> >::type_id;
     }
+#pragma GCC diagnostic pop
 
     //------------------------------------------------------------------------
     //!
@@ -85,12 +89,15 @@ namespace core{
     //! \param v instance of T 
     //! \return type ID of T
     //!
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
     template<typename T > 
     type_id_t get_type_id(const T &v,
                           typename std::enable_if< IS_POD(T) >::type* = 0)
     {
         return type_id_map<T>::type_id;
     }
+#pragma GCC diagnostic pop
 
     //-------------------------------------------------------------------------
     // if T is a container type use this function
@@ -105,12 +112,15 @@ namespace core{
     //! \param v reference to an instance of T
     //! \return type ID of T::value_type
     //!
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
     template<typename T> 
     type_id_t get_type_id(const T &v,
                           typename std::enable_if< !IS_POD(T) >::type* = 0)
     {
         return type_id_map<typename T::value_type>::type_id;
     }
+#pragma GCC diagnostic pop
     
     //-------------------------------------------------------------------------
     //!
@@ -126,6 +136,8 @@ namespace core{
     //! \param v instance of T 
     //! \return type ID 
     //!
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
     template<typename T> 
     type_id_t type_id(T v)
     {
@@ -134,6 +146,7 @@ namespace core{
             >::type  type;
         return get_type_id(type());
     }
+#pragma GCC diagnostic pop
 
     //-------------------------------------------------------------------------
     //!

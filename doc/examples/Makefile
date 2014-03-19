@@ -1,9 +1,9 @@
-CPPFLAGS=-g -O3 -std=c++11 -fno-deduce-init-list $(shell pkg-config --cflags pnicore) 
+CPPFLAGS=-g -O0 -std=c++11 -fno-deduce-init-list $(shell pkg-config --cflags pnicore) 
 LDFLAGS=$(shell pkg-config --libs pnicore)
 
 all: copy_file array_create array_inquery array_stl array_linear_access \
 	array_multiindex array_view array_view_container array_arithmetic1 \
-	array_arithmetic2
+	array_arithmetic2 array_arithmetic3
 
 copy_file: copy_file.cpp
 	$(CXX) -o copy_file copy_file.cpp $(CPPFLAGS) $(LDFLAGS)
@@ -35,6 +35,9 @@ array_arithmetic1: array_arithmetic1.cpp
 array_arithmetic2: array_arithmetic2.cpp
 	$(CXX) -o array_arithmetic2 array_arithmetic2.cpp $(CPPFLAGS) $(LDFLAGS)
 
+array_arithmetic3: array_arithmetic3.cpp
+	$(CXX) -o array_arithmetic3 array_arithmetic3.cpp $(CPPFLAGS) $(LDFLAGS)
+
 .PHONY: clean
 	
 clean:
@@ -48,3 +51,4 @@ clean:
 	rm -f array_view_container
 	rm -f array_arithmetic1
 	rm -f array_arithmetic2
+	rm -f array_arithmetic3

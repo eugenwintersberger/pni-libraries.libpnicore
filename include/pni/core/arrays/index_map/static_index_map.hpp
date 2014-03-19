@@ -1,24 +1,26 @@
-//!
-//! (c) Copyright 2013 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
-//!
-//! This file is part of libpnicore.
-//!
-//! libpnicore is free software: you can redistribute it and/or modify
-//! it under the terms of the GNU General Public License as published by
-//! the Free Software Foundation, either version 2 of the License, or
-//! (at your option) any later version.
-//!
-//! libpnicore is distributed in the hope that it will be useful,
-//! but WITHOUT ANY WARRANTY; without even the implied warranty of
-//! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//! GNU General Public License for more details.
-//!
-//! You should have received a copy of the GNU General Public License
-//! along with libpnicore.  If not, see <http://www.gnu.org/licenses/>.
-//!************************************************************************
-//! Created on: Oct 25, 2013
-//!     Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
-//!
+//
+// (c) Copyright 2013 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
+//
+// This file is part of libpnicore.
+//
+// libpnicore is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+//
+// libpnicore is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with libpnicore.  If not, see <http://www.gnu.org/licenses/>.
+//
+// ============================================================================
+//
+// Created on: Oct 25, 2013
+//     Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
+//
 
 #pragma once
 #include <algorithm>
@@ -53,7 +55,11 @@ namespace core{
     //! \tparam MAP_IMP policy to compute the index and offset data
     //! \tparam DIMS number of elements along each dimension
     //!
-    template<typename MAP_IMP,size_t... DIMS> class static_index_map
+    template<
+             typename MAP_IMP,
+             size_t... DIMS
+            > 
+    class static_index_map
     {
         public:
             //=================public types====================================
@@ -67,7 +73,7 @@ namespace core{
             typedef typename storage_type::const_iterator const_iterator;
         private:
             //! storage for shape information
-            constexpr static storage_type _shape= {DIMS...};
+            constexpr static storage_type _shape{{DIMS...}};
         public:
 
             //-----------------------------------------------------------------
@@ -82,7 +88,7 @@ namespace core{
             //! 
             size_t max_elements() const
             {
-                return std::accumulate(_shape.begin(),_shape.end(),1,
+                return std::accumulate(_shape.begin(),_shape.end(),size_t(1),
                                        std::multiplies<size_t>()); 
             }
 

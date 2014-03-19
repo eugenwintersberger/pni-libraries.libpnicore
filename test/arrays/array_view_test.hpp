@@ -230,6 +230,11 @@ template<typename ATYPE> void array_view_test<ATYPE>::test_linear_access()
     CPPUNIT_ASSERT_NO_THROW(view.back()=v);
     compare(view.back(),v);
 
+    //finally we have to check for const references
+    const view_type &cview = view;
+    for(size_t i=0;i<pni::core::size(cview);++i)
+        compare(cview[i],array(0,2+i));
+
 }
 
 template<typename ATYPE> 
@@ -248,6 +253,12 @@ void array_view_test<ATYPE>::test_linear_access_pointer()
     auto iter = view2.begin();
     
     for(size_t i=0;i<5*NY;++i) compare(*ptr++,*iter++);
+
+    const decltype(view2) &cview2 = view2;
+    auto cptr = data(cview2);
+    auto citer = cview2.begin();
+
+    for(size_t i=0;i<5*NY;++i) compare(*cptr++,*citer++);
 }
 
 //-----------------------------------------------------------------------------
@@ -274,8 +285,8 @@ template<typename ATYPE> void array_view_test<ATYPE>::test_iterator_access()
     //----------------------check read access----------------------------------
     diter = data.begin();
     for(auto iter = v.begin();iter!=v.end();++iter,++diter)
-        //compare(*iter,*diter);
-        CPPUNIT_ASSERT(*iter == *diter);
+        compare(*iter,*diter);
+        //CPPUNIT_ASSERT(*iter == *diter);
 
     //-----now we need to check if the data arrived at the original array------
     selection_type  selection(shape_t{13,9},shape_t{10,100},shape_t{2,3});

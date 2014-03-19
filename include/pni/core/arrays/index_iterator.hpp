@@ -133,7 +133,7 @@ namespace core{
             template<typename CTYPE>
             static iterator_type end(const CTYPE &shape)
             {
-                size_t size=std::accumulate(shape.begin(),shape.end(),1,
+                size_t size=std::accumulate(shape.begin(),shape.end(),size_t(1),
                             std::multiplies<size_t>());;
 
                 return index_iterator(shape,size);
@@ -170,12 +170,15 @@ namespace core{
 
             //-----------------------------------------------------------------
             //! postfix increment operator
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
             iterator_type operator++(int i)
             {
                 iterator_type temp = *this;
                 ++(*this);
                 return temp;
             }
+#pragma GCC diagnostic pop
 
             //-----------------------------------------------------------------
             //! decrement operator
