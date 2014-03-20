@@ -33,9 +33,12 @@
 
 using namespace pni::core;
 
+// define the matrix and  vector types
 template<typename T,size_t N> using matrix_temp = static_array<T,N,N>;
 template<typename T,size_t N> using vector_temp = static_array<T,N>;
 
+//-----------------------------------------------------------------------------
+// print a matrix
 template<typename T,size_t N>
 std::ostream &operator<<(std::ostream &o,const matrix_temp<T,N> &m)
 {
@@ -49,6 +52,8 @@ std::ostream &operator<<(std::ostream &o,const matrix_temp<T,N> &m)
     return o;
 }
 
+//-----------------------------------------------------------------------------
+// print a vector
 template<typename T,size_t N>
 std::ostream &operator<<(std::ostream &o,const vector_temp<T,N> &v)
 {
@@ -56,6 +61,8 @@ std::ostream &operator<<(std::ostream &o,const vector_temp<T,N> &v)
     return o;
 }
 
+//-----------------------------------------------------------------------------
+// matrix-vector multiplication
 template<typename T,size_t N>
 vector_temp<T,N> mv_mult(const matrix_temp<T,N> &m,const vector_temp<T,N> &v)
 {
@@ -64,14 +71,14 @@ vector_temp<T,N> mv_mult(const matrix_temp<T,N> &m,const vector_temp<T,N> &v)
     size_t i = 0;
     for(auto &r: result)
     {
-        const auto col = m(i++,slice(0,N));
-        const auto dot = col*v;
-        r = std::accumulate(dot.begin(),dot.end(),T(0));
+        const auto row = m(i++,slice(0,N));
+        r = std::inner_product(v.begin(),v.end(),row.begin(),T(0));
     }
-
     return result;
 }
 
+//-----------------------------------------------------------------------------
+// vector-matrix multiplication
 template<typename T,size_t N>
 vector_temp<T,N> mv_mult(const vector_temp<T,N> &v,const matrix_temp<T,N> &m)
 {
@@ -80,14 +87,14 @@ vector_temp<T,N> mv_mult(const vector_temp<T,N> &v,const matrix_temp<T,N> &m)
     size_t i = 0;
     for(auto &r: result)
     {
-        const auto row = m(slice(0,N),i++);
-        const auto dot = row*v;
-        r = std::accumulate(dot.begin(),dot.end(),T(0));
+        const auto col = m(slice(0,N),i++);
+        r = std::inner_product(col.begin(),col.end(),v.begin(),T(0));
     }
-
     return result;
 }
 
+//-----------------------------------------------------------------------------
+// matrix-matrix multiplication
 template<typename T,size_t N>
 matrix_temp<T,N> mv_mult(const matrix_temp<T,N> &m1,const matrix_temp<T,N> &m2)
 {
@@ -99,13 +106,15 @@ matrix_temp<T,N> mv_mult(const matrix_temp<T,N> &m1,const matrix_temp<T,N> &m2)
         {
             const auto row = m1(i,slice(0,N));
             const auto col = m2(slice(0,N),j);
-            const auto dot = row*col;
-            result(i,j) = std::accumulate(dot.begin(),dot.end(),T(0));
+            result(i,j) = std::inner_product(row.begin(),row.end(),
+                                             col.begin(),T(0));
         }
     }
     return result;
 }
 
+//-----------------------------------------------------------------------------
+// define some local types
 typedef float64                    number_type;
 typedef vector_temp<number_type,3> vector_type;
 typedef matrix_temp<number_type,3> matrix_type;

@@ -201,6 +201,54 @@ line $31$ in an arithmetic expression. In fact, what we are doing here is,
 we are writing the corrected data back on the stack since {\tt curr\_frame} is
 just a view on the particular image in the stack.
 
-In the last example matrix vector multiplications are treated. 
-\inputminted[fontsize=\small,linenos,firstline=24,frame=lines]{cpp}
+\section{Some more elaborate example}
+\subsection{Matrix-vector multiplications}
+In the last example matrix vector multiplications are treated. The full code can
+be viewed in {\tt array\_arithmetic3.cpp} in the source distribution. But lets
+first start with the header
+\inputminted[fontsize=\small,linenos,firstline=24,lastline=39,firstnumber=24,frame=lines]{cpp}
 {../examples/array_arithmetic3.cpp}
+Besides including all required header files matrix and vector templates are 
+defined in lines $37$ and $38$ using the new C++11 template aliasing.
+
+\inputminted[fontsize=\small,linenos,firstline=40,lastline=63,firstnumber=40,frame=lines]{cpp}
+{../examples/array_arithmetic3.cpp}
+In lines $42$ and $57$ output operators are defined for vectors and matrices.
+These will allow us to write the data to a stream. 
+
+
+The implementation of the matrix vector multiplication is shown in the next
+block. In other words
+\begin{align}
+ \mathbf{r} = A\mathbf{v} \mbox{ or } r_j = A_{j,i}v_i
+\end{align}
+with $A$ denoting a $N\times N$ matrix and $\mathbf{r}$ and $\mathbf{v}$ are
+$N$-dimensional vectors. In all formulas Einsteins sum convention is used.
+\inputminted[fontsize=\small,linenos,firstline=64,lastline=80,firstnumber=64,frame=lines]{cpp}
+{../examples/array_arithmetic3.cpp}
+In line $74$ we select the $i$-th row of the matrix and compute the inner
+product of the row vector and the input vector in line $75$. 
+The vector matrix multiplication
+\begin{align}
+ \mathbf{r} = \mathbf{v}A\mbox{ or } r_i = v_j A_{j,i}
+\end{align}
+is computed analogously 
+\inputminted[fontsize=\small,linenos,firstline=80,lastline=95,firstnumber=80,frame=lines]{cpp}
+{../examples/array_arithmetic3.cpp}
+despite the fact that we are choosing the appropriate column instead of a row in 
+line $90$. Finally we need an implementation for the matrix - matrix
+multiplication
+\begin{align}
+C = AB \mbox{ or } C_{i,j} = A_{i,k}B_{k,j}
+\end{align}
+\inputminted[fontsize=\small,linenos,firstline=96,lastline=115,firstnumber=96,frame=lines]{cpp}
+{../examples/array_arithmetic3.cpp}
+The rows and columns are selected in lines $107$ and $108$ respectively. 
+Line $109$ finally computes the inner product of the row and column vector.
+
+Finally the main program shows a simple application of these template functions. 
+\inputminted[fontsize=\small,linenos,firstline=116,lastline=138,firstnumber=116,frame=lines]{cpp}
+{../examples/array_arithmetic3.cpp}
+It is important to understand that the appropriate function is determined by the
+types of the arguments (vector or matrix). This is a rather nice example of how
+to use the typing system of C++ to add meaning to objects.
