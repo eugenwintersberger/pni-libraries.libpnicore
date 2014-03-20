@@ -186,10 +186,21 @@ forms. The binary versions are implemented as expression templates avoiding the
 allocation of unnecessary temporary and giving the compiler more possibilities
 to optimize the code. 
 Views, arrays and scalars can be mixed within all arithmetic expressions. 
-
-
+There is nothing magical with expression templates as they work entirely
+transparent to the user. Just use the arithmetic expressions as you are used to
 \inputminted[fontsize=\small,linenos,firstline=24,frame=lines]{cpp}
 {../examples/array_arithmetic1.cpp}
+The important line here is $24$ where arrays and scalars are mixed in an
+arithmetic expression.
+One can also mix arrays, selections, and scalars as the next examples 
+shows
 \inputminted[fontsize=\small,linenos,firstline=24,frame=lines]{cpp}
 {../examples/array_arithmetic2.cpp}
+In line $30$ a single image frame is selected from a stack of images and used in
+line $31$ in an arithmetic expression. In fact, what we are doing here is,
+we are writing the corrected data back on the stack since {\tt curr\_frame} is
+just a view on the particular image in the stack.
 
+In the last example matrix vector multiplications are treated. 
+\inputminted[fontsize=\small,linenos,firstline=24,frame=lines]{cpp}
+{../examples/array_arithmetic3.cpp}
