@@ -36,14 +36,17 @@ namespace core{
 
 
     //-------------------------------------------------------------------------
-    /*!
-    \ingroup mdim_array_classes
-    \brief array factory 
-
-    This utility template provides static functions for array construction. 
-
-    \tparam ATYPE array type
-    */
+    //!
+    //! \ingroup mdim_array_internal_classes
+    //! \brief array factory 
+    //!
+    //! This utility template provides static functions for array construction. 
+    //! This version of the array_factory template can will be used for 
+    //! fully dynamic arrays and arrays of fixed dimension. A special overload 
+    //! exists for static arrays.
+    //! 
+    //! \tparam ATYPE array type
+    //!
     template<typename ATYPE> struct array_factory
     {
         //! shortcut for the array type
@@ -57,31 +60,33 @@ namespace core{
 
 
         //---------------------------------------------------------------------
+        //!
+        //! \brief create array from shape
+        //!
+        //! Create an array from a container with shape data and initialize 
+        //! all its elements with a default value.
         /*!
-        \brief create array from shape
-
-        Create an array from a container with shape data and initialize all its
-        elements with a default value.
-
         \code
         typedef ......................... array_type; 
         typedef array_type::value_type    value_type
         typedef arrya_factory<array_type> factory;
-
+        
         //create array without initial value
         auto a = factory::create(shape_t{100,200});
-
+        
         //create array with initial value
         auto b = factory::create(shape_t{1024,1024},value_type(0));
         \endcode
-
-        \tparam STYPE container type for shape information
-        \param s shape of the array
-        \param def_val default value for data
-        \return instance of array_type
         */
+        //! 
+        //! \tparam STYPE container type for shape information
+        //! \param s shape of the array
+        //! \param def_val default value for data
+        //! \return instance of array_type
+        //!
         template<typename STYPE> 
-        static array_type create(const STYPE &s,value_type def_val = value_type())
+        static array_type create(const STYPE &s,
+                                 value_type def_val = value_type())
         {
             //create the index map
             auto map = map_utils<map_type>::create(s);
@@ -92,14 +97,14 @@ namespace core{
         }
 
         //---------------------------------------------------------------------
-        /*!
-        \brief create array from shape and data
-
-        Usually array types can only be created from their original index map
-        and storage type. This function allows construction from a shape and
-        data stored in arbitrary containers. 
-
-        \code 
+        //!
+        //! \brief create array from shape and data
+        //! 
+        //! Usually array types can only be created from their original index 
+        //! map and storage type. This function allows construction from a 
+        //! shape and data stored in arbitrary containers. 
+        //! 
+        /*! \code 
         typedef ...................... array_type; 
         typedef array_type::value_type value_type;
         typedef std::list<size_t>     shape_type;
@@ -111,13 +116,14 @@ namespace core{
         storage_type data = ....;
         auto a = factory::create(shape,data);
         \endcode
-
-        \tparam STYPE container type for shape
-        \tparam DTYPE container type for data
-        \param s reference to shape container
-        \param data reference to data container
-        \return instance of ATYPE
         */
+        //!
+        //! \tparam STYPE container type for shape
+        //! \tparam DTYPE container type for data
+        //! \param s reference to shape container
+        //! \param data reference to data container
+        //! \return instance of ATYPE
+        //!
         template<typename STYPE,
                  typename DTYPE
                 >
@@ -137,13 +143,13 @@ namespace core{
         }
 
         //---------------------------------------------------------------------
+        //!
+        //! \brief construct from initializer list 
+        //!
+        //! This is maybe the lazy mans version of an array construction 
+        //! function.  It uses initializer lists and is thus best suited for 
+        //! the construction of small arrays (like matrices). 
         /*!
-        \brief construct from initializer list 
-
-        This is maybe the lazy mans version of an array construction function.
-        It uses initializer lists and is thus best suited for the construction
-        of small arrays (like matrices). 
-
         \code
         typedef ......................... array_type;
         typedef array_type::value_type    value_type;
@@ -151,15 +157,18 @@ namespace core{
 
         auto a = factory::create({3,3},{1,2,3,4,5,6,7,8,9});
         \endcode
-
-        \tparam IT shape value type
-        \tparam DT data value type
-        \param shape initializer list with shape data
-        \param data initializer list with array data
-        \return instance of ATYPE
         */
-        template<typename IT,
-                 typename DT>
+        //!
+        //! \tparam IT shape value type
+        //! \tparam DT data value type
+        //! \param shape initializer list with shape data
+        //! \param data initializer list with array data
+        //! \return instance of ATYPE
+        //!
+        template<
+                 typename IT,
+                 typename DT
+                >
         static array_type create(std::initializer_list<IT> shape,
                                  std::initializer_list<DT> data)
         {
@@ -177,6 +186,7 @@ namespace core{
         }
         
     };
+    
 //end of namespace
 }
 }

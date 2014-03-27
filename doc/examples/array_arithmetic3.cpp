@@ -122,9 +122,11 @@ typedef matrix_temp<number_type,3> matrix_type;
 
 int main(int argc,char **argv)
 {
-    vector_type v  = vector_type::create({3},{1,2,3});
-    matrix_type m1 = matrix_type::create({3,3},{1,2,3,4,5,6,7,8,9});
-    matrix_type m2 = matrix_type::create({3,3},{9,8,7,6,5,4,3,2,1});
+    vector_type v;
+    matrix_type m1,m2; 
+    m1 = {1,2,3,4,5,6,7,8,9};
+    m2 = {9,8,7,6,5,4,3,2,1};
+    v  = {1,2,3};
 
     std::cout<<"m1 = "<<std::endl<<m1<<std::endl;
     std::cout<<"m2 = "<<std::endl<<m2<<std::endl;

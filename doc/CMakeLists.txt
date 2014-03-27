@@ -26,6 +26,7 @@ set(HEADER_FILES
                  ${HDR_DIR}/type_erasures/value_ref.hpp
                  
                  ${HDR_DIR}/arrays/array_selection.hpp
+                 ${HDR_DIR}/arrays/array_factory.hpp
                  ${HDR_DIR}/arrays/array_view.hpp
                  ${HDR_DIR}/arrays/mdarray.hpp
                  ${HDR_DIR}/arrays/scalar.hpp

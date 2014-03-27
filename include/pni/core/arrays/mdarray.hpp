@@ -270,6 +270,29 @@ namespace core {
 
                 return *this;
             }
+
+            //-----------------------------------------------------------------
+            //!
+            //! \brief assignment from an initializer list
+            //! 
+            //! Assigns the values given by an initializer list to an allocated
+            //! array. If the number of elements in the list does not match
+            //! the number of elements in the array an exception is thrown. 
+            //!
+            //! \throws size_mismatch_error if list size and array size do not 
+            //! match
+            //! \param l reference to an initializer list
+            //! \return reference to the array
+            //!
+            array_type &operator=(const std::initializer_list<value_type> &l)
+            {
+                if(l.size() != this->size())
+                    throw size_mismatch_error(EXCEPTION_RECORD,
+                            "Size of array and initializer list do not match");
+
+                std::copy(l.begin(),l.end(),this->begin());
+                return *this;
+            }
             
 
             //================public methods===================================
