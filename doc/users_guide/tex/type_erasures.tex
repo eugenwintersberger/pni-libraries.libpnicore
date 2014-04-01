@@ -1,0 +1,29 @@
+%%% Dealing with type erasures
+
+As powerful templates are the tedious they can become in certain situations. 
+For this purpose several type erasures are available [REFERENCE TO TYPE
+ERASURES]. 
+The following erasures are available 
+\begin{description}
+\item[{\tt value}]
+can be used to store a single scalar value of a POD type. 
+\item[{\tt value\_ref}]
+stores a reference to a single scalar POD type.
+\item[{\tt array}] 
+holds an arbitrary array type.
+\end{description}
+To use type erasures include the {\tt /pni/core/type\_erasures.hpp} at the top of
+your source file.
+The default way of how to create a {\tt value} type erasure would be the
+following
+\inputminted[fontsize=\small,linenos,firstnumber=35,firstline=35,lastline=37]{cpp}
+{../examples/type_erasure1.cpp}
+where a value is passed to the constructor.
+To retrieve the value stored in a {\tt value} use the {\tt as} template method
+as shown in the next snippet
+\inputminted[fontsize=\small,linenos,firstnumber=40,firstline=40,lastline=41]{cpp}
+{../examples/type_erasure1.cpp}
+Due to the internal structure of a type erasure construction without a target
+value leaves the type 
+
+

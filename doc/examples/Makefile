@@ -3,7 +3,7 @@ LDFLAGS=$(shell pkg-config --libs pnicore)
 
 all: copy_file array_create array_inquery array_stl array_linear_access \
 	array_multiindex array_view array_view_container array_arithmetic1 \
-	array_arithmetic2 array_arithmetic3
+	array_arithmetic2 array_arithmetic3 type_erasure1
 
 copy_file: copy_file.cpp
 	$(CXX) -o copy_file copy_file.cpp $(CPPFLAGS) $(LDFLAGS)
@@ -38,6 +38,9 @@ array_arithmetic2: array_arithmetic2.cpp
 array_arithmetic3: array_arithmetic3.cpp
 	$(CXX) -o array_arithmetic3 array_arithmetic3.cpp $(CPPFLAGS) $(LDFLAGS)
 
+type_erasure1: type_erasure1.cpp
+	$(CXX) -o type_erasure1 type_erasure1.cpp $(CPPFLAGS) $(LDFLAGS)
+
 .PHONY: clean
 	
 clean:
@@ -52,3 +55,4 @@ clean:
 	rm -f array_arithmetic1
 	rm -f array_arithmetic2
 	rm -f array_arithmetic3
+	rm -f type_erasure1`

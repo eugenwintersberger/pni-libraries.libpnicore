@@ -4,6 +4,7 @@ set(HEADER_FILES arrays.hpp
                  types.hpp
                  utilities.hpp
                  error.hpp
+                 type_erasures.hpp
                  )
 
 install(FILES ${HEADER_FILES} 

@@ -24,6 +24,7 @@
 #pragma once
 
 #include "../types.hpp"
+#include "../utilities/container_utils.hpp"
 
 namespace pni{
 namespace core{

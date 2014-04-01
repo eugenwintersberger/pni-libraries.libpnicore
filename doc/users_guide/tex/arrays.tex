@@ -97,6 +97,19 @@ number of elements stored in the array.
 The {\tt shape} template function in line $20$ returns the number of elements
 along each dimension stored in a user provided container type.
 
+The content of arrays can be copied to and from containers using the standard 
+{\tt std::copy} template function from the STL. In addition a version of the
+assignment operator is provided which allows assignment of values from an
+initializer list. This is particularly useful for static arrays which basically
+do not require construction. 
+\begin{minted}[fontsize=\small,linenos,frame=lines]{cpp}
+typedef .... static_array_type; 
+
+static_array_type a;
+
+a = {1,2,3,4,5};
+\end{minted}
+
 \section{Linear access to data}
 As already mentioned in the first section of this chapter, the array types
 provided by \libpnicore\ are fully STL compliant containers. They provided all
