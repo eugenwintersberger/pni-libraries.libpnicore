@@ -1,6 +1,6 @@
-\documentclass[a4paper]{scrbook}
+\documentclass[a4paper,draft]{scrbook}
 \usepackage{a4wide,amsmath,graphics}
-\usepackage{hyperref}  %% need this for links and references in the document
+\usepackage[draft=false]{hyperref}  %% need this for links and references in the document
 \usepackage{array}     %% need this for more table formating (m{} and p{})
 \usepackage{url}       %% support for URLs
 \usepackage{float}     %% required for extra float placement
@@ -11,7 +11,9 @@
 \usepackage{color}
 \usepackage[figuresright]{rotating}
 \usepackage{minted}    %% excellent source code formating
-
+\usepackage{fixme} %% need this here to make annotations to the text in 
+                       %% the PDF, pretty much like the notes function in 
+                       %% office suites
 \hypersetup{pdftitle={libpniio API review 2013 },
 				pdfborder=0 0 0,
 				colorlinks=false}
@@ -36,6 +38,7 @@
 \begin{document}
 \maketitle
 \tableofcontents
+\listoffixmes
 
 \chapter{Introduction}\label{chapter:introduction}
 \input{tex/introduction.tex}
