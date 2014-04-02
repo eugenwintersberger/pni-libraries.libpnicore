@@ -210,6 +210,12 @@ namespace core{
     {
         return a.rank();
     }
+
+    //-------------------------------------------------------------------------
+    type_id_t type_id(const array &a)
+    {
+        return a.type_id();
+    }
 //end of namespace
 }
 }

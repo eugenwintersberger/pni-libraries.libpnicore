@@ -355,6 +355,17 @@ namespace core{
     //!
     std::istream &operator>>(std::istream &is,array &o);
 
+    //-------------------------------------------------------------------------
+    //! 
+    //! \ingroup mdim_array_classes
+    //! \brief get type id
+    //! 
+    //! Get the type ID of the array stored in an array type erasure.
+    //! 
+    //! \param a reference to the array 
+    //! \return the type ID 
+    //! 
+    type_id_t type_id(const array &a);
 
     //-------------------------------------------------------------------------
     //! 
