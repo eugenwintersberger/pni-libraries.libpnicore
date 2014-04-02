@@ -1,4 +1,5 @@
-CPPFLAGS=-g -O3 -std=c++11 -fno-deduce-init-list -Wall -Wextra -pedantic $(shell pkg-config --cflags pnicore) 
+CPPFLAGS=-g -O3 -std=c++11 -fno-deduce-init-list -Wall -Wextra -pedantic \
+		 $(shell pkg-config --cflags pnicore) 
 LDFLAGS=$(shell pkg-config --libs pnicore)
 
 all: copy_file array_create array_inquery array_stl array_linear_access \

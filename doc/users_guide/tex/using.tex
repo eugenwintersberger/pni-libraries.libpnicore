@@ -1,7 +1,53 @@
 %%% description of how to use the library 
+\libpnicore\ provides a {\tt pkg-config} file. In the case of a system wide
+installation this file is most probably allready at the right place in the file
+system. One can easily check this with 
+\begin{minted}{bash}
+>> pkg-config --libs --cflags pnicore 
+\end{minted}
+for a system wide installation you should get something like this
+\begin{verbatim}
+-lpniio -lhdf5 -lz -lboost_filesystem -lpnicore -lboost_program_options -lboost_regex\
+-lboost_system 
+\end{verbatim}
+For installation locations which are not in the default paths of your system you
+may get some additional {\tt -I} and {\tt -L} output pointing to the directories
+where the header files and the library binaries are installed.
+If {\tt pkg-config} complains that it cannot find a package named {\tt pnicore}
+then you most probably have to set {\tt PKG\_CONFIG\_PATH} to the location where 
+the {\tt pkg-config} file of your \libpnicore\ installation has been installed. 
+
+\section{From the command line}
+
+If a single simple program should be compiled the following approach is
+suggested 
+\begin{verbatim}
+$> g++ -std=c++11 -O3 -oprogram program.cpp $(pkg-config --cflags --libs pnicore)
+\end{verbatim}
+Please recognize the {\tt -std=c++11} option. \libpnicore requires the use of a
+compiler which supports the new C++11 standard.
+
 
 \section{Within a Makefile}
 
+If {\tt make} should be used to build the code add the following lines to your
+{\tt Makefile}
+
+\begin{minted}{make}
+CPPFLAGS=-g -O3 -std=c++11 -fno-deduce-init-list -Wall -Wextra -pedantic \
+		 $(shell pkg-config --cflags pnicore) 
+LDFLAGS=$(shell pkg-config --libs pnicore)
+\end{minted}
+This will set the appropriate compiler and linker options for the build.
+
 \section{With Scons}
+
+If you use {\tt SCons} for building the code add the following to your {\tt
+SConstruct} file
+\begin{minted}{python}
+env = Environment()
+env.AppendUnique(CXXFLAGS=["-std=c++11","-pedantic","-Wall","-Wextra"])
+env.ParseConfig('pkg-config --cflags --libs pnicore')
+\end{minted}
 
 \section{With CMake}
