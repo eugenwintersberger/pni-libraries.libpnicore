@@ -7,8 +7,8 @@ system. One can easily check this with
 \end{minted}
 for a system wide installation you should get something like this
 \begin{verbatim}
--lpniio -lhdf5 -lz -lboost_filesystem -lpnicore -lboost_program_options -lboost_regex\
--lboost_system 
+-lpniio -lhdf5 -lz -lboost_filesystem -lpnicore -lboost_program_options\ 
+-lboost_regex -lboost_system 
 \end{verbatim}
 For installation locations which are not in the default paths of your system you
 may get some additional {\tt -I} and {\tt -L} output pointing to the directories
@@ -17,18 +17,20 @@ If {\tt pkg-config} complains that it cannot find a package named {\tt pnicore}
 then you most probably have to set {\tt PKG\_CONFIG\_PATH} to the location where 
 the {\tt pkg-config} file of your \libpnicore\ installation has been installed. 
 
+%%%============================================================================
 \section{From the command line}
 
 If a single simple program should be compiled the following approach is
 suggested 
 \begin{verbatim}
-$> g++ -std=c++11 -O3 -oprogram program.cpp $(pkg-config --cflags --libs pnicore)
+$> g++ -std=c++11 -O3 -oprogram program.cpp\
+       $(pkg-config --cflags --libs pnicore)
 \end{verbatim}
-Please recognize the {\tt -std=c++11} option. \libpnicore requires the use of a
-compiler which supports the new C++11 standard.
+Please recognize the {\tt -std=c++11} option. \libpnicore\ requires a state of
+the art compiler with full support for C++11.
 
-
-\section{Within a Makefile}
+%%%============================================================================
+\section{From within a Makefile}
 
 If {\tt make} should be used to build the code add the following lines to your
 {\tt Makefile}
@@ -40,6 +42,7 @@ LDFLAGS=$(shell pkg-config --libs pnicore)
 \end{minted}
 This will set the appropriate compiler and linker options for the build.
 
+%%%============================================================================
 \section{With Scons}
 
 If you use {\tt SCons} for building the code add the following to your {\tt
@@ -49,5 +52,12 @@ env = Environment()
 env.AppendUnique(CXXFLAGS=["-std=c++11","-pedantic","-Wall","-Wextra"])
 env.ParseConfig('pkg-config --cflags --libs pnicore')
 \end{minted}
+The {\tt ParseConfig} method of a {\tt SCons} environment is able to parse the
+output of {\tt pkg-config} and add the flags to the environments configuration.
 
+%%%============================================================================
 \section{With CMake}
+
+For \cmake\ package files are provides which makes integrating \libpnicore\ into
+other projects using \cmake\ rather easy.
+

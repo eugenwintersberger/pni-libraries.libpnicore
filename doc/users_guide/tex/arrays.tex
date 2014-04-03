@@ -65,14 +65,18 @@ All array types derived from {\tt mdarray} provide the following features
 along with STL algorithms.
 \end{enumerate}
 
+%%%============================================================================
 \section{Array construction and inquery}
     
 Constructing arrays is rather simple by means of the {\tt ::create} function
 provided by the array templates. The next example shows how to create arrays 
 using this static function
 
-\inputminted[fontsize=\small,linenos,firstline=24,frame=lines]{cpp}
-{../examples/array_create.cpp}
+\inputminted[fontsize=\small,
+             linenos,firstline=24,
+             frame=lines,
+             label=examples/array\_create.cpp]
+{cpp}{../examples/array_create.cpp}
 In line $12$ a concrete array type is defined from the {\tt dynamic\_array}
 utility template.
 The {\tt::create} function comes in three flavors as shown in the previous
@@ -87,8 +91,12 @@ array from this. In this case the storage container is allocated internally.
 After an array has been created we may want to retrieve some of its basic
 properties. In the next example we do exactly this 
 
-\inputminted[fontsize=\small,linenos,firstline=24,frame=lines]{cpp}
-{../examples/array_inquery.cpp}
+\inputminted[fontsize=\small,
+             linenos,
+             firstline=24,
+             frame=lines,
+             label=examples/array\_inquery.cpp]
+{cpp}{../examples/array_inquery.cpp}
 The important part is the implementation of the {\tt show\_info} function
 template starting at line $14$. The function template {\tt type\_id} is used in
 line $17$ to retrieve the type ID of the arrays element type. {\tt rank} in line
@@ -110,6 +118,7 @@ static_array_type a;
 a = {1,2,3,4,5};
 \end{minted}
 
+%%%============================================================================
 \section{Linear access to data}
 As already mentioned in the first section of this chapter, the array types
 provided by \libpnicore\ are fully STL compliant containers. They provided all
@@ -117,8 +126,12 @@ the iterators required by the STL.
 Before we have a look on STL lets first investigate how to simply access data
 elements in an array
 
-\inputminted[fontsize=\small,linenos,firstline=24,frame=lines]{cpp}
-{../examples/array_linear_access.cpp}
+\inputminted[fontsize=\small,
+             linenos,
+             firstline=24,
+             frame=lines,
+             label=examples/array\_linear\_access.cpp]
+{cpp}{../examples/array_linear_access.cpp}
 For all array types the new C++ {\em for-each} construction can be used as shown
 in lines $24$ and $34$. Unchecked access (no index bounds are checked) is
 provided via the {\tt []} operator as demonstrated in line $27$. Finally, in
@@ -127,13 +140,18 @@ $30$ and $31$.
 Some of the operations in this example can be done much more efficient with STL
 algorithms as demonstrated in the next example
 
-\inputminted[fontsize=\small,linenos,firstline=24,frame=lines]{cpp}
-{../examples/array_stl.cpp}
+\inputminted[fontsize=\small,
+             linenos,
+             firstline=24,
+             frame=lines,
+             label=examples/array\_stl.cpp]
+{cpp}{../examples/array_stl.cpp}
 In line $19$ {\tt std::fill} is used to initialize the array to $0$ and 
 {\tt std::generate} in line $25$ fills it with random numbers using a lambda
 expression . The rest of the example should be trivial (if not, please lookup a
 good C++ STL reference).
 
+%%%============================================================================
 \section{Multidimensional access}
 
 Though being an important feature, linear access to multidimensional arrays is
@@ -144,8 +162,12 @@ $(i,j)$ rather than the linear offset in memory.
 \libpnicore\ provides easy multidimensional access to the data stored in an
 array. The next example shows how to use this feature to work only on a small
 region of the image data as defined in the last example
-\inputminted[fontsize=\small,linenos,firstline=24,frame=lines]{cpp}
-{../examples/array_multiindex.cpp}
+\inputminted[fontsize=\small,
+             linenos,
+             firstline=24,
+             frame=lines,
+             label=examples/array\_multiindex.cpp]
+{cpp}{../examples/array_multiindex.cpp}
 The interesting part here are lines $36$ and $37$. You can pass the
 multidimensional indexes either as a variadic argument list to the  {\tt ()}
 operator of the array type (as in line $36$) or you can use a container like 
@@ -157,6 +179,7 @@ the variadic form when you know the number of dimensions the array has and
 containers only in those cases where this information is only available at
 runtime.
 
+%%%============================================================================
 \section{Array views and slicing}
 
 In the previous example multiindex access was used to do work on only a small
@@ -164,8 +187,12 @@ part of the image data. \libpnicore\ provides view types for arrays which would
 make these operations easier. Views are created by passing instances of {\tt
 slice} to the {\tt ()} operator of an array type. Slices in \libpnicore\ work
 pretty much the same as in python. Lets have a look on the following example
-\inputminted[fontsize=\small,linenos,firstline=24,frame=lines]{cpp}
-{../examples/array_view.cpp}
+\inputminted[fontsize=\small,
+             linenos,
+             firstline=24,
+             frame=lines,
+             label=examples/array\_view.cpp]
+{cpp}{../examples/array_view.cpp}
 The view is created in line $30$ where the slices are passed instead of integer
 indices to the {\tt ()} operator. A slice selects an entire index range along a
 dimension. The first argument to the {\tt slice} constructor is the starting
@@ -180,7 +207,11 @@ STL algorithms as shown in lines $31$ and $33$.
 
 View types can be copied and moved and thus can be stored in STL containers as
 shown in the next example
-\inputminted[fontsize=\small,linenos,firstline=24,frame=lines]{cpp}
+\inputminted[fontsize=\small,
+             linenos,
+             firstline=24,
+             frame=lines,
+             label=examples/array\_view\_container.cpp]{cpp}
 {../examples/array_view_container.cpp}
 Here we apply the algorithms from the previous example not to a single but to
 several selections in the image. As shown in lines $32$ to $34$ we can safely
@@ -191,6 +222,7 @@ algorithms only for entire arrays. If it should be applied to only a part of an
 array we can use a view and pass it to the algorithm. As views expose the same
 interface as an array the algorithm should work on views too.
 
+%%%============================================================================
 \section{Arithmetic expressions}
 
 Array and view types fully support the common arithmetic
@@ -201,31 +233,52 @@ to optimize the code.
 Views, arrays and scalars can be mixed within all arithmetic expressions. 
 There is nothing magical with expression templates as they work entirely
 transparent to the user. Just use the arithmetic expressions as you are used to
-\inputminted[fontsize=\small,linenos,firstline=24,frame=lines]{cpp}
-{../examples/array_arithmetic1.cpp}
+\inputminted[fontsize=\small,
+             linenos,
+             firstline=24,
+             frame=lines,
+             label=examples/array\_arithmetic1.cpp]
+{cpp}{../examples/array_arithmetic1.cpp}
 The important line here is $24$ where arrays and scalars are mixed in an
 arithmetic expression.
 One can also mix arrays, selections, and scalars as the next examples 
 shows
-\inputminted[fontsize=\small,linenos,firstline=24,frame=lines]{cpp}
-{../examples/array_arithmetic2.cpp}
+\inputminted[fontsize=\small,
+             linenos,
+             firstline=24,
+             frame=lines,
+             label=examples/array\_arithmetic2.cpp]
+{cpp}{../examples/array_arithmetic2.cpp}
 In line $30$ a single image frame is selected from a stack of images and used in
 line $31$ in an arithmetic expression. In fact, what we are doing here is,
 we are writing the corrected data back on the stack since {\tt curr\_frame} is
 just a view on the particular image in the stack.
 
+%%%============================================================================
 \section{Some more elaborate example}
 \subsection{Matrix-vector multiplications}
 In the last example matrix vector multiplications are treated. The full code can
 be viewed in {\tt array\_arithmetic3.cpp} in the source distribution. But lets
 first start with the header
-\inputminted[fontsize=\small,linenos,firstline=24,lastline=39,firstnumber=24,frame=lines]{cpp}
-{../examples/array_arithmetic3.cpp}
+\inputminted[fontsize=\small,
+             linenos,
+             firstline=24,
+             lastline=39,
+             firstnumber=24,
+             frame=lines,
+             label=examples/array\_arithmetic3.cpp]
+{cpp}{../examples/array_arithmetic3.cpp}
 Besides including all required header files matrix and vector templates are 
 defined in lines $37$ and $38$ using the new C++11 template aliasing.
 
-\inputminted[fontsize=\small,linenos,firstline=40,lastline=63,firstnumber=40,frame=lines]{cpp}
-{../examples/array_arithmetic3.cpp}
+\inputminted[fontsize=\small,
+             linenos,
+             firstline=40,
+             lastline=63,
+             firstnumber=40,
+             frame=lines,
+             label=examples/array\_arithmetic3.cpp]
+{cpp}{../examples/array_arithmetic3.cpp}
 In lines $42$ and $57$ output operators are defined for vectors and matrices.
 These will allow us to write the data to a stream. 
 
@@ -237,8 +290,14 @@ block. In other words
 \end{align}
 with $A$ denoting a $N\times N$ matrix and $\mathbf{r}$ and $\mathbf{v}$ are
 $N$-dimensional vectors. In all formulas Einsteins sum convention is used.
-\inputminted[fontsize=\small,linenos,firstline=64,lastline=80,firstnumber=64,frame=lines]{cpp}
-{../examples/array_arithmetic3.cpp}
+\inputminted[fontsize=\small,
+             linenos,
+             firstline=64,
+             lastline=80,
+             firstnumber=64,
+             frame=lines,
+             label=examples/array\_arithmetic3.cpp]
+{cpp}{../examples/array_arithmetic3.cpp}
 In line $74$ we select the $i$-th row of the matrix and compute the inner
 product of the row vector and the input vector in line $75$. 
 The vector matrix multiplication
@@ -246,22 +305,40 @@ The vector matrix multiplication
  \mathbf{r} = \mathbf{v}A\mbox{ or } r_i = v_j A_{j,i}
 \end{align}
 is computed analogously 
-\inputminted[fontsize=\small,linenos,firstline=80,lastline=95,firstnumber=80,frame=lines]{cpp}
-{../examples/array_arithmetic3.cpp}
+\inputminted[fontsize=\small,
+             linenos,
+             firstline=80,
+             lastline=95,
+             firstnumber=80,
+             frame=lines,
+             label=examples/array\_arithmetic3.cpp]
+{cpp}{../examples/array_arithmetic3.cpp}
 despite the fact that we are choosing the appropriate column instead of a row in 
 line $90$. Finally we need an implementation for the matrix - matrix
 multiplication
 \begin{align}
 C = AB \mbox{ or } C_{i,j} = A_{i,k}B_{k,j}
 \end{align}
-\inputminted[fontsize=\small,linenos,firstline=96,lastline=115,firstnumber=96,frame=lines]{cpp}
-{../examples/array_arithmetic3.cpp}
+\inputminted[fontsize=\small,
+             linenos,
+             firstline=96,
+             lastline=115,
+             firstnumber=96,
+             frame=lines,
+             label=examples/array\_arithmetics3.cpp]
+{cpp}{../examples/array_arithmetic3.cpp}
 The rows and columns are selected in lines $107$ and $108$ respectively. 
 Line $109$ finally computes the inner product of the row and column vector.
 
 Finally the main program shows a simple application of these template functions. 
-\inputminted[fontsize=\small,linenos,firstline=116,lastline=138,firstnumber=116,frame=lines]{cpp}
-{../examples/array_arithmetic3.cpp}
+\inputminted[fontsize=\small,
+             linenos,
+             firstline=116,
+             lastline=138,
+             firstnumber=116,
+             frame=lines,
+             label=examples/array\_arithemtic3.cpp]
+{cpp}{../examples/array_arithmetic3.cpp}
 It is important to understand that the appropriate function is determined by the
 types of the arguments (vector or matrix). This is a rather nice example of how
 to use the typing system of C++ to add meaning to objects.

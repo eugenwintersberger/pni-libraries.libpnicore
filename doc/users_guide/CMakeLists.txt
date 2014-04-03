@@ -2,6 +2,7 @@
 
 #get all the sources for the documentation
 set(PDFLATEX_COMPILER pdflatex)
+set(BIBTEX_COMMAND bibtex)
 set(SOURCES libpnicore_ug.tex
             tex/appendix_multidim_arrays.tex
             tex/array_general_concepts.tex
@@ -12,10 +13,13 @@ set(SOURCES libpnicore_ug.tex
             pics/array_3d_forder.pdf
             pics/array_3d.pdf
             pics/md_array_basic_structure.png
+            pics/pni-cpp-libraries.pdf
     )
 
 
 add_custom_command(OUTPUT libpnicore_ug.pdf 
+                   COMMAND ${PDFLATEX_COMPILER} -shell-escape libpnicore_ug.tex
+                   COMMAND ${BIBTEX_COMMAND} libpnicore_ug
                    COMMAND ${PDFLATEX_COMPILER} -shell-escape libpnicore_ug.tex
                    COMMAND ${PDFLATEX_COMPILER} -shell-escape libpnicore_ug.tex
                    DEPENDS ${SOURCES}

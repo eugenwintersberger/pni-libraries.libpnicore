@@ -1,5 +1,8 @@
 *.aux
 *.out
-*.pdf
+libpnicore_ug.pdf
 *.toc
 *.lox
+*.bbl
+*.bib
+*.blg

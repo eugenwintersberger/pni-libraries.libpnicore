@@ -1,0 +1,19 @@
+<?xml version="1.0" ?>
+<!--GENERATED FILE, PLEASE DO NOT EDIT!!!--><EXT object="record reader example" version="3">
+  <DEPS>
+    <ID name="record reader example" mc="AnalystProject" uid="f2dbe746-8781-49d5-af8f-85128cdefecb"/>
+    <COMPID name="record reader example" mc="PropertyContainer" uid="087e6bfa-6071-4dc2-8b1b-e63c1ae84375"/>
+  </DEPS>
+  <OBJECT>
+    <ID name="record reader example" mc="AnalystProject" uid="f2dbe746-8781-49d5-af8f-85128cdefecb"/>
+    <ATTRIBUTES>
+      <ATT name="Name"><![CDATA[record reader example]]></ATT>
+      <ATT name="status">1970354901745664</ATT>
+    </ATTRIBUTES>
+    <DEPENDENCIES>
+      <COMP relation="PropertyRoot">
+        <COMPID name="record reader example" mc="PropertyContainer" uid="087e6bfa-6071-4dc2-8b1b-e63c1ae84375"/>
+      </COMP>
+    </DEPENDENCIES>
+  </OBJECT>
+</EXT>

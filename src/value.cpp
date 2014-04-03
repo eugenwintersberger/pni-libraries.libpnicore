@@ -84,6 +84,12 @@ namespace core{
 
         return stream;
     }
+
+    //-------------------------------------------------------------------------
+    type_id_t type_id(const value &v)
+    {
+        return v.type_id();
+    }
 //end of namespace
 }
 }

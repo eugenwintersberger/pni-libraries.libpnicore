@@ -1,5 +1,7 @@
 \documentclass[a4paper,draft]{scrbook}
-\usepackage{a4wide,amsmath,graphics}
+\usepackage{a4wide,amsmath}
+\usepackage[final]{graphicx}
+\usepackage[square,numbers]{natbib}
 \usepackage[draft=false]{hyperref}  %% need this for links and references in the document
 \usepackage{array}     %% need this for more table formating (m{} and p{})
 \usepackage{url}       %% support for URLs
@@ -34,6 +36,8 @@
 \newcommand{\cmake}{{\tt cmake}}
 \newcommand{\pkgconfig}{{\tt pkg-config}}
 \newcommand{\gcc}{{\tt gcc}}
+
+\bibliographystyle{plainnat}
 
 \begin{document}
 \maketitle
@@ -75,5 +79,7 @@
 \chapter{Some internals on multidimensional arrays}
 \input{tex/appendix_multidim_arrays.tex}
 \FloatBarrier
+
+\bibliography{libpnicore_ug}
 
 \end{document}

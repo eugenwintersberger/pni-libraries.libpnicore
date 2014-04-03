@@ -255,6 +255,19 @@ namespace core{
     //!
     std::istream &operator>>(std::istream &stream,value &v);
 
+    //-------------------------------------------------------------------------
+    //! 
+    //! \ingroup type_erasure_classes
+    //! \brief get type ID
+    //! 
+    //! Overload of type_id to obtain the type ID of the element stored in the 
+    //! type erasure.
+    //! 
+    //! \param v reference to value 
+    //! \return type ID of the erased type
+    //!
+    type_id_t type_id(const value &rv);
+
 //end of namespace
 }
 }
