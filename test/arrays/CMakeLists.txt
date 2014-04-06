@@ -9,6 +9,7 @@ set(SOURCES array_selection_test.cpp
             mdarray_unary_arithmetic_test.cpp
             scalar_test.cpp
             static_mdarray_test.cpp
+            array_view_utils_test.cpp
     )
 
 

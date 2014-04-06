@@ -24,6 +24,13 @@
 
 #pragma once
 
+#include <functional>
+#include <boost/mpl/contains.hpp>
+#include <boost/mpl/vector.hpp>
+#include <boost/mpl/placeholders.hpp>
+#include <boost/mpl/count_if.hpp>
+#include <boost/mpl/size.hpp>
+
 namespace pni{
 namespace core{
 
@@ -37,16 +44,16 @@ namespace core{
     std::array<size_t,sizeof...(IT)>{{size_t(i)...}}
 
 #define IS_INDEX(IT)\
-    is_valid_index<IT...>::value
+    is_index_types<IT...>::value
 
 #define ENABLE_VALID_INDEX(IT)\
     typename std::enable_if<IS_INDEX(IT)>::type
 
 #define ENABLE_VIEW_CONT(TYPE)\
-    typename std::enable_if<is_view_cont<TYPE>::value >::type
+    typename std::enable_if<!is_index_type<TYPE>::value && is_view_cont<TYPE>::value >::type
 
 #define ENABLE_ELEMENT_CONT(TYPE)\
-    typename std::enable_if<!is_view_cont<TYPE>::value >::type
+    typename std::enable_if<!is_index_type<TYPE>::value && !is_view_cont<TYPE>::value >::type
 
 #define VIEW_TYPE(AT,IT)\
     typename array_view_trait<AT,IS_VIEW(ITYPES)>::type
@@ -54,6 +61,51 @@ namespace core{
 #define CONST_VIEW_TYPE(AT,IT)\
     typename array_view_trait<const AT,IS_VIEW(ITYPES)>::const_type
 
+    //!
+    //! \ingroup mdim_array_internal_classes
+    //! \brief check if an index type is a valid index type
+    //!
+    //! Index types are all integer types and slice.
+    //!
+    //! \tparam T type to check
+    //!
+    template<typename T>
+    struct is_index_type
+    {
+        //! true if T is integer or a slice type, false otherwise
+        static const bool value = std::is_integral<T>::value || 
+                                  std::is_same<T,slice>::value;
+    };
+
+    //-------------------------------------------------------------------------
+    //!
+    //! \ingroup mdim_array_internal_classes
+    //! \brief check a set of types for index 
+    //!
+    //! This template checks a range of types whether or not they are index 
+    //! types. If all of the types are index types the member value is true.
+    //! Otherwise it is false.
+    //!
+    //! \tparam ITYPES variadic set of types to check
+    //!
+    template<typename ...ITYPES>
+    struct is_index_types
+    {
+        template<typename T> 
+        struct is_index_type_pred
+        {
+            typedef is_index_type<T> type;
+        };
+
+        using _ = boost::mpl::placeholders::_;
+        typedef typename boost::mpl::vector<ITYPES...> types;
+        typedef boost::mpl::count_if<types,is_index_type_pred<_>> n_index_types;
+
+        static const bool value = n_index_types::value ==
+            int(boost::mpl::size<types>::value);
+    };
+
+    //-------------------------------------------------------------------------
     //!
     //! \ingroup mdim_array_internal_classes
     //! \brief checks for view index
@@ -135,6 +187,11 @@ namespace core{
         static const bool value = 
             is_valid_index<value_type>::value &&
             is_view_index<value_type>::value;
+    };
+
+    template<> struct is_view_cont<slice>
+    {
+        static const bool value = false;
     };
 
   
@@ -284,7 +341,8 @@ namespace core{
         template<
                  typename CTYPE,
                  typename MAP,
-                 typename ITYPE
+                 typename ITYPE,
+                 typename = typename std::enable_if<!is_index_type<ITYPE>::value>::type
                 >
         static ref_type get_reference(CTYPE &c,MAP &map,const ITYPE &index)
         {
@@ -428,7 +486,8 @@ namespace core{
         template<
                  typename CTYPE,
                  typename MAP,
-                 typename ITYPE
+                 typename ITYPE,
+                 typename = typename std::enable_if<!is_index_type<ITYPE>::value>::type
                 >
         static ref_type get_reference(CTYPE &c,MAP &map,const ITYPE &i)
         {

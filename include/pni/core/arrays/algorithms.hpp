@@ -106,6 +106,12 @@ namespace core{
         return a.size();
     }
 
+    template<typename CTYPE>
+    const typename CTYPE::value_type *data(const CTYPE &c)
+    {
+        return c.data();
+    }
+
 //end of namespace
 }
 }

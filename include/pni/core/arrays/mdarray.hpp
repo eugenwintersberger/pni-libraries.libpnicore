@@ -34,8 +34,6 @@
 #include<cstdio>
 #include<memory>
 
-#include <boost/mpl/contains.hpp>
-#include <boost/mpl/vector.hpp>
 
 #include "../error/exception_utils.hpp"
 #include "../types/types.hpp"
