@@ -18,7 +18,7 @@
 //
 // ============================================================================
 //
-//  Created on: Apr 7, 2014
+//  Created on: Apr 8, 2014
 //      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
 //
 
@@ -28,53 +28,45 @@
 #include <vector>
 #include <list>
 
-#include "check_equal_size_test.hpp"
+#include "check_index_in_dim_test.hpp"
 
-CPPUNIT_TEST_SUITE_REGISTRATION(check_equal_size_test);
+CPPUNIT_TEST_SUITE_REGISTRATION(check_index_in_dim_test);
 
 //-----------------------------------------------------------------------------
-void check_equal_size_test::setUp()
+void check_index_in_dim_test::setUp()
 {
     
 }
 
 //-----------------------------------------------------------------------------
-void check_equal_size_test::tearDown()
+void check_index_in_dim_test::tearDown()
 {
 }
 
 //-----------------------------------------------------------------------------
-void check_equal_size_test::test_no_throw()
+void check_index_in_dim_test::test_no_throw()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
     
-    std_vector = vector_type(10);
-
-    CPPUNIT_ASSERT(check_equal_size(std_vector,std_array));
-    CPPUNIT_ASSERT(check_equal_size(std_vector,sarray_1));
-
-    fdarray_1 = fixed_dim_array<size_t,2>::create(shape_t{4,10});
-    CPPUNIT_ASSERT(!check_equal_size(fdarray_1,std_vector));
-    CPPUNIT_ASSERT(!check_equal_size(fdarray_1,sarray_1));
-
-    vector_type v1,v2;
-    CPPUNIT_ASSERT(check_equal_size(v1,v2));
+    CPPUNIT_ASSERT(check_index_in_dim(0,100));
+    CPPUNIT_ASSERT(check_index_in_dim(10,100));
+    CPPUNIT_ASSERT(check_index_in_dim(99,100));
+    CPPUNIT_ASSERT(!check_index_in_dim(100,100));
+    CPPUNIT_ASSERT(!check_index_in_dim(101,100));
 
 }
 
 //-----------------------------------------------------------------------------
-void check_equal_size_test::test_throw()
+void check_index_in_dim_test::test_throw()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
-    std_vector = vector_type(100);
-
-    CPPUNIT_ASSERT_THROW(check_equal_size(std_vector,std_array,EXCEPTION_RECORD)
-                         ,size_mismatch_error);
-    CPPUNIT_ASSERT_THROW(check_equal_size(sarray_1,std_vector,EXCEPTION_RECORD),
-                         size_mismatch_error);
-
-    vector_type v1,v2;
-    CPPUNIT_ASSERT_NO_THROW(check_equal_size(v1,v2));
+    CPPUNIT_ASSERT_NO_THROW(check_index_in_dim(0,100,EXCEPTION_RECORD));
+    CPPUNIT_ASSERT_NO_THROW(check_index_in_dim(10,100,EXCEPTION_RECORD));
+    CPPUNIT_ASSERT_NO_THROW(check_index_in_dim(99,100,EXCEPTION_RECORD));
+    CPPUNIT_ASSERT_THROW(check_index_in_dim(100,100,EXCEPTION_RECORD),
+                         index_error);
+    CPPUNIT_ASSERT_THROW(check_index_in_dim(101,100,EXCEPTION_RECORD),
+                         index_error);
 }
 
