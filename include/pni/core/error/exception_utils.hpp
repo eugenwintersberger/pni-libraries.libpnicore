@@ -1,27 +1,27 @@
-//!
-//! (c) Copyright 2011 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
-//!
-//! This file is part of libpnicore.
-//!
-//! libpnicore is free software: you can redistribute it and/or modify
-//! it under the terms of the GNU General Public License as published by
-//! the Free Software Foundation, either version 2 of the License, or
-//! (at your option) any later version.
-//!
-//! libpnicore is distributed in the hope that it will be useful,
-//! but WITHOUT ANY WARRANTY; without even the implied warranty of
-//! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//! GNU General Public License for more details.
-//!
-//! You should have received a copy of the GNU General Public License
-//! along with lipniutils.  If not, see <http://www.gnu.org/licenses/>.
-//!
-//! ===========================================================================
-//!
-//! Created on: May 23, 2012
-//!     Author: Eugen Wintersberger
-//!
-//!
+//
+// (c) Copyright 2011 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
+//
+// This file is part of libpnicore.
+//
+// libpnicore is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+//
+// libpnicore is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with lipniutils.  If not, see <http://www.gnu.org/licenses/>.
+//
+// ============================================================================
+//
+// Created on: May 23, 2012
+//     Author: Eugen Wintersberger
+//
+//
 #pragma once
 
 #include <vector>
@@ -297,6 +297,7 @@ namespace core{
     //! 
     //! \tparam A container type for the first shape
     //! \tparam B container type for the second shape
+    //! \throws size_mismatch_error if array sizes do not match
     //! \throws shape_mismatch_error if shapes do not match
     //! \param a first shape
     //! \param b second shape
@@ -308,7 +309,7 @@ namespace core{
         check_equal_size(a,b,i);
         check_equal_rank(a,b,i);
 
-        if(!check_equal_size(a,b))
+        if(!check_equal_shape(a,b))
         {
             std::stringstream ss;
             ss<<"Shape of "<<demangle_cpp_name(typeid(a).name())<<" (";
