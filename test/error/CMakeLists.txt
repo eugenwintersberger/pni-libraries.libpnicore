@@ -1,6 +1,7 @@
 #need to define the version of the library
 set(SOURCES error_test.cpp check_equal_size_test.cpp 
-            check_index_in_dim_test.cpp check_indexes_test.cpp)
+            check_index_in_dim_test.cpp check_indexes_test.cpp 
+            check_equal_rank_test.cpp)
 
 
 link_directories("${CMAKE_CURRENT_BINARY_DIR}/../../src")
