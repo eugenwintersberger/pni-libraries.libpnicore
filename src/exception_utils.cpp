@@ -28,13 +28,20 @@
 namespace pni{
 namespace core{
 
-    //-------------------------------------------------------------------------
-    void check_index(size_t index,size_t maxindex,const exception_record &i)
+    //------------------------------------------------------------------------
+    bool check_index_in_dim(size_t index,size_t dimsize)
     {
-        if(index>=maxindex)
+        return index<dimsize;
+    }
+
+    //-------------------------------------------------------------------------
+    void check_index_in_dim(size_t index,size_t dimsize,
+                            const exception_record &i)
+    {
+        if(!check_index_in_dim(index,dimsize))
         {
             std::stringstream ss;
-            ss<<"Index ("<<index<<") exceeds maximum value ("<<maxindex<<")!";
+            ss<<"Index ("<<index<<") exceeds dimension range ("<<dimsize<<")!";
             throw index_error(i,ss.str());
         }
     }

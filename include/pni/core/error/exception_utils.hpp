@@ -34,25 +34,64 @@
 namespace pni{
 namespace core{
 
-    //=====================Exception related helper functions==================
-    /*!
-    \ingroup error_classes
-    \brief check if two objects have different size
-    
-    This utilty function can be used to check for the equality of the size of
-    two objects. It is typically used to compare the size of a shape and a 
-    buffer or any other container object. 
-    If the sizes do not match an exception is thrown.
-    \throws size_mismatch_error if sizes do not match
-    \param a first object
-    \param b second object
-    \param i exception_record for the location where to perform the check
-    performed
-    */
-    template<typename A,typename B> 
-        void check_equal_size(const A &a,const B &b,const exception_record &i)
+    template<typename VTYPE>
+    void print_vector(std::ostream &o,const VTYPE &v)
     {
-        if(a.size() != b.size())
+        o<<"( ";
+        for(auto x: v) o<<x<<" ";
+        o<<")";
+    }
+
+    //=====================Exception related helper functions==================
+    //!
+    //! \ingroup error_class
+    //! \brief check if two container have equal size
+    //! 
+    //! This helper function checks if two container instances have equal size
+    //! and returns true if this is the case. Otherwise false will be returned.
+    //! Both container types have to provide a size() method returning the 
+    //! number of elements the container can hold. 
+    //! 
+    //! \tparam A first container type
+    //! \tparam B second container type
+    //! \param a reference to an instance of A
+    //! \param b reference to an instance of B
+    //! \return true if a and b have same size, false otherwise
+    //! 
+    template<
+             typename A,
+             typename B
+            >
+    bool check_equal_size(const A &a,const B &b) 
+    {
+        return a.size() == b.size();
+    }
+
+    //-------------------------------------------------------------------------
+    //!
+    //! \ingroup error_classes
+    //! \brief check if two objects have different size
+    //! 
+    //! This utilty function can be used to check for the equality of the size 
+    //! of two objects. It is typically used to compare the size of a shape 
+    //! and a buffer or any other container object. 
+    //! If the sizes do not match an exception is thrown.
+    //! 
+    //! \throws size_mismatch_error if sizes do not match
+    //! \tparam A first container type
+    //! \tparam B second container type
+    //! \param a instance of container type A
+    //! \param b instance of container type B
+    //! \param i exception_record for the location where to perform the check
+    //! performed
+    //!
+    template<
+             typename A,
+             typename B
+            > 
+    void check_equal_size(const A &a,const B &b,const exception_record &i)
+    {
+        if(!check_equal_size(a,b))
         {
             std::stringstream ss;
             ss<<"Size of "<<demangle_cpp_name(typeid(A).name())<<" (";
@@ -64,112 +103,221 @@ namespace core{
     }
 
     //-------------------------------------------------------------------------
-    /*!
-    \ingroup error_classes
-    \brief check index 
-
-    This utilty function can be used to check if an index exeeds a particular
-    value.
-    \throws index_error if i exceeds imax
-    \param index actual index
-    \param maxindex maximum value
-    \param i exception_record for the location where to perform the check
-    performed
-    */
-    void check_index(size_t index,size_t maxindex,const exception_record &i);
+    //! 
+    //! \ingroup error_classes
+    //! \brief check index in dim
+    //!
+    //! Check if an index resides within a dimension range. The index must be
+    //! than the size of the dimension. If the index is within the dimension 
+    //! size true is returned. false otherwise.
+    //! 
+    //! \param index the index to check
+    //! \param dimsize size of the dimension
+    //! \return true if index<dimsize, flase otherwise
+    //! 
+    bool check_index_in_dim(size_t index,size_t dimsize);
 
     //-------------------------------------------------------------------------
-    /*!
-    \ingroup error_classes
-    \brief check indexes
+    //!
+    //! \ingroup error_classes
+    //! \brief check index in dim
+    //!
+    //! Throwing version of check_index_in_dim. Throws an index_error 
+    //! exception if the index is not within the dimension range.
+    //! 
+    //! \throws index_error if i exceeds dimsize
+    //! \param index actual index
+    //! \param dimsize dimension size
+    //! \param i exception_record for the location where to perform the check
+    //! performed
+    //!
+    void check_index_in_dim(size_t index,size_t dimsize,
+                            const exception_record &i);
 
-    Checks if all indexes stored in a container lie within a given range
-    determined by the shape. In addition the function checks if the number of
-    indexes matches the number of elements in the shape. 
+    //-------------------------------------------------------------------------
+    //!
+    //! \ingroup error_classes
+    //! \brief check indexes
+    //! 
+    //! Check if all index values stored in a container do not exceed 
 
-    \throws index_error if one of the indexes exceeds the number of elements in
-    its dimension
-    \throws shape_mismatch_error if the number of indexes does not match the
-    number of dimensions (elements in the shape)
-    \tparam ITYPE index container type
-    \tparam STYPE shape container type
-    \param index container with index data
-    \param shape container with shape data
-    \param record the exception record of the calling function
-    */
-    template<typename ITYPE,typename STYPE>
-    void check_indexes(const ITYPE &index,const STYPE &shape,
-                       const exception_record &record)
+    template<
+             typename ITYPE,
+             typename STYPE
+            >
+    bool check_indexes(const ITYPE &index,const STYPE &shape)
     {
-        //check size
-        if(index.size() != shape.size())
-        {
-            std::stringstream ss;
-            ss<<"Number of indexes ("<<index.size()<<") does not match ";
-            ss<<"the rank of the shape ("<<shape.size()<<")!";
-            throw shape_mismatch_error(record,ss.str());
-        }
+        if(!check_equal_size(index,shape)) return false;
 
         auto iiter = index.begin();
         auto siter = shape.begin();
-        for(;iiter!=index.end();++iiter,++siter)
-            check_index(*iiter,*siter,record);
 
+        for(;iiter!=index.end();++iiter,++siter)
+            if(*iiter>=*siter) return false;
+
+        return true;
+    }
+
+    //-------------------------------------------------------------------------
+    //!
+    //! \ingroup error_classes
+    //! \brief check indexes
+    //!
+    //! Checks if all indexes stored in a container lie within a given range
+    //! determined by the shape. In addition the function checks if the number 
+    //! of indexes matches the number of elements in the shape. 
+    //!
+    //! \throws index_error if one of the indexes exceeds the number of 
+    //! elements in its dimension
+    //! \throws shape_mismatch_error if the number of indexes does not match 
+    //! the number of dimensions (elements in the shape)
+    //! \tparam ITYPE index container type
+    //! \tparam STYPE shape container type
+    //! \param index container with index data
+    //! \param shape container with shape data
+    //! \param record the exception record of the calling function
+    //!
+    template<
+             typename ITYPE,
+             typename STYPE
+            >
+    void check_indexes(const ITYPE &index,const STYPE &shape,
+                       const exception_record &record)
+    {
+        //check size - if it does not match throw an exception
+        if(!check_equal_size(index,shape))
+        {
+            std::stringstream ss;
+            ss<<"Rank of index vector ("<<index.size()<<") does not match ";
+            ss<<"the rank of the shape vector ("<<shape.size()<<")!";
+            throw shape_mismatch_error(record,ss.str());
+        }
+       
+        //if sizes of the vectors match check the individual ranges. 
+        if(!check_indexes(index,shape))
+        {
+            std::stringstream ss;
+            ss<<"Indexes ";
+            print_vector(ss,index);
+            ss<<" do not match shape ";
+            print_vector(ss,shape);
+            ss<<std::endl;
+
+            throw index_error(record,ss.str());
+        }
+
+    }
+
+    //-------------------------------------------------------------------------
+    //!
+    //! \ingroup error_classes
+    //! \brief check equal rank
+    //! 
+    //! Return true of the two array like objects have an equal number of 
+    //! dimensions. In any other case return false.
+    //! 
+    //! \tparam A first array type
+    //! \tparam B second array type
+    //! \param a reference to an instance of A
+    //! \param b reference to an instance of B
+    //! \return true if a and b have equal rank, false otherwise
+    //! 
+    template<
+             typename A,
+             typename B
+            >
+    bool check_equal_rank(const A &a,const B &b)
+    {
+        return a.rank() == b.rank();
+    }
+
+    //-------------------------------------------------------------------------
+    //! 
+    //! \ingroup error_classes
+    //! \brief check equal rank 
+    //! 
+    //! Throwing version of check_equal_rank. 
+    //!
+    //! \throws shape_mismatch_error if a and b have different rank
+    //! \tparam A first array type
+    //! \tparam B second array type
+    //! \param a reference to an instance of A
+    //! \param b reference to an instance of B
+    //!
+    template<
+             typename A,
+             typename B
+            >
+    void check_equal_rank(const A &a,const B &b,const exception_record &i)
+    {
+        if(!check_equal_rank(a,b))
+        {
+            std::stringstream ss;
+            ss<<"Rank of "<<demangle_cpp_name(typeid(a).name())<<" (";
+            ss<<a.rank()<<") does not match that of ";
+            ss<<demangle_cpp_name(typeid(b).name())<<" (";
+            ss<<b.rank()<<")!";
+            throw shape_mismatch_error(i,ss.str());
+        }
+    }
+
+    //-------------------------------------------------------------------------
+    //! 
+    //! \ingroup error_classes
+    //! \brief check for shape equality 
+    //! 
+    //! 
+    template<
+             typename A,
+             typename B
+            >
+    bool check_equal_shape(const A &a,const B &b)
+    {
+        //check if the sizes match
+        if(!check_equal_size(a,b)) return false;
+        if(!check_equal_rank(a,b)) return false;
+
+        auto sa = a.template shape<std::vector<size_t> >();
+        auto sb = b.template shape<std::vector<size_t> >();
+        
+        if(!std::equal(sa.begin(),sa.end(),sb.begin()))
+            return false;
+
+        return true;
     }
 
 
     //-------------------------------------------------------------------------
-    /*!
-    \ingroup error_classes
-    \brief check shape equality
-
-    Checks if two Shape objects are equal and throws an exception if they are
-    not.
-    \tparam A container type for the first shape
-    \tparam B container type for the second shape
-    \throws shape_mismatch_error if shapes do not match
-    \param a first shape
-    \param b second shape
-    \param i exception_record for the location where to perform the check
-    */
+    //!
+    //! \ingroup error_classes
+    //! \brief check shape equality
+    //! 
+    //! Checks if two Shape objects are equal and throws an exception if they 
+    //! are not.
+    //! 
+    //! \tparam A container type for the first shape
+    //! \tparam B container type for the second shape
+    //! \throws shape_mismatch_error if shapes do not match
+    //! \param a first shape
+    //! \param b second shape
+    //! \param i exception_record for the location where to perform the check
+    //!
     template<typename A,typename B>
     void check_equal_shape(const A &a,const B &b,const exception_record &i)
     {
-        auto sa = a.template shape<std::vector<size_t> >();
-        auto sb = b.template shape<std::vector<size_t> >();
+        check_equal_size(a,b,i);
+        check_equal_rank(a,b,i);
 
-        if((sa.size()!=sb.size()) ||
-           (!std::equal(sa.begin(),sa.end(),sb.begin())))
+        if(!check_equal_size(a,b))
         {
-            //assemble error string
             std::stringstream ss;
-            ss<<"Shapes ( ";
-#ifdef NOFOREACH
-            for(auto iter = sa.begin();iter!=sa.end();++iter)
-            {
-                auto v = *iter;
-#else
-            for(auto v: sa)
-            {
-#endif
-                std::cout<<v<<" ";
-            }
-            ss<<") and ( ";
-#ifdef NOFOREACH
-            for(auto iter = sb.begin();iter!=sb.end();++iter)
-            {
-                auto v = *iter;
-#else
-            for(auto v: sb)
-            {
-#endif 
-                std::cout<<v<<" ";
-            }
-            ss<<") do not match";
-
-            //construct exception
+            ss<<"Shape of "<<demangle_cpp_name(typeid(a).name())<<" (";
+            ss<<a.size()<<") does not match that of ";
+            ss<<demangle_cpp_name(typeid(b).name())<<" (";
+            ss<<b.size()<<")!";
             throw shape_mismatch_error(i,ss.str());
         }
+
     }
 
     //-------------------------------------------------------------------------
@@ -183,8 +331,8 @@ namespace core{
     \param o object to check
     \param i exception_record for the location where to perform the check
     */
-    template<typename OTYPE> void
-        check_allocation_state(const OTYPE &o,const exception_record &i)
+    template<typename OTYPE> 
+    void check_allocation_state(const OTYPE &o,const exception_record &i)
     {
         if(!o.size())
         {
@@ -196,17 +344,17 @@ namespace core{
     }
 
     //-------------------------------------------------------------------------
-    /*! 
-    \ingroup error_classes
-    \brief check pointer state
-
-    Checks if a pointer is nullptr or not and throws an exception if it is.
-    \throws memory_not_allocated_error if pointer is a nullptr
-    \param ptr pointer to check
-    \param i exception_record for the location where to perform the check
-    */
+    //! 
+    //! \ingroup error_classes
+    //! \brief check pointer state
+    //!
+    //! Checks if a pointer is nullptr or not and throws an exception if it is.
+    //! \throws memory_not_allocated_error if pointer is a nullptr
+    //! \param ptr pointer to check
+    //! \param i exception_record for the location where to perform the check
+    //!
     template<typename T> 
-        void check_ptr_state(const T *ptr,const exception_record &i)
+    void check_ptr_state(const T *ptr,const exception_record &i)
     {
         if(!ptr)
         {

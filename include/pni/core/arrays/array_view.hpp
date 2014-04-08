@@ -370,7 +370,7 @@ namespace core{
             value_type &operator[](size_t i)
             {
 #ifdef DEBUG
-                check_index(i,size(),EXCEPTION_RECORD);
+                check_index_in_dim(i,size(),EXCEPTION_RECORD);
 #endif
                 //compute the multidimensional index in the original array for
                 //the linear index i in the view
@@ -398,7 +398,7 @@ namespace core{
             value_type operator[](size_t i) const
             {
 #ifdef DEBUG
-                check_index(i,size(),EXCEPTION_RECORD);
+                check_index_in_dim(i,size(),EXCEPTION_RECORD);
 #endif
                 if(_is_contiguous) return _parray.get()[i+_start_offset];
                 else
@@ -447,7 +447,7 @@ namespace core{
             //!
             value_type &at(size_t i) 
             { 
-                check_index(i,size(),EXCEPTION_RECORD); 
+                check_index_in_dim(i,size(),EXCEPTION_RECORD); 
                 return (*this)[i]; 
             }
 
@@ -466,7 +466,7 @@ namespace core{
             //!
             value_type at(size_t i) const 
             { 
-                check_index(i,size(),EXCEPTION_RECORD);
+                check_index_in_dim(i,size(),EXCEPTION_RECORD);
                 return (*this)[i]; 
             }
 

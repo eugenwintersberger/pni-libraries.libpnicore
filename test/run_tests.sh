@@ -25,5 +25,7 @@ types/type_test &> type_test.log
 utils_test/utils_test &> utils_test.log
 #tail utils_test.xml
 
+error/error_test &> error_test.log
+
 grep FailuresTotal *.xml
 
