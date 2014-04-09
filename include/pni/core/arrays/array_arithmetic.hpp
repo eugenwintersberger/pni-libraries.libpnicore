@@ -27,10 +27,7 @@
 #include "index_map/index_maps.hpp"
 #include "../types/complex_utils.hpp"
 #include "scalar.hpp"
-#include "math/add_op.hpp"
-#include "math/sub_op.hpp"
-#include "math/mult_op.hpp"
-#include "math/div_op.hpp"
+#include "../algorithms.hpp"
 #include "../utilities/sfinae_macros.hpp"
 
 namespace pni{

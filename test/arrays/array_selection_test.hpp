@@ -27,7 +27,7 @@
 #include<cppunit/extensions/HelperMacros.h>
 #include<vector>
 #include <pni/core/arrays/array_selection.hpp>
-#include <pni/core/arrays/algorithms.hpp>
+#include <pni/core/algorithms.hpp>
 #include <pni/core/arrays/index_map/index_maps.hpp>
 
 using namespace pni::core;

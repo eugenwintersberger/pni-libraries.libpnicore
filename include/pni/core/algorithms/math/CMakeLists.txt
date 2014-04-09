@@ -8,4 +8,4 @@ sub_op.hpp
 )
 
 install(FILES ${HEADER_FILES}
-        DESTINATION  ${CMAKE_INSTALL_FULL_INCLUDEDIR}/pni/core/arrays/math)
+        DESTINATION  ${CMAKE_INSTALL_FULL_INCLUDEDIR}/pni/core/algorithms/math)

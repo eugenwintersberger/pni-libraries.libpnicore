@@ -32,7 +32,7 @@
 
 #include "../utilities/container_utils.hpp"
 #include "../error/exception_utils.hpp"
-#include "algorithms.hpp"
+#include "../algorithms.hpp"
 #include "slice.hpp"
 
 namespace pni{

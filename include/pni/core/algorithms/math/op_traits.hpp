@@ -23,7 +23,7 @@
 //
 #pragma once
 
-#include "../scalar.hpp"
+#include "../../arrays/scalar.hpp"
 
 namespace pni{
 namespace core{

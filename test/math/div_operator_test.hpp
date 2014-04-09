@@ -30,6 +30,7 @@
 
 #include <pni/core/arrays.hpp>
 #include <pni/core/arrays/array_arithmetic.hpp>
+#include <pni/core/algorithms/math/div_op.hpp>
 #include "../compare.hpp"
 #include "../data_generator.hpp"
 

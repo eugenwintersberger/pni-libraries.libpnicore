@@ -23,7 +23,7 @@
 //!
 #include<cppunit/extensions/HelperMacros.h>
 
-#include <pni/core/arrays/math/inplace_arithmetics.hpp>
+#include <pni/core/algorithms/math/inplace_arithmetics.hpp>
 #include "inplace_arithmetics_test.hpp"
 
 

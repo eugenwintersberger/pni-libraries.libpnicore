@@ -31,7 +31,7 @@
 #include "../arrays.hpp"
 #include "array_holder.hpp"
 #include "array_iterator.hpp"
-#include "../arrays/algorithms.hpp"
+#include "../algorithms.hpp"
 
 
 namespace pni{

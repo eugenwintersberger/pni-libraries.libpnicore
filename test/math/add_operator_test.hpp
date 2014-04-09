@@ -30,7 +30,7 @@
 #include <boost/current_function.hpp>
 
 #include <pni/core/arrays.hpp>
-#include <pni/core/arrays/math/add_op.hpp>
+#include <pni/core/algorithms/math/add_op.hpp>
 #include <pni/core/arrays/array_arithmetic.hpp>
 #include "../compare.hpp"
 #include "../data_generator.hpp"

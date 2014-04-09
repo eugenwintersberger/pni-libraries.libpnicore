@@ -31,7 +31,7 @@
 #include "../utilities.hpp"
 #include "array_selection.hpp"
 #include "array_view_utils.hpp"
-#include "algorithms.hpp"
+#include "../algorithms.hpp"
 
 namespace pni{
 namespace core{

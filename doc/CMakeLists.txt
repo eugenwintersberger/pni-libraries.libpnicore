@@ -32,12 +32,6 @@ set(HEADER_FILES
                  ${HDR_DIR}/arrays/scalar.hpp
                  ${HDR_DIR}/arrays/index_iterator.hpp
                  ${HDR_DIR}/arrays/slice.hpp
-                 ${HDR_DIR}/arrays/math/add_op.hpp
-                 ${HDR_DIR}/arrays/math/inplace_arithmetics.hpp
-                 ${HDR_DIR}/arrays/math/op_traits.hpp
-                 ${HDR_DIR}/arrays/math/sub_op.hpp
-                 ${HDR_DIR}/arrays/math/div_op.hpp
-                 ${HDR_DIR}/arrays/math/mult_op.hpp
                  ${HDR_DIR}/arrays/array_operations.hpp
                  ${HDR_DIR}/arrays/index_map/index_maps.hpp
                  ${HDR_DIR}/arrays/index_map/c_index_map_imp.hpp
@@ -47,6 +41,14 @@ set(HEADER_FILES
                  ${HDR_DIR}/arrays/dimension_layout/static_dim_layout.hpp
                  ${HDR_DIR}/arrays/dimension_layout/algorithms.hpp
                  ${HDR_DIR}/arrays/dimension_layout/dimension_layout.hpp
+                
+                 ${HDR_DIR}/algorithms/general.hpp
+                 ${HDR_DIR}/algorithms/math/add_op.hpp
+                 ${HDR_DIR}/algorithms/math/inplace_arithmetics.hpp
+                 ${HDR_DIR}/algorithms/math/op_traits.hpp
+                 ${HDR_DIR}/algorithms/math/sub_op.hpp
+                 ${HDR_DIR}/algorithms/math/div_op.hpp
+                 ${HDR_DIR}/algorithms/math/mult_op.hpp
                  
                  ${HDR_DIR}/types/type_conversion.hpp
                  ${HDR_DIR}/types/id_type_map.hpp

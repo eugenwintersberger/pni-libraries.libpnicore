@@ -5,11 +5,13 @@ set(HEADER_FILES arrays.hpp
                  utilities.hpp
                  error.hpp
                  type_erasures.hpp
+                 algorithms.hpp
                  )
 
 install(FILES ${HEADER_FILES} 
         DESTINATION ${CMAKE_INSTALL_FULL_INCLUDEDIR}/pni/core/)
 
+add_subdirectory("algorithms")
 add_subdirectory("arrays")
 add_subdirectory("benchmark")
 add_subdirectory("configuration")

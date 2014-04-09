@@ -23,7 +23,7 @@
 //
 #pragma once
 
-#include "../arrays/algorithms.hpp"
+#include "../algorithms.hpp"
 #include "array_holder_interface.hpp"
 
 namespace pni{

@@ -29,7 +29,6 @@
 #include "arrays/array_view.hpp"
 #include "arrays/array_factory.hpp"
 #include "arrays/slice.hpp"
-#include "arrays/algorithms.hpp"
 #include "arrays/array_arithmetic.hpp"
 #include "arrays/index_iterator.hpp"
 

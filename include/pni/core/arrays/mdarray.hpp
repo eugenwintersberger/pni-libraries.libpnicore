@@ -43,8 +43,7 @@
 #include "array_factory.hpp"
 #include "array_view_utils.hpp"
 #include "index_map/index_maps.hpp"
-#include "math/inplace_arithmetics.hpp"
-#include "algorithms.hpp"
+#include "../algorithms.hpp"
 
 
 namespace pni {
