@@ -773,11 +773,24 @@ namespace core{
             }
     };
 
-    template<typename ATYPE> struct container_trait<array_view<ATYPE>>
+    //!
+    //! \ingroup type_classes
+    //! \brief container_trait for an array_view
+    //!
+    //! Specialization of the container_trait for instances of array_view. 
+    //!
+    //! \param ATYPE array type of the view
+    //!
+    template<typename ATYPE> 
+    struct container_trait<array_view<ATYPE>>
     {
+        //! array_view is a random access container
         static const bool is_random_access = true;
+        //! array_view is iterable
         static const bool is_iterable = true;
+        //! array view is not by default contiguous
         static const bool is_contiguous = false;
+        //! array view is multidimensional
         static const bool is_multidim = true;
     };
 

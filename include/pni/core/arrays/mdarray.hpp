@@ -199,9 +199,14 @@ namespace core {
             //! \brief construction from initializer list
             //!
             //! This version of the static create function uses an initializer 
-            //! list. 
+            //! list. The first initializer list holds shape information while
+            //! the second holds the data which will be stored in the array.
             //!
-            //! 
+            //! \tparam T1 element type of shape list
+            //! \tparam T2 element type of data list
+            //! \param l1 instance of shape list
+            //! \param l2 instance of data list
+            //! \return instance of array_type
             template<
                      typename T1,
                      typename T2
@@ -279,6 +284,7 @@ namespace core {
             //! elements stored in the array. 
             //! 
             //! \tparam CTYPE container type 
+            //! \return instance of CTYPE with shape data
             //!
             template<typename CTYPE> CTYPE shape() const
             {
@@ -865,6 +871,17 @@ namespace core {
 
     };
 
+    //-------------------------------------------------------------------------
+    //!
+    //! \ingroup type_classes
+    //! \brief container trait mdarray
+    //! 
+    //! Specialization of the container_trait for mdarray.
+    //!
+    //! \tparam STORAGE array storage type
+    //! \tparam IMAP index map type
+    //! \tparam IPA inplace arithmetic type
+    //! 
     template<
              typename STORAGE,
              typename IMAP,
@@ -872,10 +889,15 @@ namespace core {
             >
     struct container_trait<mdarray<STORAGE,IMAP,IPA>>
     {
+        //! mdarray provides random access
         static const bool is_random_access = true;
+        //! mdarray is iterable
         static const bool is_iterable = true;
+        //! whether or not an mdarray has contiguous memory depends on the
+        //! underlying storage type
         static const bool is_contiguous =
             container_trait<STORAGE>::is_contiguous;
+        //! mdarray is a multidimensional container
         static const bool is_multidim = true;
     };
 

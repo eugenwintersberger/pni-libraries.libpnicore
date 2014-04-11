@@ -40,13 +40,13 @@ namespace core{
     //! methods. 
     //! The information collected includes
     //!
-    //! \li \cis_random_access - if true the container provides [] and at() to
+    //! \li \c is_random_access - if true the container provides [] and at() to
     //! access data elements
-    //! \li \cis_iterable - if true the container provides an iterator
-    //! \li \cis_contiguous - the data is stored contiguous in memory (for such 
+    //! \li \c is_iterable - if true the container provides an iterator
+    //! \li \c is_contiguous - the data is stored contiguous in memory (for such 
     //! containers it makes sense to provide a data() method to access this
     //! memory
-    //! \li \cis_multidim - the contianer is multidimensional (basically this is 
+    //! \li \c is_multidim - the contianer is multidimensional (basically this is 
     //! only the case for mdarray and array_view.
     //!
     //! If a user provides a new container type an overload for this trait
@@ -54,7 +54,6 @@ namespace core{
     //! 
     //! \tparam CTYPE container type 
     //!
-    
     template<typename CTYPE> struct container_trait
     {
         //! by default false

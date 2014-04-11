@@ -91,16 +91,31 @@ namespace core{
     template<typename ...ITYPES>
     struct is_index_types
     {
+        //!
+        //! \brief predicate type for count_if
+        //!
+        //! This internal type implements a predicate to be used in connection 
+        //! with count_if from MPL. 
+        //! 
+        //! \tparam T input type
+        //! 
         template<typename T> 
         struct is_index_type_pred
         {
+            //! result type 
             typedef is_index_type<T> type;
         };
 
+        //! load the _ placeholder from boost::mpl
         using _ = boost::mpl::placeholders::_;
+        //! list of types passed by the user
         typedef typename boost::mpl::vector<ITYPES...> types;
+
+        //! count all index types
         typedef boost::mpl::count_if<types,is_index_type_pred<_>> n_index_types;
 
+        //! if the number of index types is equal to the number of types passed
+        //! by the user, all passed types are valid index types
         static const bool value = n_index_types::value ==
             int(boost::mpl::size<types>::value);
     };
@@ -189,8 +204,19 @@ namespace core{
             is_view_index<value_type>::value;
     };
 
+    //------------------------------------------------------------------------
+    //! 
+    //! \ingroup mdim_array_internal_class
+    //! \brief view container check for slice 
+    //! 
+    //! This specialization of the is_view_cont template handles situations
+    //! where a slice instance is passed as a template parameters. 
+    //! Obviously, slice is not a valid container type. Thus the value of 
+    //! is_view_cont is set to false.
+    //!
     template<> struct is_view_cont<slice>
     {
+        //! slice is not a view container -> set to false
         static const bool value = false;
     };
 

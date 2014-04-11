@@ -263,7 +263,7 @@ namespace core{
     //! Overload of type_id to obtain the type ID of the element stored in the 
     //! type erasure.
     //! 
-    //! \param v reference to value 
+    //! \param rv reference to value 
     //! \return type ID of the erased type
     //!
     type_id_t type_id(const value &rv);

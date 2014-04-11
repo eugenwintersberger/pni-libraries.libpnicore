@@ -34,6 +34,17 @@
 namespace pni{
 namespace core{
 
+    //!
+    //! \ingroup error_classes
+    //! \brief print vector content
+    //!
+    //! Print the content of an interable as a vector. The output is  
+    //! embraced by () and each element is separated by a comma.  
+    //! 
+    //! \tparam VTYPE container type
+    //! \param o output stream 
+    //! \param v iterable instance
+    //!
     template<typename VTYPE>
     void print_vector(std::ostream &o,const VTYPE &v)
     {
@@ -139,8 +150,15 @@ namespace core{
     //! \ingroup error_classes
     //! \brief check indexes
     //! 
-    //! Check if all index values stored in a container do not exceed 
-
+    //! Check if all index values stored in a container do not exceed their
+    //! dimensions limits. 
+    //!
+    //! \tparam ITYPE index container type
+    //! \tparam STYPE shape container type
+    //! \param index reference to an index container
+    //! \param shape reference to a shape container
+    //! \return true if all indexes are in their bounds
+    //!
     template<
              typename ITYPE,
              typename STYPE
@@ -243,6 +261,7 @@ namespace core{
     //! \tparam B second array type
     //! \param a reference to an instance of A
     //! \param b reference to an instance of B
+    //! \param i exception record of the calling function
     //!
     template<
              typename A,
