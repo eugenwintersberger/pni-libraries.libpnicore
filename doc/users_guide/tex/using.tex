@@ -1,4 +1,33 @@
 %%% description of how to use the library 
+\section{Include files}
+
+To use \libpnicore\ in code the appropriate header files must be included. In
+the simplest case just use the {\tt core.hpp} file 
+\begin{minted}{cpp}
+#include <pni/core.hpp>
+\end{minted}
+which pulls in all the other header files required to work with \libpnicore.
+Alternatively, the header files for the different components provided by
+\libpnicore\ can be used
+\begin{minted}{cpp}
+#include <pni/core/algorithms.hpp>    //basic algorithms
+#include <pni/core/arrays.hpp>        //multidimensional arrays
+#include <pni/core/benchmark.hpp>     //benchmark classes
+#include <pni/core/configuration.hpp> //program configuration facilities
+#include <pni/core/error.hpp>         //exception management
+#include <pni/core/type_erasures.hpp> //type erasures
+#include <pni/core/types.hpp>         //fundamental data types
+#include <pni/core/utilities.hpp>     //general purpose utilities
+\end{minted}
+All classes provided by \libpnicore\ reside within the {\tt pni::core}
+namespace. If you do not want to give the namespace explicitly for every type
+and function use
+\begin{minted}{cpp}
+using namespace pni::core;
+\end{minted}
+after including the required header files.
+
+\section{Building and linking}
 \libpnicore\ provides a {\tt pkg-config} file. In the case of a system wide
 installation this file is most probably allready at the right place in the file
 system. One can easily check this with 
@@ -18,7 +47,7 @@ then you most probably have to set {\tt PKG\_CONFIG\_PATH} to the location where
 the {\tt pkg-config} file of your \libpnicore\ installation has been installed. 
 
 %%%============================================================================
-\section{From the command line}
+\subsection{From the command line}
 
 If a single simple program should be compiled the following approach is
 suggested 
@@ -30,7 +59,7 @@ Please recognize the {\tt -std=c++11} option. \libpnicore\ requires a state of
 the art compiler with full support for C++11.
 
 %%%============================================================================
-\section{From within a Makefile}
+\subsection{From within a Makefile}
 
 If {\tt make} should be used to build the code add the following lines to your
 {\tt Makefile}
@@ -43,7 +72,7 @@ LDFLAGS=$(shell pkg-config --libs pnicore)
 This will set the appropriate compiler and linker options for the build.
 
 %%%============================================================================
-\section{With Scons}
+\subsection{With Scons}
 
 If you use {\tt SCons} for building the code add the following to your {\tt
 SConstruct} file
@@ -56,8 +85,22 @@ The {\tt ParseConfig} method of a {\tt SCons} environment is able to parse the
 output of {\tt pkg-config} and add the flags to the environments configuration.
 
 %%%============================================================================
-\section{With CMake}
+\subsection{With CMake}
 
-For \cmake\ package files are provides which makes integrating \libpnicore\ into
-other projects using \cmake\ rather easy.
+Currently no \cmake-package files are installed with the library. However, due
+to \cmake s {\tt pkg-config} support autoconfiguration can still be done. In one
+of the toplevel {\tt CMakeLists.txt} files use
+\begin{minted}{cmake}
+pkg_search_module(PNICORE REQUIRED pnicore)
+\end{minted}
+to load the configuration for \libpnicore\ from {\tt pkg-config}. Furthermore we
+have to add the header file and library installation paths to the configuration
+\begin{minted}{cmake}
+link_directories(${PNICORE_LIBRARY_DIRS} ${HDF5_LIBRARY_DIRS})
+include_directories(${PNICORE_INCLUDE_DIRS} ${HDF5_INCLUDE_DIRS})
+\end{minted}
+Finally the library can easily be added to the build target with 
+\begin{minted}{cmake}
+target_link_libraries(mytarget ${PNICORE_LIBRARIES})
+\end{minted}
 

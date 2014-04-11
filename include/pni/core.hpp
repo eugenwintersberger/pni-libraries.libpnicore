@@ -16,18 +16,18 @@
 // You should have received a copy of the GNU General Public License
 // along with libpnicore.  If not, see <http://www.gnu.org/licenses/>.
 //
-// ===========================================================================
+// ============================================================================
 //
 // Created on: Mar 7, 2014
 //     Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
 //
 #pragma once
 
-#include "type_erasures/array_holder.hpp"
-#include "type_erasures/array_holder_interface.hpp"
-#include "type_erasures/array.hpp"
-#include "type_erasures/array_iterator.hpp"
-#include "type_erasures/value_holder.hpp"
-#include "type_erasures/value_holder_interface.hpp"
-#include "type_erasures/value.hpp"
-#include "type_erasures/value_ref.hpp"
+#include "core/algorithms.hpp"
+#include "core/arrays.hpp"
+#include "core/benchmark.hpp"
+#include "core/configuration.hpp"
+#include "core/error.hpp"
+#include "core/type_erasures.hpp"
+#include "core/types.hpp"
+#include "core/utilities.hpp"
