@@ -49,36 +49,6 @@
 namespace pni {
 namespace core {
     
-    template<typename S,typename MAP,typename IPA> class mdarray; 
-    //-------------------------------------------------------------------------
-    //!
-    //! \ingroup mdim_array_classes
-    //! \brief array identifier 
-    //!
-    //! Specialization of the is_array template for instances of mdarray.
-    //!
-    template<typename ...ARGS> 
-    struct is_array<mdarray<ARGS...>>
-    {
-        //! type is an array type
-        static const bool value = true;
-    };
-
-    //-------------------------------------------------------------------------
-    //!
-    //! \ingroup mdim_array_classes
-    //! \brief get data pointer
-    //! 
-    //! Get the pointer to the data stored in an mdarray.
-    //! 
-    //! \tparam ARGS mdarray template arguments
-    //! \param a reference to the array
-    //! \return pointer to data
-    template<typename ...ARGS> 
-    const typename mdarray<ARGS...>::value_type* data(const mdarray<ARGS...> &a)
-    {
-        return a.storage().data();
-    }
     
     //! 
     //! \ingroup mdim_array_classes
@@ -177,7 +147,7 @@ namespace core {
             //!
             template<typename ATYPE>
             explicit mdarray(const array_view<ATYPE> &view):
-                _imap(map_utils<map_type>::create(pni::core::shape<shape_t>(view))),
+                _imap(map_utils<map_type>::create(view.shape<shape_t>())),
                 _data(container_utils<storage_type>::create(view.size()))
             {
                 std::copy(view.begin(),view.end(),_data.begin());
@@ -197,7 +167,7 @@ namespace core {
             //!
             template<typename ...MDARGS>
             explicit mdarray(const mdarray<MDARGS...> &array):
-                _imap(map_utils<map_type>::create(pni::core::shape<shape_t>(array))),
+                _imap(map_utils<map_type>::create(array.shape<shape_t>())),
                 _data(container_utils<storage_type>::create(array.size()))
             {
                 //copy data
@@ -305,26 +275,17 @@ namespace core {
             //! 
             //! \brief shape to container
             //! 
-            //! \deprecated  This method is deprecated and will be replaced in 
-            //! one of the next versions of \c libpnicore. Use 
-            //!  pni::core::shape() instead!
+            //! This returns a container of type CTYPE with the number of
+            //! elements stored in the array. 
+            //! 
+            //! \tparam CTYPE container type 
             //!
             template<typename CTYPE> CTYPE shape() const
             {
-                DEPRECATED_FUNCTION("pni::core::shape()");
-                CTYPE c(_imap.rank());
+                auto c = container_utils<CTYPE>::create(_imap.rank());
                 std::copy(_imap.begin(),_imap.end(),c.begin());
                 return c;
             }
-
-            //-----------------------------------------------------------------
-            //! 
-            //! \brief obtain buffer reference
-            //!
-            //! Return a const reference to the arrays buffer object.
-            //! \return buffer reference
-            //!
-            const STORAGE &storage() const { return _data; }
 
             //-----------------------------------------------------------------
             //! 
@@ -342,13 +303,12 @@ namespace core {
             //! 
             //! \brief get number of dimensions 
             //! 
-            //! \deprecated This method is deprecated and will be removed in 
-            //! one of the next versionso of \c libpnicore. Use
-            //! pni::core::rank() instead.
+            //! Returns the number of dimensions of the array. 
+            //!
+            //! \return number of dimensions
             //!
             size_t rank() const 
             { 
-                DEPRECATED_FUNCTION("pni::core::rank()");
                 return _imap.rank(); 
             }
 
@@ -600,6 +560,32 @@ namespace core {
             value_type operator()(const CTYPE &index) const
             {
                 return _data[_imap.offset(index)];
+            }
+            
+            //-----------------------------------------------------------------
+            //!
+            //! \brief return const pointer 
+            //! 
+            //! Return a const pointer to the data stored in the array. 
+            //!
+            //! \return pointer to data
+            //!
+            const value_type *data() const
+            {
+                return _data.data();
+            }
+
+            //-----------------------------------------------------------------
+            //!
+            //! \brief return  pointer 
+            //! 
+            //! Return a  pointer to the data stored in the array. 
+            //!
+            //! \return pointer to data
+            //!
+            value_type *data()
+            {
+                return _data.data();
             }
 
             //-----------------------------------------------------------------
@@ -877,6 +863,20 @@ namespace core {
             }
 
 
+    };
+
+    template<
+             typename STORAGE,
+             typename IMAP,
+             typename IPA
+            >
+    struct container_trait<mdarray<STORAGE,IMAP,IPA>>
+    {
+        static const bool is_random_access = true;
+        static const bool is_iterable = true;
+        static const bool is_contiguous =
+            container_trait<STORAGE>::is_contiguous;
+        static const bool is_multidim = true;
     };
 
     //set data for static member attribute

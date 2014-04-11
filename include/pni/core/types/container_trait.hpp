@@ -55,7 +55,17 @@ namespace core{
     //! \tparam CTYPE container type 
     //!
     
-    template<typename CTYPE> struct container_trait;
+    template<typename CTYPE> struct container_trait
+    {
+        //! by default false
+        static const bool is_random_access = false;
+        //! by default false
+        static const bool is_iterable   = false;
+        //! by default false
+        static const bool is_contiguous = false;
+        //! by default false
+        static const bool is_multidim   = false;
+    };
 
     //-------------------------------------------------------------------------
     //!

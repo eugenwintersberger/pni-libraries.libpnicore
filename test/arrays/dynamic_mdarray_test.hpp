@@ -1,26 +1,26 @@
-//!
-//! (c) Copyright 2013 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
-//!
-//! This file is part of libpnicore.
-//!
-//! libpnicore is free software: you can redistribute it and/or modify
-//! it under the terms of the GNU General Public License as published by
-//! the Free Software Foundation, either version 2 of the License, or
-//! (at your option) any later version.
-//!
-//! libpnicore is distributed in the hope that it will be useful,
-//! but WITHOUT ANY WARRANTY; without even the implied warranty of
-//! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//! GNU General Public License for more details.
-//!
-//! You should have received a copy of the GNU General Public License
-//! along with libpnicore.  If not, see <http://www.gnu.org/licenses/>.
-//!
-//! ===========================================================================
-//!
-//!  Created on: Oct 28, 2013
-//!      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
-//!
+//
+// (c) Copyright 2013 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
+//
+// This file is part of libpnicore.
+//
+// libpnicore is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+//
+// libpnicore is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with libpnicore.  If not, see <http://www.gnu.org/licenses/>.
+//
+// ===========================================================================
+//
+//  Created on: Oct 28, 2013
+//      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
+//
 #pragma once
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
@@ -103,8 +103,8 @@ void dynamic_mdarray_test<ATYPE>::test_constructors()
 
     //check parameters after default construction
     ATYPE array1;
-    CPPUNIT_ASSERT(size(array1) == 0);
-    CPPUNIT_ASSERT(rank(array1) == 0);
+    CPPUNIT_ASSERT(array1.size() == 0);
+    CPPUNIT_ASSERT(array1.rank() == 0);
 
     //check default construction
     //we construct the array from an map instance and a storage instance using 
@@ -114,23 +114,23 @@ void dynamic_mdarray_test<ATYPE>::test_constructors()
     allocate_storage(storage,map.max_elements());
     ATYPE array2(map,storage);
    
-    CPPUNIT_ASSERT(rank(array2) == 3);
-    CPPUNIT_ASSERT(size(array2) == storage.size());
+    CPPUNIT_ASSERT(array2.rank() == 3);
+    CPPUNIT_ASSERT(array2.size() == storage.size());
 
     //this is however not very efficient - try move construction of the map and
     //storage
     ATYPE array3(std::move(map),std::move(storage));
-    CPPUNIT_ASSERT(size(array3) == 30);
-    CPPUNIT_ASSERT(rank(array3) == 3);
+    CPPUNIT_ASSERT(array3.size() == 30);
+    CPPUNIT_ASSERT(array3.rank() == 3);
     CPPUNIT_ASSERT(storage.size()==0);
     CPPUNIT_ASSERT(map.rank() == 0);
 
     //now lets do some move construction
     ATYPE array4 = std::move(array3);
-    CPPUNIT_ASSERT(rank(array4) == rank(array2));
-    CPPUNIT_ASSERT(size(array4) == size(array2));
-    CPPUNIT_ASSERT(size(array3) == 0);
-    CPPUNIT_ASSERT(rank(array3) == 0);
+    CPPUNIT_ASSERT(array4.rank() == array2.rank());
+    CPPUNIT_ASSERT(array4.size() == array2.size());
+    CPPUNIT_ASSERT(array3.size() == 0);
+    CPPUNIT_ASSERT(array3.rank() == 0);
 }
 
 //------------------------------------------------------------------------------
@@ -141,20 +141,20 @@ void dynamic_mdarray_test<ATYPE>::test_constructor_from_other()
    
     //--------------------construct from fixed dim array-----------------------
     ATYPE array(farray);
-    CPPUNIT_ASSERT(size(farray) == size(array));
-    CPPUNIT_ASSERT(rank(farray) == rank(array));
-    auto array_shape = pni::core::shape<shape_t>(array);
-    auto farray_shape = pni::core::shape<shape_t>(farray);
+    CPPUNIT_ASSERT(farray.size() == array.size());
+    CPPUNIT_ASSERT(farray.rank() == array.rank());
+    auto array_shape = array.template shape<shape_t>();
+    auto farray_shape = farray.template shape<shape_t>();
     CPPUNIT_ASSERT(std::equal(array_shape.begin(),array_shape.end(),
                               farray_shape.begin()));
     CPPUNIT_ASSERT(std::equal(array.begin(),array.end(),farray.begin()));
 
     //--------------------construct from static array---------------------------
     ATYPE array2(sarray);
-    CPPUNIT_ASSERT(size(sarray) == size(array2));
-    CPPUNIT_ASSERT(rank(sarray) == rank(array2));
-    auto array2_shape = pni::core::shape<shape_t>(array2);
-    auto sarray_shape = pni::core::shape<shape_t>(sarray);
+    CPPUNIT_ASSERT(sarray.size() == array2.size());
+    CPPUNIT_ASSERT(sarray.rank() == array2.rank());
+    auto array2_shape = array2.template shape<shape_t>();
+    auto sarray_shape = sarray.template shape<shape_t>();
     CPPUNIT_ASSERT(std::equal(array2_shape.begin(),array2_shape.end(),
                               sarray_shape.begin()));
     CPPUNIT_ASSERT(std::equal(array2.begin(),array2.end(),sarray.begin()));
@@ -192,18 +192,18 @@ void dynamic_mdarray_test<ATYPE>::test_assignment()
 
     //copy assignment
     array2 = array1;
-    CPPUNIT_ASSERT(rank(array2) == rank(array1));
-    CPPUNIT_ASSERT(size(array2) == size(array1));
+    CPPUNIT_ASSERT(array2.rank() == array1.rank());
+    CPPUNIT_ASSERT(array2.size() == array1.size());
     CPPUNIT_ASSERT(std::equal(array1.begin(),array1.end(),array2.begin()));
 
     //do move assignment
     array3 = std::move(array1);
-    CPPUNIT_ASSERT(rank(array2) == rank(array3));
-    CPPUNIT_ASSERT(size(array2) == size(array3));
+    CPPUNIT_ASSERT(array2.rank() == array3.rank());
+    CPPUNIT_ASSERT(array2.size() == array3.size());
     CPPUNIT_ASSERT(std::equal(array1.begin(),array1.end(),array3.begin()));
 
     //check if the original is destroyed
-    CPPUNIT_ASSERT(rank(array1) == 0);
-    CPPUNIT_ASSERT(size(array1) == 0);
+    CPPUNIT_ASSERT(array1.rank() == 0);
+    CPPUNIT_ASSERT(array1.size() == 0);
 }
 

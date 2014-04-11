@@ -66,12 +66,12 @@ template<typename ATYPE> class array_view_test : public CppUnit::TestFixture
         {
             size_t ref_size = std::accumulate(ref.begin(),ref.end(),1,
                     std::multiplies<size_t>());
-            size_t ref_rank = pni::core::size(ref);
+            size_t ref_rank = ref.size();
 
-            CPPUNIT_ASSERT(pni::core::rank(view) == ref_rank);
-            CPPUNIT_ASSERT(pni::core::size(view) == ref_size);
+            CPPUNIT_ASSERT(view.rank() == ref_rank);
+            CPPUNIT_ASSERT(view.size() == ref_size);
 
-            auto shape = pni::core::shape<shape_t>(view);
+            auto shape = view.template shape<shape_t>();
             CPPUNIT_ASSERT(std::equal(shape.begin(),shape.end(),ref.begin()));
 
         }
@@ -208,7 +208,7 @@ template<typename ATYPE> void array_view_test<ATYPE>::test_linear_access()
                    selection_type::create(slice_container{slice(0,1),slice(2,7)}));
     check_view(view,shape_t{5});
 
-    for(size_t i=0;i<pni::core::size(view);++i) 
+    for(size_t i=0;i<view.size();++i) 
     {
         value_type v1 = array(0,2+i);
         value_type v2 = view[i];
@@ -232,7 +232,7 @@ template<typename ATYPE> void array_view_test<ATYPE>::test_linear_access()
 
     //finally we have to check for const references
     const view_type &cview = view;
-    for(size_t i=0;i<pni::core::size(cview);++i)
+    for(size_t i=0;i<cview.size();++i)
         compare(cview[i],array(0,2+i));
 
 }
@@ -246,16 +246,16 @@ void array_view_test<ATYPE>::test_linear_access_pointer()
     auto view1 = array(slice(0,50,2),slice(1,100,3));
 
     //should not work
-    CPPUNIT_ASSERT_THROW(data(view1),shape_mismatch_error);
+    CPPUNIT_ASSERT_THROW(view1.data(),shape_mismatch_error);
 
     auto view2 = array(slice(0,5),slice(0,NY));
-    auto ptr = data(view2);
+    auto ptr = view2.data();
     auto iter = view2.begin();
     
     for(size_t i=0;i<5*NY;++i) compare(*ptr++,*iter++);
 
     const decltype(view2) &cview2 = view2;
-    auto cptr = data(cview2);
+    auto cptr = cview2.data();
     auto citer = cview2.begin();
 
     for(size_t i=0;i<5*NY;++i) compare(*cptr++,*citer++);
@@ -275,7 +275,7 @@ template<typename ATYPE> void array_view_test<ATYPE>::test_iterator_access()
     check_view(v,shape_t{13,9});
 
     //create data for the selection
-    ctype data(pni::core::size(v));
+    ctype data(v.size());
     std::generate(data.begin(),data.end(),random_generator<value_type>());
 
     //---------------------check write access----------------------------------
@@ -286,7 +286,6 @@ template<typename ATYPE> void array_view_test<ATYPE>::test_iterator_access()
     diter = data.begin();
     for(auto iter = v.begin();iter!=v.end();++iter,++diter)
         compare(*iter,*diter);
-        //CPPUNIT_ASSERT(*iter == *diter);
 
     //-----now we need to check if the data arrived at the original array------
     selection_type  selection(shape_t{13,9},shape_t{10,100},shape_t{2,3});
@@ -318,9 +317,9 @@ template<typename ATYPE> void array_view_test<ATYPE>::test_assignment()
     //static array we would have to know the shape of the array
 
     dynamic_array<value_type> roia(roi);
-    auto roi_s = pni::core::shape<shape_t>(roi);
-    auto roia_s = pni::core::shape<shape_t>(roia);
-    CPPUNIT_ASSERT(pni::core::rank(roi) == pni::core::rank(roia));
+    auto roi_s = roi.template shape<shape_t>();
+    auto roia_s = roia.template shape<shape_t>();
+    CPPUNIT_ASSERT(roi.rank() == roia.rank());
     CPPUNIT_ASSERT(roia_s.size() == roi_s.size());
     CPPUNIT_ASSERT(std::equal(roia_s.begin(),roia_s.end(),roi_s.begin()));
 
@@ -346,9 +345,9 @@ template<typename ATYPE> void array_view_test<ATYPE>::test_multiindex_access()
     slice_container slices{slice(10,40),slice(0,100)};
     view_type view(array,selection_type::create(slices));
     check_view(view,shape_t{30,100});
-    auto s = shape<shape_t>(view);
+    auto s = view.template shape<shape_t>();
 
-    ctype data(pni::core::size(view));
+    ctype data(view.size());
     std::generate(data.begin(),data.end(),random_generator<value_type>());
     //-----------------writing data----------------------------
     auto diter = data.begin();

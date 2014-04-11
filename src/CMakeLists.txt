@@ -18,7 +18,8 @@ set(SOURCES array.cpp
             types.cpp
             type_utils.cpp
             value.cpp
-            value_ref.cpp)
+            value_ref.cpp
+            )
 
 
 #set up the library target

@@ -42,7 +42,6 @@ set(HEADER_FILES
                  ${HDR_DIR}/arrays/dimension_layout/algorithms.hpp
                  ${HDR_DIR}/arrays/dimension_layout/dimension_layout.hpp
                 
-                 ${HDR_DIR}/algorithms/general.hpp
                  ${HDR_DIR}/algorithms/math/add_op.hpp
                  ${HDR_DIR}/algorithms/math/inplace_arithmetics.hpp
                  ${HDR_DIR}/algorithms/math/op_traits.hpp

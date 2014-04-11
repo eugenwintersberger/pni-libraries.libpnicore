@@ -41,7 +41,7 @@ namespace core{
     template<typename ATYPE> 
     const void *get_pointer(const ATYPE &a)
     {
-        return (void *)(a.storage().data());
+        return (void *)(a.data());
     }
 
 
@@ -97,13 +97,13 @@ namespace core{
             
             //-----------------------------------------------------------------
             //! return the rank of the held array
-            virtual size_t rank() const { return pni::core::rank(_object); }
+            virtual size_t rank() const { return _object.rank(); }
 
             //-----------------------------------------------------------------
             //! return the shape of the held array
             virtual shape_t shape() const 
             {
-                return pni::core::shape<shape_t>(_object);
+                return _object.template shape<shape_t>();
             }
 
             //-----------------------------------------------------------------

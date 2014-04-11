@@ -117,7 +117,7 @@ namespace core{
                 _parray(std::ref(a)),
                 _selection(s),
                 _imap(map_utils<map_type>::create(_selection.shape<index_type>())),
-                _index(pni::core::rank(a)),
+                _index(a.rank()),
                 _is_contiguous(is_contiguous(a.map(),_selection)),
                 _start_offset(start_offset(a.map(),_selection))
             { }
@@ -137,7 +137,7 @@ namespace core{
                 _parray(std::ref(a)),
                 _selection(std::move(s)),
                 _imap(map_utils<map_type>::create(_selection.shape<index_type>())),
-                _index(pni::core::rank(a)),
+                _index(a.rank()),
                 _is_contiguous(is_contiguous(a.map(),_selection)),
                 _start_offset(start_offset(a.map(),_selection))
             {}
@@ -340,10 +340,6 @@ namespace core{
             //! 
             //! \brief get shape of the view
             //! 
-            //! \deprecated This method is deprecated and will be removed in one 
-            //! of the future versions of \c libpnicore. Use 
-            //! pni::core::shape() instead.
-            //!
             //! This returns the shape of the array view. This shape includes 
             //! only those dimensions where the number of elements along the 
             //! original array is not equal 1. 
@@ -352,7 +348,6 @@ namespace core{
             //!
             template<typename CTYPE> CTYPE shape() const
             {
-                DEPRECATED_FUNCTION("pni::core::shape()");
                 return _selection.template shape<CTYPE>();
             }
 
@@ -424,6 +419,28 @@ namespace core{
             //! \return const pointer to data
             //! 
             const value_type *data() const
+            {
+                if(_is_contiguous) 
+                    return &_parray.get()[_start_offset];
+                else
+                    throw shape_mismatch_error(EXCEPTION_RECORD,
+                            "Selection view is not contiguous!");
+            }
+
+            //-----------------------------------------------------------------
+            //!
+            //! \brief get pointer to data
+            //! 
+            //! This method returns a pointer to the storage covered by the 
+            //! view. However, this is only possible if the selection on which
+            //! the view is passed is contiguous. 
+            //! In the case of a non contiguous view an exception will be 
+            //! thrown. 
+            //! 
+            //! \throw shape_mismatch_error if selection not contiguous
+            //! \return const pointer to data
+            //! 
+            value_type *data() 
             {
                 if(_is_contiguous) 
                     return &_parray.get()[_start_offset];
@@ -522,13 +539,12 @@ namespace core{
             //!
             //! \brief get rank of the view
             //!
-            //! \deprecated This method is deprecated and will be removed in 
-            //! one of the future versions of \c libpnicore. Use
-            //! pin::core::rank() instead. 
+            //! Returns the number of dimensions of the array.
+            //!
+            //! \return number of dimensions
             //! 
             size_t rank()  const 
             { 
-                DEPRECATED_FUNCTION("pni::core::rank()");
                 return _selection.rank(); 
             }
 
@@ -757,56 +773,15 @@ namespace core{
             }
     };
 
-    //-------------------------------------------------------------------------
-    //!
-    //! \ingroup mdim_array_classes
-    //! \brief array identifier
-    //! 
-    //! Specialization of the is_array template for array_view instances. 
-    //!
-    template<typename ...ARGS> 
-    struct is_array<array_view<ARGS...>>
+    template<typename ATYPE> struct container_trait<array_view<ATYPE>>
     {
-        //! type is an array type
-        static const bool value = true;
+        static const bool is_random_access = true;
+        static const bool is_iterable = true;
+        static const bool is_contiguous = false;
+        static const bool is_multidim = true;
     };
+
     
-    //-------------------------------------------------------------------------
-    //!
-    //! \ingroup mdim_array_classes
-    //! \brief get data pointer
-    //! 
-    //! Get the pointer to the data of an array_view instance. This function
-    //! will only succeed if the selection on which the view is based on is 
-    //! contiguous. Otherwise an exception will be thrown.
-    //! 
-    //! \tparam ATYPE array type of the view
-    //! \param v reference to the view
-    //! \return pointer to data
-    //! 
-    template<typename ATYPE>
-    const typename array_view<ATYPE>::value_type*
-    data(const array_view<ATYPE> &v)
-    {
-        return v.data();
-    }
-    
-    //-------------------------------------------------------------------------
-    //!
-    //! \ingroup mdim_array_classes
-    //! \brief get size
-    //! 
-    //! Returns the number of elements stored in an array or view. 
-    //! 
-    //! \tparam ATYPE array or view type
-    //! \param a reference to the array or view
-    //! \return number of elements
-    //! 
-    template<typename ATYPE>
-    size_t size(const array_view<ATYPE> &a)
-    {
-        return a.map().max_elements();
-    }
 
 //end of namespace
 }

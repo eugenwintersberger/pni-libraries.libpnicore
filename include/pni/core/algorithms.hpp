@@ -23,5 +23,4 @@
 //
 #pragma once
 
-#include "algorithms/general.hpp"
 #include "algorithms/math.hpp"

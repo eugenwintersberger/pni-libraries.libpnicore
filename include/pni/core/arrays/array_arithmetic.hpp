@@ -33,7 +33,7 @@
 namespace pni{
 namespace core{
 
-#define IS_ARRAY(T) is_array<T>::value
+#define IS_ARRAY(T) container_trait<T>::is_multidim
 
 #define MAP_TYPE(T) typename T::map_type
 
