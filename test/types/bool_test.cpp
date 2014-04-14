@@ -89,3 +89,17 @@ void bool_test::test_compatability()
 
 }
 
+//----------------------------------------------------------------------------
+void bool_test::test_operators()
+{
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+    bool_t v1 = true;
+    bool_t v2 = false;
+
+    CPPUNIT_ASSERT(!(v1 && v2));
+    CPPUNIT_ASSERT(v1 && v1);
+
+    CPPUNIT_ASSERT(v1 || v2);
+    CPPUNIT_ASSERT(!(v2 || v2));
+}
+

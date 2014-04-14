@@ -35,6 +35,7 @@ class bool_test : public CppUnit::TestFixture
     CPPUNIT_TEST(test_comparison);
     CPPUNIT_TEST(test_assignment);
     CPPUNIT_TEST(test_compatability);
+    CPPUNIT_TEST(test_operators);
 	CPPUNIT_TEST_SUITE_END();
 public:
 	void setUp();
@@ -43,5 +44,6 @@ public:
     void test_comparison();
     void test_assignment();
     void test_compatability();
+    void test_operators();
 
 };

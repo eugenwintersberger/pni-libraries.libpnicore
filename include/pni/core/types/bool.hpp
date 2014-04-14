@@ -27,15 +27,31 @@
 
 namespace pni{
 namespace core{
-    
+
+    //!
+    //! \ingroup type_classes
+    //! \brief boolean type
+    //! 
+    //! There is a particular problem when using the standard bool type in
+    //! connection with std::vector. The std::vector template is overloaded 
+    //! for bool in a sense that each boolean value is stored in an individual 
+    //! bit. Thus elements cannot be addressed. Thus std::vector<bool> cannot 
+    //! be used in connection with libpniio. 
+    //! This type prevents the C++ compiler to overload std:vector<bool_t> 
+    //! making boolean values available for libpniio.
+    //!
     class bool_t
     {
         private:
-            bool _value;
+            bool _value; //!< data element holding the current boolean value
         public:
+            //! default constructor
             bool_t():_value(false) {}
+
+            //! conversion constructor
             bool_t(bool v):_value(v) {}
 
+            //! conversion operator
             operator bool() const
             {
                 return _value;
@@ -43,8 +59,11 @@ namespace core{
 
     };
 
-
+    
+    //! output operator for bool_t
     std::ostream &operator<<(std::ostream &stream,const bool_t &b);
+
+    //! input operator for bool_t
     std::istream &operator>>(std::istream &stream,bool_t &b);
 //end of namespace
 }
