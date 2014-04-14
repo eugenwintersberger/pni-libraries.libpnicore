@@ -54,7 +54,7 @@ namespace core{
      {"complex64",type_id_t::COMPLEX64},{"c64",type_id_t::COMPLEX64},
      {"complex128",type_id_t::COMPLEX128},{"c128",type_id_t::COMPLEX128},
      {"string",type_id_t::STRING},{"str",type_id_t::STRING},
-     {"binary",type_id_t::BINARY}
+     {"binary",type_id_t::BINARY}, {"bool",type_id_t::BOOL}
     };
 
     //-------------------------------------------------------------------------
@@ -77,7 +77,8 @@ namespace core{
      {type_id_t::COMPLEX64,"complex64"},
      {type_id_t::COMPLEX128,"complex128"},
      {type_id_t::STRING,"string"},
-     {type_id_t::BINARY,"binary"}
+     {type_id_t::BINARY,"binary"},
+     {type_id_t::BOOL,"bool"}
     };
 
     //-------------------------------------------------------------------------
@@ -86,6 +87,12 @@ namespace core{
     type_id_t get_type_id(const binary &v)
     {
         return type_id_t::BINARY;
+    }
+
+    //-------------------------------------------------------------------------
+    type_id_t get_type_id(const bool_t &v)
+    {
+        return type_id_t::BOOL;
     }
 
     //-------------------------------------------------------------------------

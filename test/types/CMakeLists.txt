@@ -9,6 +9,7 @@ set(SOURCES binary_test.cpp
             type_str_id_test.cpp
             types_test.cpp
             container_trait_test.cpp
+            bool_test.cpp
     )
 
 

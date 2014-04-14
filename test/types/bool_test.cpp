@@ -16,7 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with libpnicore.  If not, see <http://www.gnu.org/licenses/>.
 //
-// ===========================================================================
+// ============================================================================
 //
 //  Created on: Apr 11, 2014
 //      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
@@ -24,52 +24,68 @@
 #include<cppunit/extensions/HelperMacros.h>
 
 #include <iostream>
+#include <boost/current_function.hpp>
 
-#include "container_trait_test.hpp"
+#include <pni/core/types/bool.hpp>
 
-CPPUNIT_TEST_SUITE_REGISTRATION(container_trait_test);
+#include "bool_test.hpp"
+
+
+CPPUNIT_TEST_SUITE_REGISTRATION(bool_test);
+
 
 //-----------------------------------------------------------------------------
-void container_trait_test::setUp(){ }
+void bool_test::setUp(){ }
 
 //-----------------------------------------------------------------------------
-void container_trait_test::tearDown(){ }
+void bool_test::tearDown(){ }
 
 //-----------------------------------------------------------------------------
-void container_trait_test::test_vector()
+void bool_test::test_construction()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
-    typedef std::vector<size_t> vector_type;
-    typedef container_trait<vector_type> trait_type;
-
-    CPPUNIT_ASSERT(trait_type::is_random_access);
-    CPPUNIT_ASSERT(trait_type::is_iterable);
-    CPPUNIT_ASSERT(trait_type::is_contiguous);
-    CPPUNIT_ASSERT(!trait_type::is_multidim);
+    bool_t bvalue;
+    CPPUNIT_ASSERT(!bvalue);
+    
+    bool_t bvalue2 = true; 
+    CPPUNIT_ASSERT(bvalue2);
 }
 
 //-----------------------------------------------------------------------------
-void container_trait_test::test_array()
+void bool_test::test_comparison()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
-    typedef std::array<size_t,4> array_type;
-    typedef container_trait<array_type> trait_type;
+    bool_t v1;
+    bool_t v2 = true;
+    bool_t v3 = false;
 
-    CPPUNIT_ASSERT(trait_type::is_random_access);
-    CPPUNIT_ASSERT(trait_type::is_iterable);
-    CPPUNIT_ASSERT(trait_type::is_contiguous);
-    CPPUNIT_ASSERT(!trait_type::is_multidim);
+    CPPUNIT_ASSERT(v1 != v2);
+    CPPUNIT_ASSERT(v1 == v3);
 }
 
 //-----------------------------------------------------------------------------
-void container_trait_test::test_list()
+void bool_test::test_assignment()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
-    typedef std::list<size_t> list_type;
-    typedef container_trait<list_type> trait_type;
+    bool_t v1;
+    CPPUNIT_ASSERT(!v1);
 
-    CPPUNIT_ASSERT(!trait_type::is_random_access);
-    CPPUNIT_ASSERT(trait_type::is_iterable);
-    CPPUNIT_ASSERT(!trait_type::is_contiguous);
-    CPPUNIT_ASSERT(!trait_type::is_multidim);
+    v1 = true;
+
+    CPPUNIT_ASSERT(v1);
 }
+
+//-----------------------------------------------------------------------------
+void bool_test::test_compatability()
+{
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+    typedef std::vector<bool_t> vector_type;
+
+    vector_type v(10);
+    
+    bool_t *ptr = v.data();
+    for(auto x: v)
+        CPPUNIT_ASSERT(x==*ptr++);
+
+}
+

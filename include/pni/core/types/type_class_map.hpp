@@ -72,7 +72,7 @@ namespace core{
     CREATE_TYPE_CLASS_MAP(complex64,type_class_t::COMPLEX);
     CREATE_TYPE_CLASS_MAP(complex128,type_class_t::COMPLEX);
 
-    CREATE_TYPE_CLASS_MAP(bool,type_class_t::BOOL);
+    CREATE_TYPE_CLASS_MAP(bool_t,type_class_t::BOOL);
     CREATE_TYPE_CLASS_MAP(binary,type_class_t::BINARY);
     CREATE_TYPE_CLASS_MAP(string,type_class_t::STRING);
 

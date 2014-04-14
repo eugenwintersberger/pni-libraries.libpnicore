@@ -1,5 +1,5 @@
 //
-// (c) Copyright 2012 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
+// (c) Copyright 2014 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
 //
 // This file is part of libpnicore.
 //
@@ -15,29 +15,34 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with libpnicore.  If not, see <http://www.gnu.org/licenses/>.
+// 
+// ============================================================================
 //
-// ===========================================================================
-//
-//  Created on: Sep 27, 2012
-//      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
+// Created on: Apr 11, 2014
+//     Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
 //
 #pragma once
 
-#include<cppunit/TestFixture.h>
-#include<cppunit/extensions/HelperMacros.h>
-#include<boost/current_function.hpp>
 
-#include <pni/core/types.hpp>
+namespace pni{
+namespace core{
+    
+    class bool_t
+    {
+        private:
+            bool _value;
+        public:
+            bool_t():_value(false) {}
+            bool_t(bool v):_value(v) {}
 
-using namespace pni::core;
+            operator bool() const
+            {
+                return _value;
+            }
 
-class type_class_test : public CppUnit::TestFixture
-{
-        CPPUNIT_TEST_SUITE(type_class_test);
-        CPPUNIT_TEST(test_map);
-        CPPUNIT_TEST_SUITE_END();
-    public:
-        void setUp();
-        void tearDown();
-        void test_map();
-};
+    };
+
+
+//end of namespace
+}
+}
