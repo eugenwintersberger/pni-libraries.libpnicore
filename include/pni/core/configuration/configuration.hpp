@@ -60,6 +60,45 @@ namespace core{
 
             //! positional arguments description
             popts::positional_options_description _oargs;
+
+            //! 
+            //! \brief get default value string
+            //! 
+            //! Converts the default value provided by an option to its
+            //! string representation. 
+            //! 
+            //! \tparam T data type of the default value
+            //! \param v default value
+            //! \return string representation of v
+            //! 
+            template<typename T> 
+            string default_value_string(const T &v)
+            {
+                return boost::lexical_cast<string>(v);
+            }
+
+            //!
+            //! \brief get default value string
+            //! 
+            //! Overloaded version if the option allows multiple values via a
+            //! std::pointer. In this case the first element is used as a
+            //! default value. An exception is thrown wenn the default 
+            //! container is an empty container.
+            //!
+            //! \throws index_error if the vector is empty
+            //! \tparam T element type of the vector
+            //! \param v instance of the vector
+            //! \return string representation of the first element
+            //!
+            template<typename T>
+            string default_value_string(const std::vector<T> &v)
+            {
+                if(v.empty())
+                    throw index_error(EXCEPTION_RECORD,
+                            "Default value container is empty!");
+
+                return boost::lexical_cast<string>(v[0]);
+            }
         protected:
             //!
             //! \brief print options
@@ -191,7 +230,8 @@ namespace core{
                 auto value =
                     popts::value<T>(const_cast<T*>(opt.external_reference()));
                 if(opt.has_default())
-                    value->default_value(opt.default_value());
+                    value->default_value(opt.default_value(),
+                                         default_value_string(opt.default_value()));
 
                 option_sptr option_ptr (new popts::option_description(oname.c_str(),
                                         value,opt.description().c_str()));
