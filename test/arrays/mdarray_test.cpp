@@ -1,26 +1,26 @@
-//!
-//! (c) Copyright 2013 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
-//!
-//! This file is part of libpnicore.
-//!
-//! libpnicore is free software: you can redistribute it and/or modify
-//! it under the terms of the GNU General Public License as published by
-//! the Free Software Foundation, either version 2 of the License, or
-//! (at your option) any later version.
-//!
-//! libpnicore is distributed in the hope that it will be useful,
-//! but WITHOUT ANY WARRANTY; without even the implied warranty of
-//! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//! GNU General Public License for more details.
-//!
-//! You should have received a copy of the GNU General Public License
-//! along with libpnicore.  If not, see <http://www.gnu.org/licenses/>.
-//!
-//! ===========================================================================
-//!
-//!  Created on: Oct 28, 2013
-//!      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
-//!
+//
+// (c) Copyright 2013 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
+//
+// This file is part of libpnicore.
+//
+// libpnicore is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+//
+// libpnicore is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with libpnicore.  If not, see <http://www.gnu.org/licenses/>.
+//
+// ===========================================================================
+//
+//  Created on: Oct 28, 2013
+//      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
+//
 #include<cppunit/extensions/HelperMacros.h>
 
 #include <iostream>
@@ -59,7 +59,8 @@ DYNARRAY_TEST_REGISTRATION(float128);
 DYNARRAY_TEST_REGISTRATION(complex32);
 DYNARRAY_TEST_REGISTRATION(complex64);
 DYNARRAY_TEST_REGISTRATION(complex128);
-//DYNARRAY_TEST_REGISTRATION(string);
+DYNARRAY_TEST_REGISTRATION(string);
+DYNARRAY_TEST_REGISTRATION(bool_t);
 //-------------------fixed dimension tests-------------------------------------
 FIXARRAY_TEST_REGISTRATION(uint8,3);
 FIXARRAY_TEST_REGISTRATION(int8,3);
@@ -75,7 +76,8 @@ FIXARRAY_TEST_REGISTRATION(float128,3);
 FIXARRAY_TEST_REGISTRATION(complex32,3);
 FIXARRAY_TEST_REGISTRATION(complex64,3);
 FIXARRAY_TEST_REGISTRATION(complex128,3);
-//FIXARRAY_TEST_REGISTRATION(string,3);
+FIXARRAY_TEST_REGISTRATION(string,3);
+FIXARRAY_TEST_REGISTRATION(bool_t,3);
 //---------------------static array test---------------------------------------
 STATARRAY_TEST_REGISTRATION(uint8);
 STATARRAY_TEST_REGISTRATION(int8);
@@ -91,4 +93,5 @@ STATARRAY_TEST_REGISTRATION(float128);
 STATARRAY_TEST_REGISTRATION(complex32);
 STATARRAY_TEST_REGISTRATION(complex64);
 STATARRAY_TEST_REGISTRATION(complex128);
-//STATARRAY_TEST_REGISTRATION(string);
+STATARRAY_TEST_REGISTRATION(string);
+STATARRAY_TEST_REGISTRATION(bool_t);

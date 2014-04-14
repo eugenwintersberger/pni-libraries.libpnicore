@@ -50,6 +50,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION(array_test<dynamic_array<complex64> >);
 CPPUNIT_TEST_SUITE_REGISTRATION(array_test<dynamic_array<complex128> >);
 
 CPPUNIT_TEST_SUITE_REGISTRATION(array_test<dynamic_array<string> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(array_test<dynamic_array<bool_t>> );
 
 CPPUNIT_TEST_SUITE_REGISTRATION(array_test<sarray<uint8> >);
 CPPUNIT_TEST_SUITE_REGISTRATION(array_test<sarray<int8> >);
@@ -69,6 +70,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION(array_test<sarray<complex64> >);
 CPPUNIT_TEST_SUITE_REGISTRATION(array_test<sarray<complex128> >);
 
 CPPUNIT_TEST_SUITE_REGISTRATION(array_test<sarray<string> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(array_test<sarray<bool_t> >);
 
 CPPUNIT_TEST_SUITE_REGISTRATION(array_test<farray<uint8> >);
 CPPUNIT_TEST_SUITE_REGISTRATION(array_test<farray<int8> >);
@@ -88,3 +90,4 @@ CPPUNIT_TEST_SUITE_REGISTRATION(array_test<farray<complex64> >);
 CPPUNIT_TEST_SUITE_REGISTRATION(array_test<farray<complex128> >);
 
 CPPUNIT_TEST_SUITE_REGISTRATION(array_test<farray<string> >);
+CPPUNIT_TEST_SUITE_REGISTRATION(array_test<farray<bool_t> >);

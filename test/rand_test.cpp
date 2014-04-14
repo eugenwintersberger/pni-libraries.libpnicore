@@ -50,6 +50,7 @@ template<> struct bound_type<string>
 };
 
 
+
 template<typename T> void execute(size_t n,string a,string b)
 {
     using boost::lexical_cast;
@@ -104,6 +105,7 @@ int main(int argc,char **argv)
     else if(type_id == type_id_t::COMPLEX64) execute<complex64>(nruns,a,b);
     else if(type_id == type_id_t::COMPLEX128) execute<complex128>(nruns,a,b);
     else if(type_id == type_id_t::STRING) execute<string>(nruns,a,b);
+    else if(type_id == type_id_t::BOOL) execute<bool_t>(nruns,a,b);
     else
     {
         std::cerr<<"Unknown data type!"<<std::endl;

@@ -113,6 +113,28 @@ template<typename T> class random_generator<std::complex<T>>
 };
 
 //-----------------------------------------------------------------------------
+template<> class random_generator<bool_t>
+{
+    private:
+        random_generator<unsigned short> _generator;
+    public:
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+        random_generator(unsigned short a,unsigned short b):_generator(0,1)
+        {}
+#pragma GCC diagnostic pop
+
+        random_generator(): _generator(0,1)
+        {}
+
+        bool_t operator()()
+        {
+            return bool(_generator());
+        }
+
+};
+
+//-----------------------------------------------------------------------------
 template<> class random_generator<string>
 {
     private:

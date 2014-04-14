@@ -18,34 +18,34 @@
 // 
 // ============================================================================
 //
-// Created on: Apr 11, 2014
+// Created on: Apr 14, 2014
 //     Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
 //
-#pragma once
 
-#include <iostream>
+#include <pni/core/types.hpp>
 
 namespace pni{
 namespace core{
     
-    class bool_t
+    std::ostream &operator<<(std::ostream &stream,const bool_t &b)
     {
-        private:
-            bool _value;
-        public:
-            bool_t():_value(false) {}
-            bool_t(bool v):_value(v) {}
+        if(b) stream<<"True";
+        else stream<<"False";
 
-            operator bool() const
-            {
-                return _value;
-            }
+        return stream;
+    }
 
-    };
+    std::istream &operator>>(std::istream &stream,bool_t &b)
+    {
+        string value;
+        stream>>value;
+        if(value == "True") b = true;
+        else if(value == "False") b = false;
+
+        return stream;
+    }
 
 
-    std::ostream &operator<<(std::ostream &stream,const bool_t &b);
-    std::istream &operator>>(std::istream &stream,bool_t &b);
 //end of namespace
 }
 }

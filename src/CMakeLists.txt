@@ -19,6 +19,7 @@ set(SOURCES array.cpp
             type_utils.cpp
             value.cpp
             value_ref.cpp
+            bool.cpp
             )
 
 
