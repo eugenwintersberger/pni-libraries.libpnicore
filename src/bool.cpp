@@ -1,5 +1,5 @@
 //
-// (c) Copyright 2012 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
+// (c) Copyright 2014 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
 //
 // This file is part of libpnicore.
 //
@@ -15,29 +15,37 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with libpnicore.  If not, see <http://www.gnu.org/licenses/>.
+// 
+// ============================================================================
 //
-// ===========================================================================
+// Created on: Apr 14, 2014
+//     Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
 //
-//  Created on: Sep 27, 2012
-//      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
-//
-#pragma once
-
-#include<cppunit/TestFixture.h>
-#include<cppunit/extensions/HelperMacros.h>
-#include<boost/current_function.hpp>
 
 #include <pni/core/types.hpp>
 
-using namespace pni::core;
+namespace pni{
+namespace core{
+    
+    std::ostream &operator<<(std::ostream &stream,const bool_t &b)
+    {
+        if(b) stream<<"True";
+        else stream<<"False";
 
-class type_class_test : public CppUnit::TestFixture
-{
-        CPPUNIT_TEST_SUITE(type_class_test);
-        CPPUNIT_TEST(test_map);
-        CPPUNIT_TEST_SUITE_END();
-    public:
-        void setUp();
-        void tearDown();
-        void test_map();
-};
+        return stream;
+    }
+
+    std::istream &operator>>(std::istream &stream,bool_t &b)
+    {
+        string value;
+        stream>>value;
+        if(value == "True") b = true;
+        else if(value == "False") b = false;
+
+        return stream;
+    }
+
+
+//end of namespace
+}
+}

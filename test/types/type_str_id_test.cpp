@@ -1,26 +1,26 @@
-//!
-//! (c) Copyright 2013 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
-//!
-//! This file is part of libpnicore.
-//!
-//! libpnicore is free software: you can redistribute it and/or modify
-//! it under the terms of the GNU General Public License as published by
-//! the Free Software Foundation, either version 2 of the License, or
-//! (at your option) any later version.
-//!
-//! libpnicore is distributed in the hope that it will be useful,
-//! but WITHOUT ANY WARRANTY; without even the implied warranty of
-//! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//! GNU General Public License for more details.
-//!
-//! You should have received a copy of the GNU General Public License
-//! along with libpnicore.  If not, see <http://www.gnu.org/licenses/>.
-//!
-//! ===========================================================================
-//!
-//!  Created on: Oct 15, 2013
-//!      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
-//!
+//
+// (c) Copyright 2013 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
+//
+// This file is part of libpnicore.
+//
+// libpnicore is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+//
+// libpnicore is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with libpnicore.  If not, see <http://www.gnu.org/licenses/>.
+//
+// ===========================================================================
+//
+//  Created on: Oct 15, 2013
+//      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
+//
 #include<cppunit/extensions/HelperMacros.h>
 
 #include <iostream>
@@ -61,6 +61,7 @@ void type_str_id_test::test_id_to_str()
 
     CPPUNIT_ASSERT(str_from_type_id(type_id_t::STRING)=="string");
     CPPUNIT_ASSERT(str_from_type_id(type_id_t::BINARY)=="binary");
+    CPPUNIT_ASSERT(str_from_type_id(type_id_t::BOOL) == "bool");
     
     CPPUNIT_ASSERT_THROW(str_from_type_id(type_id_t::NONE),key_error);
 }
@@ -109,6 +110,7 @@ void type_str_id_test::test_str_to_id()
     CPPUNIT_ASSERT(type_id_from_str("string")==type_id_t::STRING);
     CPPUNIT_ASSERT(type_id_from_str("str")==type_id_t::STRING);
     CPPUNIT_ASSERT(type_id_from_str("binary")==type_id_t::BINARY);
+    CPPUNIT_ASSERT(type_id_from_str("bool")==type_id_t::BOOL);
 
     CPPUNIT_ASSERT_THROW(type_id_from_str("blabla"),key_error);
 

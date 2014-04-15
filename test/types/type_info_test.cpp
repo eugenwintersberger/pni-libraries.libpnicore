@@ -1,26 +1,26 @@
-//!
-//! (c) Copyright 2012 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
-//!
-//! This file is part of libpnicore.
-//!
-//! libpnicore is free software: you can redistribute it and/or modify
-//! it under the terms of the GNU General Public License as published by
-//! the Free Software Foundation, either version 2 of the License, or
-//! (at your option) any later version.
-//!
-//! libpnicore is distributed in the hope that it will be useful,
-//! but WITHOUT ANY WARRANTY; without even the implied warranty of
-//! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//! GNU General Public License for more details.
-//!
-//! You should have received a copy of the GNU General Public License
-//! along with libpnicore.  If not, see <http://www.gnu.org/licenses/>.
-//!
-//! ===========================================================================
-//!
-//!  Created on: Oct 01, 2012
-//!      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
-//!
+//
+// (c) Copyright 2012 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
+//
+// This file is part of libpnicore.
+//
+// libpnicore is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+//
+// libpnicore is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with libpnicore.  If not, see <http://www.gnu.org/licenses/>.
+//
+// ===========================================================================
+//
+//  Created on: Oct 01, 2012
+//      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
+//
 #include<cppunit/extensions/HelperMacros.h>
 #include<limits>
 
@@ -83,5 +83,36 @@ void type_info_test::test_min_max()
     CPPUNIT_ASSERT(type_info<bool>::min() == false);
     CPPUNIT_ASSERT(type_info<bool>::max() == true);
 
+}
+
+//----------------------------------------------------------------------------
+void type_info_test::test_binary()
+{
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+    typedef type_info<binary> info_type;
+        
+    CPPUNIT_ASSERT(info_type::size == 1);
+    CPPUNIT_ASSERT(info_type::is_integer);
+    CPPUNIT_ASSERT(!info_type::is_signed);
+    CPPUNIT_ASSERT(!info_type::is_complex);
+
+    CPPUNIT_ASSERT(info_type::min() == 0);
+    CPPUNIT_ASSERT(info_type::max() == 255);
+}
+
+//----------------------------------------------------------------------------
+void type_info_test::test_bool()
+{
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+
+    typedef type_info<bool_t> info_type;
+
+    CPPUNIT_ASSERT(info_type::size == 1);
+    CPPUNIT_ASSERT(info_type::is_integer);
+    CPPUNIT_ASSERT(!info_type::is_signed);
+    CPPUNIT_ASSERT(!info_type::is_complex);
+
+    CPPUNIT_ASSERT(info_type::min() == false);
+    CPPUNIT_ASSERT(info_type::max() == true);
 }
 

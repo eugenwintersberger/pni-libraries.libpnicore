@@ -46,3 +46,4 @@ CPPUNIT_TEST_SUITE_REGISTRATION(value_ref_test<complex64>);
 CPPUNIT_TEST_SUITE_REGISTRATION(value_ref_test<complex128>);
 
 CPPUNIT_TEST_SUITE_REGISTRATION(value_ref_test<string>);
+CPPUNIT_TEST_SUITE_REGISTRATION(value_ref_test<bool_t>);

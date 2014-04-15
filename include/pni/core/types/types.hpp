@@ -30,6 +30,7 @@
 #include <vector>
 
 #include "binary.hpp"
+#include "bool.hpp"
 
 namespace pni{
 namespace core{

@@ -65,6 +65,17 @@ namespace core{
     type_id_t get_type_id(const binary &v);
 
     //-------------------------------------------------------------------------
+    //!
+    //! \ingroup type_classes_internal
+    //! \btrief get_type_id overload for bool_t data
+    //!
+    //! \param v boolean data
+    //! \return typeID for bool_t
+    //!
+    type_id_t get_type_id(const bool_t &v);
+
+
+    //-------------------------------------------------------------------------
     //call this to obtain the type ID of a string value
     //! 
     //! \ingroup type_classes_internal

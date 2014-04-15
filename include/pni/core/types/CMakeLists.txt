@@ -8,6 +8,7 @@ set(HEADER_FILES binary.hpp
                  types.hpp
                  type_utils.hpp
                  container_trait.hpp
+                 bool.hpp
                  )
 
 install(FILES ${HEADER_FILES} 

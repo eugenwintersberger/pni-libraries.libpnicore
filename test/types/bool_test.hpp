@@ -1,5 +1,5 @@
 //
-// (c) Copyright 2012 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
+// (c) Copyright 2014 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
 //
 // This file is part of libpnicore.
 //
@@ -16,9 +16,9 @@
 // You should have received a copy of the GNU General Public License
 // along with libpnicore.  If not, see <http://www.gnu.org/licenses/>.
 //
-// ============================================================================
+// ===========================================================================
 //
-//  Created on: Feb 08, 2012
+//  Created on: Apr 11, 2014
 //      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
 //
 #pragma once
@@ -28,25 +28,22 @@
 
 using namespace pni::core;
 
-class binary_test : public CppUnit::TestFixture
+class bool_test : public CppUnit::TestFixture
 {
-	CPPUNIT_TEST_SUITE(binary_test);
+	CPPUNIT_TEST_SUITE(bool_test);
     CPPUNIT_TEST(test_construction);
     CPPUNIT_TEST(test_comparison);
     CPPUNIT_TEST(test_assignment);
     CPPUNIT_TEST(test_compatability);
-    CPPUNIT_TEST(test_io_operator);
-    CPPUNIT_TEST(test_io);
+    CPPUNIT_TEST(test_operators);
 	CPPUNIT_TEST_SUITE_END();
 public:
-    typedef binary_t<uint8> binary_type;
 	void setUp();
 	void tearDown();
     void test_construction();
     void test_comparison();
     void test_assignment();
     void test_compatability();
-    void test_io_operator();
-    void test_io();
+    void test_operators();
 
 };

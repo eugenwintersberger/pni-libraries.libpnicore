@@ -113,48 +113,67 @@ namespace core{
     template<typename T> 
     struct type_info<std::complex<T>>
     {
-        public:
+        typedef std::complex<T> type;
+        typedef T base_type;
 
-            typedef std::complex<T> type;
-            typedef T base_type;
+        static const size_t size = sizeof(std::complex<T>);
+        static const bool is_integer = type_info<T>::is_integer;
+        static const bool is_signed = type_info<T>::is_signed;
+        static const bool is_complex = true;
 
-            static const size_t size = sizeof(std::complex<T>);
-            static const bool is_integer = type_info<T>::is_integer;
-            static const bool is_signed = type_info<T>::is_signed;
-            static const bool is_complex = true;
-
-            //---------------------------------------------------------------------
-            static bool is_negative(type value){ return false; }
+        //---------------------------------------------------------------------
+        static bool is_negative(type value){ return false; }
 
 
-            //---------------------------------------------------------------------
-            //! return the minimum value of the Complex32 type
-            static T min() { return type_info<T>::min(); }
+        //---------------------------------------------------------------------
+        //! return the minimum value of the Complex32 type
+        static T min() { return type_info<T>::min(); }
 
-            //---------------------------------------------------------------------
-            //! return the maximum value of the Complex32 type
-            static T max() { return type_info<T>::max(); }
+        //---------------------------------------------------------------------
+        //! return the maximum value of the Complex32 type
+        static T max() { return type_info<T>::max(); }
 
     };
 
-    //! \ingroup Data-objects
-    //! \brief type info for bool
-    template<> class type_info<bool>
+    template<> struct type_info<binary>
     {
-        public:
-            typedef bool type;
-            typedef bool base_type;
+        typedef binary type;
+        typedef binary base_type;
 
-            static const size_t size = sizeof(bool);
-            static const bool is_integer = true;
-            static const bool is_signed = false;
-            static const bool is_complex = false;
+        static const size_t size = sizeof(binary);
+        static const bool is_integer = true;
+        static const bool is_signed = false;
+        static const bool is_complex = false;
 
-            static bool is_negative() { return false; }
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+        static bool is_negative(type value) { return false; }
+#pragma GCC diagnostic pop
 
-            static bool min() { return false; }
+        static type min() { return 0; }
+        static type max() { return 255; }
 
-            static bool max() { return true; }
+    };
+
+
+    template<> struct type_info<bool_t>
+    {
+        typedef bool_t type;
+        typedef bool_t base_type;
+
+        static const size_t size = sizeof(bool);
+        static const bool is_integer = true;
+        static const bool is_signed = false;
+        static const bool is_complex = false;
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+        static bool is_negative(type value) { return false; }
+#pragma GCC diagnostic pop
+
+        static type min() { return false; }
+
+        static type max() { return true; }
 
     };
     //! \endcond
