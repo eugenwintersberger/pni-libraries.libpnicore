@@ -35,7 +35,26 @@ done you can build the library simply with
 
 $> make 
 
-and install the software with 
+This will only build the library's binary. In order to build the documentation
+use 
+
+$> make doc
+
+3.) Testing the build 
+    -----------------
+
+To run the unit tests of the library use 
+
+$> make test 
+
+The output of this command should be self explaining. The tests are implemented
+using cppunit. Every test program is writing an xml file with test reports. 
+The xml files are stored in the test/ below the build directory. 
+
+4.) Installation
+    ------------
+
+After testing, installation runs via the install target of the Makefile
 
 $> make install
 
@@ -52,17 +71,6 @@ would look like this:
 
 $> cmake -DCMAKE_VERBOSE_MAKEFILE=ON ../libpnicore
 
-In some cases one may wants to change the default C++ compiler. This can be done
-with the CMAKE_CXX_COMPILER variable. 
-
-$> cmake -DCMAKE_CXX_COMPILER=g++-4.4 -DCMAKE_C_COMPILER=gcc-4.4 ...
-
-However, this option should be used with care. Do not try to use this feature
-for cross compilation. For this purpose toolchain files are provided. However,
-it is perfectly ok to use this feature to work with different compiler version
-on the same platform. One additional not: if one changes the CXX compiler the
-appropriate C compiler should be passed via the CMAKE_C_COMPILER VARIABLE. 
-
 The library currently provides two build types
 - RELEASE
 - DEBUG
@@ -74,9 +82,8 @@ $> cmake -DCMAKE_BUILD_TYPE=DEBUG ...
 It is important to note that the release types are case sensitive. You have to
 use RELEASE or DEBUG.
 
-
-3.) Prepare your environment 
-    ------------------------
+4.1.) Prepare your environment 
+      ------------------------
 
 Before you can actually use the library you may have to set some environment
 variables. LD_LIBRARY_PATH should point to the directory where the library
@@ -90,21 +97,6 @@ $> pkg-config --cflags --libs pnicore
 You should then obtain some compiler flags like the path to the libraries header
 files and the linker flags required to link versus libpnicore. 
 
-4.) Running the tests
-    -----------------
-
-We strongly recommend you to run the test code for the library to check if
-everything was built correctly. For this purpose change to the test directory
-below your build directory 
-
-$> cd test
-
-and run 
-
-$> ./pnicoretest
-
-If you have not installed the  library yet you may need to set LD_LIBRARY_PATH
-to the src directory of the build directory.
 
 
 
