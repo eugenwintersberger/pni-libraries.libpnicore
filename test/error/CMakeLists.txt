@@ -19,3 +19,8 @@ if(CPPUNIT_FOUND)
 
 endif()
 
+add_test(NAME error_test 
+         COMMAND error_test
+         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/../
+         )
+

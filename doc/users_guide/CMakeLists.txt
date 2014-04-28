@@ -26,7 +26,7 @@ add_custom_command(OUTPUT libpnicore_ug.pdf
                    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
                    )
 
-add_custom_target(users_guide ALL DEPENDS "libpnicore_ug.pdf" )
+               add_custom_target(users_guide  DEPENDS "libpnicore_ug.pdf" )
 
 install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/libpnicore_ug.pdf" 
         DESTINATION "${CMAKE_INSTALL_FULL_DOCDIR}")

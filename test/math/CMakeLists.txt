@@ -22,4 +22,7 @@ if(CPPUNIT_FOUND)
 
 endif()
 
-
+add_test(NAME math_test 
+         COMMAND math_test
+         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/../
+         )

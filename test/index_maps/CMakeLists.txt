@@ -17,4 +17,9 @@ if(CPPUNIT_FOUND)
 
 endif()
 
+add_test(NAME index_maps_test 
+         COMMAND index_maps_test
+         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/../
+         )
+
 

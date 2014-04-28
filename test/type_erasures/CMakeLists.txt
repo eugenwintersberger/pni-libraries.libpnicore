@@ -20,4 +20,9 @@ if(CPPUNIT_FOUND)
 
 endif()
 
+add_test(NAME type_erasures_test 
+         COMMAND type_erasures
+         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/../
+         )
+
 

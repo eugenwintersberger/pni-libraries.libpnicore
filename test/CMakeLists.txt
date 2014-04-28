@@ -9,6 +9,7 @@ add_library(test_common OBJECT ${COMMON_SOURCES})
 
 add_executable(rand_test "rand_test.cpp")
 target_link_libraries(rand_test pnicore)
+add_test(rand_test rand_test)
 
 add_subdirectory(index_maps)
 #add_subdirectory(dim_layout_test)
@@ -19,7 +20,5 @@ add_subdirectory(type_erasures)
 add_subdirectory(config)
 add_subdirectory(math)
 add_subdirectory(error)
-
-configure_file(run_tests.sh run_tests.sh COPYONLY)
 
 

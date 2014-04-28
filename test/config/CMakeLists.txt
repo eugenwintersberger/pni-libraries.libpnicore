@@ -21,3 +21,9 @@ if("${CMAKE_FAMILY_VERSION}" EQUAL "2.6")
 else()
     configure_file(pni.cfg.cmake pni.cfg)
 endif()
+
+message(${CMAKE_CURRENT_BINARY_DIR})
+add_test(NAME config_test 
+         COMMAND config_test
+         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/../
+         )
