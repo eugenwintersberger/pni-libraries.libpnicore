@@ -55,7 +55,7 @@ namespace core{
 
     //=====================Exception related helper functions==================
     //!
-    //! \ingroup error_class
+    //! \ingroup error_classes
     //! \brief check if two container have equal size
     //! 
     //! This helper function checks if two container instances have equal size
