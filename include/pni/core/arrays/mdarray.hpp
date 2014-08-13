@@ -237,8 +237,9 @@ namespace core {
             array_type &operator=(const mdarray<MDARGS...> &array)
             {
                 if((void*)this == (void*)&array) return *this;
-
-                for(size_t i=0;i<array.size();++i) (*this)[i] = array[i];
+    
+                size_t s = array.size();
+                for(size_t i=0;i<s;++i) (*this)[i] = array[i];
 
                 return *this;
             }
