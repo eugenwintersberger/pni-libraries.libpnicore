@@ -36,44 +36,89 @@ namespace core{
     //! \brief get minimum and maximum
     //! 
     //! This struct provides static methods to determine the minimum 
-    //! and maximum provided by a type.
+    //! and maximum provided by a type. This implementation provides 
+    //! min and max functions for integer types. A specialized version for 
+    //! floating point types exists too.
     //! 
     //! \tparam T data type
     //! \tparam is_float true if the type is a float type
     //!
     template<
              typename T,
-             bool is_float
+             bool is_float=false
             >
-    struct min_max;
-
-    template<typename T> struct min_max<T,true>
+    struct min_max
     {
-        static T min()
-        {
-            return -std::numeric_limits<T>::max(); 
-        }
-
-        static T max()
-        {
-            return std::numeric_limits<T>::max();
-        }
-    };
-
-    template<typename T> struct min_max<T,false>
-    {
+        //!
+        //! \brief return minimum
+        //!
+        //! Return the minimum possible value for an integer type.
+        //! This function returns std::numeric_limits<T>::min().
+        //!
+        //! \return minimum value of a type
+        //!
         static T min()
         {
             return std::numeric_limits<T>::min();
         }
 
+        //--------------------------------------------------------------------
+        //!
+        //! \brief return maximum
+        //!
+        //! Return the maximum value of an integer point type. This function
+        //! returns std::numeric_limits<T>::max().
+        //!
+        //! \return maximum value of a type
+        //!
         static T max()
         {
             return std::numeric_limits<T>::max();
         }
     };
 
+    //------------------------------------------------------------------------
+    //!
+    //! \ingroup type_classes
+    //! \brief get minimum and maximum for floats
+    //! 
+    //! Specialized version of the min_max template for determining the 
+    //! minimum and maximum value of a floating point type.
+    //! 
+    //! \tparam T data type
+    //!
+    template<typename T> struct min_max<T,true>
+    {
+        //! 
+        //! \brief get minimum
+        //! 
+        //! For floating point numbers this function returns -max() which is 
+        //! different from the std::numerics_<T> template implemented in the
+        //! STL.
+        //! 
+        //! \return minimum value of a float type
+        //!
+        static T min()
+        {
+            return -std::numeric_limits<T>::max(); 
+        }
 
+        //--------------------------------------------------------------------
+        //!
+        //! \brief get maximum
+        //! 
+        //! Returns the maximum value for a floating point type. This function
+        //! simply returns std::numeric_limits<T>::max().
+        //!
+        //! \return maximum value of a float type
+        //!
+        static T max()
+        {
+            return std::numeric_limits<T>::max();
+        }
+    };
+
+    //-------------------------------------------------------------------------
     //! 
     //! \ingroup type_classes
     //! \brief type information class
