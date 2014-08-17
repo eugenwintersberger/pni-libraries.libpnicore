@@ -149,7 +149,6 @@ template<typename ATYPE> void array_view_test<ATYPE>::tearDown() { }
 //-----------------------------------------------------------------------------
 template<typename ATYPE> void array_view_test<ATYPE>::test_construction()
 {
-    typedef typename ATYPE::map_type::storage_type index_type;
     typedef array_selection selection_type;
    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
@@ -199,7 +198,6 @@ void array_view_test<ATYPE>::test_construction_from_array_variadic()
 //-----------------------------------------------------------------------------
 template<typename ATYPE> void array_view_test<ATYPE>::test_linear_access()
 {
-    typedef typename ATYPE::map_type::storage_type index_type;
     typedef array_selection selection_type;
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
@@ -264,7 +262,6 @@ void array_view_test<ATYPE>::test_linear_access_pointer()
 //-----------------------------------------------------------------------------
 template<typename ATYPE> void array_view_test<ATYPE>::test_iterator_access()
 {
-    typedef typename ATYPE::map_type::storage_type index_type;
     typedef array_selection selection_type;
     typedef std::vector<value_type> ctype;
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
@@ -337,7 +334,6 @@ template<typename ATYPE> void array_view_test<ATYPE>::test_assignment()
 template<typename ATYPE> void array_view_test<ATYPE>::test_multiindex_access()
 {
     typedef std::vector<value_type> ctype;
-    typedef typename ATYPE::map_type::storage_type index_type;
     typedef array_selection selection_type;
 
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;

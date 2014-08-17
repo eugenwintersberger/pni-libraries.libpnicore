@@ -494,7 +494,6 @@ namespace core {
                     >
             array_view<array_type> operator()(const CTYPE &slices)
             {
-                typedef typename map_type::storage_type index_type;
                 typedef array_view<array_type> view_type;
 
                 return view_type(*this, array_selection::create(slices));
@@ -540,7 +539,6 @@ namespace core {
                     >
             array_view<const array_type> operator()(const CTYPE &slices) const
             {
-                typedef typename map_type::storage_type index_type;
                 typedef array_view<const array_type> view_type;
 
                 return view_type(*this,array_selection::create(slices));

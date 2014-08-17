@@ -133,8 +133,6 @@ void binary_test::test_io()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
-    typedef std::fstream fstream;
-
     std::ifstream istream;
     std::ofstream ostream;
 

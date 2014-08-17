@@ -31,6 +31,49 @@
 namespace pni{
 namespace core{
 
+    //!
+    //! \ingroup type_classes
+    //! \brief get minimum and maximum
+    //! 
+    //! This struct provides static methods to determine the minimum 
+    //! and maximum provided by a type.
+    //! 
+    //! \tparam T data type
+    //! \tparam is_float true if the type is a float type
+    //!
+    template<
+             typename T,
+             bool is_float
+            >
+    struct min_max;
+
+    template<typename T> struct min_max<T,true>
+    {
+        static T min()
+        {
+            return -std::numeric_limits<T>::max(); 
+        }
+
+        static T max()
+        {
+            return std::numeric_limits<T>::max();
+        }
+    };
+
+    template<typename T> struct min_max<T,false>
+    {
+        static T min()
+        {
+            return std::numeric_limits<T>::min();
+        }
+
+        static T max()
+        {
+            return std::numeric_limits<T>::max();
+        }
+    };
+
+
     //! 
     //! \ingroup type_classes
     //! \brief type information class
@@ -87,13 +130,7 @@ namespace core{
         //!
         static T min()
         {
-            //in the case of integers we can use min
-            if (std::numeric_limits<T>::is_integer)
-                return std::numeric_limits<T>::min();
-            else
-                //for floating point numbers this is a bit different min
-                //would yield here the value of the smallest possible number
-                return -std::numeric_limits<T>::max();
+            return min_max<T,std::is_floating_point<T>::value>::min();
         }
 
         //-----------------------------------------------------------------
@@ -104,7 +141,10 @@ namespace core{
         //!
         //! \return upper limit of T
         //!
-        static T max() { return std::numeric_limits<T>::max(); }
+        static T max() 
+        { 
+            return min_max<T,std::is_floating_point<T>::value>::max();
+        }
 
     };
 
