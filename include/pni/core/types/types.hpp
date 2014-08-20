@@ -214,6 +214,8 @@ namespace core{
     
     //! standard type for array shapes
     typedef std::vector<size_t> shape_t;
+    //! another alias for the standard shape type
+    typedef std::vector<size_t> shape_type;
 
 //end of namespace
 }
