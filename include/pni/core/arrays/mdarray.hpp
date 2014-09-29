@@ -531,9 +531,10 @@ namespace core {
             //!
             template<
                      typename... ITYPES,
-                     typename = ENABLE_VALID_INDEX(ITYPES)
+                     typename = typename enable_valid_index<ITYPES...>::type
                     >
-            VIEW_TYPE(array_type,ITYPES) operator()(ITYPES... indexes)
+            typename view_type_trait<array_type,ITYPES...>::type 
+            operator()(ITYPES... indexes)
             {
                 typedef view_provider<array_type,is_view_index<ITYPES...>::value>
                     provider_type;
@@ -558,9 +559,9 @@ namespace core {
             //!
             template<
                      typename... ITYPES,
-                     typename = ENABLE_VALID_INDEX(ITYPES)
+                     typename = typename enable_valid_index<ITYPES...>::type
                     >
-            CONST_VIEW_TYPE(array_type,ITYPES) 
+            typename view_type_trait<const array_type,ITYPES...>::const_type
             operator()(ITYPES ...indexes) const
             {
                 typedef view_provider<array_type,is_view_index<ITYPES...>::value>

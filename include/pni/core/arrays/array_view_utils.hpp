@@ -37,23 +37,8 @@ namespace core{
     template<typename ATYPE> class array_view;
     
     //==============================Define some useful macros===================
-#define IS_VIEW(IT)\
-    is_view_index<IT...>::value
-
 #define IDX_ARRAY(IT,i)\
     std::array<size_t,sizeof...(IT)>{{size_t(i)...}}
-
-#define IS_INDEX(IT)\
-    is_index_types<IT...>::value
-
-#define ENABLE_VALID_INDEX(IT)\
-    typename std::enable_if<IS_INDEX(IT)>::type
-
-#define VIEW_TYPE(AT,IT)\
-    typename array_view_trait<AT,IS_VIEW(ITYPES)>::type
-
-#define CONST_VIEW_TYPE(AT,IT)\
-    typename array_view_trait<const AT,IS_VIEW(ITYPES)>::const_type
 
 
     //!
@@ -590,6 +575,14 @@ template<typename CTYPE>
 
     };
 
+template<typename ATYPE,
+         typename ...ITYPES
+        >
+    using view_type_trait = array_view_trait<ATYPE,
+                                       is_view_index<ITYPES...>::value>;
+
+template<typename ...ITYPES>
+    using enable_valid_index = std::enable_if<is_index_types<ITYPES...>::value>;
 //end of namespace
 }
 }
