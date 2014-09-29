@@ -24,6 +24,9 @@
 
 #pragma once
 
+#include <vector>
+#include <array>
+
 #include <functional>
 #include <boost/mpl/contains.hpp>
 #include <boost/mpl/vector.hpp>
@@ -39,7 +42,6 @@ namespace core{
     //==============================Define some useful macros===================
 #define IDX_ARRAY(IT,i)\
     std::array<size_t,sizeof...(IT)>{{size_t(i)...}}
-
 
     //!
     //! \ingroup mdim_array_internal_classes
@@ -173,37 +175,23 @@ namespace core{
     //! This template checks if a container identifies a view. This is the 
     //! case if its value_type is slice. 
     //! 
-    template<typename CTYPE> 
-    struct is_view_cont
+    template<typename CTYPE> struct is_view_cont
     {
-        //! value type of the container
-        typedef typename CTYPE::value_type value_type;
+        //! by default CTYPE is no view container
+        static const bool value = false;
+    };
+    
+    template<typename T> struct is_view_cont<std::vector<T>>
+    {
         //! true if CTYPE holds view information
-        static const bool value = 
-            is_valid_index<value_type>::value &&
-            is_view_index<value_type>::value;
+        static const bool value = std::is_same<T,slice>::value;
     };
 
-    //------------------------------------------------------------------------
-    //! 
-    //! \ingroup mdim_array_internal_class
-    //! \brief view container check for slice 
-    //! 
-    //! This specialization of the is_view_cont template handles situations
-    //! where a slice instance is passed as a template parameters. 
-    //! Obviously, slice is not a valid container type. Thus the value of 
-    //! is_view_cont is set to false.
-    //!
-    template<> struct is_view_cont<slice>
+    template<typename T,size_t N> struct is_view_cont<std::array<T,N>>
     {
-        //! slice is not a view container -> set to false
-        static const bool value = false;
+        static const bool value = std::is_same<T,slice>::value;
     };
 
-    template<> struct is_view_cont<int>
-    {
-        static const bool value = false;
-    };
 
   
     //-------------------------------------------------------------------------
