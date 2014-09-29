@@ -220,6 +220,11 @@ namespace core{
         static const bool value = false;
     };
 
+    template<> struct is_view_cont<int>
+    {
+        static const bool value = false;
+    };
+
   
     //-------------------------------------------------------------------------
     //!

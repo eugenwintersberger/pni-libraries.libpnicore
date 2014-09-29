@@ -59,7 +59,7 @@ template<typename ATYPE> class array_view_test : public CppUnit::TestFixture
         shape_t s1,s2;
         size_t r1,r2;
         shape_t _shape;
-        ATYPE array;
+        array_type array;
 
         template<typename VTYPE>
         void check_view(const VTYPE &view,const shape_t &ref)
@@ -140,7 +140,7 @@ template<typename ATYPE> void array_view_test<ATYPE>::setUp()
 { 
     _shape = shape_t({NX,NY});
     array = ATYPE::create(_shape);
-   std::generate(array.begin(),array.end(),random_generator<value_type>());
+    std::generate(array.begin(),array.end(),random_generator<value_type>());
 }
 
 //-----------------------------------------------------------------------------
@@ -150,22 +150,22 @@ template<typename ATYPE> void array_view_test<ATYPE>::tearDown() { }
 template<typename ATYPE> void array_view_test<ATYPE>::test_construction()
 {
     typedef array_selection selection_type;
-   std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
 
-   //select a 2D array from the original 2D array
-   view_type v1(array, selection_type::create(slice_container{slice(0,3),slice(3,7)}));
-   check_view(v1,shape_t{3,4});
+    //select a 2D array from the original 2D array
+    view_type v1(array, selection_type::create(slice_container{slice(0,3),slice(3,7)}));
+    check_view(v1,shape_t{3,4});
 
-   //select a 1D strip from the 2D array
-   view_type v2(array,selection_type::create(slice_container{slice(1),slice(3,7)}));
-   check_view(v2,shape_t{4});
+    //select a 1D strip from the 2D array
+    view_type v2(array,selection_type::create(slice_container{slice(1),slice(3,7)}));
+    check_view(v2,shape_t{4});
 }
 
 //-----------------------------------------------------------------------------
 template<typename ATYPE> 
 void array_view_test<ATYPE>::test_construction_from_array()
 {
-    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
 
     slice_container selection{slice(0,3),slice(3,7)};
     shape_t view_shape{3,4};
@@ -183,7 +183,7 @@ void array_view_test<ATYPE>::test_construction_from_array()
 template<typename ATYPE> 
 void array_view_test<ATYPE>::test_construction_from_array_variadic()
 {
-    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
 
     auto view = array(slice(0,3),slice(3,7));
     shape_t view_shape{3,4};
@@ -192,6 +192,11 @@ void array_view_test<ATYPE>::test_construction_from_array_variadic()
     const array_type &carray = array;
     auto view2 = carray(slice(0,3),slice(3,7));
     check_view(view2,view_shape);
+
+    auto a = array_type::create(shape_t{{4}});
+    std::iota(a.begin(),a.end(),0);
+    typedef decltype(a(1)) view_t;
+
     
 }
 
@@ -199,7 +204,7 @@ void array_view_test<ATYPE>::test_construction_from_array_variadic()
 template<typename ATYPE> void array_view_test<ATYPE>::test_linear_access()
 {
     typedef array_selection selection_type;
-    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
 
     //create a selection
     view_type view(array,
@@ -213,7 +218,7 @@ template<typename ATYPE> void array_view_test<ATYPE>::test_linear_access()
         value_type r = v1+v2;
         if(array(0,2+i) == view[i]) 
         {
-            std::cout<<"Values equal"<<std::endl;
+            std::cerr<<"Values equal"<<std::endl;
         }
         compare(view[i],array(0,2+i));
         //compare(v1,v2);
@@ -238,7 +243,7 @@ template<typename ATYPE> void array_view_test<ATYPE>::test_linear_access()
 template<typename ATYPE> 
 void array_view_test<ATYPE>::test_linear_access_pointer()
 {
-    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
 
     //create a selection
     auto view1 = array(slice(0,50,2),slice(1,100,3));
@@ -264,7 +269,7 @@ template<typename ATYPE> void array_view_test<ATYPE>::test_iterator_access()
 {
     typedef array_selection selection_type;
     typedef std::vector<value_type> ctype;
-    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
 
     //create the view
     view_type v(array,
@@ -304,7 +309,7 @@ template<typename ATYPE> void array_view_test<ATYPE>::test_iterator_access()
 //-----------------------------------------------------------------------------
 template<typename ATYPE> void array_view_test<ATYPE>::test_assignment()
 {
-    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl; 
+    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl; 
 
     //select roi
     view_type roi(array,
@@ -336,7 +341,7 @@ template<typename ATYPE> void array_view_test<ATYPE>::test_multiindex_access()
     typedef std::vector<value_type> ctype;
     typedef array_selection selection_type;
 
-    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
      
     slice_container slices{slice(10,40),slice(0,100)};
     view_type view(array,selection_type::create(slices));
