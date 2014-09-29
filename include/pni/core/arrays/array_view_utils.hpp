@@ -49,17 +49,12 @@ namespace core{
 #define ENABLE_VALID_INDEX(IT)\
     typename std::enable_if<IS_INDEX(IT)>::type
 
-#define ENABLE_VIEW_CONT(TYPE)\
-    typename std::enable_if<!is_index_type<TYPE>::value && is_view_cont<TYPE>::value >::type
-
-#define ENABLE_ELEMENT_CONT(TYPE)\
-    typename std::enable_if<!is_index_type<TYPE>::value && !is_view_cont<TYPE>::value >::type
-
 #define VIEW_TYPE(AT,IT)\
     typename array_view_trait<AT,IS_VIEW(ITYPES)>::type
 
 #define CONST_VIEW_TYPE(AT,IT)\
     typename array_view_trait<const AT,IS_VIEW(ITYPES)>::const_type
+
 
     //!
     //! \ingroup mdim_array_internal_classes
@@ -286,6 +281,13 @@ namespace core{
 
     };
 
+template<typename CTYPE>
+    using enable_element_cont = std::enable_if<!is_index_type<CTYPE>::value && 
+                                               !is_view_cont<CTYPE>::value >;
+
+template<typename CTYPE>
+    using enable_view_cont = std::enable_if<!is_index_type<CTYPE>::value && 
+                                            is_view_cont<CTYPE>::value >;
 
     //-------------------------------------------------------------------------
     //!

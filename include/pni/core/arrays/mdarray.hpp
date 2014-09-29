@@ -422,6 +422,97 @@ namespace core {
             {
                 at(i)=value;
             }
+            //-----------------------------------------------------------------
+            //!
+            //! \brief return element reference
+            //!
+            //! Returns the reference to a single elemnt of the array 
+            //! determined by a multidimensional index of unsigned integers 
+            //! stored in a container of type CTYPE. This method performs no 
+            //! range checking. 
+            //!
+            //! \tparam CTYPE index container type
+            //! \param index reference to index container
+            //! \return reference to the element
+            //!
+            template<
+                     typename CTYPE,
+                     typename = typename enable_element_cont<CTYPE>::type
+                    >
+            value_type &operator()(const CTYPE &index)
+            {
+               return _data[_imap.offset(index)]; 
+            }
+            
+            //-----------------------------------------------------------------
+            //!
+            //! \brief return element value
+            //!
+            //! Returns the value of a single elemnt of the array determined 
+            //! by a multidimensional index of unsigned integers stored in a
+            //! container of type CTYPE. This method performs no range 
+            //! checking. 
+            //!
+            //! \tparam CTYPE index container type
+            //! \param index reference to index container
+            //! \return value of the element
+            //!
+            template<
+                     typename CTYPE,
+                     typename = typename enable_element_cont<CTYPE>::type
+                    >
+            value_type operator()(const CTYPE &index) const
+            {
+                return _data[_imap.offset(index)];
+            }
+            
+            //-----------------------------------------------------------------
+            //!
+            //! \brief return array view
+            //!
+            //! Return a view on the array determined by a set of slices 
+            //! stored in a container type CTYPE. 
+            //!
+            //! \tparam CTYPE slice container type
+            //! \param slices reference to the container
+            //! \return array_view instance
+            //!
+            template<
+                     typename CTYPE,
+                     typename = typename enable_view_cont<CTYPE>::type
+                    >
+            array_view<const array_type> 
+            operator()(const CTYPE &slices) const
+            {
+                typedef array_view<const array_type> view_type;
+
+                return view_type(*this,array_selection::create(slices));
+                
+            }
+
+            //-----------------------------------------------------------------
+            //!
+            //! \brief return array view
+            //!
+            //! Return a view on the array determined by a set of slices 
+            //! stored in a container type CTYPE. 
+            //!
+            //! \tparam CTYPE slice container type
+            //! \param slices reference to the container
+            //! \return array_view instance
+            //!
+            template<
+                     typename CTYPE,
+                     typename = typename enable_view_cont<CTYPE>::type
+                    >
+            array_view<array_type> 
+            operator()(const CTYPE &slices)
+            {
+                typedef array_view<array_type> view_type;
+
+                return view_type(*this, array_selection::create(slices));
+                
+            }
 
             //-----------------------------------------------------------------
             //!
@@ -477,95 +568,7 @@ namespace core {
                 return provider_type::get_value(*this,_imap,indexes...);
             }
 
-            //-----------------------------------------------------------------
-            //!
-            //! \brief return array view
-            //!
-            //! Return a view on the array determined by a set of slices 
-            //! stored in a container type CTYPE. 
-            //!
-            //! \tparam CTYPE slice container type
-            //! \param slices reference to the container
-            //! \return array_view instance
-            //!
-            template<
-                     typename CTYPE,
-                     typename = ENABLE_VIEW_CONT(CTYPE)
-                    >
-            array_view<array_type> operator()(const CTYPE &slices)
-            {
-                typedef array_view<array_type> view_type;
 
-                return view_type(*this, array_selection::create(slices));
-                
-            }
-
-            //-----------------------------------------------------------------
-            //!
-            //! \brief return element reference
-            //!
-            //! Returns the reference to a single elemnt of the array 
-            //! determined by a multidimensional index of unsigned integers 
-            //! stored in a container of type CTYPE. This method performs no 
-            //! range checking. 
-            //!
-            //! \tparam CTYPE index container type
-            //! \param index reference to index container
-            //! \return reference to the element
-            //!
-            template<
-                     typename CTYPE,
-                     typename = ENABLE_ELEMENT_CONT(CTYPE)
-                    >
-            value_type &operator()(const CTYPE &index)
-            {
-               return _data[_imap.offset(index)]; 
-            }
-            
-            //-----------------------------------------------------------------
-            //!
-            //! \brief return array view
-            //!
-            //! Return a view on the array determined by a set of slices 
-            //! stored in a container type CTYPE. 
-            //!
-            //! \tparam CTYPE slice container type
-            //! \param slices reference to the container
-            //! \return array_view instance
-            //!
-            template<
-                     typename CTYPE,
-                     typename = ENABLE_VIEW_CONT(CTYPE)
-                    >
-            array_view<const array_type> operator()(const CTYPE &slices) const
-            {
-                typedef array_view<const array_type> view_type;
-
-                return view_type(*this,array_selection::create(slices));
-                
-            }
-
-            //-----------------------------------------------------------------
-            //!
-            //! \brief return element value
-            //!
-            //! Returns the value of a single elemnt of the array determined 
-            //! by a multidimensional index of unsigned integers stored in a
-            //! container of type CTYPE. This method performs no range 
-            //! checking. 
-            //!
-            //! \tparam CTYPE index container type
-            //! \param index reference to index container
-            //! \return value of the element
-            //!
-            template<
-                     typename CTYPE,
-                     typename = ENABLE_ELEMENT_CONT(CTYPE)
-                    >
-            value_type operator()(const CTYPE &index) const
-            {
-                return _data[_imap.offset(index)];
-            }
             
             //-----------------------------------------------------------------
             //!

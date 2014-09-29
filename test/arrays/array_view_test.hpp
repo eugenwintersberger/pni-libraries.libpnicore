@@ -195,8 +195,8 @@ void array_view_test<ATYPE>::test_construction_from_array_variadic()
 
     auto a = array_type::create(shape_t{{4}});
     std::iota(a.begin(),a.end(),0);
-    typedef decltype(a(1)) view_t;
-
+    auto v = a(1);
+    std::cout<<v<<std::endl; 
     
 }
 

@@ -218,7 +218,7 @@ namespace core{
             //!
             template<
                      typename CTYPE,
-                     typename = ENABLE_ELEMENT_CONT(CTYPE)
+                     typename = typename enable_element_cont<CTYPE>::type
                     >
             value_type &operator()(const CTYPE &index)
             {
@@ -250,7 +250,7 @@ namespace core{
             //!
             template<
                      typename CTYPE,
-                     typename = ENABLE_ELEMENT_CONT(CTYPE)
+                     typename = typename enable_element_cont<CTYPE>::type
                     >
             value_type operator()(const CTYPE &index) const
             {
