@@ -794,6 +794,50 @@ namespace core{
         static const bool is_multidim = true;
     };
 
+    //------------------------------------------------------------------------
+    //!
+    //! \ingroup mdim_array_classes
+    //! \brief compare two array views
+    //! 
+    //! Returns true if all elements of a an b are equal. The two views 
+    //! must have equal size. Otherwise a size_mismatch_excpetion is thrown.
+    //!
+    //! \tparam ATYPE array type for the view
+    //! \param a lhs value of the operator
+    //! \param b rhs value of the operator
+    //! \return true if all elements are equal, flase otherwise
+    //!
+    template<typename ATYPE>
+    bool operator==(const array_view<ATYPE> &a,const array_view<ATYPE> &b)
+    {
+        if(a.size()!=b.size())
+            throw size_mismatch_error(EXCEPTION_RECORD,
+                    "Array view sizes do not match!");
+
+        return std::equal(a.begin(),a.end(),b.begin());
+
+
+    }
+
+    //------------------------------------------------------------------------
+    //!
+    //! \ingroup mdim_array_classes
+    //! \brief compare two array views
+    //! 
+    //! Returns false if all elements in a an b are equal. a and b must have
+    //! equal size, otherwise a size_mismatch_error exception is thrown. 
+    //!
+    //! \tparam ATYPE array type for the view
+    //! \param a lhs value of the operator
+    //! \param b rhs value of the operator
+    //! \return false if all values are equal, true otherwise
+    //!
+    template<typename ATYPE>
+    bool operator!=(const array_view<ATYPE> &a,const array_view<ATYPE> &b)
+    {
+        return !(a==b);
+    }
+
     
 
 //end of namespace

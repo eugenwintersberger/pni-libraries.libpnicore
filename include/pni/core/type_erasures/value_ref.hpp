@@ -127,7 +127,8 @@ namespace core{
             //! \tparam T type of the value to which the reference shall be created
             //! \param v reference to the value
             //!
-            template<typename T> value_ref(std::reference_wrapper<T> v):
+            template<typename T>
+            explicit value_ref(std::reference_wrapper<T> v):
                 _ptr(new value_holder<std::reference_wrapper<T> >(v))
             {}
 
@@ -226,6 +227,9 @@ namespace core{
             //! input stream operator
             friend std::istream &operator>>(std::istream &stream,
                                             value_ref &v);
+
+            friend bool operator==(const value_ref &a,const value_ref &b);
+            friend bool operator!=(const value_ref &a,const value_ref &b);
     };
 
     //======================implementation of template members=================
@@ -311,6 +315,11 @@ namespace core{
     //! \return reference to input stream
     //!
     std::istream &operator>>(std::istream &stream,value_ref &v);
+
+    //------------------------------------------------------------------------
+    bool operator!=(const value_ref &a,const value_ref &b);
+
+    bool operator==(const value_ref &a,const value_ref &b);
 
 //end of namespace
 }

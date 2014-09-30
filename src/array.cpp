@@ -142,7 +142,7 @@ namespace core{
     value array::at(size_t i) const
     {
         if(_ptr)
-            return _ptr->at(i);
+            return value(_ptr->at(i));
         else
             array::_throw_not_allocated_error(EXCEPTION_RECORD);
 

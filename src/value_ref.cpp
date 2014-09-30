@@ -85,6 +85,21 @@ namespace core{
         return stream;
     }
 
+    //------------------------------------------------------------------------
+    bool operator==(const value_ref &a,const value_ref &b)
+    {
+        if(a._ptr && b._ptr)
+            return a._ptr->compare(*b._ptr);
+
+        return false;
+    }
+
+    //------------------------------------------------------------------------
+    bool operator!=(const value_ref &a,const value_ref &b)
+    {
+        return !(a==b);
+    }
+
 //end of namespace
 }
 }

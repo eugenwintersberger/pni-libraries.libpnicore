@@ -86,6 +86,22 @@ namespace core{
     }
 
     //-------------------------------------------------------------------------
+    bool operator==(const value &a,const value &b)
+    {
+        if(a._ptr && b._ptr)
+            return a._ptr->compare(*b._ptr);
+
+        return false;
+
+    }
+
+    //-------------------------------------------------------------------------
+    bool operator!=(const value &a,const value &b)
+    {
+        return !(a==b);
+    }
+
+    //-------------------------------------------------------------------------
     type_id_t type_id(const value &v)
     {
         return v.type_id();

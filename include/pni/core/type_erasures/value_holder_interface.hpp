@@ -64,6 +64,8 @@ namespace core{
             //! is reference
             virtual bool holds_reference() const = 0;
 
+
+            virtual bool compare(const value_holder_interface &) const = 0;
     };
 
 //end of namespace

@@ -107,7 +107,8 @@ namespace core{
           
             //-----------------------------------------------------------------
             //! template constructor from value
-            template<typename T> value(T v):_ptr(new value_holder<T>(v)){}
+            template<typename T> 
+            explicit value(T v):_ptr(new value_holder<T>(v)){}
 
             //-----------------------------------------------------------------
             //! copy constructor
@@ -194,6 +195,12 @@ namespace core{
             //----------------------------------------------------------------
             friend std::istream &operator>>(std::istream &stream,
                                             value &v);
+
+            //----------------------------------------------------------------
+            friend bool operator==(const value &a,const value &b);
+
+            //----------------------------------------------------------------
+            friend bool operator!=(const value &a,const value &b);
     };
 
     //=====================implementation of template member functions=========
@@ -254,6 +261,12 @@ namespace core{
     //! \return reference to input stream
     //!
     std::istream &operator>>(std::istream &stream,value &v);
+
+    //-------------------------------------------------------------------------
+    bool operator==(const value &a,const value &b);
+
+    //-------------------------------------------------------------------------
+    bool operator!=(const value &a,const value &b);
 
     //-------------------------------------------------------------------------
     //! 

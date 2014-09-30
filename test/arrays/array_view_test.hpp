@@ -47,6 +47,7 @@ template<typename ATYPE> class array_view_test : public CppUnit::TestFixture
         CPPUNIT_TEST(test_linear_access_pointer);
         CPPUNIT_TEST(test_multiindex_access);
         CPPUNIT_TEST(test_assignment);
+        CPPUNIT_TEST(test_comparison);
         CPPUNIT_TEST_SUITE_END();
 
         typedef array_view<ATYPE> view_type;
@@ -133,6 +134,9 @@ template<typename ATYPE> class array_view_test : public CppUnit::TestFixture
         //---------------------------------------------------------------------
         //! test assignment
         void test_assignment();
+
+        //---------------------------------------------------------------------
+        void test_comparison();
 };
 
 //-----------------------------------------------------------------------------
@@ -359,5 +363,18 @@ template<typename ATYPE> void array_view_test<ATYPE>::test_multiindex_access()
     for(size_t i=0;i<s[0];++i)
         for(size_t j=0;j<s[1];++j)
             compare(view(i,j),*diter++);
+}
+
+//----------------------------------------------------------------------------
+template<typename ATYPE> void array_view_test<ATYPE>::test_comparison()
+{
+    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
+    
+    auto a = array(0,slice(0,NY));
+    auto b = array(1,slice(0,NY));
+
+    CPPUNIT_ASSERT(a==a);
+    CPPUNIT_ASSERT(b==b);
+    CPPUNIT_ASSERT(a!=b);
 }
 

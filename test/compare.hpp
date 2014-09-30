@@ -33,35 +33,56 @@
 
 using namespace pni::core;
 
-/*!
-\brief compare integers and strings
+template<typename T>
+using is_int_or_string = std::enable_if<(std::is_pod<T>::value && 
+                                        !std::is_floating_point<T>::value) || 
+                                        std::is_same<T,string>::value || 
+                                        std::is_same<T,bool_t>::value >;
 
-This template function compares two values which are integers and strings. 
-*/
-template<typename T > 
- typename std::enable_if<
- std::is_pod<T>::value && !std::is_floating_point<T>::value
- >::type
-compare(const T &a,const T &b)
-{
-    CPPUNIT_ASSERT(a==b);
-}
+template<typename T>
+using is_float = std::enable_if<std::is_pod<T>::value && 
+                                std::is_floating_point<T>::value>;
 
-
-/*!
-\brief compare floats
-
-This function compares floating points values.
-*/
-template<typename T > 
-typename  std::enable_if<
-std::is_pod<T>::value && std::is_floating_point<T>::value
->::type
-compare(const T &a,const T &b)
+//!
+//! \brief compare integers and strings
+//! 
+//! This template function compares two values which are integers and strings. 
+//! 
+template<
+         typename TA,
+         typename TB,
+         typename = typename std::enable_if<std::is_floating_point<TA>::value || 
+                                            std::is_floating_point<TB>::value>::type
+        > 
+void compare(const TA &a,const TB &b)
 {
     CPPUNIT_ASSERT_DOUBLES_EQUAL(a,b,1.e-12);
 }
 
+
+//----------------------------------------------------------------------------
+//!
+//! \brief compare floats
+//! 
+//! This function compares floating points values.
+//! 
+template<
+         typename TA,
+         typename TB,
+         typename = typename std::enable_if<!(std::is_floating_point<TA>::value || 
+                                            std::is_floating_point<TB>::value)>::type
+        > 
+void compare(const TA &a,const TB &b)
+{
+    CPPUNIT_ASSERT(a==b);
+}
+
+//---------------------------------------------------------------------------
+//!
+//! \brief compare complex
+//! 
+//! Function template comparing two complex numbers
+//!
 template<typename T>
 void compare(const std::complex<T> &a,const std::complex<T> &b)
 {
@@ -69,9 +90,11 @@ void compare(const std::complex<T> &a,const std::complex<T> &b)
     compare(a.imag(),b.imag());
 }
 
-/*!
-\brief comparison of value_ref instances
-*/
+//----------------------------------------------------------------------------
+//!
+//! \brief comparison of value_ref instances
+//!
+/*
 #define COMPARE_VALUE_WITH_REF(a,b,tid)\
     if((a.type_id() == tid) &&\
        (b.type_id() == tid)) \
@@ -80,7 +103,7 @@ void compare(const std::complex<T> &a,const std::complex<T> &b)
                 b.as<id_type_map<tid>::type>());\
         return; \
     }
-
+*/
 template<typename T> void compare(const value_ref &a, const T &b)
 {
     type_id_t t_id = type_id_map<T>::type_id;
@@ -91,13 +114,18 @@ template<typename T> void compare(const value_ref &a, const T &b)
 }
 
 
+//----------------------------------------------------------------------------
 template<typename T> void compare(const T &a,const value_ref &b)
 {
     compare(b,a);
 }
 
+//----------------------------------------------------------------------------
 void compare(const value_ref &a,const value_ref &b);
+
+//----------------------------------------------------------------------------
 void compare(const value &a,const value &b);
 
+//----------------------------------------------------------------------------
 void compare(const string &a,const string &b);
 

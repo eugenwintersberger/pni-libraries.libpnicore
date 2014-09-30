@@ -42,6 +42,7 @@ template<typename T> class value_test : public CppUnit::TestFixture
         CPPUNIT_TEST(test_copy_and_move);
         CPPUNIT_TEST(test_assignment);
         CPPUNIT_TEST(test_stream);
+        CPPUNIT_TEST(test_comparison);
         CPPUNIT_TEST_SUITE_END();
 
         random_generator<T> generator;
@@ -56,6 +57,7 @@ template<typename T> class value_test : public CppUnit::TestFixture
         void test_copy_and_move();
         void test_assignment();
         void test_stream();
+        void test_comparison();
 };
 
 //-----------------------------------------------------------------------------
@@ -72,7 +74,7 @@ template<typename T> void value_test<T>::tearDown() { }
 //-----------------------------------------------------------------------------
 template<typename T> void value_test<T>::test_construction()
 {
-    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
 
     value v1 = value_1;
     value v2 = value_2;
@@ -85,7 +87,7 @@ template<typename T> void value_test<T>::test_construction()
 //-----------------------------------------------------------------------------
 template<typename T> void value_test<T>::test_copy_and_move()
 {
-    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
 
     value v1 = value_1;
     
@@ -102,7 +104,7 @@ template<typename T> void value_test<T>::test_copy_and_move()
 //-----------------------------------------------------------------------------
 template<typename T> void value_test<T>::test_assignment()
 {
-    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
     
     value v1;
     CPPUNIT_ASSERT_THROW(v1.as<T>(),memory_not_allocated_error);
@@ -123,10 +125,22 @@ template<typename T> void value_test<T>::test_assignment()
 //-----------------------------------------------------------------------------
 template<typename T> void value_test<T>::test_stream()
 {
+    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
+
     std::stringstream ss("12");
 
     value v=value::create<T>();
     ss>>v;
+}
+
+//----------------------------------------------------------------------------
+template<typename T> void value_test<T>::test_comparison()
+{
+    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
+    
+    CPPUNIT_ASSERT(value_1==value_1);
+    CPPUNIT_ASSERT(value_2!=value_1);
+
 }
 
 

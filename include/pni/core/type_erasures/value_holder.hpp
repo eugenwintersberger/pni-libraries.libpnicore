@@ -199,6 +199,15 @@ namespace core{
             {
                 return is_reference_holder<T>::value;
             }
+
+            virtual bool compare(const value_holder_interface &other) const
+            {
+                if(type_id() != other.type_id())
+                    throw type_error(EXCEPTION_RECORD,
+                            "Cannot compare values of different type!");
+
+                return dynamic_cast<const value_holder<T>&>(other)._value == _value;
+            }
     };
 
 //end of namespace
