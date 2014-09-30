@@ -329,6 +329,42 @@ namespace core {
 
     //-------------------------------------------------------------------------
     //!
+    //! \ingroup mdim_array_classes
+    //! \brief == operator for scalar 
+    //!
+    //! Returns true if the two value of a and b are equal. 
+    //!
+    //! \tparam T data type for the scalar instance
+    //! \param a lhs value of the operator
+    //! \param b rhs value of the operator
+    //! \return true if both are equal, false otherwise
+    //! 
+    template<typename T>
+    bool operator==(const scalar<T> &a,const scalar<T> &b)
+    {
+        return T(a)==T(b);
+    }
+
+    //-------------------------------------------------------------------------
+    //!
+    //! \ingroup mdim_array_classes
+    //! \brief != operator for scalar 
+    //!
+    //! Returns true if the two value of a and b are not equal. 
+    //!
+    //! \tparam T data type for the scalar instance
+    //! \param a lhs value of the operator
+    //! \param b rhs value of the operator
+    //! \return false if both are equal, true otherwise
+    //! 
+    template<typename T>
+    bool operator!=(const scalar<T> &a,const scalar<T> &b)
+    {
+        return !(a==b);
+    }
+
+    //-------------------------------------------------------------------------
+    //!
     //! \ingroup mdim_array_classes 
     //! \brief stream output operator
     //! 

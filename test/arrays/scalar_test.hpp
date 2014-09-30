@@ -44,6 +44,7 @@ template<typename T> class scalar_test : public CppUnit::TestFixture
         CPPUNIT_TEST(test_access_checked);
         CPPUNIT_TEST(test_access_iterator);
         CPPUNIT_TEST(test_conversion);
+        CPPUNIT_TEST(test_comparison);
         CPPUNIT_TEST_SUITE_END();
 
         typedef scalar<T> scalar_type;
@@ -59,6 +60,7 @@ template<typename T> class scalar_test : public CppUnit::TestFixture
         void test_access_checked();
         void test_access_iterator();
         void test_conversion();
+        void test_comparison();
 
 };
 
@@ -74,7 +76,7 @@ template<typename T> void scalar_test<T>::tearDown(){ }
 //-----------------------------------------------------------------------------
 template<typename T> void scalar_test<T>::test_constructors()
 {
-    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
 
     //check the default constructed scalar
     CPPUNIT_ASSERT(s.rank() == 0);
@@ -93,7 +95,7 @@ template<typename T> void scalar_test<T>::test_constructors()
 //-----------------------------------------------------------------------------
 template<typename T> void scalar_test<T>::test_assignment()
 {
-    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
     
     s = v;
     compare(T(s),v);
@@ -106,7 +108,7 @@ template<typename T> void scalar_test<T>::test_assignment()
 //-----------------------------------------------------------------------------
 template<typename T> void scalar_test<T>::test_access_unchecked()
 {
-    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
 
     s = v;
     compare(s[0],v);
@@ -116,7 +118,7 @@ template<typename T> void scalar_test<T>::test_access_unchecked()
 //-----------------------------------------------------------------------------
 template<typename T> void scalar_test<T>::test_access_checked()
 {
-    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
 
     s = v;
     compare(s.at(10),v);
@@ -126,7 +128,7 @@ template<typename T> void scalar_test<T>::test_access_checked()
 //-----------------------------------------------------------------------------
 template<typename T> void scalar_test<T>::test_access_iterator()
 {
-    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
    
     s = v;
     auto iter = s.begin();
@@ -138,6 +140,20 @@ template<typename T> void scalar_test<T>::test_access_iterator()
 //-----------------------------------------------------------------------------
 template<typename T> void scalar_test<T>::test_conversion()
 {
-    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
 
+}
+
+//----------------------------------------------------------------------------
+template<typename T> void scalar_test<T>::test_comparison()
+{
+    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
+    scalar_type a = T(0);
+    scalar_type b = random_generator<T>(1,10)();
+    scalar_type c = b;
+
+    CPPUNIT_ASSERT(a!=b);
+    CPPUNIT_ASSERT(a==a);
+    CPPUNIT_ASSERT(a!=c);
+    CPPUNIT_ASSERT(c==b);
 }
