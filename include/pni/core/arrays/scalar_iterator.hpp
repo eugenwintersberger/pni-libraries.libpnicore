@@ -216,7 +216,7 @@ namespace core{
             //! comparison operator - inequality
             bool operator!=(const iterator_type &a)
             {
-                if(this==a) return false;
+                if(this==&a) return false;
                 return true;
             }
 

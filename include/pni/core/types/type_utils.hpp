@@ -150,7 +150,7 @@ namespace core{
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
     template<typename T> 
-    type_id_t type_id(T v)
+    type_id_t type_id(const T &v)
     {
         typedef typename std::remove_const<
             typename std::remove_pointer<T>::type
@@ -158,6 +158,7 @@ namespace core{
         return get_type_id(type());
     }
 #pragma GCC diagnostic pop
+
 
     //-------------------------------------------------------------------------
     //!

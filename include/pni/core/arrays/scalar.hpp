@@ -28,7 +28,6 @@
 #include <array>
 
 #include "../types.hpp"
-//#include "array_view.hpp"
 #include "scalar_iterator.hpp"
 
 namespace pni {

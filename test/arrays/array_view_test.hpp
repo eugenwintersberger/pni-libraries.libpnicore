@@ -193,11 +193,6 @@ void array_view_test<ATYPE>::test_construction_from_array_variadic()
     auto view2 = carray(slice(0,3),slice(3,7));
     check_view(view2,view_shape);
 
-    auto a = array_type::create(shape_t{{4}});
-    std::iota(a.begin(),a.end(),0);
-    auto v = a(1);
-    std::cout<<v<<std::endl; 
-    
 }
 
 //-----------------------------------------------------------------------------

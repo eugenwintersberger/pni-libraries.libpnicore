@@ -331,35 +331,6 @@ template<typename CTYPE>
 
         //---------------------------------------------------------------------
         //!
-        //! \brief get reference to container value
-        //!
-        //! Return the reference to a single element. This overload assumes that
-        //! the index is passed in a container of type ITYPE. 
-        //! 
-        //! \tparam CTYPE container type
-        //! \tparam MAP index map type
-        //! \tparam ITYPE index container type
-        //! \param c reference to the container
-        //! \param map reference to the index map
-        //! \param index reference to the index container
-        //! \return reference to the single element
-        //! 
-        template<
-                 typename CTYPE,
-                 typename MAP,
-                 typename ITYPE,
-                 typename = typename std::enable_if<!is_index_type<ITYPE>::value>::type
-                >
-        static ref_type get_reference(CTYPE &c,MAP &map,const ITYPE &index)
-        {
-#ifdef DEBUG
-            check_indexes(index,map,EXCEPTION_RECORD);
-#endif
-            return c[map.offset(index)];
-        }
-
-        //---------------------------------------------------------------------
-        //!
         //! \brief get value
         //!
         //! Return a single value from a container. The function computes 
@@ -390,36 +361,6 @@ template<typename CTYPE>
             size_t offset = map.offset(array_type{{size_t(indexes)...}});
             return c[offset];
         }
-
-        //---------------------------------------------------------------------
-        //!
-        //! \brief get value
-        //!
-        //! Return a single value from a container. The function computes 
-        //! the linear offset. This overload accepts the indexes passed in a
-        //! contianer.
-        //!
-        //! \tparam CTYPE data container type
-        //! \tparam MAP index map type
-        //! \tparam ITYPES index types
-        //! \param c reference to the data container
-        //! \param map reference to the index map
-        //! \param index index values as variadic arguments
-        //! \return value of the referenced data element.
-        //!
-        template<
-                 typename CTYPE,
-                 typename MAP,
-                 typename ITYPE
-                >
-        static type get_value(const CTYPE &c,MAP &map,const ITYPE &index)
-        {
-#ifdef DEBUG
-            check_indexes(index,map,EXCEPTION_RECORD);
-#endif
-            return c[map.offset(index)];
-        }
-         
 
     };
   
@@ -472,34 +413,6 @@ template<typename CTYPE>
         }
 #pragma GCC diagnostic pop
 
-        //---------------------------------------------------------------------
-        //!
-        //! \brief get view object
-        //!
-        //! Return a non-const view instance of the array. The indexes (slices)
-        //! determining the view are passed in a container. 
-        //!
-        //! \tparam CTYPE array type
-        //! \tparam MAP index map type
-        //! \tparam ITYPES slice container type
-        //! \param c reference to the data container
-        //! \param map reference to the index map
-        //! \param i variadic argument list
-        //! \return array view on the array
-        //!
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-parameter"
-        template<
-                 typename CTYPE,
-                 typename MAP,
-                 typename ITYPE,
-                 typename = typename std::enable_if<!is_index_type<ITYPE>::value>::type
-                >
-        static ref_type get_reference(CTYPE &c,MAP &map,const ITYPE &i)
-        {
-            return ref_type(c,array_selection::create(i));
-        }
-#pragma GCC diagnostic pop
 
         //---------------------------------------------------------------------
         //!
@@ -531,35 +444,6 @@ template<typename CTYPE>
                         array_type{{slice(indexes)...}}));
         }
 #pragma GCC diagnostic pop
-
-        //---------------------------------------------------------------------
-        //!
-        //! \brief get const view
-        //! 
-        //! This overload returns a const view of an array. The slices 
-        //! determining the view are passed in a container to the function.
-        //!
-        //! \tparam CTYPE array type
-        //! \tparam MAP index map type
-        //! \tparam ITYPES slice container type
-        //! \param c reference to the data container
-        //! \param map reference to the index map
-        //! \param i variadic argument list
-        //! \return const array view
-        //! 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-parameter"
-        template<
-                 typename CTYPE,
-                 typename MAP,
-                 typename ITYPE
-                >
-        static type get_value(const CTYPE &c,MAP &map,const ITYPE &i)
-        {
-            return type(c,array_selection::create(i));
-        }
-#pragma GCC diagnostic pop
-         
 
     };
 
