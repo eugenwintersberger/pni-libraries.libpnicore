@@ -126,7 +126,7 @@ namespace core{
                                        std::remove_reference<T>::type >::value 
                                        >::type
                     > 
-            array(const T &o):_ptr(new array_holder<T>(o))
+            explicit array(const T &o):_ptr(new array_holder<T>(o))
             { }
 
             //------------------------------------------------------------------
@@ -151,7 +151,7 @@ namespace core{
                                        std::remove_reference<T>::type >::value 
                                        >::type
                     > 
-            array(T &&o):
+            explicit array(T &&o):
                 _ptr(new array_holder<typename std::remove_cv<
                                 typename std::remove_reference<T>::type>::type>
                                 (std::forward<T>(o)))
@@ -358,6 +358,34 @@ namespace core{
     //! \return reference to input stream
     //!
     std::istream &operator>>(std::istream &is,array &o);
+
+    //-------------------------------------------------------------------------
+    //!
+    //! \ingroup type_erasure_classes
+    //! \brief compare arrays
+    //!
+    //! Returns true if all elements stored in the array erasure are equal. 
+    //! Otherwise the operator returns false.
+    //! 
+    //! \param a lhs of the operator
+    //! \param b rhs of the operator
+    //! \return true if all elements are equal
+    //! 
+    bool operator==(const array &a,const array &b);
+
+    //-------------------------------------------------------------------------
+    //!
+    //! \ingroup type_erasure_classes
+    //! \brief compare arrays
+    //!
+    //! Returns false if all elements stored in the array erasure are equal. 
+    //! Otherwise the operator returns true.
+    //! 
+    //! \param a lhs of the operator
+    //! \param b rhs of the operator
+    //! \return false if all elements are equal
+    //! 
+    bool operator!=(const array &a,const array &b);
 
     //-------------------------------------------------------------------------
     //! 

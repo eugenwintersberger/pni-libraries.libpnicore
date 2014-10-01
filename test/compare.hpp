@@ -72,11 +72,10 @@ template<
          typename TB
         >
 struct comperator<TA,TB,true >
-            
 {
     static void compare(const TA &a,const TB &b)
     {
-        CPPUNIT_DOUBLES_EQUAL(a,b,1.e-12);
+        CPPUNIT_ASSERT_DOUBLES_EQUAL(a,b,1.e-12);
     }
 };
 
@@ -104,7 +103,9 @@ template<
         >
 void compare(TA &&a,TB &&b)
 {
-    compare(a,b);
+    static const bool is_float = std::is_floating_point<TA>::value || 
+                                 std::is_floating_point<TB>::value;
+    comperator<TA,TB,is_float>::compare(a,b);
 }
 
 //---------------------------------------------------------------------------

@@ -60,7 +60,7 @@ template<typename ATYPE> class array_view_test : public CppUnit::TestFixture
         shape_t s1,s2;
         size_t r1,r2;
         shape_t _shape;
-        array_type array;
+        array_type a;
 
         template<typename VTYPE>
         void check_view(const VTYPE &view,const shape_t &ref)
@@ -143,8 +143,8 @@ template<typename ATYPE> class array_view_test : public CppUnit::TestFixture
 template<typename ATYPE> void array_view_test<ATYPE>::setUp() 
 { 
     _shape = shape_t({NX,NY});
-    array = ATYPE::create(_shape);
-    std::generate(array.begin(),array.end(),random_generator<value_type>());
+    a = ATYPE::create(_shape);
+    std::generate(a.begin(),a.end(),random_generator<value_type>());
 }
 
 //-----------------------------------------------------------------------------
@@ -157,11 +157,11 @@ template<typename ATYPE> void array_view_test<ATYPE>::test_construction()
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
 
     //select a 2D array from the original 2D array
-    view_type v1(array, selection_type::create(slice_container{slice(0,3),slice(3,7)}));
+    view_type v1(a, selection_type::create(slice_container{slice(0,3),slice(3,7)}));
     check_view(v1,shape_t{3,4});
 
     //select a 1D strip from the 2D array
-    view_type v2(array,selection_type::create(slice_container{slice(1),slice(3,7)}));
+    view_type v2(a,selection_type::create(slice_container{slice(1),slice(3,7)}));
     check_view(v2,shape_t{4});
 }
 
@@ -174,11 +174,11 @@ void array_view_test<ATYPE>::test_construction_from_array()
     slice_container selection{slice(0,3),slice(3,7)};
     shape_t view_shape{3,4};
 
-    view_type v = array(selection);
+    view_type v = a(selection);
     check_view(v,view_shape);
     
     //check construction from a const array
-    const array_type &carray = array;
+    const array_type &carray = a;
     auto v2 = carray(selection);
     check_view(v2,view_shape);
 }
@@ -189,11 +189,11 @@ void array_view_test<ATYPE>::test_construction_from_array_variadic()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
 
-    auto view = array(slice(0,3),slice(3,7));
+    auto view = a(slice(0,3),slice(3,7));
     shape_t view_shape{3,4};
     check_view(view,view_shape);
 
-    const array_type &carray = array;
+    const array_type &carray = a;
     auto view2 = carray(slice(0,3),slice(3,7));
     check_view(view2,view_shape);
 
@@ -206,25 +206,24 @@ template<typename ATYPE> void array_view_test<ATYPE>::test_linear_access()
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
 
     //create a selection
-    view_type view(array,
+    view_type view(a,
                    selection_type::create(slice_container{slice(0,1),slice(2,7)}));
     check_view(view,shape_t{5});
 
     for(size_t i=0;i<view.size();++i) 
     {
-        value_type v1 = array(0,2+i);
+        value_type v1 = a(0,2+i);
         value_type v2 = view[i];
         value_type r = v1+v2;
-        if(array(0,2+i) == view[i]) 
+        if((a(0,2+i)) == view[i]) 
         {
             std::cerr<<"Values equal"<<std::endl;
         }
-        compare(view[i],array(0,2+i));
-        //compare(v1,v2);
+        compare(view[i],a(0,2+i));
     }
 
     //-----------------check for front-----------------------------------------
-    value_type v = array.front();
+    value_type v = a.front();
     CPPUNIT_ASSERT_NO_THROW(view.front() = v);
     compare(view.front(),v);
 
@@ -235,7 +234,7 @@ template<typename ATYPE> void array_view_test<ATYPE>::test_linear_access()
     //finally we have to check for const references
     const view_type &cview = view;
     for(size_t i=0;i<cview.size();++i)
-        compare(cview[i],array(0,2+i));
+        compare(cview[i],a(0,2+i));
 
 }
 
@@ -245,12 +244,12 @@ void array_view_test<ATYPE>::test_linear_access_pointer()
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
 
     //create a selection
-    auto view1 = array(slice(0,50,2),slice(1,100,3));
+    auto view1 = a(slice(0,50,2),slice(1,100,3));
 
     //should not work
     CPPUNIT_ASSERT_THROW(view1.data(),shape_mismatch_error);
 
-    auto view2 = array(slice(0,5),slice(0,NY));
+    auto view2 = a(slice(0,5),slice(0,NY));
     auto ptr = view2.data();
     auto iter = view2.begin();
     
@@ -271,7 +270,7 @@ template<typename ATYPE> void array_view_test<ATYPE>::test_iterator_access()
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
 
     //create the view
-    view_type v(array,
+    view_type v(a,
                 selection_type::create(slice_container{slice(10,35,2),slice(100,125,3)}));
     check_view(v,shape_t{13,9});
 
@@ -298,7 +297,7 @@ template<typename ATYPE> void array_view_test<ATYPE>::test_iterator_access()
         auto oindex = *index_iter++;
         auto index = selection.index<shape_t>(oindex);
         v1 = *iter;
-        v2 = array(index);
+        v2 = a(index);
         //compare(v1,v2);
         CPPUNIT_ASSERT(v1 == v2);
         i++;
@@ -311,7 +310,7 @@ template<typename ATYPE> void array_view_test<ATYPE>::test_assignment()
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl; 
 
     //select roi
-    view_type roi(array,
+    view_type roi(a,
                   array_selection::create(slice_container{slice(1,10),slice(0,100)}));
    
     //allocate new array for a roi - we have to use a DArray here as for a
@@ -343,7 +342,7 @@ template<typename ATYPE> void array_view_test<ATYPE>::test_multiindex_access()
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
      
     slice_container slices{slice(10,40),slice(0,100)};
-    view_type view(array,selection_type::create(slices));
+    view_type view(a,selection_type::create(slices));
     check_view(view,shape_t{30,100});
     auto s = view.template shape<shape_t>();
 
@@ -370,11 +369,11 @@ template<typename ATYPE> void array_view_test<ATYPE>::test_comparison()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
     
-    auto a = array(0,slice(0,NY));
-    auto b = array(1,slice(0,NY));
+    auto a1 = a(0,slice(0,NY));
+    auto a2 = a(1,slice(0,NY));
 
-    CPPUNIT_ASSERT(a==a);
-    CPPUNIT_ASSERT(b==b);
-    CPPUNIT_ASSERT(a!=b);
+    CPPUNIT_ASSERT(a1==a1);
+    CPPUNIT_ASSERT(a2==a2);
+    CPPUNIT_ASSERT(a1!=a2);
 }
 

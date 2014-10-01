@@ -42,6 +42,7 @@ template<typename T> class value_ref_test : public CppUnit::TestFixture
         CPPUNIT_TEST(test_copy_and_move);
         CPPUNIT_TEST(test_assignment);
         CPPUNIT_TEST(test_stream);
+        CPPUNIT_TEST(test_comparison);
         CPPUNIT_TEST_SUITE_END();
 
         random_generator<T> generator;
@@ -56,6 +57,7 @@ template<typename T> class value_ref_test : public CppUnit::TestFixture
         void test_copy_and_move();
         void test_assignment();
         void test_stream();
+        void test_comparison();
 };
 
 //-----------------------------------------------------------------------------
@@ -72,7 +74,7 @@ template<typename T> void value_ref_test<T>::tearDown() { }
 //-----------------------------------------------------------------------------
 template<typename T> void value_ref_test<T>::test_construction()
 {
-    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
     value_ref v1(std::ref(value_1));
     value_ref v2(std::ref(value_2));
 
@@ -84,7 +86,7 @@ template<typename T> void value_ref_test<T>::test_construction()
 //-----------------------------------------------------------------------------
 template<typename T> void value_ref_test<T>::test_copy_and_move()
 {
-    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
     
     value_ref v1(std::ref(value_1));
     
@@ -101,7 +103,7 @@ template<typename T> void value_ref_test<T>::test_copy_and_move()
 //-----------------------------------------------------------------------------
 template<typename T> void value_ref_test<T>::test_assignment()
 {
-    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
    
     value_ref v1;
     CPPUNIT_ASSERT_THROW(v1.as<T>(),memory_not_allocated_error); 
@@ -125,6 +127,7 @@ template<typename T> void value_ref_test<T>::test_assignment()
 //-----------------------------------------------------------------------------
 template<typename T> void value_ref_test<T>::test_stream()
 {
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
     std::stringstream ss("12343.4");
 
     T data;
@@ -132,5 +135,16 @@ template<typename T> void value_ref_test<T>::test_stream()
     ss>>v;
 }
 
+//-----------------------------------------------------------------------------
+template<typename T> void value_ref_test<T>::test_comparison()
+{
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+    value_ref v1(std::ref(value_1));
+    value_ref v2(std::ref(value_2));
+
+    CPPUNIT_ASSERT((v1!=v2)==(value_1!=value_2));
+    CPPUNIT_ASSERT(v1==v1);
+
+}
 
 

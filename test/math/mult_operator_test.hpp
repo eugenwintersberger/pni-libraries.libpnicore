@@ -35,10 +35,6 @@
 #include "../compare.hpp"
 #include "../data_generator.hpp"
 
-#ifdef NOFOREACH
-#include <boost/foreach.hpp>
-#endif
-
 using namespace pni::core;
 
 /*!
@@ -95,7 +91,7 @@ template<typename ATYPE> void mult_operator_test<ATYPE>::tearDown() { }
 //-----------------------------------------------------------------------------
 template<typename ATYPE> void mult_operator_test<ATYPE>::test_construction()
 {
-    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
 
     mult_op<array_type,array_type> op(a1,a2);
     CPPUNIT_ASSERT(a1.size() == op.size());
@@ -110,94 +106,70 @@ template<typename ATYPE> void mult_operator_test<ATYPE>::test_construction()
 //-----------------------------------------------------------------------------
 template<typename ATYPE> void mult_operator_test<ATYPE>::test_access()
 {
-    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
 
     mult_op<array_type,array_type> op1(a1,a2);
 
-    for(size_t i=0;i<op1.size();i++) compare(op1[i],a1[i]*a2[i]);
+    for(size_t i=0;i<op1.size();i++) compare(op1[i],value_type(a1[i]*a2[i]));
 
     mult_op<array_type,scalar_type> op2(a1,s1);
 
-    for(size_t i=0;i<op2.size();i++) compare(op2[i],a1[i]*s1[i]);
+    for(size_t i=0;i<op2.size();i++) compare(op2[i],value_type(a1[i]*s1[i]));
 }
 
 //-----------------------------------------------------------------------------
 template<typename ATYPE> void mult_operator_test<ATYPE>::test_iterator()
 {
-    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
 
     mult_op<array_type,array_type> op1(a1,a2);
     auto iter1 = a1.begin();
     auto iter2 = a2.begin();
-#ifdef NOFOREACH
-    BOOST_FOREACH(auto v,op1)
-#else
     for(auto v: op1) 
-#endif
-        compare(v,(*iter1++)*(*iter2++));
+        compare(v,value_type((*iter1++)*(*iter2++)));
 
     mult_op<array_type,scalar_type> op2(a1,s1);
     iter1 = a1.begin();
     auto siter = s1.begin();
-#ifdef NOFOREACH
-    BOOST_FOREACH(auto v,op2)
-#else
     for(auto v: op2) 
-#endif
-        compare(v,(*iter1++)*(*siter++));
+        compare(v,value_type((*iter1++)*(*siter++)));
 }
 
 //-----------------------------------------------------------------------------
 template<typename ATYPE> void mult_operator_test<ATYPE>::test_operator()
 {
-    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
 
     array_type r(a1*a2);
     auto iter1 = a1.begin();
     auto iter2 = a2.begin();
-#ifdef NOFOREACH
-    BOOST_FOREACH(auto v,r)
-#else
     for(auto v: r) 
-#endif
         compare(v,(*iter1++)*(*iter2++));
 
     r = a1*value_type(10);
     iter1 = a1.begin();
-#ifdef NOFOREACH
-    BOOST_FOREACH(auto v,r)
-#else
     for(auto v: r) 
-#endif
-        compare(v,(*iter1++)*value_type(10));
+        compare(v,value_type((*iter1++)*value_type(10)));
 
     r = value_type(5)*a1;
     iter1 = a1.begin();
-#ifdef NOFOREACH
-    BOOST_FOREACH(auto v,r)
-#else
     for(auto v: r) 
-#endif
-        compare(v,value_type(5)*(*iter1++));
+        compare(v,value_type(value_type(5)*(*iter1++)));
 
     //put it all together
 
     r = a1 * value_type(2) * a2;
     iter1 = a1.begin();
     iter2 = a2.begin();
-#ifdef NOFOREACH
-    BOOST_FOREACH(auto v,r)
-#else
     for(auto v: r) 
-#endif
-        compare(v,(*iter1++)*value_type(2)*(*iter2++));
+        compare(v,value_type((*iter1++)*value_type(2)*(*iter2++)));
 
 }
 
 //-----------------------------------------------------------------------------
 template<typename ATYPE> void mult_operator_test<ATYPE>::test_operator_on_view()
 {
-    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
     typedef dynamic_array<value_type> result_type;
     auto v1 = a1(0,slice(0,3),slice(0,4));
     auto v2 = a2(0,slice(0,3),slice(0,4));
@@ -219,7 +191,10 @@ template<typename ATYPE> void mult_operator_test<ATYPE>::test_operator_on_view()
     riter = r.begin();
     iter1 = v1.begin();
     for(;riter!=r.end();++riter)
-        compare(*riter,value_type(95)*(*iter1++));
+    {
+        std::cout<<*riter<<"\t"<<value_type(95)*(*iter1)<<std::endl;
+        compare(*riter,value_type(value_type(95)*(*iter1++)));
+    }
 
     //put it all together
     r = v1 * value_type(10) * v2;
@@ -227,5 +202,5 @@ template<typename ATYPE> void mult_operator_test<ATYPE>::test_operator_on_view()
     iter1 = v1.begin();
     iter2 = v2.begin();
     for(;riter!=r.end();++riter)
-        compare(*riter,*iter1++ * value_type(10) * *iter2++);
+        compare(*riter,value_type(*iter1++ * value_type(10) * *iter2++));
 }

@@ -47,6 +47,7 @@ template<typename OT> class array_test : public CppUnit::TestFixture
         CPPUNIT_TEST(test_at_access);
         CPPUNIT_TEST(test_iterator);
         CPPUNIT_TEST(test_assignment);
+        CPPUNIT_TEST(test_comparison);
         CPPUNIT_TEST_SUITE_END();
 
         typedef typename OT::value_type value_type;
@@ -67,6 +68,7 @@ template<typename OT> class array_test : public CppUnit::TestFixture
         void test_at_access();
         void test_iterator();
         void test_assignment();
+        void test_comparison();
 };
 
 //-----------------------------------------------------------------------------
@@ -85,7 +87,7 @@ template<typename OT> void array_test<OT>::tearDown() { }
 //-----------------------------------------------------------------------------
 template<typename OT> void array_test<OT>::test_construction()
 {
-    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
 
     array o1(_object1);
     array o2(std::move(_object2));
@@ -103,7 +105,7 @@ template<typename OT> void array_test<OT>::test_construction()
 //-----------------------------------------------------------------------------
 template<typename OT> void array_test<OT>::test_copy_and_move()
 {
-    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
 
     array o1(_object1);
 
@@ -127,7 +129,7 @@ template<typename OT> void array_test<OT>::test_copy_and_move()
 //-----------------------------------------------------------------------------
 template<typename OT> void array_test<OT>::test_assignment()
 {
-    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
 
     array o1(_object1);
     array o2,o3;
@@ -151,7 +153,7 @@ template<typename OT> void array_test<OT>::test_assignment()
 //-----------------------------------------------------------------------------
 template<typename OT> void array_test<OT>::test_io()
 {
-    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
 
     array o(_object1);
     std::stringstream s("1 2 3 4 5 6");
@@ -162,7 +164,7 @@ template<typename OT> void array_test<OT>::test_io()
 //-----------------------------------------------------------------------------
 template<typename OT> void array_test<OT>::test_element_access()
 {
-    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
 
     array o(_object1);
 
@@ -179,7 +181,7 @@ template<typename OT> void array_test<OT>::test_element_access()
 //-----------------------------------------------------------------------------
 template<typename OT> void array_test<OT>::test_iterator()
 {
-    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
 
     array o(_object1);
  
@@ -196,7 +198,7 @@ template<typename OT> void array_test<OT>::test_iterator()
 //-----------------------------------------------------------------------------
 template<typename OT> void array_test<OT>::test_at_access()
 {
-    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
     
     array o(_object1);
 
@@ -213,10 +215,24 @@ template<typename OT> void array_test<OT>::test_at_access()
 //-----------------------------------------------------------------------------
 template<typename OT> void array_test<OT>::test_inquery()
 {
-    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
 
     array o(_object1);
     CPPUNIT_ASSERT(o.type_name() == typeid(OT).name());
+}
+
+//-----------------------------------------------------------------------------
+template<typename OT> void array_test<OT>::test_comparison()
+{
+    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
+
+    std::generate(_object1.begin(),_object1.end(),random_generator<value_type>());
+    std::generate(_object2.begin(),_object2.end(),random_generator<value_type>());
+    array a1(_object1);
+    array a2(_object2);
+
+    CPPUNIT_ASSERT(a1 == a1);
+    CPPUNIT_ASSERT(a1 != a2);
 }
 
 

@@ -221,6 +221,19 @@ namespace core{
     {
         return a.type_id();
     }
+
+    //-------------------------------------------------------------------------
+    bool operator==(const array &a,const array &b)
+    {
+        return std::equal(a.begin(),a.end(),b.begin());
+    }
+
+    //-------------------------------------------------------------------------
+    bool operator!=(const array &a,const array &b)
+    {
+        return !(a==b);
+    }
+
 //end of namespace
 }
 }
