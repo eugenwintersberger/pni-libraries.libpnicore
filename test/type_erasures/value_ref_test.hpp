@@ -73,8 +73,8 @@ template<typename T> void value_ref_test<T>::tearDown() { }
 template<typename T> void value_ref_test<T>::test_construction()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
-    value_ref v1 = std::ref(value_1);
-    value_ref v2 = std::ref(value_2);
+    value_ref v1(std::ref(value_1));
+    value_ref v2(std::ref(value_2));
 
     compare(v1.as<T>(),value_1);
     compare(v2.as<T>(),value_2);
@@ -86,7 +86,7 @@ template<typename T> void value_ref_test<T>::test_copy_and_move()
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
     
-    value_ref v1 = std::ref(value_1);
+    value_ref v1(std::ref(value_1));
     
     value_ref v2(v1);
     compare(v1.as<T>(),value_1);
@@ -128,7 +128,7 @@ template<typename T> void value_ref_test<T>::test_stream()
     std::stringstream ss("12343.4");
 
     T data;
-    value_ref v=std::ref(data);
+    value_ref v(std::ref(data));
     ss>>v;
 }
 

@@ -32,17 +32,55 @@
 #include <pni/core/type_erasures.hpp>
 
 using namespace pni::core;
+/*
+What is all this fuzz about:
+When we want to check the equality with CPPUNIT typically the macro 
+CPPUNIT_ASSERT('expression') will be called. However, for floating point numbers
+CPPUNIT_ASSERT_DOUBLES_EQUAL(a,b,error) shoud be used. We thus need a special
+overload for this situation which should be rather easy to do. 
 
-template<typename T>
-using is_int_or_string = std::enable_if<(std::is_pod<T>::value && 
-                                        !std::is_floating_point<T>::value) || 
-                                        std::is_same<T,string>::value || 
-                                        std::is_same<T,bool_t>::value >;
+For all types implementing the == operator a simple CPPUNIT_ASSERT will do 
+except for floating point values.
 
-template<typename T>
-using is_float = std::enable_if<std::is_pod<T>::value && 
-                                std::is_floating_point<T>::value>;
+*/
 
+
+//----------------------------------------------------------------------------
+template< 
+         typename TA,
+         typename TB,
+         bool is_float
+        >
+struct comperator;
+
+//----------------------------------------------------------------------------
+template<
+         typename TA,
+         typename TB
+        >
+struct comperator<TA,TB,false>
+{
+    static void compare(const TA &a,const TB &b)
+    {
+        CPPUNIT_ASSERT(a==b);
+    }
+};
+
+//----------------------------------------------------------------------------
+template<
+         typename TA,
+         typename TB
+        >
+struct comperator<TA,TB,true >
+            
+{
+    static void compare(const TA &a,const TB &b)
+    {
+        CPPUNIT_DOUBLES_EQUAL(a,b,1.e-12);
+    }
+};
+
+//----------------------------------------------------------------------------
 //!
 //! \brief compare integers and strings
 //! 
@@ -50,31 +88,23 @@ using is_float = std::enable_if<std::is_pod<T>::value &&
 //! 
 template<
          typename TA,
-         typename TB,
-         typename = typename std::enable_if<std::is_floating_point<TA>::value || 
-                                            std::is_floating_point<TB>::value>::type
+         typename TB
         > 
 void compare(const TA &a,const TB &b)
 {
-    CPPUNIT_ASSERT_DOUBLES_EQUAL(a,b,1.e-12);
+    static const bool is_float = std::is_floating_point<TA>::value || 
+                                 std::is_floating_point<TB>::value;
+    comperator<TA,TB,is_float>::compare(a,b);
 }
 
 
-//----------------------------------------------------------------------------
-//!
-//! \brief compare floats
-//! 
-//! This function compares floating points values.
-//! 
 template<
          typename TA,
-         typename TB,
-         typename = typename std::enable_if<!(std::is_floating_point<TA>::value || 
-                                            std::is_floating_point<TB>::value)>::type
-        > 
-void compare(const TA &a,const TB &b)
+         typename TB
+        >
+void compare(TA &&a,TB &&b)
 {
-    CPPUNIT_ASSERT(a==b);
+    compare(a,b);
 }
 
 //---------------------------------------------------------------------------
@@ -94,16 +124,6 @@ void compare(const std::complex<T> &a,const std::complex<T> &b)
 //!
 //! \brief comparison of value_ref instances
 //!
-/*
-#define COMPARE_VALUE_WITH_REF(a,b,tid)\
-    if((a.type_id() == tid) &&\
-       (b.type_id() == tid)) \
-    {\
-        compare(a.as<id_type_map<tid>::type>(),\
-                b.as<id_type_map<tid>::type>());\
-        return; \
-    }
-*/
 template<typename T> void compare(const value_ref &a, const T &b)
 {
     type_id_t t_id = type_id_map<T>::type_id;

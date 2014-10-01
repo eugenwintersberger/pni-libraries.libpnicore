@@ -143,6 +143,19 @@ namespace core{
         private:
             T _value; //!< the data value
 
+            template<typename TA>
+            static bool is_equal(const TA &a,const TA &b)
+            {
+                return a==b;
+            }
+
+            template<typename TA>
+            static bool is_equal(const std::reference_wrapper<TA> &a,
+                                 const std::reference_wrapper<TA> &b)
+            {
+                return a.get()==b.get();
+            }
+
         public:
             //---------------------------------------------------------
             //! default constructor
@@ -205,10 +218,12 @@ namespace core{
                 if(type_id() != other.type_id())
                     throw type_error(EXCEPTION_RECORD,
                             "Cannot compare values of different type!");
-
-                return dynamic_cast<const value_holder<T>&>(other)._value == _value;
+    
+                const auto &o = dynamic_cast<const value_holder<T>&>(other)._value;
+                return is_equal(o,_value);
             }
     };
+
 
 //end of namespace
 }

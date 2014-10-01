@@ -76,8 +76,8 @@ template<typename T> void value_test<T>::test_construction()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
 
-    value v1 = value_1;
-    value v2 = value_2;
+    value v1(value_1);
+    value v2(value_2);
 
     CPPUNIT_ASSERT(v1.as<T>()==value_1);
     CPPUNIT_ASSERT(v2.as<T>()==value_2);
@@ -89,7 +89,7 @@ template<typename T> void value_test<T>::test_copy_and_move()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
 
-    value v1 = value_1;
+    value v1(value_1);
     
     value v2(v1);
     CPPUNIT_ASSERT(v1.as<T>() == value_1);
@@ -138,8 +138,10 @@ template<typename T> void value_test<T>::test_comparison()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
     
-    CPPUNIT_ASSERT(value_1==value_1);
-    CPPUNIT_ASSERT(value_2!=value_1);
+    value v1(value_1);
+    value v2(value_2);
+    CPPUNIT_ASSERT(v1==v1);
+    CPPUNIT_ASSERT(v2!=v1);
 
 }
 
