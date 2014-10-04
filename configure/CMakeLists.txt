@@ -49,9 +49,6 @@ include(configure/InstallConfig.cmake)
 #===================================check the size of data types===============
 include(configure/CheckTypeSizes.txt)
 
-#=================try to figure out some compiler capabilities=================
-#include(configure/CheckCompilerCaps.txt)
-
 #==========need to check for several libraries if they are installed=============
 
 set(Boost_USE_STATIC_LIBS OFF)
