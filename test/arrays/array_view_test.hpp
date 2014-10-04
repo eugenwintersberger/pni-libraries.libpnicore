@@ -212,9 +212,6 @@ template<typename ATYPE> void array_view_test<ATYPE>::test_linear_access()
 
     for(size_t i=0;i<view.size();++i) 
     {
-        value_type v1 = a(0,2+i);
-        value_type v2 = view[i];
-        value_type r = v1+v2;
         if((a(0,2+i)) == view[i]) 
         {
             std::cerr<<"Values equal"<<std::endl;

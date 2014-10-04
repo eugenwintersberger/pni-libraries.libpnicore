@@ -86,7 +86,7 @@ namespace core{
             typedef index_map<index_type,typename ATYPE::map_type::implementation_type> map_type;
             //========================public members===========================
             //! type id of the value_type
-            static const size_t type_id = ATYPE::type_id;
+            static const type_id_t type_id = ATYPE::type_id;
         private:
             //! parent array from which to draw data
             std::reference_wrapper<ATYPE> _parray; 

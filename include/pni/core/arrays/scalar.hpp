@@ -188,7 +188,10 @@ namespace core {
             //! \param i index
             //! \param v value
             //!
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
             void insert(size_t i,const T &v) { this->_data[0] = v; }
+#pragma GCC diagnostic pop
             
             //-----------------------------------------------------------------
             //! 
@@ -212,11 +215,14 @@ namespace core {
             //! \param indices multidimensional index
             //! \return reference to data
             //!
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
             template<typename ...ITYPES> 
             T &operator()(ITYPES ...indices)
             {
                 return this->_data[0];
             }
+#pragma GCC diagnostic pop
 
             //-----------------------------------------------------------------
             //!
@@ -229,11 +235,14 @@ namespace core {
             //! \param indices multidimensional index
             //! \return data value
             //!
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
             template<typename ...ITYPES> 
             T operator()(ITYPES ...indices) const
             {
                 return this->_data[0];
             }
+#pragma GCC diagnostic pop
 
             //-----------------------------------------------------------------
             //!
@@ -248,6 +257,8 @@ namespace core {
             //! \param c container with indices
             //! \return reference to the data
             //!
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
             template<
                      template<typename ...> class CTYPE,
                      typename ...OTS
@@ -256,6 +267,7 @@ namespace core {
             {
                 return this->_data[0];
             }
+#pragma GCC diagnostic pop
 
             //-----------------------------------------------------------------
             //!
@@ -270,11 +282,14 @@ namespace core {
             //! \param c container with indices
             //! \return data value
             //!
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
             template<template<typename ...> class CTYPE,typename ...OTS>
             T operator()(const CTYPE<OTS...> &c) const
             {
                 return this->_data[0];
             }
+#pragma GCC diagnostic pop
 
             //===================inquery methods===============================
             //!

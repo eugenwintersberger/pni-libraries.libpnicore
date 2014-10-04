@@ -207,8 +207,10 @@ namespace core{
         static const bool is_complex = true;
 
         //---------------------------------------------------------------------
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
         static bool is_negative(type value){ return false; }
-
+#pragma GCC diagnostic pop
 
         //---------------------------------------------------------------------
         //! return the minimum value of the Complex32 type
