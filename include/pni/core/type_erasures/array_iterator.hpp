@@ -331,12 +331,15 @@ namespace core{
 
             //------------------------------------------------------------------
             //! decrement operators
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
             iterator_type operator--(int i)
             {
                 iterator_type tmp = *this;
                 --(*this);
                 return tmp;
             }
+#pragma GCC diagnostic pop
 
             //------------------------------------------------------------------
             //! compound assignment with +=

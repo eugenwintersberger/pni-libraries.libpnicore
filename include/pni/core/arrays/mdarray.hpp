@@ -147,7 +147,7 @@ namespace core {
             //!
             template<typename ATYPE>
             explicit mdarray(const array_view<ATYPE> &view):
-                _imap(map_utils<map_type>::create(view.shape<shape_t>())),
+                _imap(map_utils<map_type>::create(view.template shape<shape_t>())),
                 _data(container_utils<storage_type>::create(view.size()))
             {
                 std::copy(view.begin(),view.end(),_data.begin());
@@ -167,7 +167,7 @@ namespace core {
             //!
             template<typename ...MDARGS>
             explicit mdarray(const mdarray<MDARGS...> &array):
-                _imap(map_utils<map_type>::create(array.shape<shape_t>())),
+                _imap(map_utils<map_type>::create(array.template shape<shape_t>())),
                 _data(container_utils<storage_type>::create(array.size()))
             {
                 //copy data

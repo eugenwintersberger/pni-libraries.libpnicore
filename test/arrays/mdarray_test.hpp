@@ -91,10 +91,13 @@ class mdarray_test : public CppUnit::TestFixture
         }
 
         //---------------------------------------------------------------------
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
         template<typename T,size_t N>
         static void allocate_storage(std::array<T,N> &c,size_t n)
         {
         }
+#pragma GCC diagnostic pop
 
         //---------------------------------------------------------------------
         template<typename CTYPE,typename...ITYPES>
