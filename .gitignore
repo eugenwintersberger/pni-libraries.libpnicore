@@ -16,3 +16,4 @@ utbmark
 ./Makefile
 *.tif
 build
+.cccc
