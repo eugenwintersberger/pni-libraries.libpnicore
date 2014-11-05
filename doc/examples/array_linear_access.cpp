@@ -47,11 +47,11 @@ int main(int argc,char **argv)
     for(auto &channel: mca)  channel = dist(generator);
 
     //subtract some number 
-    for(size_t i=0;i<size(mca);++i) if(mca[i]>=10) mca[i] -= 10;
+    for(size_t i=0;i<mca.size();++i) if(mca[i]>=10) mca[i] -= 10;
 
     //set the first and last element to 0 
-    mca.at(0) = 0;
-    mca.at(size(mca)-1) = 0;
+    mca.front() = 0;
+    mca.back()  = 0;
     
     //output data
     for(auto channel: mca) std::cout<<channel<<std::endl;

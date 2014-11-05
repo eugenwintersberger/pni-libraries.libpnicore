@@ -24,11 +24,36 @@ if(DOXYGEN_FOUND)
             DESTINATION "${CMAKE_INSTALL_FULL_DOCDIR}")
 
     #------------------install the example files------------------------------
-    install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/examples"
+    set(EXAMPLES examples/Makefile
+                 examples/array_arithmetic1.cpp
+                 examples/array_arithmetic2.cpp
+                 examples/array_arithmetic3.cpp
+                 examples/array_create.cpp
+                 examples/array_inquery.cpp
+                 examples/array_linear_access.cpp
+                 examples/array_multiindex.cpp
+                 examples/array_stl.cpp
+                 examples/array_view_container.cpp
+                 examples/array_view.cpp
+                 examples/copy_file.cpp
+                 examples/example_array2.cpp
+                 examples/example_array3.cpp
+                 examples/example_array4.cpp
+                 examples/type_erasure1.cpp
+                 examples/type_erasure2.cpp
+                 examples/type_erasure3.cpp
+                 examples/type_erasure_record.cpp
+                 )
+    foreach(EXAMPLE ${EXAMPLES})
+        configure_file(${EXAMPLE} ${EXAMPLE} COPYONLY)
+    endforeach()
+
+    install(DIRECTORY "examples"
             DESTINATION "${CMAKE_INSTALL_FULL_DOCDIR}")
 else(DOXYGEN_FOUND)
     message("--- Disable building documentation")
 endif(DOXYGEN_FOUND)
 add_subdirectory(users_guide)
+
 
 add_custom_target(doc DEPENDS api_doc users_guide)

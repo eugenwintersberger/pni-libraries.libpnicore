@@ -9,11 +9,11 @@ Using selections and numerics
 
 using namespace pni::core;
 
-typedef nf32darray frame_t;
-typedef numarray<sarray<float32,3> > vector_t;
+typedef dynamic_array<float32>  frame_type;
+typedef static_array<float32,3> vector_type;
 
 
-std::ostream &operator<<(std::ostream &o,const frame_t &a)
+std::ostream &operator<<(std::ostream &o,const frame_type &a)
 {
     auto shape = a.shape<shape_t>();
     for(size_t i=0;i<shape[0];i++)
@@ -26,20 +26,10 @@ std::ostream &operator<<(std::ostream &o,const frame_t &a)
     return o;
 }
 
-std::ostream &operator<<(std::ostream &o,const vector_t &v)
+std::ostream &operator<<(std::ostream &o,const vector_type &v)
 {
     o<<"( ";
-#ifdef NOFOREACH
-    for(auto iter=v.begin();iter!=v.end();++iter)
-    {
-        auto c = *iter;
-#else
-    for(auto c: v) 
-    {
-#endif
-        o<<c<<" ";
-    }
-
+    for(auto c: v) o<<c<<" ";
     o<<")";
     return o;
 }
@@ -51,27 +41,24 @@ int main(int argc,char **argv)
     shape_t shape({10,3});
     //simpel construction from shape - memory allocation is done bye 
     //the array constructor
-    frame_t a(shape); 
+    auto a =  frame_type::create(shape); 
 
     //initialize the array with 0
     std::fill(a.begin(),a.end(),1);
 
     //using a selection to set the values of each vector
-    for(size_t i=0;i<shape[0];i++)
-        a(i,slice(0,3)) += i+0.1*i;
+    for(size_t i=0;i<shape[0];i++) a(i,slice(0,3)) += i+0.1*i;
 
     //plotting some output
     std::cout<<a<<std::endl;
     for(size_t i=0;i<shape[0];i++)
     {
-        vector_t v(a(i,slice(0,3)));
+        vector_type v(a(i,slice(0,3)));
         std::cout<<"vector = "<<v<<std::endl;
     }
 
-    vector_t v1(std::vector<float32>({1.,2.,3.}));
+    auto  v1 = vector_type::create(std::vector<float32>({1.,2.,3.}));
     std::cout<<"v1 = "<<v1<<std::endl;
-    vector_t v2{4,5,6};
-    std::cout<<"v2 = "<<v2<<std::endl;
 
     //Vector v{std::vector<Float32>{4,5,6}};
     return 0;

@@ -38,12 +38,12 @@ template<typename ATYPE>
 void show_info(const ATYPE &a)
 {
     std::cout<<"Data type: "<<type_id(a)<<std::endl;
-    std::cout<<"Rank     : "<<rank(a)<<std::endl;
+    std::cout<<"Rank     : "<<a.rank()<<std::endl;
     std::cout<<"Shape    : (";
-    auto s = shape<shape_t>(a);
+    auto s = a.template shape<shape_t>();
     for(auto n: s) std::cout<<" "<<n<<" ";
     std::cout<<")"<<std::endl;
-    std::cout<<"Size     : "<<size(a)<<std::endl;
+    std::cout<<"Size     : "<<a.size()<<std::endl;
 }
 
 int main(int argc,char **argv)

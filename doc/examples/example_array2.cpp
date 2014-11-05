@@ -5,13 +5,13 @@ Data access with DArray
 
 #include <vector>
 #include <pni/core/types.hpp>
-#include <pni/core/darray.hpp>
+#include <pni/core/arrays.hpp>
 
 using namespace pni::core;
 
 //some usefull type definitions
-typedef std::vector<size_t> index_t; //index type
-typedef darray<float32> f32array;    //an array type for Float32 values
+typedef std::vector<size_t> index_t;      //index type
+typedef dynamic_array<float32> f32array;  //an array type for Float32 values
 
 
 int main(int argc,char **argv)
@@ -19,36 +19,19 @@ int main(int argc,char **argv)
     shape_t shape({10,3});
     //simpel construction from shape - memory allocation is done bye 
     //the array constructor
-    f32array a(shape); 
+    auto a = f32array::create(shape); 
 
     //---------------linear access to data-------------------------------------
     //filling the array - works thanks to STL compliance
     std::fill(a.begin(),a.end(),0);
 
     //simple C++11 iterator access - output
-#ifdef NOFOREACH
-    for(auto iter = a.begin();iter!=a.end();++iter)
-    {
-        auto v = *iter;
-#else
-    for(auto v: a) 
-    {
-#endif
-        std::cout<<v<<" ";
-    }
+    for(auto v: a) std::cout<<v<<" ";
+
     std::cout<<std::endl;
     
     //simple C++11 iterator access - input
-#ifdef NOFOREACH
-    for(auto iter=a.begin();iter!=a.end();++iter)
-    {
-        f32array::value_type &v = *iter;
-#else
-    for(f32array::value_type &v: a) 
-    {
-#endif
-        v=100.; 
-    }
+    for(f32array::value_type &v: a) v=100.; 
 
     //data individual data can be accessed with
     a.at(10) = 101.;

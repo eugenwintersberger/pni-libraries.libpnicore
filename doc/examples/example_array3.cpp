@@ -6,16 +6,14 @@ Using selections
 #include <iostream>
 #include <vector>
 #include <pni/core/types.hpp>
-#include <pni/core/darray.hpp>
-#include <pni/core/sarray.hpp>
-#include <pni/core/slice.hpp>
+#include <pni/core/arrays.hpp>
 
 using namespace pni::core;
 
 //some usefull type definitions
-typedef std::vector<size_t> index_t; //index type
-typedef darray<float32> f32array;    //an array type for Float32 values
-typedef sarray<float32,3> f32vector; //a static 3-vector type
+typedef std::vector<size_t> index_t;        //index type
+typedef dynamic_array<float32>  f32array;    //an array type for Float32 values
+typedef static_array<float32,3> f32vector;  //a static 3-vector type
 
 
 
@@ -35,16 +33,7 @@ std::ostream &operator<<(std::ostream &o,const f32array &a)
 std::ostream &operator<<(std::ostream &o,const f32vector &v)
 {
     o<<"( ";
-#ifdef NOFOREACH
-    for(auto iter = v.begin();iter!=v.end();++iter)
-    {
-        auto c = *iter;
-#else
-    for(auto c: v) 
-    {
-#endif
-        o<<c<<" ";
-    }
+    for(auto c: v) o<<c<<" ";
     o<<")";
     return o;
 }
@@ -53,10 +42,10 @@ std::ostream &operator<<(std::ostream &o,const f32vector &v)
 
 int main(int argc,char **argv)
 {
-    shape_t shape({10,3});
+    shape_t shape{10,3};
     //simpel construction from shape - memory allocation is done bye 
     //the array constructor
-    f32array a(shape); 
+    auto a = f32array::create(shape); 
 
     //initialize the array with 0
     std::fill(a.begin(),a.end(),0);
