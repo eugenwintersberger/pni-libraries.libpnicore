@@ -86,6 +86,7 @@ namespace core{
     class value
     {
         private:
+            typedef std::unique_ptr<value_holder_interface> pointer_type;
             //!
             //! \brief throw exception
             //!
@@ -99,11 +100,11 @@ namespace core{
             static void _throw_not_allocated_error(const exception_record &r);
 
             //! pointer holding the value stored
-            std::unique_ptr<value_holder_interface> _ptr;
+            pointer_type _ptr;
         public:
             //================constructors and destructor======================
             //! default constructor
-            value():_ptr(nullptr) {}
+            value();
           
             //-----------------------------------------------------------------
             //! template constructor from value
@@ -112,28 +113,11 @@ namespace core{
 
             //-----------------------------------------------------------------
             //! copy constructor
-            value(const value &o):_ptr(o._ptr ? o._ptr->clone() : nullptr) {}
+            value(const value &o);
 
             //-----------------------------------------------------------------
             //! move constructor
-            value(value &&o):_ptr(std::move(o._ptr)) {}
-
-            //-----------------------------------------------------------------
-            //!
-            //! \brief static creation method
-            //!
-            //! If an instance of value should be created without copying an
-            //! existing variable or a temporary object no memory will be 
-            //! allocated and thus every access to the data would lead to a
-            //! memory_not_allocated exception. This static method allows to
-            //! create a default object of a particular type. 
-            //! \code
-            //! value v = value::create<float128>();
-            //! \endcode
-            //! \tparam T type for which to create the value object
-            //! \return instance of value for type T
-            //!
-            template<typename T> static value create() { return value(T()); }
+            value(value &&o);
 
             //==================assignment operators===========================
             //! 

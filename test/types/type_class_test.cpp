@@ -60,4 +60,6 @@ void type_class_test::test_map()
     CPPUNIT_ASSERT(type_class_map<binary>::type_class == type_class_t::BINARY);
     CPPUNIT_ASSERT(type_class_map<bool_t>::type_class == type_class_t::BOOL);
 
+    CPPUNIT_ASSERT(type_class_map<none>::type_class == type_class_t::NONE);
+
 }

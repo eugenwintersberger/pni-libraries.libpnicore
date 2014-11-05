@@ -23,6 +23,7 @@
 //!
 
 #include <pni/core/type_erasures/value.hpp>
+#include <pni/core/types/none.hpp>
 
 
 namespace pni{
@@ -35,11 +36,35 @@ namespace core{
     }
 
     //-------------------------------------------------------------------------
+    // Implementation of constructors
+    //-------------------------------------------------------------------------
+    value::value():
+        _ptr(new value_holder<none>(none()))
+    {}
+
+    //-------------------------------------------------------------------------
+    value::value(const value &o)
+        :_ptr(o._ptr ? o._ptr->clone() : new value_holder<none>(none())) 
+    {}
+   
+    //------------------------------------------------------------------------
+    value::value(value &&o)
+        :_ptr(std::move(o._ptr)) 
+    {
+        o = value();
+    }
+
+    //-------------------------------------------------------------------------
+    // Implementation of assignment operators
+    //-------------------------------------------------------------------------
+
+    //-------------------------------------------------------------------------
     value &value::operator=(const value &o)
     {
         if(this == &o) return *this;
-        _ptr = std::unique_ptr<value_holder_interface>(
-                o._ptr->clone());
+
+        //we have to clone here as we cannot copy a unique pointer
+        _ptr = std::unique_ptr<value_holder_interface>(o._ptr->clone());
 
         return *this;
     }
@@ -48,51 +73,32 @@ namespace core{
     value &value::operator=(value &&o)
     {
         if(this == &o) return *this;
-        _ptr = std::move(o._ptr);
+        std::swap(_ptr,o._ptr);
         return *this;
     }
     
     //-------------------------------------------------------------------------
     type_id_t value::type_id() const
     {
-        if(_ptr)
-            return _ptr->type_id();
-        else
-            _throw_not_allocated_error(EXCEPTION_RECORD);
-
-        return type_id_t::NONE; //just to make the compiler happy
+        return _ptr->type_id();
     }
 
     //-------------------------------------------------------------------------
     std::ostream &operator<<(std::ostream &stream,const value &v)
     {
-        if(v._ptr)
-            return v._ptr->write(stream);
-        else 
-            v._throw_not_allocated_error(EXCEPTION_RECORD);
-
-        return stream;
+        return v._ptr->write(stream);
     }
     
     //-------------------------------------------------------------------------
     std::istream &operator>>(std::istream &stream,value &v)
     {
-        if(v._ptr)
-            return v._ptr->read(stream);
-        else
-            v._throw_not_allocated_error(EXCEPTION_RECORD);
-
-        return stream;
+        return v._ptr->read(stream);
     }
 
     //-------------------------------------------------------------------------
     bool operator==(const value &a,const value &b)
     {
-        if(a._ptr && b._ptr)
-            return a._ptr->compare(*b._ptr);
-
-        return false;
-
+        return a._ptr->compare(*b._ptr);
     }
 
     //-------------------------------------------------------------------------

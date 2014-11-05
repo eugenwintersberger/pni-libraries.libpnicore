@@ -81,6 +81,7 @@ namespace core{
     CREATE_ID_TYPE_MAP(type_id_t::STRING,string);
     CREATE_ID_TYPE_MAP(type_id_t::BINARY,binary);
     CREATE_ID_TYPE_MAP(type_id_t::BOOL,bool_t);
+    CREATE_ID_TYPE_MAP(type_id_t::NONE,none);
     //! \endcond NO_API_DOC
 
 }

@@ -76,6 +76,8 @@ namespace core{
     CREATE_TYPE_CLASS_MAP(binary,type_class_t::BINARY);
     CREATE_TYPE_CLASS_MAP(string,type_class_t::STRING);
 
+    CREATE_TYPE_CLASS_MAP(none,type_class_t::NONE);
+
     //! \endcond NO_API_DOC
 
 //end of namespace

@@ -38,6 +38,7 @@ using namespace pni::core;
 template<typename T> class value_test : public CppUnit::TestFixture
 {
         CPPUNIT_TEST_SUITE(value_test<T>);
+        CPPUNIT_TEST(test_default_construction);
         CPPUNIT_TEST(test_construction);
         CPPUNIT_TEST(test_copy_and_move);
         CPPUNIT_TEST(test_assignment);
@@ -53,6 +54,7 @@ template<typename T> class value_test : public CppUnit::TestFixture
         void setUp();
         void tearDown();
 
+        void test_default_construction();
         void test_construction();
         void test_copy_and_move();
         void test_assignment();
@@ -72,6 +74,15 @@ template<typename T> void value_test<T>::setUp()
 template<typename T> void value_test<T>::tearDown() { }
 
 //-----------------------------------------------------------------------------
+template<typename T> void value_test<T>::test_default_construction()
+{
+    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
+
+    value v;
+    CPPUNIT_ASSERT(v.type_id() == type_id_t::NONE);
+}
+
+//-----------------------------------------------------------------------------
 template<typename T> void value_test<T>::test_construction()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
@@ -81,7 +92,6 @@ template<typename T> void value_test<T>::test_construction()
 
     CPPUNIT_ASSERT(v1.as<T>()==value_1);
     CPPUNIT_ASSERT(v2.as<T>()==value_2);
-
 }
 
 //-----------------------------------------------------------------------------
@@ -97,8 +107,7 @@ template<typename T> void value_test<T>::test_copy_and_move()
 
     value v3(std::move(v2));
     CPPUNIT_ASSERT(v3.as<T>() == v1.as<T>());
-    CPPUNIT_ASSERT_THROW(v2.as<T>(),memory_not_allocated_error);
-
+    CPPUNIT_ASSERT(v2.type_id() == type_id_t::NONE);
 }
 
 //-----------------------------------------------------------------------------
@@ -107,7 +116,6 @@ template<typename T> void value_test<T>::test_assignment()
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
     
     value v1;
-    CPPUNIT_ASSERT_THROW(v1.as<T>(),memory_not_allocated_error);
 
     v1 = value_1;
     CPPUNIT_ASSERT(v1.as<T>() == value_1);
@@ -119,7 +127,7 @@ template<typename T> void value_test<T>::test_assignment()
     value v3;
     v3 = std::move(v2);
     CPPUNIT_ASSERT(v3.as<T>() == v1.as<T>());
-    CPPUNIT_ASSERT_THROW(v2.as<T>(),memory_not_allocated_error);
+    CPPUNIT_ASSERT(v2.type_id() == type_id_t::NONE);
 }
 
 //-----------------------------------------------------------------------------
@@ -129,7 +137,7 @@ template<typename T> void value_test<T>::test_stream()
 
     std::stringstream ss("12");
 
-    value v=value::create<T>();
+    value v(T{});
     ss>>v;
 }
 

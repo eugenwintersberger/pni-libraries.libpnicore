@@ -20,6 +20,7 @@ set(SOURCES array.cpp
             value.cpp
             value_ref.cpp
             bool.cpp
+            none.cpp
             )
 
 

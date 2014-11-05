@@ -31,6 +31,7 @@
 
 #include "binary.hpp"
 #include "bool.hpp"
+#include "none.hpp"
 
 namespace pni{
 namespace core{
