@@ -254,7 +254,7 @@ namespace core{
             //! \param opt boolean configuration option
             //! \param visible visibility flag
             //!
-            void add_option(const config_option<Bool> &opt,bool visible=true);
+            void add_option(const config_option<bool> &opt,bool visible=true);
 
             //-----------------------------------------------------------------
             //!

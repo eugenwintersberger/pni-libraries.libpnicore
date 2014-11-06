@@ -69,7 +69,7 @@ namespace core{
     }
 
     //--------------------------------------------------------------------------
-    void configuration::add_option(const config_option<Bool> &opt,bool visible)
+    void configuration::add_option(const config_option<bool> &opt,bool visible)
     {
         typedef boost::shared_ptr<popts::option_description> option_sptr;
         //assemble the name of the option

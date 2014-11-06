@@ -66,7 +66,6 @@ namespace core{
     //-----------------------utility types-------------------------------------
     typedef std::string     string; //!< String type
     typedef binary_t<uint8> binary; //!< data type for binary data
-    typedef bool            Bool;   //!< data type for boolean expressions
     /*! @} */
 
 
@@ -109,6 +108,10 @@ namespace core{
     std::ostream &operator<<(std::ostream &o,const type_id_t &tid);
 
 
+    //!
+    //! \ingroup type_classes
+    //! \brief type class definitions
+    //!
     //! classes of data types provided by the PNI utility library
     enum class type_class_t {NONE,       //!< unspecified type
                              INTEGER,    //!< integer type
