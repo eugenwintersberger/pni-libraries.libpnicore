@@ -62,8 +62,7 @@ void type_str_id_test::test_id_to_str()
     CPPUNIT_ASSERT(str_from_type_id(type_id_t::STRING)=="string");
     CPPUNIT_ASSERT(str_from_type_id(type_id_t::BINARY)=="binary");
     CPPUNIT_ASSERT(str_from_type_id(type_id_t::BOOL) == "bool");
-    
-    CPPUNIT_ASSERT_THROW(str_from_type_id(type_id_t::NONE),key_error);
+    CPPUNIT_ASSERT(str_from_type_id(type_id_t::NONE) == "none");
 }
 
 //-----------------------------------------------------------------------------
@@ -112,7 +111,6 @@ void type_str_id_test::test_str_to_id()
     CPPUNIT_ASSERT(type_id_from_str("binary")==type_id_t::BINARY);
     CPPUNIT_ASSERT(type_id_from_str("bool")==type_id_t::BOOL);
 
-    CPPUNIT_ASSERT_THROW(type_id_from_str("blabla"),key_error);
-
+    CPPUNIT_ASSERT(type_id_from_str("none")==type_id_t::NONE);
 }
 

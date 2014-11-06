@@ -54,7 +54,8 @@ namespace core{
      {"complex64",type_id_t::COMPLEX64},{"c64",type_id_t::COMPLEX64},
      {"complex128",type_id_t::COMPLEX128},{"c128",type_id_t::COMPLEX128},
      {"string",type_id_t::STRING},{"str",type_id_t::STRING},
-     {"binary",type_id_t::BINARY}, {"bool",type_id_t::BOOL}
+     {"binary",type_id_t::BINARY}, {"bool",type_id_t::BOOL},
+     {"none",type_id_t::NONE}
     };
 
     //-------------------------------------------------------------------------
@@ -78,7 +79,8 @@ namespace core{
      {type_id_t::COMPLEX128,"complex128"},
      {type_id_t::STRING,"string"},
      {type_id_t::BINARY,"binary"},
-     {type_id_t::BOOL,"bool"}
+     {type_id_t::BOOL,"bool"},
+     {type_id_t::NONE,"none"}
     };
 
     //-------------------------------------------------------------------------
