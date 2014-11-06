@@ -43,27 +43,6 @@ namespace core{
     //! types).  No additional requirements are made on a data type.  
     //! Creating an instane is quite simple, just use
     //!
-    //! \code
-    //! float64 v1 = 100.243;
-    //! value v = v1;
-    //! \endcode
-    //! or
-    //! \code
-    //! value v = float64(1023); 
-    //! \endcode
-    //! An arbitrary type can be assigned at runtime
-    //! \code
-    //! value v;
-    //! .... code omitted ...
-    //! v = 1245.2340;
-    //! \endcode
-    //! In this case the original value whill be overwritten. To obtain its 
-    //! original value use the as<> template member function of the value 
-    //! class
-    //! \code
-    //! value v = float32(1243.4029);
-    //! float32 a = v.as<float32>();
-    //! \endcode
     //! if the type passed as a template parameter to as<> does not match the 
     //! type of the data wrapped by the value class a TypeError exception will 
     //! be thrown. 
@@ -264,6 +243,20 @@ namespace core{
     //! \return type ID of the erased type
     //!
     type_id_t type_id(const value &rv);
+
+    //------------------------------------------------------------------------
+    //!
+    //! \ingroup type_erasure_classes
+    //! \brief create value
+    //! 
+    //! Create a value instance for a particular type. 
+    //!
+    //! \tparam T requested type
+    //! 
+    template<typename T> value make_value()
+    {
+        return value(T{});
+    }
 
 //end of namespace
 }

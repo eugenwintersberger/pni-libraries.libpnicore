@@ -78,8 +78,13 @@ template<typename T> void value_test<T>::test_default_construction()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
 
+    //untyped construction
     value v;
     CPPUNIT_ASSERT(v.type_id() == type_id_t::NONE);
+
+    //typed default construction
+    value v1 = make_value<T>();
+    CPPUNIT_ASSERT(v1.type_id() == type_id_map<T>::type_id);
 }
 
 //-----------------------------------------------------------------------------
