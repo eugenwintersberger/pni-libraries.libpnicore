@@ -95,6 +95,7 @@ namespace core{
     class value_ref
     {
         private:
+            typedef std::unique_ptr<value_holder_interface> pointer_type;
             //!
             //! \brief throw exception
             //!
@@ -105,14 +106,16 @@ namespace core{
             //! \throw memory_not_allocated_error
             //! \param r exception record where the error occurred.
             //!
-            static void _throw_not_allocated_error(const exception_record &r);
+            void _check_pointer(const exception_record &r) const;
+
+            void _check_type(type_id_t tid,const exception_record &r) const;
 
             //! pointer holding the value stored
-            std::unique_ptr<value_holder_interface> _ptr;
+            pointer_type _ptr;
         public:
             //================constructors and destructor======================
             //! default constructor
-            value_ref():_ptr(nullptr) {}
+            value_ref();
           
             //-----------------------------------------------------------------
             //! 
@@ -134,18 +137,7 @@ namespace core{
 
             //-----------------------------------------------------------------
             //! copy constructor
-            value_ref(const value_ref &o)
-            {
-                if(o._ptr)
-                    _ptr =
-                        std::unique_ptr<value_holder_interface>(o._ptr->clone());
-                else
-                    _ptr = nullptr;
-            }
-
-            //-----------------------------------------------------------------
-            //! move constructor
-            value_ref(value_ref &&o):_ptr(std::move(o._ptr)) {}
+            value_ref(const value_ref &o);
 
             //==================assignment operators===========================
             //! 
@@ -167,30 +159,10 @@ namespace core{
             template<typename T> value_ref &operator=(const T &v);
 
             //-----------------------------------------------------------------
-            //!
-            //! \brief reference assignment
-            //!
-            //! Assign a new reference to an instance of value_ref. 
-            //! \code
-            //! value_ref a = ...;
-            //! float128 x = 1.2343;
-            //! a = std::ref(x);
-            //! \endcode
-            //! 
-            //! \tparam T type of the original variable
-            //! \param r reference to the new variable
-            //! \return reference to new instance of value_ref
-            //!
-            template<typename T> 
-            value_ref &operator=(const std::reference_wrapper<T> &r);
-
-            //-----------------------------------------------------------------
             //! copy assignment
+            // we should remove this - makes not really sense. We can 
+            // always destroy the reference and create a new one (could we?)
             value_ref &operator=(const value_ref &o);
-
-            //-----------------------------------------------------------------
-            //! move assignment operator
-            value_ref &operator=(value_ref &&o);
 
             //-----------------------------------------------------------------
             //!
@@ -235,49 +207,26 @@ namespace core{
     //======================implementation of template members=================
     template<typename T> T value_ref::as() const
     {
-        typedef value_holder<std::reference_wrapper<T> > holder_t;
-       
-        if(!_ptr) _throw_not_allocated_error(EXCEPTION_RECORD);
+        typedef value_holder<std::reference_wrapper<T> > holder_type;
+      
+        _check_pointer(EXCEPTION_RECORD);
+        _check_type(type_id_map<T>::type_id,EXCEPTION_RECORD);
 
-        if(type_id() == type_id_map<T>::type_id)
-        {
-            return dynamic_cast<holder_t*>(_ptr.get())->as();
-        }
-        throw type_error(EXCEPTION_RECORD,
-                "incompatible type - cannot return value");
-
-        return T(0); //just to make the compiler happy
+        return dynamic_cast<holder_type*>(_ptr.get())->as();
     }
            
     //-------------------------------------------------------------------------
-    template<typename T> 
-    value_ref &value_ref::operator=(const std::reference_wrapper<T> &r)
-    {
-        _ptr = std::unique_ptr<value_holder_interface>(
-                new value_holder<std::reference_wrapper<T> >(r));
-        return *this;
-    }
-    
-    //-------------------------------------------------------------------------
     template<typename T> value_ref &value_ref::operator=(const T &v)
     {
-        typedef value_holder<std::reference_wrapper<T> > holder_t;
+        typedef value_holder<std::reference_wrapper<T> > holder_type;
 
-        if(!_ptr)
-        {
-            _throw_not_allocated_error(EXCEPTION_RECORD);
-            return *this;
-        }
+        _check_pointer(EXCEPTION_RECORD);
 
+        //if types do not match we throw an exception 
+        _check_type(type_id_map<T>::type_id,EXCEPTION_RECORD);
 
-        if(type_id() ==  type_id_map<T>::type_id)
-        {
-            dynamic_cast<holder_t*>(_ptr.get())->as().get() = v;
-            return *this;
-        }
-
-        throw type_error(EXCEPTION_RECORD,
-                "type does not match value_ref type");
+        //due to the previous check this cast is save
+        dynamic_cast<holder_type*>(_ptr.get())->as().get() = v;
         return *this;
     }
 

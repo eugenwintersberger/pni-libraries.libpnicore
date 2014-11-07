@@ -28,61 +28,68 @@ namespace pni{
 namespace core{
 
     //-------------------------------------------------------------------------
-    void value_ref::_throw_not_allocated_error(const exception_record &r)
+    // Implementation of private member functions
+    //-------------------------------------------------------------------------
+    void value_ref::_check_pointer(const exception_record &r) const
     {
-        throw memory_not_allocated_error(r,
-                "Instance of value holds no data!");
+        if(!_ptr)
+            throw memory_not_allocated_error(r,
+                    "Instance of value_ref holds no data!");
     }
 
+    //------------------------------------------------------------------------
+    void value_ref::_check_type(type_id_t tid,const exception_record &r) const
+    {
+        if(type_id() != tid)
+            throw type_error(r,"incompatible type - cannot return value");
+    }
+
+    //-------------------------------------------------------------------------
+    // Implementation of constructors
+    //-------------------------------------------------------------------------
+    value_ref::value_ref():_ptr(nullptr)
+    {}
+
+    //-------------------------------------------------------------------------
+    value_ref::value_ref(const value_ref &o)
+        :_ptr(nullptr)
+    {
+        if(o._ptr) _ptr = pointer_type(o._ptr->clone());
+    }
+
+    //-------------------------------------------------------------------------
+    // Implementation of assignment operators
     //-------------------------------------------------------------------------
     value_ref &value_ref::operator=(const value_ref &o)
     {
         if(this == &o) return *this;
-        _ptr = std::unique_ptr<value_holder_interface>(
-                o._ptr->clone());
+        _ptr = pointer_type(o._ptr->clone());
 
         return *this;
     }
 
     //-------------------------------------------------------------------------
-    value_ref &value_ref::operator=(value_ref &&o)
-    {
-        if(this == &o) return *this;
-        _ptr = std::move(o._ptr);
-        return *this;
-    }
-
+    // Implementation of member functions
     //-------------------------------------------------------------------------
     type_id_t value_ref::type_id() const
     {
-        if(_ptr)
-            return _ptr->type_id();
-        else
-            _throw_not_allocated_error(EXCEPTION_RECORD);
+        _check_pointer(EXCEPTION_RECORD);
+        return _ptr->type_id();
 
-        return type_id_t::NONE; //just to make the compiler happy
     }
 
     //-------------------------------------------------------------------------
     std::ostream &operator<<(std::ostream &stream,const value_ref &v)
     {
-        if(v._ptr)
-            return v._ptr->write(stream);
-        else 
-            v._throw_not_allocated_error(EXCEPTION_RECORD);
-
-        return stream;
+        v._check_pointer(EXCEPTION_RECORD);
+        return v._ptr->write(stream);
     }
    
     //-------------------------------------------------------------------------
     std::istream &operator>>(std::istream &stream,value_ref &v)
     {
-        if(v._ptr)
-            return v._ptr->read(stream);
-        else
-            v._throw_not_allocated_error(EXCEPTION_RECORD);
-
-        return stream;
+        v._check_pointer(EXCEPTION_RECORD);
+        return v._ptr->read(stream);
     }
 
     //------------------------------------------------------------------------

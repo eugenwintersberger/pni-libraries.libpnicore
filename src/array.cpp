@@ -63,145 +63,107 @@ namespace core{
     //-------------------------------------------------------------------------
     type_id_t array::type_id() const
     { 
-        if(_ptr)
-            return _ptr->type_id(); 
-        else
-            array::_throw_not_allocated_error(EXCEPTION_RECORD);
-
-        return type_id_t::NONE; //just to make the compiler happy
+        _check_pointer(_ptr,EXCEPTION_RECORD);
+        return _ptr->type_id(); 
     }
 
     //-------------------------------------------------------------------------
     size_t array::rank() const 
-    { 
-        if(_ptr)
-            return _ptr->rank(); 
-        else
-            array::_throw_not_allocated_error(EXCEPTION_RECORD);
-
-        return 0; //just to make the compiler happy
+    {
+        _check_pointer(_ptr,EXCEPTION_RECORD);
+        return _ptr->rank(); 
     }
         
     //-------------------------------------------------------------------------
     shape_t array::shape() const 
-    { 
-        if(_ptr)
-            return _ptr->shape(); 
-        else
-            array::_throw_not_allocated_error(EXCEPTION_RECORD);
-
-        return shape_t(); //just to make the compiler happy
+    {
+        _check_pointer(_ptr,EXCEPTION_RECORD);
+        return _ptr->shape(); 
     }
 
     //-------------------------------------------------------------------------
     size_t array::size() const 
-    { 
-        if(_ptr) 
-            return _ptr->size(); 
-        else
-            array::_throw_not_allocated_error(EXCEPTION_RECORD);
-
-        return 0; //just to make the compiler happy
+    {
+        _check_pointer(_ptr,EXCEPTION_RECORD);
+        return _ptr->size(); 
     }
 
 
     //-------------------------------------------------------------------------
     std::ostream &array::write(std::ostream &os) const 
     {
-        if(_ptr)
-            return _ptr->write(os);
-        else
-            array::_throw_not_allocated_error(EXCEPTION_RECORD);
-
-        return os; //just to make the compiler happy
+        _check_pointer(_ptr,EXCEPTION_RECORD);
+        return _ptr->write(os);
     }
 
     //-------------------------------------------------------------------------
     std::istream &array::read(std::istream &is) 
     {
-        if(_ptr)
-            return _ptr->read(is);
-        else
-            array::_throw_not_allocated_error(EXCEPTION_RECORD);
-
-        return is; //just to make the compiler happy
+        _check_pointer(_ptr,EXCEPTION_RECORD);
+        return _ptr->read(is);
     }
 
     //-------------------------------------------------------------------------
     value array::operator[](size_t i) const
     {
-        if(_ptr)
-            return ((const array_holder_interface&)(*_ptr))[i];
-        else
-            array::_throw_not_allocated_error(EXCEPTION_RECORD);
-
-        return value::create<int16>(); //just to make the compiler happy
+        _check_pointer(_ptr,EXCEPTION_RECORD);
+        return ((const array_holder_interface&)(*_ptr))[i];
     }
 
     //-------------------------------------------------------------------------
     value array::at(size_t i) const
     {
-        if(_ptr)
-            return value(_ptr->at(i));
-        else
-            array::_throw_not_allocated_error(EXCEPTION_RECORD);
-
-        return value::create<int16>(); //just to make the compiler happy
+        _check_pointer(_ptr,EXCEPTION_RECORD);
+        return value(_ptr->at(i));
     }
 
     //-------------------------------------------------------------------------
     value_ref array::operator[](size_t i) 
     {
-        if(_ptr)
-            return (*_ptr)[i];
-        else
-            array::_throw_not_allocated_error(EXCEPTION_RECORD);
-
-        return value_ref(); //just to make the compiler happy
+        _check_pointer(_ptr,EXCEPTION_RECORD);
+        return (*_ptr)[i];
     }
 
     //-------------------------------------------------------------------------
     value_ref array::at(size_t i)
     {
-        if(_ptr)
-            return _ptr->at(i);
-        else
-            array::_throw_not_allocated_error(EXCEPTION_RECORD);
+        _check_pointer(_ptr,EXCEPTION_RECORD);
+        return _ptr->at(i);
+    }
 
-        return value_ref(); //just to make the compiler happy
+    //-------------------------------------------------------------------------
+    value_ref array::operator()(const element_index &index)
+    {
+        _check_pointer(_ptr,EXCEPTION_RECORD);
+        return (*_ptr)(index);
+    }
+
+    //-------------------------------------------------------------------------
+    value array::operator()(const element_index &index) const
+    {
+        _check_pointer(_ptr,EXCEPTION_RECORD);
+        return const_cast<const array_holder_interface &>((*_ptr))(index);
     }
 
     //-------------------------------------------------------------------------
     string array::type_name() const
     {
-        if(_ptr)
-            return _ptr->type_name();
-        else
-            array::_throw_not_allocated_error(EXCEPTION_RECORD);
-
-        return ""; //just to make the compiler happy
+        _check_pointer(_ptr,EXCEPTION_RECORD);
+        return _ptr->type_name();
     }
 
     //-------------------------------------------------------------------------
     const void *array::data() const
     {
-        if(_ptr)
-            return _ptr->ptr();
-        else
-            array::_throw_not_allocated_error(EXCEPTION_RECORD);
-
-        return nullptr;
+        _check_pointer(_ptr,EXCEPTION_RECORD);
+        return _ptr->ptr();
     }
     
     //-------------------------------------------------------------------------
     void *array::data() 
     {
-        if(_ptr)
-            return const_cast<void*>(_ptr->ptr());
-        else
-            array::_throw_not_allocated_error(EXCEPTION_RECORD);
-
-        return nullptr;
+        _check_pointer(_ptr,EXCEPTION_RECORD);
+        return const_cast<void*>(_ptr->ptr());
     }
    
     //-------------------------------------------------------------------------

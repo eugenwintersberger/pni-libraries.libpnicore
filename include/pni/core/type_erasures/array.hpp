@@ -70,6 +70,8 @@ namespace core{
     class array //the type erasure
     {
         private:
+            typedef std::unique_ptr<array_holder_interface> pointer_type;
+            
            
             //!
             //! \brief throw exception
@@ -87,13 +89,22 @@ namespace core{
                         "Instance of data_object holds no data!");
             }
 
+            static void _check_pointer(const pointer_type &ptr,
+                                  const exception_record &r)
+            {
+                if(!ptr)
+                    _throw_not_allocated_error(r);
+            }
+
             //! pointer to an instance of array_holder 
-            std::unique_ptr<array_holder_interface> _ptr; 
+            pointer_type _ptr; 
         public:
             //====================public types=================================
             typedef value value_type; //!< value type of the array
             typedef array_iterator<0> iterator; //!< read/write iterator
             typedef array_iterator<1> const_iterator; //!< read only iterator
+            typedef array_holder_interface::element_index element_index;
+            typedef array_holder_interface::view_index view_index;
             //===================constructors and destructor===================
             //! default constructor
             array():_ptr(nullptr) {}
@@ -292,6 +303,11 @@ namespace core{
 
             */
             value_ref at(size_t i);
+
+            //-----------------------------------------------------------------
+            value_ref operator()(const element_index &index);
+
+            value operator()(const element_index &index) const;
 
             //-----------------------------------------------------------------
             //! return the type name

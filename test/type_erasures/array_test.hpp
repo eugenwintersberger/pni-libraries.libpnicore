@@ -40,6 +40,7 @@ template<typename OT> class array_test : public CppUnit::TestFixture
 {
         CPPUNIT_TEST_SUITE(array_test<OT>);
         CPPUNIT_TEST(test_construction);
+        CPPUNIT_TEST(test_element_multidim);
         CPPUNIT_TEST(test_copy_and_move);
         CPPUNIT_TEST(test_io);
         CPPUNIT_TEST(test_inquery);
@@ -69,6 +70,7 @@ template<typename OT> class array_test : public CppUnit::TestFixture
         void test_iterator();
         void test_assignment();
         void test_comparison();
+        void test_element_multidim();
 };
 
 //-----------------------------------------------------------------------------
@@ -233,6 +235,40 @@ template<typename OT> void array_test<OT>::test_comparison()
 
     CPPUNIT_ASSERT(a1 == a1);
     CPPUNIT_ASSERT(a1 != a2);
+}
+
+//----------------------------------------------------------------------------
+template<typename OT> void array_test<OT>::test_element_multidim()
+{
+    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
+    
+    std::generate(_object1.begin(),_object1.end(),random_generator<value_type>());
+
+    array o1(_object1);
+    array o2(_object2);
+
+    //writing data
+    for(size_t i=0;i<_shape[0];++i)
+        for(size_t j=0;j<_shape[1];++j)
+        {
+            array::element_index index{i,j};
+            //the concept here is wrong: o2 returns a reference and o1 too. 
+            //the = operator basically assigns the refernece of o1 to o2 
+            //which has no effect on the data in o2 as the reference is a
+            //temporary and destroyed at the end of the block
+            o2(index) = o1(index);
+        }
+
+    for(auto i2=o2.begin(),i1=o1.begin();i1!=o1.end();++i1,++i2)
+        std::cout<<*i1<<"\t"<<*i2<<std::endl;
+
+    //reading data
+    for(size_t i=0;i<_shape[0];++i)
+        for(size_t j=0;j<_shape[1];++j)
+        {
+            array::element_index index{i,j};
+            CPPUNIT_ASSERT(o2(index)== o1(index));
+        }
 }
 
 

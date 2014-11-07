@@ -1,12 +1,9 @@
 %%% Dealing with type erasures
 
 %%%============================================================================
-\section{A short introduction}
-
 Templates are powerful tools as they allow the compiler to perform all kinds of
 optimizations. In addition they help to avoid virtual function tables and thus
 increasing overall performance of a program. 
-However, where is light there is also shadow. 
 Template instantiation virtually always goes along with code generation and thus
 with an increase in code size. This can cause problems in particular on small
 hardware (like ARM based systems) where resources are limited.
@@ -16,44 +13,84 @@ virtually the same thing for each of them (we see an example of this in the
 section below describing the array type erasure). 
 
 A reasonable solution for this problem is the use of type erasures. 
-The following erasures are available 
-\begin{description}
-\item[{\tt value}]
-can be used to store a single scalar value of a POD type. 
-\item[{\tt value\_ref}]
-stores a reference to a single scalar POD type.
-\item[{\tt array}] 
-holds an arbitrary array type.
-\end{description}
+\libpnicore\ provides three different type erasures
+\begin{center}
+\begin{tabular}{l | l}
+{\tt value} & stores a single scalar value of a POD type \\
+{\tt value\_ref} & stores the reference to an instance of a POD type \\
+{\tt arra} & stores a multidimensional array type 
+\end{tabular}
+\end{center}
 To use type erasures include the {\tt /pni/core/type\_erasures.hpp} at the top of
 your source file.
 
 %%%============================================================================
-\section{Type erasures for scalar values}
-The default way of how to create a {\tt value} type erasure would be the
-following
-\inputminted[fontsize=\small,firstnumber=35,firstline=35,lastline=37]{cpp}
-{../examples/type_erasure1.cpp}
-where a value is passed to the constructor.
-To retrieve the value stored in a {\tt value} use the {\tt as} template method
-as shown in the next snippet
-\inputminted[fontsize=\small,firstnumber=40,firstline=40,lastline=41]{cpp}
-{../examples/type_erasure1.cpp}
-The {\tt as} template function performs srict type checking. If the template
-parameter does not exactly match the data type stored in the erasure a {\tt
-type\_error} exception will be thrown.
+\section{The {\tt value} type erasures}
 
-Though type erasures can be default constructed without any value stored this
-would leave their internal memory unallocated. An attempt to retrieve a value
-from such a default constructed type erasure instance will throw a {\tt
-memory\_not\_allocated} exception. For a clean construction of type erasures 
-use the {\tt value::create} template function as show in the next snippet
-\inputminted[fontsize=\small,firstnumber=44,firstline=44,lastline=46]{cpp}
-{../examples/type_erasure1.cpp}
-The {\tt value::create} template function stores a default object of the
-requested type. However, it is not important which type to use (maybe we can
-omit this part). With the next assginment of a new data value new memory is
-allocated. 
+The {\tt value} type erasure stores the value of a single scalar POD type. 
+{\tt value} can be default constructed in which case an instance of type 
+{\tt none} is stored as can be easily confirmed with
+\begin{cppcode}
+value v;
+std::cout<<v.type_id()<<std::endl; //output NONE
+\end{cppcode}
+{\tt value} has a copy and move constructor for other instances from 
+{\tt value}. However, the constructor for other variables and literals is 
+explicit 
+\begin{cppcode}
+//explicit construction from a variable
+int32 n = 1000;
+value v1(n);     
+std::cout<<v1.type_id()<<std::endl; //output INT32
+
+//explicit construction from a literal
+value v2(3.4212); 
+std::cout<<v2.type_id()<<std::endl; //output FLOAT64
+
+//copy construction
+value v3 = v1;
+\end{cppcode}
+{\tt value} also allows copy and move assignment from other instances of {\tt
+value} as well as from literals. In all cases the assignment can change the
+stored data type
+\begin{cppcode}
+value v1,v2;  //default constructed  (type NONE)
+
+//copy assignment from literal
+v1 = 32;  
+std::cout<<v1.type_id()<<std::endl;  //output INT32
+
+v2 = v1;
+std::cout<<v2.type_id()<<std::endl;  //output INT32
+\end{cppcode}
+If default construction is required but the type of the internal value should
+not be \cpp{none} one can use the \cpp{make\_value} function template 
+\begin{cppcode}
+value v = make_value<float128>();
+std::cout<<v.type_id()<<std::endl; //output: FLOAT128
+\end{cppcode}
+This function template is particularly useful in connection with input- and
+output-streams as will be shown later. 
+
+To retrieve the data stored in an instance of \cpp{value} use the \cpp{as}
+member template function as shown in this next example
+\begin{cppcode}
+value v(float64(1.23));
+
+auto x = v.as<float64>();
+
+std::cout<<x<<std::endl;
+\end{cppcode}
+There are tow things which are important here: first, the type checking is very
+strict. To successfully retrieve the data value from the \cpp{value} instance
+the type passed as the template parameter must be exactly the equal to the type
+used to construct the \cpp{value} instance. Otherwise \cpp{type\_error} will be
+thrown. In addition, one cannot retrieve the value from a default constructed
+instance of \cpp{value} (the one which is of type \cpp{none}). In this case 
+\cpp{type\_error} will be thrown too.
+
+%%%===========================================================================
+\section{The \cpp{value\_ref} type erasure}
 
 The {\tt value} type erasures not only stores an instance of a particular
 type it also takes over ownership. In some cases one may wants to use a type
@@ -78,6 +115,8 @@ As demonstrated by the output of the program
 \end{minted}
 It is possible to alter the value of the original variable via an instance of
 the {\tt value\_ref} type erasure.
+
+%%%===========================================================================
 
 
 %%%============================================================================

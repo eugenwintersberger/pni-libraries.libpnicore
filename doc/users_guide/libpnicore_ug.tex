@@ -11,6 +11,7 @@
 \usepackage{lscape}    %% landscape figures
 \usepackage[disable]{todonotes}
 \usepackage{color}
+\usepackage{multirow}
 \usepackage[figuresright]{rotating}
 \usepackage{minted}    %% excellent source code formating
 \usepackage{fixme} %% need this here to make annotations to the text in 
@@ -36,6 +37,9 @@
 \newcommand{\cmake}{{\tt cmake}}
 \newcommand{\pkgconfig}{{\tt pkg-config}}
 \newcommand{\gcc}{{\tt gcc}}
+
+\newminted{cpp}{fontsize=\small,frame=lines}
+\newcommand{\cpp}[1]{{\tt #1}}
 
 \bibliographystyle{plainnat}
 

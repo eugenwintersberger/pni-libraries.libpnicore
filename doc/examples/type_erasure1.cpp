@@ -49,6 +49,9 @@ int main(int argc,char **argv)
     value v3(3.2123);
     std::cout<<v3<<" ("<<v3.type_id()<<")"<<std::endl;
 
+    v3 = 13;
+    std::cout<<v3<<" ("<<v3.type_id()<<")"<<std::endl;
+
     return 0;
 }
 

@@ -178,11 +178,22 @@ namespace core{
             }
 
             //-----------------------------------------------------------------
+            virtual value operator()(const element_index &index) const 
+            {
+                return value(_object(index));
+            }
+
+            //-----------------------------------------------------------------
+            virtual value_ref operator()(const element_index &index) 
+            {
+                return value_ref(std::ref(_object(index)));
+            }
+
+            //-----------------------------------------------------------------
             //! write data to output stream
             virtual std::ostream &write(std::ostream &os) const 
             {
                 os<<_object;
-
                 return os;
             }
 
@@ -191,7 +202,6 @@ namespace core{
             virtual std::istream &read(std::istream &is) 
             {
                 is>>_object; 
-
                 return is;
             }
 

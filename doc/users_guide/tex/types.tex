@@ -3,62 +3,107 @@
 \newcommand{\dtype}[1]{{\tt #1}}
 \newcommand{\podt}[2]{\dtype{#1#2}}
 \newcommand{\typeid}[1]{{\tt type\_id\_t::#1}}
+\newcommand{\typeclass}[1]{{\tt type\_class\_t::#1}}
 \newcommand{\typeidmap}{{\tt type\_id\_map}}
 \newcommand{\idtypemap}{{\tt id\_type\_map}}
+\newcommand{\typeclassmap}{{\tt type\_class\_map}}
+\newcommand{\strrep}[1]{{\tt "#1"}}
 
 
-%%%==================================================================================
+%%%---------------------------------------------------------------------------
 \begin{table}[tb]
 \centering
-\begin{tabular}{l|l|p{0.36\linewidth}}
+\begin{tabular}{l|l|l|p{0.36\linewidth}}
 \hline
-data type & type ID & description \\
+{\tt type\_class\_t::} & data type & {\tt type\_id\_t::} & description \\
 \hline\hline
-\podt{uint}{8}      & \typeid{UINT8}  & 8Bit unsinged integer           \\
-\podt{int}{8}       & \typeid{INT8}   & 8Bit signed integer             \\
-\podt{uint}{16}     & \typeid{UINT16} & 16Bit unsigned integer          \\
-\podt{int}{16}      & \typeid{INT16}  & 16Bit signed integer            \\
-\podt{uint}{32}     & \typeid{UINT32} & 32Bit unsigned integer          \\
-\podt{int}{32}      & \typeid{INT32}  & 32Bit signed integer            \\
-\podt{uint}{64}     & \typeid{UINT64} & 64Bit unsigned integer          \\
-\podt{int}{64}      & \typeid{INT64}  & 64Bit signed integer            \\
-\podt{float}{32}    & \typeid{FLOAT32} & 32Bit IEEE floating point type  \\
-\podt{float}{64}    & \typeid{FLOAT64} & 64Bit IEEE floating point type  \\
-\podt{float}{128}   & \typeid{FLOAT128} & 128Bit IEEE floating point type \\
-\podt{complex}{32}  & \typeid{COMPLEX32} & 32Bit IEEE complex float type   \\
-\podt{complex}{64}  & \typeid{COMPLEX64} &64Bit IEEE complex float type   \\
-\podt{complex}{128} & \typeid{COMPLEX128} & 128Bit IEEE complex float type  \\
-\dtype{string}      & \typeid{STRING} & string  type                    \\
-\dtype{binary}      & \typeid{BINARY} & binary type                     \\
+\multirow{8}{*} {\cpp{INTEGER}} & 
+   \podt{uint}{8}   & \cpp{UINT8}  & 8Bit unsinged integer \\
+ & \podt{int}{8}    & \cpp{INT8}   & 8Bit signed integer   \\
+ & \podt{uint}{16}  & \cpp{UINT16} & 16Bit unsigned integer\\
+ & \podt{int}{16}   & \cpp{INT16}  & 16Bit signed integer  \\
+ & \podt{uint}{32}  & \cpp{UINT32} & 32Bit unsigned integer\\
+ & \podt{int}{32}   & \cpp{INT32}  & 32Bit signed integer  \\
+ & \podt{uint}{64}  & \cpp{UINT64} & 64Bit unsigned integer\\
+ & \podt{int}{64}   & \cpp{INT64}  & 64Bit signed integer  \\
+\hline
+\multirow{3}{*}{\cpp{FLOAT}} & 
+  \podt{float}{32}  & \cpp{FLOAT32}  & 32Bit IEEE floating point type  \\
+& \podt{float}{64}  & \cpp{FLOAT64}  & 64Bit IEEE floating point type  \\
+& \podt{float}{128} & \cpp{FLOAT128} & 128Bit IEEE floating point type \\
+\hline
+\multirow{3}{*}{\cpp{COMPLEX}} & 
+   \podt{complex}{32}  & \cpp{COMPLEX32} & 32Bit IEEE complex float type   \\
+ & \podt{complex}{64}  & \cpp{COMPLEX64} &64Bit IEEE complex float type    \\
+ & \podt{complex}{128} & \cpp{COMPLEX128} & 128Bit IEEE complex float type \\
+\hline
+\cpp{STRING} & \dtype{string}  & \cpp{STRING} & string  type  \\
+\hline
+\cpp{BINARY} & \dtype{binary}  & \cpp{BINARY} & binary type   \\
+\hline
+\cpp{NONE}   & \dtype{none}    & \cpp{NONE}   & none type     \\
 \hline
 \end{tabular}
 \caption{\small\label{tab:types:basic_types} An overview of the basic POD data
 types provided by \libpnicore.}
 \end{table}
 %%%===================================================================================
-\libpnicore\ provides a set of primitive data types, defined in {\tt
-pni/core/types.hpp}, along with a set of utility functions
-and data structures for type management. These types are ensured to
-have the same size on every platform and architecture supported by the library
-\footnote{The only exceptions are 128Bit floating point numbers which have a
-    different size on some RISC architectures.}.
-Table~\ref{tab:types:basic_types} shows an overview of all supported types as
-defined in  {\tt pni/core/types.hpp}. Most of them are just {\tt typedef}s to
-existing plain old data (POD) types. The complex types use the {\tt
-std::complex} template provided by the C++ standard library. This is also true
-for the {\tt string} type which is just a {\tt typedef} to {\tt std::string}. 
-Basically one can identify three classes of primitive types
+\libpnicore\ provides a set of data types of well defined size and utility
+functions related to type management. 
+The basic header file required to use \libpnicore s type facilities is 
+\begin{cppcode}
+#include <pni/core/types.hpp>
+\end{cppcode}
+The data types provided by \libpnicore\ include
 \begin{enumerate}
 \item numeric types with all their arithmetic operations
 \item string types (currently only one member)
-\item and utility types like {\tt binary} and {\tt bool} (the latter one is used
-from the C++ standard library).
+\item and utility types like \dtype{binary}, \dtype{bool}, and \dtype{none}.
 \end{enumerate}
+In particular the numeric types are ensured to have the same size on each
+platform and architecture the \libpnicore\ supports. Most of the types provided
+by \libpnicore\ are just \cpp{typedef}s to already defined types of the C++
+standard library. However, the utility types \dtype{binary}, \dtype{bool}, and
+\dtype{none} are unique to \libpnicore\ and will be explained in more detail in
+the last sections of this chapter.
 
-While most of these types are straight forward {\tt binary} requires a bit more
-attention. {\tt binary} is an 8Bit sized type mainly introduced to carry 
-uniterpreted binary data (usually for transfer purposes).  See
-Section~\ref{section:using_binary} for details.
+Every type in \libpnicore\ is associated with an ID represented by the 
+\cpp{type\_id\_t} type and is member in a type class represented by 
+the \cpp{type\_class\_t} type. Both this types are enumeration types. 
+Table~\ref{tab:types:basic_types} gives an overview over the types provided by
+\libpnicore\ and their corresponding \cpp{type\_id\_t} and \cpp{type\_class\_t}
+values.
+
+\section{Compile time type identification}
+
+In many situations it is necessary to obtain a types ID or class at
+compile-time. Three type maps exist to provide this information
+\begin{center}
+\begin{tabular}{l l}
+    \typeidmap & mapping from a type to its ID  \\
+    \idtypemap & mapping from an ID to a type   \\
+    \typeclassmap & mapping from a type to its type class \\
+\end{tabular}
+\end{center}
+Their usage is rather straight forward. Each map provides a member type or
+static member which provides the requested information. 
+Here are some examples of how to use these maps
+\begin{cppcode}
+#include <pni/core/types.hpp>
+
+using namespace pni::core;
+
+//determine the type ID for a given type
+type_id_map<float32>::type_id == type_id_t::FLOAT32;
+
+//determine the type for a given ID
+id_type_map<type_id_t::FLOAT32>::type data = ...;
+
+//obtain the class of a particular type
+type_class_map<float32>::type_class == type_class_t::FLOAT;
+\end{cppcode}
+
+
 
 \section{Identifying types at runtime}
 %%%============================================================================
@@ -68,52 +113,25 @@ Section~\ref{section:using_binary} for details.
 \centering
 \begin{tabular}{l|p{0.48\linewidth}}
 \hline
-data type & {\tt type\_id\_t} value \\
-\hline\hline
-\podt{uint}{8}      & \typeid{UINT8}      \\
-\podt{int}{8}       & \typeid{INT8}       \\
-\podt{uint}{16}     & \typeid{UINT16}     \\
-\podt{int}{16}      & \typeid{INT16}      \\
-\podt{uint}{32}     & \typeid{UINT32}     \\
-\podt{int}{32}      & \typeid{INT32}      \\
-\podt{uint}{64}     & \typeid{UINT64}     \\
-\podt{int}{64}      & \typeid{INT64}      \\
-\podt{float}{32}    & \typeid{FLOAT32}    \\
-\podt{float}{64}    & \typeid{FLOAT64}    \\
-\podt{float}{128}   & \typeid{FLOAT128}   \\
-\podt{complex}{32}  & \typeid{COMPLEX32}  \\
-\podt{complex}{64}  & \typeid{COMPLEX64}  \\
-\podt{complex}{128} & \typeid{COMPLEX128} \\
-\dtype{string}      & \typeid{STRING}     \\
-\dtype{binary}      & \typeid{BINARY}     \\
-\hline
-\end{tabular}
-\caption{\small\label{tab:types:type_ids} \libpnicore s basic types and thier ID
-values.}
-\end{minipage}
-\hfill
-\begin{minipage}[t]{0.49\linewidth}
-\centering
-\begin{tabular}{l|p{0.48\linewidth}}
-\hline
 data type & string representation \\
 \hline\hline
-\podt{uint}{8}      &   {\tt "uint8"} , {\tt "ui8"} \\
-\podt{int}{8}       &   {\tt "int8"} , {\tt "i8"}   \\
-\podt{uint}{16}     &   {\tt "uint16"}, {\tt "ui16"}  \\
-\podt{int}{16}      &   {\tt "int16"}, {\tt "i16"}   \\
-\podt{uint}{32}     &   {\tt "uint32"}, {\tt "ui32"}   \\
-\podt{int}{32}      &   {\tt "int32"}, {\tt "i32"}  \\
-\podt{uint}{64}     &   {\tt "uint64"}, {\tt "ui64"}  \\
-\podt{int}{64}      &   {\tt "int64"}, {\tt "i64"}  \\
-\podt{float}{32}    &   {\tt "float32"}, {\tt "f32"}  \\
-\podt{float}{64}    &   {\tt "float64"}, {\tt "f64"}  \\
-\podt{float}{128}   &   {\tt "float128"}, {\tt "f128"}  \\
-\podt{complex}{32}  &   {\tt "complex32"}, {\tt "c32"}  \\
-\podt{complex}{64}  &   {\tt "complex64"}, {\tt "c64"}  \\
-\podt{complex}{128} &   {\tt "complex128"}, {\tt "c128"}  \\
-\dtype{string}      &   {\tt "string"}, {\tt "str"}  \\
-\dtype{binary}      &   {\tt "binary"} , {\tt binary}  \\
+\podt{uint}{8}      &   \strrep{uint8} , \strrep{ui8} \\
+\podt{int}{8}       &   \strrep{int8} ,  \strrep{i8}   \\
+\podt{uint}{16}     &   \strrep{uint16}, \strrep{ui16}  \\
+\podt{int}{16}      &   \strrep{int16},  \strrep{i16}   \\
+\podt{uint}{32}     &   \strrep{uint32}, \strrep{ui32}   \\
+\podt{int}{32}      &   \strrep{int32},  \strrep{i32}  \\
+\podt{uint}{64}     &   \strrep{uint64}, \strrep{ui64}  \\
+\podt{int}{64}      &   \strrep{int64},  \strrep{i64}  \\
+\podt{float}{32}    &   \strrep{float32},    \strrep{f32}  \\
+\podt{float}{64}    &   \strrep{float64},    \strrep{f64}  \\
+\podt{float}{128}   &   \strrep{float128},   \strrep{f128}  \\
+\podt{complex}{32}  &   \strrep{complex32},  \strrep{c32}  \\
+\podt{complex}{64}  &   \strrep{complex64},  \strrep{c64} \\
+\podt{complex}{128} &   \strrep{complex128}, \strrep{c128}  \\
+\dtype{string}      &   \strrep{string},     \strrep{str}  \\
+\dtype{binary}      &   \strrep{binary},     \strrep{binary}  \\
+\dtype{none}        &   \strrep{none} \\
 \hline
 \end{tabular}
 \caption{\small\label{tab:types:type_str} Data types and their string
@@ -164,7 +182,8 @@ The usage of this two guys is again straight forward.
 \end{minted}
 
 
-\section{Using the {\tt binary} type}\label{section:using_binary}
+%%%===========================================================================
+\section{The {\tt binary} type}\label{section:using_binary}
 
 In many cases uninterpreted binary data should be transfered from one location
 to the other (a typical example would be to copy the content of one file to
@@ -199,3 +218,34 @@ the same purpose. The major difference is that unlike {\tt char} {\tt binary}
 has absolutely no semantics. In practice there is nothing much you can do
 without it rather than store it back to another stream as it is done in 
 line $33$.
+
+%%%===========================================================================
+\section{The \cpp{none} type}\label{section:using_none}
+
+The \cpp{none} type represents the absence of a type. It is a dummy type 
+of very limited functionality and is mainly used internally by 
+\libpnicore. One major application of the \cpp{none} type is to do default
+construction of type erasures (see chapter~\ref{chapter:type_erasures}). 
+For all practical purposes this type can be ignored.
+
+%%%===========================================================================
+\section{The \cpp{bool\_t} type}\label{section:using_bool}
+
+Unlike the \cpp{C} programming language C++ provides a native \cpp{bool} type. 
+Unfortunately the \cpp{C++} standardization committee made some unfortunate 
+decisions with \cpp{bool} and STL containers. \cpp{std::vector} for instance is
+in most cases specialized for the standard \cpp{C++} \cpp{bool} type. 
+In the most common STL implementation {\cpp std::vector} is considered an 
+array of individual bits. Meaning that every byte in the vector is storing a
+total of $8$ \cpp{bool} values. Consequently we cannot obtain an address 
+for a particular bit but only for the byte where it is stored. 
+Hence \cpp{std::vector<bool>} does not provide the \cpp{data} method 
+which is required for storage containers used with the \cpp{mdarray} templates
+(see chapter~\ref{chapter:arrays}). 
+
+To overcome this problem a new boolean type was included in \libpnicore\ which 
+can be converted to \cpp{bool} but uses a single byte for each boolean value and
+thus can use the \cpp{std::vector} template. So use the \libpnicore\
+\cpp{bool\_t} type whenever working with \libpnicore\ templates or whenever the
+address of a container element is required. For all other purposes the default
+C++ \cpp{bool} type can be used.
