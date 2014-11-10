@@ -33,6 +33,10 @@
 namespace pni{
 namespace core{
 
+
+    //forward declaration
+    class value_ref;
+
     //!
     //! \ingroup type_erasure_classes
     //!\brief type erasure for POD data
@@ -123,6 +127,8 @@ namespace core{
             //-----------------------------------------------------------------
             //! move assignment operator
             value &operator=(value &&o);
+
+            value &operator=(const value_ref &v);
 
             //-----------------------------------------------------------------
             //!

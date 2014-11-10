@@ -33,6 +33,8 @@
 namespace pni{
 namespace core{
 
+    class value;
+
     //!
     //! \ingroup type_erasure_classes
     //! \brief type erasure for references to POD data
@@ -108,6 +110,17 @@ namespace core{
             //!
             void _check_pointer(const exception_record &r) const;
 
+            //----------------------------------------------------------------
+            //!
+            //! \brief check type
+            //!
+            //! Throws type_error exception if the passed type id does not match
+            //! the references original type. 
+            //!
+            //! \throw type_error 
+            //! \param tid type id to check
+            //! \param r exception record of the code position 
+            //!
             void _check_type(type_id_t tid,const exception_record &r) const;
 
             //! pointer holding the value stored
@@ -158,11 +171,22 @@ namespace core{
             //!
             template<typename T> value_ref &operator=(const T &v);
 
+            value_ref &operator=(const value &v);
+
             //-----------------------------------------------------------------
             //! copy assignment
             // we should remove this - makes not really sense. We can 
             // always destroy the reference and create a new one (could we?)
             value_ref &operator=(const value_ref &o);
+
+            //-----------------------------------------------------------------
+            //!
+            //! \brief conversion operator
+            //! 
+            //! This operator is used to convert a reference to a value 
+            //! type erasure. 
+            //! 
+            operator value () const;
 
             //-----------------------------------------------------------------
             //!
@@ -269,6 +293,8 @@ namespace core{
     bool operator!=(const value_ref &a,const value_ref &b);
 
     bool operator==(const value_ref &a,const value_ref &b);
+
+    value to_value(const value_ref &v);
 
 //end of namespace
 }

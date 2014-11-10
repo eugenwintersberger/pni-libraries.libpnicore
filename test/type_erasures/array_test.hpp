@@ -259,7 +259,8 @@ template<typename OT> void array_test<OT>::test_element_multidim()
             o2(index) = o1(index);
         }
 
-    for(auto i2=o2.begin(),i1=o1.begin();i1!=o1.end();++i1,++i2)
+    auto i1 = o1.begin();
+    for(auto i2=o2.begin();i2!=o2.end();++i1,++i2)
         std::cout<<*i1<<"\t"<<*i2<<std::endl;
 
     //reading data
@@ -270,5 +271,3 @@ template<typename OT> void array_test<OT>::test_element_multidim()
             CPPUNIT_ASSERT(o2(index)== o1(index));
         }
 }
-
-

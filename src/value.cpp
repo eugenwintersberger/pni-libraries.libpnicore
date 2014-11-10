@@ -24,6 +24,7 @@
 
 #include <pni/core/type_erasures/value.hpp>
 #include <pni/core/types/none.hpp>
+#include <pni/core/type_erasures/value_ref.hpp>
 
 
 namespace pni{
@@ -76,7 +77,14 @@ namespace core{
         std::swap(_ptr,o._ptr);
         return *this;
     }
-    
+
+    //-------------------------------------------------------------------------
+    value &value::operator=(const value_ref &v)
+    {
+        *this = to_value(v);
+        return *this;
+    }
+
     //-------------------------------------------------------------------------
     type_id_t value::type_id() const
     {

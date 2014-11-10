@@ -23,6 +23,7 @@
 //!
 
 #include <pni/core/type_erasures/value_ref.hpp>
+#include <pni/core/type_erasures/value.hpp>
 
 namespace pni{
 namespace core{
@@ -60,12 +61,64 @@ namespace core{
     //-------------------------------------------------------------------------
     // Implementation of assignment operators
     //-------------------------------------------------------------------------
+   
     value_ref &value_ref::operator=(const value_ref &o)
     {
         if(this == &o) return *this;
         _ptr = pointer_type(o._ptr->clone());
 
         return *this;
+    }
+    
+
+    //-------------------------------------------------------------------------
+    value_ref &value_ref::operator=(const value &v)
+    {
+        type_id_t tid = v.type_id();
+        _check_type(tid,EXCEPTION_RECORD);
+
+        if(tid == type_id_t::UINT8)
+            *this = v.as<uint8>();
+        else if(tid == type_id_t::INT8)
+            *this = v.as<int8>();
+        else if(tid == type_id_t::UINT16)
+            *this = v.as<uint16>();
+        else if(tid == type_id_t::INT16)
+            *this = v.as<int16>();
+        else if(tid == type_id_t::UINT32)
+            *this = v.as<uint32>();
+        else if(tid == type_id_t::INT32)
+            *this = v.as<int32>();
+        else if(tid == type_id_t::UINT64)
+            *this = v.as<uint64>();
+        else if(tid == type_id_t::INT64)
+            *this = v.as<int64>();
+        else if(tid == type_id_t::FLOAT32)
+            *this = v.as<float32>();
+        else if(tid == type_id_t::FLOAT64)
+            *this = v.as<float64>();
+        else if(tid == type_id_t::FLOAT128)
+            *this = v.as<float128>();
+        else if(tid == type_id_t::COMPLEX32)
+            *this = v.as<complex32>();
+        else if(tid == type_id_t::COMPLEX64)
+            *this = v.as<complex64>();
+        else if(tid == type_id_t::COMPLEX128)
+            *this = v.as<complex128>();
+        else if(tid == type_id_t::STRING)
+            *this = v.as<string>();
+        else if(tid == type_id_t::BOOL)
+            *this = v.as<bool_t>();
+        else
+            throw type_error(EXCEPTION_RECORD, "Unkown type!");
+
+        return *this;
+    }
+
+    //-------------------------------------------------------------------------
+    value_ref::operator value() const
+    {
+        return to_value(*this);
     }
 
     //-------------------------------------------------------------------------
@@ -105,6 +158,49 @@ namespace core{
     bool operator!=(const value_ref &a,const value_ref &b)
     {
         return !(a==b);
+    }
+
+    //------------------------------------------------------------------------
+    value to_value(const value_ref &v)
+    {
+        type_id_t tid = v.type_id();
+
+        if(tid == type_id_t::UINT8)
+            return value(v.as<uint8>());
+        else if(tid == type_id_t::INT8)
+            return value(v.as<int8>());
+        else if(tid == type_id_t::UINT16)
+            return value(v.as<uint16>());
+        else if(tid == type_id_t::INT16)
+            return value(v.as<int16>());
+        else if(tid == type_id_t::UINT32)
+            return value(v.as<uint32>());
+        else if(tid == type_id_t::INT32)
+            return value(v.as<int32>());
+        else if(tid == type_id_t::UINT64)
+            return value(v.as<uint64>());
+        else if(tid == type_id_t::INT64)
+            return value(v.as<int64>());
+        else if(tid == type_id_t::FLOAT32)
+            return value(v.as<float32>());
+        else if(tid == type_id_t::FLOAT64)
+            return value(v.as<float64>());
+        else if(tid == type_id_t::FLOAT128)
+            return value(v.as<float128>());
+        else if(tid == type_id_t::COMPLEX32)
+            return value(v.as<complex32>());
+        else if(tid == type_id_t::COMPLEX64)
+            return value(v.as<complex64>());
+        else if(tid == type_id_t::COMPLEX128) 
+            return value(v.as<complex128>());
+        else if(tid == type_id_t::STRING)
+            return value(v.as<string>());
+        else if(tid == type_id_t::BOOL)
+            return value(v.as<bool_t>());
+        else 
+            throw type_error(EXCEPTION_RECORD,
+                    "Value is of unkown type!");
+
     }
 
 //end of namespace

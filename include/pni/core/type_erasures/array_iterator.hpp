@@ -139,11 +139,6 @@ namespace core{
                     this->_value = (*(this->_container))[this->_state];
             }
 
-#ifdef NOEXPLICITCONV 
-            typedef void (array_iterator<const_flag>::*bool_type)() const;
-            void bool_operator_function() const {}
-#endif
-
         public:
             //====================public types==================================
             //! value type of the container
@@ -244,15 +239,6 @@ namespace core{
             //! 
             //! \return boolean value
             //!
-#ifdef NOEXPLICITCONV
-            operator bool_type() const
-            {
-                return  !((!this->_container)||
-                          (this->_state >= ssize_t(this->_container->size()))||
-                          (this->_state<0)) ? 
-                          &iterator_type::bool_operator_function : 0;
-            }
-#else
             explicit operator bool() const
             {
                 //if(!this->_container) return false;
@@ -261,7 +247,7 @@ namespace core{
                          (this->_state >= ssize_t(this->_container->size()))||
                          (this->_state<0));
             }
-#endif
+
             //------------------------------------------------------------------
             //!
             //! \brief dereferencing operator
