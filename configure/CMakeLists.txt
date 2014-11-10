@@ -1,8 +1,12 @@
+include(GNUInstallDirs)
 include(CheckTypeSize)
 include(CheckCXXSourceCompiles)
 include(CheckCXXCompilerFlag)
 include(FindBoost)
 include(FindPkgConfig)
+
+message("Installation path: ${CMAKE_INSTALL_LIBDIR}")
+message("Architecture: ${CMAKE_LIBRARY_ARCHITECTURE}")
 
 if(NOT PKG_CONFIG_FOUND)
     message("Could not find pkg-config ... try without it!")
@@ -44,7 +48,7 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
 endif()
 
 #==========================check installation configuration====================
-include(configure/InstallConfig.cmake)                          
+#include(configure/InstallConfig.cmake)                          
 
 #===================================check the size of data types===============
 include(configure/CheckTypeSizes.txt)

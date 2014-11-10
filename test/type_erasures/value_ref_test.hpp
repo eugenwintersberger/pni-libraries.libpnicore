@@ -39,7 +39,6 @@ template<typename T> class value_ref_test : public CppUnit::TestFixture
 {
         CPPUNIT_TEST_SUITE(value_ref_test<T>);
         CPPUNIT_TEST(test_construction);
-        CPPUNIT_TEST(test_copy_and_move);
         CPPUNIT_TEST(test_assignment);
         CPPUNIT_TEST(test_stream);
         CPPUNIT_TEST(test_comparison);
@@ -55,7 +54,6 @@ template<typename T> class value_ref_test : public CppUnit::TestFixture
         void tearDown();
 
         void test_construction();
-        void test_copy_and_move();
         void test_assignment();
         void test_stream();
         void test_comparison();
@@ -86,24 +84,14 @@ template<typename T> void value_ref_test<T>::test_construction()
 }
 
 //-----------------------------------------------------------------------------
-template<typename T> void value_ref_test<T>::test_copy_and_move()
-{
-    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    
-    value_ref v1(std::ref(value_1));
-    
-    value_ref v2(v1); //copy construction
-    compare(v1.as<T>(),value_1);
-    compare(v2.as<T>(),value_1);
-}
-
-//-----------------------------------------------------------------------------
 template<typename T> void value_ref_test<T>::test_assignment()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
    
     value_ref v1;
     CPPUNIT_ASSERT_THROW(v1.as<T>(),memory_not_allocated_error); 
+    value_ref v2;
+    v2 = value_ref(std::ref(value_1));
     //assign a reference
     v1 = value_ref(std::ref(value_1));
 
@@ -111,7 +99,6 @@ template<typename T> void value_ref_test<T>::test_assignment()
     v1 = value_2;
     compare(value_1,value_2);
 
-    value_ref v2;
     v2 = v1;
     CPPUNIT_ASSERT(v1.as<T>() == v2.as<T>());
 }

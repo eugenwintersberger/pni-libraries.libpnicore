@@ -33,6 +33,8 @@
 namespace pni{
 namespace core{
 
+    class value;
+
     //!
     //! \ingroup type_erasure_classes
     //! \brief type erasure for references to POD data
@@ -40,7 +42,11 @@ namespace core{
     //! Unlike value this type erasure holds references to POD data created 
     //! with std::ref. Like value the types managed by the erasure are those 
     //! that are defined in types.hpp and thus have a type_id_t value 
-    //! associated with them.  Instantiation is quite simple
+    //! associated with them. value_ref is default construtible and thus can be 
+    //! stored in as container. It is important to note that unlike the value 
+    //! type erasure, value_ref cannot be constructed from a literal!
+    //!
+    //! Instantiation is quite simple
     //!
     //! \code
     //! float64 v1 = 100.243;
@@ -95,7 +101,10 @@ namespace core{
     class value_ref
     {
         private:
+            //! internal pointer type used to hold the reference instance
             typedef std::unique_ptr<value_holder_interface> pointer_type;
+
+            //----------------------------------------------------------------
             //!
             //! \brief throw exception
             //!
@@ -108,13 +117,26 @@ namespace core{
             //!
             void _check_pointer(const exception_record &r) const;
 
+            //----------------------------------------------------------------
+            //!
+            //! \brief check type
+            //!
+            //! Throws type_error exception if the passed type id does not match
+            //! the references original type. 
+            //!
+            //! \throw type_error 
+            //! \param tid type id to check
+            //! \param r exception record of the code position 
+            //!
             void _check_type(type_id_t tid,const exception_record &r) const;
 
             //! pointer holding the value stored
             pointer_type _ptr;
         public:
             //================constructors and destructor======================
-            //! default constructor
+            //!
+            //! \brief default constructor
+            //! 
             value_ref();
           
             //-----------------------------------------------------------------
@@ -136,7 +158,9 @@ namespace core{
             {}
 
             //-----------------------------------------------------------------
-            //! copy constructor
+            //!
+            //! \brief copy constructor
+            //!
             value_ref(const value_ref &o);
 
             //==================assignment operators===========================
@@ -158,11 +182,35 @@ namespace core{
             //!
             template<typename T> value_ref &operator=(const T &v);
 
+            //----------------------------------------------------------------
+            //!
+            //! \brief assignment from a value
+            //!
+            //! In this case the value stored in v will be assigned to the
+            //! variable refered to by this instance of value_ref.
+            //!
+            //! \throws memory_not_allocated if the reference is not initialized
+            //! \throws type_error if the type of v and the reference to not
+            //! match
+            //! \param v value instance
+            //!
+            value_ref &operator=(const value &v);
+
             //-----------------------------------------------------------------
             //! copy assignment
             // we should remove this - makes not really sense. We can 
             // always destroy the reference and create a new one (could we?)
             value_ref &operator=(const value_ref &o);
+
+            //-----------------------------------------------------------------
+            //!
+            //! \brief conversion operator
+            //! 
+            //! This operator is used to convert a reference to a value 
+            //! type erasure. 
+            //! 
+            operator value () const;
+
 
             //-----------------------------------------------------------------
             //!
@@ -200,7 +248,10 @@ namespace core{
             friend std::istream &operator>>(std::istream &stream,
                                             value_ref &v);
 
+            //----------------------------------------------------------------
             friend bool operator==(const value_ref &a,const value_ref &b);
+
+            //----------------------------------------------------------------
             friend bool operator!=(const value_ref &a,const value_ref &b);
     };
 
@@ -269,6 +320,8 @@ namespace core{
     bool operator!=(const value_ref &a,const value_ref &b);
 
     bool operator==(const value_ref &a,const value_ref &b);
+
+    value to_value(const value_ref &v);
 
 //end of namespace
 }
