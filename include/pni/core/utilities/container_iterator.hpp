@@ -101,7 +101,7 @@ namespace core{
             //! \param container pointer to the container object
             //! \param state initial position of the iterator
             //!
-            container_iterator(cptr_type container,size_t state=0):
+            explicit container_iterator(cptr_type container,size_t state=0):
                 _container(container),
                 _state(state),
                 _maxsize(container->size())
