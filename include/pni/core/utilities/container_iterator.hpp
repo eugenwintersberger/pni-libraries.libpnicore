@@ -72,11 +72,6 @@ namespace core{
             //! maximum number of elements in the container
             ssize_t _maxsize;
 
-#ifdef NOEXPLICITCONV 
-            typedef void (container_iterator<ITERABLE,const_flag>::*bool_type)() const;
-            void bool_operator_function() const {}
-#endif
-
         public:
             //====================public types==================================
             //! value type of the container
@@ -175,22 +170,13 @@ namespace core{
             //! 
             //! \return boolean value
             //!
-#ifdef NOEXPLICITCONV
-            operator bool_type() const
-            {
-                return  !( (!this->_container)||
-                           (this->_state >= this->_maxsize)||
-                           (this->_state<0)) ? 
-                          &iterator_type::bool_operator_function : 0;
-            }
-#else
             explicit operator bool() const
             {
                 return !( (!this->_container)||
                           (this->_state >= this->_maxsize)||
                           (this->_state<0));
             }
-#endif
+            
             //------------------------------------------------------------------
             //! 
             //! \brief dereferencing operator
