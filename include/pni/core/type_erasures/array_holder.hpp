@@ -218,6 +218,7 @@ namespace core{
             {
                 return get_pointer(_object);            
             }
+
     };
 
 //end of namespace

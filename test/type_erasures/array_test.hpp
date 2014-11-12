@@ -40,6 +40,7 @@ template<typename OT> class array_test : public CppUnit::TestFixture
 {
         CPPUNIT_TEST_SUITE(array_test<OT>);
         CPPUNIT_TEST(test_construction);
+        CPPUNIT_TEST(test_from_view);
         CPPUNIT_TEST(test_element_multidim);
         CPPUNIT_TEST(test_foreach);
         CPPUNIT_TEST(test_copy_and_move);
@@ -73,6 +74,7 @@ template<typename OT> class array_test : public CppUnit::TestFixture
         void test_assignment();
         void test_comparison();
         void test_element_multidim();
+        void test_from_view();
 };
 
 //-----------------------------------------------------------------------------
@@ -273,10 +275,6 @@ template<typename OT> void array_test<OT>::test_element_multidim()
         for(size_t j=0;j<_shape[1];++j)
         {
             array::element_index index{i,j};
-            //the concept here is wrong: o2 returns a reference and o1 too. 
-            //the = operator basically assigns the refernece of o1 to o2 
-            //which has no effect on the data in o2 as the reference is a
-            //temporary and destroyed at the end of the block
             o2(index) = static_cast<value>(o1(index));
         }
     }
@@ -290,6 +288,23 @@ template<typename OT> void array_test<OT>::test_element_multidim()
             CPPUNIT_ASSERT(o2(index)== o1(index));
         }
     }
+}
+
+//----------------------------------------------------------------------------
+template<typename OT> void array_test<OT>::test_from_view()
+{
+    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+    
+    std::generate(_object1.begin(),_object1.end(),random_generator<value_type>());
+    
+    array o(_object1(slice(0,3),1));
+    auto v = _object1(slice(0,3),1);
+
+    CPPUNIT_ASSERT(o.rank() == 1);
+    CPPUNIT_ASSERT(o.size() == 3);
+
+    size_t index=0;
+    for(auto x: o) compare(x.as<value_type>(),v[index++]);
 }
 
 

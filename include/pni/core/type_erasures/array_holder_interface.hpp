@@ -152,7 +152,9 @@ namespace core{
             //-----------------------------------------------------------------
             virtual value operator()(const element_index &index) const = 0;
 
+            //-----------------------------------------------------------------
             virtual value_ref operator()(const element_index &index)  = 0;
+
     };
 
 
