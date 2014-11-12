@@ -136,9 +136,9 @@ namespace core{
             iterator_type &operator=(const iterator_type &i)
             {
                 if(this == &i) return *this;
-                this->_container = i._container;
-                this->_state     = i._state;
-                this->_maxsize   = i._maxsize;
+                _container = i._container;
+                _state     = i._state;
+                _maxsize   = i._maxsize;
                 return *this;
             }
 
@@ -147,11 +147,11 @@ namespace core{
             iterator_type &operator=(iterator_type &&i)
             {
                 if(this == &i) return *this;
-                this->_container = i._container;
+                _container = i._container;
                 i._container = nullptr;
-                this->_state = i._state;
+                _state = i._state;
                 i._state = 0;
-                this->_maxsize = i._maxsize;
+                _maxsize = i._maxsize;
                 i._maxsize = 0;
                 return *this;
             }
@@ -172,9 +172,7 @@ namespace core{
             //!
             explicit operator bool() const
             {
-                return !( (!this->_container)||
-                          (this->_state >= this->_maxsize)||
-                          (this->_state<0));
+                return !( (!_container)|| (_state >= _maxsize)|| (_state<0));
             }
             
             //------------------------------------------------------------------
@@ -195,7 +193,7 @@ namespace core{
                 if(!(*this))
                     throw iterator_error(EXCEPTION_RECORD,"Iterator invalid!");
 
-                return (*(this->_container))[this->_state];
+                return (*(_container))[_state];
             }
 
             //------------------------------------------------------------------
@@ -213,14 +211,14 @@ namespace core{
                 if(!(*this))
                     throw iterator_error(EXCEPTION_RECORD,"Iterator invalid!");
 
-                return &(*(this->_container))[this->_state];
+                return &(*(_container))[_state];
             }
 
             //------------------------------------------------------------------
             //! increment iterator position
             iterator_type &operator++()
             {
-                this->_state++;
+                _state++;
                 return *this;
             }
 
@@ -240,7 +238,7 @@ namespace core{
             //! decrement operators
             iterator_type &operator--()
             {
-                this->_state--;
+                _state--;
                 return *this;
             }
 
@@ -260,7 +258,7 @@ namespace core{
             //! compound assignment with +=
             iterator_type &operator+=(ssize_t i)
             {
-                this->_state += i;
+                _state += i;
                 return *this;
             }
 
@@ -268,7 +266,7 @@ namespace core{
             //! compound assignment with -=
             iterator_type &operator-=(ssize_t i)
             {
-                this->_state -= i;
+                _state -= i;
                 return *this;
             }
             //------------------------------------------------------------------
@@ -276,10 +274,10 @@ namespace core{
             bool operator==(const iterator_type &a)
             {
                 //check if the iterators point to the same container
-                if(this->_container != a._container) return false;
+                if(_container != a._container) return false;
                 //check if the iterators point to the same element
                 //within the container
-                if(this->_state != a._state) return false;
+                if(_state != a._state) return false;
 
                 return true;
             }
@@ -296,32 +294,32 @@ namespace core{
             //! lesser than operator
             bool operator<(const iterator_type &b)
             {
-                return this->_state < b._state;
+                return _state < b._state;
             }
 
             //-----------------------------------------------------------------
             //! lesser than equal operator
             bool operator<=(const iterator_type &b)
             {
-                return this->_state <= b._state;
+                return _state <= b._state;
             }
 
             //-----------------------------------------------------------------
             //! greater than operator
             bool operator>(const iterator_type &b)
             {
-                return this->_state > b._state;
+                return _state > b._state;
             }
 
             //-----------------------------------------------------------------
             //! greater equal than operator
             bool operator>=(const iterator_type &b)
             {
-                return this->_state >= b._state;
+                return _state >= b._state;
             }
 
             //! get state of the iterator
-            ssize_t state() const { return this->_state; }
+            ssize_t state() const { return _state; }
 
     };
 
