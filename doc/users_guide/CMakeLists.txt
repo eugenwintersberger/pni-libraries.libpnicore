@@ -44,7 +44,7 @@ add_custom_command(OUTPUT libpnicore_ug.pdf
                    COMMAND ${BIBTEX_COMMAND} libpnicore_ug
                    COMMAND ${PDFLATEX_COMPILER} -shell-escape ${MASTER}
                    COMMAND ${PDFLATEX_COMPILER} -shell-escape ${MASTER}
-                   DEPENDS ${SOURCES}
+                   DEPENDS ${SOURCES} ${MASTER} ${IMAGES}
                    )
 
 add_custom_target(users_guide  DEPENDS "libpnicore_ug.pdf" )
