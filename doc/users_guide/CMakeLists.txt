@@ -15,6 +15,7 @@ set(IMAGES pics/array_3d_aorder.pdf
            )
 
 set(SOURCES tex/appendix_multidim_arrays.tex
+            tex/appendix_benchmarks.tex
             tex/array_general_concepts.tex
             tex/arrays.tex
             tex/configuration.tex

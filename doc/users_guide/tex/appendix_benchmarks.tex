@@ -1,0 +1,173 @@
+%%%present some benchmark results
+
+To check the overall performance of the \cpp{mdarray} template provided by the
+library benchmark programs have been written whose results will be presented in
+this chapter.  
+Three particular aspects are investigated by the benchmarks 
+\begin{itemize}
+\item linear data access via iterators
+\item data access via multidimensional indexes 
+\item performance of the arithmetic operators
+\end{itemize}
+To keep the number of benchmark results within reasonable bounds all benchmarks
+have been performend with the three predefined specializations of the
+\cpp{mdarray} template: \cpp{dynamic\_array}, \cpp{fixed\_dim\_array}, and 
+\cpp{static\_array}. In addition to the plain array templates also their view
+types have been taken into account. The view types are interesting as they add
+some additional code which may cause some overhead. 
+
+Its (presumed) outstanding performance is the reason why so much scientific
+software is written in C. In order to show that the code provided by
+\libpnicore\ can be used in high performance applications all benchmarks are
+normalized to the runtime of equivalient C code. In most situations this means
+that data access is done via simple pointers.
+
+%%%===========================================================================
+\section{Iterator benchmarks}
+
+\begin{table}[tb]
+\centering
+\begin{minipage}{0.65\linewidth}
+\begin{tabular}{l||c|c}
+array type & iterator (r/w) & view iterator (r/w)  \\
+\hline\hline
+\cpp{dynamic\_array} & $1.02$/$1.04$ & $2.50$/$2.96$ \\
+\hline
+\cpp{fixed\_dim\_array} & $0.99$/$1.00$ & $2.52$/$2.89$ \\
+\hline
+\cpp{static\_array} & $1.00$/$1.00$ & $2.07$/$2.40$ \\
+\hline
+\end{tabular}
+\end{minipage}
+\hfill
+\begin{minipage}{0.34\linewidth}
+\caption{
+\label{tab:benchmarks:iter}
+Results for the iterator benchmark. \emph{r} and \emph{w} denote reading and
+writing results respectively.}
+\end{minipage}
+\end{table}
+
+For the iterator benchmark the following code sequence was tested for writing
+\begin{cppcode}
+for(auto &x: data)
+    x = buffer;
+\end{cppcode}
+where data is an instance of one of the considered specializations of the 
+\cpp{mdarray} template and buffer is a scalar variable holding a random data
+value. 
+The sequence for reading is quite similar
+\begin{cppcode}
+for(auto x: data)
+    buffer = x;
+\end{cppcode}
+The reference code using a pointer worked quite similar with 
+\begin{cppcode}
+T *data = new T[N];
+
+for(size_t i=0;i<N;++i)
+    data[i] = buffer;
+\end{cppcode}
+for writing and 
+\begin{cppcode}
+T *data = new T[N];
+
+for(size_t i=0;i<N;++i)
+    buffer = data[i];
+\end{cppcode}
+for reading.
+
+The benchmark results are summarized in Tab.~\ref{tab:benchmarks:iter}. All
+numbers in this table are normalized to the raw pointer performance and thus
+reflect directly any performance penalty or advantage over direct pointer
+access. Table~\ref{tab:benchmarks:iter} shows a small performance penalty
+of $2$ to $4$ \% for  the \cpp{dynamic\_array}. For \cpp{fixed\_dim\_array} 
+and \cpp{static\_array} iterator access is as fast as accessing the data 
+via a pointer. 
+In all cases iterating over a view shows significant performance penalties. 
+Using iterators on views is about $2$ up to $3$ times slower than accessing 
+the data via a pointer. This is simply due to additional overhead the 
+view template introduces. 
+
+
+%%%===========================================================================
+\section{Multidimensional index access}
+
+\begin{table}[tb]
+\centering
+\begin{tabular}{l||c|c|c}
+array type & variadic (r/w) & vector (r/w) & array (r/w) \\
+\hline\hline
+\cpp{dynamic\_array}      & $1.03$/$1.02$ & $3.82$/$4.63$ & $3.33$/$3.76$ \\
+\cpp{dynamci\_array}-view & $3.39$/$6.31$ & $6.29$/$6.49$ & $4.23$/$5.41$ \\
+\hline
+\cpp{fixed\_dim\_array}      & $0.94$/$0.97$ & $3.27$/$3.79$ & $3.29$/$3.53$ \\
+\cpp{fixed\_dim\_array}-view & $3.27$/$6.04$ & $5.02$/$6.26$ & $4.03$/$5.15$ \\
+\hline
+\cpp{static\_array}      & $0.97$/$0.97$ & $3.08$/$3.75$ & $3.25$/$3.67$ \\
+\cpp{static\_array}-view & $2.78$/$3.58$ & $4.66$/$5.92$ & $4.83$/$5.33$ \\
+\hline
+\end{tabular}
+\end{table}
+
+%%%===========================================================================
+\section{Arithmetics}
+
+\subsection{Unary arithmetics}
+\begin{table}
+\centering
+\begin{minipage}{0.6\linewidth}
+\begin{tabular}{l||c|c}
+operation & \cpp{dynamic\_array} & \cpp{fixed\_dim\_array} \\ 
+\hline\hline
+$a*=b$ & $1.00$ & $1.00$ \\
+\hline
+$a*=s$ & $0.77$ & $0.77$ \\
+\hline
+$a/=b$ & $1.00$ & $1.00$ \\
+\hline
+$a/=s$ & $1.00$ & $1.00$ \\
+\hline
+$a+=b$ & $1.00$ & $1.00$ \\
+\hline
+$a+=s$ & $0.77$ & $0.77$ \\
+\hline
+$a-=b$ & $1.00$ & $1.00$ \\
+\hline
+$a-=s$ & $0.77$ & $0.77$ \\
+\hline
+\end{tabular}
+\end{minipage}
+\hfill
+\begin{minipage}{0.39\linewidth}
+\caption{\label{tab:benchmarks:unary} 
+Results for the unary arithmetic benchmarks. Both benchmarked types show rather 
+similar performance. It is interesting, however, that in some cases the array
+types seem to outperform the pointer implementation.
+}
+\end{minipage}
+\end{table}
+
+\subsection{Binary arithmetics}
+
+\begin{table}
+\centering
+\begin{tabular}{l||c|c|c}
+operation & \cpp{dynamic\_array} & \cpp{fixed\_dim\_array} & Fortran \\
+\hline\hline
+$a+b$ & $1.04$ & $1.00$ & $2.18$ \\
+\hline
+$a-b$ & $1.02$ & $1.00$ & $2.18$ \\
+\hline
+$a\times b$ & $1.05$ & $1.00$ & $2.24$ \\
+\hline
+$a/b$ & $1.02$ & $1.00$ & $1.46$ \\
+\hline
+$a\times b + \frac{d-e}{f}$ & $1.04$ & $1.00$ & $1.49$ \\
+\hline
+\end{tabular}
+\caption{\label{tab:benchmarks:binary}
+Results for the binary arithmetic benchmarks normalized to the raw pointer
+implementation of the operations.
+}
+\end{table}
