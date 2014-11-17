@@ -208,6 +208,13 @@ arguments of the assignment operator.
 %%%===========================================================================
 \section{Arithmetics}
 
+Last but not least a feasible  array type has to provide arithmetic operators 
+of reasonable performance. This last section compares the unary and binary
+arithmetic operators for the \cpp{mdarray} specializations. 
+Unlike for the other benchmarks the arithmetic benchmarks cover only the 
+\cpp{dynamic\_array} and \cpp{fixed\_dim\_array} specializations of 
+\cpp{mdarray}.
+
 \subsection{Unary arithmetics}
 \begin{table}
 \centering
@@ -242,6 +249,23 @@ types seem to outperform the pointer implementation.
 }
 \end{minipage}
 \end{table}
+\libpnicore s \cpp{mdarray} template provides the following unary arithmetic
+operators
+\begin{itemize}
+    \item \cpp{+=} unary addition
+    \item \cpp{-=} unary subtraction
+    \item \cpp{*=} unary multiplication
+    \item \cpp{/=} unary division
+\end{itemize}
+where the operations are applied element-wise on the LHS of the operator.
+All operators accept either an array type or a scalar type as their RHS. 
+The results for the benchmark are shown in Tab.~\ref{tab:benchmarks:unary}. 
+As can be obtained from Tab.~\ref{tab:benchmarks:unary}
+the unary arithmetic operations are as fast as their equivalent implementations
+using simple pointer access. Indeed in some cases the operators are faster than
+the pointer approach. The $s$ and $b$ on the RHS of the operator in
+Tab.~\ref{tab:benchmarks:unary} denote scalar and array arguments on the RHS of
+the operator respectively.
 
 \subsection{Binary arithmetics}
 
@@ -266,3 +290,30 @@ Results for the binary arithmetic benchmarks normalized to the raw pointer
 implementation of the operations.
 }
 \end{table}
+As already mentioned binary arithmetic operations are implemented with
+expression templates. Though the reference for the binary benchmarks are still
+their equivalent C expressions Fortran has also been included in the benchmark. 
+This is in so far of importance as Fortran is, until today, considered the
+ultimate language for numerics. 
+The results for the binary arithmetic benchmarks are shown in
+Tab.~\ref{tab:benchmarks:binary}. The first conclusion which can be drawn from
+this table is the fact that \cpp{dynamic\_array} shows an up to $5$ \% 
+performance penalty over C code while \cpp{fixed\_dim\_array} is virtually as
+fast as the C implementation of the tested operations. 
+The most astonishing result is, however, the rather low performance of Fortran
+not only in comparison with the C++ types but also with respect to the C
+implementation of the operations (as can be seen from the last column of 
+Tab.~\ref{tab:benchmarks:binary}). 
+
+The reason for the bad performance is not yet clear. It might be due to the poor
+quality of the compiler (we only tested with \cpp{gfortran} from the GNU
+compiler collection). Thus the tests should be repeated using for instance
+Intel's compiler suite. On the other handside: the GNU compiler collection is
+the most important for our uses which makes the results for this set of
+compilers the most relevant. Another reason might be that the benchmark code is
+written in C++ and the Fortran functions are linked into the C++ code
+statically. It may be possible that this has some negative effect on the
+performance of the Fortran code. Whatever might be the reason far the bad
+Fortran results, a single conclusion can be drawn from this benchmark: 
+Expression templates are a very sensible way to implement operators in C++ and
+may can help to push C++ in the field of scientific computing.
