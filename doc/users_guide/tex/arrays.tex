@@ -255,8 +255,7 @@ we are writing the corrected data back on the stack since {\tt curr\_frame} is
 just a view on the particular image in the stack.
 
 %%%============================================================================
-\section{Some more elaborate example}
-\subsection{Matrix-vector multiplications}
+\section{Example: matrix-vector and matrix-matrix multiplication}
 In the last example matrix vector multiplications are treated. The full code can
 be viewed in {\tt array\_arithmetic3.cpp} in the source distribution. But lets
 first start with the header
@@ -271,18 +270,7 @@ first start with the header
 Besides including all required header files matrix and vector templates are 
 defined in lines $37$ and $38$ using the new C++11 template aliasing.
 
-\inputminted[fontsize=\small,
-             linenos,
-             firstline=40,
-             lastline=63,
-             firstnumber=40,
-             frame=lines,
-             label=examples/array\_arithmetic3.cpp]
-{cpp}{../examples/array_arithmetic3.cpp}
-In lines $42$ and $57$ output operators are defined for vectors and matrices.
-These will allow us to write the data to a stream. 
-
-
+\subsection{Matrix vector multiplication}
 The implementation of the matrix vector multiplication is shown in the next
 block. In other words
 \begin{align}
@@ -300,6 +288,8 @@ $N$-dimensional vectors. In all formulas Einsteins sum convention is used.
 {cpp}{../examples/array_arithmetic3.cpp}
 In line $74$ we select the $i$-th row of the matrix and compute the inner
 product of the row vector and the input vector in line $75$. 
+
+\subsection{Vector matrix multiplication}
 The vector matrix multiplication
 \begin{align}
  \mathbf{r} = \mathbf{v}A\mbox{ or } r_i = v_j A_{j,i}
@@ -314,7 +304,10 @@ is computed analogously
              label=examples/array\_arithmetic3.cpp]
 {cpp}{../examples/array_arithmetic3.cpp}
 despite the fact that we are choosing the appropriate column instead of a row in 
-line $90$. Finally we need an implementation for the matrix - matrix
+line $90$. 
+
+\subsection{Matrix matrix multiplication}
+Finally we need an implementation for the matrix - matrix
 multiplication
 \begin{align}
 C = AB \mbox{ or } C_{i,j} = A_{i,k}B_{k,j}
@@ -330,6 +323,7 @@ C = AB \mbox{ or } C_{i,j} = A_{i,k}B_{k,j}
 The rows and columns are selected in lines $107$ and $108$ respectively. 
 Line $109$ finally computes the inner product of the row and column vector.
 
+\subsection{Putting it all together: the main function}
 Finally the main program shows a simple application of these template functions. 
 \inputminted[fontsize=\small,
              linenos,
@@ -341,4 +335,40 @@ Finally the main program shows a simple application of these template functions.
 {cpp}{../examples/array_arithmetic3.cpp}
 It is important to understand that the appropriate function is determined by the
 types of the arguments (vector or matrix). This is a rather nice example of how
-to use the typing system of C++ to add meaning to objects.
+to use the typing system of C++ to add meaning to objects. For the exact
+implementation of the output operators please consult the full source code in 
+\cpp{array\_arithmetic3.cpp}.
+
+The output of the program is
+\begin{minted}{bash}
+>./array_arithmetic3
+m1 = 
+| 1 2 3 |
+| 4 5 6 |
+| 7 8 9 |
+
+m2 = 
+| 9 8 7 |
+| 6 5 4 |
+| 3 2 1 |
+
+v  = 
+| 1 |
+| 2 |
+| 3 |
+
+m1.v = 
+| 14 |
+| 32 |
+| 50 |
+
+v.m1 = 
+| 30 |
+| 36 |
+| 42 |
+
+m1.m2 = 
+| 30 24 18 |
+| 84 69 54 |
+| 138 114 90 |
+\end{minted}
