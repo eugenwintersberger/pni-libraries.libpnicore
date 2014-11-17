@@ -25,6 +25,7 @@ that data access is done via simple pointers.
 %%%===========================================================================
 \section{Iterator benchmarks}
 
+%%%---------------------------------------------------------------------------
 \begin{table}[tb]
 \centering
 \begin{minipage}{0.65\linewidth}
@@ -48,34 +49,58 @@ writing results respectively.}
 \end{minipage}
 \end{table}
 
-For the iterator benchmark the following code sequence was tested for writing
-\begin{cppcode}
-for(auto &x: data)
+%%%---------------------------------------------------------------------------
+\begin{listing}[tb]
+\centering
+\begin{minipage}[b]{0.4\linewidth}
+\begin{minted}[label=iteartor writing]{cpp}
+for(auto &x: data) 
     x = buffer;
-\end{cppcode}
-where data is an instance of one of the considered specializations of the 
-\cpp{mdarray} template and buffer is a scalar variable holding a random data
-value. 
-The sequence for reading is quite similar
-\begin{cppcode}
-for(auto x: data)
-    buffer = x;
-\end{cppcode}
-The reference code using a pointer worked quite similar with 
-\begin{cppcode}
+\end{minted} 
+\end{minipage}
+\hspace{0.1\linewidth}
+\begin{minipage}[b]{0.4\linewidth}
+\begin{minted}{cpp}
 T *data = new T[N];
 
-for(size_t i=0;i<N;++i)
+for(size_t i=0;i<N;++i) 
     data[i] = buffer;
-\end{cppcode}
-for writing and 
-\begin{cppcode}
+\end{minted}
+\end{minipage}
+\caption{\label{lst:benchmarks:iterator_write}
+The left snippet shows the core of the iterator writing benchmark and the right
+one the equivalent code using plain pointers.
+}
+\end{listing}
+
+%%%---------------------------------------------------------------------------
+\begin{listing}[tb]
+\centering
+\begin{minipage}{0.4\linewidth}
+\begin{minted}{cpp}
+for(auto x: data)
+    buffer = x;
+\end{minted}
+\end{minipage}
+\hspace{0.1\linewidth}
+\begin{minipage}{0.4\linewidth}
+\begin{minted}{cpp}
 T *data = new T[N];
 
 for(size_t i=0;i<N;++i)
     buffer = data[i];
-\end{cppcode}
-for reading.
+\end{minted}
+\end{minipage}
+\caption{\label{lst:benchmarks:iterator_read}
+The left snippet shows the core of the iterator reading benchmark and the right
+one the equivalent code using plain pointers.
+}
+\end{listing}
+
+The essential loops whose runtime is measured for this benchmark is shown in
+Listings~\ref{lst:benchmarks:iterator_write} and
+\ref{lst:benchmarks:iterator_read}. It should be mentioned that for the pointer
+code only the loop is measured without the time required for allocating memory.
 
 The benchmark results are summarized in Tab.~\ref{tab:benchmarks:iter}. All
 numbers in this table are normalized to the raw pointer performance and thus
@@ -93,6 +118,7 @@ view template introduces.
 %%%===========================================================================
 \section{Multidimensional index access}
 
+%%%---------------------------------------------------------------------------
 \begin{table}[tb]
 \centering
 \begin{tabular}{l||c|c|c}
@@ -108,7 +134,76 @@ array type & variadic (r/w) & vector (r/w) & array (r/w) \\
 \cpp{static\_array}-view & $2.78$/$3.58$ & $4.66$/$5.92$ & $4.83$/$5.33$ \\
 \hline
 \end{tabular}
+\caption{
+\label{tab:benchmarks:multidim}
+Results for the muldimensional index access benchmarks. For array views a 
+significant overhead is added. This makes views at the current state of
+development rather useless for high performance applications.
+}
 \end{table}
+
+%%%---------------------------------------------------------------------------
+\begin{listing}[tb]
+\centering
+\begin{tabular}{p{0.3\linewidth}p{0.05\linewidth}p{0.55\linewidth}}
+\begin{minted}{cpp}
+for(size_t i=0;i<nx;++i)
+    for(size_t j=0;j<ny;++j)
+        data(i,j) = buffer;
+\end{minted} 
+& & 
+\begin{minted}{cpp}
+for(index[0]=0;index[0]<nx;++index[0])
+    for(index[1]=0;index[1]<ny;++index[1])
+        data(index) = buffer;
+\end{minted}
+\\
+\multicolumn{1}{c}{\bf{variadic index}} & & 
+\multicolumn{1}{c}{\bf{vector/array index}} \\
+\begin{minted}{cpp}
+for(size_t i=0;i<nx;++i)
+    for(size_t j=0;j<ny;++j)
+        data[i*ny+j] = buffer;
+\end{minted} 
+& & \\
+\multicolumn{1}{c}{\bf{pointer access}} & & \\
+\end{tabular}
+\caption{\label{lst:benchmarks:mindex_write}
+Basic loop constructions measured for the multiindex write benchmarks. The code
+for reading is basically the same - just flip the RHS and LHS of the assignment
+operator.}
+\end{listing}
+
+One of the major goals for \libpnicore\ was to provide an array type which is as
+easy and intuitive to use as the multidimensional array types provided by
+Fortran or the numpy Python package. This includes easy access to array elements
+using a multidimensional index which can be passed either as a variadic list of 
+integers or as a container of an integer type. 
+This immediately raises the question how fast data access via multidimensional 
+indices is  in comparison with simple pointer access where the linear offset is
+computed from the multidimensional index and the number of elements along each
+dimension of the array. 
+
+The results for the benchmark are shown in Tab.~\ref{tab:benchmarks:multidim}.
+It follows immediately from this table that passing the multidimensional index
+as a variadic argument list is the fastest way of how to access the data. 
+The performance is virtually equal to those of using direct pointer access. 
+Using the container types \cpp{std::vector} or \cpp{std::array} to pass the
+index will cause in a performance penalty of $200$ to $300$ \% for virtually all
+array types. 
+As with linear access via iterators there is a significant performance penalty
+when accessing data via a view. One surprising aspect of the results shown in 
+Tab.~\ref{tab:benchmarks:multidim} is the fact that at least for 
+\cpp{fixed\_dim\_array} and \cpp{static\_array} variadic access outperforms even 
+pointer access.
+
+The reason for the huge performance penalties is yet unclear. However, we hope
+that they can be reduced in further releases. 
+
+Finally Listing~\ref{lst:benchmarks:mindex_write} shows the basic code that has
+been measured for this benchmark (in this particular case for writing data). The
+code used for reading data is virtually the same just flip the RHS and the LHS
+arguments of the assignment operator.
 
 %%%===========================================================================
 \section{Arithmetics}
