@@ -59,7 +59,7 @@ namespace core{
             //! This private method throws an exception if the first 
             //! index of the range exceeds the last one. 
             //!
-            //! \throws RangeError if first > last
+            //! \throws range_error if first > last
             //! \param o signature of the origin where the error occured
             //!
             void _check_start_stop(const exception_record &o) const;
@@ -71,7 +71,7 @@ namespace core{
             //! Checks if the stride does not exceed the span of the slice. 
             //! If it does an exception will be thrown. 
             //! 
-            //! \throws RangeError if stride exceeds span
+            //! \throws range_error if stride exceeds span
             //! \param o signature of the origin where the error occured 
             //!
             void _check_stride(const exception_record &o) const;
@@ -86,7 +86,7 @@ namespace core{
             //!
             //! This is the default constructor for a Slice object. 
             //! 
-            //! \throws RangeError if the first index exceeds the last
+            //! \throws range_error if the first index exceeds the last
             //! \param first first index
             //! \param last index 
             //! \param stride steps between subsequent elements
@@ -113,7 +113,7 @@ namespace core{
             //! set to 1.  In the case of a three element initializer list 
             //! the last element is considered as the stride of the slice.
             //!
-            //! \throws RangeError if the first element is larger than the last
+            //! \throws range_error if the first element is larger than the last
             //! \param l initializer list
             //!
             explicit slice(const std::initializer_list<size_t> &l);

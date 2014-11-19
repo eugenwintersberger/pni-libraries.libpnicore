@@ -32,23 +32,26 @@ namespace core{
     void slice::_check_start_stop(const exception_record &o) const
     {
         if(_first >= _last)
-        {
-            std::stringstream ss;
-            ss<<"Last index ("<<_last<<") is equal or exceeds first ("<<_first<<")!";
-            throw range_error(o,ss.str());
-        }
+            throw range_error(o,string("start stop range flawed!"));
+                   
+        /*
+                    "Last index ("+std::to_string(_last)+
+                                ") is equal or exceeds first ("+
+                                std::to_string(_first)+")!");
+                                */
     }
 
     //-------------------------------------------------------------------------
     void slice::_check_stride(const exception_record &o) const
     {
         if(span(*this)<_stride)
-        {
-            std::stringstream ss;
-            ss<<"Stride ("<<_stride<<") is larger than span ("<<span(*this);
-            ss<<")!";
-            throw range_error(o,ss.str());
-        }
+            throw range_error(o,"Stride () is larger than span ()!");
+                    
+                   /* 
+                    "Stride ("+std::to_string(_stride)+
+                                ") is larger than span ("
+                                +std::to_string(span(*this))+")!");
+                                */
     }
     
     //==========implementation of constructors and destructor==================

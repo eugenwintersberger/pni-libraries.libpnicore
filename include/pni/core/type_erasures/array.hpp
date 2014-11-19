@@ -131,7 +131,7 @@ namespace core{
             //! \code 
             //! array_type data;
             //! ....
-            //! array a = data;
+            //! array a(data);
             //! \endcode
             //! the content of the original array data is copied to the 
             //! internal array of type array_type encapsulated by the type 
