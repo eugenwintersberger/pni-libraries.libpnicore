@@ -24,6 +24,39 @@
 
 #pragma once
 
+#include <type_traits>
+#include "../types/complex_utils.hpp"
+
+namespace pni{
+namespace core{
+
+    template<typename T> using invoke = typename T::type;
+
+    template<typename T1,
+             typename T2
+            > 
+    struct or_t
+    {
+        static const bool value = T1::value || T2::value;
+    };
+
+    template<typename T> struct not_t
+    {
+        static const bool value = !T::value;
+    };
+
+    template<typename C> using enable_if = invoke<std::enable_if<C::value>>;
+    
+    template<typename T> using is_pod = std::is_pod<T>;
+
+    template<typename T> using is_ptr = std::is_pointer<T>;
+
+    template<typename T> using is_cmplx = is_complex<T>;
+
+//end of namespace
+}
+}
+
 //-----------------------------------------------------------------------------
 //!
 //! \ingroup utility_classes
