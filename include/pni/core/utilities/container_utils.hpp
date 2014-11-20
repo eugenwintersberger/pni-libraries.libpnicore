@@ -111,7 +111,7 @@ namespace core{
         //!
         template<
                  typename ITERT,
-                 ENABLE(!IS_POD(ITERT)|| IS_PTR(ITERT))
+                 typename = enable_if<or_t<not_t<is_pod<ITERT>>,is_ptr<ITERT>>>
                 >
         static container_type create(ITERT begin,ITERT end)
         {
@@ -142,7 +142,7 @@ namespace core{
         //!
         template<
                  typename OCTYPE,
-                 ENABLE(!IS_POD(OCTYPE))
+                 typename = enable_if<not_t<is_pod<OCTYPE>>>
                 >
         static container_type create(const OCTYPE &o)
         {
@@ -269,7 +269,9 @@ namespace core{
         //!
         template<
                  typename ITERT,
-                 ENABLE(!IS_POD(ITERT)||IS_PTR(ITERT))
+                 typename = enable_if<or_t<
+                            not_t<is_pod<ITERT>>,is_ptr<ITERT> 
+                            >>
                 >
         static container_type create(ITERT begin,ITERT end)
         {
@@ -308,7 +310,7 @@ namespace core{
         //!
         template<
                  typename OCTYPE,
-                 ENABLE(!IS_POD(OCTYPE)) 
+                 typename = enable_if<not_t<is_pod<OCTYPE>>>
                 >
         static container_type create(const OCTYPE &o)
         {

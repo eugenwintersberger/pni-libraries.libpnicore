@@ -78,7 +78,9 @@ namespace core{
         template<
                  typename LTYPE,
                  typename T,
-                 ENABLE(IS_POD(T)||IS_COMPLEX(T))
+                 typename = enable_if<or_t<
+                           is_pod<T>,is_cmplx<T>
+                           >>
                 > 
         static void add(LTYPE &a,T b)
         {
@@ -110,7 +112,9 @@ namespace core{
         template<
                  typename LTYPE,
                  typename RTYPE,
-                 ENABLE(!(IS_POD(RTYPE)||IS_COMPLEX(RTYPE)))
+                 typename = enable_if<not_t<
+                            or_t<is_pod<RTYPE>,is_cmplx<RTYPE>>
+                            >>
                 >
         static void add(LTYPE &a,const RTYPE &b)
         {
@@ -138,7 +142,9 @@ namespace core{
         template<
                  typename LTYPE,
                  typename T,
-                 ENABLE(IS_POD(T)||IS_COMPLEX(T))
+                 typename = enable_if<or_t< 
+                            is_pod<T>,is_cmplx<T> 
+                            >>
                 >
         static void sub(LTYPE &a,T b)
         {
@@ -167,7 +173,9 @@ namespace core{
         template<
                  typename LTYPE,
                  typename RTYPE,
-                 ENABLE(!(IS_POD(RTYPE)||IS_COMPLEX(RTYPE)))
+                 typename = enable_if<not_t<
+                            or_t<is_pod<RTYPE>,is_cmplx<RTYPE>>
+                            >>
                 >
         static void sub(LTYPE &a,const RTYPE &b)
         {
@@ -196,7 +204,9 @@ namespace core{
         template<
                  typename LTYPE,
                  typename T,
-                 ENABLE(IS_POD(T)||IS_COMPLEX(T))
+                 typename = enable_if<or_t< 
+                            is_pod<T>,is_cmplx<T> 
+                            >>
                 >
         static void mult(LTYPE &a,T b)
         {
@@ -225,7 +235,9 @@ namespace core{
         template<
                  typename LTYPE,
                  typename RTYPE,
-                 ENABLE(!(IS_POD(RTYPE)||IS_COMPLEX(RTYPE)))
+                 typename = enable_if<not_t<
+                            or_t<is_pod<RTYPE>,is_cmplx<RTYPE>>
+                            >>
                 >
         static void mult(LTYPE &a,const RTYPE &b)
         {
@@ -253,7 +265,9 @@ namespace core{
         template<
                  typename LTYPE,
                  typename T,
-                 ENABLE(IS_POD(T)||IS_COMPLEX(T))
+                 typename = enable_if<or_t< 
+                            is_pod<T>,is_cmplx<T> 
+                            >>
                 >
         static void div(LTYPE &a,T b)
         {
@@ -283,7 +297,9 @@ namespace core{
         template<
                  typename LTYPE,
                  typename RTYPE,
-                 ENABLE(!(IS_POD(RTYPE)||IS_COMPLEX(RTYPE)))
+                 typename = enable_if<not_t<
+                            or_t<is_pod<RTYPE>,is_cmplx<RTYPE>>
+                            >>
                 >
         static void div(LTYPE &a,const RTYPE &b)
         {

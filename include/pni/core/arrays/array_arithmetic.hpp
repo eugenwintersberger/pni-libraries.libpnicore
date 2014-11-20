@@ -32,12 +32,18 @@
 
 namespace pni{
 namespace core{
+    
+    template<typename T> struct is_array
+    {
+        const static bool value = container_trait<T>::is_multidim;
+    };
 
-#define IS_ARRAY(T) container_trait<T>::is_multidim
+    template<typename T>
+    using map_type = typename T::map_type;
 
-#define MAP_TYPE(T) typename T::map_type
+    template<typename T>
+    using ipa_type = typename T::inplace_arithmetic;
 
-#define IPA_TYPE(T) typename T::inplace_arithmetic
 
     //======================binary addition operator===========================
     //!
@@ -63,13 +69,13 @@ namespace core{
     template<
              typename LHS,
              typename RHS,
-             ENABLE(IS_ARRAY(LHS) && IS_ARRAY(RHS))
+             typename = enable_if<and_t<is_array<LHS>,is_array<RHS>>>
             >
-    mdarray<add_op<LHS,RHS>,MAP_TYPE(LHS),IPA_TYPE(LHS)>
+    mdarray<add_op<LHS,RHS>,map_type<LHS>,ipa_type<LHS>>
     operator+(const LHS &a,const RHS &b)
     {
         typedef add_op<LHS,RHS> operator_type;
-        typedef mdarray<operator_type,MAP_TYPE(LHS),IPA_TYPE(LHS)> return_type;
+        typedef mdarray<operator_type,map_type<LHS>,ipa_type<LHS>> return_type;
 
         return return_type(a.map(),operator_type(a,b));
     }
@@ -97,13 +103,15 @@ namespace core{
     template<
              typename LHS,
              typename T,
-             ENABLE(IS_ARRAY(LHS)&& !IS_ARRAY(T))
+             typename = enable_if<and_t<
+                        is_array<LHS>,not_t<is_array<T>> 
+                        >>
             >
-    mdarray<add_op<LHS,scalar<T>>,MAP_TYPE(LHS),IPA_TYPE(LHS)>
+    mdarray<add_op<LHS,scalar<T>>,map_type<LHS>,ipa_type<LHS>>
     operator+(const LHS &a, const T& b)
     {
         typedef add_op<LHS,scalar<T>> operator_type;
-        typedef mdarray<operator_type,MAP_TYPE(LHS),IPA_TYPE(LHS)> return_type;
+        typedef mdarray<operator_type,map_type<LHS>,ipa_type<LHS>> return_type;
 
         return return_type(a.map(),operator_type(a,b));
     }
@@ -131,13 +139,15 @@ namespace core{
     template<
              typename T,
              typename RHS,
-             ENABLE(!IS_ARRAY(T)&&IS_ARRAY(RHS))
+             typename = enable_if<and_t<
+                        not_t<is_array<T>>,is_array<RHS>
+                        >>
             >
-    mdarray<add_op<scalar<T>,RHS>,MAP_TYPE(RHS),IPA_TYPE(RHS)>
+    mdarray<add_op<scalar<T>,RHS>,map_type<RHS>,ipa_type<RHS>>
     operator+(const T& a, const RHS &b)
     {
         typedef add_op<scalar<T>,RHS> operator_type;
-        typedef mdarray<operator_type,MAP_TYPE(RHS),IPA_TYPE(RHS)> result_type;
+        typedef mdarray<operator_type,map_type<RHS>,ipa_type<RHS>> result_type;
         typedef scalar<T> scalar_type;
         
         return result_type(b.map(),operator_type(scalar_type(a),b));
@@ -167,13 +177,13 @@ namespace core{
     template<
              typename LHS,
              typename RHS,
-             ENABLE(IS_ARRAY(LHS)&&IS_ARRAY(RHS))
+             typename = enable_if<and_t<is_array<LHS>,is_array<RHS>>>
             >
-    mdarray<sub_op<LHS,RHS >,MAP_TYPE(LHS),IPA_TYPE(LHS)>
+    mdarray<sub_op<LHS,RHS >,map_type<LHS>,ipa_type<LHS>>
     operator-(const LHS &a, const RHS &b)
     {
         typedef sub_op<LHS,RHS> operator_type;
-        typedef mdarray<operator_type,MAP_TYPE(LHS),IPA_TYPE(LHS)> result_type;
+        typedef mdarray<operator_type,map_type<LHS>,ipa_type<LHS>> result_type;
 
         return result_type(a.map(),operator_type(a,b));
     }
@@ -201,13 +211,15 @@ namespace core{
     template<
              typename LHS,
              typename T,
-             ENABLE(IS_ARRAY(LHS)&& !IS_ARRAY(T))
+             typename = enable_if<and_t<
+                      is_array<LHS>,not_t<is_array<T>>
+                      >>
             >
-    mdarray<sub_op<LHS,scalar<T> >,MAP_TYPE(LHS),IPA_TYPE(LHS)>
+    mdarray<sub_op<LHS,scalar<T> >,map_type<LHS>,ipa_type<LHS>>
     operator-(const LHS &a, const T& b)
     {
         typedef sub_op<LHS,scalar<T>> operator_type;
-        typedef mdarray<operator_type,MAP_TYPE(LHS),IPA_TYPE(LHS)> result_type;
+        typedef mdarray<operator_type,map_type<LHS>,ipa_type<LHS>> result_type;
 
         return result_type(a.map(),operator_type(a,b));
     }
@@ -235,13 +247,15 @@ namespace core{
     template<
              typename T,
              typename RHS,
-             ENABLE(!IS_ARRAY(T) && IS_ARRAY(RHS))
+             typename = enable_if<and_t<
+                        not_t<is_array<T>>,is_array<RHS> 
+                        >>
             >
-    mdarray<sub_op<scalar<T>,RHS>,MAP_TYPE(RHS),IPA_TYPE(RHS)>
+    mdarray<sub_op<scalar<T>,RHS>,map_type<RHS>,ipa_type<RHS>>
     operator-(const T &a, const RHS &b)
     {
         typedef sub_op<scalar<T>,RHS> operator_type;
-        typedef mdarray<operator_type,MAP_TYPE(RHS),IPA_TYPE(RHS)> result_type;
+        typedef mdarray<operator_type,map_type<RHS>,ipa_type<RHS>> result_type;
         
         return result_type(b.map(),operator_type(a,b));
     }
@@ -269,13 +283,13 @@ namespace core{
     template<
              typename LHS,
              typename RHS,
-             ENABLE(IS_ARRAY(LHS) && IS_ARRAY(RHS))
+             typename = enable_if<and_t<is_array<LHS>,is_array<RHS>>>
             >
-    mdarray<div_op<LHS,RHS>,MAP_TYPE(LHS),IPA_TYPE(LHS)>
+    mdarray<div_op<LHS,RHS>,map_type<LHS>,ipa_type<LHS>>
     operator/(const LHS &a, const RHS &b)
     {
         typedef div_op<LHS,RHS> operator_type;
-        typedef mdarray<operator_type,MAP_TYPE(LHS),IPA_TYPE(LHS)> result_type;
+        typedef mdarray<operator_type,map_type<LHS>,ipa_type<LHS>> result_type;
 
         return result_type(a.map(),operator_type(a,b));
     }
@@ -303,13 +317,15 @@ namespace core{
     template<
              typename LHS,
              typename T,
-             ENABLE(IS_ARRAY(LHS) && !IS_ARRAY(T))
+             typename = enable_if<and_t<
+                        is_array<LHS>,not_t<is_array<T>>
+                        >>
             >
-    mdarray<div_op<LHS,scalar<T>>,MAP_TYPE(LHS),IPA_TYPE(LHS)>
+    mdarray<div_op<LHS,scalar<T>>,map_type<LHS>,ipa_type<LHS>>
     operator/(const LHS &a, const T &b)
     {
         typedef div_op<LHS,scalar<T>> operator_type;
-        typedef mdarray<operator_type,MAP_TYPE(LHS),IPA_TYPE(LHS)> result_type;
+        typedef mdarray<operator_type,map_type<LHS>,ipa_type<LHS>> result_type;
 
         return result_type(a.map(),operator_type(a,b));
     }
@@ -337,13 +353,15 @@ namespace core{
     template<
              typename T,
              typename RHS,
-             ENABLE(!IS_ARRAY(T) && IS_ARRAY(RHS))
+             typename = enable_if<and_t<
+                        not_t<is_array<T>>,is_array<RHS>
+                        >>
             >
-    mdarray<div_op<scalar<T>,RHS>,MAP_TYPE(RHS),IPA_TYPE(RHS)>
+    mdarray<div_op<scalar<T>,RHS>,map_type<RHS>,ipa_type<RHS>>
     operator/(const T &a, const RHS &b)
     {
         typedef div_op<scalar<T>,RHS> operator_type;
-        typedef mdarray<operator_type,MAP_TYPE(RHS),IPA_TYPE(RHS)> result_type;
+        typedef mdarray<operator_type,map_type<RHS>,ipa_type<RHS>> result_type;
 
         return result_type(b.map(),operator_type(a,b));
     }
@@ -370,13 +388,13 @@ namespace core{
     template<
              typename LHS,
              typename RHS,
-             ENABLE(IS_ARRAY(LHS) && IS_ARRAY(RHS))
+             typename = enable_if<and_t<is_array<LHS>,is_array<RHS> >>
             >
-    mdarray<mult_op<LHS,RHS>,MAP_TYPE(LHS),IPA_TYPE(LHS)>
+    mdarray<mult_op<LHS,RHS>,map_type<LHS>,ipa_type<LHS>>
     operator*(const LHS &a, const RHS &b)
     {
         typedef mult_op<LHS,RHS> operator_type;
-        typedef mdarray<operator_type,MAP_TYPE(LHS),IPA_TYPE(LHS)> result_type;
+        typedef mdarray<operator_type,map_type<LHS>,ipa_type<LHS>> result_type;
 
         return result_type(a.map(),operator_type(a,b));
     }
@@ -404,13 +422,15 @@ namespace core{
     template<
              typename LHS,
              typename T,
-             ENABLE(IS_ARRAY(LHS) && !IS_ARRAY(T))
+             typename = enable_if<and_t<
+                        is_array<LHS>,not_t<is_array<T>>
+                        >>
             >
-    mdarray<mult_op<LHS,scalar<T>>,MAP_TYPE(LHS),IPA_TYPE(LHS)>
+    mdarray<mult_op<LHS,scalar<T>>,map_type<LHS>,ipa_type<LHS>>
     operator*(const LHS &a, const T &b)
     {
         typedef mult_op<LHS,scalar<T>> operator_type;
-        typedef mdarray<operator_type,MAP_TYPE(LHS),IPA_TYPE(LHS)> result_type;
+        typedef mdarray<operator_type,map_type<LHS>,ipa_type<LHS>> result_type;
         
         return result_type(a.map(),operator_type(a,b));
     }
@@ -438,13 +458,15 @@ namespace core{
     template< 
              typename T,
              typename RHS,
-             ENABLE(!IS_ARRAY(T) && IS_ARRAY(RHS))
+             typename = enable_if<and_t<
+                        not_t<is_array<T>>,is_array<RHS>
+                        >>
             >
-    mdarray<mult_op<scalar<T>,RHS>,MAP_TYPE(RHS),IPA_TYPE(RHS)>
+    mdarray<mult_op<scalar<T>,RHS>,map_type<RHS>,ipa_type<RHS>>
     operator*(const T &a, const RHS &b)
     {
         typedef mult_op<scalar<T>,RHS> operator_type;
-        typedef mdarray<operator_type,MAP_TYPE(RHS),IPA_TYPE(RHS)> result_type;
+        typedef mdarray<operator_type,map_type<RHS>,ipa_type<RHS>> result_type;
 
         return result_type(b.map(),operator_type(a,b));
     }
