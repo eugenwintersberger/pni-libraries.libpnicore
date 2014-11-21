@@ -34,46 +34,97 @@ namespace core{
     //! \ingroup utility_classes 
     //! \brief alias to invoke a metafunction
     //!
+    //! Metafunction to retrieve the result type of another metafunction. 
+    //!
+    //! \tparam T metafunction type
+    //! 
     template<typename T> using invoke = typename T::type;
 
     //------------------------------------------------------------------------
     //!
     //! \ingroup utility_classes
+    //! \brief or type
+    //! 
+    //! Performs logical or operation on two metafunctions which both provide a
+    //! public value member. The result can be obtained from a new boolean 
+    //! public member.
+    //! 
+    //! \tparam T1 LHS of logical or
+    //! \tparam T2 RHS of logical or
+    //!
     template<
              typename T1,
              typename T2
             > 
     struct or_t
     {
+        //! result of the operation
         static const bool value = T1::value || T2::value;
     };
 
     //------------------------------------------------------------------------
+    //!
+    //! \ingroup utility_classes
+    //! \brief and type
+    //! 
+    //! Performs logical 'and' operation on two metafunction types both 
+    //! providing a publich value member. The result of the operation 
+    //! can be obtained from a new public member.
+    //! 
+    //! \tparam T1 LHS of logical and
+    //! \tparam T2 RHS of logical and
+    //! 
     template<
              typename T1,
              typename T2
             >
     struct and_t
     {
+        //! result of the operation
         static const bool value = T1::value && T2::value;
     };
 
     //------------------------------------------------------------------------
+    //! 
+    //! \ingroup utility_classes
+    //! \brief logical not
+    //!
+    //! Applies a logical not to the result of a metafunction.
+    //! 
+    //! \tparam T function type
+    //!
     template<typename T> struct not_t
     {
+        //! result of the operation
         static const bool value = !T::value;
     };
 
     //------------------------------------------------------------------------
+    //!
+    //! \ingroup utility_classes
+    //! \brief shortcut for std::enable_if
+    //! 
     template<typename C> using enable_if = invoke<std::enable_if<C::value>>;
     
     //------------------------------------------------------------------------
+    //!
+    //! \ingroup utility_classes
+    //! \brief shortcut for std::is_pod
+    //! 
     template<typename T> using is_pod = std::is_pod<T>;
 
     //------------------------------------------------------------------------
+    //!
+    //! \ingroup utility_classes
+    //! \brief shortcut for std::is_pointer
+    //!
     template<typename T> using is_ptr = std::is_pointer<T>;
 
     //------------------------------------------------------------------------
+    //!
+    //! \ingroup utiltiy_classes
+    //! \brief shortcut for is_complex
+    //!
     template<typename T> using is_cmplx = is_complex<T>;
 
 //end of namespace
