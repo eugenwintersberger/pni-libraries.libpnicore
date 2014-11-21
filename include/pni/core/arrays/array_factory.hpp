@@ -118,6 +118,8 @@ namespace core{
         \endcode
         */
         //!
+        //! \throws size_mismatch_error if data and shape size do not match
+        //! 
         //! \tparam STYPE container type for shape
         //! \tparam DTYPE container type for data
         //! \param s reference to shape container

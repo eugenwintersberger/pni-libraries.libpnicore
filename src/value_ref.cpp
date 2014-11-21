@@ -61,7 +61,6 @@ namespace core{
     //-------------------------------------------------------------------------
     // Implementation of assignment operators
     //-------------------------------------------------------------------------
-   
     value_ref &value_ref::operator=(const value_ref &o)
     {
         if(this == &o) return *this;

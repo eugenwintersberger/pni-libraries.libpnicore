@@ -26,29 +26,98 @@
 #include <vector>
 #include <iostream>
 #include <fstream>
-#include <sstream>
+#include <complex>
 #include <pni/core/types.hpp>
 #include <pni/core/type_erasures.hpp>
+#include <boost/spirit/include/qi.hpp>
+#include <boost/spirit/include/phoenix.hpp>
 
 using namespace pni::core;
+using namespace boost::spirit;
 
+typedef std::complex<float64>    complex_type;
 typedef std::vector<value>       record_type;
 typedef std::vector<record_type> table_type;
+
+//----------------------------------------------------------------------------
+// complex number praser
+//----------------------------------------------------------------------------
+template<typename ITERT>
+struct complex_parser : public qi::grammar<ITERT,complex_type()>
+{
+    qi::rule<ITERT,complex_type()> complex_rule;
+
+    complex_parser() : complex_parser::base_type(complex_rule)
+    {
+        using namespace boost::fusion;
+        using namespace boost::phoenix;
+        using qi::_1;
+        using qi::_2;
+        using qi::double_;
+        
+        complex_rule = ('('>>double_>>','>>double_>>')')
+                        [_val = construct<complex_type>(_1,_2)];
+    }
+};
+
+//----------------------------------------------------------------------------
+// parse a single value
+//----------------------------------------------------------------------------
+template<typename ITERT>
+struct value_parser : public qi::grammar<ITERT,pni::core::value()>
+{
+    qi::rule<ITERT,pni::core::value()> value_rule;
+
+    complex_parser<ITERT> complex_;
+
+    value_parser() : value_parser::base_type(value_rule)
+    {
+        using qi::_1;
+        using qi::char_;
+        using qi::int_;
+        using qi::double_;
+        using qi::_val;
+
+        value_rule = (
+                     (int_ >> !(char_('.')|char_('e')))[_val = _1]
+                     || 
+                     double_[_val = _1]
+                     ||
+                     complex_[_val = _1]
+                     );
+    }
+};
+
+//----------------------------------------------------------------------------
+// parse an entire record
+//----------------------------------------------------------------------------
+template<typename ITERT>
+struct record_parser : public qi::grammar<ITERT,record_type()>
+{
+    qi::rule<ITERT,record_type()> record_rule;
+
+    value_parser<ITERT> value_;
+
+    record_parser() : record_parser::base_type(record_rule)
+    {
+        using qi::blank;
+
+        record_rule = value_ % (*blank);
+    }
+};
 
 //-----------------------------------------------------------------------------
 // read a single record from the stream
 //-----------------------------------------------------------------------------
-record_type read_record(std::istream &&stream)
+record_type parse_record(const string &line)
 {
-    record_type record;
-    int32 int_data;
-    float64 float_data;
-    complex32 cmplx_data;
+    typedef string::const_iterator iterator_type;
+    typedef record_parser<iterator_type> parser_type;
 
-    stream>>int_data>>float_data>>cmplx_data;
-    record.push_back(value(int_data));
-    record.push_back(value(float_data));
-    record.push_back(value(cmplx_data));
+    parser_type parser;
+    record_type record;
+
+    qi::parse(line.begin(),line.end(),parser,record);
 
     return record;
 }
@@ -65,7 +134,7 @@ table_type read_table(std::istream &stream)
     {
         std::getline(stream,line);
         if(!line.empty())
-            table.push_back(read_record(std::stringstream(line)));
+            table.push_back(parse_record(line));
     }
 
     return table;

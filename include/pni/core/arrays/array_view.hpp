@@ -773,6 +773,7 @@ namespace core{
             }
     };
 
+    //------------------------------------------------------------------------
     //!
     //! \ingroup type_classes
     //! \brief container_trait for an array_view
@@ -815,8 +816,6 @@ namespace core{
                     "Array view sizes do not match!");
 
         return std::equal(a.begin(),a.end(),b.begin());
-
-
     }
 
     //------------------------------------------------------------------------
@@ -838,7 +837,45 @@ namespace core{
         return !(a==b);
     }
 
-    
+    //------------------------------------------------------------------------
+    //!
+    //! \ingroup mdim_array_classes
+    //! \brief output operator for view
+    //!
+    //! Output a view instance to a stream. 
+    //!
+    //! \tparam ATYPE array type of the view
+    //! \param stream reference to output stream
+    //! \param v view instance
+    //! \return reference to the modified stream
+    //!
+    template<typename ATYPE>
+    std::ostream &operator<<(std::ostream &stream,const array_view<ATYPE> &v)
+    {
+        for(auto x: v) stream<<x<<" ";
+
+        return stream;
+    }
+
+    //------------------------------------------------------------------------
+    //!
+    //! \ingroup mdim_array_classes
+    //! \brief input operator for view
+    //!
+    //! Write data from a stream to a view.
+    //!
+    //! \tparam ATYPE array type of the view
+    //! \param stream reference to the input stream
+    //! \param v reference to the view
+    //! \return reference to the modified input stream
+    //!
+    template<typename ATYPE>
+    std::istream &operator>>(std::istream &stream,array_view<ATYPE> &v)
+    {
+        for(auto &x: v) stream>>x;
+
+        return stream;
+    }
 
 //end of namespace
 }

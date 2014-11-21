@@ -69,7 +69,16 @@ namespace core{
     class value
     {
         private:
+            //! internal pointer type 
             typedef std::unique_ptr<value_holder_interface> pointer_type;
+
+            template<typename T>
+            using is_value_ref = std::is_same<T,value_ref>;
+
+            template<typename T>
+            using enable_no_value_ref = std::enable_if<!is_value_ref<T>::value>;
+
+            //----------------------------------------------------------------
             //!
             //! \brief throw exception
             //!
@@ -90,16 +99,30 @@ namespace core{
             value();
           
             //-----------------------------------------------------------------
-            //! template constructor from value
-            template<typename T> 
+            //! 
+            //! \brief  template constructor from value
+            //!
+            //! Construct a value from a POD type denoted by T. The constructor 
+            //! does not accept T = value_ref.
+            //!
+            //! \tparam T POD type
+            //! 
+            template<
+                     typename T,
+                     typename = typename enable_no_value_ref<T>::type 
+                    > 
             explicit value(T v):_ptr(new value_holder<T>(v)){}
 
             //-----------------------------------------------------------------
-            //! copy constructor
+            //!
+            //! \brief copy constructor
+            //!
             value(const value &o);
 
             //-----------------------------------------------------------------
-            //! move constructor
+            //! 
+            //! \brief move constructor
+            //!
             value(value &&o);
 
             //==================assignment operators===========================
@@ -128,6 +151,7 @@ namespace core{
             //! move assignment operator
             value &operator=(value &&o);
 
+            //----------------------------------------------------------------
             value &operator=(const value_ref &v);
 
             //-----------------------------------------------------------------

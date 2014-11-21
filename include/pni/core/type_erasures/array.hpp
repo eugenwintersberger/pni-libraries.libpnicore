@@ -70,15 +70,16 @@ namespace core{
     class array //the type erasure
     {
         private:
+            //! local pointer type used to hold the array
             typedef std::unique_ptr<array_holder_interface> pointer_type;
             
-           
+            //----------------------------------------------------------------
             //!
             //! \brief throw exception
             //!
-            //! Static helper method that throws a MemoryNotAllcatedError if the
-            //! type erasure holds no data and data access is requested by the 
-            //! user.
+            //! Static helper method that throws a MemoryNotAllcatedError if 
+            //! the type erasure holds no data and data access is requested 
+            //! by the user.
             //! 
             //! \throw MemoryNotAllocatedError
             //! \param r exception record where the error occured.
@@ -89,6 +90,17 @@ namespace core{
                         "Instance of data_object holds no data!");
             }
 
+            //----------------------------------------------------------------
+            //!
+            //! \brief check pointer
+            //! 
+            //! Check the internal pointer for validity. If the pointer is not
+            //! valid an exception is thrown. 
+            //! 
+            //! \throws memory_not_allocated if pointer is not valid
+            //! \param ptr the pointer to check
+            //! \param r the exception record
+            //! 
             static void _check_pointer(const pointer_type &ptr,
                                   const exception_record &r)
             {
@@ -119,7 +131,7 @@ namespace core{
             //! \code 
             //! array_type data;
             //! ....
-            //! array a = data;
+            //! array a(data);
             //! \endcode
             //! the content of the original array data is copied to the 
             //! internal array of type array_type encapsulated by the type 
@@ -307,6 +319,7 @@ namespace core{
             //-----------------------------------------------------------------
             value_ref operator()(const element_index &index);
 
+            //-----------------------------------------------------------------
             value operator()(const element_index &index) const;
 
             //-----------------------------------------------------------------

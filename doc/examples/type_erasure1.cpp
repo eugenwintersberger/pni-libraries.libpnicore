@@ -41,7 +41,7 @@ int main(int argc,char **argv)
     std::cout<<x<<std::endl;
 
     //create an empty value
-    value v2 = value::create<float64>();
+    auto v2 = make_value<float64>();
     v2 = number;
     std::cout<<v2<<std::endl;
 

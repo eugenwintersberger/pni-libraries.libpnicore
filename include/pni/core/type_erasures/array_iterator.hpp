@@ -121,34 +121,23 @@ namespace core{
     template<int const_flag> class array_iterator
     {
         private:
+            typedef array_iterator_types<const_flag> iterator_types;
             
             //! pointer to the container object
             typename array_iterator_types<const_flag>::cont_ptr _container; 
 
             //! actual position state of the iterator
             ssize_t _state;                    
-
-            //! actual selected element
-            typename array_iterator_types<const_flag>::value_type _value;
-
-
-            //! set the item pointer
-            void _set_item()
-            {
-                if(*this) 
-                    this->_value = (*(this->_container))[this->_state];
-            }
-
         public:
             //====================public types==================================
             //! value type of the container
-            typedef typename array_iterator_types<const_flag>::value_type value_type;
+            typedef typename iterator_types::value_type value_type;
             //! pointer type the iterator provides
-            typedef typename array_iterator_types<const_flag>::ptr_type pointer;
+            typedef typename iterator_types::ptr_type pointer;
             //! reference type the iterator provides
-            typedef typename array_iterator_types<const_flag>::ref_type reference;
+            typedef typename iterator_types::ref_type reference;
             //! pointer type of the container
-            typedef typename array_iterator_types<const_flag>::cont_ptr cptr_type;
+            typedef typename iterator_types::cont_ptr cptr_type;
             //! difference type of the iterator
             typedef ssize_t difference_type;
             //! type of iterator
@@ -169,60 +158,26 @@ namespace core{
             //! \param container pointer to the container object
             //! \param state initial position of the iterator
             //!
-            array_iterator(cptr_type container,size_t state=0):
+            explicit array_iterator(cptr_type container,size_t state=0):
                 _container(container),
                 _state(state)
-            { 
-                _set_item(); 
-            }
+            { }
 
             //------------------------------------------------------------------
             //! copy constructor
             array_iterator(const iterator_type &i):
                 _container(i._container),
-                _state(i._state),
-                _value(i._value)
+                _state(i._state)
             { }
 
             //------------------------------------------------------------------
             //! move constructor
             array_iterator(iterator_type &&i):
                 _container(i._container),
-                _state(i._state),
-                _value(i._value)
+                _state(i._state)
             {
                 i._container = nullptr;
                 i._state = 0;
-                i._value = iterator_type::value_type();
-            }
-
-            //------------------------------------------------------------------
-            //! default constructor
-            ~array_iterator() {}
-
-            //=================assignment operator==============================
-            //! copy assignment operator
-            iterator_type &operator=(const iterator_type &i)
-            {
-                if(this == &i) return *this;
-                this->_container = i._container;
-                this->_state     = i._state;
-                this->_value     = i._value;
-                return *this;
-            }
-
-            //------------------------------------------------------------------
-            //! move assignment operator
-            iterator_type &operator=(iterator_type &&i)
-            {
-                if(this == &i) return *this;
-                this->_container = i._container;
-                i._container = nullptr;
-                this->_state = i._state;
-                i._state = 0;
-                this->_value = i._value;
-                i._value = value_type();
-                return *this;
             }
 
             //====================public methods and operators==================
@@ -243,9 +198,9 @@ namespace core{
             {
                 //if(!this->_container) return false;
                 //ssize_t size = (ssize_t)(this->_container->size());
-                return !((!this->_container)||
-                         (this->_state >= ssize_t(this->_container->size()))||
-                         (this->_state<0));
+                return !((!_container)||
+                         (_state >= ssize_t(_container->size()))||
+                         (_state<0));
             }
 
             //------------------------------------------------------------------
@@ -256,41 +211,22 @@ namespace core{
             //! pointer or the object by value. The return type depends if the 
             //! iterator is used as a standard iterator or a const iterator.
             //!
-            //! \throws IteratorError if the iterator is invalid
+            //! \throws iterator_error if the iterator is invalid
             //! \return reference or value of the actual object
             //!
             typename array_iterator_types<const_flag>::return_type operator*()
             {
                 if(!(*this))
                     throw iterator_error(EXCEPTION_RECORD,"Iterator invalid!");
-
-                return this->_value;
-            }
-
-            //------------------------------------------------------------------
-            //!
-            //! \brief pointer access operator
-            //!
-            //! Returns a const or non-const pointer to the object the iterator
-            //! actually points to. 
-            //!
-            //! \throws IteratorError if the iterator is invalid
-            //! \return pointer to actual object
-            //!
-            pointer operator->()
-            {
-                if(!(*this))
-                    throw iterator_error(EXCEPTION_RECORD,"Iterator invalid!");
-
-                return &this->_value;
+            
+                return (*_container)[_state];
             }
 
             //------------------------------------------------------------------
             //! increment iterator position
             iterator_type &operator++()
             {
-                this->_state++;
-                _set_item();
+                _state++;
                 return *this;
             }
 
@@ -310,8 +246,7 @@ namespace core{
             //! decrement operators
             iterator_type &operator--()
             {
-                this->_state--;
-                _set_item();
+                _state--;
                 return *this;
             }
 
@@ -331,8 +266,7 @@ namespace core{
             //! compound assignment with +=
             iterator_type &operator+=(ssize_t i)
             {
-                this->_state += i;
-                _set_item();
+                _state += i;
                 return *this;
             }
 
@@ -340,8 +274,7 @@ namespace core{
             //! compound assignment with -=
             iterator_type &operator-=(ssize_t i)
             {
-                this->_state -= i;
-                _set_item();
+                _state -= i;
                 return *this;
             }
             //------------------------------------------------------------------
@@ -349,10 +282,10 @@ namespace core{
             bool operator==(const iterator_type &a)
             {
                 //check if the iterators point to the same container
-                if(this->_container != a._container) return false;
+                if(_container != a._container) return false;
                 //check if the iterators point to the same element
                 //within the container
-                if(this->_state != a._state) return false;
+                if(_state != a._state) return false;
 
                 return true;
             }
@@ -367,30 +300,30 @@ namespace core{
 
             //===============comparison operators==============================
             //! lesser than operator
-            bool operator<(const iterator_type &b)
-            {
-                return this->_state < b._state;
+            bool operator<(const iterator_type &b) 
+            { 
+                return _state < b._state; 
             }
 
             //-----------------------------------------------------------------
             //! lesser than equal operator
             bool operator<=(const iterator_type &b)
             {
-                return this->_state <= b._state;
+                return _state <= b._state;
             }
 
             //-----------------------------------------------------------------
             //! greater than operator
             bool operator>(const iterator_type &b)
             {
-                return this->_state > b._state;
+                return _state > b._state;
             }
 
             //-----------------------------------------------------------------
             //! greater equal than operator
             bool operator>=(const iterator_type &b)
             {
-                return this->_state >= b._state;
+                return _state >= b._state;
             }
 
             //! get state of the iterator

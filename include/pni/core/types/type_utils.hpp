@@ -21,7 +21,6 @@
 // Created on: Sep 18, 2013
 //     Author: Eugen Wintersberger
 //
-//
 #pragma once
 
 #include <map>
@@ -103,8 +102,7 @@ namespace core{
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
     template<typename T > 
-    type_id_t get_type_id(const T &v,
-                          typename std::enable_if< IS_POD(T) >::type* = 0)
+    type_id_t get_type_id(const T &v,enable_if<is_pod<T>>* = 0)
     {
         return type_id_map<T>::type_id;
     }
@@ -126,8 +124,7 @@ namespace core{
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
     template<typename T> 
-    type_id_t get_type_id(const T &v,
-                          typename std::enable_if< !IS_POD(T) >::type* = 0)
+    type_id_t get_type_id(const T &v,enable_if<not_t<is_pod<T>>>* = 0)
     {
         return type_id_map<typename T::value_type>::type_id;
     }
@@ -189,8 +186,6 @@ namespace core{
     //! \return string representation of the type
     //!
     string str_from_type_id(type_id_t id);
-
-
 
 //end of namespace
 }
