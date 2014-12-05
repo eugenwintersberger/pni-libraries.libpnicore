@@ -31,3 +31,4 @@
 #include "type_erasures/value_holder_interface.hpp"
 #include "type_erasures/value.hpp"
 #include "type_erasures/value_ref.hpp"
+#include "type_erasures/make_array.hpp"
