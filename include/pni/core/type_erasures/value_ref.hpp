@@ -211,10 +211,6 @@ namespace core{
             //! 
             operator value () const;
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 12fe5ea4b5eaee690bea259cf6fb7c0483456c7a
             //-----------------------------------------------------------------
             //!
             //! \brief get the stored value
