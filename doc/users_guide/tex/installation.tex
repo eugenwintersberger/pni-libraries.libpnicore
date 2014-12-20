@@ -21,16 +21,16 @@ Binary packages are currently available for the following platforms
 
 As Debian and Ubuntu are closely related the installation is quite similar. 
 The packages are provided by a special Debian repository. To work on the package
-sources you need to login as {\tt root} user. Use {\tt su} or {\tt sudo su} on
+sources you need to login as \texttt{root} user. Use \texttt{su} or \texttt{sudo su} on
 Debian and Ubuntu respectively. 
 The first task is to add the GPG key of the HDRI repository to your local
 keyring
 \begin{minted}{bash}
 > wget -q -O - http://repos.pni-hdri.de/debian_repo.pub.gpg | apt-key add -
 \end{minted}
-The return value of this command line should be {\tt OK}.
+The return value of this command line should be \texttt{OK}.
 In a next step you have to add new package sources to your system. For this
-purpose go to {\tt /etc/apt/sources.list.d} and download the sources file. 
+purpose go to \texttt{/etc/apt/sources.list.d} and download the sources file. 
 For Debian use
 \begin{minted}{bash}
 > wget http://repos.pni-hdri.de/wheezy-pni-hdri.list
@@ -64,11 +64,11 @@ For a successful build some requirements must be satisfied
 \begin{itemize} 
 \item \gcc\ $>=$ 4.7 -- since version 1.0.0 \libpnicore\ requires a mostly C++11
 compliant compiler. For the gcc familiy this is 4.7 and upwards 
-\item {\tt BOOST} \cite{web:boostsite} $>=$ 4.1 
-\item {\tt doxygen} \cite{web:doxygen} -- used to build the API documentation 
-\item {\tt cmake} \cite{web:cmake} $>=$ 2.4.8 -- the build software used by the \libpnicore
-\item {\tt pkg-config} \cite{web:pkgconfig} -- program to manage libraries
-\item {\tt cppunit} \cite{web:cppunit} -- a unit test library used for the tests
+\item \texttt{BOOST} \cite{web:boostsite} $>=$ 4.1 
+\item \texttt{doxygen} \cite{web:doxygen} -- used to build the API documentation 
+\item \texttt{cmake} \cite{web:cmake} $>=$ 2.4.8 -- the build software used by the \libpnicore
+\item \texttt{pkg-config} \cite{web:pkgconfig} -- program to manage libraries
+\item \texttt{cppunit} \cite{web:cppunit} -- a unit test library used for the tests
 \end{itemize}
 
 \subsection{Obtaining the sources}
@@ -89,7 +89,7 @@ Once downloaded unpack the tarball in a temporary location.
 \begin{minted}{bash}
 > tar xzf libpnicore*.tar.gz
 \end{minted}
-which will lead to a new directory named {\tt libpnicore}. As we use \cmake\ for
+which will lead to a new directory named \texttt{libpnicore}. As we use \cmake\ for
 building the library, out of place builds are recommended. For this purpose 
 create a new directory where the code will be built and change to this directory
 \begin{minted}{bash}
@@ -100,7 +100,7 @@ Now call \cmake\ with a path to the original source directory
 \begin{minted}{bash}
 > cmake ../libpnicore
 \end{minted}
-A subsequent {\tt make} finally build the library
+A subsequent \texttt{make} finally build the library
 \begin{minted}{bash}
 > make
 \end{minted}
@@ -111,7 +111,7 @@ However, building the test suite is rather time consuming.
 \subsection{Testing the build}
 
 Once the build has finished you should definitely run the tests. For this
-purpose change to the {\tt test} subdirectory in the build directory and run 
+purpose change to the \texttt{test} subdirectory in the build directory and run 
 the test script
 \begin{minted}{bash}
 > cd test
@@ -127,10 +127,10 @@ the build directory with
 \begin{minted}{bash}
 > make install
 \end{minted}
-By default the installation prefix is {\tt /usr/local}. If another prefix should
-be used the {\tt CMAKE\_INSTALL\_PREFIX} variable must be set when running
+By default the installation prefix is \texttt{/usr/local}. If another prefix should
+be used the \texttt{CMAKE\_INSTALL\_PREFIX} variable must be set when running
 \cmake\ with
 \begin{minted}{bash}
 > cmake -DCMAKE_INSTALL_PREFIX=/opt/pni ../libpnicore
 \end{minted}
-which causes the installation prefix to be {\tt /opt/pni}. 
+which causes the installation prefix to be \texttt{/opt/pni}. 

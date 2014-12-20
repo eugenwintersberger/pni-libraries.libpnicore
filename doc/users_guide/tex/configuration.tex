@@ -11,7 +11,7 @@ about input arguments and parameters
 It is important to note that this is information the program has only read-only
 access too. \libpnicore\ provides some simple functions to make programs aware
 of command line options and arguments as well as of configuration files. The
-facility provided by \libpnicore\ is based on the {\tt boost::program\_options}
+facility provided by \libpnicore\ is based on the \texttt{boost::program\_options}
 library. However, its interface is much easier to use.  
 What makes this facility so interesting for scientific applications is the fact
 that every option or argument can be given a distinct data type. 
@@ -44,16 +44,16 @@ typical command line call on a Unix or Linux system
 \begin{minted}{ps1}
 > program -oresult.dat --wavelength=1.234 in1.dat in2.dat in3.dat
 \end{minted}
-The three input files at the end of the call ({\tt in1.dat}, {\tt in2.dat}, and
-{\tt in3.dat}) are passed as arguments. They can appear in any order and there
+The three input files at the end of the call (\texttt{in1.dat}, \texttt{in2.dat}, and
+\texttt{in3.dat}) are passed as arguments. They can appear in any order and there
 is no way to distinguish one from the other and will be processed in the order
-of their appearance. This is in contrast to {\tt result.dat} and {\tt 1.234}
+of their appearance. This is in contrast to \texttt{result.dat} and \texttt{1.234}
 which are passed as options. An option can be identified by a {\em short name} (by
-convention this must be a single character) as it is the case for {\tt
-result.dat} or by a {\em long name}, like for {\tt 1.234}, which must be a
-string without whitespaces. Short names are are introduced by a single '{\tt -}'
-and followed immediately by the value of the option. Long names start with '{\tt
---}' followed by a '{\tt =}' and the value of the option. An option can have both,
+convention this must be a single character) as it is the case for \texttt{
+result.dat} or by a {\em long name}, like for \texttt{1.234}, which must be a
+string without whitespaces. Short names are are introduced by a single '\texttt{-}'
+and followed immediately by the value of the option. Long names start with
+'\texttt{--}' followed by a '\texttt{=}' and the value of the option. An option can have both,
 a long and a short name. While short names are typically used when a program is
 called interactively by a user to minimize the typing effort, long names are
 mostly used when a program is called from a script. As they are not limited to a
@@ -66,10 +66,10 @@ used options have only a long name.
 
 Creating a configuration for a program involves three classes
 \begin{itemize}
-\item {\tt configuration} which, in the end, will hold the configuration data
+\item \texttt{configuration} which, in the end, will hold the configuration data
 and provide access to it
-\item {\tt config\_option} describing a single command line option
-\item {\tt config\_argument} which we will use to describe command line arguments 
+\item \texttt{config\_option} describing a single command line option
+\item \texttt{config\_argument} which we will use to describe command line arguments 
 \end{itemize}
 Lets start with the above example. The source code of the program would maybe
 look like this
@@ -99,7 +99,7 @@ int main(int argc,char **argv)
 
 \section{Configuration files}
 
-Configuration files handled by \libpnicore\ follow the {\tt INI}-file syntax as
+Configuration files handled by \libpnicore\ follow the \texttt{INI}-file syntax as
 used by Windows. 
 An example file would look like this
 \begin{minted}{ini}

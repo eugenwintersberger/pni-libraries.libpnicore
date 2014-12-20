@@ -1,13 +1,13 @@
 %%%documentation on data types
 
-\newcommand{\dtype}[1]{{\tt #1}}
+\newcommand{\dtype}[1]{\texttt{#1}}
 \newcommand{\podt}[2]{\dtype{#1#2}}
-\newcommand{\typeid}[1]{{\tt type\_id\_t::#1}}
-\newcommand{\typeclass}[1]{{\tt type\_class\_t::#1}}
-\newcommand{\typeidmap}{{\tt type\_id\_map}}
-\newcommand{\idtypemap}{{\tt id\_type\_map}}
-\newcommand{\typeclassmap}{{\tt type\_class\_map}}
-\newcommand{\strrep}[1]{{\tt "#1"}}
+\newcommand{\typeid}[1]{\texttt{type\_id\_t::#1}}
+\newcommand{\typeclass}[1]{\texttt{ type\_class\_t::#1}}
+\newcommand{\typeidmap}{\texttt{type\_id\_map}}
+\newcommand{\idtypemap}{\texttt{id\_type\_map}}
+\newcommand{\typeclassmap}{\texttt{type\_class\_map}}
+\newcommand{\strrep}[1]{\texttt{"#1"}}
 
 
 %%%---------------------------------------------------------------------------
@@ -15,7 +15,7 @@
 \centering
 \begin{tabular}{l|l|l|p{0.36\linewidth}}
 \hline
-{\tt type\_class\_t::} & data type & {\tt type\_id\_t::} & description \\
+\texttt{type\_class\_t::} & data type & \texttt{type\_id\_t::} & description \\
 \hline\hline
 \multirow{8}{*} {\cpp{INTEGER}} & 
    \podt{uint}{8}   & \cpp{UINT8}  & 8Bit unsinged integer \\
@@ -141,10 +141,10 @@ representations.}
 
 %%%============================================================================
 The recommended way to deal with type information at runtime are the
-{\tt type\_id\_t} enumerations.
+\texttt{type\_id\_t} enumerations.
 At some point in time a program might has to determine the type ID of a variable
 type or of the element type of a container.  The basic facility to achieve this
-is the {\tt type\_id} function defined in {\tt pni/core/type\_utils.hpp}.  The
+is the \texttt{type\_id} function defined in \texttt{pni/core/type\_utils.hpp}.  The
 usage of this function is rather simple as shown here
 \begin{minted}[frame=lines]{cpp}
 #incldue<pni/core/types.hpp>
@@ -156,16 +156,16 @@ auto data = get_data(...);
 
 std::cout<<type_id(data)<<std::endl;
 \end{minted}
-The important thing to notice here is that no matter what type the {\tt
-get\_data} function returns, {\tt type\_id} will give you the type ID.
+The important thing to notice here is that no matter what type the \texttt{
+get\_data} function returns, \texttt{type\_id} will give you the type ID.
 
 Another important scenario is the situation where a user uses the string
 representation to tell a program with which type it should work. 
 In such a situation you either want to convert the string representation of a
-type into a value of {\tt type\_id\_t} or vica verse. The library provides two
-functions for this purpose {\tt type\_id\_from\_str} which converts the string
-representation of a type to a value of {\tt type\_id\_t} and 
-{\tt str\_from\_type\_id} which performs the opposite operation. 
+type into a value of \texttt{type\_id\_t} or vica verse. The library provides two
+functions for this purpose \texttt{type\_id\_from\_str} which converts the string
+representation of a type to a value of \texttt{type\_id\_t} and 
+\texttt{str\_from\_type\_id} which performs the opposite operation. 
 The usage of this two guys is again straight forward.
 \begin{minted}[linenos,frame=lines]{cpp}
     #include <pni/core/types.hpp>
@@ -183,24 +183,24 @@ The usage of this two guys is again straight forward.
 
 
 %%%===========================================================================
-\section{The {\tt binary} type}\label{section:using_binary}
+\section{The \texttt{binary} type}\label{section:using_binary}
 
 In many cases uninterpreted binary data should be transfered from one location
 to the other (a typical example would be to copy the content of one file to
 another).
-Typically one would use a {\tt typdef} to something like {\tt uint8} to realize
+Typically one would use a \texttt{ typdef} to something like \texttt{uint8} to realize
 such a type. However, this approach has two disadvantages
 \begin{enumerate}
-\item as {\tt uint8} is a numeric type with all arithmetic operators available
+\item as \texttt{uint8} is a numeric type with all arithmetic operators available
 which we do not want for uninterpreted binary data 
-\item a mere {\tt typedef} would make {\tt uint8} and {\tt binary} 
+\item a mere \texttt{typedef} would make \texttt{uint8} and \texttt{binary} 
 indistinguishable and thus we could not specialize template classes for each of
 them.
 \end{enumerate}
-Consequently {\tt binary} was implemented as a thin wrapper around an
+Consequently \texttt{binary} was implemented as a thin wrapper around an
 appropriately sized integer type with all arithmetic operators stripped away.
-A short example of how to use binary is the {\tt copy\_file.cpp} example in the
-{\tt examples} directory of the source distribution of {\tt libpnicore}. 
+A short example of how to use binary is the \texttt{copy\_file.cpp} example in the
+\texttt{examples} directory of the source distribution of \texttt{libpnicore}. 
 
 \inputminted[linenos,
              firstline=24,
@@ -208,13 +208,13 @@ A short example of how to use binary is the {\tt copy\_file.cpp} example in the
              label=examples/copy\_file.cpp]
 {cpp}{../examples/copy_file.cpp}
 
-In lines $8$ and $10$ we include the {\tt pni/core/types.hpp} header file and
-instruct the compiler to use the {\tt pni::core} namespace by default. In line
+In lines $8$ and $10$ we include the \texttt{pni/core/types.hpp} header file and
+instruct the compiler to use the \texttt{pni::core} namespace by default. In line
 $12$ a vector type with binary elements is defined and an instance of this type
 is allocated in line $24$. 
 In line $27$ data is read from the input file and stored in the vector. Now, it
-is clear from here that a vector of type  {\tt char} would have perfectly served
-the same purpose. The major difference is that unlike {\tt char} {\tt binary}
+is clear from here that a vector of type  \texttt{char} would have perfectly served
+the same purpose. The major difference is that unlike \texttt{char} \texttt{binary}
 has absolutely no semantics. In practice there is nothing much you can do
 without it rather than store it back to another stream as it is done in 
 line $33$.
@@ -249,3 +249,177 @@ thus can use the \cpp{std::vector} template. So use the \libpnicore\
 \cpp{bool\_t} type whenever working with \libpnicore\ templates or whenever the
 address of a container element is required. For all other purposes the default
 C++ \cpp{bool} type can be used.
+
+%%%===========================================================================
+\section{Type conversion}
+
+\libpnicore\ provides facilities for save type conversion. These functions are
+not only used internally by the library they are also available to users. 
+The conversion policy enforced by \libpnicore\ is more strict than that of
+standard C++. For instance you cannot convert a negative integer to an unsigned
+integer type. The goal of the conversion rules are set up in order to avoid
+truncation errors as they would typically occur when using the standard C++
+rules.
+
+The basic rule for conversion between two integer type A and B is as follows
+\begin{quote}
+    A value of type A can only be converted to type B if the value does 
+    not exceed the range value B can cover.
+\end{quote}
+A consequence of this rule is that a signed integer can only be converted 
+to an unsigned type if its value is larger than $0$. This is different 
+from the standard C++ rule where the unsigned target type will just overflow. 
+
+For integer to float conversion a similar rules holds. 
+\begin{quote}
+    A value of integer type A can only be converted to a float type B
+    if the range of the floating point type is sufficient to hold the 
+    value of the integer.
+\end{quote}
+Conversion from float to integer is not allowed as they would most 
+likely lead to truncation errors. 
+A floating point value can be converted to a complex type if the value fits in
+the range of the source value fits into the base type of the complex type. 
+In the case of float to complex conversion the float value will be 
+assigned to the real part of the instance of the complex type. 
+Conversion from a complex type to a floating point type is prohibited. 
+
+Serveral types cannot be converted to anything else
+\begin{itemize}
+    \item \texttt{bool\_t} which can be only the result of a boolean 
+        operation.
+    \item \texttt{binary} as this type is considered to be a completely 
+        opaque type conversion to any other type is prohibited. Furthermore no
+        type can be converted to binary. 
+    \item \texttt{string} conversion to string is done exclusively carried out by 
+        formatters provided by the IO library. 
+\end{itemize}
+
+The library distinguishes between two kinds of type conversion
+\begin{description}
+    \item[unchecked conversion] the conversion can be done without checking the
+        value
+    \item[checked conversion] the value has to be checked if it fits into the 
+        target type.
+\end{description}
+Both approaches will be explained into the next sections.
+
+\subsection{Unchecked conversion}
+
+In this case the conversion can be made simply by looking at the source and the
+target type. For instance an \texttt{uint8} can always be converted into a 
+\texttt{uint16}. This is an important case in particular for containers (like
+arrays) as for performance reasons we do not want to check the range for each
+element by default (though it would be possible manually). 
+
+To check at compile time if two types are unchecked convertible the 
+\texttt{is\_unchecked\_convertible} template struct is available and can be 
+used like this
+\begin{minted}{cpp}
+if(is_unchecked_convertibel<T1,T2>::value)
+    //perform some action
+\end{minted}
+There also exists a function which allows for checks at runtime
+\begin{minted}{cpp}
+if(is_unchecked_convertible(type_id_t::UINT16,type_id_t::INT32))
+ //perform some action
+\end{minted}
+Table~\ref{tab:types:unchecked_conversion} gives an overview between which types 
+unchecked conversion can be done. 
+
+\begin{landscape}
+    \begin{table}
+    \centering
+\begin{tabular}{c||c|c|c|c||c|c|c|c||c|c|c||c|c|c}
+    \hline
+source / target& \podt{ui}{8} & \podt{ui}{16} & \podt{ui}{32} & \podt{ui}{64} & 
+                 \podt{i}{8}  & \podt{i}{16}  & \podt{i}{32}  & \podt{i}{64} & 
+                 \podt{f}{32} & \podt{f}{64}  & \podt{f}{128} & 
+                 \podt{c}{32} & \podt{c}{64}  & \podt{c}{128} \\
+\hline\hline
+\podt{ui}{8}     & \true & \true & \true & \true & 
+                   \false & \true & \true & \true & 
+                   \true & \true & \true & 
+                   \true & \true & \true \\
+\hline
+\podt{ui}{16}    & \false & \true & \true & \true & 
+                   \false & \false & \true & \true & 
+                   \true & \true & \true & 
+                   \true & \true & \true \\
+\hline
+\podt{ui}{32}    & \false & \false & \true & \true & 
+                   \false & \false & \false & \true & 
+                   \true & \true & \true & 
+                   \true & \true & \true \\
+\hline
+\podt{ui}{64}    & \false & \false & \false & \true & 
+                   \false & \false & \false & \false & 
+                   \true & \true & \true & 
+                   \true & \true & \true \\
+\hline\hline
+\podt{i}{8}      & \false & \false & \false & \false & 
+                   \true & \true & \true & \true & 
+                   \true & \true & \true & 
+                   \true & \true & \true \\
+\hline
+\podt{i}{16}     & \false & \false & \false & \false & 
+                   \false & \true & \true & \true & 
+                   \true & \true & \true & 
+                   \true & \true & \true \\
+\hline
+\podt{i}{32}     & \false & \false & \false & \false & 
+                   \false & \false & \true & \true & 
+                   \true & \true & \true & 
+                   \true & \true & \true \\
+\hline
+\podt{i}{64}     & \false & \false & \false & \false & 
+                   \false & \false & \false & \true & 
+                   \true & \true & \true & 
+                   \true & \true & \true \\
+\hline\hline
+\podt{f}{32}     & \false & \false & \false & \false & 
+                   \false & \false & \false & \false & 
+                   \true & \true & \true & 
+                   \true & \true & \true \\
+\hline
+\podt{f}{64}     & \false & \false & \false & \false & 
+                   \false & \false & \false & \false & 
+                   \false & \true & \true & 
+                   \false & \true & \true \\
+\hline
+\podt{f}{128}    & \false & \false & \false & \false & 
+                   \false & \false & \false & \false & 
+                   \false & \false & \true & 
+                   \false & \false & \true \\
+\hline\hline
+\podt{c}{32}     & \false & \false & \false & \false & 
+                   \false & \false & \false & \false & 
+                   \false & \false & \false & 
+                   \true & \true & \true \\
+\hline
+\podt{c}{64}     & \false & \false & \false & \false & 
+                   \false & \false & \false & \false & 
+                   \false & \false & \false & 
+                   \false & \true & \true \\
+\hline
+\podt{c}{128}    & \false & \false & \false & \false & 
+                   \false & \false & \false & \false & 
+                   \false & \false & \false & 
+                   \false & \false & \true \\
+\hline
+\end{tabular}
+\caption{{\small\label{tab:types:unchecked_conversion}
+Type matrix showing between which types unchecked conversion could be done. 
+The T and F denote \emph{true} and \emph{false} respectively.}}
+\end{table}
+\end{landscape}
+
+
+\subsection{Checked conversion}
+
+In this case the value of the source has to be checked if it fits into the
+target type. This is typically the case if the source type is not entirely
+covered by the target type. An example would be the conversion of a value of 
+type \texttt{uint8} to \texttt{int8}. If the source value is in the range of 
+$0--127$ it can be converted. Otherwise, a \texttt{range\_error} exception 
+shall be thrown. 

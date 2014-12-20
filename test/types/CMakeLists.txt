@@ -25,6 +25,7 @@ if(CPPUNIT_FOUND)
     target_link_libraries(type_test ${CPPUNIT_LIBRARIES})
 
 endif()
+add_subdirectory(conversion)
 
 add_test(NAME type_test 
          COMMAND type_test

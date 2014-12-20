@@ -11,7 +11,7 @@ double matrix[3][3];
 \end{minted}
 However, this approach has a whole bunch of problems
 \begin{enumerate}
-\item the variable {\tt matrix} is allocated on the stack which will cause
+\item the variable \texttt{matrix} is allocated on the stack which will cause
 problems if the matrix becomes large
 \item there is no easy way how to allocate such a variable on the heap (at least
 not at runtime)
@@ -50,7 +50,7 @@ number of elements stored in a MD array and can be computed with
     n_{\mathrm{tot}} = \prod_{i=1}^r n_i
 \end{align}
 \item[element type] the data type of the elements stored in the array,
-abbreviated with {\tt ETYPE}. 
+abbreviated with \texttt{ETYPE}. 
 \end{description}
 
 %%-----------------------------------------------------------------------------
@@ -74,14 +74,14 @@ To overcome the issues that classical MD arrays have in C or C++ we need a more
 elaborate data structure to describe the array. In \libpnicore\ a MD array
 consists of two components (see also Fig.~\ref{fig:array_app:basic_structure})
 \begin{enumerate}
-\item a linear storage of size $n_{\mathrm{tot}}$ for elements of type {\tt
+\item a linear storage of size $n_{\mathrm{tot}}$ for elements of type \texttt{
 ETYPE}
-\item a so called index map {\tt IMAP} which is a data structure providing a
+\item a so called index map \texttt{IMAP} which is a data structure providing a
 unique mapping between a multidimensional index $(i,j,k,\hdots)$ and a linear
 offset in the storage. 
 \end{enumerate}
-The storage can be any data structure that can hold elements of type {\tt ETYPE}
-contiguously in memory and exposes an interface compatible to that of {\tt std::vector}.
+The storage can be any data structure that can hold elements of type \texttt{ETYPE}
+contiguously in memory and exposes an interface compatible to that of \texttt{std::vector}.
 
 \section{Index maps}
 
@@ -225,7 +225,7 @@ have a look how these objects are implemented in \libpnicore.
 \centering
 \resizebox{\linewidth}{!}{\includegraphics{pics/index_map_diagram.png}}
 \caption{{\small\label{fig:array_app:index_map_diagram}
-An ordinary index map consists of an instance of {\tt index\_policy}
+An ordinary index map consists of an instance of \texttt{index\_policy}
 (transforming indexes to offsets and vice verse) and a
 storage for the number of elements along each dimension. 
 }}
@@ -240,8 +240,8 @@ are entirely defined at compile time.
 }}
 \end{minipage}
 \end{figure}
-There are two fundamental templates for index maps available: {\tt index\_map}
-and {\tt static\_index\_map}. The former one can be used to for general index
+There are two fundamental templates for index maps available: \texttt{index\_map}
+and \texttt{static\_index\_map}. The former one can be used to for general index
 maps while the latter one considers the special case for a static index map
 for which the rank and the number of elements along each dimension are fixed at
 compile time. 

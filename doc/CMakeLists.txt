@@ -36,6 +36,7 @@ if(DOXYGEN_FOUND)
                  examples/array_view_container.cpp
                  examples/array_view.cpp
                  examples/copy_file.cpp
+                 examples/record.dat
                  examples/example_array2.cpp
                  examples/example_array3.cpp
                  examples/example_array4.cpp

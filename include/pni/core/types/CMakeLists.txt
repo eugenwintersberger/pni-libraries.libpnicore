@@ -10,6 +10,7 @@ set(HEADER_FILES binary.hpp
                  container_trait.hpp
                  bool.hpp
                  none.hpp
+                 unchecked_convertible.hpp
                  )
 
 install(FILES ${HEADER_FILES} 

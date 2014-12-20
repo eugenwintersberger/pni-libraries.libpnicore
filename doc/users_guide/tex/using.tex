@@ -2,7 +2,7 @@
 \section{Include files}
 
 To use \libpnicore\ in code the appropriate header files must be included. In
-the simplest case just use the {\tt core.hpp} file 
+the simplest case just use the \texttt{core.hpp} file 
 \begin{minted}{cpp}
 #include <pni/core.hpp>
 \end{minted}
@@ -19,7 +19,7 @@ Alternatively, the header files for the different components provided by
 #include <pni/core/types.hpp>         //fundamental data types
 #include <pni/core/utilities.hpp>     //general purpose utilities
 \end{minted}
-All classes provided by \libpnicore\ reside within the {\tt pni::core}
+All classes provided by \libpnicore\ reside within the \texttt{pni::core}
 namespace. If you do not want to give the namespace explicitly for every type
 and function use
 \begin{minted}{cpp}
@@ -28,7 +28,7 @@ using namespace pni::core;
 after including the required header files.
 
 \section{Building and linking}
-\libpnicore\ provides a {\tt pkg-config} file. In the case of a system wide
+\libpnicore\ provides a \texttt{pkg-config} file. In the case of a system wide
 installation this file is most probably allready at the right place in the file
 system. One can easily check this with 
 \begin{minted}{bash}
@@ -40,11 +40,11 @@ for a system wide installation you should get something like this
 -lboost_regex -lboost_system 
 \end{verbatim}
 For installation locations which are not in the default paths of your system you
-may get some additional {\tt -I} and {\tt -L} output pointing to the directories
+may get some additional \texttt{-I} and \texttt{-L} output pointing to the directories
 where the header files and the library binaries are installed.
-If {\tt pkg-config} complains that it cannot find a package named {\tt pnicore}
-then you most probably have to set {\tt PKG\_CONFIG\_PATH} to the location where 
-the {\tt pkg-config} file of your \libpnicore\ installation has been installed. 
+If \texttt{pkg-config} complains that it cannot find a package named \texttt{pnicore}
+then you most probably have to set \texttt{PKG\_CONFIG\_PATH} to the location where 
+the \texttt{pkg-config} file of your \libpnicore\ installation has been installed. 
 
 %%%============================================================================
 \subsection{From the command line}
@@ -55,14 +55,14 @@ suggested
 $> g++ -std=c++11 -O3 -oprogram program.cpp\
        $(pkg-config --cflags --libs pnicore)
 \end{verbatim}
-Please recognize the {\tt -std=c++11} option. \libpnicore\ requires a state of
+Please recognize the \texttt{-std=c++11} option. \libpnicore\ requires a state of
 the art compiler with full support for C++11.
 
 %%%============================================================================
 \subsection{From within a Makefile}
 
-If {\tt make} should be used to build the code add the following lines to your
-{\tt Makefile}
+If \texttt{make} should be used to build the code add the following lines to your
+\texttt{Makefile}
 
 \begin{minted}{make}
 CPPFLAGS=-g -O3 -std=c++11 -fno-deduce-init-list -Wall -Wextra -pedantic \
@@ -74,26 +74,26 @@ This will set the appropriate compiler and linker options for the build.
 %%%============================================================================
 \subsection{With Scons}
 
-If you use {\tt SCons} for building the code add the following to your {\tt
-SConstruct} file
+If you use \texttt{SCons} for building the code add the following to your 
+\texttt{SConstruct} file
 \begin{minted}{python}
 env = Environment()
 env.AppendUnique(CXXFLAGS=["-std=c++11","-pedantic","-Wall","-Wextra"])
 env.ParseConfig('pkg-config --cflags --libs pnicore')
 \end{minted}
-The {\tt ParseConfig} method of a {\tt SCons} environment is able to parse the
-output of {\tt pkg-config} and add the flags to the environments configuration.
+The \texttt{ParseConfig} method of a \texttt{SCons} environment is able to parse the
+output of \texttt{pkg-config} and add the flags to the environments configuration.
 
 %%%============================================================================
 \subsection{With CMake}
 
 Currently no \cmake-package files are installed with the library. However, due
-to \cmake s {\tt pkg-config} support autoconfiguration can still be done. In one
-of the toplevel {\tt CMakeLists.txt} files use
+to \cmake s \texttt{pkg-config} support autoconfiguration can still be done. In one
+of the toplevel \texttt{CMakeLists.txt} files use
 \begin{minted}{cmake}
 pkg_search_module(PNICORE REQUIRED pnicore)
 \end{minted}
-to load the configuration for \libpnicore\ from {\tt pkg-config}. Furthermore we
+to load the configuration for \libpnicore\ from \texttt{pkg-config}. Furthermore we
 have to add the header file and library installation paths to the configuration
 \begin{minted}{cmake}
 link_directories(${PNICORE_LIBRARY_DIRS} ${HDF5_LIBRARY_DIRS})

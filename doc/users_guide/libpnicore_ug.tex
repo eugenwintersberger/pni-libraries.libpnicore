@@ -1,5 +1,6 @@
 \documentclass[a4paper,draft]{scrbook}
 \usepackage{a4wide,amsmath}
+\usepackage[usenames,dvipsnames]{xcolor}
 \usepackage[final]{graphicx}
 \usepackage[square,numbers]{natbib}
 \usepackage[draft=false]{hyperref}  %% need this for links and references in the document
@@ -7,17 +8,11 @@
 \usepackage{url}       %% support for URLs
 \usepackage{float}     %% required for extra float placement
 \usepackage{placeins}
-\usepackage{subfig}
 \usepackage{lscape}    %% landscape figures
 \usepackage{todonotes}
-\usepackage{color}
 \usepackage{multirow}
-\usepackage[figuresright]{rotating}
 \usepackage{minted}    %% excellent source code formating
-\usepackage{fixme} %% need this here to make annotations to the text in 
-                       %% the PDF, pretty much like the notes function in 
-                       %% office suites
-\hypersetup{pdftitle={libpniio API review 2013 },
+\hypersetup{pdftitle={libpniio 1.0.0 Users Guide},
 				pdfborder=0 0 0,
 				colorlinks=false}
 
@@ -26,27 +21,28 @@
 \title{{\Huge{\tt libpnicore} Users Guide}}
 \author{Eugen Wintersberger}
 
-\newcommand{\libpnicore}{{\tt libpnicore}}
-\newcommand{\sdarray}{{\tt static\_array}}
-\newcommand{\darray}{{\tt dynamic\_array}}
-\newcommand{\farray}{{\tt fixed\_dim\_array}}
-\newcommand{\mdarray}{{\tt mdarray}}
-\newcommand{\arrayview}{{\tt array\_view}}
-\newcommand{\arrayerasure}{{\tt array}}
-\newcommand{\numarray}{{\tt numeric\_array}}
-\newcommand{\cmake}{{\tt cmake}}
-\newcommand{\pkgconfig}{{\tt pkg-config}}
-\newcommand{\gcc}{{\tt gcc}}
+\newcommand{\libpnicore}{\texttt{libpnicore}}
+\newcommand{\sdarray}{\texttt{static\_array}}
+\newcommand{\darray}{\texttt{dynamic\_array}}
+\newcommand{\farray}{\texttt{fixed\_dim\_array}}
+\newcommand{\mdarray}{\texttt{mdarray}}
+\newcommand{\arrayview}{\texttt{array\_view}}
+\newcommand{\arrayerasure}{\texttt{array}}
+\newcommand{\numarray}{\texttt{numeric\_array}}
+\newcommand{\cmake}{\texttt{cmake}}
+\newcommand{\pkgconfig}{\texttt{pkg-config}}
+\newcommand{\gcc}{\texttt{gcc}}
+\newcommand{\true}{\textcolor{ForestGreen}{T}}
+\newcommand{\false}{\textcolor{red}{F}}
 
 \newminted{cpp}{fontsize=\small,frame=lines}
-\newcommand{\cpp}[1]{{\tt #1}}
+\newcommand{\cpp}[1]{\texttt{ #1}}
 
 \bibliographystyle{plainnat}
 
 \begin{document}
 \maketitle
 \tableofcontents
-\listoffixmes
 
 \chapter{Introduction}\label{chapter:introduction}
 \input{tex/introduction.tex}

@@ -72,6 +72,7 @@ namespace core{
         //! \throws range_error if the value of u does not fit in the 
         //! range covered by T
         //! \throws type_error in case of all other errors
+        //!
         //! \param u original value of type U
         //! \return converted value of type T
         //!
@@ -273,6 +274,7 @@ namespace core{
 
     }
 
+    bool is_unchecked_convertible(type_id_t source_tid,type_id_t target_tid);
 
 //end of namespace
 }

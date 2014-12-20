@@ -7,7 +7,7 @@ increasing overall performance of a program.
 Template instantiation virtually always goes along with code generation and thus
 with an increase in code size. This can cause problems in particular on small
 hardware (like ARM based systems) where resources are limited.
-Think about the {\tt show\_info} function template in the previous chapter. The
+Think about the \texttt{show\_info} function template in the previous chapter. The
 function will be instantiated for every array type passed to it although it does
 virtually the same thing for each of them (we see an example of this in the
 section below describing the array type erasure). 
@@ -16,26 +16,26 @@ A reasonable solution for this problem is the use of type erasures.
 \libpnicore\ provides three different type erasures
 \begin{center}
 \begin{tabular}{l | l}
-{\tt value} & stores a single scalar value of a POD type \\
-{\tt value\_ref} & stores the reference to an instance of a POD type \\
-{\tt arra} & stores a multidimensional array type 
+\texttt{value} & stores a single scalar value of a POD type \\
+\texttt{value\_ref} & stores the reference to an instance of a POD type \\
+\texttt{array} & stores a multidimensional array type 
 \end{tabular}
 \end{center}
-To use type erasures include the {\tt /pni/core/type\_erasures.hpp} at the top of
+To use type erasures include the \texttt{/pni/core/type\_erasures.hpp} at the top of
 your source file.
 
 %%%============================================================================
-\section{The {\tt value} type erasures}
+\section{The \texttt{value} type erasures}
 
-The {\tt value} type erasure stores the value of a single scalar POD type. 
-{\tt value} can be default constructed in which case an instance of type 
-{\tt none} is stored as can be easily confirmed with
+The \texttt{value} type erasure stores the value of a single scalar POD type. 
+\texttt{value} can be default constructed in which case an instance of type 
+\texttt{none} is stored as can be easily confirmed with
 \begin{cppcode}
 value v;
 std::cout<<v.type_id()<<std::endl; //output NONE
 \end{cppcode}
-{\tt value} has a copy and move constructor for other instances from 
-{\tt value}. However, the constructor for other variables and literals is 
+\texttt{value} has a copy and move constructor for other instances from 
+\texttt{value}. However, the constructor for other variables and literals is 
 explicit 
 \begin{cppcode}
 //explicit construction from a variable
@@ -50,8 +50,8 @@ std::cout<<v2.type_id()<<std::endl; //output FLOAT64
 //copy construction
 value v3 = v1;
 \end{cppcode}
-{\tt value} also allows copy and move assignment from other instances of {\tt
-value} as well as from literals. In all cases the assignment can change the
+\texttt{value} also allows copy and move assignment from other instances of
+\texttt{value} as well as from literals. In all cases the assignment can change the
 stored data type
 \begin{cppcode}
 value v1,v2;  //default constructed  (type NONE)
@@ -125,7 +125,7 @@ as demonstrated by the output of the program
 2334.5
 \end{minted}
 It is possible to alter the value of the original variable via an instance of
-the {\tt value\_ref} type erasure.
+the \texttt{value\_ref} type erasure.
 
 In fact \cpp{value\_ref} is a wrapper around the \cpp{std::reference\_wrapper} 
 template provided by C++. Therefore, as shown in line $36$ in the above example
@@ -218,7 +218,8 @@ and all STL algorithms with a \cpp{array} type erasure.
 In this final section a typical use-case for a type erasure will be discussed. 
 One problem that regularly pops up is to read tabular ASCII data. 
 For this example a very simple file format has been used. The file
-\cpp{record.dat} has the following content
+\cpp{record.dat}
+has the following content
 \inputminted[fontsize=\small,
              frame=lines,
              label=examples/record.dat]

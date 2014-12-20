@@ -21,6 +21,7 @@ set(SOURCES array.cpp
             value_ref.cpp
             bool.cpp
             none.cpp
+            type_conversion.cpp
             )
 
 
