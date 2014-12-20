@@ -30,6 +30,7 @@
 
 #include "../error/exceptions.hpp"
 #include "../error/exception_utils.hpp"
+#include "unchecked_convertible.hpp"
 #include "type_info.hpp"
 
 
@@ -274,6 +275,44 @@ namespace core{
 
     }
 
+
+    //------------------------------------------------------------------------
+    template<typename ST>
+    bool is_unchecked_convertible_to(type_id_t target_tid)
+    {
+        if(target_tid == type_id_t::UINT8)
+            return unchecked_convertible<ST,uint8>::value;
+        else if(target_tid == type_id_t::INT8)
+            return unchecked_convertible<ST,int8>::value;
+        else if(target_tid == type_id_t::UINT16)
+            return unchecked_convertible<ST,uint16>::value;
+        else if(target_tid == type_id_t::INT16)
+            return unchecked_convertible<ST,int16>::value;
+        else if(target_tid == type_id_t::UINT32)
+            return unchecked_convertible<ST,uint32>::value;
+        else if(target_tid == type_id_t::INT32)
+            return unchecked_convertible<ST,int32>::value;
+        else if(target_tid == type_id_t::UINT64)
+            return unchecked_convertible<ST,uint64>::value;
+        else if(target_tid == type_id_t::INT64)
+            return unchecked_convertible<ST,int64>::value;
+        else if(target_tid == type_id_t::FLOAT32)
+            return unchecked_convertible<ST,float32>::value;
+        else if(target_tid == type_id_t::FLOAT64)
+            return unchecked_convertible<ST,float64>::value;
+        else if(target_tid == type_id_t::FLOAT128)
+            return unchecked_convertible<ST,float128>::value;
+        else if(target_tid == type_id_t::COMPLEX32)
+            return unchecked_convertible<ST,complex32>::value;
+        else if(target_tid == type_id_t::COMPLEX64)
+            return unchecked_convertible<ST,complex64>::value;
+        else if(target_tid == type_id_t::COMPLEX128)
+            return unchecked_convertible<ST,complex128>::value;
+        else
+            return false;
+    }
+
+    //------------------------------------------------------------------------
     bool is_unchecked_convertible(type_id_t source_tid,type_id_t target_tid);
 
 //end of namespace

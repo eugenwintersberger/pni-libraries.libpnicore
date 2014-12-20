@@ -28,12 +28,11 @@
 #include <boost/mpl/contains.hpp>
 #include <boost/mpl/map.hpp>
 #include <boost/mpl/at.hpp>
-#include "types.hpp"
+#include "id_type_map.hpp"
 
 namespace pni{
 namespace core{
 
-    using namespace boost;
 
     //!
     //! \ingroup type_classes_internal
@@ -41,98 +40,105 @@ namespace core{
     //! 
     //! This map provides for each type a list of types to which this type 
     //! can be converted without range checking. 
-    typedef mpl::map<
+    typedef boost::mpl::map<
         //-------------source type uint8--------------------------------------
-        mpl::pair<
-                  uint8,
-                  mpl::vector<uint8,uint16,uint32,uint64,
-                              int16,int32,int64,
-                              float32,float64,float128,
-                              complex32,complex64,complex128>
-                 >,
+        boost::mpl::pair<
+                         uint8,
+                         boost::mpl::vector<uint8,uint16,uint32,uint64,
+                                            int16,int32,int64,
+                                            float32,float64,float128,
+                                            complex32,complex64,complex128>
+                       >,
 
         //----------------source type uint16----------------------------------
-        mpl::pair<
-                  uint16,
-                  mpl::vector<uint16,uint32,uint64, 
-                              int32,int64,
-                              float32,float64,float128,
-                              complex32,complex64,complex128>
-                >,
+        boost::mpl::pair<
+                         uint16,
+                         boost::mpl::vector<uint16,uint32,uint64, 
+                                            int32,int64,
+                                            float32,float64,float128,
+                                            complex32,complex64,complex128>
+                       >,
 
         //----------------------source type uint32----------------------------
-        mpl::pair<
-                  uint32,
-                  mpl::vector<uint32,uint64,
-                              int64,
-                              float32,float64,float128,
-                              complex32,complex64,complex128>
-                >,
+        boost::mpl::pair<
+                         uint32,
+                         boost::mpl::vector<uint32,uint64,
+                                            int64,
+                                            float32,float64,float128,
+                                            complex32,complex64,complex128>
+                       >,
 
         //--------------------------source type uint64------------------------
-        mpl::pair<
-                  uint64,
-                  mpl::vector<uint64,
-                              float32,float64,float128,
-                              complex32,complex64,complex128>
-                >,
+        boost::mpl::pair<
+                         uint64,
+                         boost::mpl::vector<uint64,
+                                            float32,float64,float128,
+                                            complex32,complex64,complex128>
+                       >,
 
         //------------------------source type int8 ---------------------------
-        mpl::pair<
-                  int8,
-                  mpl::vector<int8,int16,int32,int64,
-                              float32,float64,float128,
-                              complex32,complex64,complex128>
-                >,
+        boost::mpl::pair<
+                         int8,
+                         boost::mpl::vector<int8,int16,int32,int64,
+                                            float32,float64,float128,
+                                            complex32,complex64,complex128>
+                       >,
 
         //-----------------------source type int16----------------------------
-        mpl::pair<
-                  int16,
-                  mpl::vector<int16,int32,int64,
-                              float32,float64,float128,
-                              complex32,complex64,complex128>
-                >,
+        boost::mpl::pair<
+                         int16,
+                         boost::mpl::vector<int16,int32,int64,
+                                            float32,float64,float128,
+                                            complex32,complex64,complex128>
+                       >,
 
         //------------------------source type int32---------------------------
-        mpl::pair<
-                  int32,
-                  mpl::vector<int32,int64,
-                              float32,float64,float128,
-                              complex32,complex64,complex128>
-                >,
+        boost::mpl::pair<
+                         int32,
+                         boost::mpl::vector<int32,int64,
+                                            float32,float64,float128,
+                                            complex32,complex64,complex128>
+                       >,
 
         //------------------------source type int64----------------------------
-        mpl::pair<
-                  int64,
-                  mpl::vector<int64,
-                             float32,float64,float128,
-                             complex32,complex64,complex128>
-                >,
+        boost::mpl::pair<
+                         int64,
+                         boost::mpl::vector<int64,
+                                            float32,float64,float128,
+                                            complex32,complex64,complex128>
+                       >,
 
         //-------------------------source type float32------------------------
-        mpl::pair<
-                  float32,
-                  mpl::vector<float32,float64,float128,
-                              complex32,complex64,complex128>
-                 >,
+        boost::mpl::pair<
+                         float32,
+                         boost::mpl::vector<float32,float64,float128,
+                                            complex32,complex64,complex128>
+                       >,
 
         //-------------------------source type float64------------------------
-        mpl::pair<
-                  float64,
-                  mpl::vector<float64,float128,complex64,complex128>
-                 >,
+        boost::mpl::pair<
+                         float64,
+                         boost::mpl::vector<float64,float128,complex64,
+                                            complex128>
+                       >,
 
         //-------------------source type float128-----------------------------
-        mpl::pair<float128,mpl::vector<float128,complex128>>,
+        boost::mpl::pair<float128,boost::mpl::vector<float128,complex128>>,
 
         //-------------------source type complex32----------------------------
-        mpl::pair<complex32,mpl::vector<complex32,complex64,complex128>>,
+        boost::mpl::pair<
+                         complex32,
+                         boost::mpl::vector<complex32,complex64,complex128>
+                        >,
         
         //-------------------source type complex64----------------------------
-        mpl::pair<complex64,mpl::vector<complex64,complex128>>,
+        boost::mpl::pair<
+                         complex64,
+                         boost::mpl::vector<complex64,complex128>
+                        >,
 
         //-------------------source type complex128---------------------------
-        mpl::pair<complex128,mpl::vector<complex128>>
+        boost::mpl::pair<complex128,boost::mpl::vector<complex128>>
 
         > unchecked_type_vectors;
 
@@ -153,14 +159,10 @@ namespace core{
     struct unchecked_convertible
     {
         //select the type vector
-        typedef typename mpl::at<unchecked_type_vectors,ST>::type map_element;
-        typedef mpl::contains<map_element,TT> c;
+        typedef typename boost::mpl::at<unchecked_type_vectors,ST>::type map_element;
+        typedef boost::mpl::contains<map_element,TT> c;
         static const bool value = c::value;
     };
-
-
-
-
 
 
 //end of namespace
