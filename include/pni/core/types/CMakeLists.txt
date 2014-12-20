@@ -12,6 +12,7 @@ set(HEADER_FILES binary.hpp
                  none.hpp
                  unchecked_convertible.hpp
                  checked_convertible.hpp
+                 convertible.hpp
                  )
 
 install(FILES ${HEADER_FILES} 

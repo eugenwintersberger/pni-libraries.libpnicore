@@ -108,7 +108,7 @@ namespace core{
         //-------------------source type complex128---------------------------
         boost::mpl::pair<complex128,boost::mpl::vector<complex32,complex64>>
 
-        > unchecked_type_vectors;
+        > checked_type_vectors;
 
     //------------------------------------------------------------------------
     //!
@@ -127,7 +127,7 @@ namespace core{
     struct checked_convertible
     {
         //select the type vector
-        typedef typename boost::mpl::at<unchecked_type_vectors,ST>::type map_element;
+        typedef typename boost::mpl::at<checked_type_vectors,ST>::type map_element;
         typedef boost::mpl::contains<map_element,TT> c;
         static const bool value = c::value;
     };
