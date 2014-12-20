@@ -30,8 +30,38 @@ namespace core{
 
     bool is_unchecked_convertible(type_id_t source_tid,type_id_t target_tid)
     {
-        return false;
+        if(source_tid == type_id_t::UINT8)
+            return is_unchecked_convertible_to<uint8>(target_tid);
+        else if(source_tid == type_id_t::INT8)
+            return is_unchecked_convertible_to<int8>(target_tid);
+        else if(source_tid == type_id_t::UINT16)
+            return is_unchecked_convertible_to<uint16>(target_tid);
+        else if(source_tid == type_id_t::INT16)
+            return is_unchecked_convertible_to<int16>(target_tid);
+        else if(source_tid == type_id_t::UINT32)
+            return is_unchecked_convertible_to<uint32>(target_tid);
+        else if(source_tid == type_id_t::INT32)
+            return is_unchecked_convertible_to<int32>(target_tid);
+        else if(source_tid == type_id_t::UINT64)
+            return is_unchecked_convertible_to<uint64>(target_tid);
+        else if(source_tid == type_id_t::INT64)
+            return is_unchecked_convertible_to<int64>(target_tid);
+        else if(source_tid == type_id_t::FLOAT32)
+            return is_unchecked_convertible_to<float32>(target_tid);
+        else if(source_tid == type_id_t::FLOAT64)
+            return is_unchecked_convertible_to<float64>(target_tid);
+        else if(source_tid == type_id_t::FLOAT128)
+            return is_unchecked_convertible_to<float128>(target_tid);
+        else if(source_tid == type_id_t::COMPLEX32)
+            return is_unchecked_convertible_to<complex32>(target_tid);
+        else if(source_tid == type_id_t::COMPLEX64)
+            return is_unchecked_convertible_to<complex64>(target_tid);
+        else if(source_tid == type_id_t::COMPLEX128)
+            return is_unchecked_convertible_to<complex128>(target_tid);
+        else 
+            return false;
     }
+
 //end of namespace
 }
 }

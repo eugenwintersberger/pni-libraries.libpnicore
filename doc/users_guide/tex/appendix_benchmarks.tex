@@ -158,15 +158,15 @@ for(index[0]=0;index[0]<nx;++index[0])
         data(index) = buffer;
 \end{minted}
 \\
-\multicolumn{1}{c}{\bf{variadic index}} & & 
-\multicolumn{1}{c}{\bf{vector/array index}} \\
+\multicolumn{1}{c}{\textbf{variadic index}} & & 
+\multicolumn{1}{c}{\textbf{vector/array index}} \\
 \begin{minted}{cpp}
 for(size_t i=0;i<nx;++i)
     for(size_t j=0;j<ny;++j)
         data[i*ny+j] = buffer;
 \end{minted} 
 & & \\
-\multicolumn{1}{c}{\bf{pointer access}} & & \\
+\multicolumn{1}{c}{\textbf{pointer access}} & & \\
 \end{tabular}
 \caption{\label{lst:benchmarks:mindex_write}
 Basic loop constructions measured for the multiindex write benchmarks. The code
