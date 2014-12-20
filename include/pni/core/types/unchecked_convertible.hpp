@@ -32,8 +32,7 @@
 
 namespace pni{
 namespace core{
-
-
+    
     //!
     //! \ingroup type_classes_internal
     //! \brief unchecked convertible map

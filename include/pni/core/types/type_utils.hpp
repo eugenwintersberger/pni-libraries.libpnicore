@@ -26,6 +26,8 @@
 #include <map>
 #include "type_id_map.hpp"
 #include "../utilities/sfinae_macros.hpp"
+#include <functional>
+#include <boost/mpl/for_each.hpp>
 
 
 namespace pni{
@@ -186,6 +188,42 @@ namespace core{
     //! \return string representation of the type
     //!
     string str_from_type_id(type_id_t id);
+   
+    //------------------------------------------------------------------------
+
+    template<typename CTYPE>
+    class type_id_container_builder
+    {
+        private:
+            CTYPE _container;
+
+        public:
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+            template<typename T> void operator()(T x)
+            {
+                type_id_t tid = type_id_map<T>::type_id;
+                _container.push_back(tid);
+            }
+#pragma GCC diagnostic pop
+
+            CTYPE get() const
+            {
+                return _container;
+            }
+        
+    };
+
+    template<typename CTYPE,typename TS>
+    CTYPE build_type_id_container()
+    {
+        type_id_container_builder<CTYPE> builder;
+            
+        boost::mpl::for_each<TS>(std::ref(builder));
+
+        return builder.get();
+    }
 
 //end of namespace
 }

@@ -22,6 +22,7 @@ set(SOURCES array.cpp
             bool.cpp
             none.cpp
             type_conversion.cpp
+            is_unchecked_convertible.cpp
             )
 
 

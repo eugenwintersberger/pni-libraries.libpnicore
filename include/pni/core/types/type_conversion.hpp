@@ -31,6 +31,7 @@
 #include "../error/exceptions.hpp"
 #include "../error/exception_utils.hpp"
 #include "unchecked_convertible.hpp"
+#include "unchecked_convertible.hpp"
 #include "type_info.hpp"
 
 
@@ -311,6 +312,7 @@ namespace core{
         else
             return false;
     }
+
 
     //------------------------------------------------------------------------
     bool is_unchecked_convertible(type_id_t source_tid,type_id_t target_tid);
