@@ -58,9 +58,7 @@ namespace core{
     //!
     template<
              typename T, 
-             typename U,
-             bool     t_complex,
-             bool     u_complex
+             typename U
             >
     struct conversion_strategy
     {
@@ -118,8 +116,11 @@ namespace core{
              typename T,
              typename U
             > 
-    struct conversion_strategy<T,U,true,false>
+    struct conversion_strategy<std::complex<T>,U>
     {
+        typedef T               base_type;
+        typedef std::complex<T> target_type;
+        typedef U               source_type;
         //!
         //! \brief convert U to T
         //!
@@ -132,14 +133,12 @@ namespace core{
         //! \param u original value of type U
         //! \return converted value of type T
         //!
-        static T convert(const U &u)
+        static target_type convert(const source_type &u)
         {
-            typedef typename type_info<T>::BaseType TBaseType;
-            T value;
+            target_type value;
             try
             {
-                value = std::complex<TBaseType>(
-                        boost::numeric_cast<TBaseType>(u),0);
+                value = target_type(boost::numeric_cast<base_type>(u),0);
             }
             catch(negative_overflow &error)
             {
@@ -175,8 +174,11 @@ namespace core{
              typename T,
              typename U
             > 
-    struct conversion_strategy<T,U,true,true>
+    struct conversion_strategy<std::complex<T>,std::complex<U>>
     {
+        typedef T               base_type;
+        typedef std::complex<U> source_type;
+        typedef std::complex<T> target_type;
         //!
         //! \brief convert U to T
         //!
@@ -189,15 +191,14 @@ namespace core{
         //! \param u original value of type U
         //! \return converted value of type T
         //!
-        static T convert(const U &u)
+        static target_type convert(const source_type &u)
         {
-            typedef typename type_info<T>::BaseType TBaseType;
-            TBaseType real;
-            TBaseType imag;
+            base_type real;
+            base_type imag;
             try
             {
-                real = boost::numeric_cast<TBaseType>(u.real());
-                imag = boost::numeric_cast<TBaseType>(u.imag());
+                real = boost::numeric_cast<base_type>(u.real());
+                imag = boost::numeric_cast<base_type>(u.imag());
             }
             catch(negative_overflow &error)
             {
@@ -214,7 +215,7 @@ namespace core{
                 throw type_error(EXCEPTION_RECORD,"Type conversion failed!");
             }
 
-            return std::complex<TBaseType>(real,imag);
+            return target_type(real,imag);
         }
     };
 
@@ -242,7 +243,7 @@ namespace core{
             > 
     T convert(const U &u)
     {
-        
+
         //static assert of the source type is float and T is an integer type
         //this avoids conversion from float to integer as supported by the
         //C++ standard.
@@ -257,8 +258,7 @@ namespace core{
         T value;
         try
         {
-            value = conversion_strategy<T,U,type_info<T>::is_complex,
-                                     type_info<U>::is_complex >::convert(u);
+            value = conversion_strategy<T,U>::convert(u);
         }
         catch(type_error &e)
         {
