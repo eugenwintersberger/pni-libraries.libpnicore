@@ -7,7 +7,6 @@ set(SOURCES array.cpp
             chrono_timer.cpp
             clock_timer.cpp
             cli_args.cpp
-            complex_utils.cpp
             config_parser.cpp
             configuration.cpp
             exceptions.cpp
@@ -15,23 +14,18 @@ set(SOURCES array.cpp
             library_config.cpp
             service.cpp
             slice.cpp
-            types.cpp
-            type_utils.cpp
             value.cpp
             value_ref.cpp
-            bool.cpp
-            none.cpp
-            type_conversion.cpp
-            is_unchecked_convertible.cpp
             )
 
-
+add_definitions(-fPIC)
+add_subdirectory(types)
 #set up the library target
-add_library(pnicore SHARED ${SOURCES})
-add_dependencies(pnicore config.hpp)
+add_library(pnicore SHARED ${SOURCES} $<TARGET_OBJECTS:type_objects>)
 #set the version and SO version of the library
 set_target_properties(pnicore PROPERTIES VERSION "${LIBRARY_VERSION}"
                                        SOVERSION "${SO_VERSION}")
+add_dependencies(pnicore config.hpp)
 
 #add BOOST libraries to the target if they have been found
 if(Boost_FOUND)
@@ -39,18 +33,20 @@ if(Boost_FOUND)
     target_link_libraries(pnicore ${Boost_LIBRARIES})
 endif()
 
+#install the libraries
+install(TARGETS pnicore LIBRARY DESTINATION "${CMAKE_INSTALL_FULL_LIBDIR}")
+
 
 #obtain the compiler flags used to build the target
 get_directory_property(PNICORE_CMP_FLAGS_LIST DIRECTORY 
                        ${CMAKE_CURRENT_SOURCE_DIR} COMPILE_DEFINITIONS) 
 
+#need to add a check here if the list is empty
 set(PNICORE_CMP_FLAGS "")
 foreach(FLAG ${PNICORE_CMP_FLAGS_LIST})
     set(PNICORE_CMP_FLAGS "${PNICORE_CMP_FLAGS} -D${FLAG}")
 endforeach()
 
-#install the libraries
-install(TARGETS pnicore LIBRARY DESTINATION "${CMAKE_INSTALL_FULL_LIBDIR}")
 
 #have to create the pkg-config file
 if("${CMAKE_FAMILY_VERSION}" EQUAL "2.6")
