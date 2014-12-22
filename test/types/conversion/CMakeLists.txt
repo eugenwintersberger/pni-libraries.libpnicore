@@ -1,8 +1,9 @@
 #need to define the version of the library
 set(SOURCES conversion_test.cpp
             unchecked_convertible_test.cpp
-            is_unchecked_convertible_to_test.cpp
             is_unchecked_convertible_test.cpp
+            is_checked_convertible_test.cpp
+            is_convertible_test.cpp
             checked_convertible_test.cpp
             convertible_test.cpp
     )

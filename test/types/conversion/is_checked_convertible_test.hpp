@@ -18,7 +18,7 @@
 //
 // ===========================================================================
 //
-//  Created on: Dec 18, 2014
+//  Created on: Dec 22, 2014
 //      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
 //
 #pragma once
@@ -31,9 +31,9 @@
 
 using namespace pni::core;
 
-class is_unchecked_convertible_to_test : public CppUnit::TestFixture
+class is_checked_convertible_test : public CppUnit::TestFixture
 {
-        CPPUNIT_TEST_SUITE(is_unchecked_convertible_to_test);
+        CPPUNIT_TEST_SUITE(is_checked_convertible_test);
         CPPUNIT_TEST(test_uint8);
         CPPUNIT_TEST(test_uint16);
         CPPUNIT_TEST(test_uint32);
@@ -51,54 +51,23 @@ class is_unchecked_convertible_to_test : public CppUnit::TestFixture
         CPPUNIT_TEST_SUITE_END();
 
         //--------------------------------------------------------------------
-        template<typename T> void always_fails()
-        {
-            CPPUNIT_ASSERT(!is_unchecked_convertible_to<T>(type_id_t::BOOL));
-            CPPUNIT_ASSERT(!is_unchecked_convertible_to<T>(type_id_t::BINARY));
-            CPPUNIT_ASSERT(!is_unchecked_convertible_to<T>(type_id_t::STRING));
-        }
+        void always_fails(type_id_t sid);
 
         //--------------------------------------------------------------------
-        template<typename T> void uint_always_fails()
-        {
-            CPPUNIT_ASSERT(!is_unchecked_convertible_to<T>(type_id_t::UINT8));
-            CPPUNIT_ASSERT(!is_unchecked_convertible_to<T>(type_id_t::UINT16));
-            CPPUNIT_ASSERT(!is_unchecked_convertible_to<T>(type_id_t::UINT32));
-            CPPUNIT_ASSERT(!is_unchecked_convertible_to<T>(type_id_t::UINT64));
-        }
+        void uint_always_fails(type_id_t sid);
 
         //--------------------------------------------------------------------
-        template<typename T> void int_always_fails()
-        {
-            CPPUNIT_ASSERT(!is_unchecked_convertible_to<T>(type_id_t::INT8));
-            CPPUNIT_ASSERT(!is_unchecked_convertible_to<T>(type_id_t::INT16));
-            CPPUNIT_ASSERT(!is_unchecked_convertible_to<T>(type_id_t::INT32));
-            CPPUNIT_ASSERT(!is_unchecked_convertible_to<T>(type_id_t::INT64));
-        }
+        void int_always_fails(type_id_t sid);
 
         //--------------------------------------------------------------------
-        template<typename T> void float_always_fails()
-        {
-            CPPUNIT_ASSERT(!is_unchecked_convertible_to<T>(type_id_t::FLOAT32));
-            CPPUNIT_ASSERT(!is_unchecked_convertible_to<T>(type_id_t::FLOAT64));
-            CPPUNIT_ASSERT(!is_unchecked_convertible_to<T>(type_id_t::FLOAT128));
-        }
+        void float_always_fails(type_id_t sid);
         
         //--------------------------------------------------------------------
-        template<typename T> void float_always_pass()
-        {
-            CPPUNIT_ASSERT(is_unchecked_convertible_to<T>(type_id_t::FLOAT32));
-            CPPUNIT_ASSERT(is_unchecked_convertible_to<T>(type_id_t::FLOAT64));
-            CPPUNIT_ASSERT(is_unchecked_convertible_to<T>(type_id_t::FLOAT128));
-        }
+        void complex_always_fails(type_id_t sid);
 
         //--------------------------------------------------------------------
-        template<typename T> void complex_always_pass()
-        {
-            CPPUNIT_ASSERT(is_unchecked_convertible_to<T>(type_id_t::COMPLEX32));
-            CPPUNIT_ASSERT(is_unchecked_convertible_to<T>(type_id_t::COMPLEX64));
-            CPPUNIT_ASSERT(is_unchecked_convertible_to<T>(type_id_t::COMPLEX128));
-        }
+        void uint_always_pass(type_id_t sid);
+        
     public:
         void setUp();
         void tearDown();
