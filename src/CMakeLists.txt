@@ -2,10 +2,6 @@
 #gather all source files for the library
 set(SOURCES array.cpp
             array_selection.cpp
-            benchmark_result.cpp
-            benchmark_runner.cpp
-            chrono_timer.cpp
-            clock_timer.cpp
             cli_args.cpp
             config_parser.cpp
             configuration.cpp
@@ -20,8 +16,13 @@ set(SOURCES array.cpp
 
 add_definitions(-fPIC)
 add_subdirectory(types)
+add_subdirectory(benchmark)
+
 #set up the library target
-add_library(pnicore SHARED ${SOURCES} $<TARGET_OBJECTS:type_objects>)
+add_library(pnicore SHARED ${SOURCES} 
+                           $<TARGET_OBJECTS:type_objects>
+                           $<TARGET_OBJECTS:benchmark_objects>)
+
 #set the version and SO version of the library
 set_target_properties(pnicore PROPERTIES VERSION "${LIBRARY_VERSION}"
                                        SOVERSION "${SO_VERSION}")
