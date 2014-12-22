@@ -1,27 +1,21 @@
 
 #gather all source files for the library
-set(SOURCES array.cpp
-            cli_args.cpp
-            config_parser.cpp
-            configuration.cpp
-            exceptions.cpp
-            exception_utils.cpp
-            library_config.cpp
-            service.cpp
-            value.cpp
-            value_ref.cpp
-            )
 
 add_definitions(-fPIC)
 add_subdirectory(types)
 add_subdirectory(benchmark)
 add_subdirectory(arrays)
+add_subdirectory(configuration)
+add_subdirectory(type_erasures)
+add_subdirectory(misc)
 
 #set up the library target
-add_library(pnicore SHARED ${SOURCES} 
-                           $<TARGET_OBJECTS:type_objects>
+add_library(pnicore SHARED $<TARGET_OBJECTS:type_objects>
                            $<TARGET_OBJECTS:benchmark_objects>
-                           $<TARGET_OBJECTS:array_objects>)
+                           $<TARGET_OBJECTS:array_objects>
+                           $<TARGET_OBJECTS:configuration_objects>
+                           $<TARGET_OBJECTS:type_erasure_objects>
+                           $<TARGET_OBJECTS:misc_objects>)
 
 #set the version and SO version of the library
 set_target_properties(pnicore PROPERTIES VERSION "${LIBRARY_VERSION}"
