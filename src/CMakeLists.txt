@@ -1,7 +1,6 @@
 
 #gather all source files for the library
 set(SOURCES array.cpp
-            array_selection.cpp
             cli_args.cpp
             config_parser.cpp
             configuration.cpp
@@ -9,7 +8,6 @@ set(SOURCES array.cpp
             exception_utils.cpp
             library_config.cpp
             service.cpp
-            slice.cpp
             value.cpp
             value_ref.cpp
             )
@@ -17,11 +15,13 @@ set(SOURCES array.cpp
 add_definitions(-fPIC)
 add_subdirectory(types)
 add_subdirectory(benchmark)
+add_subdirectory(arrays)
 
 #set up the library target
 add_library(pnicore SHARED ${SOURCES} 
                            $<TARGET_OBJECTS:type_objects>
-                           $<TARGET_OBJECTS:benchmark_objects>)
+                           $<TARGET_OBJECTS:benchmark_objects>
+                           $<TARGET_OBJECTS:array_objects>)
 
 #set the version and SO version of the library
 set_target_properties(pnicore PROPERTIES VERSION "${LIBRARY_VERSION}"
