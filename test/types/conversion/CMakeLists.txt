@@ -10,6 +10,13 @@ set(SOURCES conversion_test.cpp
             convert_uint16_test.cpp
             convert_uint32_test.cpp
             convert_uint64_test.cpp
+            convert_int8_test.cpp
+            convert_int16_test.cpp
+            convert_int32_test.cpp
+            convert_int64_test.cpp
+            convert_float32_test.cpp
+            convert_float64_test.cpp
+            convert_float128_test.cpp
     )
 
 

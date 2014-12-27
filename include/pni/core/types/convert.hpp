@@ -42,6 +42,33 @@ namespace core{
 
     using namespace boost::numeric;
 
+    template<
+             typename TT,
+             typename ST
+            >
+    struct converter
+    {
+        static TT convert(const ST &value)
+        {
+            return boost::numeric_cast<TT>(value);
+        }
+    };
+
+    //------------------------------------------------------------------------
+    template<
+             typename BT,
+             typename ST
+            >
+    struct converter<std::complex<BT>,ST>
+    {
+        static std::complex<BT> convert(const ST &value)
+        {
+            BT real = boost::numeric_cast<BT>(value);
+
+            return std::complex<BT>(real,0);
+        }
+    };
+
 
     //-------------------------------------------------------------------------
     //!
@@ -74,7 +101,7 @@ namespace core{
         {
             try
             {
-                return boost::numeric_cast<T>(source);
+                return converter<T,S>::convert(source);
             }
             catch(const boost::numeric::positive_overflow &error)
             {
