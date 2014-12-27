@@ -18,7 +18,7 @@
 //
 // ===========================================================================
 //
-//  Created on: Dec 23, 2014
+//  Created on: Dec 27, 2014
 //      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
 //
 #pragma once
@@ -33,9 +33,10 @@
 //! \brief test conversion of an uint8 value
 //! 
 //! Test conversion of an uint8 value to any other type
-class convert_uint8_test : public CppUnit::TestFixture
+class convert_uint64_test : public CppUnit::TestFixture
 {
-        CPPUNIT_TEST_SUITE(convert_uint8_test);
+    private:
+        CPPUNIT_TEST_SUITE(convert_uint64_test);
         CPPUNIT_TEST(test_to_uint8);
         CPPUNIT_TEST(test_to_uint16);
         CPPUNIT_TEST(test_to_uint32);
@@ -51,8 +52,11 @@ class convert_uint8_test : public CppUnit::TestFixture
         CPPUNIT_TEST(test_to_complex64);
         CPPUNIT_TEST(test_to_complex128);
         CPPUNIT_TEST_SUITE_END();
-    
-        typedef pni::core::uint8 source_type;
+        
+        typedef pni::core::uint64 source_type;
+
+        static const source_type fails_uint  = 5000000000; 
+        static const source_type fails_int   = 5000000000;
         
     public:
         void setUp();
@@ -71,5 +75,8 @@ class convert_uint8_test : public CppUnit::TestFixture
         void test_to_complex32();
         void test_to_complex64();
         void test_to_complex128();
-
 };
+
+const convert_uint64_test::source_type convert_uint64_test::fails_uint;
+const convert_uint64_test::source_type convert_uint64_test::fails_int;
+

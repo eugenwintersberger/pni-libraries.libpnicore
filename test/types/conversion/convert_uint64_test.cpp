@@ -18,7 +18,7 @@
 //
 // ===========================================================================
 //
-//  Created on: Dec 22, 2014
+//  Created on: Dec 27, 2014
 //      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
 //
 #include<cppunit/extensions/HelperMacros.h>
@@ -26,47 +26,56 @@
 
 #include <iostream>
 
-#include "convert_uint8_test.hpp"
+#include "convert_uint64_test.hpp"
 using namespace pni::core;
 
-CPPUNIT_TEST_SUITE_REGISTRATION(convert_uint8_test);
+CPPUNIT_TEST_SUITE_REGISTRATION(convert_uint64_test);
 
 //-----------------------------------------------------------------------------
-void convert_uint8_test::setUp(){ }
+void convert_uint64_test::setUp(){ }
 
 //-----------------------------------------------------------------------------
-void convert_uint8_test::tearDown(){ }
+void convert_uint64_test::tearDown(){ }
         
 
 //-----------------------------------------------------------------------------
-void convert_uint8_test::test_to_uint8()
+void convert_uint64_test::test_to_uint8()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
     typedef uint8 target_type;
     
     CPPUNIT_ASSERT(convert<target_type>(source_type(1)) == target_type(1));
+
+    CPPUNIT_ASSERT_THROW(convert<target_type>(fails_uint),
+                         pni::core::range_error);
 }
 
 //-----------------------------------------------------------------------------
-void convert_uint8_test::test_to_uint16()
+void convert_uint64_test::test_to_uint16()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
     typedef uint16 target_type;
     
     CPPUNIT_ASSERT(convert<target_type>(source_type(19))==target_type(19));
+
+    CPPUNIT_ASSERT_THROW(convert<target_type>(fails_uint),
+                         pni::core::range_error);
 }
 
 //-----------------------------------------------------------------------------
-void convert_uint8_test::test_to_uint32()
+void convert_uint64_test::test_to_uint32()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
     typedef uint32 target_type;
     
     CPPUNIT_ASSERT(convert<target_type>(source_type(19))==target_type(19));
+
+    CPPUNIT_ASSERT_THROW(convert<target_type>(fails_uint),
+                         pni::core::range_error);
 }
 
 //-----------------------------------------------------------------------------
-void convert_uint8_test::test_to_uint64()
+void convert_uint64_test::test_to_uint64()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
     typedef uint64 target_type;
@@ -75,20 +84,20 @@ void convert_uint8_test::test_to_uint64()
 }
 
 //-----------------------------------------------------------------------------
-void convert_uint8_test::test_to_int8()
+void convert_uint64_test::test_to_int8()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
     typedef int8 target_type;
     
-    CPPUNIT_ASSERT(convert<target_type>(source_type(19))==target_type(19));
+    CPPUNIT_ASSERT(convert<target_type>(source_type(19))==int8(19));
 
     //we can only produce a negative overflow
-    CPPUNIT_ASSERT_THROW(convert<target_type>(source_type(200)),
+    CPPUNIT_ASSERT_THROW(convert<target_type>(fails_int),
                          pni::core::range_error);
 }
 
 //-----------------------------------------------------------------------------
-void convert_uint8_test::test_to_int16()
+void convert_uint64_test::test_to_int16()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
     typedef int16 target_type;
@@ -96,32 +105,37 @@ void convert_uint8_test::test_to_int16()
     CPPUNIT_ASSERT(convert<target_type>(source_type(19))==target_type(19));
     
     //we cannot do any overflow to int16
+
+    CPPUNIT_ASSERT_THROW(convert<target_type>(fails_int),
+                         pni::core::range_error);
 }
 
 //-----------------------------------------------------------------------------
-void convert_uint8_test::test_to_int32()
+void convert_uint64_test::test_to_int32()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
     typedef int32 target_type;
     
     CPPUNIT_ASSERT(convert<target_type>(source_type(19))==target_type(19));
-
-    //we cannot do any overflow to int16
+    
+    CPPUNIT_ASSERT_THROW(convert<target_type>(fails_int),
+                   pni::core::range_error);
 }
 
 //-----------------------------------------------------------------------------
-void convert_uint8_test::test_to_int64()
+void convert_uint64_test::test_to_int64()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
     typedef int64 target_type;
     
     CPPUNIT_ASSERT(convert<target_type>(source_type(19))==target_type(19));
 
-    //we cannot do any overflow to int16
+    CPPUNIT_ASSERT_THROW(convert<target_type>(source_type(9.3e+18)),
+                         pni::core::range_error);
 }
 
 //-----------------------------------------------------------------------------
-void convert_uint8_test::test_to_float32()
+void convert_uint64_test::test_to_float32()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
     typedef float32 target_type;
@@ -132,7 +146,7 @@ void convert_uint8_test::test_to_float32()
 }
 
 //-----------------------------------------------------------------------------
-void convert_uint8_test::test_to_float64()
+void convert_uint64_test::test_to_float64()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
     typedef float64 target_type;
@@ -144,7 +158,7 @@ void convert_uint8_test::test_to_float64()
 }
 
 //-----------------------------------------------------------------------------
-void convert_uint8_test::test_to_float128()
+void convert_uint64_test::test_to_float128()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
     typedef float128 target_type;
@@ -155,7 +169,7 @@ void convert_uint8_test::test_to_float128()
 }
 
 //-----------------------------------------------------------------------------
-void convert_uint8_test::test_to_complex32()
+void convert_uint64_test::test_to_complex32()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
     typedef complex32 target_type;
@@ -167,7 +181,7 @@ void convert_uint8_test::test_to_complex32()
 }
 
 //-----------------------------------------------------------------------------
-void convert_uint8_test::test_to_complex64()
+void convert_uint64_test::test_to_complex64()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
     typedef complex64 target_type;
@@ -179,7 +193,7 @@ void convert_uint8_test::test_to_complex64()
 }
 
 //-----------------------------------------------------------------------------
-void convert_uint8_test::test_to_complex128()
+void convert_uint64_test::test_to_complex128()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
     typedef complex128 target_type;

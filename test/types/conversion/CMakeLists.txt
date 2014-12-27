@@ -7,6 +7,9 @@ set(SOURCES conversion_test.cpp
             checked_convertible_test.cpp
             convertible_test.cpp
             convert_uint8_test.cpp
+            convert_uint16_test.cpp
+            convert_uint32_test.cpp
+            convert_uint64_test.cpp
     )
 
 
