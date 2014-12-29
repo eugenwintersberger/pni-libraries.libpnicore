@@ -23,15 +23,20 @@
 //!/
 #pragma once
 
-#include "types/types.hpp"
+
 #include "types/binary.hpp"
 #include "types/bool.hpp"
-#include "types/none.hpp"
-#include "types/id_type_map.hpp"
-#include "types/type_id_map.hpp"
-#include "types/type_class_map.hpp"
-#include "types/type_conversion.hpp"
-#include "types/type_info.hpp"
-#include "types/type_utils.hpp"
+#include "types/checked_convertible.hpp"
 #include "types/complex_utils.hpp"
 #include "types/container_trait.hpp"
+#include "types/convert.hpp"
+#include "types/convertible.hpp"
+#include "types/id_type_map.hpp"
+#include "types/none.hpp"
+#include "types/type_class_map.hpp"
+#include "types/type_conversion.hpp"
+#include "types/type_id_map.hpp"
+#include "types/type_info.hpp"
+#include "types/types.hpp"
+#include "types/type_utils.hpp"
+#include "types/unchecked_convertible.hpp"
