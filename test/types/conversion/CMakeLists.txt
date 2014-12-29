@@ -17,6 +17,8 @@ set(SOURCES conversion_test.cpp
             convert_float32_test.cpp
             convert_float64_test.cpp
             convert_float128_test.cpp
+            convert_complex32_test.cpp
+            convert_complex64_test.cpp
     )
 
 

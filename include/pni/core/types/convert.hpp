@@ -34,6 +34,7 @@
 #include "type_info.hpp"
 #include "unchecked_convertible.hpp"
 #include "checked_convertible.hpp"
+#include "convertible.hpp"
 #include "type_conversion.hpp"
 
 
@@ -69,39 +70,46 @@ namespace core{
         }
     };
 
+    //------------------------------------------------------------------------
+    template<
+             typename BTT,
+             typename BST
+            >
+    struct converter<std::complex<BTT>,std::complex<BST>>
+    {
+        static std::complex<BTT> convert(const std::complex<BST> &value)
+        {
+            BTT real = boost::numeric_cast<BTT>(value.real());
+            BTT imag = boost::numeric_cast<BTT>(value.imag());
 
-    //-------------------------------------------------------------------------
-    //!
-    //! ingroup type_classes_internal
-    //! \brief type conversion function template
-    //! 
-    //! This function template finally performs the type conversion. Several
-    //! static asserts are performed which ensure the two cases of conversions
-    //! will not even compile: conversion from a floating point number of an
-    //! integer value and conversion from a complex value to a non-complex 
-    //! type.
-    //!
-    //! \throws range_error if u does not fit in the range covered by T
-    //! \throws type_error in case of all other errors
-    //! \tparam T target type
-    //! \tparam U source type
-    //! \param u value of type U
-    //! \return value of u converted to T
-    //!
+            return std::complex<BTT>(real,imag);
+        }
+    };
+
+    template<
+             typename T,
+             typename S,
+             bool unchecked_convertible=true
+            > 
+    struct conversion_strategy
+    {
+        static T convert(const S &value)
+        {
+            return T(value);
+        }
+    };
+
     template<
              typename T,
              typename S
-            > 
-    T convert(const S &source)
+            >
+    struct conversion_strategy<T,S,false>
     {
-
-        if(unchecked_convertible<S,T>::value)
-            return T(source);
-        else if(checked_convertible<S,T>::value)
+        static T convert(const S &value)
         {
             try
             {
-                return converter<T,S>::convert(source);
+                return converter<T,S>::convert(value);
             }
             catch(const boost::numeric::positive_overflow &error)
             {
@@ -119,9 +127,42 @@ namespace core{
                         "Unknown error during type conversion!");
             }
         }
-        else
-            throw type_error(EXCEPTION_RECORD,
-                             "Type conversion not possible!");
+    
+    };
+
+
+
+
+    //-------------------------------------------------------------------------
+    //!
+    //! ingroup type_classes_internal
+    //! \brief type conversion function template
+    //! 
+    //! This function template finally performs the type conversion. Several
+    //! static asserts are performed which ensure the two cases of conversions
+    //! will not even compile: conversion from a floating point number of an
+    //! integer value and conversion from a complex value to a non-complex 
+    //! type.
+    //!
+    //! \throws range_error if u does not fit in the range covered by T
+    //! \throws type_error in case of all other errors
+    //! \tparam T target type
+    //! \tparam S source type
+    //! \param source value of type S
+    //! \return value of u converted to T
+    //!
+    template<
+             typename T,
+             typename S
+            > 
+    T convert(const S &source)
+    {
+        static_assert(convertible<S,T>::value,
+                      "Types are in no way convertible!");
+
+        typedef conversion_strategy<T,S,unchecked_convertible<S,T>::value> strategy;
+        return strategy::convert(source);
+
     }
 
 //end of namespace

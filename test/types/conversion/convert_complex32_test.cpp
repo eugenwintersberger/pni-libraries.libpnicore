@@ -26,20 +26,20 @@
 
 #include <iostream>
 
-#include "convert_float32_test.hpp"
+#include "convert_complex32_test.hpp"
 using namespace pni::core;
 
-CPPUNIT_TEST_SUITE_REGISTRATION(convert_float32_test);
+CPPUNIT_TEST_SUITE_REGISTRATION(convert_complex32_test);
 
 //-----------------------------------------------------------------------------
-void convert_float32_test::setUp(){ }
+void convert_complex32_test::setUp(){ }
 
 //-----------------------------------------------------------------------------
-void convert_float32_test::tearDown(){ }
+void convert_complex32_test::tearDown(){ }
         
 
 //-----------------------------------------------------------------------------
-void convert_float32_test::test_to_uint8()
+void convert_complex32_test::test_to_uint8()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
 #pragma GCC diagnostic push
@@ -52,7 +52,7 @@ void convert_float32_test::test_to_uint8()
 }
 
 //-----------------------------------------------------------------------------
-void convert_float32_test::test_to_uint16()
+void convert_complex32_test::test_to_uint16()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
 #pragma GCC diagnostic push
@@ -65,7 +65,7 @@ void convert_float32_test::test_to_uint16()
 }
 
 //-----------------------------------------------------------------------------
-void convert_float32_test::test_to_uint32()
+void convert_complex32_test::test_to_uint32()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
 #pragma GCC diagnostic push
@@ -78,7 +78,7 @@ void convert_float32_test::test_to_uint32()
 }
 
 //-----------------------------------------------------------------------------
-void convert_float32_test::test_to_uint64()
+void convert_complex32_test::test_to_uint64()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
 #pragma GCC diagnostic push
@@ -91,7 +91,7 @@ void convert_float32_test::test_to_uint64()
 }
 
 //-----------------------------------------------------------------------------
-void convert_float32_test::test_to_int8()
+void convert_complex32_test::test_to_int8()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
 #pragma GCC diagnostic push
@@ -104,7 +104,7 @@ void convert_float32_test::test_to_int8()
 }
 
 //-----------------------------------------------------------------------------
-void convert_float32_test::test_to_int16()
+void convert_complex32_test::test_to_int16()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
 #pragma GCC diagnostic push
@@ -117,7 +117,7 @@ void convert_float32_test::test_to_int16()
 }
 
 //-----------------------------------------------------------------------------
-void convert_float32_test::test_to_int32()
+void convert_complex32_test::test_to_int32()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
 #pragma GCC diagnostic push
@@ -130,7 +130,7 @@ void convert_float32_test::test_to_int32()
 }
 
 //-----------------------------------------------------------------------------
-void convert_float32_test::test_to_int64()
+void convert_complex32_test::test_to_int64()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
 #pragma GCC diagnostic push
@@ -138,77 +138,82 @@ void convert_float32_test::test_to_int64()
     typedef int64 target_type;
 #pragma GCC diagnostic pop
    
-
     //does not compile
     //CPPUNIT_ASSERT_THROW(convert<target_type>(source_type(19)),type_error);
 }
 
 //-----------------------------------------------------------------------------
-void convert_float32_test::test_to_float32()
+void convert_complex32_test::test_to_float32()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-local-typedefs"
     typedef float32 target_type;
-    
-    CPPUNIT_ASSERT_DOUBLES_EQUAL(target_type(19),
-                                 convert<target_type>(source_type(19)),
-                                 1.e-6);
+#pragma GCC diagnostic pop
+   
+    //does not compile
+    //CPPUNIT_ASSERT_THROWS(convert<target_type>(source_type{19,-4.5}),type_error);
 }
 
 //-----------------------------------------------------------------------------
-void convert_float32_test::test_to_float64()
+void convert_complex32_test::test_to_float64()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-local-typedefs"
     typedef float64 target_type;
+#pragma GCC diagnostic pop
     
-    CPPUNIT_ASSERT_DOUBLES_EQUAL(target_type(19),
-                                 convert<target_type>(source_type(19)),
-                                 1.e-16);
+    //does not compile
+    //CPPUNIT_ASSERT_THROWS(convert<target_type>(source_type(19,-4.5)),type_error);
 
 }
 
 //-----------------------------------------------------------------------------
-void convert_float32_test::test_to_float128()
+void convert_complex32_test::test_to_float128()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-local-typedefs"
     typedef float128 target_type;
+#pragma GCC diagnostic pop
     
-    CPPUNIT_ASSERT_DOUBLES_EQUAL(target_type(19),
-                                 convert<target_type>(source_type(19)),
-                                 1.e-16);
+    //does not compile
+    //CPPUNIT_ASSERT_THROWS(convert<target_type>(source_type(19)),type_error);
 }
 
 //-----------------------------------------------------------------------------
-void convert_float32_test::test_to_complex32()
+void convert_complex32_test::test_to_complex32()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
     typedef complex32 target_type;
     typedef float32   base_type;
    
-    auto value = convert<target_type>(source_type(19));
+    auto value = convert<target_type>(source_type(19,-4.5));
     CPPUNIT_ASSERT_DOUBLES_EQUAL(base_type(19),value.real(),1.e-6);
-    CPPUNIT_ASSERT_DOUBLES_EQUAL(base_type(0),value.imag(),1.e-6);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(base_type(-4.5),value.imag(),1.e-6);
 }
 
 //-----------------------------------------------------------------------------
-void convert_float32_test::test_to_complex64()
+void convert_complex32_test::test_to_complex64()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
     typedef complex64 target_type;
     typedef float64   base_type;
     
-    auto value = convert<target_type>(source_type(19));
+    auto value = convert<target_type>(source_type(19,-4.5));
     CPPUNIT_ASSERT_DOUBLES_EQUAL(base_type(19),value.real(),1.e-16);
-    CPPUNIT_ASSERT_DOUBLES_EQUAL(base_type(0),value.imag(),1.e-16);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(base_type(-4.5),value.imag(),1.e-16);
 }
 
 //-----------------------------------------------------------------------------
-void convert_float32_test::test_to_complex128()
+void convert_complex32_test::test_to_complex128()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
     typedef complex128 target_type;
     typedef float128   base_type;
     
-    auto value = convert<target_type>(source_type(19));
+    auto value = convert<target_type>(source_type(19,-4.5));
     CPPUNIT_ASSERT_DOUBLES_EQUAL(base_type(19),value.real(),1.e-16);
-    CPPUNIT_ASSERT_DOUBLES_EQUAL(base_type(0),value.imag(),1.e-16);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(base_type(-4.5),value.imag(),1.e-16);
 }
