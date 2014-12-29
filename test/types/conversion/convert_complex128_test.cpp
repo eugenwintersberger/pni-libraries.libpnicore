@@ -208,8 +208,11 @@ void convert_complex128_test::test_to_complex64()
     CPPUNIT_ASSERT_DOUBLES_EQUAL(base_type(19),value.real(),1.e-16);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(base_type(-4.5),value.imag(),1.e-16);
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Woverflow"
     CPPUNIT_ASSERT_THROW(convert<target_type>(source_type(1.e+400,-2e+400)),
                          range_error);
+#pragma GCC diagnostic pop
 }
 
 //-----------------------------------------------------------------------------

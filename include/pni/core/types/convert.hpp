@@ -43,6 +43,15 @@ namespace core{
 
     using namespace boost::numeric;
 
+    //!
+    //! \ingroup type_classes_internal
+    //! \brief simple numeric converter
+    //!
+    //! Implements conversion between simple scalar numeric types.
+    //! 
+    //! \tparam TT target type
+    //! \tparam ST source type
+    //!
     template<
              typename TT,
              typename ST
@@ -56,6 +65,15 @@ namespace core{
     };
 
     //------------------------------------------------------------------------
+    //!
+    //! \ingroup type_classes_internal
+    //! \brief simple to complex conversion
+    //!
+    //! Implements conversion from a simple scalar type to a complex type. 
+    //!
+    //! \tparam BT target base type
+    //! \tparam ST simple source type
+    //!
     template<
              typename BT,
              typename ST
@@ -71,6 +89,15 @@ namespace core{
     };
 
     //------------------------------------------------------------------------
+    //!
+    //! \ingroup type_classes_internal
+    //! \brief complex to complex conversion
+    //!
+    //! Implements complex to complex conversion.
+    //!
+    //! \tparam BTT target base type
+    //! \tparam BST source base type
+    //! 
     template<
              typename BTT,
              typename BST
@@ -86,6 +113,17 @@ namespace core{
         }
     };
 
+    //------------------------------------------------------------------------
+    //!
+    //! \ingroup type_classes_internal
+    //! \brief simple unchecked strategy
+    //! 
+    //! This strategy implements a simple unchecked type conversion. 
+    //! 
+    //! \tparam T target type
+    //! \tparam S source type
+    //! \tparam unchecked_convertible a flag if true use this strategy
+    //!
     template<
              typename T,
              typename S,
@@ -99,6 +137,17 @@ namespace core{
         }
     };
 
+    //------------------------------------------------------------------------
+    //!
+    //! \ingroup type_classes_internal
+    //! \brief checked conversion strategy
+    //!
+    //! This strategy uses the numeric_cast function to implement the 
+    //! conversion.
+    //!
+    //! \tparam T target type
+    //! \tparam S source type
+    //!
     template<
              typename T,
              typename S
@@ -129,9 +178,6 @@ namespace core{
         }
     
     };
-
-
-
 
     //-------------------------------------------------------------------------
     //!
