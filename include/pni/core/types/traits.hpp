@@ -53,15 +53,12 @@ namespace core{
         static const bool value = boost::mpl::contains<numeric_types,T>::value;
     };
 
-    //------------------------------------------------------------------------
-    //!
-    //! \ingroup type_classes
-    //! \brief non numeric types
-    //!
-    //! A boos MPL vector with non numeric types
-    //!
-    typedef boost::mpl::vector<none,bool_t,binary,string> non_numeric_types;
-
+    //-------------------------------------------------------------------------
+    template<typename T> struct non_numeric_type
+    {
+        static const bool value =
+            boost::mpl::contains<non_numeric_types,T>::value;
+    };
     
 //end of namespace
 }

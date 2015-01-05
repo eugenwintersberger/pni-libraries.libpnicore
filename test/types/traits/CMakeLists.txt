@@ -4,6 +4,7 @@ set(SOURCES traits_test.cpp
             float_type_test.cpp
             complex_type_test.cpp
             numeric_type_test.cpp
+            non_numeric_type_test.cpp
     )
 
 

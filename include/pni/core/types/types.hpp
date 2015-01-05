@@ -104,11 +104,25 @@ namespace core{
                                complex64,
                                complex128> complex_types;
 
+    //!
+    //! \ingroup type_classes
+    //! \brief non numeric types vector
+    //!
+    //! An MPL vector with all numeric types supported by libpnicore.
+    //!
     typedef boost::mpl::joint_view<
         boost::mpl::joint_view<integer_types,float_types>::type,
         complex_types
         > numeric_types;
 
+    //------------------------------------------------------------------------
+    //!
+    //! \ingroup type_classes
+    //! \brief non numeric types
+    //!
+    //! A boos MPL vector with non numeric types
+    //!
+    typedef boost::mpl::vector<none,bool_t,binary,string> non_numeric_types;
 
     //! 
     //! \ingroup type_classes
