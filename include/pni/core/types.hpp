@@ -40,3 +40,4 @@
 #include "types/types.hpp"
 #include "types/type_utils.hpp"
 #include "types/unchecked_convertible.hpp"
+#include "types/traits.hpp"

@@ -28,6 +28,8 @@
 #include <string>
 #include <cstdint>
 #include <vector>
+#include <boost/mpl/vector.hpp>
+#include <boost/mpl/joint_view.hpp>
 
 #include "binary.hpp"
 #include "bool.hpp"
@@ -67,6 +69,45 @@ namespace core{
     typedef std::string     string; //!< String type
     typedef binary_t<uint8> binary; //!< data type for binary data
     /*! @} */
+
+    //-------------------------------------------------------------------------
+    // define some mpl containers with types 
+
+    //!
+    //! \ingroup type_classes
+    //! \brief integer types vector
+    //!
+    //! An MPL vector with all integer types supported by libpnicore
+    //!
+    typedef boost::mpl::vector<uint8,int8,
+                               uint16,int16,
+                               uint32,int32,
+                               uint64,int64> integer_types;
+
+    //!
+    //! \ingroup type_classes
+    //! \brief floating point types vector
+    //!
+    //! An MPL vector with all floating point types supported by libpnicore
+    //!
+    typedef boost::mpl::vector<float32,
+                               float64,
+                               float128> float_types;
+
+    //!
+    //! \ingroup type_classes
+    //! \brief complex types vector
+    //!
+    //! An MPL vector with all complex number types supported by libpnicore.
+    //!
+    typedef boost::mpl::vector<complex32,
+                               complex64,
+                               complex128> complex_types;
+
+    typedef boost::mpl::joint_view<
+        boost::mpl::joint_view<integer_types,float_types>::type,
+        complex_types
+        > numeric_types;
 
 
     //! 
