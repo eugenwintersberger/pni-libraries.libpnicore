@@ -59,6 +59,14 @@ namespace core{
         static const bool value =
             boost::mpl::contains<non_numeric_types,T>::value;
     };
+
+    bool is_numeric(type_id_t tid);
+
+    bool is_integer_type(type_id_t tid);
+
+    bool is_complex_type(type_id_t tid);
+
+    bool is_float_type(type_id_t tid);
     
 //end of namespace
 }

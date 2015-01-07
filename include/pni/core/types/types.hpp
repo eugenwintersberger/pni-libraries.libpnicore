@@ -84,6 +84,7 @@ namespace core{
                                uint32,int32,
                                uint64,int64> integer_types;
 
+    //------------------------------------------------------------------------
     //!
     //! \ingroup type_classes
     //! \brief floating point types vector
@@ -94,6 +95,7 @@ namespace core{
                                float64,
                                float128> float_types;
 
+    //------------------------------------------------------------------------
     //!
     //! \ingroup type_classes
     //! \brief complex types vector
@@ -104,6 +106,7 @@ namespace core{
                                complex64,
                                complex128> complex_types;
 
+    //------------------------------------------------------------------------
     //!
     //! \ingroup type_classes
     //! \brief non numeric types vector
@@ -124,6 +127,7 @@ namespace core{
     //!
     typedef boost::mpl::vector<none,bool_t,binary,string> non_numeric_types;
 
+    //------------------------------------------------------------------------
     //! 
     //! \ingroup type_classes
     //! \brief type codes for PNI data types
