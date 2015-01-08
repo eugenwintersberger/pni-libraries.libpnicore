@@ -19,6 +19,7 @@ if(CPPUNIT_FOUND)
     target_link_libraries(type_erasures ${CPPUNIT_LIBRARIES})
 
 endif()
+add_subdirectory(value)
 
 add_test(NAME type_erasures_test 
          COMMAND type_erasures

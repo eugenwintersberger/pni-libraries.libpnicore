@@ -155,7 +155,6 @@ template<typename T> void value_test<T>::test_comparison()
     value v2(value_2);
     CPPUNIT_ASSERT((v1==v1) == (value_1==value_1));
     CPPUNIT_ASSERT((v2!=v1) == (value_1!=value_2));
-
 }
 
 
