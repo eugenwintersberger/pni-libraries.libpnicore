@@ -3,6 +3,9 @@ set(SOURCES value_test.cpp
             value_construction_test.cpp
             value_assignment_test.cpp
             uint8_value_as_test.cpp
+            uint16_value_as_test.cpp
+            uint32_value_as_test.cpp
+            uint64_value_as_test.cpp
     )
 
 
