@@ -165,7 +165,7 @@ void uint32_value_as_test::test_as_complex64()
 void uint32_value_as_test::test_as_complex128()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    typedef float128 target_type;
+    typedef complex128 target_type;
     compare(as<target_type>(v),convert<target_type>(value_1));
 }
 

@@ -6,6 +6,16 @@ set(SOURCES value_test.cpp
             uint16_value_as_test.cpp
             uint32_value_as_test.cpp
             uint64_value_as_test.cpp
+            int8_value_as_test.cpp
+            int16_value_as_test.cpp
+            int32_value_as_test.cpp
+            int64_value_as_test.cpp
+            float32_value_as_test.cpp
+            float64_value_as_test.cpp
+            float128_value_as_test.cpp
+            complex32_value_as_test.cpp
+            complex64_value_as_test.cpp
+            complex128_value_as_test.cpp
     )
 
 
