@@ -16,6 +16,9 @@ set(SOURCES value_test.cpp
             complex32_value_as_test.cpp
             complex64_value_as_test.cpp
             complex128_value_as_test.cpp
+            string_value_as_test.cpp
+            binary_value_as_test.cpp
+            bool_value_as_test.cpp
     )
 
 
