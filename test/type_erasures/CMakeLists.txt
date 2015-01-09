@@ -2,7 +2,6 @@
 set(SOURCES array_test.cpp
             type_erasures.cpp
             value_ref_test.cpp
-            value_test.cpp
     )
 
 
