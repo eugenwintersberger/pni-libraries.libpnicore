@@ -2,6 +2,7 @@
 set(SOURCES array_test.cpp
             type_erasures.cpp
             value_ref_test.cpp
+            int8_value_ref_as_test.cpp
     )
 
 
@@ -19,6 +20,7 @@ if(CPPUNIT_FOUND)
 
 endif()
 add_subdirectory(value)
+add_subdirectory(value_ref)
 
 add_test(NAME type_erasures_test 
          COMMAND type_erasures
