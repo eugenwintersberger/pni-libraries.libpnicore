@@ -45,7 +45,7 @@ void binary_value_as_test::test_as_uint8()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
     typedef uint8 target_type;
-    //would not compile
+    CPPUNIT_ASSERT_THROW(v.as<target_type>(),type_error);
 }
 
 //-----------------------------------------------------------------------------
@@ -53,7 +53,7 @@ void binary_value_as_test::test_as_uint16()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
     typedef uint16 target_type;
-    //would not compile
+    CPPUNIT_ASSERT_THROW(v.as<target_type>(),type_error);
 }
 
 //-----------------------------------------------------------------------------
@@ -61,7 +61,7 @@ void binary_value_as_test::test_as_uint32()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
     typedef uint32 target_type;
-    //would not compile
+    CPPUNIT_ASSERT_THROW(v.as<target_type>(),type_error);
 }
 
 //-----------------------------------------------------------------------------
@@ -69,7 +69,7 @@ void binary_value_as_test::test_as_uint64()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
     typedef uint64 target_type;
-    //would not compile
+    CPPUNIT_ASSERT_THROW(v.as<target_type>(),type_error);
 }
 
 //-----------------------------------------------------------------------------
@@ -77,7 +77,7 @@ void binary_value_as_test::test_as_int8()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
     typedef int8 target_type;
-    //would not compile
+    CPPUNIT_ASSERT_THROW(v.as<target_type>(),type_error);
 }
 
 //-----------------------------------------------------------------------------
@@ -85,7 +85,7 @@ void binary_value_as_test::test_as_int16()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
     typedef int16 target_type;
-    //would not compile
+    CPPUNIT_ASSERT_THROW(v.as<target_type>(),type_error);
 }
 
 //-----------------------------------------------------------------------------
@@ -93,7 +93,7 @@ void binary_value_as_test::test_as_int32()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
     typedef int32 target_type;
-    //would not compile
+    CPPUNIT_ASSERT_THROW(v.as<target_type>(),type_error);
 }
 
 //-----------------------------------------------------------------------------
@@ -101,7 +101,7 @@ void binary_value_as_test::test_as_int64()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
     typedef int64 target_type;
-    //would not compile
+    CPPUNIT_ASSERT_THROW(v.as<target_type>(),type_error);
 }
 
 //-----------------------------------------------------------------------------
@@ -109,7 +109,7 @@ void binary_value_as_test::test_as_float32()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
     typedef float32 target_type;
-    //wont compile
+    CPPUNIT_ASSERT_THROW(v.as<target_type>(),type_error);
 }
 
 //-----------------------------------------------------------------------------
@@ -117,7 +117,7 @@ void binary_value_as_test::test_as_float64()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
     typedef float64 target_type;
-    //wont compile
+    CPPUNIT_ASSERT_THROW(v.as<target_type>(),type_error);
 }
 
 //-----------------------------------------------------------------------------
@@ -125,7 +125,7 @@ void binary_value_as_test::test_as_float128()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
     typedef float128 target_type;
-    //wont compile
+    CPPUNIT_ASSERT_THROW(v.as<target_type>(),type_error);
 }
 
 //-----------------------------------------------------------------------------
@@ -133,7 +133,7 @@ void binary_value_as_test::test_as_complex32()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
     typedef complex32 target_type;
-    //wont compile
+    CPPUNIT_ASSERT_THROW(v.as<target_type>(),type_error);
 }
 
 //-----------------------------------------------------------------------------
@@ -141,7 +141,7 @@ void binary_value_as_test::test_as_complex64()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
     typedef complex64 target_type;
-    //wont compile
+    CPPUNIT_ASSERT_THROW(v.as<target_type>(),type_error);
 }
 
 //-----------------------------------------------------------------------------
@@ -149,7 +149,7 @@ void binary_value_as_test::test_as_complex128()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
     typedef complex128 target_type;
-    //wont compile
+    CPPUNIT_ASSERT_THROW(v.as<target_type>(),type_error);
 }
 
 //----------------------------------------------------------------------------
@@ -158,7 +158,7 @@ void binary_value_as_test::test_as_string()
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
     typedef string target_type;
     
-    CPPUNIT_ASSERT_THROW(as<target_type>(v),type_error);
+    CPPUNIT_ASSERT_THROW(v.as<target_type>(),type_error);
 }
 
 //----------------------------------------------------------------------------
@@ -167,7 +167,7 @@ void binary_value_as_test::test_as_binary()
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
     typedef binary target_type;
    
-    CPPUNIT_ASSERT(as<target_type>(v) == value_1);
+    CPPUNIT_ASSERT(v.as<target_type>() == value_1);
 }
 
 //----------------------------------------------------------------------------
@@ -176,6 +176,6 @@ void binary_value_as_test::test_as_bool()
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
     typedef bool_t target_type;
     
-    CPPUNIT_ASSERT_THROW(as<target_type>(v),type_error);
+    CPPUNIT_ASSERT_THROW(v.as<target_type>(),type_error);
 }
 

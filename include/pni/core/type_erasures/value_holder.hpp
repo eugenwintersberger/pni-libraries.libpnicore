@@ -23,6 +23,7 @@
 //
 #pragma once
 
+#include "../types/type_id_map.hpp"
 #include "value_holder_interface.hpp"
 
 namespace pni{

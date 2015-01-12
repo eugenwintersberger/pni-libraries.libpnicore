@@ -30,7 +30,6 @@
 #include "../../data_generator.hpp"
 
 #include <pni/core/type_erasures/value.hpp>
-#include <pni/core/type_erasures/as.hpp>
 #include <functional>
 
 using namespace pni::core;

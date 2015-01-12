@@ -29,11 +29,13 @@
 #include "../types/convert.hpp"
 #include "../types/type_conversion.hpp"
 #include "../types/traits.hpp"
+#include "value_holder.hpp"
 
 namespace pni{
 namespace core{
 
 
+    //------------------------------------------------------------------------
     template<
              typename TT,
              typename ST,
@@ -41,33 +43,65 @@ namespace core{
             > 
     struct value_converter
     {
+        typedef TT target_type;
+        typedef ST source_type;
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
-        static TT convert(const ST &v)
+        static target_type convert(const source_type &v)
         {
             throw type_error(EXCEPTION_RECORD,"Conversion not possible!");
-            return TT();
+            return target_type();
         }
 #pragma GCC diagnostic pop
     };
 
+
+
+    //------------------------------------------------------------------------
     template<
              typename TT,
              typename ST
             >
     struct value_converter<TT,ST,true>
     {
-        static TT convert(const ST &v)
+        typedef TT target_type;
+        typedef ST source_type;
+
+        static target_type convert(const source_type &v)
         {
-            return pni::core::convert<TT>(v);
+            return pni::core::convert<target_type>(v);
         }
     };
 
+    //------------------------------------------------------------------------
     template<
              typename TT,
              typename ST
             >
     using strategy = value_converter<TT,ST,convertible<ST,TT>::value>;
+
+    //------------------------------------------------------------------------
+    //!
+    //! \brief alias for std::reference_wrapper
+    //!
+    //! A simple alias for the std::reference_wrapper template to reduce
+    //! typing work. 
+    //!
+    //! \tparam T type of the reference
+    //!
+    template<typename T> using ref_type = std::reference_wrapper<T>;
+
+    //------------------------------------------------------------------------
+    template<
+             typename T,
+             typename PTR
+            >
+    value_holder<T> *get_holder_ptr(PTR &ptr)
+    {
+        typedef value_holder<T> holder_type;
+                
+        return dynamic_cast<holder_type*>(ptr.get());
+    }
 
 //end of namespace
 }

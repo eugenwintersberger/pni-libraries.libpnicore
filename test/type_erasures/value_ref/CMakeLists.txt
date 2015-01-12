@@ -1,6 +1,7 @@
 #need to define the version of the library
 set(SOURCES value_ref_test.cpp
             value_ref_construction_test.cpp
+            value_ref_assignment_test.cpp
     )
 
 

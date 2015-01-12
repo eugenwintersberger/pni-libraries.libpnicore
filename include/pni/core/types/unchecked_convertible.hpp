@@ -137,8 +137,14 @@ namespace core{
                         >,
 
         //-------------------source type complex128---------------------------
-        boost::mpl::pair<complex128,boost::mpl::vector<complex128>>
+        boost::mpl::pair<complex128,boost::mpl::vector<complex128>>,
 
+        //-------------------source type for string---------------------------
+        boost::mpl::pair<string,boost::mpl::vector<string>>,
+
+        boost::mpl::pair<bool_t,boost::mpl::vector<bool_t>>,
+
+        boost::mpl::pair<binary,boost::mpl::vector<binary>>
         > unchecked_type_vectors;
 
     //------------------------------------------------------------------------
@@ -162,7 +168,6 @@ namespace core{
         typedef boost::mpl::contains<map_element,TT> c;
         static const bool value = c::value;
     };
-
 
 //end of namespace
 }

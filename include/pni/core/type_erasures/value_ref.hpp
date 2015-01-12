@@ -27,8 +27,8 @@
 
 #include "../error/exceptions.hpp"
 #include "../types/types.hpp"
-#include "../arrays.hpp"
 #include "value_holder.hpp"
+#include "utils.hpp"
 
 namespace pni{
 namespace core{
@@ -39,64 +39,6 @@ namespace core{
     //! \ingroup type_erasure_classes
     //! \brief type erasure for references to POD data
     //!
-    //! Unlike value this type erasure holds references to POD data created 
-    //! with std::ref. Like value the types managed by the erasure are those 
-    //! that are defined in types.hpp and thus have a type_id_t value 
-    //! associated with them. value_ref is default construtible and thus can be 
-    //! stored in as container. It is important to note that unlike the value 
-    //! type erasure, value_ref cannot be constructed from a literal!
-    //!
-    //! Instantiation is quite simple
-    //!
-    //! \code
-    //! float64 v1 = 100.243;
-    //! value_ref v = std::ref(v1);
-    //! \endcode
-    //! The idea is that it is now possible to manipulate either the 
-    //! original object or the value_ref instance. Consequently the behavior 
-    //! of the assignment operator is slightly different from that of the 
-    //! value class as will be shown in the next example
-    //! \code
-    //! float32 v1 = 34;
-    //! value_ref v = std::ref(v1); 
-    //! //v holds now aaaa reference to v1 and thus has a value of 34
-    //!
-    //! //assigment of a simple value will change the value of value_ref 
-    //! //as well as of the original object v1
-    //! v = 1245.2340; 
-    //!
-    //! //however we can assign a new reference with
-    //! complex32 x(1,2);
-    //! v = std::ref(x);
-    //!
-    //! //now v points to x rather than to v1
-    //! \endcode
-    //! 
-    //! Accessing the content of an instance of value_ref is again similar to 
-    //! value
-    //! \code
-    //! float32 v1 = 123.03;
-    //! value_ref v = std::ref(v1);
-    //! float32 a = v.as<float32>();
-    //! \endcode
-    //! if the type passed as a template parameter to as<> does not match the 
-    //! type of the data wrapped by the value class a type_error exception 
-    //! will be thrown. 
-    //!
-    //! The value class provides input and output operators to read and write 
-    //! to an instance from streams. 
-    //! \code
-    //! value_ref v = ....;
-    //! std::cin>>v;
-    //! std::cout<<v;
-    //! \endcode
-    //! Other streams are of coarse supported. It is important to note that an
-    //! uninitialized instance of v will throw an exception if one tries to 
-    //! access data for reading. However as this class holds references there 
-    //! is no such thing as a creation function to create an empty object. 
-    //! It is up to the programmer to do proper initialization. Furthermore 
-    //! it is the responsibility of the user to ensure that the lifetime 
-    //! of an object exceeds that of a reference pointing to it.
     //!
     class value_ref
     {
@@ -129,6 +71,56 @@ namespace core{
             //! \param r exception record of the code position 
             //!
             void _check_type(type_id_t tid,const exception_record &r) const;
+            
+
+            //----------------------------------------------------------------
+            //! 
+            //! \brief return value
+            //!
+            //! Return the value of the variable the reference refers to. 
+            //! T denotes the data type requested by the  user. S denotes 
+            //! the type of the variable the reference points to.
+            //! 
+            //! \throws type_error if the conversion is not possible
+            //! \throws range_error if the value 
+            //! \tparam T target type
+            //! \tparam S source type
+            //! \return value as T
+            //!
+            template<
+                     typename T,
+                     typename S 
+                    > 
+            T _get_value() const 
+            {
+                typedef strategy<T,S>   strategy_type;
+
+                return strategy_type::convert(get_holder_ptr<ref_type<S>>(_ptr)->as()); 
+            }
+
+            //----------------------------------------------------------------
+            //!
+            //! \brief set value
+            //! 
+            //! Sets the value of the variable the reference points to. 
+            //!
+            //! \throws type_error if the conversion is not possible
+            //! \throws range_error if the passed value does not fit in the
+            //! target type
+            //! \tparam S type of the variable
+            //! \tparam T type of the value the user passed
+            //! \param T 
+
+            template<
+                     typename S,
+                     typename T 
+                    >
+            void _set_value(const T &v)
+            {
+                typedef strategy<S,T> strategy_type;
+
+                get_holder_ptr<ref_type<S>>(_ptr)->as().get() = strategy_type::convert(v);
+            }
 
             //! pointer holding the value stored
             pointer_type _ptr;
@@ -143,10 +135,10 @@ namespace core{
             //! 
             //! \brief template constructor from value
             //!
-            //! Constructs a reference to a value. 
+            //! Constructs a reference to a variable of type T. 
             //! \code
             //! float32 x = 100.;
-            //! value_ref v = std::ref(x);
+            //! value_ref v(std::ref(x));
             //! \endcode
             //!
             //! \tparam T type of the value to which the reference shall be created
@@ -165,17 +157,17 @@ namespace core{
 
             //==================assignment operators===========================
             //! 
-            //! \brief assign a value to the reference
+            //! \brief assign value to the variable
             //!
-            //! Assign a new value to reference. 
-            //! \code
-            //! uint16 v1=1;
-            //! value_ref vr = std::ref(v1);
-            //!
-            //! vr = uint16(12);
-            //! \endcode
-            //! The assignment copies the new value to an appropriate instance 
-            //! of value_holder. This means that the type changes. 
+            //! Assign a value of type T to the target of the reference. 
+            //! If T differs from the original type of the target the data will 
+            //! be converted. 
+            //! 
+            //! \throws memory_not_allocated_error if the reference is not 
+            //! initialized 
+            //! \throws type_error if conversion is not possible 
+            //! \throws range_error if the value does not fit into the target
+            //! type.
             //!
             //! \param v reference to the new value
             //! \return instance of value
@@ -188,10 +180,14 @@ namespace core{
             //!
             //! In this case the value stored in v will be assigned to the
             //! variable refered to by this instance of value_ref.
+            //! If the data types do not match a type conversion takes place 
+            //! if necessary.
             //!
             //! \throws memory_not_allocated if the reference is not initialized
             //! \throws type_error if the type of v and the reference to not
             //! match
+            //! \throws range_error if the value of v does not fit in the type 
+            //! of the variable referenced by this instance of value_ref.
             //! \param v value instance
             //!
             value_ref &operator=(const value &v);
@@ -213,16 +209,18 @@ namespace core{
 
             //-----------------------------------------------------------------
             //!
-            //! \brief get the stored value
+            //! \brief get the referenced value
             //!
-            //! Return the stored value as type T. If the value instance has 
-            //! not been initialized before an exception is thrown. In 
-            //! addition, if the data type passed as a template parameter 
-            //! does not fit the type used to store the data an exception 
-            //! will be thrown.
+            //! Returns the value of the variable the value_ref instance 
+            //! points to. If the type requested by the user via the template
+            //! parameter T is different from the type of the variable value_ref
+            //! points to the data will be converted if possible. 
+            //! If the conversion fails or is not possible an exception will 
+            //! be thrown. 
             //! 
             //! \throws memory_not_allocated_error if value is uninitialized
-            //! \throws type_error if T does not match the original data type
+            //! \throws type_error if data cannot be converted to T
+            //! \throws range_error if data does not fit into the range of T 
             //! \return value of type T 
             //!
             template<typename T> T as() const;
@@ -248,6 +246,10 @@ namespace core{
                                             value_ref &v);
 
             //----------------------------------------------------------------
+            //!
+            //! \brief value comparison
+            //!
+            //! Compares the two values stored by the 
             friend bool operator==(const value_ref &a,const value_ref &b);
 
             //----------------------------------------------------------------
@@ -257,12 +259,34 @@ namespace core{
     //======================implementation of template members=================
     template<typename T> T value_ref::as() const
     {
-        typedef value_holder<std::reference_wrapper<T> > holder_type;
-      
+        //check if the reference points to something
         _check_pointer(EXCEPTION_RECORD);
-        _check_type(type_id_map<T>::type_id,EXCEPTION_RECORD);
 
-        return dynamic_cast<holder_type*>(_ptr.get())->as();
+        type_id_t tid = type_id();
+        switch(tid)
+        {
+            case type_id_t::UINT8:      return _get_value<T,uint8>();
+            case type_id_t::INT8:       return _get_value<T,int8>();
+            case type_id_t::UINT16:     return _get_value<T,uint16>();
+            case type_id_t::INT16:      return _get_value<T,int16>();
+            case type_id_t::UINT32:     return _get_value<T,uint32>();
+            case type_id_t::INT32:      return _get_value<T,int32>();
+            case type_id_t::UINT64:     return _get_value<T,uint64>();
+            case type_id_t::INT64:      return _get_value<T,int64>();
+            case type_id_t::FLOAT32:    return _get_value<T,float32>();
+            case type_id_t::FLOAT64:    return _get_value<T,float64>();
+            case type_id_t::FLOAT128:   return _get_value<T,float128>();
+            case type_id_t::COMPLEX32:  return _get_value<T,complex32>();
+            case type_id_t::COMPLEX64:  return _get_value<T,complex64>();
+            case type_id_t::COMPLEX128: return _get_value<T,complex128>();
+            case type_id_t::BINARY:     return _get_value<T,binary>();
+            case type_id_t::STRING:     return _get_value<T,string>();
+            case type_id_t::BOOL:       return _get_value<T,bool_t>();
+            default:
+                throw type_error(EXCEPTION_RECORD,
+                        "The reference points to an object of unkown type!");
+        }
+        
     }
            
     //-------------------------------------------------------------------------
@@ -271,12 +295,33 @@ namespace core{
         typedef value_holder<std::reference_wrapper<T> > holder_type;
 
         _check_pointer(EXCEPTION_RECORD);
+        
+        type_id_t tid = type_id();
 
-        //if types do not match we throw an exception 
-        _check_type(type_id_map<T>::type_id,EXCEPTION_RECORD);
+        switch(tid)
+        {
+            case type_id_t::UINT8:      _set_value<uint8>(v);      break;
+            case type_id_t::INT8:       _set_value<int8>(v);       break;
+            case type_id_t::UINT16:     _set_value<uint16>(v);     break;
+            case type_id_t::INT16:      _set_value<int16>(v);      break;
+            case type_id_t::UINT32:     _set_value<uint32>(v);     break;
+            case type_id_t::INT32:      _set_value<int32>(v);      break;
+            case type_id_t::UINT64:     _set_value<uint64>(v);     break;
+            case type_id_t::INT64:      _set_value<int64>(v);      break;
+            case type_id_t::FLOAT32:    _set_value<float32>(v);    break;
+            case type_id_t::FLOAT64:    _set_value<float64>(v);    break;
+            case type_id_t::FLOAT128:   _set_value<float128>(v);   break;
+            case type_id_t::COMPLEX32:  _set_value<complex32>(v);  break;
+            case type_id_t::COMPLEX64:  _set_value<complex64>(v);  break;
+            case type_id_t::COMPLEX128: _set_value<complex128>(v); break;
+            case type_id_t::BINARY:     _set_value<binary>(v);     break;
+            case type_id_t::STRING:     _set_value<string>(v);     break;
+            case type_id_t::BOOL:       _set_value<bool_t>(v);     break;
+            default:
+                throw type_error(EXCEPTION_RECORD,
+                        "The reference points to an object of unknown type!");
+        }
 
-        //due to the previous check this cast is save
-        dynamic_cast<holder_type*>(_ptr.get())->as().get() = v;
         return *this;
     }
 
@@ -320,6 +365,21 @@ namespace core{
 
     bool operator==(const value_ref &a,const value_ref &b);
 
+    //------------------------------------------------------------------------
+    //!
+    //! \ingroup type_erasure_classes
+    //! \brief conversion function to value
+    //!
+    //! This function extracts the value stored in the variable referenced by 
+    //! value_ref and stores it in a new instance of value. 
+    //!
+    //! \throws memory_not_allocated_error if the reference is not set
+    //! \throws type_error if the type of the variable referenced by value_ref 
+    //! is unknown
+    //!
+    //! \param v reference to value_ref
+    //! \return instance of value with the content of value_ref
+    //!
     value to_value(const value_ref &v);
 
 //end of namespace

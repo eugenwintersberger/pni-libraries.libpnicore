@@ -29,6 +29,7 @@
 #include "../types/types.hpp"
 #include "../arrays.hpp"
 #include "value_holder.hpp"
+#include "utils.hpp"
 
 namespace pni{
 namespace core{
@@ -77,6 +78,20 @@ namespace core{
 
             template<typename T>
             using enable_no_value_ref = std::enable_if<!is_value_ref<T>::value>;
+
+            //! 
+            //! \brief return value T 
+            //!
+            template<
+                     typename T,
+                     typename S 
+                    > 
+            T _get_value() const 
+            {
+                typedef strategy<T,S>   strategy_type;
+
+                return strategy_type::convert(get_holder_ptr<S>(_ptr)->as()); 
+            }
 
             //----------------------------------------------------------------
             //!
@@ -166,6 +181,8 @@ namespace core{
             //!
             //! \throws memory_not_allocate_error if value is uninitialized
             //! \throws type_error if T does not match the original data type
+            //! \throws range_error if the value stored does not fit into the 
+            //! requested type.
             //! \return value of type T 
             //!
             template<typename T> T as() const;
@@ -199,16 +216,31 @@ namespace core{
     //=====================implementation of template member functions=========
     template<typename T> T value::as() const
     {
-        if(!_ptr) _throw_not_allocated_error(EXCEPTION_RECORD);
+        type_id_t tid = type_id();
 
-        if(type_id() == type_id_map<T>::type_id)
+        switch(tid)
         {
-            return dynamic_cast<value_holder<T>*>(_ptr.get())->as();
+            case type_id_t::UINT8:      return _get_value<T,uint8>();
+            case type_id_t::INT8:       return _get_value<T,int8>();
+            case type_id_t::UINT16:     return _get_value<T,uint16>();
+            case type_id_t::INT16:      return _get_value<T,int16>();
+            case type_id_t::UINT32:     return _get_value<T,uint32>();
+            case type_id_t::INT32:      return _get_value<T,int32>();
+            case type_id_t::UINT64:     return _get_value<T,uint64>();
+            case type_id_t::INT64:      return _get_value<T,int64>();
+            case type_id_t::FLOAT32:    return _get_value<T,float32>();
+            case type_id_t::FLOAT64:    return _get_value<T,float64>();
+            case type_id_t::FLOAT128:   return _get_value<T,float128>();
+            case type_id_t::COMPLEX32:  return _get_value<T,complex32>();
+            case type_id_t::COMPLEX64:  return _get_value<T,complex64>();
+            case type_id_t::COMPLEX128: return _get_value<T,complex128>(); 
+            case type_id_t::STRING:     return _get_value<T,string>();
+            case type_id_t::BINARY:     return _get_value<T,binary>();
+            case type_id_t::BOOL:       return _get_value<T,bool_t>();
+            default:
+                throw type_error(EXCEPTION_RECORD,"Uknown type!");
         }
-        throw type_error(EXCEPTION_RECORD,
-                "incompatible type - cannot return value");
 
-        return T(0); //just to make the compiler happy
     }
 
     //-------------------------------------------------------------------------

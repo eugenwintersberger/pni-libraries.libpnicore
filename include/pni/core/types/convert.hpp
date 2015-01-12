@@ -64,6 +64,15 @@ namespace core{
         }
     };
 
+    template<typename TT>
+    struct converter<TT,TT>
+    {
+        static TT convert(const TT &value)
+        {
+            return value;
+        }
+    };
+
     //------------------------------------------------------------------------
     //!
     //! \ingroup type_classes_internal

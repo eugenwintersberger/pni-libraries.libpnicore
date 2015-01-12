@@ -18,7 +18,7 @@
 //!
 //! ===========================================================================
 //!
-//!  Created on: Jan 9, 2015
+//!  Created on: Jan 8, 2015
 //!      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
 //!
 
@@ -26,18 +26,18 @@
 #include<cppunit/TestFixture.h>
 #include<cppunit/extensions/HelperMacros.h>
 #include<boost/current_function.hpp>
-#include "../../compare.hpp"
-#include "../../data_generator.hpp"
+#include "../compare.hpp"
+#include "../data_generator.hpp"
 
-#include <pni/core/type_erasures/value.hpp>
+#include <pni/core/type_erasures/value_ref.hpp>
 #include <functional>
 
 using namespace pni::core;
 
 
-class float128_value_as_test : public CppUnit::TestFixture
+class int8_value_ref_as_test : public CppUnit::TestFixture
 {
-        CPPUNIT_TEST_SUITE(float128_value_as_test);
+        CPPUNIT_TEST_SUITE(int8_value_ref_as_test);
         CPPUNIT_TEST(test_as_uint8);
         CPPUNIT_TEST(test_as_uint16);
         CPPUNIT_TEST(test_as_uint32);
@@ -57,11 +57,11 @@ class float128_value_as_test : public CppUnit::TestFixture
         CPPUNIT_TEST(test_as_binary);
         CPPUNIT_TEST_SUITE_END();
    
-        typedef float128 value_type;
+        typedef int8 value_type;
         typedef random_generator<value_type> generator_type;
         generator_type generator;
         value_type value_1;
-        value v;
+        value_ref v;
 
     public:
         void setUp();
