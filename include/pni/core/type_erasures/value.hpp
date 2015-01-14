@@ -309,6 +309,19 @@ namespace core{
         return value(T{});
     }
 
+    //------------------------------------------------------------------------
+    //!
+    //! \ingroup type_erasure_classes
+    //! \brief create value
+    //! 
+    //! Create a value instance for a particular type. Here the type is entirely
+    //! determined by its type ID. 
+    //!
+    //! \throws type_error if the type ID is now known
+    //! \tparam T requested type
+    //! 
+    value make_value(type_id_t tid);
+
 //end of namespace
 }
 }
