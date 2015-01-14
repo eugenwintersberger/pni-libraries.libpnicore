@@ -31,12 +31,6 @@ namespace pni{
 namespace core{
 
     //-------------------------------------------------------------------------
-    void value::_throw_not_allocated_error(const exception_record &r)
-    {
-        throw memory_not_allocated_error(r, "Instance of value holds no data!");
-    }
-
-    //-------------------------------------------------------------------------
     // Implementation of constructors
     //-------------------------------------------------------------------------
     value::value():
@@ -89,30 +83,6 @@ namespace core{
     type_id_t value::type_id() const
     {
         return _ptr->type_id();
-    }
-
-    //-------------------------------------------------------------------------
-    std::ostream &operator<<(std::ostream &stream,const value &v)
-    {
-        return v._ptr->write(stream);
-    }
-    
-    //-------------------------------------------------------------------------
-    std::istream &operator>>(std::istream &stream,value &v)
-    {
-        return v._ptr->read(stream);
-    }
-
-    //-------------------------------------------------------------------------
-    bool operator==(const value &a,const value &b)
-    {
-        return a._ptr->compare(*b._ptr);
-    }
-
-    //-------------------------------------------------------------------------
-    bool operator!=(const value &a,const value &b)
-    {
-        return !(a==b);
     }
 
     //-------------------------------------------------------------------------

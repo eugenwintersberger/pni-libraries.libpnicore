@@ -259,13 +259,6 @@ namespace core{
             //!
             size_t size() const; 
 
-            //-----------------------------------------------------------------
-            //! write container to output stream
-            std::ostream &write(std::ostream &os) const;
-
-            //-----------------------------------------------------------------
-            //! read data from input stream
-            std::istream &read(std::istream &is);
 
             //-----------------------------------------------------------------
             //!

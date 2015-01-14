@@ -103,6 +103,34 @@ namespace core{
         return dynamic_cast<holder_type*>(ptr.get());
     }
 
+    //------------------------------------------------------------------------
+    template<
+             typename T,
+             typename S,
+             typename PTR
+            > 
+    T get_value(PTR holder_ptr)  
+    {
+        typedef strategy<T,S>   strategy_type;
+
+        return strategy_type::convert(holder_ptr->as()); 
+    }
+
+    //------------------------------------------------------------------------
+    template<
+             typename S,
+             typename T,
+             typename PTR
+            >
+    void set_value(PTR holder_ptr,const T &v)
+    {
+        typedef strategy<S,T> strategy_type;
+
+        holder_ptr->as() = strategy_type::convert(v);
+    }
+
+
+
 //end of namespace
 }
 }

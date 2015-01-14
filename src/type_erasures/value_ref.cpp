@@ -119,35 +119,6 @@ namespace core{
 
     }
 
-    //-------------------------------------------------------------------------
-    std::ostream &operator<<(std::ostream &stream,const value_ref &v)
-    {
-        v._check_pointer(EXCEPTION_RECORD);
-        return v._ptr->write(stream);
-    }
-   
-    //-------------------------------------------------------------------------
-    std::istream &operator>>(std::istream &stream,value_ref &v)
-    {
-        v._check_pointer(EXCEPTION_RECORD);
-        return v._ptr->read(stream);
-    }
-
-    //------------------------------------------------------------------------
-    bool operator==(const value_ref &a,const value_ref &b)
-    {
-        if(a._ptr && b._ptr)
-            return a._ptr->compare(*b._ptr);
-
-        return false;
-    }
-
-    //------------------------------------------------------------------------
-    bool operator!=(const value_ref &a,const value_ref &b)
-    {
-        return !(a==b);
-    }
-
     //------------------------------------------------------------------------
     value to_value(const value_ref &v)
     {

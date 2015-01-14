@@ -128,6 +128,17 @@ namespace core{
     typedef boost::mpl::vector<none,bool_t,binary,string> non_numeric_types;
 
     //------------------------------------------------------------------------
+    //!
+    //! \ingroup type_classes
+    //! \brief all primitive types
+    //! 
+    //! This MPL vector contains all primitive types. These types are in some
+    //! sense considered as POD types.
+    //!
+    typedef boost::mpl::joint_view<numeric_types,non_numeric_types> 
+        primitive_types;
+
+    //------------------------------------------------------------------------
     //! 
     //! \ingroup type_classes
     //! \brief type codes for PNI data types

@@ -88,21 +88,6 @@ namespace core{
         return _ptr->size(); 
     }
 
-
-    //-------------------------------------------------------------------------
-    std::ostream &array::write(std::ostream &os) const 
-    {
-        _check_pointer(_ptr,EXCEPTION_RECORD);
-        return _ptr->write(os);
-    }
-
-    //-------------------------------------------------------------------------
-    std::istream &array::read(std::istream &is) 
-    {
-        _check_pointer(_ptr,EXCEPTION_RECORD);
-        return _ptr->read(is);
-    }
-
     //-------------------------------------------------------------------------
     value array::operator[](size_t i) const
     {
@@ -167,34 +152,11 @@ namespace core{
     }
    
     //-------------------------------------------------------------------------
-    std::ostream &operator<<(std::ostream &os,const array &o)
-    {
-        return o.write(os);
-    }
-
-    //-------------------------------------------------------------------------
-    std::istream &operator>>(std::istream &is,array &o)
-    {
-        return o.read(is);
-    }
-
-    //-------------------------------------------------------------------------
     type_id_t type_id(const array &a)
     {
         return a.type_id();
     }
 
-    //-------------------------------------------------------------------------
-    bool operator==(const array &a,const array &b)
-    {
-        return std::equal(a.begin(),a.end(),b.begin());
-    }
-
-    //-------------------------------------------------------------------------
-    bool operator!=(const array &a,const array &b)
-    {
-        return !(a==b);
-    }
 
 //end of namespace
 }

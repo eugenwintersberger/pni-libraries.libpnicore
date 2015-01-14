@@ -108,8 +108,8 @@ void value_assignment_test<T>::test_reset()
 
     value v1(value_1);
 
-    v1 = uint8(3);
-    CPPUNIT_ASSERT(v1.type_id()==type_id_t::UINT8);
-    compare(3,v1.as<uint8>());
+    value_1 = generator();
+    v1 = value_1;
+    compare(value_1,v1.as<T>());
 }
 

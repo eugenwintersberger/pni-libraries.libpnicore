@@ -71,7 +71,6 @@ namespace core{
             //! \param r exception record of the code position 
             //!
             void _check_type(type_id_t tid,const exception_record &r) const;
-            
 
             //----------------------------------------------------------------
             //! 
@@ -91,11 +90,9 @@ namespace core{
                      typename T,
                      typename S 
                     > 
-            T _get_value() const 
+            T _get() const
             {
-                typedef strategy<T,S>   strategy_type;
-
-                return strategy_type::convert(get_holder_ptr<ref_type<S>>(_ptr)->as()); 
+                return get_value<T,S>(get_holder_ptr<ref_type<S>>(_ptr));
             }
 
             //----------------------------------------------------------------
@@ -110,16 +107,13 @@ namespace core{
             //! \tparam S type of the variable
             //! \tparam T type of the value the user passed
             //! \param T 
-
             template<
                      typename S,
-                     typename T 
-                    >
-            void _set_value(const T &v)
+                     typename T
+                    > 
+            void _set(const T& v) const
             {
-                typedef strategy<S,T> strategy_type;
-
-                get_holder_ptr<ref_type<S>>(_ptr)->as().get() = strategy_type::convert(v);
+                return set_value<S,T>(get_holder_ptr<ref_type<S>>(_ptr),v);
             }
 
             //! pointer holding the value stored
@@ -236,24 +230,6 @@ namespace core{
             //!
             type_id_t type_id() const;
 
-            //-----------------------------------------------------------------
-            //! output stream operator
-            friend std::ostream &operator<<(std::ostream &stream,
-                                            const value_ref &v);
-            //-----------------------------------------------------------------
-            //! input stream operator
-            friend std::istream &operator>>(std::istream &stream,
-                                            value_ref &v);
-
-            //----------------------------------------------------------------
-            //!
-            //! \brief value comparison
-            //!
-            //! Compares the two values stored by the 
-            friend bool operator==(const value_ref &a,const value_ref &b);
-
-            //----------------------------------------------------------------
-            friend bool operator!=(const value_ref &a,const value_ref &b);
     };
 
     //======================implementation of template members=================
@@ -265,23 +241,23 @@ namespace core{
         type_id_t tid = type_id();
         switch(tid)
         {
-            case type_id_t::UINT8:      return _get_value<T,uint8>();
-            case type_id_t::INT8:       return _get_value<T,int8>();
-            case type_id_t::UINT16:     return _get_value<T,uint16>();
-            case type_id_t::INT16:      return _get_value<T,int16>();
-            case type_id_t::UINT32:     return _get_value<T,uint32>();
-            case type_id_t::INT32:      return _get_value<T,int32>();
-            case type_id_t::UINT64:     return _get_value<T,uint64>();
-            case type_id_t::INT64:      return _get_value<T,int64>();
-            case type_id_t::FLOAT32:    return _get_value<T,float32>();
-            case type_id_t::FLOAT64:    return _get_value<T,float64>();
-            case type_id_t::FLOAT128:   return _get_value<T,float128>();
-            case type_id_t::COMPLEX32:  return _get_value<T,complex32>();
-            case type_id_t::COMPLEX64:  return _get_value<T,complex64>();
-            case type_id_t::COMPLEX128: return _get_value<T,complex128>();
-            case type_id_t::BINARY:     return _get_value<T,binary>();
-            case type_id_t::STRING:     return _get_value<T,string>();
-            case type_id_t::BOOL:       return _get_value<T,bool_t>();
+            case type_id_t::UINT8:      return _get<T,uint8>();
+            case type_id_t::INT8:       return _get<T,int8>();
+            case type_id_t::UINT16:     return _get<T,uint16>();
+            case type_id_t::INT16:      return _get<T,int16>();
+            case type_id_t::UINT32:     return _get<T,uint32>();
+            case type_id_t::INT32:      return _get<T,int32>();
+            case type_id_t::UINT64:     return _get<T,uint64>();
+            case type_id_t::INT64:      return _get<T,int64>();
+            case type_id_t::FLOAT32:    return _get<T,float32>();
+            case type_id_t::FLOAT64:    return _get<T,float64>();
+            case type_id_t::FLOAT128:   return _get<T,float128>();
+            case type_id_t::COMPLEX32:  return _get<T,complex32>();
+            case type_id_t::COMPLEX64:  return _get<T,complex64>();
+            case type_id_t::COMPLEX128: return _get<T,complex128>();
+            case type_id_t::BINARY:     return _get<T,binary>();
+            case type_id_t::STRING:     return _get<T,string>();
+            case type_id_t::BOOL:       return _get<T,bool_t>();
             default:
                 throw type_error(EXCEPTION_RECORD,
                         "The reference points to an object of unkown type!");
@@ -300,23 +276,23 @@ namespace core{
 
         switch(tid)
         {
-            case type_id_t::UINT8:      _set_value<uint8>(v);      break;
-            case type_id_t::INT8:       _set_value<int8>(v);       break;
-            case type_id_t::UINT16:     _set_value<uint16>(v);     break;
-            case type_id_t::INT16:      _set_value<int16>(v);      break;
-            case type_id_t::UINT32:     _set_value<uint32>(v);     break;
-            case type_id_t::INT32:      _set_value<int32>(v);      break;
-            case type_id_t::UINT64:     _set_value<uint64>(v);     break;
-            case type_id_t::INT64:      _set_value<int64>(v);      break;
-            case type_id_t::FLOAT32:    _set_value<float32>(v);    break;
-            case type_id_t::FLOAT64:    _set_value<float64>(v);    break;
-            case type_id_t::FLOAT128:   _set_value<float128>(v);   break;
-            case type_id_t::COMPLEX32:  _set_value<complex32>(v);  break;
-            case type_id_t::COMPLEX64:  _set_value<complex64>(v);  break;
-            case type_id_t::COMPLEX128: _set_value<complex128>(v); break;
-            case type_id_t::BINARY:     _set_value<binary>(v);     break;
-            case type_id_t::STRING:     _set_value<string>(v);     break;
-            case type_id_t::BOOL:       _set_value<bool_t>(v);     break;
+            case type_id_t::UINT8:      _set<uint8>(v);      break;
+            case type_id_t::INT8:       _set<int8>(v);       break;
+            case type_id_t::UINT16:     _set<uint16>(v);     break;
+            case type_id_t::INT16:      _set<int16>(v);      break;
+            case type_id_t::UINT32:     _set<uint32>(v);     break;
+            case type_id_t::INT32:      _set<int32>(v);      break;
+            case type_id_t::UINT64:     _set<uint64>(v);     break;
+            case type_id_t::INT64:      _set<int64>(v);      break;
+            case type_id_t::FLOAT32:    _set<float32>(v);    break;
+            case type_id_t::FLOAT64:    _set<float64>(v);    break;
+            case type_id_t::FLOAT128:   _set<float128>(v);   break;
+            case type_id_t::COMPLEX32:  _set<complex32>(v);  break;
+            case type_id_t::COMPLEX64:  _set<complex64>(v);  break;
+            case type_id_t::COMPLEX128: _set<complex128>(v); break;
+            case type_id_t::BINARY:     _set<binary>(v);     break;
+            case type_id_t::STRING:     _set<string>(v);     break;
+            case type_id_t::BOOL:       _set<bool_t>(v);     break;
             default:
                 throw type_error(EXCEPTION_RECORD,
                         "The reference points to an object of unknown type!");
@@ -324,46 +300,6 @@ namespace core{
 
         return *this;
     }
-
-    //-------------------------------------------------------------------------
-    //!
-    //! \ingroup type_erasure_classes
-    //! \brief stream output operator
-    //!
-    //! Writes the content of value to the output stream. An exception is 
-    //! thrown if the value is not initialized. 
-    //!
-    //! \throws memory_not_allocated_error if value is not initialized 
-    //! \param stream output stream
-    //! \param v reference to value
-    //! \return reference to output stream
-    //!
-    std::ostream &operator<<(std::ostream &stream,const value_ref &v);
-
-    //-------------------------------------------------------------------------
-    //!
-    //! \ingroup type_erasure_classes
-    //! \brief stream input operator
-    //!
-    //! Read data from an input stream to the value. It is important to 
-    //! note that the value must be initialized otherwise an exception will 
-    //! be thrown. 
-    //! \code
-    //! value v = value::create<uint32>();
-    //! std::cin>>v;
-    //! \endcode
-    //!
-    //! \throw memroy_not_allocated_error if value not initialized 
-    //! \param stream input stream
-    //! \param v value where to store data
-    //! \return reference to input stream
-    //!
-    std::istream &operator>>(std::istream &stream,value_ref &v);
-
-    //------------------------------------------------------------------------
-    bool operator!=(const value_ref &a,const value_ref &b);
-
-    bool operator==(const value_ref &a,const value_ref &b);
 
     //------------------------------------------------------------------------
     //!
