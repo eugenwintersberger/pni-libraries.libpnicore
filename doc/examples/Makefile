@@ -69,3 +69,4 @@ type_erasure_record:type_erasure_record.cpp
 	
 clean:
 	rm -f $(PRGS)
+	rm -rf *.o
