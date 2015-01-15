@@ -242,47 +242,6 @@ namespace core{
     }
 
     //-------------------------------------------------------------------------
-    //!
-    //! \ingroup type_erasure_classes
-    //! \brief stream output operator
-    //!
-    //! Writes the content of value to the output stream. An exception is 
-    //! thrown if the value is not initialized. 
-    //! 
-    //! \throws memory_allocation_error if value is not initialized 
-    //! \param stream output stream
-    //! \param v reference to value
-    //! \return reference to output stream
-    //!
-    std::ostream &operator<<(std::ostream &stream,const value &v);
-
-    //-------------------------------------------------------------------------
-    //!
-    //! \ingroup type_erasure_classes
-    //! \brief stream input operator
-    //!
-    //! Read data from an input stream to the value. It is important to note 
-    //! that the value must be initialized otherwise an exception will be 
-    //! thrown. 
-    //! \code
-    //! value v = value::create<uint32>();
-    //! std::cin>>v;
-    //! \endcode
-    //!
-    //! \throw memory_not_allocated_error if value not initialized 
-    //! \param stream input stream
-    //! \param v value where to store data
-    //! \return reference to input stream
-    //!
-    std::istream &operator>>(std::istream &stream,value &v);
-
-    //-------------------------------------------------------------------------
-    bool operator==(const value &a,const value &b);
-
-    //-------------------------------------------------------------------------
-    bool operator!=(const value &a,const value &b);
-
-    //-------------------------------------------------------------------------
     //! 
     //! \ingroup type_erasure_classes
     //! \brief get type ID

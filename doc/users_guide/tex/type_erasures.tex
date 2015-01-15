@@ -2,15 +2,22 @@
 
 %%%============================================================================
 Templates are powerful tools as they allow the compiler to perform all kinds of
-optimizations. In addition they help to avoid virtual function tables and thus
-increasing overall performance of a program. 
-Template instantiation virtually always goes along with code generation and thus
-with an increase in code size. This can cause problems in particular on small
-hardware (like ARM based systems) where resources are limited.
-Think about the \texttt{show\_info} function template in the previous chapter. The
-function will be instantiated for every array type passed to it although it does
-virtually the same thing for each of them (we see an example of this in the
-section below describing the array type erasure). 
+optimizations.In addition they help to avoid virtual functions in classes and
+thus increase performance by avoiding call indirection through the virtual
+functions table. However, there are two major obstacles with templates
+\begin{enumerate}
+\item template expansion virtually always leas to code generation and this could 
+lead to large binaries which might be a problem on small hardware architectures
+\item template libraries and the applications which are using them are harder 
+to maintain. 
+\end{enumerate}
+The last point may requires a bit of explanation. The reason why system
+administrators are not very happy with programs based on template libraries is
+that the latter ones are distributed as source code. 
+Consequently whenever a bug is fixed in the library all programs depending 
+on the code required recompilation. For programs using binary libraries only the
+library has to be updated. This is obviously much easier than recompiling 
+all the programs depending on a library. 
 
 A reasonable solution for this problem is the use of type erasures. 
 \libpnicore\ provides three different type erasures
@@ -21,22 +28,30 @@ A reasonable solution for this problem is the use of type erasures.
 \texttt{array} & stores a multidimensional array type 
 \end{tabular}
 \end{center}
-To use type erasures include the \texttt{/pni/core/type\_erasures.hpp} at the top of
+To use type erasures include the \cpp{/pni/core/type\_erasures.hpp} at the top of
 your source file.
 
 %%%============================================================================
-\section{The \texttt{value} type erasures}
+\section{The \cpp{value} type erasures}
 
-The \texttt{value} type erasure stores the value of a single scalar POD type. 
-\texttt{value} can be default constructed in which case an instance of type 
-\texttt{none} is stored as can be easily confirmed with
-\begin{cppcode}
+\subsection{Construction}
+The \cpp{value} type erasure stores the value of a single primitive type. 
+Whenever an instance of \cpp{value} is constructed memory is allocated 
+large enough to store the value of a particular type. 
+
+\cpp{value} provides a default constructor. The instance produced by the 
+default constructor holds a value of type \cpp{none}. \begin{cppcode}
 value v;
 std::cout<<v.type_id()<<std::endl; //output NONE
 \end{cppcode}
-\texttt{value} has a copy and move constructor for other instances from 
-\texttt{value}. However, the constructor for other variables and literals is 
-explicit 
+Though there is not too much one can do with such a type it has the nice 
+advantage that one can default construct an instance of type \cpp{value}.
+In addition a copy and a move constructor is provided. All these constructors
+are implicit. 
+
+The more interesting constructors are explicit. An instance of \cpp{value} 
+can be constructed either from a variable from a particular type or from a
+literal as shown in this next example
 \begin{cppcode}
 //explicit construction from a variable
 int32 n = 1000;
@@ -50,55 +65,87 @@ std::cout<<v2.type_id()<<std::endl; //output FLOAT64
 //copy construction
 value v3 = v1;
 \end{cppcode}
-\texttt{value} also allows copy and move assignment from other instances of
-\texttt{value} as well as from literals. In all cases the assignment can change the
-stored data type
+
+As mentioned earlier in this section, whenever an instance of \cpp{value} 
+is constructed, memory is allocated to store the quantity that should be 
+hidden in the type erasure. The default constructor would allocate memory for a 
+\cpp{none} type with which one can do nothing useful. 
+A typical application for type erasures would be to store primitive values 
+of different type in a container and we would like to make the decision 
+which type to use at runtime. 
+For this purpose one could define a vector type like this
 \begin{cppcode}
-value v1,v2;  //default constructed  (type NONE)
-
-//copy assignment from literal
-v1 = 32;  
-std::cout<<v1.type_id()<<std::endl;  //output INT32
-
-v2 = v1;
-std::cout<<v2.type_id()<<std::endl;  //output INT32
+typedef std::vector<value> value_vector; 
 \end{cppcode}
-If default construction is required but the type of the internal value should
-not be \cpp{none} one can use the \cpp{make\_value} function template 
+However, how would one initialize an instance of this vector? It would not make
+too much sense to use the default constructor (as we cannot pass type
+information). The solution to this problem is the \cpp{make\_value} function
+which comes in two flavors. The first, as shown in the next code snippet, takes
+a type ID as a single argument and returns an instance of \cpp{value} of the 
+requested type.
 \begin{cppcode}
-auto v = make_value<float128>();
-std::cout<<v.type_id()<<std::endl; //output: FLOAT128
-\end{cppcode}
-This function template is particularly useful in connection with input- and
-output-streams as will be shown later. 
+std::vector<type_id_t>  ids = get_ids();
+value_vector values; 
 
-To retrieve the data stored in an instance of \cpp{value} use the \cpp{as}
-member template function as shown in this next example
+for(auto id: ids)
+    values.push_back(make_value(id));
+\end{cppcode}
+In addition there is a function template which serves the same purpose
 \begin{cppcode}
-value v(float64(1.23));
-
-auto x = v.as<float64>();
-
-std::cout<<x<<std::endl;
+value v = make_value<uint32>();
 \end{cppcode}
-There are tow things which are important here: first, the type checking is very
-strict. To successfully retrieve the data value from the \cpp{value} instance
-the type passed as the template parameter must be exactly the equal to the type
-used to construct the \cpp{value} instance. Otherwise \cpp{type\_error} will be
-thrown. In addition, one cannot retrieve the value from a default constructed
-instance of \cpp{value} (the one which is of type \cpp{none}). In this case 
-\cpp{type\_error} will be thrown too.
+Here the type is determined by the template parameter of the function template.
 
-The \cpp{value} type erasure can be used with the standard C++ input and output
-streams
+\subsection{Assignment}
+
+Copy and move assignment are provided by the \cpp{value} between two of its
+instances. In both situations the type of the \cpp{value} instance on the 
+left handside of the operator changes (this is obvious). 
+Move and copy assignment have the expected semantics. 
+
+The more interesting situation appears with assigning new values to an instance
+of \cpp{value}. As memory is only allocated during creation (or copy
+assignment) assigning a new value does not create a new instance of
+\cpp{value} but rather tries to perform a type conversion between the 
+instance of \cpp{value} on the LHS of the operator and the value on the LHS. 
 \begin{cppcode}
-auto value = make_value<float32>();
-std::cin>>value;
+value v = make_value<float32>(); //creates a value for a float32 value
 
-std::cout<<value;
+v = uint16(5); //converts uint16 value to a float32 value
 \end{cppcode}
-however, it is necessary to create a default value whose type is not
-\cpp{none}.
+The type conversion follows the same rules as described in the section about 
+type conversion earlier in this manual (in fact it uses this functionality). 
+Consequently 
+\begin{cppcode}
+value v = make_value<float64>(); 
+
+v = complex32(3,4); //throws type_error 
+\end{cppcode}
+will throw a \cpp{type\_error} exception as a complex number cannot be 
+converted to a single float value.
+
+\subsection{Retrieving data}
+
+Retrieving data from an instance of \cpp{value} is done via the \cpp{as} 
+template method like this
+\begin{cppcode}
+value v = ....;
+
+auto data = v.as<uint8>();
+\end{cppcode}
+The template parameter of \cpp{as} determines the data type as which the data
+should be retrieved. Like for value assignment the method performs a type
+conversion if necessary and throws \cpp{type\_error} or \cpp{range\_error} 
+exceptions if the conversion is not possible or the numeric range of the
+requested type is too small.
+
+Information about the type of the data stored in the \cpp{value} instance 
+can be obtained by means of the \cpp{type\_id} method. 
+\begin{cppcode}
+value v = ...;
+v.type_id();
+\end{cppcode}
+
 
 %%%===========================================================================
 \section{The \cpp{value\_ref} type erasure}
