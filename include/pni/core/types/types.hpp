@@ -59,11 +59,11 @@ namespace core{
 
     //-----------------------complex types--------------------------------------
     //! 32Bit complex floating point type
-    typedef std::complex<float>       complex32; 
+    typedef std::complex<float32>  complex32; 
     //! 64Bit complex floating point type 
-    typedef std::complex<double>      complex64; 
+    typedef std::complex<float64>  complex64; 
     //! 128Bit complex floating point type
-    typedef std::complex<long double> complex128; 
+    typedef std::complex<float128> complex128; 
 
     //-----------------------utility types-------------------------------------
     typedef std::string     string; //!< String type

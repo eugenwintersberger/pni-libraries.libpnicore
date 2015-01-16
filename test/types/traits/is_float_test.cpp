@@ -18,7 +18,7 @@
 //
 // ===========================================================================
 //
-//  Created on: Jan 5, 2015
+//  Created on: Jan 7, 2015
 //      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
 //
 #include<cppunit/extensions/HelperMacros.h>
@@ -27,140 +27,140 @@
 
 #include <iostream>
 
-#include "numeric_type_test.hpp"
+#include "is_float_test.hpp"
 using namespace pni::core;
 
-CPPUNIT_TEST_SUITE_REGISTRATION(numeric_type_test);
+CPPUNIT_TEST_SUITE_REGISTRATION(is_float_test);
 
 //-----------------------------------------------------------------------------
-void numeric_type_test::setUp(){ }
+void is_float_test::setUp(){ }
 
 //-----------------------------------------------------------------------------
-void numeric_type_test::tearDown(){ }
+void is_float_test::tearDown(){ }
         
 
 //-----------------------------------------------------------------------------
-void numeric_type_test::test_uint8()
+void is_float_test::test_uint8()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    CPPUNIT_ASSERT(numeric_type<uint8>::value);
+    CPPUNIT_ASSERT(!is_float(type_id_t::UINT8));
 }
 
 //-----------------------------------------------------------------------------
-void numeric_type_test::test_uint16()
+void is_float_test::test_uint16()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    CPPUNIT_ASSERT(numeric_type<uint16>::value);
+    CPPUNIT_ASSERT(!is_float(type_id_t::UINT16));
 }
 
 //-----------------------------------------------------------------------------
-void numeric_type_test::test_uint32()
+void is_float_test::test_uint32()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    CPPUNIT_ASSERT(numeric_type<uint32>::value);
+    CPPUNIT_ASSERT(!is_float(type_id_t::UINT32));
 }
 
 //-----------------------------------------------------------------------------
-void numeric_type_test::test_uint64()
+void is_float_test::test_uint64()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    CPPUNIT_ASSERT(numeric_type<uint64>::value);
+    CPPUNIT_ASSERT(!is_float(type_id_t::UINT64));
 }
 
 //-----------------------------------------------------------------------------
-void numeric_type_test::test_int8()
+void is_float_test::test_int8()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    CPPUNIT_ASSERT(numeric_type<int8>::value);
+    CPPUNIT_ASSERT(!is_float(type_id_t::INT8));
 }
 
 //-----------------------------------------------------------------------------
-void numeric_type_test::test_int16()
+void is_float_test::test_int16()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    CPPUNIT_ASSERT(numeric_type<int16>::value);
+    CPPUNIT_ASSERT(!is_float(type_id_t::INT16));
 }
 
 //-----------------------------------------------------------------------------
-void numeric_type_test::test_int32()
+void is_float_test::test_int32()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    CPPUNIT_ASSERT(numeric_type<int32>::value);
+    CPPUNIT_ASSERT(!is_float(type_id_t::INT32));
 }
 
 //-----------------------------------------------------------------------------
-void numeric_type_test::test_int64()
+void is_float_test::test_int64()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    CPPUNIT_ASSERT(numeric_type<int64>::value);
+    CPPUNIT_ASSERT(!is_float(type_id_t::INT64));
 }
 
 //-----------------------------------------------------------------------------
-void numeric_type_test::test_float32()
+void is_float_test::test_float32()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    CPPUNIT_ASSERT(numeric_type<float32>::value);
+    CPPUNIT_ASSERT(is_float(type_id_t::FLOAT32));
 }
 
 //-----------------------------------------------------------------------------
-void numeric_type_test::test_float64()
+void is_float_test::test_float64()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    CPPUNIT_ASSERT(numeric_type<float64>::value);
+    CPPUNIT_ASSERT(is_float(type_id_t::FLOAT64));
 }
 
 //-----------------------------------------------------------------------------
-void numeric_type_test::test_float128()
+void is_float_test::test_float128()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    CPPUNIT_ASSERT(numeric_type<float128>::value);
+    CPPUNIT_ASSERT(is_float(type_id_t::FLOAT128));
 }
 
 //-----------------------------------------------------------------------------
-void numeric_type_test::test_complex32()
+void is_float_test::test_complex32()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    CPPUNIT_ASSERT(numeric_type<complex32>::value);
+    CPPUNIT_ASSERT(!is_float(type_id_t::COMPLEX32));
 }
 
 //-----------------------------------------------------------------------------
-void numeric_type_test::test_complex64()
+void is_float_test::test_complex64()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    CPPUNIT_ASSERT(numeric_type<complex64>::value);
+    CPPUNIT_ASSERT(!is_float(type_id_t::COMPLEX64));
 }
 
 //-----------------------------------------------------------------------------
-void numeric_type_test::test_complex128()
+void is_float_test::test_complex128()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    CPPUNIT_ASSERT(numeric_type<complex128>::value);
+    CPPUNIT_ASSERT(!is_float(type_id_t::COMPLEX128));
 }
 
 //----------------------------------------------------------------------------
-void numeric_type_test::test_string()
+void is_float_test::test_string()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    CPPUNIT_ASSERT(!numeric_type<string>::value);
+    CPPUNIT_ASSERT(!is_float(type_id_t::STRING));
 }
 
 //----------------------------------------------------------------------------
-void numeric_type_test::test_none()
+void is_float_test::test_none()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    CPPUNIT_ASSERT(!numeric_type<none>::value);
+    CPPUNIT_ASSERT(!is_float(type_id_t::NONE));
 }
 
 //----------------------------------------------------------------------------
-void numeric_type_test::test_bool()
+void is_float_test::test_bool()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    CPPUNIT_ASSERT(!numeric_type<bool_t>::value);
+    CPPUNIT_ASSERT(!is_float(type_id_t::BOOL));
 }
 
 //----------------------------------------------------------------------------
-void numeric_type_test::test_binary()
+void is_float_test::test_binary()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    CPPUNIT_ASSERT(!numeric_type<binary>::value);
+    CPPUNIT_ASSERT(!is_float(type_id_t::BINARY));
 }

@@ -30,50 +30,50 @@ namespace pni{
 namespace core{
 
     //------------------------------------------------------------------------
-    template<typename T> struct integer_type
+    template<typename T> struct is_integer_type
     {
         static const bool value = boost::mpl::contains<integer_types,T>::value;
     };
 
     //------------------------------------------------------------------------
-    template<typename T> struct float_type
+    template<typename T> struct is_float_type
     {
         static const bool value = boost::mpl::contains<float_types,T>::value;
     };
 
     //------------------------------------------------------------------------
-    template<typename T> struct complex_type
+    template<typename T> struct is_complex_type
     {
         static const bool value = boost::mpl::contains<complex_types,T>::value;
     };
 
     //-------------------------------------------------------------------------
-    template<typename T> struct numeric_type
+    template<typename T> struct is_numeric_type
     {
         static const bool value = boost::mpl::contains<numeric_types,T>::value;
     };
 
     //-------------------------------------------------------------------------
-    template<typename T> struct non_numeric_type
+    template<typename T> struct is_non_numeric_type
     {
         static const bool value =
             boost::mpl::contains<non_numeric_types,T>::value;
     };
 
     //-------------------------------------------------------------------------
-    template<typename T> struct primitive_type
+    template<typename T> struct is_primitive_type
     {
         static const bool value =  
             boost::mpl::contains<primitive_types,T>::value;
     };
 
-    bool is_numeric_type(type_id_t tid);
+    bool is_numeric(type_id_t tid);
 
-    bool is_integer_type(type_id_t tid);
+    bool is_integer(type_id_t tid);
 
-    bool is_complex_type(type_id_t tid);
+    bool is_complex(type_id_t tid);
 
-    bool is_float_type(type_id_t tid);
+    bool is_float(type_id_t tid);
     
 //end of namespace
 }

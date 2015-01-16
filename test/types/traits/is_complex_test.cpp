@@ -18,7 +18,7 @@
 //
 // ===========================================================================
 //
-//  Created on: Jan 5, 2015
+//  Created on: Jan 7, 2015
 //      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
 //
 #include<cppunit/extensions/HelperMacros.h>
@@ -27,140 +27,140 @@
 
 #include <iostream>
 
-#include "integer_type_test.hpp"
+#include "is_complex_test.hpp"
 using namespace pni::core;
 
-CPPUNIT_TEST_SUITE_REGISTRATION(integer_type_test);
+CPPUNIT_TEST_SUITE_REGISTRATION(is_complex_test);
 
 //-----------------------------------------------------------------------------
-void integer_type_test::setUp(){ }
+void is_complex_test::setUp(){ }
 
 //-----------------------------------------------------------------------------
-void integer_type_test::tearDown(){ }
+void is_complex_test::tearDown(){ }
         
 
 //-----------------------------------------------------------------------------
-void integer_type_test::test_uint8()
+void is_complex_test::test_uint8()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    CPPUNIT_ASSERT(integer_type<uint8>::value);
+    CPPUNIT_ASSERT(!is_complex(type_id_t::UINT8));
 }
 
 //-----------------------------------------------------------------------------
-void integer_type_test::test_uint16()
+void is_complex_test::test_uint16()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    CPPUNIT_ASSERT(integer_type<uint16>::value);
+    CPPUNIT_ASSERT(!is_complex(type_id_t::UINT16));
 }
 
 //-----------------------------------------------------------------------------
-void integer_type_test::test_uint32()
+void is_complex_test::test_uint32()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    CPPUNIT_ASSERT(integer_type<uint32>::value);
+    CPPUNIT_ASSERT(!is_complex(type_id_t::UINT32));
 }
 
 //-----------------------------------------------------------------------------
-void integer_type_test::test_uint64()
+void is_complex_test::test_uint64()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    CPPUNIT_ASSERT(integer_type<uint64>::value);
+    CPPUNIT_ASSERT(!is_complex(type_id_t::UINT64));
 }
 
 //-----------------------------------------------------------------------------
-void integer_type_test::test_int8()
+void is_complex_test::test_int8()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    CPPUNIT_ASSERT(integer_type<int8>::value);
+    CPPUNIT_ASSERT(!is_complex(type_id_t::INT8));
 }
 
 //-----------------------------------------------------------------------------
-void integer_type_test::test_int16()
+void is_complex_test::test_int16()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    CPPUNIT_ASSERT(integer_type<int16>::value);
+    CPPUNIT_ASSERT(!is_complex(type_id_t::INT16));
 }
 
 //-----------------------------------------------------------------------------
-void integer_type_test::test_int32()
+void is_complex_test::test_int32()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    CPPUNIT_ASSERT(integer_type<int32>::value);
+    CPPUNIT_ASSERT(!is_complex(type_id_t::INT32));
 }
 
 //-----------------------------------------------------------------------------
-void integer_type_test::test_int64()
+void is_complex_test::test_int64()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    CPPUNIT_ASSERT(integer_type<int64>::value);
+    CPPUNIT_ASSERT(!is_complex(type_id_t::INT64));
 }
 
 //-----------------------------------------------------------------------------
-void integer_type_test::test_float32()
+void is_complex_test::test_float32()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    CPPUNIT_ASSERT(!integer_type<float32>::value);
+    CPPUNIT_ASSERT(!is_complex(type_id_t::FLOAT32));
 }
 
 //-----------------------------------------------------------------------------
-void integer_type_test::test_float64()
+void is_complex_test::test_float64()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    CPPUNIT_ASSERT(!integer_type<float64>::value);
+    CPPUNIT_ASSERT(!is_complex(type_id_t::FLOAT64));
 }
 
 //-----------------------------------------------------------------------------
-void integer_type_test::test_float128()
+void is_complex_test::test_float128()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    CPPUNIT_ASSERT(!integer_type<float128>::value);
+    CPPUNIT_ASSERT(!is_complex(type_id_t::FLOAT128));
 }
 
 //-----------------------------------------------------------------------------
-void integer_type_test::test_complex32()
+void is_complex_test::test_complex32()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    CPPUNIT_ASSERT(!integer_type<complex32>::value);
+    CPPUNIT_ASSERT(is_complex(type_id_t::COMPLEX32));
 }
 
 //-----------------------------------------------------------------------------
-void integer_type_test::test_complex64()
+void is_complex_test::test_complex64()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    CPPUNIT_ASSERT(!integer_type<complex64>::value);
+    CPPUNIT_ASSERT(is_complex(type_id_t::COMPLEX64));
 }
 
 //-----------------------------------------------------------------------------
-void integer_type_test::test_complex128()
+void is_complex_test::test_complex128()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    CPPUNIT_ASSERT(!integer_type<complex128>::value);
+    CPPUNIT_ASSERT(is_complex(type_id_t::COMPLEX128));
 }
 
 //----------------------------------------------------------------------------
-void integer_type_test::test_string()
+void is_complex_test::test_string()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    CPPUNIT_ASSERT(!integer_type<string>::value);
+    CPPUNIT_ASSERT(!is_complex(type_id_t::STRING));
 }
 
 //----------------------------------------------------------------------------
-void integer_type_test::test_none()
+void is_complex_test::test_none()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    CPPUNIT_ASSERT(!integer_type<none>::value);
+    CPPUNIT_ASSERT(!is_complex(type_id_t::NONE));
 }
 
 //----------------------------------------------------------------------------
-void integer_type_test::test_bool()
+void is_complex_test::test_bool()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    CPPUNIT_ASSERT(!integer_type<bool_t>::value);
+    CPPUNIT_ASSERT(!is_complex(type_id_t::BOOL));
 }
 
 //----------------------------------------------------------------------------
-void integer_type_test::test_binary()
+void is_complex_test::test_binary()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    CPPUNIT_ASSERT(!integer_type<binary>::value);
+    CPPUNIT_ASSERT(!is_complex(type_id_t::BINARY));
 }

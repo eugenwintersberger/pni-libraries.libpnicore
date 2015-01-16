@@ -25,6 +25,7 @@
 #pragma once
 
 #include <type_traits>
+#include "../types/traits.hpp"
 #include "../types/complex_utils.hpp"
 
 namespace pni{
@@ -125,7 +126,7 @@ namespace core{
     //! \ingroup utiltiy_classes
     //! \brief shortcut for is_complex
     //!
-    template<typename T> using is_cmplx = is_complex<T>;
+    template<typename T> using is_cmplx = is_complex_type<T>;
 
 //end of namespace
 }

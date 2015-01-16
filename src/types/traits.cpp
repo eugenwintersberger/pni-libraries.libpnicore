@@ -51,25 +51,25 @@ namespace core{
     }
    
     //------------------------------------------------------------------------
-    bool is_numeric_type(type_id_t tid)
+    bool is_numeric(type_id_t tid)
     {
         return contains_type_id(numeric_ids,tid);
     }
 
     //------------------------------------------------------------------------
-    bool is_integer_type(type_id_t tid)
+    bool is_integer(type_id_t tid)
     {
         return contains_type_id(integer_ids,tid);
     }
 
     //------------------------------------------------------------------------
-    bool is_complex_type(type_id_t tid)
+    bool is_complex(type_id_t tid)
     {
         return contains_type_id(complex_ids,tid);
     }
 
     //------------------------------------------------------------------------
-    bool is_float_type(type_id_t tid)
+    bool is_float(type_id_t tid)
     {
         return contains_type_id(float_ids,tid);
     }

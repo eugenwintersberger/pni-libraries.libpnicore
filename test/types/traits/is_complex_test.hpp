@@ -18,7 +18,7 @@
 //
 // ===========================================================================
 //
-//  Created on: Jan 5, 2015
+//  Created on: Jan 7, 2015
 //      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
 //
 #pragma once
@@ -33,9 +33,9 @@
 //! \brief test conversion of an uint8 value
 //! 
 //! Test conversion of an uint8 value to any other type
-class numeric_type_test : public CppUnit::TestFixture
+class is_complex_test : public CppUnit::TestFixture
 {
-        CPPUNIT_TEST_SUITE(numeric_type_test);
+        CPPUNIT_TEST_SUITE(is_complex_test);
         CPPUNIT_TEST(test_uint8);
         CPPUNIT_TEST(test_uint16);
         CPPUNIT_TEST(test_uint32);

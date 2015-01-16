@@ -1,14 +1,18 @@
 #need to define the version of the library
 set(SOURCES traits_test.cpp
-            integer_type_test.cpp
-            float_type_test.cpp
-            complex_type_test.cpp
-            numeric_type_test.cpp
-            non_numeric_type_test.cpp
             is_integer_type_test.cpp
-            is_float_type_test.cpp
+            is_integer_test.cpp
+
+            is_complex_test.cpp
             is_complex_type_test.cpp
+
+            is_float_type_test.cpp
+            is_float_test.cpp
+
             is_numeric_type_test.cpp
+            is_numeric_test.cpp
+            
+            is_non_numeric_type_test.cpp
     )
 
 

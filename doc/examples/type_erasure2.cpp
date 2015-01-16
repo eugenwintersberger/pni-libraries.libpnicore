@@ -34,11 +34,11 @@ int main(int argc,char **argv)
     //construction from a number
     float64 number = 10.234;
     value_ref v(std::ref(number));
-    std::cout<<v<<std::endl;
+    std::cout<<v.as<float64>()<<std::endl;
 
     v = 23.345e+2;
 
-    std::cout<<v<<std::endl;
+    std::cout<<v.as<float64>()<<std::endl;
     std::cout<<number<<std::endl;
 
     return 0;

@@ -36,15 +36,15 @@ namespace core{
 
 #define CHECK_ARITHMETIC_SINGLE(type)\
     static_assert(std::is_arithmetic<typename type::value_type>::value || \
-                  is_complex<typename type::value_type>::value,\
+                  is_complex_type<typename type::value_type>::value,\
             "Arithemtic operations can only be used with arithmetic types!")
 
 #define CHECK_ARITHMETIC_DOUBLE(type1,type2)\
     static_assert(\
             (std::is_arithmetic<typename type1::value_type>::value || \
-             is_complex<typename type1::value_type>::value) && \
+             is_complex_type<typename type1::value_type>::value) && \
             (std::is_arithmetic<typename type2::value_type>::value || \
-             is_complex<typename type2::value_type>::value), \
+             is_complex_type<typename type2::value_type>::value), \
             "Arithemtic operations can only be used with arithmetic types!")
 
     //! 

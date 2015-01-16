@@ -141,11 +141,29 @@ table_type read_table(std::istream &stream)
 }
 
 //-----------------------------------------------------------------------------
+void write_value(std::ostream &stream,const value &v)
+{
+    type_id_t tid = v.type_id();
+    switch(tid)
+    {
+        case type_id_t::FLOAT64: stream<<v.as<float64>(); break;
+        case type_id_t::COMPLEX64: stream<<v.as<complex64>(); break;
+        case type_id_t::INT32:     stream<<v.as<int32>(); break;
+        default:
+            type_error(EXCEPTION_RECORD,
+                    "Value holds unkown data type!");
+    }
+}
+//-----------------------------------------------------------------------------
 // write a single record to the output stream
 //-----------------------------------------------------------------------------
 void write_record(std::ostream &stream,const record_type &r)
 {
-    for(auto v: r) stream<<v<<"\t";
+    for(auto v: r) 
+    {
+        write_value(stream,v);
+        stream<<"\t";
+    }
     stream<<std::endl; //terminate the output with a newline
 }
 

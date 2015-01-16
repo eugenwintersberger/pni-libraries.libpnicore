@@ -50,7 +50,7 @@ namespace core{
             typedef std::unique_ptr<value_holder_interface> pointer_type;
 
             template<typename T>
-            using enable_primitive = std::enable_if<primitive_type<T>::value>;
+            using enable_primitive = std::enable_if<is_primitive_type<T>::value>;
             
             //----------------------------------------------------------------
             //! 

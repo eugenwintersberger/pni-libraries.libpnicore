@@ -18,7 +18,7 @@
 //
 // ===========================================================================
 //
-//  Created on: Jan 7, 2015
+//  Created on: Jan 5, 2015
 //      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
 //
 #include<cppunit/extensions/HelperMacros.h>
@@ -43,124 +43,124 @@ void is_integer_type_test::tearDown(){ }
 void is_integer_type_test::test_uint8()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    CPPUNIT_ASSERT(is_integer_type(type_id_t::UINT8));
+    CPPUNIT_ASSERT(is_integer_type<uint8>::value);
 }
 
 //-----------------------------------------------------------------------------
 void is_integer_type_test::test_uint16()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    CPPUNIT_ASSERT(is_integer_type(type_id_t::UINT16));
+    CPPUNIT_ASSERT(is_integer_type<uint16>::value);
 }
 
 //-----------------------------------------------------------------------------
 void is_integer_type_test::test_uint32()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    CPPUNIT_ASSERT(is_integer_type(type_id_t::UINT32));
+    CPPUNIT_ASSERT(is_integer_type<uint32>::value);
 }
 
 //-----------------------------------------------------------------------------
 void is_integer_type_test::test_uint64()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    CPPUNIT_ASSERT(is_integer_type(type_id_t::UINT64));
+    CPPUNIT_ASSERT(is_integer_type<uint64>::value);
 }
 
 //-----------------------------------------------------------------------------
 void is_integer_type_test::test_int8()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    CPPUNIT_ASSERT(is_integer_type(type_id_t::INT8));
+    CPPUNIT_ASSERT(is_integer_type<int8>::value);
 }
 
 //-----------------------------------------------------------------------------
 void is_integer_type_test::test_int16()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    CPPUNIT_ASSERT(is_integer_type(type_id_t::INT16));
+    CPPUNIT_ASSERT(is_integer_type<int16>::value);
 }
 
 //-----------------------------------------------------------------------------
 void is_integer_type_test::test_int32()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    CPPUNIT_ASSERT(is_integer_type(type_id_t::INT32));
+    CPPUNIT_ASSERT(is_integer_type<int32>::value);
 }
 
 //-----------------------------------------------------------------------------
 void is_integer_type_test::test_int64()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    CPPUNIT_ASSERT(is_integer_type(type_id_t::INT64));
+    CPPUNIT_ASSERT(is_integer_type<int64>::value);
 }
 
 //-----------------------------------------------------------------------------
 void is_integer_type_test::test_float32()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    CPPUNIT_ASSERT(!is_integer_type(type_id_t::FLOAT32));
+    CPPUNIT_ASSERT(!is_integer_type<float32>::value);
 }
 
 //-----------------------------------------------------------------------------
 void is_integer_type_test::test_float64()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    CPPUNIT_ASSERT(!is_integer_type(type_id_t::FLOAT64));
+    CPPUNIT_ASSERT(!is_integer_type<float64>::value);
 }
 
 //-----------------------------------------------------------------------------
 void is_integer_type_test::test_float128()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    CPPUNIT_ASSERT(!is_integer_type(type_id_t::FLOAT128));
+    CPPUNIT_ASSERT(!is_integer_type<float128>::value);
 }
 
 //-----------------------------------------------------------------------------
 void is_integer_type_test::test_complex32()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    CPPUNIT_ASSERT(!is_integer_type(type_id_t::COMPLEX32));
+    CPPUNIT_ASSERT(!is_integer_type<complex32>::value);
 }
 
 //-----------------------------------------------------------------------------
 void is_integer_type_test::test_complex64()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    CPPUNIT_ASSERT(!is_integer_type(type_id_t::COMPLEX64));
+    CPPUNIT_ASSERT(!is_integer_type<complex64>::value);
 }
 
 //-----------------------------------------------------------------------------
 void is_integer_type_test::test_complex128()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    CPPUNIT_ASSERT(!is_integer_type(type_id_t::COMPLEX128));
+    CPPUNIT_ASSERT(!is_integer_type<complex128>::value);
 }
 
 //----------------------------------------------------------------------------
 void is_integer_type_test::test_string()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    CPPUNIT_ASSERT(!is_integer_type(type_id_t::STRING));
+    CPPUNIT_ASSERT(!is_integer_type<string>::value);
 }
 
 //----------------------------------------------------------------------------
 void is_integer_type_test::test_none()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    CPPUNIT_ASSERT(!is_integer_type(type_id_t::NONE));
+    CPPUNIT_ASSERT(!is_integer_type<none>::value);
 }
 
 //----------------------------------------------------------------------------
 void is_integer_type_test::test_bool()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    CPPUNIT_ASSERT(!is_integer_type(type_id_t::BOOL));
+    CPPUNIT_ASSERT(!is_integer_type<bool_t>::value);
 }
 
 //----------------------------------------------------------------------------
 void is_integer_type_test::test_binary()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    CPPUNIT_ASSERT(!is_integer_type(type_id_t::BINARY));
+    CPPUNIT_ASSERT(!is_integer_type<binary>::value);
 }
