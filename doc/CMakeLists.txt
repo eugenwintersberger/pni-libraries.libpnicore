@@ -37,6 +37,7 @@ if(DOXYGEN_FOUND)
                  examples/array_view.cpp
                  examples/copy_file.cpp
                  examples/record.dat
+                 examples/record2.dat
                  examples/example_array2.cpp
                  examples/example_array3.cpp
                  examples/example_array4.cpp
@@ -49,8 +50,8 @@ if(DOXYGEN_FOUND)
         configure_file(${EXAMPLE} ${EXAMPLE} COPYONLY)
     endforeach()
 
-    install(DIRECTORY "examples"
-            DESTINATION "${CMAKE_INSTALL_FULL_DOCDIR}")
+    install(DIRECTORY examples DESTINATION ${CMAKE_INSTALL_FULL_DOCDIR})
+
 else(DOXYGEN_FOUND)
     message("--- Disable building documentation")
 endif(DOXYGEN_FOUND)
