@@ -47,7 +47,7 @@
 \cpp{NONE}   & \dtype{none}    & \cpp{NONE}   & none type     \\
 \hline
 \end{tabular}
-\caption{\small\label{tab:types:basic_types} An overview of the basic POD data
+\caption{\small\label{tab:types:basic_types} An overview of the primitive data
 types provided by \libpnicore.}
 \end{table}
 %%%===================================================================================
@@ -63,34 +63,25 @@ The data types provided by \libpnicore\ include
 \item string types (currently only one member)
 \item and utility types like \dtype{binary}, \dtype{bool}, and \dtype{none}.
 \end{enumerate}
-In particular the numeric types are ensured to have the same size on each
-platform and architecture the \libpnicore\ supports. Most of the types provided
-by \libpnicore\ are just \cpp{typedef}s to already defined types of the C++
-standard library. However, the utility types \dtype{binary}, \dtype{bool}, and
-\dtype{none} are unique to \libpnicore\ and will be explained in more detail in
-the last sections of this chapter.
+All this types together are refered to as \emph{ primitive types}.
+The numeric types are ensured to have the same size on each
+platform and architecture supported by \libpnicore. They are mostly
+\cpp{typedef}s to the types defined by the C standard library.  However, the
+utility types \dtype{binary}, \dtype{bool}, and \dtype{none} are unique to
+\libpnicore\ and will be explained in more detail in the last sections of this
+chapter.
 
 Every type in \libpnicore\ is associated with an ID represented by the 
-\cpp{type\_id\_t} type and is member in a type class represented by 
-the \cpp{type\_class\_t} type. Both this types are enumeration types. 
-Table~\ref{tab:types:basic_types} gives an overview over the types provided by
-\libpnicore\ and their corresponding \cpp{type\_id\_t} and \cpp{type\_class\_t}
-values.
+\cpp{type\_id\_t} enumeration type. Additionally every type belongs to a
+particular type class defined by the \cpp{type\_class\_t} enumeration type.
+Table~\ref{tab:types:basic_types} gives an overview over the primitive types
+provided by \libpnicore\ and their corresponding \cpp{type\_id\_t} and
+\cpp{type\_class\_t} values.
 
 \section{Compile time type identification}
 
-In many situations it is necessary to obtain a types ID or class at
-compile-time. Three type maps exist to provide this information
-\begin{center}
-\begin{tabular}{l l}
-    \typeidmap & mapping from a type to its ID  \\
-    \idtypemap & mapping from an ID to a type   \\
-    \typeclassmap & mapping from a type to its type class \\
-\end{tabular}
-\end{center}
-Their usage is rather straight forward. Each map provides a member type or
-static member which provides the requested information. 
-Here are some examples of how to use these maps
+To obtain the ID or class of a type at compile time use the 
+\typeidmap\ or \typeclassmap\ type maps. 
 \begin{cppcode}
 #include <pni/core/types.hpp>
 
@@ -99,12 +90,30 @@ using namespace pni::core;
 //determine the type ID for a given type
 type_id_map<float32>::type_id == type_id_t::FLOAT32;
 
-//determine the type for a given ID
-id_type_map<type_id_t::FLOAT32>::type data = ...;
-
 //obtain the class of a particular type
 type_class_map<float32>::type_class == type_class_t::FLOAT;
 \end{cppcode}
+For IDs the other way around is also possible with the \idtypemap 
+\begin{cppcode}
+#include <pni/core/types.hpp>
+
+using namespace pni::core;
+
+//determine the type for a given ID
+id_type_map<type_id_t::FLOAT32>::type data = ...;
+\end{cppcode}
+For numeric types there are also some other templates for a more detailed type
+classification 
+\begin{center}
+\begin{tabular}{ll}
+\cpp{is\_integer\_type<T>::value} & \cpp{true} if \cpp{T} is an integer type\\
+\cpp{is\_float\_type<T>::value} & \cpp{true} if \cpp{T} is a floating point type\\
+\cpp{is\_complex\_type<T>::value} & \cpp{true} if \cpp{T} is a complex number
+type\\
+\cpp{is\_numeric\_type<T>::value} & \cpp{true} if \cpp{T} is any of the above
+types\\
+\end{tabular}
+\end{center}
 
 
 
@@ -161,6 +170,21 @@ std::cout<<type_id(data)<<std::endl;
 \end{minted}
 The important thing to notice here is that no matter what type the \texttt{
 get\_data} function returns, \texttt{type\_id} will give you the type ID.
+In cases where the type ID is given and a classification of the type 
+has to be made four functions are provided where each takes a type ID as 
+its single most argument
+\begin{center}
+\begin{tabular}{ll}
+    \cpp{is\_integer(type\_id\_t)} & returns true if the type ID refers 
+    to an integer type \\
+    \cpp{is\_float(type\_id\_t)} & returns true if the type ID refers 
+    to a float type \\
+    \cpp{is\_complex(type\_id\_t)} & returns true if the type ID refers 
+    to a complex type \\
+    \cpp{is\_numeric(type\_id\_t)} & returns true if the type ID refers 
+    to a numeric type \\
+\end{tabular}
+\end{center}
 
 Another important scenario is the situation where a user uses the string
 representation to tell a program with which type it should work. 
@@ -254,40 +278,36 @@ address of a container element is required. For all other purposes the default
 C++ \cpp{bool} type can be used.
 
 %%%===========================================================================
-\section{Type conversion}
+\section{Numeric type conversion}
 
-\libpnicore\ provides facilities for save type conversion. These functions are
-not only used internally by the library they are also available to users. 
-The conversion policy enforced by \libpnicore\ is more strict than that of
-standard C++. For instance you cannot convert a negative integer to an unsigned
-integer type. The goal of the conversion rules are set up in order to avoid
-truncation errors as they would typically occur when using the standard C++
-rules.
+\libpnicore\ provides facilities for save numeric type conversion. These
+functions are not only used internally by the library they are also available to
+users.  The conversion policy enforced by \libpnicore\ is more strict than that
+of standard C++. For instance you cannot convert a negative integer to an
+unsigned integer type. The goal of the conversion rules are set up in order to
+avoid truncation errors as they would typically occur when using the standard
+C++ rules.
 
 The basic rule for conversion between two integer type A and B is as follows
 \begin{quote}
-    A value of type A can only be converted to type B if the value does 
-    not exceed the range value B can cover.
+    A value of type \cpp{S} can only be converted to type \cpp{B} if the value
+    does not exceed the numeric range of type \cpp{B}.
 \end{quote}
 A consequence of this rule is that a signed integer can only be converted 
 to an unsigned type if its value is larger than $0$. This is different 
 from the standard C++ rule where the unsigned target type will just overflow. 
 
-For integer to float conversion a similar rules holds. 
+The second basic rule which governs \libpnicore s conversion policy is 
 \begin{quote}
-    A value of integer type A can only be converted to a float type B
-    if the range of the floating point type is sufficient to hold the 
-    value of the integer.
+    During a conversion no information must be lost!
 \end{quote}
-Conversion from float to integer is not allowed as they would most 
-likely lead to truncation errors. 
-A floating point value can be converted to a complex type if the value fits in
-the range of the source value fits into the base type of the complex type. 
-In the case of float to complex conversion the float value will be 
-assigned to the real part of the instance of the complex type. 
-Conversion from a complex type to a floating point type is prohibited. 
+Hence, conversion from a floating point type to an integer type is prohibited as
+it would most likely lead to truncation and thus a loss of information. 
+Conversion from a scalar float value to a complex value is allowed (as long as
+the first rule applies to the base type of the complex type) but one cannot
+convert a complex value to a scalar float type.
 
-Serveral types cannot be converted to anything else
+Several types cannot be converted to anything than themselves 
 \begin{itemize}
     \item \texttt{bool\_t} which can be only the result of a boolean 
         operation.
@@ -305,31 +325,10 @@ The library distinguishes between two kinds of type conversion
     \item[checked conversion] the value has to be checked if it fits into the 
         target type.
 \end{description}
-Both approaches will be explained into the next sections.
-
-\subsection{Unchecked conversion}
-
-In this case the conversion can be made simply by looking at the source and the
-target type. For instance an \texttt{uint8} can always be converted into a 
-\texttt{uint16}. This is an important case in particular for containers (like
-arrays) as for performance reasons we do not want to check the range for each
-element by default (though it would be possible manually). 
-
-To check at compile time if two types are unchecked convertible the 
-\texttt{is\_unchecked\_convertible} template struct is available and can be 
-used like this
-\begin{minted}{cpp}
-if(is_unchecked_convertibel<T1,T2>::value)
-    //perform some action
-\end{minted}
-There also exists a function which allows for checks at runtime
-\begin{minted}{cpp}
-if(is_unchecked_convertible(type_id_t::UINT16,type_id_t::INT32))
- //perform some action
-\end{minted}
-Table~\ref{tab:types:unchecked_conversion} gives an overview between which types 
-unchecked conversion can be done. 
-
+Table~\ref{tab:types:unchecked_conversions} gives an overview between which
+types conversion is possible and whether unchecked or checked conversion will be
+used. 
+%%%---------------------------------------------------------------------------
 \begin{landscape}
     \begin{table}
     \centering
@@ -412,17 +411,52 @@ source / target& \podt{ui}{8} & \podt{ui}{16} & \podt{ui}{32} & \podt{ui}{64} &
 \hline
 \end{tabular}
 \caption{{\small\label{tab:types:unchecked_conversion}
-Type matrix showing between which types unchecked conversion could be done. 
-The T and F denote \emph{true} and \emph{false} respectively.}}
+Type matrix showing between which types  conversion is possible. \cpp{U} and
+\cpp{C} denote unchecked and checked type conversion. \cpp{N} indicates 
+type pairs where conversion is impossible as it would violate one of the 
+conversion policies mentioned in the text.}}
 \end{table}
 \end{landscape}
 
+\subsection{The \cpp{convert} function template}
 
-\subsection{Checked conversion}
+At the heart of \libpnicore s type conversion system is the \cpp{convert}
+function template. The declaration of the template looks somehow like this
+\begin{cppcode}
+template<typename ST,typename TT> TT convert(const ST &v);
+\end{cppcode}
+A value of a particular source type (denoted by the template parameter 
+\cpp{ST}) is passed as an argument to the \cpp{convert} template. The value 
+of this argument will then be converted to a value of the target type 
+\cpp{TT} and returned from the function template. 
+This function template throws two exceptions
+\begin{center}
+\begin{tabular}{ll}
+\cpp{type\_error} & in situations where the type conversion is not possible \\
+\cpp{range\_error} & where the source value does not fit into the target type
+\end{tabular}
+\end{center}
+The behavior of this function can best be demonstrated examples. 
+\begin{cppcode}
+auto f = convert<float32>(int32(5)); 
+\end{cppcode}
+In this example a value of type \cpp{int32} is successfully converted 
+to a value of type \cpp{float32}, while
+\begin{cppcode}
+auto f = convert<uint16>(float32(-5)); // throws type_error
+\end{cppcode}
+leads to \cpp{type\_error}. According to the conversion policies mentioned above
+a float value cannot be converted to an integer due to truncation issues. 
+\begin{cppcode}
+auto f = convert<uint32>(int32(-3)); //throws range_error
+\end{cppcode}
+\cpp{range\_error} will be thrown as a negative value cannot be converted to an 
+unsigned type. A similar situation would be 
+\begin{cppcode}
+auto f = convert<uint8>(int16(10000)); //throws range_error
+\end{cppcode}
+where \cpp{range\_error} would indicate that it is impossible to store a value 
+of $10000$ in an $8$-Bit unsigned variable.
 
-In this case the value of the source has to be checked if it fits into the
-target type. This is typically the case if the source type is not entirely
-covered by the target type. An example would be the conversion of a value of 
-type \texttt{uint8} to \texttt{int8}. If the source value is in the range of 
-$0--127$ it can be converted. Otherwise, a \texttt{range\_error} exception 
-shall be thrown. 
+
+
