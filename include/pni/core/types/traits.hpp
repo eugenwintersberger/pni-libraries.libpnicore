@@ -30,30 +30,77 @@ namespace pni{
 namespace core{
 
     //------------------------------------------------------------------------
+    //!
+    //! \ingroup type_classes
+    //! \brief check integer type
+    //! 
+    //! Set the value member to true if T is an integer type, otherwise value
+    //! will be false.
+    //!
+    //! \tparam T type to check
+    //!
     template<typename T> struct is_integer_type
     {
         static const bool value = boost::mpl::contains<integer_types,T>::value;
     };
 
     //------------------------------------------------------------------------
+    //!
+    //! \ingroup type_classes
+    //! \brief check float type
+    //!
+    //! Set the value member to true if T is a float type, otherwise value 
+    //! will be false.
+    //!
+    //! \tparam T type to check
+    //!
     template<typename T> struct is_float_type
     {
         static const bool value = boost::mpl::contains<float_types,T>::value;
     };
 
     //------------------------------------------------------------------------
+    //!
+    //! \ingroup type_classes
+    //! \brief check complex type
+    //! 
+    //! Set the value  member to true if T is a complex number type, otherwise
+    //! value will be false.
+    //!
+    //! \tparam T type to check. 
+    //!
     template<typename T> struct is_complex_type
     {
         static const bool value = boost::mpl::contains<complex_types,T>::value;
     };
 
     //-------------------------------------------------------------------------
+    //!
+    //! \ingroup type_classes
+    //! \brief check numeric type
+    //!
+    //! Set the value member to true if T is a numeric type, otherwise value
+    //! will be false. Numeric types are either integer, float, or complex
+    //! types.
+    //!
+    //! \tparam T type to check
+    //!
     template<typename T> struct is_numeric_type
     {
         static const bool value = boost::mpl::contains<numeric_types,T>::value;
     };
 
     //-------------------------------------------------------------------------
+    //!
+    //! \ingroup type_classes
+    //! \brief check non numeric type
+    //! 
+    //! Set the value member to true if T is one of the non numeric types.
+    //! For all other types value will be false. Non numeric types are 
+    //! bool, binary, and none. 
+    //!
+    //! \tparam T type to check
+    //! 
     template<typename T> struct is_non_numeric_type
     {
         static const bool value =
@@ -61,18 +108,71 @@ namespace core{
     };
 
     //-------------------------------------------------------------------------
+    //!
+    //! \ingroup type_classes
+    //! \brief check primitive type
+    //!
+    //! Set the value member to true if T belongs to the primitive types 
+    //! provided by libpnicore. For all other types value will be false. 
+    //!
+    //! \tparam T type to check
+    //!
     template<typename T> struct is_primitive_type
     {
         static const bool value =  
             boost::mpl::contains<primitive_types,T>::value;
     };
 
+    //------------------------------------------------------------------------
+    //!
+    //! \ingroup type_classes
+    //! \brief check numeric type
+    //!
+    //! Returns true if the type associated with tid belongs to the numeric 
+    //! types. 
+    //! 
+    //! \param tid type ID of the type to check
+    //! \return true if tid refers to a numeric type, false otherwise
+    //!
     bool is_numeric(type_id_t tid);
 
+    //------------------------------------------------------------------------
+    //!
+    //! \ingroup type_classes
+    //! \brief check integer type
+    //! 
+    //! Returns true if the type associated with tid belongs to the integer 
+    //! types. 
+    //!
+    //! \param tid type ID of the type to check
+    //! \return true if tid refers to an integer type, false otherwise
+    //!
     bool is_integer(type_id_t tid);
 
+    //------------------------------------------------------------------------
+    //! 
+    //! \ingroup type_classes
+    //! \brief check complex type
+    //!
+    //! Returns true if the type associated with tid belongs to the complex
+    //! types. 
+    //! 
+    //! \param tid type ID of the type to check
+    //! \return true if tid refers to a complex type, false otherwise
+    //! 
     bool is_complex(type_id_t tid);
 
+    //------------------------------------------------------------------------
+    //!
+    //! \ingroup type_classes
+    //! \brief check float type
+    //! 
+    //! Returns true if the type associated with the tid belongs to the 
+    //! float types. 
+    //!
+    //! \param tid id of the type to check
+    //! \return true if tid refers to a float type, false otherwise
+    //!
     bool is_float(type_id_t tid);
     
 //end of namespace
