@@ -268,8 +268,6 @@ namespace core{
     //-------------------------------------------------------------------------
     template<typename T> value_ref &value_ref::operator=(const T &v)
     {
-        typedef value_holder<std::reference_wrapper<T> > holder_type;
-
         _check_pointer(EXCEPTION_RECORD);
         
         type_id_t tid = type_id();
