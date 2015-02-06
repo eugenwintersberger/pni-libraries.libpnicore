@@ -152,4 +152,19 @@ template<> class random_generator<string>
         }
 };
 
+//-----------------------------------------------------------------------------
+template<> class random_generator<binary>
+{
+    private:
+        random_generator<uint8> _generator;
+    public:
+        random_generator():
+            _generator(0,255)
+        {}
+
+        binary operator()()
+        {
+            return binary(_generator());
+        }
+};
     

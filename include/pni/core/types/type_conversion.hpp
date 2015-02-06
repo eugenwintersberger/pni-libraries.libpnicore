@@ -38,12 +38,45 @@ namespace pni{
 namespace core{
     
     //------------------------------------------------------------------------
+    //!
+    //! \ingroup type_classes
+    //! \brief check if two types are unchecked convertible
+    //!
+    //! Returns true if two types, determined by their type ID, are unchecked 
+    //! convertible. 
+    //!
+    //! \param source_tid ID of the source type
+    //! \param target_tid ID of the target type
+    //! \return true if types are unchecked convertible, false otherwise
+    //! 
     bool is_unchecked_convertible(type_id_t source_tid,type_id_t target_tid);
 
     //------------------------------------------------------------------------
+    //!
+    //! \ingroup type_classes
+    //! \brief check if two types are checked convertible
+    //!
+    //! Returns true if two types, determined by their type ID, are checked 
+    //! convertible. 
+    //!
+    //! \param source_tid ID of the source type
+    //! \param target_tid ID of the target type
+    //! \return true if types are checked convertible, false otherwise
+    //! 
     bool is_checked_convertible(type_id_t source_tid,type_id_t target_tid);
 
     //------------------------------------------------------------------------
+    //!
+    //! \ingroup type_classes
+    //! \brief check if two types are unchecked convertible
+    //!
+    //! Returns true if two types, determined by their type ID, are 
+    //! convertible. 
+    //!
+    //! \param source_tid ID of the source type
+    //! \param target_tid ID of the target type
+    //! \return true if types are , false otherwise
+    //! 
     bool is_convertible(type_id_t source_tid,type_id_t target_tid);
 
 

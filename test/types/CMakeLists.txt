@@ -26,6 +26,7 @@ if(CPPUNIT_FOUND)
 
 endif()
 add_subdirectory(conversion)
+add_subdirectory(traits)
 
 add_test(NAME type_test 
          COMMAND type_test

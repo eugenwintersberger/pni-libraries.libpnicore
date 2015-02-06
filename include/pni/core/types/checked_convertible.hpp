@@ -106,7 +106,11 @@ namespace core{
                         >,
 
         //-------------------source type complex128---------------------------
-        boost::mpl::pair<complex128,boost::mpl::vector<complex32,complex64>>
+        boost::mpl::pair<complex128,boost::mpl::vector<complex32,complex64>>,
+
+        boost::mpl::pair<string,boost::mpl::vector<>>,
+        boost::mpl::pair<binary,boost::mpl::vector<>>,
+        boost::mpl::pair<bool_t,boost::mpl::vector<>>
 
         > checked_type_vectors;
 

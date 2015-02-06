@@ -40,8 +40,6 @@ template<typename T> class value_ref_test : public CppUnit::TestFixture
         CPPUNIT_TEST_SUITE(value_ref_test<T>);
         CPPUNIT_TEST(test_construction);
         CPPUNIT_TEST(test_assignment);
-        CPPUNIT_TEST(test_stream);
-        CPPUNIT_TEST(test_comparison);
         CPPUNIT_TEST_SUITE_END();
         
         typedef random_generator<T> generator_type;
@@ -55,8 +53,6 @@ template<typename T> class value_ref_test : public CppUnit::TestFixture
 
         void test_construction();
         void test_assignment();
-        void test_stream();
-        void test_comparison();
 };
 
 //-----------------------------------------------------------------------------
@@ -103,27 +99,5 @@ template<typename T> void value_ref_test<T>::test_assignment()
     CPPUNIT_ASSERT(v1.as<T>() == v2.as<T>());
 }
 
-//-----------------------------------------------------------------------------
-template<typename T> void value_ref_test<T>::test_stream()
-{
-    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
-    std::stringstream ss("12343.4");
-
-    T data;
-    value_ref v(std::ref(data));
-    ss>>v;
-}
-
-//-----------------------------------------------------------------------------
-template<typename T> void value_ref_test<T>::test_comparison()
-{
-    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
-    value_ref v1(std::ref(value_1));
-    value_ref v2(std::ref(value_2));
-
-    CPPUNIT_ASSERT((v1!=v2)==(value_1!=value_2));
-    CPPUNIT_ASSERT(v1==v1);
-
-}
 
 

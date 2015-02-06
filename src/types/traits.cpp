@@ -18,42 +18,62 @@
 //
 // ============================================================================
 //
-// Created on: Dec 22, 2014
-//     Author: Eugen Wintersberger
+//  Created on: Dec 29, 2014
+//      Author: Eugen Wintersberger
 //
 
+#include <algorithm>
 #include <pni/core/types/traits.hpp>
-
-#include <map>
-
 #include "utils.hpp"
 
 namespace pni{
 namespace core{
     
-    static const std::map<type_id_t,type_id_vector> conversion_map{
-        generate_map_element<uint8,checked_type_vectors>(),
-        generate_map_element<uint16,checked_type_vectors>(),
-        generate_map_element<uint32,checked_type_vectors>(),
-        generate_map_element<uint64,checked_type_vectors>(),
-        generate_map_element<int8,checked_type_vectors>(),
-        generate_map_element<int16,checked_type_vectors>(),
-        generate_map_element<int32,checked_type_vectors>(),
-        generate_map_element<int64,checked_type_vectors>(),
-        generate_map_element<float32,checked_type_vectors>(),
-        generate_map_element<float64,checked_type_vectors>(),
-        generate_map_element<float128,checked_type_vectors>(),
-        generate_map_element<complex32,checked_type_vectors>(),
-        generate_map_element<complex64,checked_type_vectors>(),
-        generate_map_element<complex128,checked_type_vectors>()
-    };
 
-    bool is_checked_convertible(type_id_t source_tid,type_id_t target_tid)
+    static const type_id_vector numeric_ids =
+        build_type_id_container<type_id_vector,numeric_types>();
+
+    static const type_id_vector integer_ids = 
+        build_type_id_container<type_id_vector,integer_types>();
+
+    static const type_id_vector float_ids = 
+        build_type_id_container<type_id_vector,float_types>();
+
+    static const type_id_vector complex_ids = 
+        build_type_id_container<type_id_vector,complex_types>();
+
+    //------------------------------------------------------------------------
+    bool contains_type_id(const type_id_vector &v,type_id_t &value)
     {
-        type_id_vector types = conversion_map.at(source_tid);
-        
-        return std::count(types.begin(),types.end(),target_tid);
+        auto result = std::find(v.begin(),v.end(),value);
+        return result != v.end();
     }
+   
+    //------------------------------------------------------------------------
+    bool is_numeric(type_id_t tid)
+    {
+        return contains_type_id(numeric_ids,tid);
+    }
+
+    //------------------------------------------------------------------------
+    bool is_integer(type_id_t tid)
+    {
+        return contains_type_id(integer_ids,tid);
+    }
+
+    //------------------------------------------------------------------------
+    bool is_complex(type_id_t tid)
+    {
+        return contains_type_id(complex_ids,tid);
+    }
+
+    //------------------------------------------------------------------------
+    bool is_float(type_id_t tid)
+    {
+        return contains_type_id(float_ids,tid);
+    }
+
+
 //end of namespace
 }
 }

@@ -29,6 +29,8 @@
 #include "../types/types.hpp"
 #include "../arrays.hpp"
 #include "value_holder.hpp"
+#include "utils.hpp"
+#include "../types/traits.hpp"
 
 namespace pni{
 namespace core{
@@ -41,31 +43,6 @@ namespace core{
     //! \ingroup type_erasure_classes
     //!\brief type erasure for POD data
     //!
-    //! This is a very simple type erasure for POD data. Only those data types
-    //! defined in Types.hpp in the pni core library cane be used along with 
-    //! this type erasure (a proper TypeID value must be available for a data 
-    //! types).  No additional requirements are made on a data type.  
-    //! Creating an instane is quite simple, just use
-    //!
-    //! if the type passed as a template parameter to as<> does not match the 
-    //! type of the data wrapped by the value class a TypeError exception will 
-    //! be thrown. 
-    //!
-    //! The value class provides input and output operators to read and write 
-    //! to an instance from streams. 
-    //! \code
-    //! value v = ....;
-    //! std::cin>>v;
-    //! std::cout<<v;
-    //! \endcode
-    //! Other streams are of coarse supported. It is important to note that an
-    //! uninitialized instance of v will throw an exception if one tries to 
-    //! access data for reading. Thus a static method is provided by the class 
-    //! to create a new instance of value for a particular data type
-    //! \code
-    //! value v = value::create<float32>();
-    //! \endcode
-    //!
     class value
     {
         private:
@@ -73,23 +50,51 @@ namespace core{
             typedef std::unique_ptr<value_holder_interface> pointer_type;
 
             template<typename T>
-            using is_value_ref = std::is_same<T,value_ref>;
-
-            template<typename T>
-            using enable_no_value_ref = std::enable_if<!is_value_ref<T>::value>;
+            using enable_primitive = std::enable_if<is_primitive_type<T>::value>;
+            
+            //----------------------------------------------------------------
+            //! 
+            //! \brief return value
+            //!
+            //! Return the value of the variable the reference refers to. 
+            //! T denotes the data type requested by the  user. S denotes 
+            //! the type of the variable the reference points to.
+            //! 
+            //! \throws type_error if the conversion is not possible
+            //! \throws range_error if the value 
+            //! \tparam T target type
+            //! \tparam S source type
+            //! \return value as T
+            //!
+            template<
+                     typename T,
+                     typename S 
+                    > 
+            T _get() const
+            {
+                return get_value<T,S>(get_holder_ptr<S>(_ptr));
+            }
 
             //----------------------------------------------------------------
             //!
-            //! \brief throw exception
+            //! \brief set value
+            //! 
+            //! Sets the value of the variable the reference points to. 
             //!
-            //! Static helper method that throws a MemoryNotAllcatedError if 
-            //! the type erasure holds no data and data access is requested by 
-            //! the user.
-            //!
-            //! \throw memory_not_allocated
-            //! \param r exception record where the error occured.
-            //!
-            static void _throw_not_allocated_error(const exception_record &r);
+            //! \throws type_error if the conversion is not possible
+            //! \throws range_error if the passed value does not fit in the
+            //! target type
+            //! \tparam S type of the variable
+            //! \tparam T type of the value the user passed
+            //! \param T 
+            template<
+                     typename S,
+                     typename T
+                    > 
+            void _set(const T& v) const
+            {
+                return set_value<S,T>(get_holder_ptr<S>(_ptr),v);
+            }
 
             //! pointer holding the value stored
             pointer_type _ptr;
@@ -102,14 +107,13 @@ namespace core{
             //! 
             //! \brief  template constructor from value
             //!
-            //! Construct a value from a POD type denoted by T. The constructor 
-            //! does not accept T = value_ref.
+            //! This constructor accepts all primitive types from libpnicore.
             //!
-            //! \tparam T POD type
+            //! \tparam T primitive type
             //! 
             template<
                      typename T,
-                     typename = typename enable_no_value_ref<T>::type 
+                     typename = typename enable_primitive<T>::type 
                     > 
             explicit value(T v):_ptr(new value_holder<T>(v)){}
 
@@ -129,15 +133,6 @@ namespace core{
             //! 
             //! \brief copy assignment from value
             //!
-            //! Assign a new value to class value. 
-            //! \code
-            //! value v = value::create<float32>();
-            //! 
-            //! v = uint16(12);
-            //! \endcode
-            //! The assignment copies the new value to an appropriate 
-            //! instance of value_holder. This means that the type changes. 
-            //! 
             //! \param v reference to the new value
             //! \return instance of value
             //!
@@ -166,6 +161,8 @@ namespace core{
             //!
             //! \throws memory_not_allocate_error if value is uninitialized
             //! \throws type_error if T does not match the original data type
+            //! \throws range_error if the value stored does not fit into the 
+            //! requested type.
             //! \return value of type T 
             //!
             template<typename T> T as() const;
@@ -180,86 +177,69 @@ namespace core{
             //! \return type ID.
             //!
             type_id_t type_id() const;
-
-            //-----------------------------------------------------------------
-            friend std::ostream &operator<<(std::ostream &stream,
-                                            const value &v);
-
-            //----------------------------------------------------------------
-            friend std::istream &operator>>(std::istream &stream,
-                                            value &v);
-
-            //----------------------------------------------------------------
-            friend bool operator==(const value &a,const value &b);
-
-            //----------------------------------------------------------------
-            friend bool operator!=(const value &a,const value &b);
     };
 
     //=====================implementation of template member functions=========
     template<typename T> T value::as() const
     {
-        if(!_ptr) _throw_not_allocated_error(EXCEPTION_RECORD);
+        type_id_t tid = type_id();
 
-        if(type_id() == type_id_map<T>::type_id)
+        switch(tid)
         {
-            return dynamic_cast<value_holder<T>*>(_ptr.get())->as();
+            case type_id_t::UINT8:      return _get<T,uint8>();
+            case type_id_t::INT8:       return _get<T,int8>();
+            case type_id_t::UINT16:     return _get<T,uint16>();
+            case type_id_t::INT16:      return _get<T,int16>();
+            case type_id_t::UINT32:     return _get<T,uint32>();
+            case type_id_t::INT32:      return _get<T,int32>();
+            case type_id_t::UINT64:     return _get<T,uint64>();
+            case type_id_t::INT64:      return _get<T,int64>();
+            case type_id_t::FLOAT32:    return _get<T,float32>();
+            case type_id_t::FLOAT64:    return _get<T,float64>();
+            case type_id_t::FLOAT128:   return _get<T,float128>();
+            case type_id_t::COMPLEX32:  return _get<T,complex32>();
+            case type_id_t::COMPLEX64:  return _get<T,complex64>();
+            case type_id_t::COMPLEX128: return _get<T,complex128>(); 
+            case type_id_t::STRING:     return _get<T,string>();
+            case type_id_t::BINARY:     return _get<T,binary>();
+            case type_id_t::BOOL:       return _get<T,bool_t>();
+            default:
+                throw type_error(EXCEPTION_RECORD,"Uknown type!");
         }
-        throw type_error(EXCEPTION_RECORD,
-                "incompatible type - cannot return value");
 
-        return T(0); //just to make the compiler happy
     }
 
     //-------------------------------------------------------------------------
     template<typename VT> value &value::operator=(const VT &v)
     {
-        _ptr = std::unique_ptr<value_holder_interface>(
-                new value_holder<VT>(v));
+        type_id_t tid = type_id();
+
+        switch(tid)
+        {
+            case type_id_t::UINT8:      _set<uint8>(v);      break;
+            case type_id_t::INT8:       _set<int8>(v);       break;
+            case type_id_t::UINT16:     _set<uint16>(v);     break;
+            case type_id_t::INT16:      _set<int16>(v);      break;
+            case type_id_t::UINT32:     _set<uint32>(v);     break;
+            case type_id_t::INT32:      _set<int32>(v);      break;
+            case type_id_t::UINT64:     _set<uint64>(v);     break;
+            case type_id_t::INT64:      _set<int64>(v);      break;
+            case type_id_t::FLOAT32:    _set<float32>(v);    break;
+            case type_id_t::FLOAT64:    _set<float64>(v);    break;
+            case type_id_t::FLOAT128:   _set<float128>(v);   break;
+            case type_id_t::COMPLEX32:  _set<complex32>(v);  break;
+            case type_id_t::COMPLEX64:  _set<complex64>(v);  break;
+            case type_id_t::COMPLEX128: _set<complex128>(v); break;
+            case type_id_t::BINARY:     _set<binary>(v);     break;
+            case type_id_t::BOOL:       _set<bool_t>(v);     break;
+            case type_id_t::STRING:     _set<string>(v);     break;
+            default:
+                throw type_error(EXCEPTION_RECORD,
+                        "Value is of unkonw type!");
+        }
 
         return *this;
     }
-
-    //-------------------------------------------------------------------------
-    //!
-    //! \ingroup type_erasure_classes
-    //! \brief stream output operator
-    //!
-    //! Writes the content of value to the output stream. An exception is 
-    //! thrown if the value is not initialized. 
-    //! 
-    //! \throws memory_allocation_error if value is not initialized 
-    //! \param stream output stream
-    //! \param v reference to value
-    //! \return reference to output stream
-    //!
-    std::ostream &operator<<(std::ostream &stream,const value &v);
-
-    //-------------------------------------------------------------------------
-    //!
-    //! \ingroup type_erasure_classes
-    //! \brief stream input operator
-    //!
-    //! Read data from an input stream to the value. It is important to note 
-    //! that the value must be initialized otherwise an exception will be 
-    //! thrown. 
-    //! \code
-    //! value v = value::create<uint32>();
-    //! std::cin>>v;
-    //! \endcode
-    //!
-    //! \throw memory_not_allocated_error if value not initialized 
-    //! \param stream input stream
-    //! \param v value where to store data
-    //! \return reference to input stream
-    //!
-    std::istream &operator>>(std::istream &stream,value &v);
-
-    //-------------------------------------------------------------------------
-    bool operator==(const value &a,const value &b);
-
-    //-------------------------------------------------------------------------
-    bool operator!=(const value &a,const value &b);
 
     //-------------------------------------------------------------------------
     //! 
@@ -287,6 +267,19 @@ namespace core{
     {
         return value(T{});
     }
+
+    //------------------------------------------------------------------------
+    //!
+    //! \ingroup type_erasure_classes
+    //! \brief create value
+    //! 
+    //! Create a value instance for a particular type. Here the type is entirely
+    //! determined by its type ID. 
+    //!
+    //! \throws type_error if the type ID is now known
+    //! \tparam T requested type
+    //! 
+    value make_value(type_id_t tid);
 
 //end of namespace
 }

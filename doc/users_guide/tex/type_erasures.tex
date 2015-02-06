@@ -2,15 +2,22 @@
 
 %%%============================================================================
 Templates are powerful tools as they allow the compiler to perform all kinds of
-optimizations. In addition they help to avoid virtual function tables and thus
-increasing overall performance of a program. 
-Template instantiation virtually always goes along with code generation and thus
-with an increase in code size. This can cause problems in particular on small
-hardware (like ARM based systems) where resources are limited.
-Think about the \texttt{show\_info} function template in the previous chapter. The
-function will be instantiated for every array type passed to it although it does
-virtually the same thing for each of them (we see an example of this in the
-section below describing the array type erasure). 
+optimizations.In addition they help to avoid virtual functions in classes and
+thus increase performance by avoiding call indirection through the virtual
+functions table. However, there are two major obstacles with templates
+\begin{enumerate}
+\item template expansion virtually always leas to code generation and this could 
+lead to large binaries which might be a problem on small hardware architectures
+\item template libraries and the applications which are using them are harder 
+to maintain. 
+\end{enumerate}
+The last point may requires a bit of explanation. The reason why system
+administrators are not very happy with programs based on template libraries is
+that the latter ones are distributed as source code. 
+Consequently whenever a bug is fixed in the library all programs depending 
+on the code required recompilation. For programs using binary libraries only the
+library has to be updated. This is obviously much easier than recompiling 
+all the programs depending on a library. 
 
 A reasonable solution for this problem is the use of type erasures. 
 \libpnicore\ provides three different type erasures
@@ -21,22 +28,30 @@ A reasonable solution for this problem is the use of type erasures.
 \texttt{array} & stores a multidimensional array type 
 \end{tabular}
 \end{center}
-To use type erasures include the \texttt{/pni/core/type\_erasures.hpp} at the top of
+To use type erasures include the \cpp{/pni/core/type\_erasures.hpp} at the top of
 your source file.
 
 %%%============================================================================
-\section{The \texttt{value} type erasures}
+\section{The \cpp{value} type erasures}
 
-The \texttt{value} type erasure stores the value of a single scalar POD type. 
-\texttt{value} can be default constructed in which case an instance of type 
-\texttt{none} is stored as can be easily confirmed with
-\begin{cppcode}
+\subsection{Construction}
+The \cpp{value} type erasure stores the value of a single primitive type. 
+Whenever an instance of \cpp{value} is constructed memory is allocated 
+large enough to store the value of a particular type. 
+
+\cpp{value} provides a default constructor. The instance produced by the 
+default constructor holds a value of type \cpp{none}. \begin{cppcode}
 value v;
 std::cout<<v.type_id()<<std::endl; //output NONE
 \end{cppcode}
-\texttt{value} has a copy and move constructor for other instances from 
-\texttt{value}. However, the constructor for other variables and literals is 
-explicit 
+Though there is not too much one can do with such a type it has the nice 
+advantage that one can default construct an instance of type \cpp{value}.
+In addition a copy and a move constructor is provided. All these constructors
+are implicit. 
+
+The more interesting constructors are explicit. An instance of \cpp{value} 
+can be constructed either from a variable from a particular type or from a
+literal as shown in this next example
 \begin{cppcode}
 //explicit construction from a variable
 int32 n = 1000;
@@ -50,118 +65,192 @@ std::cout<<v2.type_id()<<std::endl; //output FLOAT64
 //copy construction
 value v3 = v1;
 \end{cppcode}
-\texttt{value} also allows copy and move assignment from other instances of
-\texttt{value} as well as from literals. In all cases the assignment can change the
-stored data type
+
+As mentioned earlier in this section, whenever an instance of \cpp{value} 
+is constructed, memory is allocated to store the quantity that should be 
+hidden in the type erasure. The default constructor would allocate memory for a 
+\cpp{none} type with which one can do nothing useful. 
+A typical application for type erasures would be to store primitive values 
+of different type in a container and we would like to make the decision 
+which type to use at runtime. 
+For this purpose one could define a vector type like this
 \begin{cppcode}
-value v1,v2;  //default constructed  (type NONE)
-
-//copy assignment from literal
-v1 = 32;  
-std::cout<<v1.type_id()<<std::endl;  //output INT32
-
-v2 = v1;
-std::cout<<v2.type_id()<<std::endl;  //output INT32
+typedef std::vector<value> value_vector; 
 \end{cppcode}
-If default construction is required but the type of the internal value should
-not be \cpp{none} one can use the \cpp{make\_value} function template 
+However, how would one initialize an instance of this vector? It would not make
+too much sense to use the default constructor (as we cannot pass type
+information). The solution to this problem is the \cpp{make\_value} function
+which comes in two flavors. The first, as shown in the next code snippet, takes
+a type ID as a single argument and returns an instance of \cpp{value} of the 
+requested type.
 \begin{cppcode}
-auto v = make_value<float128>();
-std::cout<<v.type_id()<<std::endl; //output: FLOAT128
-\end{cppcode}
-This function template is particularly useful in connection with input- and
-output-streams as will be shown later. 
+std::vector<type_id_t>  ids = get_ids();
+value_vector values; 
 
-To retrieve the data stored in an instance of \cpp{value} use the \cpp{as}
-member template function as shown in this next example
+for(auto id: ids)
+    values.push_back(make_value(id));
+\end{cppcode}
+In addition there is a function template which serves the same purpose
 \begin{cppcode}
-value v(float64(1.23));
-
-auto x = v.as<float64>();
-
-std::cout<<x<<std::endl;
+value v = make_value<uint32>();
 \end{cppcode}
-There are tow things which are important here: first, the type checking is very
-strict. To successfully retrieve the data value from the \cpp{value} instance
-the type passed as the template parameter must be exactly the equal to the type
-used to construct the \cpp{value} instance. Otherwise \cpp{type\_error} will be
-thrown. In addition, one cannot retrieve the value from a default constructed
-instance of \cpp{value} (the one which is of type \cpp{none}). In this case 
-\cpp{type\_error} will be thrown too.
+Here the type is determined by the template parameter of the function template.
 
-The \cpp{value} type erasure can be used with the standard C++ input and output
-streams
+\subsection{Assignment}
+
+Copy and move assignment are provided by the \cpp{value} between two of its
+instances. In both situations the type of the \cpp{value} instance on the 
+left handside of the operator changes (this is obvious). 
+Move and copy assignment have the expected semantics. 
+
+The more interesting situation appears with assigning new values to an instance
+of \cpp{value}. As memory is only allocated during creation (or copy
+assignment) assigning a new value does not create a new instance of
+\cpp{value} but rather tries to perform a type conversion between the 
+instance of \cpp{value} on the LHS of the operator and the value on the LHS. 
 \begin{cppcode}
-auto value = make_value<float32>();
-std::cin>>value;
+value v = make_value<float32>(); //creates a value for a float32 value
 
-std::cout<<value;
+v = uint16(5); //converts uint16 value to a float32 value
 \end{cppcode}
-however, it is necessary to create a default value whose type is not
-\cpp{none}.
+The type conversion follows the same rules as described in the section about 
+type conversion earlier in this manual (in fact it uses this functionality). 
+Consequently 
+\begin{cppcode}
+value v = make_value<float64>(); 
+
+v = complex32(3,4); //throws type_error 
+\end{cppcode}
+will throw a \cpp{type\_error} exception as a complex number cannot be 
+converted to a single float value.
+
+\subsection{Retrieving data}
+
+Retrieving data from an instance of \cpp{value} is done via the \cpp{as} 
+template method like this
+\begin{cppcode}
+value v = ....;
+
+auto data = v.as<uint8>();
+\end{cppcode}
+The template parameter of \cpp{as} determines the data type as which the data
+should be retrieved. Like for value assignment the method performs a type
+conversion if necessary and throws \cpp{type\_error} or \cpp{range\_error} 
+exceptions if the conversion is not possible or the numeric range of the
+requested type is too small.
+
+Information about the type of the data stored in the \cpp{value} instance 
+can be obtained by means of the \cpp{type\_id} method. 
+\begin{cppcode}
+value v = ...;
+v.type_id();
+\end{cppcode}
+
 
 %%%===========================================================================
 \section{The \cpp{value\_ref} type erasure}
 
-The \cpp{value} type takes over ownership over the stored value. 
-In some cases one may wants to use a type erasures to a reference of a
-particular type.  For this purpose \libpnicore\ provides the \cpp{value\_ref}
-type erasure as shown in the next example
+The \cpp{value} type encapsulates data of an arbitrary type and has full 
+ownership of the data. Sometimes it is more feasible to only store a reference 
+to an already existing data item of a primitive type. If the reference 
+should be copyable the default approach towards this problem would be to use
+\cpp{std::reference\_wrapper}. Unfortunately, this template includes the 
+full type information -- which is what we want to get rid of when using 
+a type erasure. 
+\libpnicore\ for this purpose provides the \cpp{value\_ref} erasure. It stores 
+a reference to an existing data item and hides all the type information. 
+Though \cpp{value\_ref} behaves quite similar to \cpp{value} there are some 
+subtle differences originating from its nature as a reference type. Thus it
+is highly recommended to read this section carefully if you are planing to 
+use \cpp{value\_ref}.
 
-\inputminted[fontsize=\small,
-             linenos,
-             firstnumber=26,
-             firstline=26,
-             lastline=45,
-             frame=lines,
-             label=examples/type\_erasure2.cpp]
-{cpp}{../examples/type_erasure2.cpp}
-Unlike \cpp{value} \cpp{value\_ref} does not take ownership over the object
-whose type should be erased but rather holds a reference to it
-as demonstrated by the output of the program
-\begin{minted}{bash}
-10.234
-2334.5
-2334.5
-\end{minted}
-It is possible to alter the value of the original variable via an instance of
-the \texttt{value\_ref} type erasure.
+\subsection{Construction}
 
-In fact \cpp{value\_ref} is a wrapper around the \cpp{std::reference\_wrapper} 
-template provided by C++. Therefore, as shown in line $36$ in the above example
-it has to be constructed from such a type. 
-As the \cpp{value} type erasure it provides a \cpp{as<>} template method and a
-\cpp{type\_id} method.
-\cpp{value\_ref} provides a default constructor. However, every attempt to 
-access the data of a default constructed \cpp{value\_ref} instance will throw
-a \cpp{memory\_not\_allocated} exception. This behavior is sensible as one 
-tries to access a not initialized reference. In addition the behavior of the 
-assignment operator for \cpp{value\_ref} is slightly more complex than that of 
-\cpp{value} as demonstrated in the next example
+Like \cpp{value}, \cpp{value\_ref} is default constructible
 \begin{cppcode}
-float64 n = 234.2;
-value v = 1.234;
-value_ref vr(std::ref(n));
-
-vr = 54.1334; //assigns a new value to n and vr
-vr = v;       //assigns a new value to n and vr
-
-float64 n2 = 10000;
-value_ref vi(std::ref(n2));
-
-vr = vi;      //rebinds the vr to n2
+value_ref vref;
 \end{cppcode}
-In the first two cases a new value is assigned to \cpp{vr} while in the latter
-case the assignment between two instances of \cpp{value\_ref} causes a rebind of
-\cpp{vr} to the variable $n2$. This may cause some trouble. If only the value of
-a reference should be assigned we need to use the \cpp{static\_cast} function
-and replace the last line with
+allowing it to be used in STL containers. However, unlike \cpp{value} the default 
+constructed reference points to nowhere. Every access to any of
+\cpp{value\_ref}s methods will throw \cpp{memory\_not\_allocated\_error} 
+for a default constructed instance of \cpp{value\_ref}. The preferred way of 
+how to initialize \cpp{value\_ref} is by passing an instance of 
+\cpp{std::reference\_wrapper} to it 
 \begin{cppcode}
-vr = static_cast<value>(vi);
+float64 data;
+value_ref data_ref(std::ref(data));
 \end{cppcode}
-By casting to \cpp{value}  we do not have to care about the particular data type
-held by \cpp{vi}. However, one must take care that the types do match, otherwise
-a \cpp{type\_error} exception will be thrown.
+In addition \cpp{value\_ref} is copy constructible. 
+
+\subsection{Assignment}
+
+The most difficult operation with \cpp{value\_ref} is assignment. It really
+depends on the right handside of the assignment operator what happens. 
+One can do copy assignment
+\begin{cppcode}
+float32 temperature; 
+uint32  counter;
+value_ref v1(std::ref(temperature)); //reference to temperature
+value_ref v2(std::ref(counter));     //reference to counter
+
+v1 = v2; //now v1 is a reference to counter too
+\end{cppcode}
+which has the same semantics as the copy assignment for
+\cpp{std::reference\_wrapper} where the reference is copied. 
+
+Another possibility is to assign the value of a primitive type to an 
+instance of \cpp{value\_ref}. In this case two things are taking place
+\begin{enumerate}
+\item the value is converted to the type of the data item the instance 
+of \cpp{value\_ref} references
+\item the converted value is assigned to the referenced data item
+\end{enumerate}
+Consider this example
+\begin{cppcode}
+float32 temperature;
+value_ref temp_ref(std::ref(temperature));
+
+temp_ref = uint16(12);
+\end{cppcode}
+In this example the value $12$ of type \cpp{uint16} is first converted to 
+a \cpp{float32} value. This new float value is then assigned to the variable 
+\cpp{temperature}. As always with type conversions exceptions will be 
+thrown if the conversion fails.
+
+One can also change the variable an instance of \cpp{value\_ref} references 
+with
+\begin{cppcode}
+value_ref ref = ....;    //reference to some data item
+complex64 refractive_index = ...;
+
+ref = std::ref(refractive_index);  //now reference points to refractive_index
+\end{cppcode}
+Finally a value from a \cpp{value} instance can be assigned with
+\begin{cppcode}
+value v = int32(100);
+value_ref ref = ....;
+
+ref = v;
+\end{cppcode}
+in which case type conversion from the internal type of \cpp{v} to the internal 
+type of \cpp{ref} occurs. Exceptions are thrown if the type conversion fails.
+
+\subsection{Retrieving data}
+
+Data retrieval for \cpp{value\_ref} works exactly the same way as for
+\cpp{value}. The type provides a template method \cpp{as} which can be 
+used to get a copy of the data stored in the item referenced as an instance 
+of a type determined by the template parameter. 
+\begin{cppcode}
+value_ref ref = ....;
+
+auto data = ref.as<uint32>();
+\end{cppcode}
+Again, type conversion takes place from the original type of the referenced 
+data item to the type requested by the user via the template parameter. 
+Finally, as \cpp{value}, \cpp{value\_ref} provides a \cpp{type\_id} member 
+function which returns the type ID of the referenced data item.
+
 
 %%%============================================================================
 \section{Type erasures for arrays}

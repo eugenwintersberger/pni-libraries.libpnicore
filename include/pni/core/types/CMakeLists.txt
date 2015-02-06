@@ -14,6 +14,7 @@ set(HEADER_FILES binary.hpp
                  checked_convertible.hpp
                  convertible.hpp
                  convert.hpp
+                 traits.hpp
                  )
 
 install(FILES ${HEADER_FILES} 

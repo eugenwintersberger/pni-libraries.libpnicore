@@ -7,6 +7,7 @@ set(HEADER_FILES array_holder.hpp
                  value.hpp
                  value_ref.hpp
                  make_array.hpp
+                 utils.hpp
                  )
 
 install(FILES ${HEADER_FILES} 

@@ -23,6 +23,7 @@
 //
 #pragma once
 
+#include "../types/type_id_map.hpp"
 #include "value_holder_interface.hpp"
 
 namespace pni{
@@ -32,46 +33,70 @@ namespace core{
     //! \ingroup type_erasure_classes_internal
     //! \brief return reference
     //!
-    //! Return the reference to its argument. 
+    //! Return the reference to its argument. This function template produces 
+    //! no code. It just passes the reference through.
     //! 
     //! \tparam T type of the reference
     //! \param v input reference
     //! \return reference to the argument
     //!
-    template<typename T> T& get_reference(T& v) { return v; }
+    template<typename T> 
+    T& get_ref(T &v) noexcept
+    { 
+        return v;
+    } 
 
-    //-------------------------------------------------------------------------
+    //------------------------------------------------------------------------
+    //!
+    //! \ingroup type_erasure_classes_internal
+    //! \brief return const reference
+    //!
+    //! Return a const reference from a primitive type. 
+    //!
+    //! \tparam T primitive type
+    //! \param v const reference to the primitive type
+    //! \return const reference to T
+    //!
+    template<typename T> 
+    const T& get_const_ref(const T &v) noexcept
+    { 
+        return v; 
+    }
+
+    //------------------------------------------------------------------------
     //!
     //! \ingroup type_erasure_classes_internal
     //! \brief return reference
     //!
-    //! This template function returns the reference to an object wrapped in 
-    //! the std::reference_wrapper template.
+    //! Return the reference stored in a std::reference_wrapper. 
+    //! 
+    //! \tparam T type wrapped by std::reference_wrapper
+    //! \param v input reference
+    //! \return reference to the argument
     //!
-    //! \param v reference to reference_wrapper
-    //! \return original reference
-    //!
-    template<typename T> T& get_reference(std::reference_wrapper<T> &v)
+    template<typename T> 
+    T& get_ref(std::reference_wrapper<T> &v) noexcept
     {
         return v.get();
     }
 
-    //-------------------------------------------------------------------------
+    //------------------------------------------------------------------------
     //!
     //! \ingroup type_erasure_classes_internal
-    //! \brief get const reference
+    //! \brief return const reference
     //!
-    //! Return the const reference to an object wrapped by the 
-    //! reference_wrapper template.
+    //! Return a const reference stored in a std::reference_wrapper. 
     //! 
-    //! \param v reference to wrapper
-    //! \return original const reference
+    //! \tparam T type wrapped by std::reference_wrapper
+    //! \param v const reference 
+    //! \return reference to the argument
     //!
-    template<typename T>
-    const T& get_reference(const std::reference_wrapper<T> &v) 
+    template<typename T> 
+    const T& get_const_ref(const std::reference_wrapper<T> &v) noexcept
     {
         return v.get();
     }
+
 
     //-------------------------------------------------------------------------
     //!
@@ -113,6 +138,8 @@ namespace core{
     {
         //! original reference type
         typedef T value_type;
+        typedef T &reference_type;
+        typedef const T &const_reference_type;
     };
 
     //-------------------------------------------------------------------------
@@ -127,6 +154,8 @@ namespace core{
     {
         //! original reference type
         typedef T value_type;
+        typedef T &reference_type;
+        typedef const  T &const_reference_type;
     };
 
     //-------------------------------------------------------------------------
@@ -143,44 +172,40 @@ namespace core{
         private:
             T _value; //!< the data value
 
-            template<typename TA>
-            static bool is_equal(const TA &a,const TA &b)
-            {
-                return a==b;
-            }
-
-            template<typename TA>
-            static bool is_equal(const std::reference_wrapper<TA> &a,
-                                 const std::reference_wrapper<TA> &b)
-            {
-                return a.get()==b.get();
-            }
-
         public:
-            //---------------------------------------------------------
+            //----------------------------------------------------------------
+            //!
             //! default constructor
+            //!
             value_holder():_value(T(0)) {}
 
-            //---------------------------------------------------------
+            //----------------------------------------------------------------
+            //!
             //! value constructor
+            //!
             value_holder(T v):_value(v) {}
 
 
-            //===============public inerface implementation============            
+            //====================public inerface implementation==============
+            //!
             //! get type id of data
-            virtual type_id_t type_id() const 
+            //!
+            virtual type_id_t type_id() const noexcept
             {
-                return type_id_map<typename get_reference_type<T>::value_type >::type_id;
+                typedef typename get_reference_type<T>::value_type value_type;
+                return type_id_map<value_type >::type_id;
             }
 
-            //---------------------------------------------------------
+            //----------------------------------------------------------------
+            //!
             //! clone holder instance
+            //!
             virtual value_holder_interface *clone() const
             {
                 return new value_holder<T>(_value);
             }
 
-            //---------------------------------------------------------
+            //----------------------------------------------------------------
             //!
             //! \brief return value
             //!
@@ -188,39 +213,24 @@ namespace core{
             //!
             //! \return value of type T
             //!
-            T as() const { return _value; } 
+            typename get_reference_type<T>::value_type as() const 
+            { 
+                return get_const_ref(_value);
+            } 
 
-            //---------------------------------------------------------
-            //! write value to output stream
-            virtual std::ostream &write(std::ostream &stream) const
+            //----------------------------------------------------------------
+            typename get_reference_type<T>::reference_type as()
             {
-                stream<<get_reference(_value);
-                return stream;
+                return get_ref(_value);
             }
 
-            //----------------------------------------------------------
-            //! read value from input stream
-            virtual std::istream &read(std::istream &stream)
-            {
-                stream>>get_reference(_value);
-                return stream;
-            }
-
-            //----------------------------------------------------------
+            //----------------------------------------------------------------
+            //!
             //! true if the holder keeps a reference
+            //!
             virtual bool holds_reference() const
             {
                 return is_reference_holder<T>::value;
-            }
-
-            virtual bool compare(const value_holder_interface &other) const
-            {
-                if(type_id() != other.type_id())
-                    throw type_error(EXCEPTION_RECORD,
-                            "Cannot compare values of different type!");
-    
-                const auto &o = dynamic_cast<const value_holder<T>&>(other)._value;
-                return is_equal(o,_value);
             }
     };
 

@@ -7,6 +7,7 @@ set(SOURCES bool.cpp
             type_conversion.cpp
             types.cpp
             type_utils.cpp
+            traits.cpp
    )
 
 add_library(type_objects OBJECT ${SOURCES})

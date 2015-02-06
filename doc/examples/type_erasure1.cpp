@@ -34,7 +34,6 @@ int main(int argc,char **argv)
     //construction from a number
     float64 number = 10.234;
     value v(number);
-    std::cout<<v<<std::endl;
 
     //conversion 
     auto x = v.as<float64>();
@@ -43,14 +42,10 @@ int main(int argc,char **argv)
     //create an empty value
     auto v2 = make_value<float64>();
     v2 = number;
-    std::cout<<v2<<std::endl;
 
     //create a value from a literal
     value v3(3.2123);
-    std::cout<<v3<<" ("<<v3.type_id()<<")"<<std::endl;
-
-    v3 = 13;
-    std::cout<<v3<<" ("<<v3.type_id()<<")"<<std::endl;
+    std::cout<<v3.as<float64>()<<" ("<<v3.type_id()<<")"<<std::endl;
 
     return 0;
 }

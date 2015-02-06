@@ -31,12 +31,6 @@ namespace pni{
 namespace core{
 
     //-------------------------------------------------------------------------
-    void value::_throw_not_allocated_error(const exception_record &r)
-    {
-        throw memory_not_allocated_error(r, "Instance of value holds no data!");
-    }
-
-    //-------------------------------------------------------------------------
     // Implementation of constructors
     //-------------------------------------------------------------------------
     value::value():
@@ -92,33 +86,37 @@ namespace core{
     }
 
     //-------------------------------------------------------------------------
-    std::ostream &operator<<(std::ostream &stream,const value &v)
-    {
-        return v._ptr->write(stream);
-    }
-    
-    //-------------------------------------------------------------------------
-    std::istream &operator>>(std::istream &stream,value &v)
-    {
-        return v._ptr->read(stream);
-    }
-
-    //-------------------------------------------------------------------------
-    bool operator==(const value &a,const value &b)
-    {
-        return a._ptr->compare(*b._ptr);
-    }
-
-    //-------------------------------------------------------------------------
-    bool operator!=(const value &a,const value &b)
-    {
-        return !(a==b);
-    }
-
-    //-------------------------------------------------------------------------
     type_id_t type_id(const value &v)
     {
         return v.type_id();
+    }
+
+    //------------------------------------------------------------------------
+    value make_value(type_id_t tid)
+    {
+        switch(tid)
+        {
+            case type_id_t::UINT8:      return make_value<uint8>();
+            case type_id_t::INT8:       return make_value<int8>();
+            case type_id_t::UINT16:     return make_value<uint16>();
+            case type_id_t::INT16:      return make_value<int16>();
+            case type_id_t::UINT32:     return make_value<uint32>();
+            case type_id_t::INT32:      return make_value<int32>();
+            case type_id_t::UINT64:     return make_value<uint64>();
+            case type_id_t::INT64:      return make_value<int64>();
+            case type_id_t::FLOAT32:    return make_value<float32>();
+            case type_id_t::FLOAT64:    return make_value<float64>();
+            case type_id_t::FLOAT128:   return make_value<float128>();
+            case type_id_t::COMPLEX32:  return make_value<complex32>();
+            case type_id_t::COMPLEX64:  return make_value<complex64>();
+            case type_id_t::COMPLEX128: return make_value<complex128>();
+            case type_id_t::BINARY:     return make_value<binary>();
+            case type_id_t::STRING:     return make_value<string>();
+            case type_id_t::BOOL:       return make_value<bool_t>();
+            default:
+                throw type_error(EXCEPTION_RECORD,
+                        "Unknown type ID - cannot instantive value!");
+        }
     }
 //end of namespace
 }

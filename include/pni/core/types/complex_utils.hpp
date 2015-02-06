@@ -26,63 +26,10 @@
 #pragma once
 
 #include "types.hpp"
-#include "type_info.hpp"
 
 
 namespace pni{
 namespace core{
-
-    //!
-    //! \ingroup type_classes
-    //! \brief checks if a type is complex 
-    //! 
-    //! Checks whether a type is a complex number type. 
-    //! \tparam T type to check
-    //!
-    template<typename T> 
-    struct is_complex
-    {
-        //! check result
-        static const bool value = false;
-    };
-
-    //--------------------------------------------------------------------------
-    //!
-    //! \ingroup type_classes
-    //! \brief checks if a type is complex 
-    //! 
-    //! This specialization provides true for complex numbers.
-    //!
-    template<typename T> 
-    struct is_complex<std::complex<T>>
-    {
-        //! check result
-        static const bool value = true;
-    };
-
-    //-------------------------------------------------------------------------
-    //!
-    //! \ingroup type_classes_internal
-    //! \brief complex to complex conversion
-    //! 
-    //! template function implementing the conversion from one complex type to
-    //! an other. 
-    //! 
-    //! \tparam C target type
-    //! \tparam O source type
-    //! \param v reference to the original object
-    //! \return new instance of C with values from v
-    //!
-    template<
-             typename C,
-             typename O
-            > 
-    C __convert(const O &v)
-    {
-        if(type_info<O>::is_complex) return C(v.real(),v.imag());
-
-        return C(v);
-    }
 
     //-------------------------------------------------------------------------
     //!

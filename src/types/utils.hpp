@@ -22,6 +22,7 @@
 //     Author: Eugen Wintersberger
 //
 
+#include <functional>
 #include <pni/core/types/types.hpp>
 #include <pni/core/types/type_id_map.hpp>
 #include <boost/mpl/for_each.hpp>

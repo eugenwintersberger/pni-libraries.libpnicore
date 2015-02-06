@@ -24,6 +24,7 @@
 //!/
 
 #include <pni/core/types/complex_utils.hpp>
+#include <pni/core/types/convert.hpp>
 
 namespace pni{
 namespace core{
@@ -31,7 +32,7 @@ namespace core{
     //-------------------------------------------------------------------------
     bool operator==(const complex32 &a,const complex64 &b)
     {
-        complex64 _a(a.real(),a.imag());
+        auto _a = convert<complex64>(a);
 
         return (_a == b);
     }
@@ -39,7 +40,7 @@ namespace core{
     //-------------------------------------------------------------------------
     bool operator==(const complex32 &a,const complex128 &b)
     {
-        complex64 _a(a.real(),a.imag());
+        auto _a = convert<complex128>(a);
 
         return (_a == b);
     }
@@ -47,28 +48,28 @@ namespace core{
     //-------------------------------------------------------------------------
     bool operator==(const complex64 &a,const complex32 &b)
     {
-        complex64 _b(b.real(),b.imag());
+        auto _b = convert<complex64>(b);
         return (a == _b);
     }
 
     //-------------------------------------------------------------------------
     bool operator==(const complex64 &a,const complex128 &b)
     {
-        complex128 _a(a.real(),a.imag());
+        auto _a = convert<complex128>(a);
         return(_a == b);
     }
 
     //-------------------------------------------------------------------------
     bool operator==(const complex128 &a,const complex32 &b)
     {
-        complex128 _b(b.real(),b.imag());
+        auto _b = convert<complex128>(b);
         return(_b == a);
     }
 
     //-------------------------------------------------------------------------
     bool operator==(const complex128 &a,const complex64 &b)
     {
-        complex128 _b(b.real(),b.imag());
+        auto _b = convert<complex128>(b);
         return(_b == a);
     }
 

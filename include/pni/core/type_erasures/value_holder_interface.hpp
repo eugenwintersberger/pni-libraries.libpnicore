@@ -40,32 +40,25 @@ namespace core{
     {
         public:
             //-----------------------------------------------------------------
+            //!
             //! get type id
+            //!
             virtual type_id_t type_id() const = 0;
 
             //-----------------------------------------------------------------
-            /*!
-            \brief clone 
-
-            Clone the actual holder object. 
-            \return pointer to new holder instance 
-            */
+            //!
+            //! \brief clone 
+            //!
+            //! Clone the actual holder object. 
+            //! \return pointer to new holder instance 
+            //!
             virtual value_holder_interface *clone() const = 0;
 
             //-----------------------------------------------------------------
-            //! write content to output stream
-            virtual std::ostream &write(std::ostream &) const = 0;
-
-            //-----------------------------------------------------------------
-            //! read content from input stream
-            virtual std::istream &read(std::istream &) = 0;
-
-            //-----------------------------------------------------------------
+            //!
             //! is reference
+            //!
             virtual bool holds_reference() const = 0;
-
-
-            virtual bool compare(const value_holder_interface &) const = 0;
     };
 
 //end of namespace

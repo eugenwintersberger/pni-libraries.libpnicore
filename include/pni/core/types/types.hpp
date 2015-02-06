@@ -28,6 +28,8 @@
 #include <string>
 #include <cstdint>
 #include <vector>
+#include <boost/mpl/vector.hpp>
+#include <boost/mpl/joint_view.hpp>
 
 #include "binary.hpp"
 #include "bool.hpp"
@@ -57,18 +59,86 @@ namespace core{
 
     //-----------------------complex types--------------------------------------
     //! 32Bit complex floating point type
-    typedef std::complex<float>       complex32; 
+    typedef std::complex<float32>  complex32; 
     //! 64Bit complex floating point type 
-    typedef std::complex<double>      complex64; 
+    typedef std::complex<float64>  complex64; 
     //! 128Bit complex floating point type
-    typedef std::complex<long double> complex128; 
+    typedef std::complex<float128> complex128; 
 
     //-----------------------utility types-------------------------------------
     typedef std::string     string; //!< String type
     typedef binary_t<uint8> binary; //!< data type for binary data
     /*! @} */
 
+    //-------------------------------------------------------------------------
+    // define some mpl containers with types 
 
+    //!
+    //! \ingroup type_classes
+    //! \brief integer types vector
+    //!
+    //! An MPL vector with all integer types supported by libpnicore
+    //!
+    typedef boost::mpl::vector<uint8,int8,
+                               uint16,int16,
+                               uint32,int32,
+                               uint64,int64> integer_types;
+
+    //------------------------------------------------------------------------
+    //!
+    //! \ingroup type_classes
+    //! \brief floating point types vector
+    //!
+    //! An MPL vector with all floating point types supported by libpnicore
+    //!
+    typedef boost::mpl::vector<float32,
+                               float64,
+                               float128> float_types;
+
+    //------------------------------------------------------------------------
+    //!
+    //! \ingroup type_classes
+    //! \brief complex types vector
+    //!
+    //! An MPL vector with all complex number types supported by libpnicore.
+    //!
+    typedef boost::mpl::vector<complex32,
+                               complex64,
+                               complex128> complex_types;
+
+    //------------------------------------------------------------------------
+    //!
+    //! \ingroup type_classes
+    //! \brief non numeric types vector
+    //!
+    //! An MPL vector with all numeric types supported by libpnicore.
+    //!
+    typedef boost::mpl::joint_view<
+        boost::mpl::joint_view<integer_types,float_types>::type,
+        complex_types
+        > numeric_types;
+
+    //------------------------------------------------------------------------
+    //!
+    //! \ingroup type_classes
+    //! \brief non numeric types
+    //!
+    //! A boos MPL vector with non numeric types
+    //!
+    typedef boost::mpl::vector<none,bool_t,binary,string> non_numeric_types;
+
+    //------------------------------------------------------------------------
+    //!
+    //! \ingroup type_classes
+    //! \brief all primitive types
+    //! 
+    //! This MPL vector contains all primitive types. These types are in some
+    //! sense considered as POD types.
+    //!
+    typedef boost::mpl::joint_view<numeric_types,non_numeric_types> 
+        primitive_types;
+
+    //------------------------------------------------------------------------
     //! 
     //! \ingroup type_classes
     //! \brief type codes for PNI data types

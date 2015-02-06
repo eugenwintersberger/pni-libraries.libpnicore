@@ -44,13 +44,11 @@ template<typename OT> class array_test : public CppUnit::TestFixture
         CPPUNIT_TEST(test_element_multidim);
         CPPUNIT_TEST(test_foreach);
         CPPUNIT_TEST(test_copy_and_move);
-        CPPUNIT_TEST(test_io);
         CPPUNIT_TEST(test_inquery);
         CPPUNIT_TEST(test_element_access);
         CPPUNIT_TEST(test_at_access);
         CPPUNIT_TEST(test_iterator);
         CPPUNIT_TEST(test_assignment);
-        CPPUNIT_TEST(test_comparison);
         CPPUNIT_TEST_SUITE_END();
 
         typedef typename OT::value_type value_type;
@@ -65,14 +63,12 @@ template<typename OT> class array_test : public CppUnit::TestFixture
 
         void test_construction();
         void test_copy_and_move();
-        void test_io();
         void test_inquery();
         void test_element_access();
         void test_at_access();
         void test_iterator();
         void test_foreach();
         void test_assignment();
-        void test_comparison();
         void test_element_multidim();
         void test_from_view();
 };
@@ -157,17 +153,6 @@ template<typename OT> void array_test<OT>::test_assignment()
 }
 
 //-----------------------------------------------------------------------------
-template<typename OT> void array_test<OT>::test_io()
-{
-    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-
-    array o(_object1);
-    std::stringstream s("1 2 3 4 5 6");
-
-    s>>o;
-}
-
-//-----------------------------------------------------------------------------
 template<typename OT> void array_test<OT>::test_element_access()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
@@ -245,24 +230,11 @@ template<typename OT> void array_test<OT>::test_inquery()
     CPPUNIT_ASSERT(o.type_name() == typeid(OT).name());
 }
 
-//-----------------------------------------------------------------------------
-template<typename OT> void array_test<OT>::test_comparison()
-{
-    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-
-    std::generate(_object1.begin(),_object1.end(),random_generator<value_type>());
-    std::generate(_object2.begin(),_object2.end(),random_generator<value_type>());
-    array a1(_object1);
-    array a2(_object2);
-
-    CPPUNIT_ASSERT(a1 == a1);
-    CPPUNIT_ASSERT(a1 != a2);
-}
-
 //----------------------------------------------------------------------------
 template<typename OT> void array_test<OT>::test_element_multidim()
 {
     std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
+    typedef typename OT::value_type value_type;
     
     std::generate(_object1.begin(),_object1.end(),random_generator<value_type>());
 
@@ -285,7 +257,8 @@ template<typename OT> void array_test<OT>::test_element_multidim()
         for(size_t j=0;j<_shape[1];++j)
         {
             array::element_index index{i,j};
-            CPPUNIT_ASSERT(o2(index)== o1(index));
+            CPPUNIT_ASSERT(o2(index).as<value_type>()==
+                    o1(index).as<value_type>());
         }
     }
 }

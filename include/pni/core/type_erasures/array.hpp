@@ -259,13 +259,6 @@ namespace core{
             //!
             size_t size() const; 
 
-            //-----------------------------------------------------------------
-            //! write container to output stream
-            std::ostream &write(std::ostream &os) const;
-
-            //-----------------------------------------------------------------
-            //! read data from input stream
-            std::istream &read(std::istream &is);
 
             //-----------------------------------------------------------------
             //!
@@ -361,61 +354,6 @@ namespace core{
         return c;
     }
 
-    //================declaration of stream operators==========================
-
-    //!
-    //! \ingroup type_erasure_classes
-    //! \brief stream output
-    //!
-    //! Writes the content of a data_object to an output stream.
-    //!
-    //! \param os reference to output stream
-    //! \param o instance of data_object
-    //! \return reference to output stream
-    //!
-    std::ostream &operator<<(std::ostream &os,const array &o);
-
-    //-------------------------------------------------------------------------
-    //!
-    //! \ingroup type_erasure_classes
-    //! \brief stream input
-    //!
-    //! Store data from stream to data_object.
-    //! 
-    //! \param is reference to input stream
-    //! \param o reference to data object
-    //! \return reference to input stream
-    //!
-    std::istream &operator>>(std::istream &is,array &o);
-
-    //-------------------------------------------------------------------------
-    //!
-    //! \ingroup type_erasure_classes
-    //! \brief compare arrays
-    //!
-    //! Returns true if all elements stored in the array erasure are equal. 
-    //! Otherwise the operator returns false.
-    //! 
-    //! \param a lhs of the operator
-    //! \param b rhs of the operator
-    //! \return true if all elements are equal
-    //! 
-    bool operator==(const array &a,const array &b);
-
-    //-------------------------------------------------------------------------
-    //!
-    //! \ingroup type_erasure_classes
-    //! \brief compare arrays
-    //!
-    //! Returns false if all elements stored in the array erasure are equal. 
-    //! Otherwise the operator returns true.
-    //! 
-    //! \param a lhs of the operator
-    //! \param b rhs of the operator
-    //! \return false if all elements are equal
-    //! 
-    bool operator!=(const array &a,const array &b);
-
     //-------------------------------------------------------------------------
     //! 
     //! \ingroup mdim_array_classes
@@ -431,6 +369,4 @@ namespace core{
 //end of namespace
 }
 }
-
-
         
