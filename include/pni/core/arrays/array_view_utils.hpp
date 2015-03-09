@@ -170,7 +170,7 @@ namespace core{
     //-------------------------------------------------------------------------
     //!
     //! \ingroup mdim_array_internal_classes
-    //! \brief check if view container 
+    //! \brief check if view index 
     //! 
     //! This template checks if a container identifies a view. This is the 
     //! case if its value_type is slice. 
@@ -180,7 +180,13 @@ namespace core{
         //! by default CTYPE is no view container
         static const bool value = false;
     };
-    
+   
+    //-------------------------------------------------------------------------
+    //!
+    //! \ingroup mdim_array_internal_classes
+    //! \brief check if view index
+    //! 
+    //! This template checks 
     template<typename T> struct is_view_cont<std::vector<T>>
     {
         //! true if CTYPE holds view information

@@ -118,7 +118,7 @@ namespace core{
                 _selection(s),
                 _imap(map_utils<map_type>::create(_selection.shape<index_type>())),
                 _index(a.rank()),
-                _is_contiguous(is_contiguous(a.map(),_selection)),
+                _is_contiguous(pni::core::is_contiguous(a.map(),_selection)),
                 _start_offset(start_offset(a.map(),_selection))
             { }
 
@@ -138,7 +138,7 @@ namespace core{
                 _selection(std::move(s)),
                 _imap(map_utils<map_type>::create(_selection.shape<index_type>())),
                 _index(a.rank()),
-                _is_contiguous(is_contiguous(a.map(),_selection)),
+                _is_contiguous(pni::core::is_contiguous(a.map(),_selection)),
                 _start_offset(start_offset(a.map(),_selection))
             {}
 
@@ -770,6 +770,17 @@ namespace core{
             const map_type &map() const
             {
                 return _imap;
+            }
+
+            //-----------------------------------------------------------------
+            //!
+            //! \brief check if contiguous
+            //! 
+            //! Returns true if the view is contiguous. Otherweise false. 
+            //! 
+            bool is_contiguous() const
+            {
+                return _is_contiguous;
             }
     };
 
