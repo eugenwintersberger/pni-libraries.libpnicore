@@ -787,6 +787,23 @@ namespace core{
     //------------------------------------------------------------------------
     //!
     //! \ingroup type_classes
+    //! \brief specialization for type_id 
+    //! 
+    //! This function returns the type ID of an array view instance. 
+    //! 
+    //! 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+    template<typename ATYPE>
+    type_id_t type_id(const array_view<ATYPE> &v)
+    {
+        return type_id_map<typename ATYPE::value_type>::type_id;
+    }
+#pragma GCC diagnostic pop
+
+    //------------------------------------------------------------------------
+    //!
+    //! \ingroup type_classes
     //! \brief container_trait for an array_view
     //!
     //! Specialization of the container_trait for instances of array_view. 
