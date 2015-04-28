@@ -41,6 +41,7 @@ template<typename T> class value_ref_assignment_test : public CppUnit::TestFixtu
         CPPUNIT_TEST(test_copy);
         CPPUNIT_TEST(test_from_value);
         CPPUNIT_TEST(test_from_T);
+        CPPUNIT_TEST(test_to_value);
         CPPUNIT_TEST_SUITE_END();
        
         typedef T value_type;
@@ -76,6 +77,8 @@ template<typename T> class value_ref_assignment_test : public CppUnit::TestFixtu
         //! value of the target variable for the reference.
         //!
         void test_from_T();
+
+        void test_to_value();
 };
 
 //-----------------------------------------------------------------------------
@@ -135,5 +138,18 @@ void value_ref_assignment_test<T>::test_from_T()
     v = value_2;
     compare(v.as<value_type>(),value_2);
     compare(value_2,value_1);
+}
+
+//-----------------------------------------------------------------------------
+template<typename T>
+void value_ref_assignment_test<T>::test_to_value()
+{
+    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
+    
+    value_ref v_ref(std::ref(value_1));
+    value v = to_value(v_ref);
+    
+    compare(v.as<value_type>(),v_ref.as<value_type>());
+    compare(v.as<value_type>(),value_1);
 }
 
