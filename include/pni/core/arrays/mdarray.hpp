@@ -90,6 +90,8 @@ namespace core {
             typedef array_view<array_type> view_type;
             //! const view type
             typedef array_view<const array_type> const_view_type;
+            //! type used for size
+            typedef size_t size_type;
 
             
             //==================public members=================================

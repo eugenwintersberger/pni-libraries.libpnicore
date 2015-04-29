@@ -222,6 +222,14 @@ namespace core{
                 return (*_container)[_state];
             }
 
+            typename array_iterator_types<const_flag>::return_type operator*()
+                const
+            {
+                if(!(*this))
+                    throw iterator_error(EXCEPTION_RECORD,"Iterator invalid!");
+            
+                return (*_container)[_state];
+            }
             //------------------------------------------------------------------
             //! increment iterator position
             iterator_type &operator++()

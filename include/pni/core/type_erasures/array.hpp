@@ -117,6 +117,7 @@ namespace core{
             typedef array_iterator<1> const_iterator; //!< read only iterator
             typedef array_holder_interface::element_index element_index;
             typedef array_holder_interface::view_index view_index;
+            typedef size_t size_type; //!< type used for array size
             //===================constructors and destructor===================
             //! default constructor
             array():_ptr(nullptr) {}

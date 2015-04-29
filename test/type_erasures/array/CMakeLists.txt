@@ -3,6 +3,7 @@ set(SOURCES
         array_test.cpp
         array_creation_test.cpp
         array_access_test.cpp
+        array_iterator_test.cpp
     )
 
 add_executable(array_test ${SOURCES} $<TARGET_OBJECTS:test_common>)
