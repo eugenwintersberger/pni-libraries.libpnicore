@@ -10,15 +10,15 @@ Minimum requirements:
 -> doxygen  (to build the documentation)
 -> cppunit  (to build unit tests)
 -> pkg-config needed to configure additional required packages
+-> pdflatex to build the users guide
 
 
 2.) Build and installation
     ----------------------
 
-libpnicore has switched from scons to cmake as its build system. 
-We strongly recommend to build the library in a separate  build directory. 
-After obtaining the source tree (either by cloning the GIT repository or by
-downloading a tarball) create a build directory
+As libpnicore uses CMake for building the software we strongly recommend out of
+source builds.  After obtaining the source tree (either by cloning the GIT
+repository or by downloading a tarball) create a build directory
 
 $> mkdir libpnicore_build
 
