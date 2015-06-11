@@ -57,15 +57,18 @@ namespace core{
 
         //run the parser
         popts::parsed_options parsed_opts(&total_opts);
-        if(unregistered)
-            parsed_opts = popts::command_line_parser(args).
-                          options(total_opts).
-                          positional(config.arguments()).
-                          allow_unregistered().run();
-        else
-            parsed_opts = popts::command_line_parser(args).
-                          options(total_opts).
-                          positional(config.arguments()).run();
+        
+        auto p = popts::command_line_parser(args);
+        p.options(total_opts);
+
+        //if there are any positional arguments - add them
+        if(config.arguments().max_total_count()) 
+            p.positional(config.arguments());
+
+        //if we allow for unregistered options
+        if(unregistered) p.allow_unregistered();
+
+        parsed_opts = p.run();
 
         //store the parsed options
         popts::store(parsed_opts,const_cast<popts::variables_map&>(config.map()));
@@ -75,7 +78,7 @@ namespace core{
         popts::notify(const_cast<popts::variables_map&>(config.map()));
 
         return
-            popts::collect_unrecognized(parsed_opts.options,popts::exclude_positional);
+            popts::collect_unrecognized(parsed_opts.options,popts::include_positional);
 
        
     }
