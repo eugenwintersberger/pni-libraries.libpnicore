@@ -122,6 +122,24 @@ namespace core{
         if(s.stride()!=1) o<<":"<<s.stride();
         return o;
     }
+
+    //-------------------------------------------------------------------------
+    bool operator==(const slice &lhs,const slice &rhs)
+    {
+        if(lhs.first()!=rhs.first()) return false;
+
+        if(lhs.last()!=rhs.last()) return false;
+
+        if(lhs.stride()!=rhs.stride()) return false;
+
+        return true;
+    }
+
+    //------------------------------------------------------------------------
+    bool operator!=(const slice &lhs,const slice &rhs)
+    {
+        return !(lhs==rhs);
+    }
     
     //-------------------------------------------------------------------------
     size_t size(const slice &s)

@@ -165,6 +165,10 @@ namespace core{
     //! output operator
     std::ostream &operator<<(std::ostream &o,const slice &s);
 
+    bool operator==(const slice &lhs,const slice &rhs);
+
+    bool operator!=(const slice &lhs,const slice &rhs);
+
     //-------------------------------------------------------------------------
     //! 
     //! \ingroup mdim_array_classes   
