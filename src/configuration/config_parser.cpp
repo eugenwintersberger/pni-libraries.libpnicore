@@ -25,6 +25,7 @@
 
 #include <fstream>
 #include <boost/program_options.hpp>
+#include <boost/program_options/errors.hpp>
 #include <boost/filesystem.hpp>
 #include <pni/core/configuration/config_parser.hpp>
 
@@ -68,11 +69,36 @@ namespace core{
         //if we allow for unregistered options
         if(unregistered) p.allow_unregistered();
 
-        parsed_opts = p.run();
+        try
+        {
+            parsed_opts = p.run();
 
-        //store the parsed options
-        popts::store(parsed_opts,const_cast<popts::variables_map&>(config.map()));
-        
+            //store the parsed options
+            popts::store(parsed_opts,const_cast<popts::variables_map&>(config.map()));
+
+        }
+        catch(popts::unknown_option &error)
+        {
+            throw cli_option_error(EXCEPTION_RECORD,
+                    "Unknown option ["+error.get_option_name()+"]!");
+        }
+        catch(popts::required_option &error)
+        {
+            throw cli_option_error(EXCEPTION_RECORD,
+                    "Missing required option ["+error.get_option_name()+"]!");
+        }
+        catch(popts::multiple_occurrences &error)
+        {
+            throw cli_option_error(EXCEPTION_RECORD,
+                    "Multiple occurrence of option ["
+                    +error.get_option_name()+"]!");
+        }
+        catch(popts::invalid_option_value &error)
+        {
+            throw cli_option_error(EXCEPTION_RECORD,
+                    "Invalid value for option ["+error.get_option_name()+"]!");
+        }
+
 
         //notify the variable map that we are done
         popts::notify(const_cast<popts::variables_map&>(config.map()));
