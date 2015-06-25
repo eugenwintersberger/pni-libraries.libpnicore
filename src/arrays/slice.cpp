@@ -32,26 +32,20 @@ namespace core{
     void slice::_check_start_stop(const exception_record &o) const
     {
         if(_first >= _last)
-            throw range_error(o,string("start stop range flawed!"));
-                   
-        /*
-                    "Last index ("+std::to_string(_last)+
-                                ") is equal or exceeds first ("+
-                                std::to_string(_first)+")!");
-                                */
+            throw range_error(o,
+                    "The first index ("+std::to_string(_first)+
+                                ") is equal or larger than the last ("+
+                                std::to_string(_last)+")!");
     }
 
     //-------------------------------------------------------------------------
     void slice::_check_stride(const exception_record &o) const
     {
         if(span(*this)<_stride)
-            throw range_error(o,"Stride () is larger than span ()!");
-                    
-                   /* 
+            throw range_error(o,
                     "Stride ("+std::to_string(_stride)+
                                 ") is larger than span ("
                                 +std::to_string(span(*this))+")!");
-                                */
     }
     
     //==========implementation of constructors and destructor==================
@@ -75,14 +69,8 @@ namespace core{
 
         _stride = 1;
         size_t cnt=0;
-#ifdef NOFOREACH
-        for(auto iter = l.begin(); iter != l.end(); iter++)
-        {
-            size_t v = *iter;
-#else
         for(auto v: l)
         {
-#endif
             if(cnt == 0) _first = v;
             if(cnt == 1) _last = v;
             if(cnt == 2) _stride = v ;
