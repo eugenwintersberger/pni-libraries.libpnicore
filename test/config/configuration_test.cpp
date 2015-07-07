@@ -30,7 +30,6 @@
 
 #include <pni/core/configuration/config_parser.hpp>
 #include <pni/core/configuration/cli_args.hpp>
-#include <pni/core/configuration/library_config.hpp>
 #include "configuration_test.hpp"
 
 CPPUNIT_TEST_SUITE_REGISTRATION(configuration_test);

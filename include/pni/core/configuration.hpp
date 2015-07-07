@@ -29,4 +29,3 @@
 #include "configuration/config_option.hpp"
 #include "configuration/config_parser.hpp"
 #include "configuration/configuration.hpp"
-#include "configuration/library_config.hpp"

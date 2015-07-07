@@ -20,7 +20,6 @@ add_library(pnicore SHARED $<TARGET_OBJECTS:type_objects>
 #set the version and SO version of the library
 set_target_properties(pnicore PROPERTIES VERSION "${LIBRARY_VERSION}"
                                        SOVERSION "${SO_VERSION}")
-add_dependencies(pnicore config.hpp)
 
 #add BOOST libraries to the target if they have been found
 if(Boost_FOUND)
