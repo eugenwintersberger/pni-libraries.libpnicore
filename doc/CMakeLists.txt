@@ -58,4 +58,5 @@ endif(DOXYGEN_FOUND)
 add_subdirectory(users_guide)
 
 
-add_custom_target(doc DEPENDS api_doc users_guide)
+add_custom_target(pdf DEPENDS users_guide)
+add_custom_target(html DEPENDS api_doc)
