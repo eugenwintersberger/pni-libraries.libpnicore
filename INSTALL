@@ -54,10 +54,14 @@ has successfully finished run make
 
 $> make 
 
-This will build the library's binaries and the unit tests. In order to build the
-documentation run 
+This will build the library's binaries and the unit tests. To optionally build
+the API documentation use 
 
-$> make doc
+$> make html
+
+and for the users guide 
+
+$> make pdf
 
 The output of the make run is rather sparse in comparison for instance to the 
 autotools. In case of build errors it might help to run make with more 
@@ -96,7 +100,19 @@ into the following directories
 /usr/local/lib                  - the library binaries 
 /usr/local/lib/pkg-config       - the package config file
 /usr/local/include              - the library header files
-/usr/local/share/doc/libpnicore - API documentation and users guide
+/usr/local/share/doc/libpnicore - API documentation, users guide, and examples
+
+The default 'install' target only installs the libraries, header files, and the 
+examples. In order to install the API documentation and the users guide 
+use 
+
+$> make install-html
+
+and 
+
+$> make install-pdf 
+
+respectively. 
 
 To change the installation prefix one has to set the CMAKE_INSTALL_PREFIX 
 variable during the cmake run:
