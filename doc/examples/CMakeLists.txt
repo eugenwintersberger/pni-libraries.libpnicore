@@ -27,6 +27,7 @@ endforeach()
 
 install(FILES ${EXAMPLES} 
         DESTINATION ${CMAKE_INSTALL_FULL_DOCDIR}/examples
+        OPTIONAL
         COMPONENT doc_examples
         )
 
