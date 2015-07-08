@@ -47,9 +47,6 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     add_definitions(-DCOMPILER=CLANG)
 endif()
 
-#==========================check installation configuration====================
-#include(configure/InstallConfig.cmake)                          
-
 #===================================check the size of data types===============
 include(configure/CheckTypeSizes.txt)
 
