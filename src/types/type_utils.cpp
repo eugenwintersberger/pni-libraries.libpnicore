@@ -84,25 +84,22 @@ namespace core{
     };
 
     //-------------------------------------------------------------------------
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-parameter"
-    type_id_t get_type_id(const binary &v)
+    type_id_t get_type_id(const binary &)
     {
         return type_id_t::BINARY;
     }
 
     //-------------------------------------------------------------------------
-    type_id_t get_type_id(const bool_t &v)
+    type_id_t get_type_id(const bool_t &)
     {
         return type_id_t::BOOL;
     }
 
     //-------------------------------------------------------------------------
-    type_id_t get_type_id(const string &v)
+    type_id_t get_type_id(const string &)
     {
         return type_id_t::STRING;
     }
-#pragma GCC diagnostic pop
 
     //-------------------------------------------------------------------------
     type_id_t type_id_from_str(const string &s)

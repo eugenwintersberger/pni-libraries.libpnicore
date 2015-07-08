@@ -36,7 +36,7 @@ std::ostream &operator<<(std::ostream &o,const vector_type &v)
 
 
 
-int main(int argc,char **argv)
+int main(int ,char **)
 {
     shape_t shape({10,3});
     //simpel construction from shape - memory allocation is done bye 

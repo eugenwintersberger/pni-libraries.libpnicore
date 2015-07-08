@@ -27,40 +27,28 @@
 namespace pni{
 namespace core{
 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-parameter"
-    std::ostream &operator<<(std::ostream &stream,const none &n)
+    std::ostream &operator<<(std::ostream &stream,const none &)
     {
         return stream;
     }
-#pragma GCC diagnostic pop
 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-parameter"
     //------------------------------------------------------------------------
-    std::istream &operator>>(std::istream &stream,none &n)
+    std::istream &operator>>(std::istream &stream,none &)
     {
         return stream;
     }
-#pragma GCC diagnostic pop
 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-parameter"
     //------------------------------------------------------------------------
-    bool operator==(const none &a,const none &b)
+    bool operator==(const none &,const none &)
     {
         return true;
     }
-#pragma GCC diagnostic pop
 
     //------------------------------------------------------------------------
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-parameter"
     bool operator!=(const none &a,const none &b)
     {
         return !(a==b);
     }
-#pragma GCC diagnostic pop
 
 //end of namespace
 }

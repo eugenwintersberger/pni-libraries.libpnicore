@@ -45,14 +45,11 @@ namespace core{
     {
         typedef TT target_type;
         typedef ST source_type;
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-parameter"
-        static target_type convert(const source_type &v)
+        static target_type convert(const source_type &)
         {
             throw type_error(EXCEPTION_RECORD,"Conversion not possible!");
             return target_type();
         }
-#pragma GCC diagnostic pop
     };
 
 

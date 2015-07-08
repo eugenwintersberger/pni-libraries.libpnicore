@@ -34,7 +34,7 @@ using namespace pni::core;
 typedef uint16                          channel_type;
 typedef fixed_dim_array<channel_type,1> mca_type;
 
-int main(int argc,char **argv)
+int main(int ,char **)
 {
     auto mca = mca_type::create(shape_t{128}); 
 

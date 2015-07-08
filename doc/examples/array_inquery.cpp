@@ -46,7 +46,7 @@ void show_info(const ATYPE &a)
     std::cout<<"Size     : "<<a.size()<<std::endl;
 }
 
-int main(int argc,char **argv)
+int main(int ,char **)
 {
     auto a1 = darray_type::create(shape_t{1024,2048});
 

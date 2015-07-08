@@ -37,7 +37,7 @@ typedef fixed_dim_array<number_type,3> stack_type;
 typedef fixed_dim_array<number_type,2> image_type;
 typedef fixed_dim_array<number_type,1> data_type;
 
-int main(int argc,char **argv)
+int main(int ,char **)
 {
     shape_t frame_shape{1024,512};
     shape_t data_shape{100};

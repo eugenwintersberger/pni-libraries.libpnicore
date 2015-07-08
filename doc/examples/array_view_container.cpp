@@ -38,7 +38,7 @@ typedef fixed_dim_array<pixel_type,2> image_type;
 typedef image_type::view_type         roi_type;
 typedef std::vector<roi_type>         roi_vector;
 
-int main(int argc,char **argv)
+int main(int ,char **)
 {
     auto image = image_type::create(shape_t{1024,512});
 

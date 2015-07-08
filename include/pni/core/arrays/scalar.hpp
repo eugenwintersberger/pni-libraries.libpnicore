@@ -129,6 +129,7 @@ namespace core {
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
             operator T() const { return this->_data[0]; }
+#pragma GCC diagnostic pop
 
             //===================linear access operators========================
             //!
@@ -140,7 +141,7 @@ namespace core {
             //! \param i linear index of the value
             //! \return value of the scalar
             //!
-            T operator[](size_t i) const { return this->_data[0]; }
+            T operator[](size_t) const { return this->_data[0]; }
 
             //-----------------------------------------------------------------
             //!
@@ -153,7 +154,7 @@ namespace core {
             //! \param i index
             //! \return reference to the scalar data
             //!
-            T &operator[](size_t i) { return this->_data[0]; }
+            T &operator[](size_t) { return this->_data[0]; }
 
             //-----------------------------------------------------------------
             //! 
@@ -165,7 +166,7 @@ namespace core {
             //! \param i index
             //! \return data value
             //!
-            T at(size_t i) const { return this->_data[0]; }
+            T at(size_t) const { return this->_data[0]; }
 
             //-----------------------------------------------------------------
             //! 
@@ -177,8 +178,7 @@ namespace core {
             //! \param i index
             //! \return reference to data
             //!
-            T &at(size_t i) { return this->_data[0]; }
-#pragma GCC diagnostic pop
+            T &at(size_t) { return this->_data[0]; }
 
             //-----------------------------------------------------------------
             //! 
@@ -188,10 +188,7 @@ namespace core {
             //! \param i index
             //! \param v value
             //!
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-parameter"
-            void insert(size_t i,const T &v) { this->_data[0] = v; }
-#pragma GCC diagnostic pop
+            void insert(size_t,const T &v) { this->_data[0] = v; }
             
             //-----------------------------------------------------------------
             //! 
@@ -215,14 +212,11 @@ namespace core {
             //! \param indices multidimensional index
             //! \return reference to data
             //!
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-parameter"
             template<typename ...ITYPES> 
-            T &operator()(ITYPES ...indices)
+            T &operator()(ITYPES ...)
             {
                 return this->_data[0];
             }
-#pragma GCC diagnostic pop
 
             //-----------------------------------------------------------------
             //!
@@ -235,14 +229,11 @@ namespace core {
             //! \param indices multidimensional index
             //! \return data value
             //!
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-parameter"
             template<typename ...ITYPES> 
-            T operator()(ITYPES ...indices) const
+            T operator()(ITYPES ...) const
             {
                 return this->_data[0];
             }
-#pragma GCC diagnostic pop
 
             //-----------------------------------------------------------------
             //!
@@ -257,17 +248,14 @@ namespace core {
             //! \param c container with indices
             //! \return reference to the data
             //!
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-parameter"
             template<
                      template<typename ...> class CTYPE,
                      typename ...OTS
                     >
-            T &operator()(const CTYPE<OTS...> &c)
+            T &operator()(const CTYPE<OTS...> &)
             {
                 return this->_data[0];
             }
-#pragma GCC diagnostic pop
 
             //-----------------------------------------------------------------
             //!
@@ -282,14 +270,11 @@ namespace core {
             //! \param c container with indices
             //! \return data value
             //!
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-parameter"
             template<template<typename ...> class CTYPE,typename ...OTS>
-            T operator()(const CTYPE<OTS...> &c) const
+            T operator()(const CTYPE<OTS...> &) const
             {
                 return this->_data[0];
             }
-#pragma GCC diagnostic pop
 
             //===================inquery methods===============================
             //!

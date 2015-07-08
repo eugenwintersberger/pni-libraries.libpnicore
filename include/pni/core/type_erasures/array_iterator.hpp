@@ -240,15 +240,12 @@ namespace core{
 
             //------------------------------------------------------------------
             //! increment iterator position
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-parameter"
-            iterator_type operator++(int i)
+            iterator_type operator++(int)
             {
                 iterator_type temp = *this;
                 ++(*this);
                 return temp;
             }
-#pragma GCC diagnostic pop
 
             //------------------------------------------------------------------
             //! decrement operators
@@ -260,15 +257,12 @@ namespace core{
 
             //------------------------------------------------------------------
             //! decrement operators
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-parameter"
-            iterator_type operator--(int i)
+            iterator_type operator--(int)
             {
                 iterator_type tmp = *this;
                 --(*this);
                 return tmp;
             }
-#pragma GCC diagnostic pop
 
             //------------------------------------------------------------------
             //! compound assignment with +=

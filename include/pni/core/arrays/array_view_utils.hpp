@@ -403,21 +403,18 @@ template<typename CTYPE>
         //! \param indexes variadic argument list
         //! \return array view on array
         //!
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-parameter"
         template<
                  typename CTYPE,
                  typename MAP,
                  typename... ITYPES
                 > 
-        static ref_type get_reference(CTYPE &c,MAP &map,ITYPES ...indexes)
+        static ref_type get_reference(CTYPE &c,MAP &,ITYPES ...indexes)
         {
             typedef std::array<slice,sizeof...(ITYPES)> array_type; 
 
             return ref_type(c,array_selection::create(
                             array_type{{slice(indexes)...}}));
         }
-#pragma GCC diagnostic pop
 
 
         //---------------------------------------------------------------------
@@ -435,21 +432,18 @@ template<typename CTYPE>
         //! \param indexes variadic argument list
         //! \return const array view
         //! 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-parameter"
         template<
                  typename CTYPE,
                  typename MAP,
                  typename ...ITYPES
                 >
-        static type get_value(const CTYPE &c,MAP &map,ITYPES ...indexes)
+        static type get_value(const CTYPE &c,MAP &,ITYPES ...indexes)
         {
             typedef std::array<slice,sizeof...(ITYPES)> array_type;
 
             return type(c,array_selection::create(
                         array_type{{slice(indexes)...}}));
         }
-#pragma GCC diagnostic pop
 
     };
 

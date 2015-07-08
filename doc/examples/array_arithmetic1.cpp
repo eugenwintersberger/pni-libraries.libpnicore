@@ -35,7 +35,7 @@ using namespace pni::core;
 typedef float64                        number_type;
 typedef fixed_dim_array<number_type,2> image_type;
 
-int main(int argc,char **argv)
+int main(int ,char **)
 {
     shape_t s{1024,512};
     auto image      = image_type::create(s);

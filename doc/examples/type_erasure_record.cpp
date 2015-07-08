@@ -192,7 +192,7 @@ void file_to_stream(std::ostream &output_stream,const string fname)
 }
 
 //-----------------------------------------------------------------------------
-int main(int argc,char **argv)
+int main(int ,char **)
 {
     std::cout<<"File: record.dat"<<std::endl;
     file_to_stream(std::cout,"record.dat");

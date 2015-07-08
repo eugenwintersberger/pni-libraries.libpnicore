@@ -29,7 +29,7 @@
 
 using namespace pni::core;
 
-int main(int argc,char **argv)
+int main(int ,char **)
 {
     //construction from a number
     float64 number = 10.234;

@@ -14,7 +14,7 @@ typedef std::vector<size_t> index_t;      //index type
 typedef dynamic_array<float32> f32array;  //an array type for Float32 values
 
 
-int main(int argc,char **argv)
+int main(int ,char **)
 {
     shape_t shape({10,3});
     //simpel construction from shape - memory allocation is done bye 

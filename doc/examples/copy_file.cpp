@@ -34,7 +34,7 @@ using namespace pni::core;
 
 typedef std::vector<binary> binary_vector;
 
-int main(int argc,char **argv)
+int main(int ,char **)
 {
     //open the input file
     std::ifstream i_stream("Makefile",std::fstream::binary);

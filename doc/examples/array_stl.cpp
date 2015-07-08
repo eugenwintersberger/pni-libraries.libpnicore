@@ -35,7 +35,7 @@ using namespace pni::core;
 typedef uint16                        pixel_type;
 typedef fixed_dim_array<pixel_type,2> image_type;
 
-int main(int argc,char **argv)
+int main(int ,char **)
 {
     auto image = image_type::create(shape_t{1024,512});
 

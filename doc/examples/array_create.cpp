@@ -34,7 +34,7 @@ using namespace pni::core;
 //some usefull type definitions
 typedef dynamic_array<float64> darray_type;
 
-int main(int argc,char **argv)
+int main(int ,char **)
 {
     //construction from shape
     auto a1 = darray_type::create(shape_t{1024,2048});

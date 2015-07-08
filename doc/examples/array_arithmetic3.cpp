@@ -120,7 +120,7 @@ typedef vector_temp<number_type,3> vector_type;
 typedef matrix_temp<number_type,3> matrix_type;
 
 
-int main(int argc,char **argv)
+int main(int ,char **)
 {
     vector_type v;
     matrix_type m1,m2; 

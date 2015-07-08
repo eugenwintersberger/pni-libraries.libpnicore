@@ -170,15 +170,12 @@ namespace core{
 
             //-----------------------------------------------------------------
             //! postfix increment operator
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-parameter"
-            iterator_type operator++(int i)
+            iterator_type operator++(int )
             {
                 iterator_type temp = *this;
                 ++(*this);
                 return temp;
             }
-#pragma GCC diagnostic pop
 
             //-----------------------------------------------------------------
             //! decrement operator
@@ -193,15 +190,12 @@ namespace core{
 
             //-----------------------------------------------------------------
             //! postfix decrement operator
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-parameter"
-            iterator_type operator--(int i)
+            iterator_type operator--(int )
             {
                 iterator_type temp = *this;
                 --(*this);
                 return temp;
             }
-#pragma GCC diagnostic pop
 
             //-----------------------------------------------------------------
             //! equality operator

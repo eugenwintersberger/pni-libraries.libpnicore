@@ -207,10 +207,7 @@ namespace core{
         static const bool is_complex = true;
 
         //---------------------------------------------------------------------
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-parameter"
-        static bool is_negative(type value){ return false; }
-#pragma GCC diagnostic pop
+        static bool is_negative(type ){ return false; }
 
         //---------------------------------------------------------------------
         //! return the minimum value of the Complex32 type
@@ -232,10 +229,7 @@ namespace core{
         static const bool is_signed = false;
         static const bool is_complex = false;
 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-parameter"
-        static bool is_negative(type value) { return false; }
-#pragma GCC diagnostic pop
+        static bool is_negative(type ) { return false; }
 
         static type min() { return 0; }
         static type max() { return 255; }
@@ -253,10 +247,7 @@ namespace core{
         static const bool is_signed = false;
         static const bool is_complex = false;
 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-parameter"
-        static bool is_negative(type value) { return false; }
-#pragma GCC diagnostic pop
+        static bool is_negative(type) { return false; }
 
         static type min() { return false; }
 
