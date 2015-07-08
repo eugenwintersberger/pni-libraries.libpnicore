@@ -42,16 +42,7 @@ foreach(FLAG ${PNICORE_CMP_FLAGS_LIST})
 endforeach()
 
 
-#have to create the pkg-config file
-if("${CMAKE_FAMILY_VERSION}" EQUAL "2.6")
-    CONFIGURE_FILE(pnicore.pc.cmake ./src/pnicore.pc @ONLY)
-else()
-    CONFIGURE_FILE(pnicore.pc.cmake pnicore.pc @ONLY)
-endif()
-
 #install the configuration and the pkg-config file
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/pnicore.pc" 
         DESTINATION "${CMAKE_INSTALL_FULL_LIBDIR}/pkgconfig")
-install(FILES "pnicore.cfg" 
-        DESTINATION "${CMAKE_INSTALL_FULL_SYSCONFDIR}/pnicore")
 
