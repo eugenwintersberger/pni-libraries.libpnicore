@@ -41,6 +41,7 @@ foreach(FLAG ${PNICORE_CMP_FLAGS_LIST})
     set(PNICORE_CMP_FLAGS "${PNICORE_CMP_FLAGS} -D${FLAG}")
 endforeach()
 
+configure_file(pnicore.pc.cmake pnicore.pc @ONLY)
 
 #install the configuration and the pkg-config file
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/pnicore.pc" 
