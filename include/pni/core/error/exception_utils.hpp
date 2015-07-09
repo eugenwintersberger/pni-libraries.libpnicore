@@ -27,6 +27,7 @@
 #include <vector>
 #include <iostream>
 #include <algorithm>
+#include <boost/units/detail/utility.hpp>
 
 #include "../error/exceptions.hpp"
 #include "../utilities/service.hpp"
@@ -105,9 +106,9 @@ namespace core{
         if(!check_equal_size(a,b))
         {
             std::stringstream ss;
-            ss<<"Size of "<<demangle_cpp_name(typeid(A).name())<<" (";
+            ss<<"Size of "<<boost::units::detail::demangle(typeid(A).name())<<" (";
             ss<<a.size()<<") ";
-            ss<<"does not match size of "<<demangle_cpp_name(typeid(B).name())<<" (";
+            ss<<"does not match size of "<<boost::units::detail::demangle(typeid(B).name())<<" (";
             ss<<b.size()<<")!";
             throw size_mismatch_error(i,string(ss.str()));
         }
@@ -272,9 +273,9 @@ namespace core{
         if(!check_equal_rank(a,b))
         {
             std::stringstream ss;
-            ss<<"Rank of "<<demangle_cpp_name(typeid(a).name())<<" (";
+            ss<<"Rank of "<<boost::units::detail::demangle(typeid(a).name())<<" (";
             ss<<a.rank()<<") does not match that of ";
-            ss<<demangle_cpp_name(typeid(b).name())<<" (";
+            ss<<boost::units::detail::demangle(typeid(b).name())<<" (";
             ss<<b.rank()<<")!";
             throw shape_mismatch_error(i,ss.str());
         }
@@ -331,9 +332,9 @@ namespace core{
         if(!check_equal_shape(a,b))
         {
             std::stringstream ss;
-            ss<<"Shape of "<<demangle_cpp_name(typeid(a).name())<<" (";
+            ss<<"Shape of "<<boost::units::detail::demangle(typeid(a).name())<<" (";
             ss<<a.size()<<") does not match that of ";
-            ss<<demangle_cpp_name(typeid(b).name())<<" (";
+            ss<<boost::units::detail::demangle(typeid(b).name())<<" (";
             ss<<b.size()<<")!";
             throw shape_mismatch_error(i,ss.str());
         }
@@ -357,7 +358,7 @@ namespace core{
         if(!o.size())
         {
             std::stringstream ss;
-            ss<<"Instance of "<<demangle_cpp_name(typeid(OTYPE).name());
+            ss<<"Instance of "<<boost::units::detail::demangle(typeid(OTYPE).name());
             ss<<" not allocated!";
             throw memory_not_allocated_error(i,ss.str());
         }

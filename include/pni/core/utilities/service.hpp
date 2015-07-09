@@ -23,11 +23,6 @@
 //
 #pragma once
 
-#if (__GNUC__ && __cplusplus && __GNUC__ >= 3)
-#include <cxxabi.h>
-#define USE_GNU_DEMANGLING 1
-#endif
-
 #include "../types/types.hpp"
 
 namespace pni{
@@ -65,20 +60,6 @@ namespace core{
     std::cerr<<""<<BOOST_CURRENT_FUNCTION;\
     std::cerr<<" is deprecated use "<<newfunc<<" instread!";\
     std::cerr<<std::endl
-
-
-    //-------------------------------------------------------------------------
-    //!
-    //! \ingroup utility_classes
-    //! \brief demangle C++ names
-    //! 
-    //! When using a GNU compiler this function demangles a C++ name as, for
-    //! instance, returned by typeid(..).name(). 
-    //! 
-    //! \param n mangled name
-    //! \return demangled name of the type 
-    //!
-    string demangle_cpp_name(const char *n);
 
 //end of namespace
 }
