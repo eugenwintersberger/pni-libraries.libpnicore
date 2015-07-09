@@ -45,8 +45,11 @@ namespace core{
             >
     struct convertible
     {
+        //! true if checked conversion is possible 
         static const bool checked = checked_convertible<ST,TT>::value;
+        //! true if unchecked conversion is possible 
         static const bool unchecked = unchecked_convertible<ST,TT>::value;
+        //! true if a conversion can be done at all
         static const bool value = checked || unchecked;
     };
 

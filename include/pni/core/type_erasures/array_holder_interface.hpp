@@ -39,7 +39,9 @@ namespace core{
     class array_holder_interface
     {
         public:
+            //! single element index type
             typedef std::vector<size_t> element_index; 
+            //! view index type
             typedef std::vector<slice>  view_index;
             //!
             //! \brief return type id 
@@ -150,9 +152,11 @@ namespace core{
             virtual const void *ptr() const = 0;
 
             //-----------------------------------------------------------------
+            //! get element value
             virtual value operator()(const element_index &index) const = 0;
 
             //-----------------------------------------------------------------
+            //! get element reference
             virtual value_ref operator()(const element_index &index)  = 0;
 
     };

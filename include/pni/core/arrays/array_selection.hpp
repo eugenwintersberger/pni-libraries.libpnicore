@@ -389,25 +389,27 @@ namespace core{
             //! 
             //! The functionality of this template method can be best 
             //! explained using an example. 
-            //! \code
-            //! typedef std::vector<size_t> itype;
-            //! 
-            //! //create a (1,25,128) selection from a 3D array at offset (1,1,1)
-            //! //and with stride (1,1,1)
-            //! array_selection s(itype{1,25,128},itype{1,1,1},itype{1,1,1});
-            //! 
-            //! //selection index
-            //! itype sindex{2,100};
-            //! 
-            //! //if we want to access data from the original array we need to
-            //! //convert this to a 3D index
-            //! itype oindex(3);
-            //! s.index(sindex,oindex);
-            //! 
-            //! //now the vector oindex holds the values {1,2,100} which can be used
-            //! //to obtain data form the original array.
-            //! 
-            //! \endcode
+            /*!
+            \code
+            typedef std::vector<size_t> itype;
+            
+            //create a (1,25,128) selection from a 3D array at offset (1,1,1)
+            //and with stride (1,1,1)
+            array_selection s(itype{1,25,128},itype{1,1,1},itype{1,1,1});
+            
+            //selection index
+            itype sindex{2,100};
+            
+            //if we want to access data from the original array we need to
+            //convert this to a 3D index
+            itype oindex(3);
+            s.index(sindex,oindex);
+            
+            //now the vector oindex holds the values {1,2,100} which can be used
+            //to obtain data form the original array.
+            
+            \endcode
+            !*/
             //! The method assumes that all index containers are of appropriate
             //! size. If this is not the case an exception will be thrown
             //! 

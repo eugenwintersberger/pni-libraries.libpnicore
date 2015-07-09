@@ -178,12 +178,14 @@ namespace core{
             }
 
             //-----------------------------------------------------------------
+            //! return element value
             virtual value operator()(const element_index &index) const 
             {
                 return value(_object(index));
             }
 
             //-----------------------------------------------------------------
+            //! return element reference
             virtual value_ref operator()(const element_index &index) 
             {
                 return value_ref(std::ref(_object(index)));

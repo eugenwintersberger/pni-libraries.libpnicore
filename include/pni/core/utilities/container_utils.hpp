@@ -68,13 +68,15 @@ namespace core{
         //! \brief create container of given size
         //! 
         //! Create a new container with a size of n elements.
-        //! \code
-        //! typedef std::list<int32> list_type;
-        //! typedef std::vector<float64> vector_type;
-        //! 
-        //! auto v = container_utils<vector_type>::create(20);
-        //! auto l = container_utils<list_type>::create(20);
-        //! \endcode
+        /*! 
+        \code
+        typedef std::list<int32> list_type;
+        typedef std::vector<float64> vector_type;
+        
+        auto v = container_utils<vector_type>::create(20);
+        auto l = container_utils<list_type>::create(20);
+        \endcode
+        !*/
         //!  
         //! \param n number of elements
         //! \param default_value the default value for the elements
@@ -93,14 +95,16 @@ namespace core{
         //! \brief create container from a range
         //!
         //! Create a new container from a pair of iterators. 
-        //! \code
-        //! typedef std::list<int32> list_type;
-        //! typedef std::vector<float64> vector_type;
-        //! 
-        //! .... c = ....; //an arbitrary STL compliant container
-        //! auto v = container_utils<vector_type>::create(c.begin(),c.end());
-        //! auto l = container_utils<list_type>::create(c.begin(),c.end());
-        //! \endcode
+        /*!
+        \code
+        typedef std::list<int32> list_type;
+        typedef std::vector<float64> vector_type;
+        
+        .... c = ....; //an arbitrary STL compliant container
+        auto v = container_utils<vector_type>::create(c.begin(),c.end());
+        auto l = container_utils<list_type>::create(c.begin(),c.end());
+        \endcode
+        !*/
         //!  
         //! The range can be passed either as a pair of iterators or pointers.
         //! 
@@ -126,16 +130,16 @@ namespace core{
         //! 
         //! Create a new container from an arbitrary container provided by the 
         //! use. 
-        //!
-        //! \code
-        //! typedef std::list<int32> list_type;
-        //! typedef std::vector<float64> vector_type;
-        //! 
-        //! .... c = ....; //an arbitrary STL compliant container
-        //! auto v = container_utils<vector_type>::create(c);
-        //! auto l = container_utils<list_type>::create(c);
-        //! \endcode
-        //! 
+        /*!
+        \code
+        typedef std::list<int32> list_type;
+        typedef std::vector<float64> vector_type;
+        
+        .... c = ....; //an arbitrary STL compliant container
+        auto v = container_utils<vector_type>::create(c);
+        auto l = container_utils<list_type>::create(c);
+        \endcode
+        !*/ 
         //! \tparam OCTYPE type of the source container
         //! \param o reference to the original container
         //! \return instance of container_type with data from o
@@ -158,15 +162,15 @@ namespace core{
         //! As construction from an initializer list is not an issue for the
         //! container types treated by this class this function is provided for
         //! convienance in order to expose a common interface.
-        //!
-        //! \code 
-        //! typedef std::list<int32> list_type;
-        //! typedef std::vector<float64> vector_type;
-        //! 
-        //! auto v = container_utils<vector_type>::create({1,2,3,4});
-        //! auto l = container_utils<list_type>::create({1,2,3,4});
-        //! \endcode
-        //! 
+        /*!
+        \code 
+        typedef std::list<int32> list_type;
+        typedef std::vector<float64> vector_type;
+        
+        auto v = container_utils<vector_type>::create({1,2,3,4});
+        auto l = container_utils<list_type>::create({1,2,3,4});
+        \endcode
+        !*/ 
         //! \tparam T element type of the initializer list
         //! \param list initializer list instance
         //! \return container with data from initializer list
@@ -214,13 +218,13 @@ namespace core{
         //! defined at compile time this method does not allocate new memory. 
         //! If n does not match the size of std::array an exception will be 
         //! thrown. Otherwise std::array will be initialized with default_value. 
-        //! 
-        //! \code 
-        //! typedef std::array<float64,3> array_type; 
-        //! 
-        //! auto vector = container_utils<array_type>::create(3,1.23);
-        //! \endcode
-        //! 
+        /*! 
+        \code 
+        typedef std::array<float64,3> array_type; 
+        
+        auto vector = container_utils<array_type>::create(3,1.23);
+        \endcode
+        !*/ 
         //! \throws size_mismatch_error if n does not match the size of 
         //! std::array
         //! \param n number of elements
@@ -252,14 +256,14 @@ namespace core{
         //! number of elements in std::array an exception will be thrown. 
         //! Otherwise, an instance of std::array initialized with the data 
         //! refered to by the iterator range will be returned. 
-        //!
-        //! \code
-        //! typedef std::array<float64,3> array_type;
-        //!
-        //! ... c = ...; //some container type
-        //! auto vector = container_utils<array_type>::create(c.begin(),c.end());
-        //! \endcode
-        //!
+        /*!
+        \code
+        typedef std::array<float64,3> array_type;
+        
+        ... c = ...; //some container type
+        auto vector = container_utils<array_type>::create(c.begin(),c.end());
+        \endcode
+        !*/
         //! \throws size_mismatch_error if the number of elements spanned by 
         //! the iterator range does not match the size of the array
         //! \tparam ITERT iterator type
@@ -295,13 +299,13 @@ namespace core{
         //! Here we initialize an instance of std::array from an arbitrary, 
         //! STL compliant container. If the size of the container does not 
         //! match the size of std::array an exception will be thrown. 
-        //!
-        //! \code 
-        //! typedef std::array<float64,3> array_type;
-        //!
-        //! auto vector = container_utils<array_type>::create(c);
-        //! \endcode
-        //!
+        /*!
+        \code 
+        typedef std::array<float64,3> array_type;
+        
+        auto vector = container_utils<array_type>::create(c);
+        \endcode
+        !*/
         //! \throws size_mismatch_error if the container size does not match 
         //! the array size
         //! \tparam OCTYPE container type 
@@ -350,13 +354,13 @@ namespace core{
         //! This function provides a common interface. If the number of 
         //! elements in the initializer list does not match that of the 
         //! std::array instance an exception will be thrown.
-        //! 
-        //! \code 
-        //! typedef std::array<float64,3> array_type;
-        //! 
-        //! auto v = container_utils<array_type>::create({1,2,3});
-        //! \endcode
-        //! 
+        /*! 
+        \code 
+        typedef std::array<float64,3> array_type;
+        
+        auto v = container_utils<array_type>::create({1,2,3});
+        \endcode
+        !*/ 
         //! \throws size_mismatch_error if the size of std::array and the
         //! initializer list do not match
         //! \tparam ET element type of the initializer list
@@ -411,19 +415,21 @@ namespace core{
     //! This variadic function compares the sizes of all the containers passed
     //! its arguments. If they are all equal true is returend, false otherwise.
     //!
-    //! \code
-    //! typedef ... vector_type;
-    //! typedef ... list_type;
-    //! typedef std::vector<size_t,10> array_type;
-    //! 
-    //! vector_type v1(100);
-    //! list_type   l1(100);
-    //! array_type  a1;
-    //! 
-    //! check_equal_size(v1,l1); //returns true
-    //!  
-    //! check_equal_size(v1,l1,a1); //returns false
-    //! \endcode
+    /*!
+    \code
+    typedef ... vector_type;
+    typedef ... list_type;
+    typedef std::vector<size_t,10> array_type;
+    
+    vector_type v1(100);
+    list_type   l1(100);
+    array_type  a1;
+    
+    check_equal_size(v1,l1); //returns true
+     
+    check_equal_size(v1,l1,a1); //returns false
+    \endcode
+    !*/
     //!
     //! \tparam CTYPE container type of first argument
     //! \tparam CTYPES residual arguments types

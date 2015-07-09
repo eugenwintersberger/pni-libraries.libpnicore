@@ -138,7 +138,9 @@ namespace core{
     {
         //! original reference type
         typedef T value_type;
+        //! reference type
         typedef T &reference_type;
+        //! const reference type
         typedef const T &const_reference_type;
     };
 
@@ -154,7 +156,9 @@ namespace core{
     {
         //! original reference type
         typedef T value_type;
+        //! reference type
         typedef T &reference_type;
+        //! const reference type
         typedef const  T &const_reference_type;
     };
 
@@ -181,15 +185,22 @@ namespace core{
 
             //----------------------------------------------------------------
             //!
-            //! value constructor
+            //! \brief constructor 
+            //! 
+            //! Construct a value_holder instance from a concrete value of 
+            //! type T. 
+            //! 
+            //! \param v value from which to construct the holder
             //!
             value_holder(T v):_value(v) {}
 
 
             //====================public inerface implementation==============
             //!
-            //! get type id of data
+            //! \brief get type id of data
             //!
+            //! \return type ID of the value stored in this holder instance 
+            //! 
             virtual type_id_t type_id() const noexcept
             {
                 typedef typename get_reference_type<T>::value_type value_type;
@@ -198,8 +209,10 @@ namespace core{
 
             //----------------------------------------------------------------
             //!
-            //! clone holder instance
+            //! \brief clone holder instance
             //!
+            //! \return pointer to a new instance of value holder 
+            //! 
             virtual value_holder_interface *clone() const
             {
                 return new value_holder<T>(_value);
@@ -219,6 +232,11 @@ namespace core{
             } 
 
             //----------------------------------------------------------------
+            //! 
+            //! \brief get reference 
+            //! 
+            //! \return reference to the stored value
+            //! 
             typename get_reference_type<T>::reference_type as()
             {
                 return get_ref(_value);
@@ -226,8 +244,10 @@ namespace core{
 
             //----------------------------------------------------------------
             //!
-            //! true if the holder keeps a reference
+            //! \brief check if holder stores a reference
             //!
+            //! \return true if a reference is stored, false otherwise 
+            //! 
             virtual bool holds_reference() const
             {
                 return is_reference_holder<T>::value;

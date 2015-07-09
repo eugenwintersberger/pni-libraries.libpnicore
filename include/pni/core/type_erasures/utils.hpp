@@ -36,6 +36,23 @@ namespace core{
 
 
     //------------------------------------------------------------------------
+    //! 
+    //! \ingroup type_erasure_classes_internal
+    //! \brief converter class
+    //! 
+    //! This template provides a static conversion function from the source 
+    //! type ST to the target type TT. The convertible template parameters 
+    //! makes a decission about whether or not the conversion can be done. 
+    //! The default value of the convertible parameter is false, causing 
+    //! the static convert() member function to throw a type_error 
+    //! exception. We need this special system here as in the generic code 
+    //! we may need to compile TT and ST pairs where the plain convert()
+    //! function template would throw a static assertion.
+    //! 
+    //! \tparam TT target type
+    //! \tparam ST source type
+    //! \tparam convertible if true the conversion is possible, otherwise not
+    //! 
     template<
              typename TT,
              typename ST,
@@ -43,8 +60,20 @@ namespace core{
             > 
     struct value_converter
     {
+        //! target type alias
         typedef TT target_type;
+        //! source type alias
         typedef ST source_type;
+        
+        //! 
+        //! \brief static conversion function
+        //! 
+        //! This implementation does nothing else than throwing a type 
+        //! error exception. 
+        //! 
+        //! \throws type_error types cannot be converted 
+        //! \return nothing 
+        //! 
         static target_type convert(const source_type &)
         {
             throw type_error(EXCEPTION_RECORD,"Conversion not possible!");
@@ -55,15 +84,39 @@ namespace core{
 
 
     //------------------------------------------------------------------------
+    //! 
+    //! \ingroup type_erasure_classes_internal
+    //! \brief converter class specialization
+    //! 
+    //! Specialization of the value_converter template for convertible 
+    //! types. 
+    //! 
+    //! \tparam TT target type
+    //! \tparam ST source type
+    //! 
     template<
              typename TT,
              typename ST
             >
     struct value_converter<TT,ST,true>
     {
+        //! target type alias 
         typedef TT target_type;
+        //! source type alias 
         typedef ST source_type;
 
+        //!
+        //! \brief conversion function
+        //!
+        //! Converts an instance of a source type to an instance of 
+        //! the target type. 
+        //! 
+        //! \throws range_error if v does not fit in the range spanned by 
+        //!                     TT
+        //! \throws type_error in case of any other type related error 
+        //! \param v reference to the source value
+        //! \return instance of TT with the converted value
+        //! 
         static target_type convert(const source_type &v)
         {
             return pni::core::convert<target_type>(v);
@@ -89,6 +142,22 @@ namespace core{
     template<typename T> using ref_type = std::reference_wrapper<T>;
 
     //------------------------------------------------------------------------
+    //!
+    //! \ingroup type_erasure_classes_internal
+    //! \brief get pointer to value holder
+    //! 
+    //! Retrieve the pointer to a concrete value holder instance. 
+    //! The value class only stores a pointer to value_holder_interface. 
+    //! However, to retrieve typed data the pointer to the particular
+    //! holder instance is required. This template function performs the 
+    //! cast based on the original data type T (which can be obtained 
+    //! from the type ID of the value. 
+    //! 
+    //! \tparam T erased data type
+    //! \tparam PTR interface pointer type
+    //! \param ptr reference to the interface pointer
+    //! \return pointer of value_holder<T> type
+    //! 
     template<
              typename T,
              typename PTR
@@ -101,6 +170,24 @@ namespace core{
     }
 
     //------------------------------------------------------------------------
+    //!
+    //! \ingroup type_erasure_classes_internal
+    //! \brief get value from holder
+    //! 
+    //! Get the value stored in a particular holder as an instance of a 
+    //! user requested type T. 
+    //!
+    //! \throws range_error if the value stored in the holder does not fit 
+    //!                     in the range of the requested target type T 
+    //! \throws type_error in case of any other type related error 
+    //! 
+    //! \tparam T target type
+    //! \tparam S source type (the original type)
+    //! \tparam PTR holder pointer type
+    //! 
+    //! \param holder_ptr pointer to the original holder 
+    //! \return value as an instance of type T 
+    //!
     template<
              typename T,
              typename S,
@@ -114,6 +201,23 @@ namespace core{
     }
 
     //------------------------------------------------------------------------
+    //!
+    //! \ingroup type_erasure_classes_internal
+    //! \brief set value to holder
+    //! 
+    //! Take a value of type  T and store it to a value_holder of type S. 
+    //! If S and T are not equal a type conversion is performed. 
+    //! 
+    //! \throws range_error if v does not fit in the range provided by S 
+    //! \throws type_error in case of any other type related error
+    //! 
+    //! \tparam S target type (the holder type)
+    //! \tparam T source type (provided by the user)
+    //! \tparam PTR holder pointer type 
+    //! 
+    //! \param holder_ptr pointer to the typed value_holder
+    //! \param v reference to the value of type T 
+    //! 
     template<
              typename S,
              typename T,

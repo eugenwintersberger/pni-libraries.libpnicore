@@ -69,24 +69,25 @@ namespace core{
     //! This timer class is using the chrono framework of the C++ standard. 
     //! To create a timer instance using the high_resolution_clock one 
     //! could use the following code to obtain a result in nanoseconds
-    //! \code
-    //! #include<pni/core/benchmark/chrono_timer.hpp>
-    //!
-    //! ....
-    //! chrono_timer<std::chrono::high_resolution_clock,
-    //!             std::chrono::nanoseconds> timer;
-    //!
-    //! //start the timer
-    //! timer.start();
-    //! 
-    //! ......
-    //! //stop the timer
-    //! timer.stop();
-    //!
-    //! std::cout<<timer.duration()<<" ("<<timer.unit()<<")"<<std::endl;
-    //!
-    //! \endcode
-    //!
+    /*!
+    \code
+    #include<pni/core/benchmark/chrono_timer.hpp>
+    
+    ....
+    chrono_timer<std::chrono::high_resolution_clock,
+                std::chrono::nanoseconds> timer;
+    
+    //start the timer
+    timer.start();
+    
+    ......
+    //stop the timer
+    timer.stop();
+    
+    std::cout<<timer.duration()<<" ("<<timer.unit()<<")"<<std::endl;
+    
+    \endcode
+    !*/
     //! \tparam CLKT clock type
     //! \tparam DTYPE duration type
     //!

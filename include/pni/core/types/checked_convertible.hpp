@@ -130,9 +130,11 @@ namespace core{
             >
     struct checked_convertible
     {
-        //select the type vector
+        //! select the type vector
         typedef typename boost::mpl::at<checked_type_vectors,ST>::type map_element;
+        //! type to check if TT is in the map
         typedef boost::mpl::contains<map_element,TT> c;
+        //! result of the search
         static const bool value = c::value;
     };
 

@@ -757,7 +757,7 @@ EXCEPTION_FORWARD(MemoryNotAllocatedError)
 
     //--------------------------------------------------------------------------
     //! 
-    //! \inrgroup error_classes
+    //! \ingroup error_classes
     //! \brief command line option error
     //!
     //! Exception thrown in cases where a command line option is missing or 

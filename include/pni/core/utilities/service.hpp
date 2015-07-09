@@ -40,18 +40,20 @@ namespace core{
     //! the actual function.  The only argument is the signature of the new 
     //! function to be used instread.
     //! 
-    //! \code 
-    //! void old_function()
-    //! {
-    //!    DEPRECATED_FUNCTION("void new_function()");
-    //!    .......
-    //! }
-    //!
-    //! void new_function()
-    //! {
-    //!   .......
-    //! }
-    //! \endcode
+    /*!
+    \code 
+    void old_function()
+    {
+       DEPRECATED_FUNCTION("void new_function()");
+       .......
+    }
+    
+    void new_function()
+    {
+      .......
+    }
+    \endcode
+    !*/
     //! 
     //! \param newfunc the new function to use
     //!

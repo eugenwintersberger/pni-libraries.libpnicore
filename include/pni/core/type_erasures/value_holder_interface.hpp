@@ -41,8 +41,10 @@ namespace core{
         public:
             //-----------------------------------------------------------------
             //!
-            //! get type id
+            //! \brief get type id
             //!
+            //! \return type ID of the stored value
+            //! 
             virtual type_id_t type_id() const = 0;
 
             //-----------------------------------------------------------------
@@ -56,8 +58,10 @@ namespace core{
 
             //-----------------------------------------------------------------
             //!
-            //! is reference
+            //! \brief check for reference
             //!
+            //! \return true if a reference is stored, false otherwise
+            //! 
             virtual bool holds_reference() const = 0;
     };
 

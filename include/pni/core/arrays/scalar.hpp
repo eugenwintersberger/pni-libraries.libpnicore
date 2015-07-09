@@ -245,7 +245,6 @@ namespace core {
             //!
             //! \tparam CTYPE container template
             //! \tparam OTS template arguments for the container template
-            //! \param c container with indices
             //! \return reference to the data
             //!
             template<
@@ -267,7 +266,6 @@ namespace core {
             //! \tparam CTYPE container template
             //! \tparam OTS template arguments of the container template
             //!
-            //! \param c container with indices
             //! \return data value
             //!
             template<template<typename ...> class CTYPE,typename ...OTS>

@@ -41,7 +41,6 @@ namespace core{
     //! Overloaded version of get_type_id for complex numbers.
     //!
     //! \tparam T base type for std::complex
-    //! \param v instance of std::complex<T>
     //! \return type ID of the complex type
     //!
     template<typename T> 
@@ -65,7 +64,7 @@ namespace core{
     //-------------------------------------------------------------------------
     //!
     //! \ingroup type_classes_internal
-    //! \btrief get_type_id overload for bool_t data
+    //! \brief get_type_id overload for bool_t data
     //!
     //! \param v boolean data
     //! \return typeID for bool_t
@@ -95,7 +94,6 @@ namespace core{
     //! This version of get_type_id is used for POD (Plain Old Data). 
     //! 
     //! \tparam T data type
-    //! \param v instance of T 
     //! \return type ID of T
     //!
     template<typename T > 
@@ -114,7 +112,6 @@ namespace core{
     //! of the value_type. 
     //! 
     //! \tparam T container type
-    //! \param v reference to an instance of T
     //! \return type ID of T::value_type
     //!
     template<typename T> 
@@ -134,7 +131,6 @@ namespace core{
     //! is returned.
     //!
     //! \tparam T type if the object
-    //! \param v instance of T 
     //! \return type ID 
     //!
     template<typename T> 

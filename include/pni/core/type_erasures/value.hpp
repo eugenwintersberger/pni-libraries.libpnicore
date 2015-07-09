@@ -86,7 +86,7 @@ namespace core{
             //! target type
             //! \tparam S type of the variable
             //! \tparam T type of the value the user passed
-            //! \param T 
+            //! \param v value to set  
             template<
                      typename S,
                      typename T
@@ -110,6 +110,7 @@ namespace core{
             //! This constructor accepts all primitive types from libpnicore.
             //!
             //! \tparam T primitive type
+            //! \param v value to store in the type erasure
             //! 
             template<
                      typename T,
@@ -147,6 +148,7 @@ namespace core{
             value &operator=(value &&o);
 
             //----------------------------------------------------------------
+            //! copy construction from a value reference
             value &operator=(const value_ref &v);
 
             //-----------------------------------------------------------------
@@ -262,7 +264,8 @@ namespace core{
     //! Create a value instance for a particular type. 
     //!
     //! \tparam T requested type
-    //! 
+    //! \return instance of value holding a value of T
+    //!
     template<typename T> value make_value()
     {
         return value(T{});
@@ -277,8 +280,9 @@ namespace core{
     //! determined by its type ID. 
     //!
     //! \throws type_error if the type ID is now known
-    //! \tparam T requested type
-    //! 
+    //! \param tid type ID of the requested type
+    //! \return instance of value holding data of type tid  
+    //!
     value make_value(type_id_t tid);
 
 //end of namespace

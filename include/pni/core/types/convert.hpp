@@ -58,15 +58,39 @@ namespace core{
             >
     struct converter
     {
+        //!
+        //! \brief perform conversion
+        //! 
+        //! \param value reference of instance of source type
+        //! \return instance of target type with the converted value
+        //! 
         static TT convert(const ST &value)
         {
             return boost::numeric_cast<TT>(value);
         }
     };
 
+    //!
+    //! \ingroup type_classes_internal
+    //! \brief simple numeric converter
+    //! 
+    //! This is a specialization of the converter template for the case 
+    //! that the target and source type are equal.
+    //! 
+    //! \tparam TT target and source type
+    //!
     template<typename TT>
     struct converter<TT,TT>
     {
+        //!
+        //! \brief perform conversion
+        //!     
+        //! As the target and the source type are equal this function 
+        //! does nothing. It just passes the user provided value through. 
+        //! 
+        //! \param value original value 
+        //! \return the same as the original value
+        //! 
         static TT convert(const TT &value)
         {
             return value;
@@ -89,6 +113,15 @@ namespace core{
             >
     struct converter<std::complex<BT>,ST>
     {
+        //!
+        //! \brief perform conversion
+        //! 
+        //! The scalar type becomes the real part of the complex 
+        //! value.
+        //! 
+        //! \param value the original simple scalar type
+        //! \return complex type  with value as its real part
+        //! 
         static std::complex<BT> convert(const ST &value)
         {
             BT real = boost::numeric_cast<BT>(value);
@@ -113,6 +146,14 @@ namespace core{
             >
     struct converter<std::complex<BTT>,std::complex<BST>>
     {
+        //!
+        //! \brief perform conversion
+        //! 
+        //! Convert two complex numbers of different base type. 
+        //! 
+        //! \param value instance of the source complex type
+        //! \return new instance of target type
+        //!
         static std::complex<BTT> convert(const std::complex<BST> &value)
         {
             BTT real = boost::numeric_cast<BTT>(value.real());
@@ -140,6 +181,13 @@ namespace core{
             > 
     struct conversion_strategy
     {
+        //!
+        //! \brief perform conversion
+        //! 
+        //! For types which can be converted unchecked we just do a cast. 
+        //! 
+        //! \param value reference to the original value
+        //! \return converted value
         static T convert(const S &value)
         {
             return T(value);
@@ -163,6 +211,15 @@ namespace core{
             >
     struct conversion_strategy<T,S,false>
     {
+        //!
+        //! \brief perform conversion
+        //! 
+        //! Use one of the converters to perform the conversion between 
+        //! the source and the target type. 
+        //! 
+        //! \param value original value of type S
+        //! \return converted value of type T
+        //!
         static T convert(const S &value)
         {
             try
@@ -190,7 +247,7 @@ namespace core{
 
     //-------------------------------------------------------------------------
     //!
-    //! ingroup type_classes_internal
+    //! \ingroup type_classes_internal
     //! \brief type conversion function template
     //! 
     //! This function template finally performs the type conversion. Several
@@ -201,8 +258,10 @@ namespace core{
     //!
     //! \throws range_error if u does not fit in the range covered by T
     //! \throws type_error in case of all other errors
+    //! 
     //! \tparam T target type
     //! \tparam S source type
+    //! 
     //! \param source value of type S
     //! \return value of u converted to T
     //!

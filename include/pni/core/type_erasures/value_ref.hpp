@@ -106,7 +106,8 @@ namespace core{
             //! target type
             //! \tparam S type of the variable
             //! \tparam T type of the value the user passed
-            //! \param T 
+            //! \param v value to set 
+            //! 
             template<
                      typename S,
                      typename T
@@ -130,11 +131,12 @@ namespace core{
             //! \brief template constructor from value
             //!
             //! Constructs a reference to a variable of type T. 
-            //! \code
-            //! float32 x = 100.;
-            //! value_ref v(std::ref(x));
-            //! \endcode
-            //!
+            /*!
+            \code
+            float32 x = 100.;
+            value_ref v(std::ref(x));
+            \endcode
+            !*/
             //! \tparam T type of the value to which the reference shall be created
             //! \param v reference to the value
             //!
@@ -179,10 +181,13 @@ namespace core{
             //!
             //! \throws memory_not_allocated if the reference is not initialized
             //! \throws type_error if the type of v and the reference to not
-            //! match
+            //!                    match
             //! \throws range_error if the value of v does not fit in the type 
-            //! of the variable referenced by this instance of value_ref.
+            //!                     of the variable referenced by this 
+            //!                     instance of value_ref.
+            //! 
             //! \param v value instance
+            //! \return reference to this instance
             //!
             value_ref &operator=(const value &v);
 

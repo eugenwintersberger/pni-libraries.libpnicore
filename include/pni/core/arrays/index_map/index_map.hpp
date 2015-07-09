@@ -47,17 +47,19 @@ namespace core{
     //! \li the storage container type 
     //! \li the implementation type
     //! 
-    //! \code
-    //! typedef std::vector<size_t>  dyn_storage_type;
-    //! typedef std::array<size_t,3> fix_storage_type;
-    //!
-    //! typedef index_map<dyn_storage_type,c_index_map_imp> dyn_index_map;
-    //! typedef index_map<fix_storage_type,c_index_map_imp> fix_index_map; 
-    //! 
-    //! //maps can be constructed from their storage type
-    //! dyn_index_map dmap1(dstorage{3,4,2});
-    //! fix_index_map smap1(fix_storage_type{{3,4,5}});
-    //! \endcode
+    /*!
+    \code
+    typedef std::vector<size_t>  dyn_storage_type;
+    typedef std::array<size_t,3> fix_storage_type;
+    
+    typedef index_map<dyn_storage_type,c_index_map_imp> dyn_index_map;
+    typedef index_map<fix_storage_type,c_index_map_imp> fix_index_map; 
+    
+    //maps can be constructed from their storage type
+    dyn_index_map dmap1(dstorage{3,4,2});
+    fix_index_map smap1(fix_storage_type{{3,4,5}});
+    \endcode
+    !*/
     //!  
     //! This index map template should be used for index maps who are either
     //! entirely dynamic or which have a fixed number of dimensions but the 
@@ -127,14 +129,15 @@ namespace core{
             //! This constructor does copy construction from a storage type
             //! instance. This constructor would be called in the following
             //! situation
-            //! \code
-            //! typedef std::vector<size_t> storage_type;
-            //! typedef index_map<storage_type,c_index_map_imp> index_map;
-            //! 
-            //! storage_type shape{3,3,2};
-            //! index_map map(shape);
-            //! \endcode
-            //! 
+            /*!
+            \code
+            typedef std::vector<size_t> storage_type;
+            typedef index_map<storage_type,c_index_map_imp> index_map;
+            
+            storage_type shape{3,3,2};
+            index_map map(shape);
+            \endcode
+            !*/
             //! \param s instance of storage_type
             //!
             explicit index_map(const storage_type &s):_shape(s) {}
@@ -146,13 +149,14 @@ namespace core{
             //! Performs move construction from an rvalue reference to an 
             //! instance of storage_type. A typical application would be 
             //! like this
-            //! \code
-            //! typedef std::vector<size_t> storage_type;
-            //! typedef index_map<storage_type,c_index_map_imp> index_map;
-            //! 
-            //! index_map map(storage_type{3,3,2});
-            //! \endcode
-            //! 
+            /*!
+            \code
+            typedef std::vector<size_t> storage_type;
+            typedef index_map<storage_type,c_index_map_imp> index_map;
+            
+            index_map map(storage_type{3,3,2});
+            \endcode
+            !*/
             //! \param s rvalue reference to storage_type
             //! 
             explicit index_map(storage_type &&s):_shape(std::move(s)) {}
@@ -234,11 +238,12 @@ namespace core{
             //!
             //! This method is used in the case where the index is passed as 
             //! an lvalue reference. 
-            //! \code
-            //! index_map map(...);
-            //! size_t offset = map.offset(std::list<size_t>{3,2,1});
-            //! \endcode
-            //! 
+            /*!
+            \code
+            index_map map(...);
+            size_t offset = map.offset(std::list<size_t>{3,2,1});
+            \endcode
+            !*/
             //! \tparam CTYPE container type for index data
             //! \param index instance of CTYPE with container data
             //! \return linear offset
@@ -262,15 +267,16 @@ namespace core{
             //! 
             //! Compute the offset in the case of a selection. 
             //!
-            //! \code   
-            //! typedef index_map<....> map_type;
-            //! typedef ....            index_type;
-            //!   
-            //! array_selection s(....);
-            //! index_type index{...};
-            //! size_t offset = map.offset(s,index);
-            //! \endcode
-            //! 
+            /*!
+            \code   
+            typedef index_map<....> map_type;
+            typedef ....            index_type;
+              
+            array_selection s(....);
+            index_type index{...};
+            size_t offset = map.offset(s,index);
+            \endcode
+            !*/
             //! \tparam CTYPE container type for the index
             //! \param s lvalue reference to the selection 
             //! \param index lvalue reference to the index 
@@ -294,13 +300,13 @@ namespace core{
             //! 
             //! Return the index stored in a container determined by the user 
             //! as a template parameter.
-            //!  
-            //! \code
-            //! typedef index_map<...> map_t;
-            //! map_t map(...)
-            //! auto index = map.index<shape_t>(3);
-            //! \endcode
-            //! 
+            /*!
+            \code
+            typedef index_map<...> map_t;
+            map_t map(...)
+            auto index = map.index<shape_t>(3);
+            \endcode
+            !*/
             //! \tparam CTYPE container type for the index
             //! \param offset linear offset for which to compute the index
             //! \return instance of CTYPE with index values

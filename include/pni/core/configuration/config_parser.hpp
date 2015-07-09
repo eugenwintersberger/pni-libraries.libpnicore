@@ -34,6 +34,7 @@ namespace core{
     //! \brief store cli options in vector
     //!
     //! This function stores CLI options and arguments in a vector. 
+    //!
     //! \param argc number of arguments
     //! \param argv argument values
     //!\return vector with arguments and options
@@ -50,19 +51,21 @@ namespace core{
     //! name (usually passed as the first argument to a program). A utilty 
     //! function can be used to convert the defautl CLI argument pointer to 
     //! a vector
-    //! \code
-    //! int main(int argc,char **argv)
-    //! {
-    //!   ......
-    //!
-    //!   std::vector<string> args = cliargs2vector(argc,argv);
-    //!   configuration config;
-    //!   ......
-    //!   parse(config,args);
-    //!
-    //!  ......
-    //! }
-    //! \endcode
+    /*!
+    \code
+    int main(int argc,char **argv)
+    {
+      ......
+    
+      std::vector<string> args = cliargs2vector(argc,argv);
+      configuration config;
+      ......
+      parse(config,args);
+    
+     ......
+    }
+    \endcode
+    !*/
     //! 
     //! \param c reference to the configuration to be parsed
     //! \param args command line arguments in a vector

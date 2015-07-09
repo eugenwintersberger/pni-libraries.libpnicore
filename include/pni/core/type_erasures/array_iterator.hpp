@@ -121,6 +121,7 @@ namespace core{
     template<int const_flag> class array_iterator
     {
         private:
+            //! iterator type
             typedef array_iterator_types<const_flag> iterator_types;
             
             //! pointer to the container object
@@ -222,6 +223,17 @@ namespace core{
                 return (*_container)[_state];
             }
 
+            //------------------------------------------------------------------
+            //!
+            //! \brief dereferencing operator
+            //!
+            //! Returns a const reference on the object the iterator is actually 
+            //! pointer or the object by value. The return type depends if the 
+            //! iterator is used as a standard iterator or a const iterator.
+            //!
+            //! \throws iterator_error if the iterator is invalid
+            //! \return reference or value of the actual object
+            //!
             typename array_iterator_types<const_flag>::return_type operator*()
                 const
             {
@@ -341,10 +353,12 @@ namespace core{
     //! Add an offset to the iterator and thus increment its internal state by 
     //! this offset.
     //!
-    //! \code
-    //! array_iterator<...> iter = ...'
-    //! array_iteator<...> iter2 = iter+2;
-    //! \endcode
+    /*!
+    \code
+    array_iterator<...> iter = ...'
+    array_iteator<...> iter2 = iter+2;
+    \endcode
+    !*/
     //!
     //! \param a original iterator
     //! \param b offset to add

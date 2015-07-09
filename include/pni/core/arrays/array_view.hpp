@@ -43,19 +43,21 @@ namespace core{
     //! The ArrayView class provides a view on the part of an array. No new 
     //! memory is allocated.  An array view can be obtained from an array 
     //! using the () operator. 
-    //! \code
-    //! darray<float32> a(std::vector<size_t>{3,4,10});
-    //!
-    //! //create a (4,10) view from the above array 
-    //! auto view = a(1,slice{0,4},Slice{0,10});
-    //! 
-    //! //the view can now be used like any other array - however, no new 
-    //! //memory isallocated.
-    //! 
-    //! //create an array from the view
-    //! darray<float32> roi(view.shape<std::vector<size_t> >(),
-    //!                  darray<float32>::storage_type(view));
-    //! \endcode
+    /*!
+    \code
+    darray<float32> a(std::vector<size_t>{3,4,10});
+    
+    //create a (4,10) view from the above array 
+    auto view = a(1,slice{0,4},Slice{0,10});
+    
+    //the view can now be used like any other array - however, no new 
+    //memory isallocated.
+    
+    //create an array from the view
+    darray<float32> roi(view.shape<std::vector<size_t> >(),
+                     darray<float32>::storage_type(view));
+    \endcode
+    !*/
     //!
     template<typename ATYPE> 
     class array_view
@@ -274,11 +276,13 @@ namespace core{
             //!
             //! () operator allows access to the data using a multidimensional
             //! index represented by the arguments of the operator. 
-            //! \code 
-            //! darray<Float32> data({100,200,100});
-            //! auto view = data(slice(50,75),slice(0,200),slice(25,41));
-            //! std::cout<<view(3,34,10)<<std::endl;
-            //! \endcode
+            /*!
+            \code 
+            darray<Float32> data({100,200,100});
+            auto view = data(slice(50,75),slice(0,200),slice(25,41));
+            std::cout<<view(3,34,10)<<std::endl;
+            \endcode
+            !*/
             //! This works essentially the same as for the Array template.
             //! \tparam ITypes index types
             //! \param indices instances of ITypes determining the index
@@ -308,11 +312,13 @@ namespace core{
             //!
             //! () operator allows access to the data using a multidimensional
             //! index represented by the arguments of the operator. 
-            //! \code 
-            //! darray<float32> data({100,200,100});
-            //! auto view = data(slice(50,75),slice(0,200),slice(25,41));
-            //! std::cout<<view(3,34,10)<<std::endl;
-            //! \endcode
+            /*!
+            \code 
+            darray<float32> data({100,200,100});
+            auto view = data(slice(50,75),slice(0,200),slice(25,41));
+            std::cout<<view(3,34,10)<<std::endl;
+            \endcode
+            !*/
             //! This works essentially the same as for the Array template.
             //! \tparam ITypes index types
             //! \param indices instances of ITypes determining the 
@@ -594,13 +600,15 @@ namespace core{
             //!
             //! \brief unary addition of a scalar
             //!
-            //! \code
-            //! array_type a = ...;
-            //! array_type::value_type s = ...;
-            //! auto view = a(0,slice(0,100),slice(3,23));
-            //!
-            //! view += s;
-            //! \endcode
+            /*!
+            \code
+            array_type a = ...;
+            array_type::value_type s = ...;
+            auto view = a(0,slice(0,100),slice(3,23));
+            
+            view += s;
+            \endcode
+            !*/
             //! \param s the scalar value to add
             //! \return view reference
             //!
@@ -614,13 +622,15 @@ namespace core{
             //!
             //! \brief unary addition of an array 
             //!
-            //! \code
-            //! array_type1 a = ...;
-            //! array_tyep2 b = ...;
-            //! auto view = a(1,slice(0,100),slice(3,23));
-            //!
-            //! view += b;
-            //! \endcode
+            /*!
+            \code
+            array_type1 a = ...;
+            array_tyep2 b = ...;
+            auto view = a(1,slice(0,100),slice(3,23));
+            
+            view += b;
+            \endcode
+            !*/
             //!
             //! \tparam RTYPE type of the array to add
             //! \param v reference to the array to add 
@@ -637,13 +647,15 @@ namespace core{
             //!
             //! \brief unary subtraction of a scalar
             //!
-            //! \code
-            //! array_type a = ...;
-            //! array_type::value_type s = ...;
-            //! auto view = a(0,slice(0,100),slice(3,23));
-            //!
-            //! view -= s;
-            //! \endcode
+            /*!
+            \code
+            array_type a = ...;
+            array_type::value_type s = ...;
+            auto view = a(0,slice(0,100),slice(3,23));
+            
+            view -= s;
+            \endcode
+            !*/
             //! \param s the scalar value to subtract
             //! \return view reference
             //!
@@ -657,14 +669,16 @@ namespace core{
             //!
             //! \brief unary subtraction of an array
             //!
-            //! \code
-            //! array_type1 a = ...;
-            //! array_tyep2 b = ...;
-            //!
-            //! auto view = a(0,slice(0,100),slice(2,23));
-            //!
-            //! view -= b;
-            //! \endcode
+            /*!
+            \code
+            array_type1 a = ...;
+            array_tyep2 b = ...;
+            
+            auto view = a(0,slice(0,100),slice(2,23));
+            
+            view -= b;
+            \endcode
+            !*/
             //!
             //! \tparam RTYPE type of the array to subtract
             //! \param v reference to the array to subtract 
@@ -681,13 +695,15 @@ namespace core{
             //!
             //! \brief unary multiplication of a scalar
             //!
-            //! \code
-            //! array_type a = ...;
-            //! array_type::value_type s = ...;
-            //! auto view = a(slice(0,100),10,slice(2,23));
-            //!
-            //! view *= s;
-            //! \endcode
+            /*!
+            \code
+            array_type a = ...;
+            array_type::value_type s = ...;
+            auto view = a(slice(0,100),10,slice(2,23));
+            
+            view *= s;
+            \endcode
+            !*/
             //! \param s the scalar value to multiply with
             //! \return view reference
             //!
@@ -701,13 +717,15 @@ namespace core{
             //!
             //! \brief unary multiplication of an array
             //!
-            //! \code
-            //! array_type1 a = ...;
-            //! array_tyep2 b = ...;
-            //! auto view = a(slice(0,100),100,slice(2,102));
-            //!
-            //! view *= b;
-            //! \endcode
+            /*!
+            \code
+            array_type1 a = ...;
+            array_tyep2 b = ...;
+            auto view = a(slice(0,100),100,slice(2,102));
+            
+            view *= b;
+            \endcode
+            !*/
             //!
             //! \tparam RTYPE type of the array to multiply 
             //! \param v reference to the array to multiply 
@@ -724,13 +742,15 @@ namespace core{
             //!
             //! \brief unary division of a scalar
             //!
-            //! \code
-            //! array_type a = ...;
-            //! array_type::value_type s = ...;
-            //! auto view = a(slice(0,100),slice(2,3),slice(4,10));
-            //!
-            //! view /= s;
-            //! \endcode
+            /*!
+            \code
+            array_type a = ...;
+            array_type::value_type s = ...;
+            auto view = a(slice(0,100),slice(2,3),slice(4,10));
+            
+            view /= s;
+            \endcode
+            !*/
             //! \param s the scalar value to divide by
             //! \return array reference
             //!
@@ -744,13 +764,15 @@ namespace core{
             //!
             //! \brief unary division of an array
             //!
-            //! \code
-            //! array_type1 a = ...;
-            //! array_tyep2 b = ...;
-            //! auto view = a(slice(0,100),10,10);
-            //!
-            //! view /= b;
-            //! \endcode
+            /*!
+            \code
+            array_type1 a = ...;
+            array_tyep2 b = ...;
+            auto view = a(slice(0,100),10,10);
+            
+            view /= b;
+            \endcode
+            !*/
             //!
             //! \tparam RTYPE type of the array to divide by  
             //! \param v reference to the array to divide by 
@@ -778,6 +800,7 @@ namespace core{
             //! 
             //! Returns true if the view is contiguous. Otherweise false. 
             //! 
+            //! \return true if contiguous selection, false otherwise
             bool is_contiguous() const
             {
                 return _is_contiguous;
@@ -789,9 +812,11 @@ namespace core{
     //! \ingroup type_classes
     //! \brief specialization for type_id 
     //! 
-    //! This function returns the type ID of an array view instance. 
+    //! This function returns the type ID of the elements of the array 
+    //! referenced by an array view instance.
     //! 
-    //! 
+    //! \tparam ATYPE array type
+    //! \return type id of element type
     template<typename ATYPE>
     type_id_t type_id(const array_view<ATYPE> &)
     {

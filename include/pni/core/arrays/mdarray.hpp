@@ -708,14 +708,14 @@ namespace core {
             //==========implementation of unary arithmetic operators===========
             //!
             //! \brief unary addition of a scalar
-            //!
-            //! \code
-            //! array_type a = ...;
-            //! array_type::value_type s = ...;
-            //!
-            //! a += s;
-            //! \endcode
-            //! 
+            /*!
+            \code
+            array_type a = ...;
+            array_type::value_type s = ...;
+            
+            a += s;
+            \endcode
+            !*/ 
             //! \param s the scalar value to add
             //! \return array reference
             //!
@@ -728,14 +728,14 @@ namespace core {
             //-----------------------------------------------------------------
             //!
             //! \brief unary addition of an array 
-            //!
-            //! \code
-            //! array_type1 a = ...;
-            //! array_tyep2 b = ...;
-            //!
-            //! a += b;
-            //! \endcode
-            //!
+            /*!
+            \code
+            array_type1 a = ...;
+            array_tyep2 b = ...;
+            
+            a += b;
+            \endcode
+            !*/
             //! \tparam ATYPE type of the array to add
             //! \param v reference to the array to add 
             //! \return reference to the original array
@@ -750,14 +750,14 @@ namespace core {
             //-----------------------------------------------------------------
             //!
             //! \brief unary subtraction of a scalar
-            //!
-            //! \code
-            //! array_type a = ...;
-            //! array_type::value_type s = ...;
-            //!
-            //! a -= s;
-            //! \endcode
-            //! 
+            /*!
+            \code
+            array_type a = ...;
+            array_type::value_type s = ...;
+            
+            a -= s;
+            \endcode
+            !*/ 
             //! \param s the scalar value to subtract
             //! \return array reference
             //!
@@ -770,14 +770,14 @@ namespace core {
             //-----------------------------------------------------------------
             //!
             //! \brief unary subtraction of an array
-            //!
-            //! \code
-            //! array_type1 a = ...;
-            //! array_tyep2 b = ...;
-            //!
-            //! a -= b;
-            //! \endcode
-            //!
+            /*!
+            \code
+            array_type1 a = ...;
+            array_tyep2 b = ...;
+            
+            a -= b;
+            \endcode
+            !*/
             //! \tparam ATYPE type of the array to subtract
             //! \param v reference to the array to subtract 
             //! \return reference to the original array
@@ -792,14 +792,14 @@ namespace core {
             //-----------------------------------------------------------------
             //!
             //! \brief unary multiplication of a scalar
-            //!
-            //! \code
-            //! array_type a = ...;
-            //! array_type::value_type s = ...;
-            //! 
-            //! a *= s;
-            //! \endcode
-            //! 
+            /*!
+            \code
+            array_type a = ...;
+            array_type::value_type s = ...;
+            
+            a *= s;
+            \endcode
+            !*/ 
             //! \param s the scalar value to multiply with
             //! \return array reference
             //!
@@ -812,14 +812,14 @@ namespace core {
             //-----------------------------------------------------------------
             //!
             //! \brief unary multiplication of an array
-            //!
-            //! \code
-            //! array_type1 a = ...;
-            //! array_tyep2 b = ...;
-            //!
-            //! a *= b;
-            //! \endcode
-            //!
+            /*!
+            \code
+            array_type1 a = ...;
+            array_tyep2 b = ...;
+            
+            a *= b;
+            \endcode
+            !*/
             //! \tparam ATYPE type of the array to multiply 
             //! \param v reference to the array to multiply 
             //! \return reference to the original array
@@ -834,14 +834,14 @@ namespace core {
             //-----------------------------------------------------------------
             //!
             //! \brief unary division of a scalar
-            //!
-            //! \code
-            //! array_type a = ...;
-            //! array_type::value_type s = ...;
-            //!
-            //! a /= s;
-            //! \endcode
-            //! 
+            /*!
+            \code
+            array_type a = ...;
+            array_type::value_type s = ...;
+            
+            a /= s;
+            \endcode
+            !*/ 
             //! \param s the scalar value to divide by
             //! \return array reference
             //!
@@ -854,14 +854,14 @@ namespace core {
             //-----------------------------------------------------------------
             //!
             //! \brief unary division of an array
-            //!
-            //! \code
-            //! array_type1 a = ...;
-            //! array_tyep2 b = ...;
-            //! 
-            //! a /= b;
-            //! \endcode
-            //! 
+            /*!
+            \code
+            array_type1 a = ...;
+            array_tyep2 b = ...;
+            
+            a /= b;
+            \endcode
+            !*/ 
             //! \tparam ATYPE type of the array to divide by  
             //! \param v reference to the array to divide by 
             //! \return reference to the original array

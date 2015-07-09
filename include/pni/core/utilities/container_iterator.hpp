@@ -38,18 +38,18 @@ namespace core{
     //! used with all container types provided by the library. A container 
     //! that wants to use this iterator must implement the following 
     //! interface
-    //!
-    //! \code
-    //! template<typename T> class Iterable<T>
-    //! {
-    //!     public:
-    //!         typedef T value_type;
-    //!         size_t size() const;
-    //!         T &operator[](size_t i);
-    //!         T operator[](size_t i) const;
-    //! };
-    //! \endcode
-    //! 
+    /*!
+    \code
+    template<typename T> class Iterable<T>
+    {
+        public:
+            typedef T value_type;
+            size_t size() const;
+            T &operator[](size_t i);
+            T operator[](size_t i) const;
+    };
+    \endcode
+    !*/ 
     //! This template implements a simple forward iterator. Unlike STL 
     //! iterators an exception is thrown if one tries to dereference an invalid 
     //! iterator

@@ -36,16 +36,17 @@ namespace core{
     //! This iterator is specifically designed to loop infinitely over a scalar
     //! value. As there is no end of sequence and thus no 'end' iterator one 
     //! cannot use this to loop over a range like this
-    //! \code
-    //! auto start = infinite_iterator<...>(...);
-    //! auto end   = infinite_iterator<...>(...);
-    //!
-    //! for(;start != end; ++start)
-    //! {
-    //!  .....
-    //! }
-    //! \endcode
-    //!
+    /*!
+    \code
+    auto start = infinite_iterator<...>(...);
+    auto end   = infinite_iterator<...>(...);
+    
+    for(;start != end; ++start)
+    {
+     .....
+    }
+    \endcode
+    !*/
     //! Although the iterator implements the interface of a bidirectional 
     //! iterator (including all operators) it always refers to the same 
     //! scalar value. 
@@ -255,10 +256,13 @@ namespace core{
     //! Add an offset to the iterator and thus increment its internal state 
     //! by this offset.
     //! 
-    //! \code
-    //! Iteartor<...> iter = ...'
-    //! Iteartor<...> iter2 = iter+2;
-    //! \endcode
+    /*!
+    \code
+    Iteartor<...> iter = ...'
+    Iteartor<...> iter2 = iter+2;
+    \endcode
+    !*/
+    //!
     //! \param a original iterator
     //! \param b offset to add
     //! \return new iterator 
@@ -279,6 +283,7 @@ namespace core{
     //! 
     //! Add an offset to the iterator and thus increment its internal state 
     //! by this offset.
+    //!
     //! \param a offset to add
     //! \param b original iterator
     //! \return new iterator

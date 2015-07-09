@@ -163,9 +163,11 @@ namespace core{
             >
     struct unchecked_convertible
     {
-        //select the type vector
+        //! select the map
         typedef typename boost::mpl::at<unchecked_type_vectors,ST>::type map_element;
+        //! check if TT is in the map
         typedef boost::mpl::contains<map_element,TT> c;
+        //! result of the search
         static const bool value = c::value;
     };
 

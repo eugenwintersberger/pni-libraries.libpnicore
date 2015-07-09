@@ -63,13 +63,15 @@ namespace core{
         //! \brief add scalar to array
         //!
         //! Element wise inplace addition of a scalar to an array
-        //! \code
-        //! array_type array(...);
-        //! typename array_type::value_type scalar(5);
-        //!  
-        //! //performe something like array += scalar
-        //! inplace_arithmetics::add(array,scalar);
-        //! \endcode
+        /*!
+        \code
+        array_type array(...);
+        typename array_type::value_type scalar(5);
+         
+        //performe something like array += scalar
+        inplace_arithmetics::add(array,scalar);
+        \endcode
+        !*/
         //! 
         //! \tparam LTYPE array type
         //! \param a reference to an instance of LTYPE
@@ -95,14 +97,15 @@ namespace core{
         //! \brief add array to array
         //!
         //!  Element wise inplace addition of two arrays
-        //! \code
-        //! array_type1 a = ...;
-        //! array_type2 b = ...;
-        //!
-        //! //computes a+=b;
-        //! inplace_arithmetics::add(a,b);
-        //!
-        //! \endcode
+        /*!
+        \code
+        array_type1 a = ...;
+        array_type2 b = ...;
+        
+        //computes a+=b;
+        inplace_arithmetics::add(a,b);
+        \endcode
+        !*/
         //!
         //! \tparam LTYPE l.h.s. type 
         //! \tparam RTYPE r.h.s. type
@@ -128,13 +131,15 @@ namespace core{
         //! \brief subtract scalar from array
         //!
         //! Element wise subtraction of a scalar from an array
-        //! \code
-        //! array_type a = ...;
-        //! typename array_type::value_type s(1.);
-        //!
-        //! //compuate a+=scalar;
-        //! inplace_arithmetics::sub(a,s);
-        //! \endcode
+        /*!
+        \code
+        array_type a = ...;
+        typename array_type::value_type s(1.);
+        
+        //compuate a+=scalar;
+        inplace_arithmetics::sub(a,s);
+        \endcode
+        !*/
         //! \tparam LTYPE l.h.s. array type
         //! \param a reference to the l.h.s.
         //! \param b scalar value on the r.h.s.
@@ -158,13 +163,15 @@ namespace core{
         //! \brief subtract array from array
         //!
         //! Element wise inplace subtraction of a scalar from an array.
-        //! \code
-        //! array_type1 a = ...;
-        //! array_type2 b = ...;
-        //!
-        //! //compute a-=b;
-        //! inplace_arithmetics::sub(a,b);
-        //! \endcode
+        /*!
+        \code
+        array_type1 a = ...;
+        array_type2 b = ...;
+        
+        //compute a-=b;
+        inplace_arithmetics::sub(a,b);
+        \endcode
+        !*/
         //! \tparam LTYPE l.h.s. array type
         //! \tparam RTYPE r.h.s. array type
         //! \param a reference to the l.h.s.
@@ -190,13 +197,15 @@ namespace core{
         //! \brief multiply array with scalar
         //!
         //! Element wise inplace multiplication of an array with a scalar
-        //! \code
-        //! array_type1 a = ...;
-        //! typename array_type1::value_type s(5);
-        //! 
-        //! //compute a *= s;
-        //! inplace_arithmetics::mult(array,scalar);
-        //! \endcode
+        /*!
+        \code
+        array_type1 a = ...;
+        typename array_type1::value_type s(5);
+        
+        //compute a *= s;
+        inplace_arithmetics::mult(array,scalar);
+        \endcode
+        !*/
         //! \tparam LTYPE l.h.s. array type
         //! \param a reference to the l.h.s.
         //! \param b scalar r.h.s. value
@@ -220,13 +229,15 @@ namespace core{
         //! \brief multiply array by array
         //!
         //! Element wise inplace multiplication of two arrays
-        //! \code
-        //! array_type1 a = ...;
-        //! array_type2 b = ...;
-        //!
-        //! //compuate a *= b;
-        //! inplace_arithemtics::mult(a,b);
-        //! \endcode
+        /*!
+        \code
+        array_type1 a = ...;
+        array_type2 b = ...;
+        
+        //compuate a *= b;
+        inplace_arithemtics::mult(a,b);
+        \endcode
+        !*/
         //! \tparam LTYPE l.h.s. array type
         //! \tparam RTYPE r.h.s. array type
         //! \param a reference to the l.h.s.
@@ -251,13 +262,15 @@ namespace core{
         //! \brief divide array with scalar
         //!
         //! Element wise inplace division of an array with a scalar
-        //! \code
-        //! array_type a = ...;
-        //! typename array_type::value_type s(4.);
-        //!
-        //! //compute a /= s;
-        //! inplace_arithmetics::div(a,s);
-        //! \endcode
+        /*!
+        \code
+        array_type a = ...;
+        typename array_type::value_type s(4.);
+        
+        //compute a /= s;
+        inplace_arithmetics::div(a,s);
+        \endcode
+        !*/
         //! \tparam LTYPE l.h.s. array type
         //! \param a reference to the l.h.s.
         //! \param b scalar r.h.s. value
@@ -281,14 +294,15 @@ namespace core{
         //! \brief divide array by array
         //!
         //! Element wise inplace division of two arrays. 
-        //! \code
-        //! array_type1 a = ...;
-        //! array_type2 b = ...;
-        //!
-        //! //compuate a /= b;
-        //! inplace_arithemtics::div(a,b);
-        //! \endcode
-        //!
+        /*!
+        \code
+        array_type1 a = ...;
+        array_type2 b = ...;
+        
+        //compuate a /= b;
+        inplace_arithemtics::div(a,b);
+        \endcode
+        !*/
         //! \tparam LTYPE l.h.s. array type
         //! \tparam RTYPE r.h.s. array type
         //! \param a reference to the l.h.s.

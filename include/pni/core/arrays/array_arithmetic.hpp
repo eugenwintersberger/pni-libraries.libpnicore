@@ -32,9 +32,18 @@
 
 namespace pni{
 namespace core{
-    
+
+    //!
+    //! \ingroup mdim_array_arithmetic_classes
+    //! \brief struct identifying a type as an array type
+    //! 
+    //! If T is an array type value is true, otherwise it is false. 
+    //! 
     template<typename T> struct is_array
     {
+        //! 
+        //! true if T is an arra type, false otherwise
+        //!
         const static bool value = container_trait<T>::is_multidim;
     };
 

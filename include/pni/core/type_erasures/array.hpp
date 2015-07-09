@@ -44,17 +44,21 @@ namespace core{
     //! This type erasure can hold all kind of array types provides by 
     //! libpnicore.  It takes entire ownership over the array it holds.
     //! The construction is fairly easy
-    //! \code 
-    //! array a = array_type::create({104,200});
-    //! \endcode
+    /*!
+    \code 
+    array a = array_type::create({104,200});
+    \endcode
+    !*/
     //! as the array_type instance is a temporary move construction will 
     //! be used. 
     //! 
     //! Alternatively, copy construction can be done with
-    //! \code
-    //! auto data = array_type::create({104,200});
-    //! array a = data;
-    //! \endcode
+    /*!
+    \code
+    auto data = array_type::create({104,200});
+    array a = data;
+    \endcode
+    !*/
     //! in which case the copy constructor is used to copy the array's data. 
     //! It is clear that in this latter case the two objects are entirely 
     //! decoupled.  Changing a value in a will not influence the original 
@@ -115,7 +119,9 @@ namespace core{
             typedef value value_type; //!< value type of the array
             typedef array_iterator<0> iterator; //!< read/write iterator
             typedef array_iterator<1> const_iterator; //!< read only iterator
+            //! element index type
             typedef array_holder_interface::element_index element_index;
+            //! view index type
             typedef array_holder_interface::view_index view_index;
             typedef size_t size_type; //!< type used for array size
             //===================constructors and destructor===================
@@ -129,11 +135,13 @@ namespace core{
             //! This constructor creates a type erasure by copying the 
             //! original data to the internal object. This constructor is 
             //! called in a situation as this one
-            //! \code 
-            //! array_type data;
-            //! ....
-            //! array a(data);
-            //! \endcode
+            /*!
+            \code 
+            array_type data;
+            ....
+            array a(data);
+            \endcode
+            !*/
             //! the content of the original array data is copied to the 
             //! internal array of type array_type encapsulated by the type 
             //! erasure.
@@ -158,11 +166,11 @@ namespace core{
             //! \brief move original object
             //!
             //! Constructor moves the original object to the type erasure
-            //!
-            //! \code
-            //! array a = DArray<UInt16>(shape_t{1024,1024});
-            //! \endcode
-            //! 
+            /*!
+            \code
+            array a = DArray<UInt16>(shape_t{1024,1024});
+            \endcode
+            !*/
             //! \tparam T original type
             //! \param o rvalue reference to the original object
             //!
@@ -236,11 +244,11 @@ namespace core{
             //!
             //! Return the number of dimensions along each dimension as a 
             //! container type specified by the user. 
-            //! 
-            //! \code
-            //! auto s = array.shape<std::list<size_t> >();
-            //! \endcode
-            //!
+            /*! 
+            \code
+            auto s = array.shape<std::list<size_t> >();
+            \endcode
+            !*/
             //! If the wrapped type is a scalar an empty instance of CTYPE is
             //! returned.
             //!
@@ -311,9 +319,26 @@ namespace core{
             value_ref at(size_t i);
 
             //-----------------------------------------------------------------
+            //! 
+            //! \brief get reference to element
+            //! 
+            //! Returns a reference to an array element. The reference is 
+            //! represented by an instance of value_ref.
+            //! 
+            //! \param index the index of the element
+            //! \return value_ref with reference to the element
+            //! 
             value_ref operator()(const element_index &index);
 
             //-----------------------------------------------------------------
+            //! 
+            //! \brief get element value
+            //! 
+            //! Returns the value of an element as an instance of value. 
+            //! 
+            //! \param index the element index
+            //! \return the value as an instance of value
+            //! 
             value operator()(const element_index &index) const;
 
             //-----------------------------------------------------------------

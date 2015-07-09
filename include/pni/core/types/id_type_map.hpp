@@ -49,11 +49,11 @@ namespace core{
     //! This template implements a map from a type_id_t to a specific data 
     //! type. The type map can be used in a template to determine the type of a 
     //! variable by the ID rather than by its type:
-    //!
-    //! \code
-    //! id_type_map<ID>::type variable;
-    //! \endcode
-    //! 
+    /*!
+    \code
+    id_type_map<ID>::type variable;
+    \endcode
+    !*/ 
     //! \tparam id value of the type id
     //!
     template<type_id_t id> 

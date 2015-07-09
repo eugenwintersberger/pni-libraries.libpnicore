@@ -113,10 +113,12 @@ namespace core{
     //! (typically size_t), a view index contains at least one instance of 
     //! slice. 
     //! 
-    //! \code
-    //! is_view_index<size_t,size_t,size_t>::value; //this would be false
-    //! is_view_index<size_t,size_t,slice>::value;  //this would be true
-    //! \endcode
+    /*!
+    \code
+    is_view_index<size_t,size_t,size_t>::value; //this would be false
+    is_view_index<size_t,size_t,slice>::value;  //this would be true
+    \endcode
+    !*/
     //! 
     //! \tparam ITYPES index types
     //!
@@ -142,13 +144,14 @@ namespace core{
     //! index. This is the case if the arguments are either of an unsigned 
     //! integer type or instances of slice.
     //!
-    //! \code
-    //! is_valid_index<size_t,size_t,slice>::value;  //would be true
-    //! is_valid_index<size_t,size_t,size_t>::value; //would be true
-    //! is_valid_index<slice,slice>::value;          //true either
-    //! is_valid_index<slice,string>::value;         //definitely false
-    //! \endcode
-    //! 
+    /*!
+    \code
+    is_valid_index<size_t,size_t,slice>::value;  //would be true
+    is_valid_index<size_t,size_t,size_t>::value; //would be true
+    is_valid_index<slice,slice>::value;          //true either
+    is_valid_index<slice,string>::value;         //definitely false
+    \endcode
+    !*/
     //! \tparam ITYPES index types
     //!
     template<typename ...ITYPES> 
@@ -186,19 +189,31 @@ namespace core{
     //! \ingroup mdim_array_internal_classes
     //! \brief check if view index
     //! 
-    //! This template checks 
+    //! Specialization of the is_view_cont template for std::vector.
+    //! 
+    //! \tparam T element type of the vector
+    //! 
     template<typename T> struct is_view_cont<std::vector<T>>
     {
-        //! true if CTYPE holds view information
+        //! true if T is a slice type, false otherwise 
         static const bool value = std::is_same<T,slice>::value;
     };
 
+    //------------------------------------------------------------------------
+    //! 
+    //! \ingroup mdim_array_internal_classes
+    //! \brief check if view index
+    //! 
+    //! Sepcialization of the is_view_cont tempalte for std::array. 
+    //! 
+    //! \tparam T element type of the array
+    //! \tparam N number of elements 
+    //! 
     template<typename T,size_t N> struct is_view_cont<std::array<T,N>>
     {
+        //! true if T is a slice type, false otherwise
         static const bool value = std::is_same<T,slice>::value;
     };
-
-
   
     //-------------------------------------------------------------------------
     //!
@@ -399,7 +414,6 @@ template<typename CTYPE>
         //! \tparam MAP index map type
         //! \tparam ITYPES index types
         //! \param c reference to the data container
-        //! \param map reference to the index map
         //! \param indexes variadic argument list
         //! \return array view on array
         //!
@@ -428,7 +442,6 @@ template<typename CTYPE>
         //! \tparam MAP index map type
         //! \tparam ITYPES index and slice types
         //! \param c reference to the data container
-        //! \param map reference to the index map
         //! \param indexes variadic argument list
         //! \return const array view
         //! 

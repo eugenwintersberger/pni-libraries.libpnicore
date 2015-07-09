@@ -99,15 +99,17 @@ namespace core{
             //!
             //! This can be used for implicit conversion which is sometimes 
             //! quite useful for the creation fo array views. 
-            //! \code 
-            //! mdarray<...>  a({10,100});
-            //!
-            //! //default construction of a view
-            //! auto v1 = a(slice(1,4),slice(50,100));
-            //!
-            //! //one can also use initializer lists
-            //! auto v2 = a({1,4},{50,100});
-            //! \endcode
+            /*!
+            \code 
+            mdarray<...>  a({10,100});
+            
+            //default construction of a view
+            auto v1 = a(slice(1,4),slice(50,100));
+            
+            //one can also use initializer lists
+            auto v2 = a({1,4},{50,100});
+            \endcode
+            !*/
             //! If the initializer list has only two elements they are treated 
             //! as first and last element of the slice and the stride is 
             //! set to 1.  In the case of a three element initializer list 

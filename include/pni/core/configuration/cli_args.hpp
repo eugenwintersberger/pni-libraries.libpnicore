@@ -45,18 +45,20 @@ namespace core{
     //! exception save container for custom built command line options that 
     //! are generated from a container of strings. The content of this string 
     //! is than presented in way that the program options class can parse it.
-    //! \code
-    //! std::list<std::string> strlist;
-    //!
-    //! ......code omitted .....
-    //!
-    //! cli_args args(strlist);
-    //! program_config config;
-    //!
-    //! ......setup of config is omitted ....
-    //!
-    //! config.parse(args.argc(),const_cast<char**>(args.argv()));
-    //! \endcode
+    /*!
+    \code
+    std::list<std::string> strlist;
+    
+    ......code omitted .....
+    
+    cli_args args(strlist);
+    program_config config;
+    
+    ......setup of config is omitted ....
+    
+    config.parse(args.argc(),const_cast<char**>(args.argv()));
+    \endcode
+    !*/
     //! Instances of cli_args are first class objects and do memory 
     //! management by themselfe. 
     //!

@@ -43,10 +43,11 @@ namespace core{
     //!
     //! To create an index map for a 3x3 matrix one could use something 
     //! like this
-    //! \code
-    //! typedef static_index_map<c_index_map_imp,3,3> c_matrix_map;
-    //! \endcode
-    //! 
+    /*!
+    \code
+    typedef static_index_map<c_index_map_imp,3,3> c_matrix_map;
+    \endcode
+    !*/
     //! This class has no special constructors as it is ready to use just be 
     //! using the default constructor. Unlike index_map this template 
     //! provides only const iterators (as its dimensions cannot be changed 
@@ -120,20 +121,20 @@ namespace core{
             //! 
             //! This method is used in the case where the index is passed as 
             //! an rvalue reference. 
-            //! 
-            //! \code
-            //! typedef static_index_map<...> static_map;
-            //! typedef std::vector<size_t>   index_t;
-            //! static_map map;
-            //!  
-            //! size_t offset = map.offset(index_t{1,2,3});
-            //! 
-            //! //or alternatively 
-            //! index_t index;
-            //! ....
-            //! offset = map.offset(std::move(index));
-            //! \endcode
-            //! 
+            /*! 
+            \code
+            typedef static_index_map<...> static_map;
+            typedef std::vector<size_t>   index_t;
+            static_map map;
+             
+            size_t offset = map.offset(index_t{1,2,3});
+            
+            //or alternatively 
+            index_t index;
+            ....
+            offset = map.offset(std::move(index));
+            \endcode
+            !*/ 
             //! \tparam CTYPE container type for index data
             //! \param index instance of CTYPE with container data
             //! \return linear offset
@@ -183,15 +184,15 @@ namespace core{
             //! Compute the index that belongs to a particular linear offset. 
             //! The index can be stored in any STL compliant container type
             //! determined by the template parameter CTYPE. 
-            //! 
-            //! \code
-            //! typedef ... static_map;
-            //! typedef std::vector<size_t> index_type;
-            //!   
-            //! static_map map;
-            //! auto index = map.index<index_type>(100);
-            //! \endcode
-            //! 
+            /*! 
+            \code
+            typedef ... static_map;
+            typedef std::vector<size_t> index_type;
+              
+            static_map map;
+            auto index = map.index<index_type>(100);
+            \endcode
+            !*/
             //! \tparam CTYPE index container type
             //! \param offset linear offset
             //! \return CTYPE instance with index values

@@ -41,6 +41,7 @@ namespace core{
     //!
     template<typename T> struct is_integer_type
     {
+        //! true if T is an integer, false otherwise
         static const bool value = boost::mpl::contains<integer_types,T>::value;
     };
 
@@ -56,6 +57,7 @@ namespace core{
     //!
     template<typename T> struct is_float_type
     {
+        //! true if T is a floating point type, false otherwise
         static const bool value = boost::mpl::contains<float_types,T>::value;
     };
 
@@ -71,6 +73,7 @@ namespace core{
     //!
     template<typename T> struct is_complex_type
     {
+        //! true if T is a complex type, false otherwise 
         static const bool value = boost::mpl::contains<complex_types,T>::value;
     };
 
@@ -87,6 +90,7 @@ namespace core{
     //!
     template<typename T> struct is_numeric_type
     {
+        //! true if T is a numeric type, false otherwise
         static const bool value = boost::mpl::contains<numeric_types,T>::value;
     };
 
@@ -103,6 +107,7 @@ namespace core{
     //! 
     template<typename T> struct is_non_numeric_type
     {
+        //! true if T is not a numeric type, false otherwise 
         static const bool value =
             boost::mpl::contains<non_numeric_types,T>::value;
     };
@@ -119,6 +124,7 @@ namespace core{
     //!
     template<typename T> struct is_primitive_type
     {
+        //! true if T is a primitive type, false otherwise 
         static const bool value =  
             boost::mpl::contains<primitive_types,T>::value;
     };
