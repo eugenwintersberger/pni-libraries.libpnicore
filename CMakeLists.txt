@@ -20,7 +20,13 @@ set(MAJOR_VERSION "1")
 set(MINOR_VERSION "0")
 set(PATCH_VERSION "0")
 set(LIBRARY_VERSION "${MAJOR_VERSION}.${MINOR_VERSION}.${PATCH_VERSION}")
-set(SO_VERSION "2")
+
+#as libpnicore is in most part a template library and should thus be 
+#treated like a static library. In most cases all code using 
+#libpnicore has to be rebuilt if something in the headers is changed.
+#we thus set the SO version to the package version. This is also 
+#the way the boost libraries are packaged.
+set(SO_VERSION ${LIBRARY_VERSION})
 
 include_directories("./include")
 
