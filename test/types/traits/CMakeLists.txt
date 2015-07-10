@@ -18,7 +18,7 @@ set(SOURCES traits_test.cpp
 
 
 link_directories("${CMAKE_CURRENT_BINARY_DIR}/../../src")
-add_executable(traits_test ${SOURCES})
+add_executable(traits_test EXCLUDE_FROM_ALL ${SOURCES})
 target_link_libraries(traits_test pnicore ${CPPUNIT_LIBRARIES})
 
 

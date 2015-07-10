@@ -15,7 +15,7 @@ set(SOURCES array_selection_test.cpp
 
 enable_testing()
 link_directories("${CMAKE_CURRENT_BINARY_DIR}/../../src")
-add_executable(arrays_test ${SOURCES} $<TARGET_OBJECTS:test_common>)
+add_executable(arrays_test EXCLUDE_FROM_ALL ${SOURCES} $<TARGET_OBJECTS:test_common>)
 target_link_libraries(arrays_test pnicore)
 
 if(CPPUNIT_FOUND)

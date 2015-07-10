@@ -25,7 +25,7 @@ set(SOURCES conversion_test.cpp
 
 
 link_directories("${CMAKE_CURRENT_BINARY_DIR}/../../src")
-add_executable(conversion_test ${SOURCES})
+add_executable(conversion_test EXCLUDE_FROM_ALL ${SOURCES})
 target_link_libraries(conversion_test pnicore ${CPPUNIT_LIBRARIES})
 
 

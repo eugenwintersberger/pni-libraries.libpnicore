@@ -5,7 +5,7 @@ set(SOURCES index_maps_test.cpp
 
 
 link_directories("${CMAKE_CURRENT_BINARY_DIR}/../../src")
-add_executable(index_maps_test ${SOURCES})
+add_executable(index_maps_test EXCLUDE_FROM_ALL ${SOURCES})
 target_link_libraries(index_maps_test pnicore)
 
 if(CPPUNIT_FOUND)

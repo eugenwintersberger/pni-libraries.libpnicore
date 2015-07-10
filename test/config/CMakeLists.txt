@@ -3,7 +3,7 @@ set(SOURCES config_test.cpp configuration_test.cpp)
 
 
 link_directories("${CMAKE_CURRENT_BINARY_DIR}/../../src")
-add_executable(config_test ${SOURCES} $<TARGET_OBJECTS:test_common>)
+add_executable(config_test EXCLUDE_FROM_ALL ${SOURCES} $<TARGET_OBJECTS:test_common>)
 
 target_link_libraries(config_test pnicore)
 
@@ -16,13 +16,8 @@ if(CPPUNIT_FOUND)
 
 endif()
 
-if("${CMAKE_FAMILY_VERSION}" EQUAL "2.6")
-    configure_file(pni.cfg.cmake ./test/config/pni.cfg)
-else()
-    configure_file(pni.cfg.cmake pni.cfg)
-endif()
+configure_file(pni.cfg.cmake pni.cfg)
 
-message(${CMAKE_CURRENT_BINARY_DIR})
 add_test(NAME config_test 
          COMMAND config_test
          WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/../

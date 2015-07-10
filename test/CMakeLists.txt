@@ -1,18 +1,13 @@
 
-#need to define the version of the library
-set(TEST_SOURCES 
-                 vector_adapter_test.cpp
-                 )
-
+#build some commonly used code
 set(COMMON_SOURCES compare.cpp)
-add_library(test_common OBJECT ${COMMON_SOURCES})
+add_library(test_common EXCLUDE_FROM_ALL OBJECT ${COMMON_SOURCES})
 
-add_executable(rand_test "rand_test.cpp")
+add_executable(rand_test EXCLUDE_FROM_ALL "rand_test.cpp")
 target_link_libraries(rand_test pnicore)
 add_test(rand_test rand_test)
 
 add_subdirectory(index_maps)
-#add_subdirectory(dim_layout_test)
 add_subdirectory(types)
 add_subdirectory(arrays)
 add_subdirectory(utils_test)
@@ -20,5 +15,11 @@ add_subdirectory(type_erasures)
 add_subdirectory(config)
 add_subdirectory(math)
 add_subdirectory(error)
+
+add_custom_target(build-test
+                  DEPENDS arrays_test config_test error_test
+                          index_maps_test math_test array_test
+                          value_ref_test value_test conversion_test
+                          type_test traits_test utils_test rand_test)
 
 

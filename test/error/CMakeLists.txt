@@ -6,7 +6,7 @@ set(SOURCES error_test.cpp check_equal_size_test.cpp
 
 
 link_directories("${CMAKE_CURRENT_BINARY_DIR}/../../src")
-add_executable(error_test ${SOURCES} $<TARGET_OBJECTS:test_common>)
+add_executable(error_test EXCLUDE_FROM_ALL ${SOURCES} $<TARGET_OBJECTS:test_common>)
 
 target_link_libraries(error_test pnicore)
 

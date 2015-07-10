@@ -14,7 +14,7 @@ set(SOURCES binary_test.cpp
 
 
 link_directories("${CMAKE_CURRENT_BINARY_DIR}/../../src")
-add_executable(type_test ${SOURCES})
+add_executable(type_test EXCLUDE_FROM_ALL ${SOURCES})
 target_link_libraries(type_test pnicore)
 
 if(CPPUNIT_FOUND)
