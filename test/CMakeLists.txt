@@ -22,4 +22,11 @@ add_custom_target(build-test
                           value_ref_test value_test conversion_test
                           type_test traits_test utils_test rand_test)
 
+#emulating the GNU 'check' target for make
+add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND})
+add_dependencies(check arrays_test config_test error_test
+                          index_maps_test math_test array_test
+                          value_ref_test value_test conversion_test
+                          type_test traits_test utils_test rand_test)
+
 
