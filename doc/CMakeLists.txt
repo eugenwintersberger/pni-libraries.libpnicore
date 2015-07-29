@@ -6,7 +6,7 @@ set(HDR_DIR ../include/pni/core)
 
 if(DOXYGEN_FOUND)
     configure_file(Doxyfile.cmake ./Doxyfile @ONLY)
-    configure_file(mainpage.cmake mainpage @ONLY)
+    configure_file(mainpage.dox.cmake mainpage.dox @ONLY)
 
     #--------------------------run doxygen------------------------------------
     add_custom_command(OUTPUT html COMMAND ${DOXYGEN_EXECUTABLE} Doxyfile)

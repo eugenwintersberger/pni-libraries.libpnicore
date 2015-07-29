@@ -1,5 +1,4 @@
 
-NO_API_DOC           = YES
 PROJECT_NAME           = @CMAKE_PROJECT_NAME@
 PROJECT_NUMBER         =
 OUTPUT_DIRECTORY       = .
@@ -49,7 +48,6 @@ GENERATE_BUGLIST       = YES
 GENERATE_DEPRECATEDLIST= YES
 MAX_INITIALIZER_LINES  = 30
 SHOW_USED_FILES        = YES
-SHOW_DIRECTORIES       = NO
 
 #---------------------------------------------------------------------------
 # configuration options related to warning and progress messages
@@ -64,7 +62,7 @@ WARN_NO_PARAMDOC       = YES
 #---------------------------------------------------------------------------
 # configuration options related to the input files
 #---------------------------------------------------------------------------
-INPUT                  = @CMAKE_CURRENT_SOURCE_DIR@/../include ../include/ @CMAKE_CURRENT_SOURCE_DIR@/examples/ mainpage 
+INPUT                  = @CMAKE_CURRENT_SOURCE_DIR@/../include ../include/ @CMAKE_CURRENT_SOURCE_DIR@/examples/ mainpage.dox
 RECURSIVE              = YES
 EXCLUDE_SYMLINKS       = NO
 EXAMPLE_PATH           = examples
@@ -103,8 +101,6 @@ HTML_FILE_EXTENSION    = .html
 HTML_HEADER            =
 HTML_FOOTER            =
 HTML_STYLESHEET        =
-HTML_ALIGN_MEMBERS     = YES
-GENERATE_TREEVIEW = YES
 GENERATE_HTMLHELP      = YES
 CHM_FILE               =@CMAKE_PROJECT_NAME@.chm 
 HHC_LOCATION           =
@@ -113,9 +109,8 @@ BINARY_TOC             = NO
 TOC_EXPAND             = NO
 DISABLE_INDEX          = NO
 ENUM_VALUES_PER_LINE   = 4
-GENERATE_TREEVIEW      = YES
 TREEVIEW_WIDTH         = 250
-SEARCHENGINE           = YES
+SEARCHENGINE           = NO
 
 #---------------------------------------------------------------------------
 # Configuration options related to the preprocessor
@@ -170,7 +165,6 @@ GENERATE_LATEX = NO
 
 DOXYFILE_ENCODING      = UTF-8
 TYPEDEF_HIDES_STRUCT   = NO
-SYMBOL_CACHE_SIZE      = 0
 EXTRACT_ANON_NSPACES   = NO
 FORCE_LOCAL_INCLUDES   = NO
 SORT_MEMBERS_CTORS_1ST = NO
@@ -189,7 +183,6 @@ DOCSET_BUNDLE_ID       = org.doxygen.@CMAKE_PROJECT_NAME@-@LIBRARY_VERSION@
 DOCSET_PUBLISHER_ID    = org.doxygen.DESY
 DOCSET_PUBLISHER_NAME  = DESY                      
 GENERATE_QHP           = NO
-USE_INLINE_TREES       = YES
 EXT_LINKS_IN_WINDOW    = NO
 FORMULA_FONTSIZE       = 10
 FORMULA_TRANSPARENT    = YES
@@ -197,7 +190,6 @@ SERVER_BASED_SEARCH    = NO
 LATEX_SOURCE_CODE      = NO
 MSCGEN_PATH            =
 DOT_NUM_THREADS        = 0
-DOT_FONTNAME           = FreeSans.ttf
 DOT_FONTSIZE           = 10
 DOT_FONTPATH           =
 DOT_GRAPH_MAX_NODES    = 50
