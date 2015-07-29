@@ -26,7 +26,7 @@ foreach(EXAMPLE ${EXAMPLES})
 endforeach()
 
 install(FILES ${EXAMPLES} 
-        DESTINATION ${CMAKE_INSTALL_FULL_DOCDIR}/examples
+    DESTINATION "${CMAKE_INSTALL_FULL_DOCDIR}${LIBRARY_VERSION}-doc/examples"
         OPTIONAL
         COMPONENT doc_examples
         )

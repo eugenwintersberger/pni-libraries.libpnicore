@@ -14,7 +14,7 @@ if(DOXYGEN_FOUND)
 
     #------------------install the HTML documentation-------------------------
     install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/html"
-            DESTINATION "${CMAKE_INSTALL_FULL_DOCDIR}"
+            DESTINATION "${CMAKE_INSTALL_FULL_DOCDIR}${LIBRARY_VERSION}-doc"
             OPTIONAL
             COMPONENT doc_html)
 
