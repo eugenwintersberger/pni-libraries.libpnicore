@@ -55,7 +55,10 @@ include(configure/CheckTypeSizes.txt)
 set(Boost_USE_STATIC_LIBS OFF)
 set(Boost_USE_MULTITHREADED OFF)
 set(Boost_USE_STATIC_RUNTIME OFF)
-find_package(Boost 1.41 COMPONENTS program_options system regex)
+find_package(Boost 1.41 COMPONENTS program_options 
+                                   system 
+                                   regex 
+                                   unit_test_framework)
 
 if(PKG_CONFIG_FOUND)
     pkg_search_module(CPPUNIT REQUIRED cppunit)

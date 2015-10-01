@@ -21,82 +21,80 @@
 //  Created on: Dec 27, 2012
 //      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
 //
+#define BOOST_TEST_DYN_LINK
+#define BOOST_TEST_MODULE test configuration components
 
-#include<cppunit/extensions/HelperMacros.h>
-#include<boost/current_function.hpp>
+#include <boost/test/unit_test.hpp>
+#include <boost/current_function.hpp>
 
 #include <vector>
 #include <list>
 
 #include <pni/core/configuration/config_parser.hpp>
 #include <pni/core/configuration/cli_args.hpp>
-#include "configuration_test.hpp"
 
-CPPUNIT_TEST_SUITE_REGISTRATION(configuration_test);
+using namespace pni::core;
 
-//-----------------------------------------------------------------------------
-void configuration_test::setUp()
+struct configuration_test_fixture
 {
-    conf_file.add_option(config_option<size_t>("pnicore.nthreads","",
-                         "number of threads"));
+    configuration config_file;
+    configuration config_cli;
 
-    conf_cli.add_option(config_option<size_t>("nthreads","n","number of threads",3));
-    conf_cli.add_option(config_option<std::vector<size_t>>("nruns","r","number of runs"));
-}
+    configuration_test_fixture()
+    {
+        config_file.add_option(config_option<size_t>("pnicore.nthreads","",
+                               "number of threads"));
+
+        config_cli.add_option(config_option<size_t>("nthreads","n",
+                                                    "number of threads",3));
+        config_cli.add_option(config_option<std::vector<size_t>>("nruns","r","number of runs"));
+    }
+    
+};
+
+BOOST_FIXTURE_TEST_SUITE(configuration_test,configuration_test_fixture)
+
 
 //-----------------------------------------------------------------------------
-void configuration_test::tearDown()
-{
-
-
-}
-
-//-----------------------------------------------------------------------------
-void configuration_test::test_configfile()
+BOOST_AUTO_TEST_CASE(test_configfile)
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
-    parse(conf_file,"config/pni.cfg");
-    CPPUNIT_ASSERT(conf_file.value<size_t>("pnicore.nthreads")==4);
+    parse(config_file,"config/pni.cfg");
+    BOOST_CHECK_EQUAL((config_file.value<size_t>("pnicore.nthreads")),4);
 
-    configuration c = std::move(conf_file);
-    CPPUNIT_ASSERT(c.value<size_t>("pnicore.nthreads")==4);
+    configuration c = std::move(config_file);
+    BOOST_CHECK_EQUAL((c.value<size_t>("pnicore.nthreads")),4);
 
 }
 
 //-----------------------------------------------------------------------------
-void configuration_test::test_configcli()
+BOOST_AUTO_TEST_CASE(test_configcli)
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
     std::vector<string> args{"-n4","-r1","-r4","-r10"};
 
-    parse(conf_cli,args);
-    std::cout<<conf_cli<<std::endl;
+    parse(config_cli,args);
 
-    CPPUNIT_ASSERT(conf_cli.value<size_t>("nthreads")==4);
+    BOOST_CHECK_EQUAL(config_cli.value<size_t>("nthreads"),4);
 
-    auto o = conf_cli.value<std::vector<size_t>>("nruns");
-    CPPUNIT_ASSERT(o.size() == 3);
-    CPPUNIT_ASSERT(o[0] == 1);
-    CPPUNIT_ASSERT(o[1] == 4);
-    CPPUNIT_ASSERT(o[2] == 10);
+    auto o = config_cli.value<std::vector<size_t>>("nruns");
+    BOOST_CHECK_EQUAL(o.size(),3);
+    BOOST_CHECK_EQUAL(o[0],1);
+    BOOST_CHECK_EQUAL(o[1],4);
+    BOOST_CHECK_EQUAL(o[2],10);
 
     configuration conf;
-    CPPUNIT_ASSERT_THROW(
+    BOOST_CHECK_THROW(
     conf.add_option(config_option<std::vector<string>>("names","n",
                 "user names",std::vector<string>{})),
     index_error);
 
-    CPPUNIT_ASSERT_NO_THROW(
+    BOOST_CHECK_NO_THROW(
     conf.add_option(config_option<std::vector<string>>("names","n",
             "user names",std::vector<string>{"me"})));
 
 }
 
-//-----------------------------------------------------------------------------
-void configuration_test::test_libconfig()
-{
-    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+BOOST_AUTO_TEST_SUITE_END()
 
-    //CPPUNIT_ASSERT(pnicore_config.n_arithmetic_threads() == 4);
-}
