@@ -22,59 +22,62 @@
 //      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
 //
 
-#include<cppunit/extensions/HelperMacros.h>
-#include<boost/current_function.hpp>
-
+#include <boost/test/unit_test.hpp>
+#include <boost/current_function.hpp>
+#include <pni/core/error/exception_utils.hpp>
 #include <vector>
 #include <list>
+#include "types.hpp"
 
-#include "check_equal_size_test.hpp"
+using namespace pni::core;
 
-CPPUNIT_TEST_SUITE_REGISTRATION(check_equal_size_test);
+struct check_equal_size_test_fixture
+{
+    vector_type std_vector;
+    list_type   std_list;
+    array_type  std_array;
+    fixed_dim_array<size_t,2> fdarray_1;
+    fixed_dim_array<size_t,1> fdarray_2;
+    static_array<size_t,2,5>  sarray_1;
+    dynamic_array<size_t>     darray_1;
+    dynamic_array<float64>    darray_2;
+
+    check_equal_size_test_fixture()
+    {}
+};
+
+
+BOOST_FIXTURE_TEST_SUITE(check_equal_size_test,check_equal_size_test_fixture)
 
 //-----------------------------------------------------------------------------
-void check_equal_size_test::setUp()
+BOOST_AUTO_TEST_CASE(test_no_throw)
 {
-    
-}
-
-//-----------------------------------------------------------------------------
-void check_equal_size_test::tearDown()
-{
-}
-
-//-----------------------------------------------------------------------------
-void check_equal_size_test::test_no_throw()
-{
-    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
-    
     std_vector = vector_type(10);
 
-    CPPUNIT_ASSERT(check_equal_size(std_vector,std_array));
-    CPPUNIT_ASSERT(check_equal_size(std_vector,sarray_1));
+    BOOST_CHECK(check_equal_size(std_vector,std_array));
+    BOOST_CHECK(check_equal_size(std_vector,sarray_1));
 
     fdarray_1 = fixed_dim_array<size_t,2>::create(shape_t{4,10});
-    CPPUNIT_ASSERT(!check_equal_size(fdarray_1,std_vector));
-    CPPUNIT_ASSERT(!check_equal_size(fdarray_1,sarray_1));
+    BOOST_CHECK(!check_equal_size(fdarray_1,std_vector));
+    BOOST_CHECK(!check_equal_size(fdarray_1,sarray_1));
 
     vector_type v1,v2;
-    CPPUNIT_ASSERT(check_equal_size(v1,v2));
+    BOOST_CHECK(check_equal_size(v1,v2));
 
 }
 
 //-----------------------------------------------------------------------------
-void check_equal_size_test::test_throw()
+BOOST_AUTO_TEST_CASE(test_throw)
 {
-    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
-
     std_vector = vector_type(100);
 
-    CPPUNIT_ASSERT_THROW(check_equal_size(std_vector,std_array,EXCEPTION_RECORD)
+    BOOST_CHECK_THROW(check_equal_size(std_vector,std_array,EXCEPTION_RECORD)
                          ,size_mismatch_error);
-    CPPUNIT_ASSERT_THROW(check_equal_size(sarray_1,std_vector,EXCEPTION_RECORD),
+    BOOST_CHECK_THROW(check_equal_size(sarray_1,std_vector,EXCEPTION_RECORD),
                          size_mismatch_error);
 
     vector_type v1,v2;
-    CPPUNIT_ASSERT_NO_THROW(check_equal_size(v1,v2));
+    BOOST_CHECK_NO_THROW(check_equal_size(v1,v2));
 }
 
+BOOST_AUTO_TEST_SUITE_END()

@@ -22,65 +22,62 @@
 //      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
 //
 
-#include<cppunit/extensions/HelperMacros.h>
-#include<boost/current_function.hpp>
-
+#include <boost/test/unit_test.hpp>
+#include <boost/current_function.hpp>
 #include <vector>
 #include <list>
+#include <pni/core/error/exception_utils.hpp>
+#include "types.hpp"
 
-#include "check_equal_shape_test.hpp"
+using namespace pni::core;
 
-CPPUNIT_TEST_SUITE_REGISTRATION(check_equal_shape_test);
+struct check_equal_shape_test_fixture
+{
+    vector_type                std_vector;
+    dynamic_array<float64>     darray_1;
+    dynamic_array<uint16>      darray_2;
+    fixed_dim_array<uint32,2>  farray_1;
+    static_array<size_t,4,4,5> sarray_1;
+
+    check_equal_shape_test_fixture():
+        darray_1(dynamic_array<float64>::create(shape_t{2,3})),
+        darray_2(dynamic_array<uint16>::create(shape_t{3,2})),
+        farray_1(fixed_dim_array<uint32,2>::create(shape_t{2,3}))
+    {}
+};
+
+
+BOOST_FIXTURE_TEST_SUITE(check_equal_shape_test,check_equal_shape_test_fixture)
 
 //-----------------------------------------------------------------------------
-void check_equal_shape_test::setUp()
+BOOST_AUTO_TEST_CASE(test_no_throw)
 {
-    darray_1 = dynamic_array<float64>::create(shape_t{2,3});
-    darray_2 = dynamic_array<uint16>::create(shape_t{3,2});
-    farray_1 = fixed_dim_array<uint32,2>::create(shape_t{2,3});
+    BOOST_CHECK(check_equal_shape(darray_1,farray_1));
+    BOOST_CHECK(!check_equal_shape(darray_1,darray_2));
+    BOOST_CHECK(!check_equal_shape(darray_1,sarray_1));
+
 }
 
 //-----------------------------------------------------------------------------
-void check_equal_shape_test::tearDown()
+BOOST_AUTO_TEST_CASE(test_throw)
 {
-}
-
-//-----------------------------------------------------------------------------
-void check_equal_shape_test::test_no_throw()
-{
-    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
-   
-    CPPUNIT_ASSERT(check_equal_shape(darray_1,farray_1));
-    CPPUNIT_ASSERT(!check_equal_shape(darray_1,darray_2));
-    CPPUNIT_ASSERT(!check_equal_shape(darray_1,sarray_1));
-
-}
-
-//-----------------------------------------------------------------------------
-void check_equal_shape_test::test_throw()
-{
-    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
-
-    CPPUNIT_ASSERT_NO_THROW(check_equal_shape(darray_1,farray_1,EXCEPTION_RECORD));
-    CPPUNIT_ASSERT_THROW(check_equal_shape(darray_1,darray_2,EXCEPTION_RECORD),
+    BOOST_CHECK_NO_THROW(check_equal_shape(darray_1,farray_1,EXCEPTION_RECORD));
+    BOOST_CHECK_THROW(check_equal_shape(darray_1,darray_2,EXCEPTION_RECORD),
                          shape_mismatch_error);
-    CPPUNIT_ASSERT_THROW(check_equal_shape(darray_1,sarray_1,EXCEPTION_RECORD),
+    BOOST_CHECK_THROW(check_equal_shape(darray_1,sarray_1,EXCEPTION_RECORD),
                          size_mismatch_error);
 
 }
 
 //-----------------------------------------------------------------------------
-void check_equal_shape_test::test_invalid_input()
+BOOST_AUTO_TEST_CASE(test_invalid_input)
 {
-    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
-    
     dynamic_array<float64> d1,d2;
 
-    CPPUNIT_ASSERT(check_equal_shape(d1,d2));
-    CPPUNIT_ASSERT_THROW(check_equal_shape(d1,darray_1,EXCEPTION_RECORD),
-                         size_mismatch_error);
-
-
-    
+    BOOST_CHECK(check_equal_shape(d1,d2));
+    BOOST_CHECK_THROW(check_equal_shape(d1,darray_1,EXCEPTION_RECORD),
+                      size_mismatch_error);
 }
+
+BOOST_AUTO_TEST_SUITE_END()
 

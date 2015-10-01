@@ -21,40 +21,5 @@
 //  Created on: Apr 7, 2014
 //      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
 //
-#include<iostream>
-#include<fstream>
-#include<string>
-#include<vector>
-
-#include<cppunit/extensions/HelperMacros.h>
-#include<cppunit/TestCaller.h>
-#include<cppunit/TestResult.h>
-#include<cppunit/TestRunner.h>
-#include<cppunit/XmlOutputter.h>
-#include<cppunit/TextTestProgressListener.h>
-#include<cppunit/ui/text/TextTestRunner.h>
-#include<cppunit/extensions/TestFactoryRegistry.h>
-
-#include<cppunit/ui/qt/TestRunner.h>
-
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-parameter"
-int main(int argc,char **argv)
-{
-    //setup the test runner
-    CppUnit::TextTestRunner runner;
-    CppUnit::TextTestProgressListener progress;
-    CppUnit::TestFactoryRegistry &registry = CppUnit::TestFactoryRegistry::getRegistry();
-    
-    runner.addTest(registry.makeTest());
-    runner.eventManager().addListener(&progress);
-
-    std::ofstream os("error_test.xml");
-    runner.setOutputter(new CppUnit::XmlOutputter(&runner.result(),os));
-    
-    bool result = runner.run();
-
-    return result ? 0 : 1;
-}
-#pragma GCC diagnostic pop
-
+#define BOOST_TEST_DYN_LINK
+#define BOOST_TEST_MODULE testing simple error utility code

@@ -21,52 +21,37 @@
 //  Created on: Apr 8, 2014
 //      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
 //
-
-#include<cppunit/extensions/HelperMacros.h>
-#include<boost/current_function.hpp>
-
+#include <boost/test/unit_test.hpp>
+#include <boost/current_function.hpp>
+#include <pni/core/error/exception_utils.hpp>
 #include <vector>
 #include <list>
+#include "types.hpp"
 
-#include "check_index_in_dim_test.hpp"
+using namespace pni::core;
 
-CPPUNIT_TEST_SUITE_REGISTRATION(check_index_in_dim_test);
+BOOST_AUTO_TEST_SUITE(check_index_in_dim_test)
 
 //-----------------------------------------------------------------------------
-void check_index_in_dim_test::setUp()
+BOOST_AUTO_TEST_CASE(test_no_throw)
 {
-    
+    BOOST_CHECK(check_index_in_dim(0,100));
+    BOOST_CHECK(check_index_in_dim(10,100));
+    BOOST_CHECK(check_index_in_dim(99,100));
+    BOOST_CHECK(!check_index_in_dim(100,100));
+    BOOST_CHECK(!check_index_in_dim(101,100));
 }
 
 //-----------------------------------------------------------------------------
-void check_index_in_dim_test::tearDown()
+BOOST_AUTO_TEST_CASE(test_throw)
 {
-}
-
-//-----------------------------------------------------------------------------
-void check_index_in_dim_test::test_no_throw()
-{
-    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
-    
-    CPPUNIT_ASSERT(check_index_in_dim(0,100));
-    CPPUNIT_ASSERT(check_index_in_dim(10,100));
-    CPPUNIT_ASSERT(check_index_in_dim(99,100));
-    CPPUNIT_ASSERT(!check_index_in_dim(100,100));
-    CPPUNIT_ASSERT(!check_index_in_dim(101,100));
-
-}
-
-//-----------------------------------------------------------------------------
-void check_index_in_dim_test::test_throw()
-{
-    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
-
-    CPPUNIT_ASSERT_NO_THROW(check_index_in_dim(0,100,EXCEPTION_RECORD));
-    CPPUNIT_ASSERT_NO_THROW(check_index_in_dim(10,100,EXCEPTION_RECORD));
-    CPPUNIT_ASSERT_NO_THROW(check_index_in_dim(99,100,EXCEPTION_RECORD));
-    CPPUNIT_ASSERT_THROW(check_index_in_dim(100,100,EXCEPTION_RECORD),
+    BOOST_CHECK_NO_THROW(check_index_in_dim(0,100,EXCEPTION_RECORD));
+    BOOST_CHECK_NO_THROW(check_index_in_dim(10,100,EXCEPTION_RECORD));
+    BOOST_CHECK_NO_THROW(check_index_in_dim(99,100,EXCEPTION_RECORD));
+    BOOST_CHECK_THROW(check_index_in_dim(100,100,EXCEPTION_RECORD),
                          index_error);
-    CPPUNIT_ASSERT_THROW(check_index_in_dim(101,100,EXCEPTION_RECORD),
+    BOOST_CHECK_THROW(check_index_in_dim(101,100,EXCEPTION_RECORD),
                          index_error);
 }
 
+BOOST_AUTO_TEST_SUITE_END()

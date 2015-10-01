@@ -22,108 +22,107 @@
 //      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
 //
 
-#include<cppunit/extensions/HelperMacros.h>
-#include<boost/current_function.hpp>
-
+#include <boost/test/unit_test.hpp>
+#include <boost/current_function.hpp>
+#include <pni/core/error/exception_utils.hpp>
 #include <vector>
 #include <list>
+#include "types.hpp"
 
-#include "check_indexes_test.hpp"
+using namespace pni::core;
 
-CPPUNIT_TEST_SUITE_REGISTRATION(check_indexes_test);
+struct check_indexes_test_fixture
+{
+    vector_type std_vector;
+    std::array<size_t,1> index_1;
+    std::array<size_t,2> index_2;
+    std::array<size_t,3> index_3;
+
+    check_indexes_test_fixture():
+        index_1({{4}}),
+        index_2({{5,3}}),
+        index_3({{7,3,10}})
+    {}
+};
+
+
+BOOST_FIXTURE_TEST_SUITE(check_indexes_test,check_indexes_test_fixture)
+
 
 //-----------------------------------------------------------------------------
-void check_indexes_test::setUp()
+BOOST_AUTO_TEST_CASE(test_no_throw)
 {
-    index_1 = {{4}};
-    index_2 = {{5,3}};
-    index_3 = {{7,3,10}};
-}
-
-//-----------------------------------------------------------------------------
-void check_indexes_test::tearDown()
-{
-}
-
-//-----------------------------------------------------------------------------
-void check_indexes_test::test_no_throw()
-{
-    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
-   
     //check 1D case
-    CPPUNIT_ASSERT(check_indexes(vector_type{0},index_1));
-    CPPUNIT_ASSERT(check_indexes(vector_type{3},index_1));
-    CPPUNIT_ASSERT(!check_indexes(vector_type{4},index_1));
-    CPPUNIT_ASSERT(!check_indexes(vector_type{10},index_1));
+    BOOST_CHECK(check_indexes(vector_type{0},index_1));
+    BOOST_CHECK(check_indexes(vector_type{3},index_1));
+    BOOST_CHECK(!check_indexes(vector_type{4},index_1));
+    BOOST_CHECK(!check_indexes(vector_type{10},index_1));
 
     // check 2D case
-    CPPUNIT_ASSERT(check_indexes(vector_type{2,1},index_2));
-    CPPUNIT_ASSERT(check_indexes(vector_type{4,2},index_2));
-    CPPUNIT_ASSERT(!check_indexes(vector_type{10,10},index_2));
-    CPPUNIT_ASSERT(!check_indexes(vector_type{10,2},index_2));
-    CPPUNIT_ASSERT(!check_indexes(vector_type{3,5},index_2));
+    BOOST_CHECK(check_indexes(vector_type{2,1},index_2));
+    BOOST_CHECK(check_indexes(vector_type{4,2},index_2));
+    BOOST_CHECK(!check_indexes(vector_type{10,10},index_2));
+    BOOST_CHECK(!check_indexes(vector_type{10,2},index_2));
+    BOOST_CHECK(!check_indexes(vector_type{3,5},index_2));
 
     // check the 3D case
-    CPPUNIT_ASSERT(check_indexes(vector_type{0,0,0},index_3));
-    CPPUNIT_ASSERT(!check_indexes(vector_type{7,0,0},index_3));
-    CPPUNIT_ASSERT(!check_indexes(vector_type{0,3,0},index_3));
-    CPPUNIT_ASSERT(!check_indexes(vector_type{0,0,10},index_3));
+    BOOST_CHECK(check_indexes(vector_type{0,0,0},index_3));
+    BOOST_CHECK(!check_indexes(vector_type{7,0,0},index_3));
+    BOOST_CHECK(!check_indexes(vector_type{0,3,0},index_3));
+    BOOST_CHECK(!check_indexes(vector_type{0,0,10},index_3));
 
     // check different ranks
-    CPPUNIT_ASSERT(!check_indexes(vector_type{2},index_3));
-    CPPUNIT_ASSERT(!check_indexes(vector_type{3,2},index_1));
+    BOOST_CHECK(!check_indexes(vector_type{2},index_3));
+    BOOST_CHECK(!check_indexes(vector_type{3,2},index_1));
 
 }
 
 //-----------------------------------------------------------------------------
-void check_indexes_test::test_throw()
+BOOST_AUTO_TEST_CASE(test_throw)
 {
-    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
-
     //check 1D case
-    CPPUNIT_ASSERT_NO_THROW(check_indexes(vector_type{0},index_1,EXCEPTION_RECORD));
-    CPPUNIT_ASSERT_NO_THROW(check_indexes(vector_type{3},index_1,EXCEPTION_RECORD));
-    CPPUNIT_ASSERT_THROW(check_indexes(vector_type{4},index_1,EXCEPTION_RECORD),
+    BOOST_CHECK_NO_THROW(check_indexes(vector_type{0},index_1,EXCEPTION_RECORD));
+    BOOST_CHECK_NO_THROW(check_indexes(vector_type{3},index_1,EXCEPTION_RECORD));
+    BOOST_CHECK_THROW(check_indexes(vector_type{4},index_1,EXCEPTION_RECORD),
                          index_error);
-    CPPUNIT_ASSERT_THROW(check_indexes(vector_type{10},index_1,EXCEPTION_RECORD),
+    BOOST_CHECK_THROW(check_indexes(vector_type{10},index_1,EXCEPTION_RECORD),
                          index_error);
 
     // check 2D case
-    CPPUNIT_ASSERT_NO_THROW(check_indexes(vector_type{2,1},index_2,EXCEPTION_RECORD));
-    CPPUNIT_ASSERT_NO_THROW(check_indexes(vector_type{4,2},index_2,EXCEPTION_RECORD));
-    CPPUNIT_ASSERT_THROW(check_indexes(vector_type{10,10},index_2,EXCEPTION_RECORD),
+    BOOST_CHECK_NO_THROW(check_indexes(vector_type{2,1},index_2,EXCEPTION_RECORD));
+    BOOST_CHECK_NO_THROW(check_indexes(vector_type{4,2},index_2,EXCEPTION_RECORD));
+    BOOST_CHECK_THROW(check_indexes(vector_type{10,10},index_2,EXCEPTION_RECORD),
                          index_error);
-    CPPUNIT_ASSERT_THROW(check_indexes(vector_type{10,2},index_2,EXCEPTION_RECORD),
+    BOOST_CHECK_THROW(check_indexes(vector_type{10,2},index_2,EXCEPTION_RECORD),
                          index_error);
-    CPPUNIT_ASSERT_THROW(check_indexes(vector_type{3,5},index_2,EXCEPTION_RECORD),
+    BOOST_CHECK_THROW(check_indexes(vector_type{3,5},index_2,EXCEPTION_RECORD),
                          index_error);
     
     // check the 3D case
-    CPPUNIT_ASSERT_NO_THROW(check_indexes(vector_type{0,0,0},index_3,EXCEPTION_RECORD));
-    CPPUNIT_ASSERT_THROW(check_indexes(vector_type{7,0,0},index_3,EXCEPTION_RECORD),
+    BOOST_CHECK_NO_THROW(check_indexes(vector_type{0,0,0},index_3,EXCEPTION_RECORD));
+    BOOST_CHECK_THROW(check_indexes(vector_type{7,0,0},index_3,EXCEPTION_RECORD),
                          index_error);
-    CPPUNIT_ASSERT_THROW(check_indexes(vector_type{0,3,0},index_3,EXCEPTION_RECORD),
+    BOOST_CHECK_THROW(check_indexes(vector_type{0,3,0},index_3,EXCEPTION_RECORD),
                          index_error);
-    CPPUNIT_ASSERT_THROW(check_indexes(vector_type{0,0,10},index_3,EXCEPTION_RECORD),
+    BOOST_CHECK_THROW(check_indexes(vector_type{0,0,10},index_3,EXCEPTION_RECORD),
                          index_error);
 
     // check different ranks
-    CPPUNIT_ASSERT_THROW(check_indexes(vector_type{2},index_3,EXCEPTION_RECORD),
+    BOOST_CHECK_THROW(check_indexes(vector_type{2},index_3,EXCEPTION_RECORD),
                          shape_mismatch_error);
-    CPPUNIT_ASSERT_THROW(check_indexes(vector_type{3,2},index_1,EXCEPTION_RECORD),
+    BOOST_CHECK_THROW(check_indexes(vector_type{3,2},index_1,EXCEPTION_RECORD),
                          shape_mismatch_error);
 }
 
 //-----------------------------------------------------------------------------
-void check_indexes_test::test_invalid_input()
+BOOST_AUTO_TEST_CASE(test_invalid_input)
 {
-    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
-    
-    CPPUNIT_ASSERT(check_indexes(vector_type(),vector_type()));
-    CPPUNIT_ASSERT_NO_THROW(check_indexes(vector_type(),vector_type(),EXCEPTION_RECORD));
-    CPPUNIT_ASSERT_THROW(check_indexes(vector_type(),index_3,EXCEPTION_RECORD),
+    BOOST_CHECK(check_indexes(vector_type(),vector_type()));
+    BOOST_CHECK_NO_THROW(check_indexes(vector_type(),vector_type(),EXCEPTION_RECORD));
+    BOOST_CHECK_THROW(check_indexes(vector_type(),index_3,EXCEPTION_RECORD),
                          shape_mismatch_error);
-    CPPUNIT_ASSERT_THROW(check_indexes(vector_type{2,2},vector_type(),EXCEPTION_RECORD),
+    BOOST_CHECK_THROW(check_indexes(vector_type{2,2},vector_type(),EXCEPTION_RECORD),
                          shape_mismatch_error);
 }
 
+BOOST_AUTO_TEST_SUITE_END()
