@@ -21,94 +21,73 @@
 //!  Created on: May 15, 2012
 //!      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
 //!
-#include<cppunit/extensions/HelperMacros.h>
+#define BOOST_TEST_DYN_LINK
+#define BOOST_TEST_MODULE testing container utilities
 
-#include <iostream>
+#include <boost/test/unit_test.hpp>
 #include <boost/current_function.hpp>
+#include <pni/core/arrays/slice.hpp>
+#include <iostream>
 
-#include "slice_test.hpp"
+using namespace pni::core;
 
-
-CPPUNIT_TEST_SUITE_REGISTRATION(slice_test);
-
-
-//===========implementation of private test functions==========================
-void slice_test::_construct(size_t start,size_t stop)
-{
-    slice s(start,stop);
-}
-
-void slice_test::_construct(size_t start,size_t stop,size_t stride)
-{
-    slice s(start,stop,stride);
-}
+BOOST_AUTO_TEST_SUITE(slice_test)
 
 //-----------------------------------------------------------------------------
-void slice_test::setUp() { }
-
-//-----------------------------------------------------------------------------
-void slice_test::tearDown() { }
-
-//-----------------------------------------------------------------------------
-void slice_test::test_construction()
+BOOST_AUTO_TEST_CASE(test_construction)
 {
-    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
-
-    CPPUNIT_ASSERT_THROW(_construct(1,0),range_error);
-    CPPUNIT_ASSERT_THROW(_construct(1,1),range_error);
-    CPPUNIT_ASSERT_THROW(_construct(1,10,100),range_error);
+    BOOST_CHECK_THROW(slice(1,0),range_error);
+    BOOST_CHECK_THROW(slice(1,1),range_error);
+    BOOST_CHECK_THROW(slice(1,10,100),range_error);
    
     //test construction without stride
     size_t f=1,l=10;
     slice s(f,l);
-    CPPUNIT_ASSERT(s.first() == f);
-    CPPUNIT_ASSERT(s.last() == l);
-    CPPUNIT_ASSERT(s.stride() == 1);
+    BOOST_CHECK_EQUAL(s.first(),f);
+    BOOST_CHECK_EQUAL(s.last(),l);
+    BOOST_CHECK_EQUAL(s.stride(),1);
 
     //test construction with stride
     size_t stride = 2;
     slice s1(f,l,stride);
-    CPPUNIT_ASSERT(s1.first() == f);
-    CPPUNIT_ASSERT(s1.last() == l);
-    CPPUNIT_ASSERT(s1.stride() == stride);
+    BOOST_CHECK_EQUAL(s1.first(),f);
+    BOOST_CHECK_EQUAL(s1.last(),l);
+    BOOST_CHECK_EQUAL(s1.stride(),stride);
 
     //test copy construction
     slice s2(s1);
-    CPPUNIT_ASSERT(s2.first() == s1.first());
-    CPPUNIT_ASSERT(s2.last()  == s1.last());
-    CPPUNIT_ASSERT(s2.stride() == s1.stride());
+    BOOST_CHECK_EQUAL(s2.first(),s1.first());
+    BOOST_CHECK_EQUAL(s2.last(),s1.last());
+    BOOST_CHECK_EQUAL(s2.stride(),s1.stride());
 
 }
 
 //-----------------------------------------------------------------------------
-void slice_test::test_assignment()
+BOOST_AUTO_TEST_CASE(test_assignment)
 {
-    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
-
     size_t f=20,l=100,stride=13;
     slice s(f,l,stride);
-
     slice s1(f,l);
 
-    CPPUNIT_ASSERT_NO_THROW(s1 = s);
-    CPPUNIT_ASSERT(s1.first() == s.first());
-    CPPUNIT_ASSERT(s1.last() == s.last());
-    CPPUNIT_ASSERT(s1.stride() == s.stride());
+    BOOST_CHECK_NO_THROW(s1 = s);
+    BOOST_CHECK_EQUAL(s1.first(), s.first());
+    BOOST_CHECK_EQUAL(s1.last(),s.last());
+    BOOST_CHECK_EQUAL(s1.stride(),s.stride());
 
 }
 
 //-----------------------------------------------------------------------------
-void slice_test::test_functions()
+BOOST_AUTO_TEST_CASE(test_functions)
 {
-    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
-
     size_t f=20,l=100,stride=13;
     slice s(f,l,stride);
 
-    CPPUNIT_ASSERT(size(s) == 7);
-    CPPUNIT_ASSERT(span(s) == 80);
+    BOOST_CHECK_EQUAL(size(s),7);
+    BOOST_CHECK_EQUAL(span(s),80);
 
     slice s1(1,3,2);
-    CPPUNIT_ASSERT(size(s1) == 1);
-    CPPUNIT_ASSERT(span(s1) == 2);
+    BOOST_CHECK_EQUAL(size(s1),1);
+    BOOST_CHECK_EQUAL(span(s1),2);
 }
+
+BOOST_AUTO_TEST_SUITE_END()

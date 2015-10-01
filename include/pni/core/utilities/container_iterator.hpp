@@ -195,6 +195,25 @@ namespace core{
 
                 return (*(_container))[_state];
             }
+            
+            //------------------------------------------------------------------
+            //! 
+            //! \brief const dereferencing operator
+            //!
+            //! In this case the iterator always returns a value_type with a 
+            //! copy of the original object.
+            //!
+            //! \throws IteratorError if the iterator is invalid
+            //! \return reference or value of the actual object
+            //!
+            value_type operator*() const
+            {
+                if(!(*this))
+                    throw iterator_error(EXCEPTION_RECORD,"Iterator invalid!");
+
+                return (*(_container))[_state];
+            }
+
 
             //------------------------------------------------------------------
             //!
@@ -265,7 +284,7 @@ namespace core{
             }
             //------------------------------------------------------------------
             //! comparsion operator - equality
-            bool operator==(const iterator_type &a)
+            bool operator==(const iterator_type &a) const 
             {
                 //check if the iterators point to the same container
                 if(_container != a._container) return false;
@@ -278,7 +297,7 @@ namespace core{
 
             //------------------------------------------------------------------
             //! comparison operator - inequality
-            bool operator!=(const iterator_type &a)
+            bool operator!=(const iterator_type &a) const
             {
                 if((*this)==a) return false;
                 return true;
@@ -286,28 +305,28 @@ namespace core{
 
             //===============comparison operators==============================
             //! lesser than operator
-            bool operator<(const iterator_type &b)
+            bool operator<(const iterator_type &b) const
             {
                 return _state < b._state;
             }
 
             //-----------------------------------------------------------------
             //! lesser than equal operator
-            bool operator<=(const iterator_type &b)
+            bool operator<=(const iterator_type &b) const
             {
                 return _state <= b._state;
             }
 
             //-----------------------------------------------------------------
             //! greater than operator
-            bool operator>(const iterator_type &b)
+            bool operator>(const iterator_type &b) const
             {
                 return _state > b._state;
             }
 
             //-----------------------------------------------------------------
             //! greater equal than operator
-            bool operator>=(const iterator_type &b)
+            bool operator>=(const iterator_type &b) const
             {
                 return _state >= b._state;
             }
