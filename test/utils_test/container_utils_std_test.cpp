@@ -1,49 +1,71 @@
-//!
-//! (c) Copyright 2013 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
-//!
-//! This file is part of libpnicore.
-//!
-//! libpnicore is free software: you can redistribute it and/or modify
-//! it under the terms of the GNU General Public License as published by
-//! the Free Software Foundation, either version 2 of the License, or
-//! (at your option) any later version.
-//!
-//! libpnicore is distributed in the hope that it will be useful,
-//! but WITHOUT ANY WARRANTY; without even the implied warranty of
-//! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//! GNU General Public License for more details.
-//!
-//! You should have received a copy of the GNU General Public License
-//! along with libpnicore.  If not, see <http://www.gnu.org/licenses/>.
-//!
-//! ===========================================================================
-//!
-//!  Created on: Nov 07, 2013
-//!      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
-//!
+//
+// (c) Copyright 2013 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
+//
+// This file is part of libpnicore.
+//
+// libpnicore is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+//
+// libpnicore is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with libpnicore.  If not, see <http://www.gnu.org/licenses/>.
+//
+// ===========================================================================
+//
+//  Created on: Nov 07, 2013
+//      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
+//
 
 #include <boost/test/unit_test.hpp>
 #include <boost/mpl/list.hpp>
+#include <boost/mpl/joint_view.hpp>
 #include <list>
-#include <vector>
 #include <boost/current_function.hpp>
 #include <pni/core/types.hpp>
-#include <pni/core/utilities/container_utils.hpp>
-#include "../data_generator.hpp"
+#include "test_trait.hpp"
 
 using namespace pni::core;
 
 typedef boost::mpl::list<std::vector<uint8>,
-                         std::vector<int8>> test_types;
+                         std::vector<int8>,
+                         std::vector<uint16>,
+                         std::vector<int16>,
+                         std::vector<uint32>,
+                         std::vector<int32>,
+                         std::vector<uint64>,
+                         std::vector<int64>,
+                         std::vector<float32>,
+                         std::vector<float64>,
+                         std::vector<float128>,
+                         std::vector<complex32>,
+                         std::vector<complex64>,
+                         std::vector<complex128>
+                         > vector_test_types;
 
+typedef boost::mpl::list< std::list<uint8>,
+                         std::list<int8>,
+                         std::list<uint16>,
+                         std::list<int16>,
+                         std::list<uint32>,
+                         std::list<int32>,
+                         std::list<uint64>,
+                         std::list<int64>,
+                         std::list<float32>,
+                         std::list<float64>,
+                         std::list<float128>,
+                         std::list<complex32>,
+                         std::list<complex64>,
+                         std::list<complex128>
+                        > list_test_types;
 
-template<typename T> struct test_trait
-{
-    typedef container_utils<T>     utils_type;
-    typedef typename T::value_type value_type;
-    typedef std::vector<value_type> ref_type; 
-    typedef random_generator<value_type> generator_type;
-};
+typedef boost::mpl::joint_view<vector_test_types,list_test_types> test_types;
+
 
 BOOST_AUTO_TEST_SUITE(container_utils_std_test)
 

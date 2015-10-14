@@ -25,9 +25,7 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/mpl/list.hpp>
 #include <array>
-#include <pni/core/utilities/container_utils.hpp>
-#include "../data_generator.hpp"
-#include "../compare.hpp"
+#include "test_trait.hpp"
 
 using namespace pni::core;
 
@@ -52,14 +50,6 @@ typedef boost::mpl::list<array_type<uint8>,
                          array_type<string>,
                          array_type<bool_t>
                          > test_types;
-
-template<typename T> struct test_trait
-{
-    typedef container_utils<T>     utils_type;
-    typedef typename T::value_type value_type;
-    typedef std::vector<value_type> ref_type; 
-    typedef random_generator<value_type> generator_type;
-};
 
 
 BOOST_AUTO_TEST_SUITE(container_utils_array_test)
