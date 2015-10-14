@@ -22,9 +22,48 @@
 //!      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
 //!
 
+#include <boost/test/unit_test.hpp>
+#include <boost/test/test_case_template.hpp>
+#include <boost/mpl/list.hpp>
 #include <boost/current_function.hpp>
-#include<cppunit/extensions/HelperMacros.h>
+#include <vector>
+#include <iostream>
 
-#include "index_iterator_test.hpp"
+#include <pni/core/arrays/index_iterator.hpp>
+#include <pni/core/arrays/index_map/index_maps.hpp>
 
-CPPUNIT_TEST_SUITE_REGISTRATION(index_iterator_test<shape_t>);
+using namespace pni::core;
+
+namespace std{
+        
+    ostream &operator<<(ostream &stream,const shape_t &s)
+    {
+        stream<<"(";
+        for(auto i: s) stream<<i;
+        stream<<")";
+        return stream;
+    }
+}
+
+typedef boost::mpl::list<shape_t> test_types; 
+
+BOOST_AUTO_TEST_SUITE(index_iterator_test)
+
+BOOST_AUTO_TEST_CASE_TEMPLATE(test_forward,CT,test_types)
+{
+    typedef index_iterator<CT,dynamic_cindex_map> iterator_t;
+    std::vector<CT> ref_index{{0,0},{0,1},{0,2},{0,3},
+                              {1,0},{1,1},{1,2},{1,3}};
+    
+
+    auto i_start = iterator_t::begin(shape_t{2,4});
+    auto i_end   = iterator_t::end(shape_t{2,4});
+    auto r_start = ref_index.begin();
+    auto r_end   = ref_index.end();
+    BOOST_CHECK_EQUAL_COLLECTIONS(i_start,i_end,r_start,r_end);
+}
+
+
+BOOST_AUTO_TEST_SUITE_END()
+
+

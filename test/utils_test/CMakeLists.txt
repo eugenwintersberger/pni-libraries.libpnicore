@@ -4,23 +4,12 @@ set(SOURCES container_utils_array_test.cpp
             index_iterator_test.cpp
             iterator_test.cpp
             slice_test.cpp
-            utils_test.cpp
     )
 
 
 link_directories("${CMAKE_CURRENT_BINARY_DIR}/../../src")
 add_executable(utils_test EXCLUDE_FROM_ALL ${SOURCES} $<TARGET_OBJECTS:test_common>)
-
-target_link_libraries(utils_test pnicore)
-
-if(CPPUNIT_FOUND)
-    #add include directories
-    include_directories(${CPPUNIT_INCLUDE_DIRS})
-
-    #add libraries
-    target_link_libraries(utils_test ${CPPUNIT_LIBRARIES})
-
-endif()
+target_link_libraries(utils_test pnicore ${Boost_LIBRARIES})
 
 add_test(NAME utils_test 
          COMMAND utils_test

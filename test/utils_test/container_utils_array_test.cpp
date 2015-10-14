@@ -22,32 +22,74 @@
 //!      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
 //!
 
-#include <list>
-#include <vector>
-#include <boost/current_function.hpp>
-#include<cppunit/extensions/HelperMacros.h>
+#include <boost/test/unit_test.hpp>
+#include <boost/mpl/list.hpp>
+#include <array>
+#include <pni/core/utilities/container_utils.hpp>
+#include "../data_generator.hpp"
+#include "../compare.hpp"
 
-#include "container_utils_array_test.hpp"
+using namespace pni::core;
 
 template<typename T>
 using array_type = std::array<T,4>;
 
-template<typename T> 
-using array_test = container_utils_array_test<array_type<T>>;
+//data types for which to test container construction
+typedef boost::mpl::list<array_type<uint8>,
+                         array_type<int8>,
+                         array_type<uint16>,
+                         array_type<int16>,
+                         array_type<uint32>,
+                         array_type<int32>,
+                         array_type<uint64>,
+                         array_type<int64>,
+                         array_type<float32>,
+                         array_type<float64>,
+                         array_type<float128>,
+                         array_type<complex32>,
+                         array_type<complex64>,
+                         array_type<complex128>,
+                         array_type<string>,
+                         array_type<bool_t>
+                         > test_types;
+
+template<typename T> struct test_trait
+{
+    typedef container_utils<T>     utils_type;
+    typedef typename T::value_type value_type;
+    typedef std::vector<value_type> ref_type; 
+    typedef random_generator<value_type> generator_type;
+};
 
 
-CPPUNIT_TEST_SUITE_REGISTRATION(array_test<uint8>);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_test<int8>);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_test<uint16>);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_test<int16>);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_test<uint32>);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_test<int32>);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_test<uint64>);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_test<int64>);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_test<float32>);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_test<float64>);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_test<float128>);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_test<complex32>);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_test<complex64>);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_test<complex128>);
+BOOST_AUTO_TEST_SUITE(container_utils_array_test)
+
+//-----------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE_TEMPLATE(test_create_from_size,CT,test_types)
+{
+    typedef test_trait<CT> trait_type;
+    typedef typename trait_type::generator_type generator_type;
+    typedef typename trait_type::utils_type utils_type;
+    generator_type generator;
+
+    //without initializiation value
+    auto c1 = utils_type::create(4);
+    BOOST_CHECK_EQUAL(c1.size(),4);
+
+
+    //with initializiation value
+    auto random_value = generator();
+    auto c2 = utils_type::create(4,random_value);
+    for(auto c: c2)
+        BOOST_CHECK_EQUAL(c,random_value);
+
+    //check exception
+    BOOST_CHECK_THROW(utils_type::create(5),size_mismatch_error);
+    BOOST_CHECK_THROW(utils_type::create(3),size_mismatch_error);
+}
+
+
+BOOST_AUTO_TEST_SUITE_END()
+
+
 

@@ -69,58 +69,91 @@ struct iterator_test_fixture
 
 BOOST_FIXTURE_TEST_SUITE(iterator_test,iterator_test_fixture)
 
-//-----------------------------------------------------------------------------
-BOOST_AUTO_TEST_CASE(test_construction)
+//
+// test default construction of iterators
+//
+// After default construction the resulting iterator should be invalid.
+//
+BOOST_AUTO_TEST_CASE(test_default_construction)
 {
     using namespace itest_types;
-    //==================testing default construction===========================
-    iterator iterator1;
-    //after default construction the interator should be invalid
-    BOOST_CHECK(!iterator1);
+    
+    iterator iter;
+    BOOST_CHECK(!iter); 
 
-    const_iterator const_iterator1;
-    BOOST_CHECK(!const_iterator1);
+    const_iterator citer;
+    BOOST_CHECK(!citer);
+}
 
+//----------------------------------------------------------------------------
+//
+// test standard constructor 
+//
+// The construction is done with the address to a container and an initial 
+// position
+// 
+BOOST_AUTO_TEST_CASE(test_standard_construction)
+{
+    using namespace itest_types;
+    
     //====================testing standard construction========================
     //check construction on the first element - this is how begin() method
     //would create an interator.
-    iterator iterator2(&vector,0);
-    BOOST_CHECK(iterator2);
+    iterator iter1(&vector,0);
+    BOOST_CHECK(iter1);
 
-    const_iterator const_iterator2(&vector,0);
-    BOOST_CHECK(const_iterator2);
+    const_iterator citer1(&vector,0);
+    BOOST_CHECK(citer1);
 
     //check construction on the last+1 element - this is how end() method
     //produces the final iterator.
-    iterator iterator3(&vector,vector.size());
-    const_iterator const_iterator3(&vector,vector.size());
-    BOOST_CHECK(!iterator3);
-    BOOST_CHECK(!const_iterator3);
+    iterator iter2(&vector,vector.size());
+    const_iterator citer2(&vector,vector.size());
+    BOOST_CHECK(!iter2);
+    BOOST_CHECK(!citer2);
 
 
     //check construction on a negative element (should lead to an invalid 
     //iterator)
-    iterator iterator4(&vector,-1);
-    const_iterator const_iterator4(&vector,-1);
-    BOOST_CHECK(!iterator4);
-    BOOST_CHECK(!const_iterator4);
+    iterator iter3(&vector,-1);
+    const_iterator citer3(&vector,-1);
+    BOOST_CHECK(!iter3);
+    BOOST_CHECK(!citer3);
+}
 
-    //====================check copy construction==============================
-    iterator iterator5(iterator2);
-    const_iterator const_iterator5(const_iterator2);
-    BOOST_CHECK(iterator5);
-    BOOST_CHECK(iterator2 == iterator5);
-    BOOST_CHECK(const_iterator5);
-    BOOST_CHECK(const_iterator5 == const_iterator2);
+//-----------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(test_copy_construction)
+{
+    using namespace itest_types;
+    iterator iter1(&vector,0);
+    iterator iter2(iter1);
+    BOOST_CHECK(iter1);
+    BOOST_CHECK(iter2);
+    BOOST_CHECK(iter1 == iter2);
+
+    const_iterator citer1(&vector,0);
+    const_iterator citer2(citer1);
+    BOOST_CHECK(citer1);
+    BOOST_CHECK(citer2);
+    BOOST_CHECK(citer1 == citer2);
+}
+
+BOOST_AUTO_TEST_CASE(test_move_construction)
+{
+    using namespace itest_types;
 
     //======================check move construction===========================
-    iterator iterator6 = std::move(iterator2);
-    BOOST_CHECK(!iterator2);
-    BOOST_CHECK(iterator6);
+    iterator iter1(&vector,0);
+    iterator iter2 = std::move(iter1);
+    BOOST_CHECK(!iter1);
+    BOOST_CHECK(iter2);
+    BOOST_CHECK(iter1 != iter2);
 
-    const_iterator const_iterator6 = std::move(const_iterator2);
-    BOOST_CHECK(!const_iterator2);
-    BOOST_CHECK(const_iterator6);
+    const_iterator citer1(&vector,0);
+    const_iterator citer2 = std::move(citer1);
+    BOOST_CHECK(!citer1);
+    BOOST_CHECK(citer2);
+    BOOST_CHECK(citer1 != citer2);
 }
 
 //-----------------------------------------------------------------------------

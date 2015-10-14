@@ -22,45 +22,94 @@
 //!      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
 //!
 
+#include <boost/test/unit_test.hpp>
+#include <boost/mpl/list.hpp>
 #include <list>
 #include <vector>
 #include <boost/current_function.hpp>
-#include<cppunit/extensions/HelperMacros.h>
+#include <pni/core/types.hpp>
+#include <pni/core/utilities/container_utils.hpp>
+#include "../data_generator.hpp"
 
-#include "container_utils_std_test.hpp"
+using namespace pni::core;
 
-template<typename T> 
-using vector_test = container_utils_std_test<std::vector<T>>;
+typedef boost::mpl::list<std::vector<uint8>,
+                         std::vector<int8>> test_types;
 
-template<typename T>
-using list_test   = container_utils_std_test<std::list<T>>;
 
-CPPUNIT_TEST_SUITE_REGISTRATION(vector_test<uint8>);
-CPPUNIT_TEST_SUITE_REGISTRATION(vector_test<int8>);
-CPPUNIT_TEST_SUITE_REGISTRATION(vector_test<uint16>);
-CPPUNIT_TEST_SUITE_REGISTRATION(vector_test<int16>);
-CPPUNIT_TEST_SUITE_REGISTRATION(vector_test<uint32>);
-CPPUNIT_TEST_SUITE_REGISTRATION(vector_test<int32>);
-CPPUNIT_TEST_SUITE_REGISTRATION(vector_test<uint64>);
-CPPUNIT_TEST_SUITE_REGISTRATION(vector_test<int64>);
-CPPUNIT_TEST_SUITE_REGISTRATION(vector_test<float32>);
-CPPUNIT_TEST_SUITE_REGISTRATION(vector_test<float64>);
-CPPUNIT_TEST_SUITE_REGISTRATION(vector_test<float128>);
-CPPUNIT_TEST_SUITE_REGISTRATION(vector_test<complex32>);
-CPPUNIT_TEST_SUITE_REGISTRATION(vector_test<complex64>);
-CPPUNIT_TEST_SUITE_REGISTRATION(vector_test<complex128>);
+template<typename T> struct test_trait
+{
+    typedef container_utils<T>     utils_type;
+    typedef typename T::value_type value_type;
+    typedef std::vector<value_type> ref_type; 
+    typedef random_generator<value_type> generator_type;
+};
 
-CPPUNIT_TEST_SUITE_REGISTRATION(list_test<uint8>);
-CPPUNIT_TEST_SUITE_REGISTRATION(list_test<int8>);
-CPPUNIT_TEST_SUITE_REGISTRATION(list_test<uint16>);
-CPPUNIT_TEST_SUITE_REGISTRATION(list_test<int16>);
-CPPUNIT_TEST_SUITE_REGISTRATION(list_test<uint32>);
-CPPUNIT_TEST_SUITE_REGISTRATION(list_test<int32>);
-CPPUNIT_TEST_SUITE_REGISTRATION(list_test<uint64>);
-CPPUNIT_TEST_SUITE_REGISTRATION(list_test<int64>);
-CPPUNIT_TEST_SUITE_REGISTRATION(list_test<float32>);
-CPPUNIT_TEST_SUITE_REGISTRATION(list_test<float64>);
-CPPUNIT_TEST_SUITE_REGISTRATION(list_test<float128>);
-CPPUNIT_TEST_SUITE_REGISTRATION(list_test<complex32>);
-CPPUNIT_TEST_SUITE_REGISTRATION(list_test<complex64>);
-CPPUNIT_TEST_SUITE_REGISTRATION(list_test<complex128>);
+BOOST_AUTO_TEST_SUITE(container_utils_std_test)
+
+    //========================================================================
+    BOOST_AUTO_TEST_CASE_TEMPLATE(test_create_from_size,CTYPE,test_types)
+    {
+        typedef test_trait<CTYPE> trait_type;
+        typedef typename trait_type::utils_type utils_type;
+        typedef typename trait_type::generator_type generator_type;
+
+        //without initializiation value
+        auto c1 = utils_type::create(10);
+        BOOST_CHECK_EQUAL(c1.size(),10);
+
+        //with initializiation value
+        auto init_value = generator_type()();
+        auto c2 = utils_type::create(100,init_value);
+        for(auto c: c2) BOOST_CHECK_EQUAL(c,init_value);
+    }
+    
+    //========================================================================
+    BOOST_AUTO_TEST_CASE_TEMPLATE(test_create_from_range,CTYPE,test_types)
+    {
+        typedef test_trait<CTYPE> trait_type;
+        typedef typename trait_type::utils_type utils_type;
+        typedef typename trait_type::ref_type   vector_type;
+        typedef typename trait_type::generator_type generator_type; 
+    
+        generator_type generator;
+        vector_type v(100);
+        std::generate(v.begin(),v.end(),generator);
+        auto c = utils_type::create(v.begin(),v.end());
+        BOOST_CHECK_EQUAL(c.size(),v.size());
+        
+        BOOST_CHECK_EQUAL_COLLECTIONS(v.begin(),v.end(),c.begin(),c.end());
+    }
+    
+    //========================================================================
+    BOOST_AUTO_TEST_CASE_TEMPLATE(test_create_from_container,CTYPE,test_types)
+    {
+        typedef test_trait<CTYPE> trait_type;
+        typedef typename trait_type::utils_type utils_type;
+        typedef typename trait_type::ref_type   vector_type;
+        typedef typename trait_type::generator_type generator_type;
+
+        generator_type generator;
+        vector_type v(100);
+        std::generate(v.begin(),v.end(),generator);
+
+        auto c = utils_type::create(v);
+        BOOST_CHECK_EQUAL(c.size(),v.size());
+        BOOST_CHECK_EQUAL_COLLECTIONS(v.begin(),v.end(),c.begin(),c.end());
+    }
+
+    //========================================================================
+    BOOST_AUTO_TEST_CASE_TEMPLATE(test_create_from_init_list,CTYPE,test_types)
+    {
+        typedef test_trait<CTYPE> trait_type;
+        typedef typename trait_type::utils_type utils_type;
+        typedef typename trait_type::ref_type   vector_type;
+
+        auto v = vector_type{1,2,3,4};
+        auto c = utils_type::create({1,2,3,4});
+        BOOST_CHECK_EQUAL(c.size(),v.size());
+        BOOST_CHECK_EQUAL_COLLECTIONS(v.begin(),v.end(),c.begin(),c.end());
+    }
+
+BOOST_AUTO_TEST_SUITE_END()
+
