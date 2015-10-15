@@ -1,15 +1,14 @@
 #need to define the version of the library
 set(SOURCES binary_test.cpp
-            type_class_test.cpp
-            type_id_container_test.cpp
-            type_id_scalar_test.cpp
-            type_info_test.cpp
-            type_maps_test.cpp
-            types_test.cpp
-            type_str_id_test.cpp
-            types_test.cpp
-            container_trait_test.cpp
             bool_test.cpp
+            type_class_map_test.cpp
+            type_id_map_test.cpp
+            id_type_map_test.cpp
+            container_trait_test.cpp
+            type_id_test.cpp
+            type_info_test.cpp
+            type_id_from_str_test.cpp
+            str_from_type_id_test.cpp
     )
 
 
@@ -17,14 +16,6 @@ link_directories("${CMAKE_CURRENT_BINARY_DIR}/../../src")
 add_executable(type_test EXCLUDE_FROM_ALL ${SOURCES})
 target_link_libraries(type_test pnicore)
 
-if(CPPUNIT_FOUND)
-    #add include directories
-    include_directories(${CPPUNIT_INCLUDE_DIRS})
-
-    #add libraries
-    target_link_libraries(type_test ${CPPUNIT_LIBRARIES})
-
-endif()
 add_subdirectory(conversion)
 add_subdirectory(traits)
 
@@ -32,4 +23,5 @@ add_test(NAME type_test
          COMMAND type_test
          WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/../
          )
+add_dependencies(check type_test)
 

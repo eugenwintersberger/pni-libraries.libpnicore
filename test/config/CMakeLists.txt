@@ -12,3 +12,5 @@ add_test(NAME config_test
          COMMAND config_test
          WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/../
          )
+
+add_dependencies(check config_test)

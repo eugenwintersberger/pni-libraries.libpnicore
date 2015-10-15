@@ -16,4 +16,5 @@ add_test(NAME error_test
          COMMAND error_test
          WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/../
          )
+add_dependencies(check error_test)
 

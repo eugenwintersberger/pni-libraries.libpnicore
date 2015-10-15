@@ -21,85 +21,74 @@
 //  Created on: Apr 11, 2014
 //      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
 //
-#include<cppunit/extensions/HelperMacros.h>
 
+#include <boost/test/unit_test.hpp>
 #include <iostream>
-#include <boost/current_function.hpp>
-
 #include <pni/core/types/bool.hpp>
 
-#include "bool_test.hpp"
+using namespace pni::core;
 
 
-CPPUNIT_TEST_SUITE_REGISTRATION(bool_test);
+BOOST_AUTO_TEST_SUITE(bool_test)
 
+    //========================================================================
+    BOOST_AUTO_TEST_CASE(test_construction)
+    {
+        BOOST_TEST_MESSAGE("test bool_t construction...");
+        bool_t bvalue;  //default constructed - should be false
+        BOOST_CHECK(!bvalue);
+        
+        bool_t bvalue2 = true; 
+        BOOST_CHECK(bvalue2);
+    }
 
-//-----------------------------------------------------------------------------
-void bool_test::setUp(){ }
+    //========================================================================
+    BOOST_AUTO_TEST_CASE(test_comparison)
+    {
+        BOOST_TEST_MESSAGE("test bool_t comparison...");
+        bool_t v1;
+        bool_t v2 = true;
+        bool_t v3 = false;
 
-//-----------------------------------------------------------------------------
-void bool_test::tearDown(){ }
+        BOOST_CHECK(v1 != v2);
+        BOOST_CHECK(v1 == v3);
+    }
 
-//-----------------------------------------------------------------------------
-void bool_test::test_construction()
-{
-    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
-    bool_t bvalue;
-    CPPUNIT_ASSERT(!bvalue);
-    
-    bool_t bvalue2 = true; 
-    CPPUNIT_ASSERT(bvalue2);
-}
+    //========================================================================
+    BOOST_AUTO_TEST_CASE(test_assignment)
+    {
+        BOOST_TEST_MESSAGE("test bool_t assignment...");
+        bool_t v1;
+        BOOST_CHECK(!v1);
 
-//-----------------------------------------------------------------------------
-void bool_test::test_comparison()
-{
-    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
-    bool_t v1;
-    bool_t v2 = true;
-    bool_t v3 = false;
+        v1 = true;
+        BOOST_CHECK(v1);
+    }
 
-    CPPUNIT_ASSERT(v1 != v2);
-    CPPUNIT_ASSERT(v1 == v3);
-}
+    //========================================================================
+    BOOST_AUTO_TEST_CASE(test_compatability)
+    {
+        BOOST_TEST_MESSAGE("test bool_t vector compatability ...");
+        typedef std::vector<bool_t> vector_type;
 
-//-----------------------------------------------------------------------------
-void bool_test::test_assignment()
-{
-    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
-    bool_t v1;
-    CPPUNIT_ASSERT(!v1);
+        vector_type v(10);
+        
+        bool_t *ptr = v.data();
+        for(auto x: v) BOOST_CHECK_EQUAL(x,*ptr++);
+    }
 
-    v1 = true;
+    //========================================================================
+    BOOST_AUTO_TEST_CASE(test_operators)
+    {
+        BOOST_TEST_MESSAGE("test bool_t with operators...");
+        bool_t v1 = true;
+        bool_t v2 = false;
 
-    CPPUNIT_ASSERT(v1);
-}
+        BOOST_CHECK(!(v1 && v2));
+        BOOST_CHECK(v1 && v1);
 
-//-----------------------------------------------------------------------------
-void bool_test::test_compatability()
-{
-    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
-    typedef std::vector<bool_t> vector_type;
+        BOOST_CHECK(v1 || v2);
+        BOOST_CHECK(!(v2 || v2));
+    }
 
-    vector_type v(10);
-    
-    bool_t *ptr = v.data();
-    for(auto x: v)
-        CPPUNIT_ASSERT(x==*ptr++);
-
-}
-
-//----------------------------------------------------------------------------
-void bool_test::test_operators()
-{
-    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
-    bool_t v1 = true;
-    bool_t v2 = false;
-
-    CPPUNIT_ASSERT(!(v1 && v2));
-    CPPUNIT_ASSERT(v1 && v1);
-
-    CPPUNIT_ASSERT(v1 || v2);
-    CPPUNIT_ASSERT(!(v2 || v2));
-}
-
+BOOST_AUTO_TEST_SUITE_END()

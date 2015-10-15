@@ -21,143 +21,98 @@
 //  Created on: Feb 08, 2012
 //      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
 //
-#include<cppunit/extensions/HelperMacros.h>
-
+#define BOOST_TEST_DYN_LINK
+#define BOOST_TEST_MODULE testing data type features
+#include <boost/test/unit_test.hpp>
 #include <iostream>
-#include <boost/current_function.hpp>
-
 #include <pni/core/types.hpp>
 
-#include "binary_test.hpp"
+using namespace pni::core;
 
 
-CPPUNIT_TEST_SUITE_REGISTRATION(binary_test);
+BOOST_AUTO_TEST_SUITE(binary_test)
 
-
-//-----------------------------------------------------------------------------
-void binary_test::setUp(){ }
-
-//-----------------------------------------------------------------------------
-void binary_test::tearDown(){ }
-
-//-----------------------------------------------------------------------------
-void binary_test::test_construction()
-{
-    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
-    binary bvalue;
-    
-    binary bvalue2 = 8; 
-    CPPUNIT_ASSERT(bvalue2 == 8);
-}
-
-//-----------------------------------------------------------------------------
-void binary_test::test_comparison()
-{
-    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
-    binary v1 = 8;
-    binary v2 = 10;
-    binary v3 = 8;
-
-    CPPUNIT_ASSERT(v1 != v2);
-    CPPUNIT_ASSERT(v1 == v3);
-}
-
-//-----------------------------------------------------------------------------
-void binary_test::test_assignment()
-{
-    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
-    binary v1;
-
-    v1 = 10;
-
-    binary v2 = 10;
-    CPPUNIT_ASSERT(v1 == v2);
-}
-
-//-----------------------------------------------------------------------------
-void binary_test::test_compatability()
-{
-    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
-    typedef binary_t<uint8> binary_type;
-    uint8 rv;
-    binary_type bv = 10;
-   
-    //this should work
-    rv = bv;
-    CPPUNIT_ASSERT(rv == bv);
-    rv = 100;
-    bv = rv;
-    CPPUNIT_ASSERT(bv == rv);
-
-    //should not work
-    float64 f64 = 12.3445;
-    bv = f64;
-
-    uint8 *rptr = new uint8[10];
-    binary_type *bptr = new binary_type[10];
-
-    for(size_t i=0;i<10;i++)
+    //========================================================================
+    BOOST_AUTO_TEST_CASE(test_construction)
     {
-        rptr[i] = i;
-        bptr[i] = i;
+        binary bvalue = 8; 
+        BOOST_CHECK_EQUAL(bvalue,8);
     }
 
-    for(size_t i=0;i<10;i++) CPPUNIT_ASSERT(rptr[i] == bptr[i]);
-
-
-    delete [] rptr;
-    delete [] bptr;
-}
-
-//-----------------------------------------------------------------------------
-void binary_test::test_io_operator()
-{
-    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
-    binary  b = 'a';
-
-    CPPUNIT_ASSERT(b == 'a');
-    b = 'x';
-    CPPUNIT_ASSERT(b == 'x');
-
-    binary::storage_type bvalue;
-
-    bvalue = b;
-    CPPUNIT_ASSERT(bvalue == 'x');
-    
-    int8 ivalue = 'z';
-    b = ivalue;
-}
-
-//-----------------------------------------------------------------------------
-void binary_test::test_io()
-{
-    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
-
-    std::ifstream istream;
-    std::ofstream ostream;
-
-    //open the file for reading
-    istream.open("mscp03_au_sputter2_00057.tif", 
-            std::ifstream::in | std::ifstream::binary);
-   
-    //need to determine the size of the file
-    istream.seekg(0,std::ios::end);
-    istream.seekg(0,std::ios::beg);
-
-
-    ostream.open("test.tif", 
-            std::ofstream::out | std::ofstream::binary);
-   
-    //copy binary file
-
-    binary buffer;
-    while(istream.get(((char&)buffer)))
+    //========================================================================
+    BOOST_AUTO_TEST_CASE(test_comparison)
     {
-        ostream.put(((char&)buffer));
+        binary v1 = 8;
+        binary v2 = 10;
+        binary v3 = 8;
+
+        BOOST_CHECK_NE(v1,v2);
+        BOOST_CHECK_EQUAL(v1,v3);
     }
 
-    istream.close();
-    ostream.close();
-}
+    //========================================================================
+    BOOST_AUTO_TEST_CASE(test_assignment)
+    {
+        binary v1;
+
+        v1 = 10;
+
+        binary v2 = 10;
+        BOOST_CHECK_EQUAL(v1,v2);
+    }
+
+    //========================================================================
+    BOOST_AUTO_TEST_CASE(test_compatability)
+    {
+        typedef binary_t<uint8> binary_type;
+        uint8 rv;
+        binary_type bv = 10;
+       
+        //this should work
+        rv = bv;
+        BOOST_CHECK_EQUAL(rv,bv);
+        rv = 100;
+        bv = rv;
+        BOOST_CHECK_EQUAL(bv,rv);
+
+        //should not work
+        float64 f64 = 12.3445;
+        bv = f64;
+
+        uint8 *rptr = new uint8[10];
+        binary_type *bptr = new binary_type[10];
+
+        for(size_t i=0;i<10;i++)
+        {
+            rptr[i] = i;
+            bptr[i] = i;
+        }
+
+        for(size_t i=0;i<10;i++) 
+            BOOST_CHECK_EQUAL(rptr[i],bptr[i]);
 
 
+        delete [] rptr;
+        delete [] bptr;
+    }
+
+    //========================================================================
+    BOOST_AUTO_TEST_CASE(test_io_operator)
+    {
+        std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+        binary  b = 'a';
+
+        BOOST_CHECK_EQUAL(b,'a');
+        b = 'x';
+        BOOST_CHECK_EQUAL(b,'x');
+
+        binary::storage_type bvalue;
+
+        bvalue = b;
+        BOOST_CHECK_EQUAL(bvalue,'x');
+        
+        int8 ivalue = 'z';
+        b = ivalue;
+    }
+
+BOOST_AUTO_TEST_SUITE_END()

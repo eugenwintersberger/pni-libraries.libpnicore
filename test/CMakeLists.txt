@@ -7,6 +7,10 @@ add_executable(rand_test EXCLUDE_FROM_ALL "rand_test.cpp")
 target_link_libraries(rand_test pnicore)
 add_test(rand_test rand_test)
 
+#add the check target to emulate GNU 'check' target
+add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND})
+add_dependencies(check rand_test)
+
 add_subdirectory(index_maps)
 add_subdirectory(types)
 add_subdirectory(arrays)
@@ -16,17 +20,12 @@ add_subdirectory(config)
 add_subdirectory(math)
 add_subdirectory(error)
 
+
 add_custom_target(build-test
                   DEPENDS arrays_test config_test error_test
                           index_maps_test math_test array_test
                           value_ref_test value_test conversion_test
                           type_test traits_test utils_test rand_test)
 
-#emulating the GNU 'check' target for make
-add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND})
-add_dependencies(check arrays_test config_test error_test
-                          index_maps_test math_test array_test
-                          value_ref_test value_test conversion_test
-                          type_test traits_test utils_test rand_test)
 
 

@@ -21,98 +21,185 @@
 //  Created on: Oct 01, 2012
 //      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
 //
-#include<cppunit/extensions/HelperMacros.h>
-#include<limits>
+#include <boost/test/unit_test.hpp>
+#include <boost/test/floating_point_comparison.hpp>
+#include <pni/core/types.hpp>
+#include <boost/mpl/list.hpp>
+#include <limits>
+#include <climits>
 
-#include "type_info_test.hpp"
+using namespace pni::core;
 
-CPPUNIT_TEST_SUITE_REGISTRATION(type_info_test);
-
-//-----------------------------------------------------------------------------
-void type_info_test::test_min_max()
-{
-    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
-
-    //--------------testing integer types----------------------
-    CPPUNIT_ASSERT(type_info<uint8>::min() == std::numeric_limits<uint8>::min() );
-    CPPUNIT_ASSERT(type_info<uint8>::max() == std::numeric_limits<uint8>::max() );
-
-    CPPUNIT_ASSERT(type_info<int8>::min() == std::numeric_limits<int8>::min());
-    CPPUNIT_ASSERT(type_info<int8>::max() == std::numeric_limits<int8>::max());
-
-    CPPUNIT_ASSERT(type_info<uint16>::min() == std::numeric_limits<uint16>::min());
-    CPPUNIT_ASSERT(type_info<uint16>::max() == std::numeric_limits<uint16>::max());
-
-    CPPUNIT_ASSERT(type_info<int16>::min() == std::numeric_limits<int16>::min());
-    CPPUNIT_ASSERT(type_info<int16>::max() == std::numeric_limits<int16>::max());
-
-    CPPUNIT_ASSERT(type_info<uint32>::min() == std::numeric_limits<uint32>::min());
-    CPPUNIT_ASSERT(type_info<uint32>::max() == std::numeric_limits<uint32>::max());
-
-    CPPUNIT_ASSERT(type_info<int32>::min() == std::numeric_limits<int32>::min());
-    CPPUNIT_ASSERT(type_info<int32>::max() == std::numeric_limits<int32>::max());
-
-    CPPUNIT_ASSERT(type_info<int64>::min() == std::numeric_limits<int64>::min());
-    CPPUNIT_ASSERT(type_info<int64>::max() == std::numeric_limits<int64>::max());
-
-    CPPUNIT_ASSERT(type_info<uint64>::min() == std::numeric_limits<uint64>::min());
-    CPPUNIT_ASSERT(type_info<uint64>::max() == std::numeric_limits<uint64>::max());
+typedef boost::mpl::list<uint8,uint16,uint32,uint64> unsigned_int_types;
+typedef boost::mpl::list<int8,int16,int32,int64> signed_int_types;
 
 
-    //---------------------testing floating point type----------
-    CPPUNIT_ASSERT(type_info<float32>::min() == -FLT_MAX);
-    CPPUNIT_ASSERT(type_info<float32>::max() == +FLT_MAX);
+BOOST_AUTO_TEST_SUITE(type_info_test)
+   
+    //========================================================================
+    BOOST_AUTO_TEST_CASE_TEMPLATE(test_type_info_uint,T,unsigned_int_types)
+    {
+        typedef type_info<T> info_type;
+        typedef std::numeric_limits<T> limits_type; 
 
-    CPPUNIT_ASSERT(type_info<float64>::min() == -DBL_MAX);
-    CPPUNIT_ASSERT(type_info<float64>::max() == +DBL_MAX);
+        BOOST_CHECK_EQUAL(info_type::min(),limits_type::min());
+        BOOST_CHECK_EQUAL(info_type::max(),limits_type::max());
+        BOOST_CHECK(info_type::is_integer);
+        BOOST_CHECK(!info_type::is_signed);
+        BOOST_CHECK(!info_type::is_complex);
+    }
+    
+    //========================================================================
+    BOOST_AUTO_TEST_CASE_TEMPLATE(test_type_info_int,T,signed_int_types)
+    {
+        typedef type_info<int8> info_type;
+        typedef std::numeric_limits<int8> limits_type; 
 
-    CPPUNIT_ASSERT(type_info<float128>::min() == -LDBL_MAX);
-    CPPUNIT_ASSERT(type_info<float128>::max() == +LDBL_MAX);
+        BOOST_CHECK_EQUAL(info_type::min(),limits_type::min());
+        BOOST_CHECK_EQUAL(info_type::max(),limits_type::max());
+        BOOST_CHECK(info_type::is_integer);
+        BOOST_CHECK(info_type::is_signed);
+        BOOST_CHECK(!info_type::is_complex);
+    }
 
-    //------------------testing floating point numbers----------
-    CPPUNIT_ASSERT(type_info<complex32>::min() == -FLT_MAX);
-    CPPUNIT_ASSERT(type_info<complex32>::max() == +FLT_MAX);
+    //========================================================================
+    BOOST_AUTO_TEST_CASE(test_type_info_int_sizes)
+    {
+        BOOST_CHECK(type_info<uint8>::size==1);
+        BOOST_CHECK(type_info<int8>::size==1);
+        BOOST_CHECK(type_info<uint16>::size==2);
+        BOOST_CHECK(type_info<int16>::size==2);
+        BOOST_CHECK(type_info<uint32>::size==4);
+        BOOST_CHECK(type_info<int32>::size==4);
+        BOOST_CHECK(type_info<uint64>::size==8);
+        BOOST_CHECK(type_info<int64>::size==8);
+    }
 
-    CPPUNIT_ASSERT(type_info<complex64>::min() == -DBL_MAX);
-    CPPUNIT_ASSERT(type_info<complex64>::max() == +DBL_MAX);
+    //========================================================================
+    BOOST_AUTO_TEST_CASE(test_type_info_float32)
+    {
+        typedef type_info<float32> info_type;
+        typedef std::numeric_limits<float32> limits_type; 
 
-    CPPUNIT_ASSERT(type_info<complex128>::min() == -LDBL_MAX);
-    CPPUNIT_ASSERT(type_info<complex128>::max() == +LDBL_MAX);
+        BOOST_CHECK_CLOSE(info_type::min(),-limits_type::max(),1.e-6);
+        BOOST_CHECK_CLOSE(info_type::max(),+limits_type::max(),1.e-6);
+        BOOST_CHECK(info_type::size==4);
+        BOOST_CHECK(!info_type::is_integer);
+        BOOST_CHECK(info_type::is_signed);
+        BOOST_CHECK(!info_type::is_complex);
+    }
+    
+    //========================================================================
+    BOOST_AUTO_TEST_CASE(test_type_info_float64)
+    {
+        typedef type_info<float64> info_type;
+        typedef std::numeric_limits<float64> limits_type; 
 
-    //------------------special types---------------------------
-    CPPUNIT_ASSERT(type_info<bool>::min() == false);
-    CPPUNIT_ASSERT(type_info<bool>::max() == true);
+        BOOST_CHECK_CLOSE(info_type::min(),-limits_type::max(),1.e-12);
+        BOOST_CHECK_CLOSE(info_type::max(),+limits_type::max(),1.e-12);
+        BOOST_CHECK(info_type::size==8);
+        BOOST_CHECK(!info_type::is_integer);
+        BOOST_CHECK(info_type::is_signed);
+        BOOST_CHECK(!info_type::is_complex);
+    }
+    
+    //========================================================================
+    BOOST_AUTO_TEST_CASE(test_type_info_float128)
+    {
+        typedef type_info<float128> info_type;
+        typedef std::numeric_limits<float128> limits_type; 
 
-}
+        BOOST_CHECK_CLOSE(info_type::min(),-limits_type::max(),1.e-12);
+        BOOST_CHECK_CLOSE(info_type::max(),+limits_type::max(),1.e-12);
+        BOOST_CHECK(info_type::size==16);
+        BOOST_CHECK(!info_type::is_integer);
+        BOOST_CHECK(info_type::is_signed);
+        BOOST_CHECK(!info_type::is_complex);
+    }
+    
+//========================================================================
+    BOOST_AUTO_TEST_CASE(test_type_info_complex32)
+    {
+        typedef type_info<complex32> info_type;
+        typedef std::numeric_limits<float32> limits_type; 
 
-//----------------------------------------------------------------------------
-void type_info_test::test_binary()
-{
-    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
-    typedef type_info<binary> info_type;
-        
-    CPPUNIT_ASSERT(info_type::size == 1);
-    CPPUNIT_ASSERT(info_type::is_integer);
-    CPPUNIT_ASSERT(!info_type::is_signed);
-    CPPUNIT_ASSERT(!info_type::is_complex);
+        BOOST_CHECK_CLOSE(info_type::min(),-limits_type::max(),1.e-6);
+        BOOST_CHECK_CLOSE(info_type::max(),+limits_type::max(),1.e-6);
+        BOOST_CHECK(info_type::size==8);
+        BOOST_CHECK(!info_type::is_integer);
+        BOOST_CHECK(info_type::is_signed);
+        BOOST_CHECK(info_type::is_complex);
+    }
+    
+    //========================================================================
+    BOOST_AUTO_TEST_CASE(test_type_info_complex64)
+    {
+        typedef type_info<complex64> info_type;
+        typedef std::numeric_limits<float64> limits_type; 
 
-    CPPUNIT_ASSERT(info_type::min() == 0);
-    CPPUNIT_ASSERT(info_type::max() == 255);
-}
+        BOOST_CHECK_CLOSE(info_type::min(),-limits_type::max(),1.e-12);
+        BOOST_CHECK_CLOSE(info_type::max(),+limits_type::max(),1.e-12);
+        BOOST_CHECK(info_type::size==16);
+        BOOST_CHECK(!info_type::is_integer);
+        BOOST_CHECK(info_type::is_signed);
+        BOOST_CHECK(info_type::is_complex);
+    }
+    
+    //========================================================================
+    BOOST_AUTO_TEST_CASE(test_type_info_complex128)
+    {
+        typedef type_info<complex128> info_type;
+        typedef std::numeric_limits<float128> limits_type; 
 
-//----------------------------------------------------------------------------
-void type_info_test::test_bool()
-{
-    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
+        BOOST_CHECK_CLOSE(info_type::min(),-limits_type::max(),1.e-12);
+        BOOST_CHECK_CLOSE(info_type::max(),+limits_type::max(),1.e-12);
+        BOOST_CHECK(info_type::size==32);
+        BOOST_CHECK(!info_type::is_integer);
+        BOOST_CHECK(info_type::is_signed);
+        BOOST_CHECK(info_type::is_complex);
+    }
+    
+    //========================================================================
+    BOOST_AUTO_TEST_CASE(test_type_info_bool)
+    {
+        typedef type_info<bool> info_type;
+        typedef std::numeric_limits<bool> limits_type; 
 
-    typedef type_info<bool_t> info_type;
+        BOOST_CHECK_EQUAL(info_type::min(),false);
+        BOOST_CHECK_EQUAL(info_type::max(),true);
+        BOOST_CHECK(info_type::size==1);
+        BOOST_CHECK(info_type::is_integer);
+        BOOST_CHECK(!info_type::is_signed);
+        BOOST_CHECK(!info_type::is_complex);
+    }
 
-    CPPUNIT_ASSERT(info_type::size == 1);
-    CPPUNIT_ASSERT(info_type::is_integer);
-    CPPUNIT_ASSERT(!info_type::is_signed);
-    CPPUNIT_ASSERT(!info_type::is_complex);
+    //========================================================================
+    BOOST_AUTO_TEST_CASE(test_type_info_bool_t)
+    {
+        typedef type_info<bool_t> info_type;
+        typedef std::numeric_limits<bool_t> limits_type; 
 
-    CPPUNIT_ASSERT(info_type::min() == false);
-    CPPUNIT_ASSERT(info_type::max() == true);
-}
+        BOOST_CHECK_EQUAL(info_type::min(),false);
+        BOOST_CHECK_EQUAL(info_type::max(),true);
+        BOOST_CHECK(info_type::size==1);
+        BOOST_CHECK(info_type::is_integer);
+        BOOST_CHECK(!info_type::is_signed);
+        BOOST_CHECK(!info_type::is_complex);
+    }
 
+    //========================================================================
+    BOOST_AUTO_TEST_CASE(test_type_info_binary)
+    {
+        typedef type_info<binary> info_type;
+            
+        BOOST_CHECK(info_type::size==1);
+        BOOST_CHECK(info_type::is_integer);
+        BOOST_CHECK(!info_type::is_signed);
+        BOOST_CHECK(!info_type::is_complex);
+
+        BOOST_CHECK_EQUAL(info_type::min() ,0);
+        BOOST_CHECK_EQUAL(info_type::max() ,255);
+    }
+
+
+BOOST_AUTO_TEST_SUITE_END()

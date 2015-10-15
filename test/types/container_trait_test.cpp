@@ -21,55 +21,48 @@
 //  Created on: Apr 11, 2014
 //      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
 //
-#include<cppunit/extensions/HelperMacros.h>
 
-#include <iostream>
+#include <boost/test/unit_test.hpp>
+#include <pni/core/types/container_trait.hpp>
 
-#include "container_trait_test.hpp"
+using namespace pni::core;
 
-CPPUNIT_TEST_SUITE_REGISTRATION(container_trait_test);
+BOOST_AUTO_TEST_SUITE(container_trait_test)
 
-//-----------------------------------------------------------------------------
-void container_trait_test::setUp(){ }
+    //=========================================================================
+    BOOST_AUTO_TEST_CASE(test_vector)
+    {
+        typedef std::vector<size_t> vector_type;
+        typedef container_trait<vector_type> trait_type;
 
-//-----------------------------------------------------------------------------
-void container_trait_test::tearDown(){ }
+        BOOST_CHECK(trait_type::is_random_access);
+        BOOST_CHECK(trait_type::is_iterable);
+        BOOST_CHECK(trait_type::is_contiguous);
+        BOOST_CHECK(!trait_type::is_multidim);
+    }
 
-//-----------------------------------------------------------------------------
-void container_trait_test::test_vector()
-{
-    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
-    typedef std::vector<size_t> vector_type;
-    typedef container_trait<vector_type> trait_type;
+    //=========================================================================
+    BOOST_AUTO_TEST_CASE(test_array)
+    {
+        typedef std::array<size_t,4> array_type;
+        typedef container_trait<array_type> trait_type;
 
-    CPPUNIT_ASSERT(trait_type::is_random_access);
-    CPPUNIT_ASSERT(trait_type::is_iterable);
-    CPPUNIT_ASSERT(trait_type::is_contiguous);
-    CPPUNIT_ASSERT(!trait_type::is_multidim);
-}
+        BOOST_CHECK(trait_type::is_random_access);
+        BOOST_CHECK(trait_type::is_iterable);
+        BOOST_CHECK(trait_type::is_contiguous);
+        BOOST_CHECK(!trait_type::is_multidim);
+    }
 
-//-----------------------------------------------------------------------------
-void container_trait_test::test_array()
-{
-    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
-    typedef std::array<size_t,4> array_type;
-    typedef container_trait<array_type> trait_type;
+    //=========================================================================
+    BOOST_AUTO_TEST_CASE(test_list)
+    {
+        typedef std::list<size_t> list_type;
+        typedef container_trait<list_type> trait_type;
 
-    CPPUNIT_ASSERT(trait_type::is_random_access);
-    CPPUNIT_ASSERT(trait_type::is_iterable);
-    CPPUNIT_ASSERT(trait_type::is_contiguous);
-    CPPUNIT_ASSERT(!trait_type::is_multidim);
-}
+        BOOST_CHECK(!trait_type::is_random_access);
+        BOOST_CHECK(trait_type::is_iterable);
+        BOOST_CHECK(!trait_type::is_contiguous);
+        BOOST_CHECK(!trait_type::is_multidim);
+    }
 
-//-----------------------------------------------------------------------------
-void container_trait_test::test_list()
-{
-    std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
-    typedef std::list<size_t> list_type;
-    typedef container_trait<list_type> trait_type;
-
-    CPPUNIT_ASSERT(!trait_type::is_random_access);
-    CPPUNIT_ASSERT(trait_type::is_iterable);
-    CPPUNIT_ASSERT(!trait_type::is_contiguous);
-    CPPUNIT_ASSERT(!trait_type::is_multidim);
-}
+BOOST_AUTO_TEST_SUITE_END()
