@@ -1,6 +1,5 @@
 #need to define the version of the library
-set(SOURCES traits_test.cpp
-            is_integer_type_test.cpp
+set(SOURCES is_integer_type_test.cpp
             is_integer_test.cpp
 
             is_complex_test.cpp
@@ -25,4 +24,6 @@ target_link_libraries(traits_test pnicore ${CPPUNIT_LIBRARIES})
 add_test(NAME "types:traits_test" 
          COMMAND traits_test
          )
+
+add_dependencies(check traits_test)
 

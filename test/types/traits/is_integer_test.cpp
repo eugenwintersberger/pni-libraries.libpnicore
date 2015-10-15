@@ -21,146 +21,42 @@
 //  Created on: Jan 7, 2015
 //      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
 //
-#include<cppunit/extensions/HelperMacros.h>
+
+#define BOOST_TEST_DYN_LINK
+#define BOOST_TEST_MODULE testing type traits and related functions
+#include <boost/test/unit_test.hpp>
 #include <pni/core/types/types.hpp>
 #include <pni/core/types/traits.hpp>
-
+#include <vector>
 #include <iostream>
+#include "constants.hpp"
 
-#include "is_integer_test.hpp"
 using namespace pni::core;
 
-CPPUNIT_TEST_SUITE_REGISTRATION(is_integer_test);
+BOOST_AUTO_TEST_SUITE(is_integer_test)
+    
+    //========================================================================
+    BOOST_AUTO_TEST_CASE(test_integer_types)
+    {
+        for(auto id: integer_ids) BOOST_CHECK(is_integer(id));
+    }
 
-//-----------------------------------------------------------------------------
-void is_integer_test::setUp(){ }
+    //========================================================================
+    BOOST_AUTO_TEST_CASE(test_float_types)
+    {
+        for(auto id: float_ids) BOOST_CHECK(!is_integer(id));
+    }
 
-//-----------------------------------------------------------------------------
-void is_integer_test::tearDown(){ }
-        
+    //========================================================================
+    BOOST_AUTO_TEST_CASE(test_complex_types)
+    {
+        for(auto id: complex_ids) BOOST_CHECK(!is_integer(id));
+    }
 
-//-----------------------------------------------------------------------------
-void is_integer_test::test_uint8()
-{
-    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    CPPUNIT_ASSERT(is_integer(type_id_t::UINT8));
-}
-
-//-----------------------------------------------------------------------------
-void is_integer_test::test_uint16()
-{
-    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    CPPUNIT_ASSERT(is_integer(type_id_t::UINT16));
-}
-
-//-----------------------------------------------------------------------------
-void is_integer_test::test_uint32()
-{
-    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    CPPUNIT_ASSERT(is_integer(type_id_t::UINT32));
-}
-
-//-----------------------------------------------------------------------------
-void is_integer_test::test_uint64()
-{
-    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    CPPUNIT_ASSERT(is_integer(type_id_t::UINT64));
-}
-
-//-----------------------------------------------------------------------------
-void is_integer_test::test_int8()
-{
-    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    CPPUNIT_ASSERT(is_integer(type_id_t::INT8));
-}
-
-//-----------------------------------------------------------------------------
-void is_integer_test::test_int16()
-{
-    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    CPPUNIT_ASSERT(is_integer(type_id_t::INT16));
-}
-
-//-----------------------------------------------------------------------------
-void is_integer_test::test_int32()
-{
-    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    CPPUNIT_ASSERT(is_integer(type_id_t::INT32));
-}
-
-//-----------------------------------------------------------------------------
-void is_integer_test::test_int64()
-{
-    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    CPPUNIT_ASSERT(is_integer(type_id_t::INT64));
-}
-
-//-----------------------------------------------------------------------------
-void is_integer_test::test_float32()
-{
-    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    CPPUNIT_ASSERT(!is_integer(type_id_t::FLOAT32));
-}
-
-//-----------------------------------------------------------------------------
-void is_integer_test::test_float64()
-{
-    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    CPPUNIT_ASSERT(!is_integer(type_id_t::FLOAT64));
-}
-
-//-----------------------------------------------------------------------------
-void is_integer_test::test_float128()
-{
-    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    CPPUNIT_ASSERT(!is_integer(type_id_t::FLOAT128));
-}
-
-//-----------------------------------------------------------------------------
-void is_integer_test::test_complex32()
-{
-    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    CPPUNIT_ASSERT(!is_integer(type_id_t::COMPLEX32));
-}
-
-//-----------------------------------------------------------------------------
-void is_integer_test::test_complex64()
-{
-    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    CPPUNIT_ASSERT(!is_integer(type_id_t::COMPLEX64));
-}
-
-//-----------------------------------------------------------------------------
-void is_integer_test::test_complex128()
-{
-    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    CPPUNIT_ASSERT(!is_integer(type_id_t::COMPLEX128));
-}
-
-//----------------------------------------------------------------------------
-void is_integer_test::test_string()
-{
-    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    CPPUNIT_ASSERT(!is_integer(type_id_t::STRING));
-}
-
-//----------------------------------------------------------------------------
-void is_integer_test::test_none()
-{
-    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    CPPUNIT_ASSERT(!is_integer(type_id_t::NONE));
-}
-
-//----------------------------------------------------------------------------
-void is_integer_test::test_bool()
-{
-    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    CPPUNIT_ASSERT(!is_integer(type_id_t::BOOL));
-}
-
-//----------------------------------------------------------------------------
-void is_integer_test::test_binary()
-{
-    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    CPPUNIT_ASSERT(!is_integer(type_id_t::BINARY));
-}
+    //========================================================================
+    BOOST_AUTO_TEST_CASE(test_non_numeric_types)
+    {
+        for(auto id: non_numeric_ids) BOOST_CHECK(!is_integer(id));
+    }
+    
+BOOST_AUTO_TEST_SUITE_END()
