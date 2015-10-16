@@ -21,314 +21,283 @@
 //  Created on: Dec 22, 2014
 //      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
 //
-#include<cppunit/extensions/HelperMacros.h>
-
+#include <boost/test/unit_test.hpp>
+#include <pni/core/types/type_conversion.hpp>
 #include <iostream>
 
-#include "is_checked_convertible_test.hpp"
+using namespace pni::core;
 
-CPPUNIT_TEST_SUITE_REGISTRATION(is_checked_convertible_test);
+BOOST_AUTO_TEST_SUITE(is_checked_convertible_test)
 
-//-----------------------------------------------------------------------------
-void is_checked_convertible_test::setUp(){ }
+    //========================================================================
+    void always_fails(type_id_t sid)
+    {
+        BOOST_CHECK(!is_checked_convertible(sid,type_id_t::BOOL));
+        BOOST_CHECK(!is_checked_convertible(sid,type_id_t::BINARY));
+        BOOST_CHECK(!is_checked_convertible(sid,type_id_t::STRING));
+    }
 
-//-----------------------------------------------------------------------------
-void is_checked_convertible_test::tearDown(){ }
-//--------------------------------------------------------------------
-void is_checked_convertible_test::always_fails(type_id_t sid)
-{
-    CPPUNIT_ASSERT(!is_checked_convertible(sid,type_id_t::BOOL));
-    CPPUNIT_ASSERT(!is_checked_convertible(sid,type_id_t::BINARY));
-    CPPUNIT_ASSERT(!is_checked_convertible(sid,type_id_t::STRING));
-}
+    //========================================================================
+    void uint_always_fails(type_id_t sid)
+    {
+        BOOST_CHECK(!is_checked_convertible(sid,type_id_t::UINT8));
+        BOOST_CHECK(!is_checked_convertible(sid,type_id_t::UINT16));
+        BOOST_CHECK(!is_checked_convertible(sid,type_id_t::UINT32));
+        BOOST_CHECK(!is_checked_convertible(sid,type_id_t::UINT64));
+    }
 
-//--------------------------------------------------------------------
-void is_checked_convertible_test::uint_always_fails(type_id_t sid)
-{
-    CPPUNIT_ASSERT(!is_checked_convertible(sid,type_id_t::UINT8));
-    CPPUNIT_ASSERT(!is_checked_convertible(sid,type_id_t::UINT16));
-    CPPUNIT_ASSERT(!is_checked_convertible(sid,type_id_t::UINT32));
-    CPPUNIT_ASSERT(!is_checked_convertible(sid,type_id_t::UINT64));
-}
+    //========================================================================
+    void int_always_fails(type_id_t sid)
+    {
+        BOOST_CHECK(!is_checked_convertible(sid,type_id_t::INT8));
+        BOOST_CHECK(!is_checked_convertible(sid,type_id_t::INT16));
+        BOOST_CHECK(!is_checked_convertible(sid,type_id_t::INT32));
+        BOOST_CHECK(!is_checked_convertible(sid,type_id_t::INT64));
+    }
 
-//--------------------------------------------------------------------
-void is_checked_convertible_test::int_always_fails(type_id_t sid)
-{
-    CPPUNIT_ASSERT(!is_checked_convertible(sid,type_id_t::INT8));
-    CPPUNIT_ASSERT(!is_checked_convertible(sid,type_id_t::INT16));
-    CPPUNIT_ASSERT(!is_checked_convertible(sid,type_id_t::INT32));
-    CPPUNIT_ASSERT(!is_checked_convertible(sid,type_id_t::INT64));
-}
+    //========================================================================
+    void float_always_fails(type_id_t sid)
+    {
+        BOOST_CHECK(!is_checked_convertible(sid,type_id_t::FLOAT32));
+        BOOST_CHECK(!is_checked_convertible(sid,type_id_t::FLOAT64));
+        BOOST_CHECK(!is_checked_convertible(sid,type_id_t::FLOAT128));
+    }
 
-//--------------------------------------------------------------------
-void is_checked_convertible_test::float_always_fails(type_id_t sid)
-{
-    CPPUNIT_ASSERT(!is_checked_convertible(sid,type_id_t::FLOAT32));
-    CPPUNIT_ASSERT(!is_checked_convertible(sid,type_id_t::FLOAT64));
-    CPPUNIT_ASSERT(!is_checked_convertible(sid,type_id_t::FLOAT128));
-}
+    //========================================================================
+    void complex_always_fails(type_id_t sid)
+    {
+        BOOST_CHECK(!is_checked_convertible(sid,type_id_t::COMPLEX32));
+        BOOST_CHECK(!is_checked_convertible(sid,type_id_t::COMPLEX64));
+        BOOST_CHECK(!is_checked_convertible(sid,type_id_t::COMPLEX128));
+    }
 
-//--------------------------------------------------------------------
-void is_checked_convertible_test::complex_always_fails(type_id_t sid)
-{
-    CPPUNIT_ASSERT(!is_checked_convertible(sid,type_id_t::COMPLEX32));
-    CPPUNIT_ASSERT(!is_checked_convertible(sid,type_id_t::COMPLEX64));
-    CPPUNIT_ASSERT(!is_checked_convertible(sid,type_id_t::COMPLEX128));
-}
+    //========================================================================
+    void uint_always_pass(type_id_t sid)
+    {
+        BOOST_CHECK(is_checked_convertible(sid,type_id_t::UINT8));
+        BOOST_CHECK(is_checked_convertible(sid,type_id_t::UINT16));
+        BOOST_CHECK(is_checked_convertible(sid,type_id_t::UINT32));
+        BOOST_CHECK(is_checked_convertible(sid,type_id_t::UINT64));
+    }
 
-//--------------------------------------------------------------------
-void is_checked_convertible_test::uint_always_pass(type_id_t sid)
-{
-    CPPUNIT_ASSERT(is_checked_convertible(sid,type_id_t::UINT8));
-    CPPUNIT_ASSERT(is_checked_convertible(sid,type_id_t::UINT16));
-    CPPUNIT_ASSERT(is_checked_convertible(sid,type_id_t::UINT32));
-    CPPUNIT_ASSERT(is_checked_convertible(sid,type_id_t::UINT64));
-}
+    //=========================================================================
+    BOOST_AUTO_TEST_CASE(test_uint8)
+    {
+        BOOST_CHECK(!is_checked_convertible(type_id_t::UINT8,type_id_t::UINT8));
+        BOOST_CHECK(!is_checked_convertible(type_id_t::UINT8,type_id_t::UINT16));
+        BOOST_CHECK(!is_checked_convertible(type_id_t::UINT8,type_id_t::UINT32));
+        BOOST_CHECK(!is_checked_convertible(type_id_t::UINT8,type_id_t::UINT64));
 
-//-----------------------------------------------------------------------------
-void is_checked_convertible_test::test_uint8()
-{
-    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    
-    CPPUNIT_ASSERT(!is_checked_convertible(type_id_t::UINT8,type_id_t::UINT8));
-    CPPUNIT_ASSERT(!is_checked_convertible(type_id_t::UINT8,type_id_t::UINT16));
-    CPPUNIT_ASSERT(!is_checked_convertible(type_id_t::UINT8,type_id_t::UINT32));
-    CPPUNIT_ASSERT(!is_checked_convertible(type_id_t::UINT8,type_id_t::UINT64));
+        BOOST_CHECK(is_checked_convertible(type_id_t::UINT8,type_id_t::INT8));
+        BOOST_CHECK(!is_checked_convertible(type_id_t::UINT8,type_id_t::INT16));
+        BOOST_CHECK(!is_checked_convertible(type_id_t::UINT8,type_id_t::INT32));
+        BOOST_CHECK(!is_checked_convertible(type_id_t::UINT8,type_id_t::INT64));
 
-    CPPUNIT_ASSERT(is_checked_convertible(type_id_t::UINT8,type_id_t::INT8));
-    CPPUNIT_ASSERT(!is_checked_convertible(type_id_t::UINT8,type_id_t::INT16));
-    CPPUNIT_ASSERT(!is_checked_convertible(type_id_t::UINT8,type_id_t::INT32));
-    CPPUNIT_ASSERT(!is_checked_convertible(type_id_t::UINT8,type_id_t::INT64));
+        float_always_fails(type_id_t::UINT8);
+        complex_always_fails(type_id_t::UINT8);
+        always_fails(type_id_t::UINT8);
+    }
 
-    float_always_fails(type_id_t::UINT8);
-    complex_always_fails(type_id_t::UINT8);
-    always_fails(type_id_t::UINT8);
-}
+    //=========================================================================
+    BOOST_AUTO_TEST_CASE(test_uint16)
+    {
+        BOOST_CHECK(is_checked_convertible(type_id_t::UINT16,type_id_t::UINT8));
+        BOOST_CHECK(!is_checked_convertible(type_id_t::UINT16,type_id_t::UINT16));
+        BOOST_CHECK(!is_checked_convertible(type_id_t::UINT16,type_id_t::UINT32));
+        BOOST_CHECK(!is_checked_convertible(type_id_t::UINT16,type_id_t::UINT64));
 
-//-----------------------------------------------------------------------------
-void is_checked_convertible_test::test_uint16()
-{
-    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    
-    CPPUNIT_ASSERT(is_checked_convertible(type_id_t::UINT16,type_id_t::UINT8));
-    CPPUNIT_ASSERT(!is_checked_convertible(type_id_t::UINT16,type_id_t::UINT16));
-    CPPUNIT_ASSERT(!is_checked_convertible(type_id_t::UINT16,type_id_t::UINT32));
-    CPPUNIT_ASSERT(!is_checked_convertible(type_id_t::UINT16,type_id_t::UINT64));
+        BOOST_CHECK(is_checked_convertible(type_id_t::UINT16,type_id_t::INT8));
+        BOOST_CHECK(is_checked_convertible(type_id_t::UINT16,type_id_t::INT16));
+        BOOST_CHECK(!is_checked_convertible(type_id_t::UINT16,type_id_t::INT32));
+        BOOST_CHECK(!is_checked_convertible(type_id_t::UINT16,type_id_t::INT64));
 
-    CPPUNIT_ASSERT(is_checked_convertible(type_id_t::UINT16,type_id_t::INT8));
-    CPPUNIT_ASSERT(is_checked_convertible(type_id_t::UINT16,type_id_t::INT16));
-    CPPUNIT_ASSERT(!is_checked_convertible(type_id_t::UINT16,type_id_t::INT32));
-    CPPUNIT_ASSERT(!is_checked_convertible(type_id_t::UINT16,type_id_t::INT64));
+        float_always_fails(type_id_t::UINT16);
+        complex_always_fails(type_id_t::UINT16);
+        always_fails(type_id_t::UINT16);
+    }
 
-    float_always_fails(type_id_t::UINT16);
-    complex_always_fails(type_id_t::UINT16);
-    always_fails(type_id_t::UINT16);
-}
+    //=========================================================================
+    BOOST_AUTO_TEST_CASE(test_uint32)
+    {
+        BOOST_CHECK(is_checked_convertible(type_id_t::UINT32,type_id_t::UINT8));
+        BOOST_CHECK(is_checked_convertible(type_id_t::UINT32,type_id_t::UINT16));
+        BOOST_CHECK(!is_checked_convertible(type_id_t::UINT32,type_id_t::UINT32));
+        BOOST_CHECK(!is_checked_convertible(type_id_t::UINT32,type_id_t::UINT64));
 
-//-----------------------------------------------------------------------------
-void is_checked_convertible_test::test_uint32()
-{
-    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    
-    CPPUNIT_ASSERT(is_checked_convertible(type_id_t::UINT32,type_id_t::UINT8));
-    CPPUNIT_ASSERT(is_checked_convertible(type_id_t::UINT32,type_id_t::UINT16));
-    CPPUNIT_ASSERT(!is_checked_convertible(type_id_t::UINT32,type_id_t::UINT32));
-    CPPUNIT_ASSERT(!is_checked_convertible(type_id_t::UINT32,type_id_t::UINT64));
+        BOOST_CHECK(is_checked_convertible(type_id_t::UINT32,type_id_t::INT8));
+        BOOST_CHECK(is_checked_convertible(type_id_t::UINT32,type_id_t::INT16));
+        BOOST_CHECK(is_checked_convertible(type_id_t::UINT32,type_id_t::INT32));
+        BOOST_CHECK(!is_checked_convertible(type_id_t::UINT32,type_id_t::INT64));
 
-    CPPUNIT_ASSERT(is_checked_convertible(type_id_t::UINT32,type_id_t::INT8));
-    CPPUNIT_ASSERT(is_checked_convertible(type_id_t::UINT32,type_id_t::INT16));
-    CPPUNIT_ASSERT(is_checked_convertible(type_id_t::UINT32,type_id_t::INT32));
-    CPPUNIT_ASSERT(!is_checked_convertible(type_id_t::UINT32,type_id_t::INT64));
+        float_always_fails(type_id_t::UINT32);
+        complex_always_fails(type_id_t::UINT32);
+        always_fails(type_id_t::UINT32);
+    }
 
-    float_always_fails(type_id_t::UINT32);
-    complex_always_fails(type_id_t::UINT32);
-    always_fails(type_id_t::UINT32);
-}
+    //=========================================================================
+    BOOST_AUTO_TEST_CASE(test_uint64)
+    {
+        BOOST_CHECK(is_checked_convertible(type_id_t::UINT64,type_id_t::UINT8));
+        BOOST_CHECK(is_checked_convertible(type_id_t::UINT64,type_id_t::UINT16));
+        BOOST_CHECK(is_checked_convertible(type_id_t::UINT64,type_id_t::UINT32));
+        BOOST_CHECK(!is_checked_convertible(type_id_t::UINT64,type_id_t::UINT64));
+        
+        BOOST_CHECK(is_checked_convertible(type_id_t::UINT64,type_id_t::INT8));
+        BOOST_CHECK(is_checked_convertible(type_id_t::UINT64,type_id_t::INT16));
+        BOOST_CHECK(is_checked_convertible(type_id_t::UINT64,type_id_t::INT32));
+        BOOST_CHECK(is_checked_convertible(type_id_t::UINT64,type_id_t::INT64));
 
-//-----------------------------------------------------------------------------
-void is_checked_convertible_test::test_uint64()
-{
-    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    
-    CPPUNIT_ASSERT(is_checked_convertible(type_id_t::UINT64,type_id_t::UINT8));
-    CPPUNIT_ASSERT(is_checked_convertible(type_id_t::UINT64,type_id_t::UINT16));
-    CPPUNIT_ASSERT(is_checked_convertible(type_id_t::UINT64,type_id_t::UINT32));
-    CPPUNIT_ASSERT(!is_checked_convertible(type_id_t::UINT64,type_id_t::UINT64));
-    
-    CPPUNIT_ASSERT(is_checked_convertible(type_id_t::UINT64,type_id_t::INT8));
-    CPPUNIT_ASSERT(is_checked_convertible(type_id_t::UINT64,type_id_t::INT16));
-    CPPUNIT_ASSERT(is_checked_convertible(type_id_t::UINT64,type_id_t::INT32));
-    CPPUNIT_ASSERT(is_checked_convertible(type_id_t::UINT64,type_id_t::INT64));
+        float_always_fails(type_id_t::UINT64);
+        complex_always_fails(type_id_t::UINT64);
+        always_fails(type_id_t::UINT64);
+    }
 
-    float_always_fails(type_id_t::UINT64);
-    complex_always_fails(type_id_t::UINT64);
-    always_fails(type_id_t::UINT64);
-}
+    //=========================================================================
+    BOOST_AUTO_TEST_CASE(test_int8)
+    {
+        uint_always_pass(type_id_t::INT8);
 
-//-----------------------------------------------------------------------------
-void is_checked_convertible_test::test_int8()
-{
-    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    
-    uint_always_pass(type_id_t::INT8);
+        BOOST_CHECK(!is_checked_convertible(type_id_t::INT8,type_id_t::INT8));
+        BOOST_CHECK(!is_checked_convertible(type_id_t::INT8,type_id_t::INT16));
+        BOOST_CHECK(!is_checked_convertible(type_id_t::INT8,type_id_t::INT32));
+        BOOST_CHECK(!is_checked_convertible(type_id_t::INT8,type_id_t::INT64));
 
-    CPPUNIT_ASSERT(!is_checked_convertible(type_id_t::INT8,type_id_t::INT8));
-    CPPUNIT_ASSERT(!is_checked_convertible(type_id_t::INT8,type_id_t::INT16));
-    CPPUNIT_ASSERT(!is_checked_convertible(type_id_t::INT8,type_id_t::INT32));
-    CPPUNIT_ASSERT(!is_checked_convertible(type_id_t::INT8,type_id_t::INT64));
+        float_always_fails(type_id_t::INT8);
+        complex_always_fails(type_id_t::INT8);
+        always_fails(type_id_t::INT8);
+    }
 
-    float_always_fails(type_id_t::INT8);
-    complex_always_fails(type_id_t::INT8);
-    always_fails(type_id_t::INT8);
-}
+    //=========================================================================
+    BOOST_AUTO_TEST_CASE(test_int16)
+    {
+        uint_always_pass(type_id_t::INT16);
 
-//-----------------------------------------------------------------------------
-void is_checked_convertible_test::test_int16()
-{
-    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    
-    uint_always_pass(type_id_t::INT16);
+        BOOST_CHECK(is_checked_convertible(type_id_t::INT16,type_id_t::INT8));
+        BOOST_CHECK(!is_checked_convertible(type_id_t::INT16,type_id_t::INT16));
+        BOOST_CHECK(!is_checked_convertible(type_id_t::INT16,type_id_t::INT32));
+        BOOST_CHECK(!is_checked_convertible(type_id_t::INT16,type_id_t::INT64));
 
-    CPPUNIT_ASSERT(is_checked_convertible(type_id_t::INT16,type_id_t::INT8));
-    CPPUNIT_ASSERT(!is_checked_convertible(type_id_t::INT16,type_id_t::INT16));
-    CPPUNIT_ASSERT(!is_checked_convertible(type_id_t::INT16,type_id_t::INT32));
-    CPPUNIT_ASSERT(!is_checked_convertible(type_id_t::INT16,type_id_t::INT64));
+        float_always_fails(type_id_t::INT16);
+        complex_always_fails(type_id_t::INT16);
+        always_fails(type_id_t::INT16);
+    }
 
-    float_always_fails(type_id_t::INT16);
-    complex_always_fails(type_id_t::INT16);
-    always_fails(type_id_t::INT16);
-}
+    //=========================================================================
+    BOOST_AUTO_TEST_CASE(test_int32)
+    {
+        uint_always_pass(type_id_t::INT32);
 
-//-----------------------------------------------------------------------------
-void is_checked_convertible_test::test_int32()
-{
-    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    
-    uint_always_pass(type_id_t::INT32);
+        BOOST_CHECK(is_checked_convertible(type_id_t::INT32,type_id_t::INT8));
+        BOOST_CHECK(is_checked_convertible(type_id_t::INT32,type_id_t::INT16));
+        BOOST_CHECK(!is_checked_convertible(type_id_t::INT32,type_id_t::INT32));
+        BOOST_CHECK(!is_checked_convertible(type_id_t::INT32,type_id_t::INT64));
 
-    CPPUNIT_ASSERT(is_checked_convertible(type_id_t::INT32,type_id_t::INT8));
-    CPPUNIT_ASSERT(is_checked_convertible(type_id_t::INT32,type_id_t::INT16));
-    CPPUNIT_ASSERT(!is_checked_convertible(type_id_t::INT32,type_id_t::INT32));
-    CPPUNIT_ASSERT(!is_checked_convertible(type_id_t::INT32,type_id_t::INT64));
+        float_always_fails(type_id_t::INT32);
+        complex_always_fails(type_id_t::INT32);
+        always_fails(type_id_t::INT32);
+    }
 
-    float_always_fails(type_id_t::INT32);
-    complex_always_fails(type_id_t::INT32);
-    always_fails(type_id_t::INT32);
-}
+    //=========================================================================
+    BOOST_AUTO_TEST_CASE(test_int64)
+    {
+        uint_always_pass(type_id_t::INT64);
 
-//-----------------------------------------------------------------------------
-void is_checked_convertible_test::test_int64()
-{
-    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    
-    uint_always_pass(type_id_t::INT64);
+        BOOST_CHECK(is_checked_convertible(type_id_t::INT64,type_id_t::INT8));
+        BOOST_CHECK(is_checked_convertible(type_id_t::INT64,type_id_t::INT16));
+        BOOST_CHECK(is_checked_convertible(type_id_t::INT64,type_id_t::INT32));
+        BOOST_CHECK(!is_checked_convertible(type_id_t::INT64,type_id_t::INT64));
 
-    CPPUNIT_ASSERT(is_checked_convertible(type_id_t::INT64,type_id_t::INT8));
-    CPPUNIT_ASSERT(is_checked_convertible(type_id_t::INT64,type_id_t::INT16));
-    CPPUNIT_ASSERT(is_checked_convertible(type_id_t::INT64,type_id_t::INT32));
-    CPPUNIT_ASSERT(!is_checked_convertible(type_id_t::INT64,type_id_t::INT64));
+        float_always_fails(type_id_t::INT64);
+        complex_always_fails(type_id_t::INT64);
+        always_fails(type_id_t::INT64);
+    }
 
-    float_always_fails(type_id_t::INT64);
-    complex_always_fails(type_id_t::INT64);
-    always_fails(type_id_t::INT64);
-}
+    //=========================================================================
+    BOOST_AUTO_TEST_CASE(test_float32)
+    {
+        uint_always_fails(type_id_t::FLOAT32);
+        int_always_fails(type_id_t::FLOAT32);
 
-//-----------------------------------------------------------------------------
-void is_checked_convertible_test::test_float32()
-{
-    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-   
-    uint_always_fails(type_id_t::FLOAT32);
-    int_always_fails(type_id_t::FLOAT32);
+        float_always_fails(type_id_t::FLOAT32);
+        complex_always_fails(type_id_t::FLOAT32);
+        always_fails(type_id_t::FLOAT32);
+    }
 
-    float_always_fails(type_id_t::FLOAT32);
-    complex_always_fails(type_id_t::FLOAT32);
-    always_fails(type_id_t::FLOAT32);
-}
+    //=========================================================================
+    BOOST_AUTO_TEST_CASE(test_float64)
+    {
+        uint_always_fails(type_id_t::FLOAT64);
+        int_always_fails(type_id_t::FLOAT64);
 
-//-----------------------------------------------------------------------------
-void is_checked_convertible_test::test_float64()
-{
-    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    
-    uint_always_fails(type_id_t::FLOAT64);
-    int_always_fails(type_id_t::FLOAT64);
+        BOOST_CHECK(is_checked_convertible(type_id_t::FLOAT64,type_id_t::FLOAT32));
+        BOOST_CHECK(!is_checked_convertible(type_id_t::FLOAT64,type_id_t::FLOAT64));
+        BOOST_CHECK(!is_checked_convertible(type_id_t::FLOAT64,type_id_t::FLOAT128));
+        
+        BOOST_CHECK(is_checked_convertible(type_id_t::FLOAT64,type_id_t::COMPLEX32));
+        BOOST_CHECK(!is_checked_convertible(type_id_t::FLOAT64,type_id_t::COMPLEX64));
+        BOOST_CHECK(!is_checked_convertible(type_id_t::FLOAT64,type_id_t::COMPLEX128));
+        
+        always_fails(type_id_t::FLOAT64);
 
-    CPPUNIT_ASSERT(is_checked_convertible(type_id_t::FLOAT64,type_id_t::FLOAT32));
-    CPPUNIT_ASSERT(!is_checked_convertible(type_id_t::FLOAT64,type_id_t::FLOAT64));
-    CPPUNIT_ASSERT(!is_checked_convertible(type_id_t::FLOAT64,type_id_t::FLOAT128));
-    
-    CPPUNIT_ASSERT(is_checked_convertible(type_id_t::FLOAT64,type_id_t::COMPLEX32));
-    CPPUNIT_ASSERT(!is_checked_convertible(type_id_t::FLOAT64,type_id_t::COMPLEX64));
-    CPPUNIT_ASSERT(!is_checked_convertible(type_id_t::FLOAT64,type_id_t::COMPLEX128));
-    
-    always_fails(type_id_t::FLOAT64);
+    }
 
-}
+    //=========================================================================
+    BOOST_AUTO_TEST_CASE(test_float128)
+    {
+        uint_always_fails(type_id_t::FLOAT128);
+        int_always_fails(type_id_t::FLOAT128);
 
-//-----------------------------------------------------------------------------
-void is_checked_convertible_test::test_float128()
-{
-    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    
-    uint_always_fails(type_id_t::FLOAT128);
-    int_always_fails(type_id_t::FLOAT128);
+        BOOST_CHECK(is_checked_convertible(type_id_t::FLOAT128,type_id_t::FLOAT32));
+        BOOST_CHECK(is_checked_convertible(type_id_t::FLOAT128,type_id_t::FLOAT64));
+        BOOST_CHECK(!is_checked_convertible(type_id_t::FLOAT128,type_id_t::FLOAT128));
+        
+        BOOST_CHECK(is_checked_convertible(type_id_t::FLOAT128,type_id_t::COMPLEX32));
+        BOOST_CHECK(is_checked_convertible(type_id_t::FLOAT128,type_id_t::COMPLEX64));
+        BOOST_CHECK(!is_checked_convertible(type_id_t::FLOAT128,type_id_t::COMPLEX128));
+       
+        always_fails(type_id_t::FLOAT128);
+    }
 
-    CPPUNIT_ASSERT(is_checked_convertible(type_id_t::FLOAT128,type_id_t::FLOAT32));
-    CPPUNIT_ASSERT(is_checked_convertible(type_id_t::FLOAT128,type_id_t::FLOAT64));
-    CPPUNIT_ASSERT(!is_checked_convertible(type_id_t::FLOAT128,type_id_t::FLOAT128));
-    
-    CPPUNIT_ASSERT(is_checked_convertible(type_id_t::FLOAT128,type_id_t::COMPLEX32));
-    CPPUNIT_ASSERT(is_checked_convertible(type_id_t::FLOAT128,type_id_t::COMPLEX64));
-    CPPUNIT_ASSERT(!is_checked_convertible(type_id_t::FLOAT128,type_id_t::COMPLEX128));
-   
-    always_fails(type_id_t::FLOAT128);
-}
+    //=========================================================================
+    BOOST_AUTO_TEST_CASE(test_complex32)
+    {
+        uint_always_fails(type_id_t::COMPLEX32);
+        int_always_fails(type_id_t::COMPLEX32);
 
-//-----------------------------------------------------------------------------
-void is_checked_convertible_test::test_complex32()
-{
-    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    
-    uint_always_fails(type_id_t::COMPLEX32);
-    int_always_fails(type_id_t::COMPLEX32);
+        float_always_fails(type_id_t::COMPLEX32);
+        complex_always_fails(type_id_t::COMPLEX32);
 
-    float_always_fails(type_id_t::COMPLEX32);
-    complex_always_fails(type_id_t::COMPLEX32);
+        always_fails(type_id_t::COMPLEX32);
+    }
 
-    always_fails(type_id_t::COMPLEX32);
-}
+    //=========================================================================
+    BOOST_AUTO_TEST_CASE(test_complex64)
+    { 
+        uint_always_fails(type_id_t::COMPLEX64);
+        int_always_fails(type_id_t::COMPLEX64);
 
-//-----------------------------------------------------------------------------
-void is_checked_convertible_test::test_complex64()
-{
-    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    
-    uint_always_fails(type_id_t::COMPLEX64);
-    int_always_fails(type_id_t::COMPLEX64);
+        float_always_fails(type_id_t::COMPLEX64);
+        BOOST_CHECK(is_checked_convertible(type_id_t::COMPLEX64,type_id_t::COMPLEX32));
+        BOOST_CHECK(!is_checked_convertible(type_id_t::COMPLEX64,type_id_t::COMPLEX64));
+        BOOST_CHECK(!is_checked_convertible(type_id_t::COMPLEX64,type_id_t::COMPLEX128));
+        
+        always_fails(type_id_t::COMPLEX64);
 
-    float_always_fails(type_id_t::COMPLEX64);
-    CPPUNIT_ASSERT(is_checked_convertible(type_id_t::COMPLEX64,type_id_t::COMPLEX32));
-    CPPUNIT_ASSERT(!is_checked_convertible(type_id_t::COMPLEX64,type_id_t::COMPLEX64));
-    CPPUNIT_ASSERT(!is_checked_convertible(type_id_t::COMPLEX64,type_id_t::COMPLEX128));
-    
-    always_fails(type_id_t::COMPLEX64);
+    }
 
-}
+    //=========================================================================
+    BOOST_AUTO_TEST_CASE(test_complex128)
+    {
+        uint_always_fails(type_id_t::COMPLEX128);
+        int_always_fails(type_id_t::COMPLEX128);
 
-//-----------------------------------------------------------------------------
-void is_checked_convertible_test::test_complex128()
-{
-    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    
-    uint_always_fails(type_id_t::COMPLEX128);
-    int_always_fails(type_id_t::COMPLEX128);
+        float_always_fails(type_id_t::COMPLEX128);
+        
+        BOOST_CHECK(is_checked_convertible(type_id_t::COMPLEX128,type_id_t::COMPLEX32));
+        BOOST_CHECK(is_checked_convertible(type_id_t::COMPLEX128,type_id_t::COMPLEX64));
+        BOOST_CHECK(!is_checked_convertible(type_id_t::COMPLEX128,type_id_t::COMPLEX128));
+       
+        always_fails(type_id_t::COMPLEX128);
+    }
 
-    float_always_fails(type_id_t::COMPLEX128);
-    
-    CPPUNIT_ASSERT(is_checked_convertible(type_id_t::COMPLEX128,type_id_t::COMPLEX32));
-    CPPUNIT_ASSERT(is_checked_convertible(type_id_t::COMPLEX128,type_id_t::COMPLEX64));
-    CPPUNIT_ASSERT(!is_checked_convertible(type_id_t::COMPLEX128,type_id_t::COMPLEX128));
-   
-    always_fails(type_id_t::COMPLEX128);
-}
+BOOST_AUTO_TEST_SUITE_END()

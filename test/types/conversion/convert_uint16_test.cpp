@@ -21,177 +21,143 @@
 //  Created on: Dec 26, 2014
 //      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
 //
-#include<cppunit/extensions/HelperMacros.h>
+
+#include <boost/test/unit_test.hpp>
+#include <boost/test/floating_point_comparison.hpp>
 #include <pni/core/types/convert.hpp>
 
-#include <iostream>
-
-#include "convert_uint16_test.hpp"
 using namespace pni::core;
 
-CPPUNIT_TEST_SUITE_REGISTRATION(convert_uint16_test);
+typedef uint16 source_type;
 
-//-----------------------------------------------------------------------------
-void convert_uint16_test::setUp(){ }
+BOOST_AUTO_TEST_SUITE(convert_uint16_test)
 
-//-----------------------------------------------------------------------------
-void convert_uint16_test::tearDown(){ }
+    //==========================================================================
+    BOOST_AUTO_TEST_CASE(test_to_uint8)
+    {
+        typedef uint8 target_type;
+        BOOST_CHECK_EQUAL(convert<target_type>(source_type(1)),target_type(1));
+        BOOST_CHECK_THROW(convert<target_type>(source_type(300)),range_error);
+    }
+
+    //==========================================================================
+    BOOST_AUTO_TEST_CASE(test_to_uint16)
+    {
+        typedef uint16 target_type;
+        BOOST_CHECK_EQUAL(convert<target_type>(source_type(19)),
+                          target_type(19));
+    }
+
+    //=========================================================================
+    BOOST_AUTO_TEST_CASE(test_to_uint32)
+    {
+        typedef uint32 target_type;
+        BOOST_CHECK_EQUAL(convert<target_type>(source_type(19)),
+                          target_type(19));
+    }
+
+    //=========================================================================
+    BOOST_AUTO_TEST_CASE(test_to_uint64)
+    {
+        typedef uint64 target_type;
+        BOOST_CHECK_EQUAL(convert<target_type>(source_type(19)),
+                          target_type(19));
+    }
+
+    //=========================================================================
+    BOOST_AUTO_TEST_CASE(test_to_int8)
+    {
+        typedef int8 target_type;
+        BOOST_CHECK_EQUAL(convert<target_type>(source_type(19)),
+                          source_type(19));
+        //we can only produce a negative overflow
+        BOOST_CHECK_THROW(convert<target_type>(source_type(200)),range_error);
+    }
+
+    //=========================================================================
+    BOOST_AUTO_TEST_CASE(test_to_int16)
+    {
+        typedef int16 target_type;
+        BOOST_CHECK_EQUAL(convert<target_type>(source_type(19)),
+                          target_type(19));
+        //we cannot do any overflow to int16
+        BOOST_CHECK_THROW(convert<target_type>(source_type(40000)),
+                          range_error);
+    }
+
+    //=========================================================================
+    BOOST_AUTO_TEST_CASE(test_to_int32)
+    {
+        typedef int32 target_type;
+        BOOST_CHECK_EQUAL(convert<target_type>(source_type(19)),
+                          target_type(19));
+        //we cannot do any overflow to int16
+    }
+
+    //=========================================================================
+    BOOST_AUTO_TEST_CASE(test_to_int64)
+    {
+        typedef int64 target_type;
+        BOOST_CHECK_EQUAL(convert<target_type>(source_type(19)),
+                          target_type(19));
+        //we cannot do any overflow to int16
+    }
+
+    //=========================================================================
+    BOOST_AUTO_TEST_CASE(test_to_float32)
+    {
+        typedef float32 target_type;
+        BOOST_CHECK_CLOSE(target_type(19),
+                          convert<target_type>(source_type(19)),1.e-6);
+    }
+
+    //=========================================================================
+    BOOST_AUTO_TEST_CASE(test_to_float64)
+    {
+        typedef float64 target_type;
+        BOOST_CHECK_CLOSE(target_type(19),
+                          convert<target_type>(source_type(19)),1.e-16);
+    }
+
+    //=========================================================================
+    BOOST_AUTO_TEST_CASE(test_to_float128)
+    {
+        typedef float128 target_type;
+        BOOST_CHECK_CLOSE(target_type(19),
+                          convert<target_type>(source_type(19)),1.e-16);
+    }
+
+    //=========================================================================
+    BOOST_AUTO_TEST_CASE(test_to_complex32)
+    {
+        typedef complex32 target_type;
+        typedef float32   base_type;
+       
+        auto value = convert<target_type>(source_type(19));
+        BOOST_CHECK_CLOSE(base_type(19),value.real(),1.e-6);
+        BOOST_CHECK_CLOSE(base_type(0),value.imag(),1.e-6);
+    }
+
+    //=========================================================================
+    BOOST_AUTO_TEST_CASE(test_to_complex64)
+    {
+        typedef complex64 target_type;
+        typedef float64   base_type;
         
+        auto value = convert<target_type>(source_type(19));
+        BOOST_CHECK_CLOSE(base_type(19),value.real(),1.e-16);
+        BOOST_CHECK_CLOSE(base_type(0),value.imag(),1.e-16);
+    }
 
-//-----------------------------------------------------------------------------
-void convert_uint16_test::test_to_uint8()
-{
-    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    typedef uint8 target_type;
-    
-    CPPUNIT_ASSERT(convert<target_type>(source_type(1)) == target_type(1));
+    //=========================================================================
+    BOOST_AUTO_TEST_CASE(test_to_complex128)
+    {
+        typedef complex128 target_type;
+        typedef float128   base_type;
+        
+        auto value = convert<target_type>(source_type(19));
+        BOOST_CHECK_CLOSE(base_type(19),value.real(),1.e-16);
+        BOOST_CHECK_CLOSE(base_type(0),value.imag(),1.e-16);
+    }
 
-    CPPUNIT_ASSERT_THROW(convert<target_type>(source_type(300)),
-                         pni::core::range_error);
-}
-
-//-----------------------------------------------------------------------------
-void convert_uint16_test::test_to_uint16()
-{
-    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    typedef uint16 target_type;
-    
-    CPPUNIT_ASSERT(convert<target_type>(source_type(19))==target_type(19));
-}
-
-//-----------------------------------------------------------------------------
-void convert_uint16_test::test_to_uint32()
-{
-    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    typedef uint32 target_type;
-    
-    CPPUNIT_ASSERT(convert<target_type>(source_type(19))==target_type(19));
-}
-
-//-----------------------------------------------------------------------------
-void convert_uint16_test::test_to_uint64()
-{
-    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    typedef uint64 target_type;
-    
-    CPPUNIT_ASSERT(convert<target_type>(source_type(19))==target_type(19));
-}
-
-//-----------------------------------------------------------------------------
-void convert_uint16_test::test_to_int8()
-{
-    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    typedef int8 target_type;
-    
-    CPPUNIT_ASSERT(convert<target_type>(source_type(19))==source_type(19));
-
-    //we can only produce a negative overflow
-    CPPUNIT_ASSERT_THROW(convert<target_type>(source_type(200)),
-                         pni::core::range_error);
-}
-
-//-----------------------------------------------------------------------------
-void convert_uint16_test::test_to_int16()
-{
-    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    typedef int16 target_type;
-    
-    CPPUNIT_ASSERT(convert<target_type>(source_type(19))==target_type(19));
-    
-    //we cannot do any overflow to int16
-
-    CPPUNIT_ASSERT_THROW(convert<target_type>(source_type(40000)),
-                         pni::core::range_error);
-}
-
-//-----------------------------------------------------------------------------
-void convert_uint16_test::test_to_int32()
-{
-    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    typedef int32 target_type;
-    
-    CPPUNIT_ASSERT(convert<target_type>(source_type(19))==target_type(19));
-
-    //we cannot do any overflow to int16
-}
-
-//-----------------------------------------------------------------------------
-void convert_uint16_test::test_to_int64()
-{
-    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    typedef int64 target_type;
-    
-    CPPUNIT_ASSERT(convert<target_type>(source_type(19))==target_type(19));
-
-    //we cannot do any overflow to int16
-}
-
-//-----------------------------------------------------------------------------
-void convert_uint16_test::test_to_float32()
-{
-    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    typedef float32 target_type;
-    
-    CPPUNIT_ASSERT_DOUBLES_EQUAL(target_type(19),
-                                 convert<target_type>(source_type(19)),
-                                 1.e-6);
-}
-
-//-----------------------------------------------------------------------------
-void convert_uint16_test::test_to_float64()
-{
-    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    typedef float64 target_type;
-    
-    CPPUNIT_ASSERT_DOUBLES_EQUAL(target_type(19),
-                                 convert<target_type>(source_type(19)),
-                                 1.e-16);
-
-}
-
-//-----------------------------------------------------------------------------
-void convert_uint16_test::test_to_float128()
-{
-    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    typedef float128 target_type;
-    
-    CPPUNIT_ASSERT_DOUBLES_EQUAL(target_type(19),
-                                 convert<target_type>(source_type(19)),
-                                 1.e-16);
-}
-
-//-----------------------------------------------------------------------------
-void convert_uint16_test::test_to_complex32()
-{
-    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    typedef complex32 target_type;
-    typedef float32   base_type;
-   
-    auto value = convert<target_type>(source_type(19));
-    CPPUNIT_ASSERT_DOUBLES_EQUAL(base_type(19),value.real(),1.e-6);
-    CPPUNIT_ASSERT_DOUBLES_EQUAL(base_type(0),value.imag(),1.e-6);
-}
-
-//-----------------------------------------------------------------------------
-void convert_uint16_test::test_to_complex64()
-{
-    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    typedef complex64 target_type;
-    typedef float64   base_type;
-    
-    auto value = convert<target_type>(source_type(19));
-    CPPUNIT_ASSERT_DOUBLES_EQUAL(base_type(19),value.real(),1.e-16);
-    CPPUNIT_ASSERT_DOUBLES_EQUAL(base_type(0),value.imag(),1.e-16);
-}
-
-//-----------------------------------------------------------------------------
-void convert_uint16_test::test_to_complex128()
-{
-    std::cerr<<BOOST_CURRENT_FUNCTION<<std::endl;
-    typedef complex128 target_type;
-    typedef float128   base_type;
-    
-    auto value = convert<target_type>(source_type(19));
-    CPPUNIT_ASSERT_DOUBLES_EQUAL(base_type(19),value.real(),1.e-16);
-    CPPUNIT_ASSERT_DOUBLES_EQUAL(base_type(0),value.imag(),1.e-16);
-}
+BOOST_AUTO_TEST_SUITE_END()
