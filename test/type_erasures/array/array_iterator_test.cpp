@@ -22,72 +22,76 @@
 //!      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
 //!
 
-#include <boost/current_function.hpp>
-#include<cppunit/extensions/HelperMacros.h>
+#include <boost/test/unit_test.hpp>
+#include <pni/core/type_erasures.hpp>
 
-#include <pni/core/arrays.hpp>
-#include <pni/core/arrays/scalar.hpp>
-#include "array_iterator_test.hpp"
+#include "array_types.hpp"
+#include "fixture.hpp"
 
-template<typename T> using sarray = static_array<T,3,2>;
-template<typename T> using farray = fixed_dim_array<T,2>;
+using namespace pni::core;
 
-CPPUNIT_TEST_SUITE_REGISTRATION(array_iterator_test<dynamic_array<uint8> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_iterator_test<dynamic_array<int8> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_iterator_test<dynamic_array<uint16> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_iterator_test<dynamic_array<int16> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_iterator_test<dynamic_array<uint32> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_iterator_test<dynamic_array<int32> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_iterator_test<dynamic_array<uint64> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_iterator_test<dynamic_array<int64> >);
+BOOST_AUTO_TEST_SUITE(array_iterator_test)
 
-CPPUNIT_TEST_SUITE_REGISTRATION(array_iterator_test<dynamic_array<float32> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_iterator_test<dynamic_array<float64> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_iterator_test<dynamic_array<float128> >);
+    BOOST_AUTO_TEST_CASE_TEMPLATE(test_iterator,AT,all_array_types)
+    {
+        typedef typename md_array_trait<AT>::value_type value_type;
+        fixture<AT> f;
 
-CPPUNIT_TEST_SUITE_REGISTRATION(array_iterator_test<dynamic_array<complex32> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_iterator_test<dynamic_array<complex64> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_iterator_test<dynamic_array<complex128> >);
+        array a1(f.mdarray_1);
+        array a2(f.mdarray_2);
+     
+        size_t index = 0;
+        auto iter1 = a1.begin();
+        auto iter2 = a2.begin();
 
-CPPUNIT_TEST_SUITE_REGISTRATION(array_iterator_test<dynamic_array<string> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_iterator_test<dynamic_array<bool_t>> );
+        for(;iter1!=a1.end();++iter1,++iter2,++index)
+        {
+            *iter2 = *iter1;
+            *iter1 = f.mdarray_2[index];
+            BOOST_CHECK_EQUAL((*iter1).as<value_type>(),f.mdarray_2[index]);
+            BOOST_CHECK_EQUAL((*iter2).as<value_type>(),f.mdarray_1[index]);
 
-CPPUNIT_TEST_SUITE_REGISTRATION(array_iterator_test<sarray<uint8> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_iterator_test<sarray<int8> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_iterator_test<sarray<uint16> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_iterator_test<sarray<int16> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_iterator_test<sarray<uint32> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_iterator_test<sarray<int32> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_iterator_test<sarray<uint64> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_iterator_test<sarray<int64> >);
+            value v(to_value(*iter1));
+            BOOST_CHECK_EQUAL(v.as<value_type>(),f.mdarray_2[index]);
+        }
+    }
 
-CPPUNIT_TEST_SUITE_REGISTRATION(array_iterator_test<sarray<float32> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_iterator_test<sarray<float64> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_iterator_test<sarray<float128> >);
+    //=========================================================================
+    BOOST_AUTO_TEST_CASE_TEMPLATE(test_const_iterator,AT,all_array_types)
+    {
+        typedef typename md_array_trait<AT>::value_type value_type;
+        fixture<AT> f;
+        
+        array a1(f.mdarray_1);
+        const array &r = a1;
 
-CPPUNIT_TEST_SUITE_REGISTRATION(array_iterator_test<sarray<complex32> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_iterator_test<sarray<complex64> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_iterator_test<sarray<complex128> >);
+        size_t index = 0;
+        auto iter = r.begin();
+        for(;iter!=r.end();++iter,++index)
+        {
+            BOOST_CHECK_EQUAL((*iter).as<value_type>(),f.mdarray_1[index]);
 
-CPPUNIT_TEST_SUITE_REGISTRATION(array_iterator_test<sarray<string> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_iterator_test<sarray<bool_t> >);
+            value v(*iter);
+            BOOST_CHECK_EQUAL(v.as<value_type>(),f.mdarray_1[index]);
+        }
+    }
 
-CPPUNIT_TEST_SUITE_REGISTRATION(array_iterator_test<farray<uint8> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_iterator_test<farray<int8> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_iterator_test<farray<uint16> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_iterator_test<farray<int16> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_iterator_test<farray<uint32> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_iterator_test<farray<int32> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_iterator_test<farray<uint64> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_iterator_test<farray<int64> >);
+    //=========================================================================
+    BOOST_AUTO_TEST_CASE_TEMPLATE(test_foreach,AT,all_array_types)
+    {
+        typedef typename md_array_trait<AT>::value_type value_type;
+        fixture<AT> f;
 
-CPPUNIT_TEST_SUITE_REGISTRATION(array_iterator_test<farray<float32> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_iterator_test<farray<float64> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_iterator_test<farray<float128> >);
+        array a1(f.mdarray_1);
+     
+        size_t index = 0;
+        for(auto v: a1)
+            v = f.mdarray_1[index++];
 
-CPPUNIT_TEST_SUITE_REGISTRATION(array_iterator_test<farray<complex32> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_iterator_test<farray<complex64> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_iterator_test<farray<complex128> >);
 
-CPPUNIT_TEST_SUITE_REGISTRATION(array_iterator_test<farray<string> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_iterator_test<farray<bool_t> >);
+        index = 0;
+        for(auto v: a1)
+            BOOST_CHECK_EQUAL(v.as<value_type>(),f.mdarray_1[index++]); 
+    }
+
+BOOST_AUTO_TEST_SUITE_END()

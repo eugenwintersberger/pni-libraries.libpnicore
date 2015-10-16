@@ -1,6 +1,5 @@
 #need to define the version of the library
 set(SOURCES 
-        array_test.cpp
         array_creation_test.cpp
         array_access_test.cpp
         array_iterator_test.cpp
@@ -15,4 +14,5 @@ add_test(NAME "type_erasure_test:array"
          COMMAND array_test
          )
 
+add_dependencies(check array_test)
 

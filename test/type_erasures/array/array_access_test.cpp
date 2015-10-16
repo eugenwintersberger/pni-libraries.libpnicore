@@ -22,72 +22,135 @@
 //!      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
 //!
 
-#include <boost/current_function.hpp>
-#include<cppunit/extensions/HelperMacros.h>
+#include <boost/test/unit_test.hpp>
+#include <pni/core/type_erasures.hpp>
 
-#include <pni/core/arrays.hpp>
-#include <pni/core/arrays/scalar.hpp>
-#include "array_access_test.hpp"
+#include "array_types.hpp"
+#include "fixture.hpp"
 
-template<typename T> using sarray = static_array<T,3,2>;
-template<typename T> using farray = fixed_dim_array<T,2>;
+using namespace pni::core;
 
-CPPUNIT_TEST_SUITE_REGISTRATION(array_access_test<dynamic_array<uint8> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_access_test<dynamic_array<int8> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_access_test<dynamic_array<uint16> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_access_test<dynamic_array<int16> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_access_test<dynamic_array<uint32> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_access_test<dynamic_array<int32> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_access_test<dynamic_array<uint64> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_access_test<dynamic_array<int64> >);
+BOOST_AUTO_TEST_SUITE(array_access_test)
+   
+    //========================================================================
+    BOOST_AUTO_TEST_CASE_TEMPLATE(test_linear_read_at,AT,all_array_types)
+    {
+        typedef typename md_array_trait<AT>::value_type value_type;
+        fixture<AT> f;
 
-CPPUNIT_TEST_SUITE_REGISTRATION(array_access_test<dynamic_array<float32> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_access_test<dynamic_array<float64> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_access_test<dynamic_array<float128> >);
+        array a(f.mdarray_1);
+        const array &aref = a;
 
-CPPUNIT_TEST_SUITE_REGISTRATION(array_access_test<dynamic_array<complex32> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_access_test<dynamic_array<complex64> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_access_test<dynamic_array<complex128> >);
+        //reading from the instance itself
+        for(size_t i=0;i<a.size();++i)
+        {
+            BOOST_CHECK_EQUAL(a.at(i).as<value_type>(),f.mdarray_1.at(i));
+            BOOST_CHECK_EQUAL(aref.at(i).as<value_type>(),f.mdarray_1.at(i));
+        }
+    }
 
-CPPUNIT_TEST_SUITE_REGISTRATION(array_access_test<dynamic_array<string> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_access_test<dynamic_array<bool_t>> );
+    //========================================================================
+    BOOST_AUTO_TEST_CASE_TEMPLATE(test_linear_write_at,AT,all_array_types)
+    {
+        typedef typename md_array_trait<AT>::value_type value_type;
+        fixture<AT> f;
 
-CPPUNIT_TEST_SUITE_REGISTRATION(array_access_test<sarray<uint8> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_access_test<sarray<int8> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_access_test<sarray<uint16> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_access_test<sarray<int16> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_access_test<sarray<uint32> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_access_test<sarray<int32> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_access_test<sarray<uint64> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_access_test<sarray<int64> >);
+        array a1(f.mdarray_1);
+        array a2(f.mdarray_2);
 
-CPPUNIT_TEST_SUITE_REGISTRATION(array_access_test<sarray<float32> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_access_test<sarray<float64> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_access_test<sarray<float128> >);
+        //reading from the instance itself
+        for(size_t i=0;i<a1.size();++i)
+        {
+            a2.at(i) = a1.at(i);
+            a1.at(i) = f.mdarray_2.at(i);
+            BOOST_CHECK_EQUAL(a1.at(i).as<value_type>(),f.mdarray_2.at(i));
+            BOOST_CHECK_EQUAL(a2.at(i).as<value_type>(),f.mdarray_1.at(i));
+        }
+    }
 
-CPPUNIT_TEST_SUITE_REGISTRATION(array_access_test<sarray<complex32> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_access_test<sarray<complex64> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_access_test<sarray<complex128> >);
+    //========================================================================
+    BOOST_AUTO_TEST_CASE_TEMPLATE(test_linear_read_operator,AT,all_array_types)
+    {
+        typedef typename md_array_trait<AT>::value_type value_type;
+        fixture<AT> f;
 
-CPPUNIT_TEST_SUITE_REGISTRATION(array_access_test<sarray<string> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_access_test<sarray<bool_t> >);
+        array a(f.mdarray_1);
+        const array &aref = a;
 
-CPPUNIT_TEST_SUITE_REGISTRATION(array_access_test<farray<uint8> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_access_test<farray<int8> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_access_test<farray<uint16> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_access_test<farray<int16> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_access_test<farray<uint32> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_access_test<farray<int32> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_access_test<farray<uint64> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_access_test<farray<int64> >);
+        //reading from the instance itself
+        for(size_t i=0;i<a.size();++i)
+        {
+            BOOST_CHECK_EQUAL(a[i].as<value_type>(),f.mdarray_1[i]);
+            BOOST_CHECK_EQUAL(aref[i].as<value_type>(),f.mdarray_1[i]);
+        }
+    }
 
-CPPUNIT_TEST_SUITE_REGISTRATION(array_access_test<farray<float32> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_access_test<farray<float64> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_access_test<farray<float128> >);
+    //========================================================================
+    BOOST_AUTO_TEST_CASE_TEMPLATE(test_linear_write_operator,AT,all_array_types)
+    {
+        typedef typename md_array_trait<AT>::value_type value_type;
+        fixture<AT> f;
+        
+        array a1(f.mdarray_1);
+        array a2(f.mdarray_2);
 
-CPPUNIT_TEST_SUITE_REGISTRATION(array_access_test<farray<complex32> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_access_test<farray<complex64> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_access_test<farray<complex128> >);
+        //reading from the instance itself
+        for(size_t i=0;i<a1.size();++i)
+        {
+            a2[i] = a1[i];
+            a1[i] = f.mdarray_2[i];
+            BOOST_CHECK_EQUAL(a1[i].as<value_type>(),f.mdarray_2[i]);
+            BOOST_CHECK_EQUAL(a2[i].as<value_type>(),f.mdarray_1[i]);
+        }
+    }
 
-CPPUNIT_TEST_SUITE_REGISTRATION(array_access_test<farray<string> >);
-CPPUNIT_TEST_SUITE_REGISTRATION(array_access_test<farray<bool_t> >);
+    //========================================================================
+    BOOST_AUTO_TEST_CASE_TEMPLATE(test_linear_read_multidim,AT,all_array_types)
+    {
+        typedef typename md_array_trait<AT>::value_type value_type;
+        typedef array::element_index index_type;
+        fixture<AT> f;
+
+        array a(f.mdarray_1);
+        const array &aref = a;
+
+        //reading from the instance itself
+        for(size_t i=0;i<f.shape[0];++i)
+        {
+            for(size_t j=0;j<f.shape[1];++j)
+            {
+                BOOST_CHECK_EQUAL(a(index_type{i,j}).as<value_type>(),
+                                  f.mdarray_1(i,j));
+                BOOST_CHECK_EQUAL(aref(index_type{i,j}).as<value_type>(),
+                                  f.mdarray_1(i,j));
+            }
+        }
+    }
+
+    //========================================================================
+    BOOST_AUTO_TEST_CASE_TEMPLATE(test_linear_write_multidim,AT,all_array_types)
+    {
+        typedef typename md_array_trait<AT>::value_type value_type;
+        typedef array::element_index index_type;
+        fixture<AT> f;
+
+        array a1(f.mdarray_1);
+        array a2(f.mdarray_2);
+
+        //reading from the instance itself
+        for(size_t i=0;i<f.shape[0];++i)
+        {
+            for(size_t j=0;j<f.shape[1];++j)
+            {
+                index_type index{i,j};
+                a2(index) = a1(index);
+                a1(index) = f.mdarray_2(i,j);
+                BOOST_CHECK_EQUAL(a1(index).as<value_type>(),
+                                  f.mdarray_2(i,j));
+                BOOST_CHECK_EQUAL(a2(index).as<value_type>(),
+                                  f.mdarray_1(i,j));
+            }
+        }
+    }
+BOOST_AUTO_TEST_SUITE_END()
+
