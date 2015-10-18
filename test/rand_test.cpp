@@ -49,29 +49,51 @@ template<> struct bound_type<string>
     typedef unsigned long type;
 };
 
-
-
-template<typename T> void execute(size_t n,string a,string b)
+template<typename GT> void execute(size_t n,GT &&g)
 {
-    using boost::lexical_cast;
-    typedef random_generator<T> random_generator_t;
-
-    random_generator_t generator;
-
-    if((a=="")&&(b=="")) //if both are empty strings 
-        generator = random_generator_t();
-    else
-    {
-        //convert user input to the appropriate number type
-        auto a_value = lexical_cast<typename bound_type<T>::type>(a);
-        auto b_value = lexical_cast<typename bound_type<T>::type>(b);
-    
-        assert(a_value<b_value);
-        generator = random_generator_t(a_value,b_value);
-    }
-
-    for(size_t i=0;i<n;++i) std::cout<<generator()<<std::endl;
+    for(size_t i=0;i<n;i++) std::cout<<g()<<std::endl;
 }
+
+template<typename T> struct generator_builder
+{
+    static random_generator<T> build(T lbound,T ubound)
+    {
+        return random_generator<T>(lbound,ubound);
+    }
+};
+
+template<typename T> struct generator_builder<std::complex<T>>
+{
+    static random_generator<std::complex<T>> build(T lbound,T ubound)
+    {
+        return random_generator<std::complex<T>>(lbound,ubound);
+    }
+};
+
+template<> struct generator_builder<string>
+{
+    static random_generator<string> build(size_t nchars)
+    {
+        return random_generator<string>(nchars);
+    }
+};
+
+template<> struct generator_builder<bool_t>
+{
+    static random_generator<bool_t> build()
+    {
+        return random_generator<bool_t>();
+    }
+};
+
+template<> struct generator_builder<binary>
+{
+    static random_generator<binary> build()
+    {
+        return random_generator<binary>();
+    }
+};
+
 
 
 int main(int argc,char **argv)
@@ -94,22 +116,58 @@ int main(int argc,char **argv)
     auto b = config.value<string>("upper-bound");
 
 
-    if     (type_id == type_id_t::INT32 ) execute<int32>(nruns,a,b);
-    else if(type_id == type_id_t::UINT32) execute<uint32>(nruns,a,b);
-    else if(type_id == type_id_t::INT64 ) execute<int64>(nruns,a,b);
-    else if(type_id == type_id_t::UINT64)  execute<uint64>(nruns,a,b);
-    else if(type_id == type_id_t::FLOAT32) execute<float32>(nruns,a,b);
-    else if(type_id == type_id_t::FLOAT64) execute<float64>(nruns,a,b);
-    else if(type_id == type_id_t::FLOAT128) execute<float128>(nruns,a,b);
-    else if(type_id == type_id_t::COMPLEX32) execute<complex32>(nruns,a,b);
-    else if(type_id == type_id_t::COMPLEX64) execute<complex64>(nruns,a,b);
-    else if(type_id == type_id_t::COMPLEX128) execute<complex128>(nruns,a,b);
-    else if(type_id == type_id_t::STRING) execute<string>(nruns,a,b);
-    else if(type_id == type_id_t::BOOL) execute<bool_t>(nruns,a,b);
-    else
+    switch(type_id)
     {
-        std::cerr<<"Unknown data type!"<<std::endl;
-        return 1;
+        case type_id_t::INT32: 
+            execute(nruns,generator_builder<int32>::build(boost::lexical_cast<int32>(a),
+                                                   boost::lexical_cast<int32>(b)));
+            break;
+        case type_id_t::UINT32:
+            execute(nruns,generator_builder<uint32>::build(boost::lexical_cast<uint32>(a),
+                                                    boost::lexical_cast<uint32>(b)));
+            break;
+
+        case type_id_t::INT64:
+            execute(nruns,generator_builder<int64>::build(boost::lexical_cast<int64>(a),
+                                                   boost::lexical_cast<int64>(b)));
+            break;
+        case type_id_t::UINT64:  
+            execute(nruns,generator_builder<uint64>::build(boost::lexical_cast<uint64>(a),
+                                                    boost::lexical_cast<uint64>(b)));
+            break;
+        case type_id_t::FLOAT32: 
+            execute(nruns,generator_builder<float32>::build(boost::lexical_cast<float32>(a),
+                                                     boost::lexical_cast<float32>(b)));
+            break;
+        case type_id_t::FLOAT64: 
+            execute(nruns,generator_builder<float64>::build(boost::lexical_cast<float64>(a),
+                                                     boost::lexical_cast<float64>(b)));
+            break;
+        case type_id_t::FLOAT128: 
+            execute(nruns,generator_builder<float128>::build(boost::lexical_cast<float128>(a),
+                                                      boost::lexical_cast<float128>(b)));
+            break;
+        case type_id_t::COMPLEX32: 
+            execute(nruns,generator_builder<complex32>::build(boost::lexical_cast<float32>(a),
+                                                       boost::lexical_cast<float32>(b)));
+            break;
+        case type_id_t::COMPLEX64: 
+            execute(nruns,generator_builder<complex64>::build(boost::lexical_cast<float64>(a),
+                                                       boost::lexical_cast<float64>(b)));
+            break;
+        case type_id_t::COMPLEX128: 
+            execute(nruns,generator_builder<complex128>::build(boost::lexical_cast<float128>(a),
+                                                        boost::lexical_cast<float128>(b)));
+            break;
+        case type_id_t::STRING: 
+            execute(nruns,generator_builder<string>::build(boost::lexical_cast<size_t>(a)));
+            break; 
+        case type_id_t::BOOL: 
+            execute(nruns,generator_builder<bool_t>::build());
+            break;
+        default:
+            std::cerr<<"Unknown data type!"<<std::endl;
+            return -1;
     }
 
     return 0;

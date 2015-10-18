@@ -22,13 +22,19 @@
 //!      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
 //!
 
-#include <boost/current_function.hpp>
-#include<cppunit/extensions/HelperMacros.h>
+#include <boost/test/unit_test.hpp>
+#include <boost/test/floating_point_comparison.hpp>
+#include <pni/core/type_erasure.hpp>
+#include <pni/core/types.hpp>
 
-#include "uint8_value_as_test.hpp"
+#include "../../data_generator.hpp"
 
-CPPUNIT_TEST_SUITE_REGISTRATION(uint8_value_as_test);
+typedef random_generator<uint8> generator_type;
 
+
+BOOST_AUTO_TEST_SUITE(uint8_value_as_test)
+
+BOOST_AUTO_TEST_SUITE_END()
 //-----------------------------------------------------------------------------
 void uint8_value_as_test::setUp() 
 { 
@@ -36,10 +42,6 @@ void uint8_value_as_test::setUp()
     value_1 = generator();
     v = value(value_1);
 }
-
-//-----------------------------------------------------------------------------
-void uint8_value_as_test::tearDown() { }
-
 //-----------------------------------------------------------------------------
 void uint8_value_as_test::test_as_uint8()
 {

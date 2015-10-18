@@ -1,9 +1,10 @@
 
 #build some commonly used code
-set(COMMON_SOURCES compare.cpp)
+set(COMMON_SOURCES compare.cpp data_generator.cpp)
 add_library(test_common EXCLUDE_FROM_ALL OBJECT ${COMMON_SOURCES})
 
-add_executable(rand_test EXCLUDE_FROM_ALL "rand_test.cpp")
+add_executable(rand_test EXCLUDE_FROM_ALL "rand_test.cpp"
+                             $<TARGET_OBJECTS:test_common>)
 target_link_libraries(rand_test pnicore)
 add_test(rand_test rand_test)
 

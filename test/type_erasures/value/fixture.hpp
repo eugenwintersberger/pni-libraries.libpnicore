@@ -18,11 +18,12 @@
 //
 // ===========================================================================
 //
-//  Created on: Oct 17, 2015
+//  Createyd on: Oct 17, 2015
 //      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
 //
 #pragma once
 #include "../../data_generator.hpp"
+
 
 template<typename T> struct fixture
 {   
@@ -31,9 +32,71 @@ template<typename T> struct fixture
     T value_1;
     T value_2;
 
-    fixture():
-        generator(1,10),
+    fixture(T lbound=1,T ubound=10):
+        generator(lbound,ubound),
         value_1(generator()),
         value_2(generator())
     {}
 };
+
+template<typename T> struct fixture<std::complex<T>>
+{   
+    typedef random_generator<T> generator_type;
+    generator_type generator;
+    std::complex<T> value_1;
+    std::complex<T> value_2;
+
+    fixture(T lbound=1,T ubound=10):
+        generator(lbound,ubound),
+        value_1(generator()),
+        value_2(generator())
+    {}
+};
+
+template<> struct fixture<binary>
+{
+    typedef random_generator<binary> generator_type;
+    generator_type generator;
+    binary value_1;
+    binary value_2;
+
+    fixture():
+        generator(),
+        value_1(generator()),
+        value_2(generator())
+    {}
+
+};
+
+template<> struct fixture<string>
+{
+    typedef random_generator<string> generator_type;
+    generator_type generator;
+    string value_1;
+    string value_2;
+
+    fixture(size_t nchars=20):
+        generator(nchars),
+        value_1(generator()),
+        value_2(generator())
+    {}
+
+};
+
+template<> struct fixture<bool_t>
+{
+    typedef random_generator<bool_t> generator_type;
+    generator_type generator;
+    bool_t value_1;
+    bool_t value_2;
+
+    fixture():
+        generator(),
+        value_1(generator()),
+        value_2(generator())
+    {}
+
+};
+
+
+
