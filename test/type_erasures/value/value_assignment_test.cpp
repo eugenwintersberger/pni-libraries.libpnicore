@@ -22,27 +22,51 @@
 //!      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
 //!
 
-#include <boost/current_function.hpp>
-#include<cppunit/extensions/HelperMacros.h>
+#include <boost/test/unit_test.hpp>
+#include <boost/test/floating_point_comparison.hpp>
+#include <pni/core/type_erasures.hpp>
 
-#include "value_assignment_test.hpp"
+#include "types.hpp"
+#include "fixture.hpp"
 
-CPPUNIT_TEST_SUITE_REGISTRATION(value_assignment_test<uint8>);
-CPPUNIT_TEST_SUITE_REGISTRATION(value_assignment_test<int8>);
-CPPUNIT_TEST_SUITE_REGISTRATION(value_assignment_test<uint16>);
-CPPUNIT_TEST_SUITE_REGISTRATION(value_assignment_test<int16>);
-CPPUNIT_TEST_SUITE_REGISTRATION(value_assignment_test<uint32>);
-CPPUNIT_TEST_SUITE_REGISTRATION(value_assignment_test<int32>);
-CPPUNIT_TEST_SUITE_REGISTRATION(value_assignment_test<uint64>);
-CPPUNIT_TEST_SUITE_REGISTRATION(value_assignment_test<int64>);
+BOOST_AUTO_TEST_SUITE(value_assignment_test)
 
-CPPUNIT_TEST_SUITE_REGISTRATION(value_assignment_test<float32>);
-CPPUNIT_TEST_SUITE_REGISTRATION(value_assignment_test<float64>);
-CPPUNIT_TEST_SUITE_REGISTRATION(value_assignment_test<float128>);
+    BOOST_AUTO_TEST_CASE_TEMPLATE(test_copy_assignment,T,all_types)
+    {
+        fixture<T> f;
 
-CPPUNIT_TEST_SUITE_REGISTRATION(value_assignment_test<complex32>);
-CPPUNIT_TEST_SUITE_REGISTRATION(value_assignment_test<complex64>);
-CPPUNIT_TEST_SUITE_REGISTRATION(value_assignment_test<complex128>);
+        value v1(f.value_1);
+        value v2;
 
-CPPUNIT_TEST_SUITE_REGISTRATION(value_assignment_test<string>);
-CPPUNIT_TEST_SUITE_REGISTRATION(value_assignment_test<bool_t>);
+        v2 = v1;
+        BOOST_CHECK_EQUAL(v2.type_id(),v1.type_id());
+        BOOST_CHECK_EQUAL(v1.as<T>(),v2.as<T>());
+    }
+
+    //========================================================================
+    BOOST_AUTO_TEST_CASE_TEMPLATE(test_move_assignment,T,all_types)
+    {
+        fixture<T> f;
+        value v1(f.value_1);
+        value v2 = make_value<uint8>();
+        
+        v2 = std::move(v1);
+        //v1 is invalid here
+        BOOST_CHECK(v2.type_id()==type_id_map<T>::type_id);
+        BOOST_CHECK_EQUAL(f.value_1,v2.as<T>());
+    }
+
+    //========================================================================
+    BOOST_AUTO_TEST_CASE_TEMPLATE(test_reset,T,all_types)
+    {
+        fixture<T> f;
+        value v1(f.value_1);
+
+        f.value_1 = f.generator();
+        v1 = f.value_1;
+        BOOST_CHECK_EQUAL(f.value_1,v1.as<T>());
+    }
+
+BOOST_AUTO_TEST_SUITE_END()
+
+
