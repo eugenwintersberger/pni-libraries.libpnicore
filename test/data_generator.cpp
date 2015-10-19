@@ -40,7 +40,10 @@ random_generator<string>::random_generator(size_t nchars):
 {}
 
 //----------------------------------------------------------------------------
-random_generator<string>::random_generator(){}
+random_generator<string>::random_generator():
+    _line_size_generator(0,10),
+    _char_index_generator(0,_char_vector.size()-1)
+{}
 
 //----------------------------------------------------------------------------
 string random_generator<string>::operator()()

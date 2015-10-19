@@ -66,7 +66,6 @@ BOOST_AUTO_TEST_SUITE(array_creation)
         {
             BOOST_CHECK_EQUAL(a[index].as<value_type>(),f.mdarray_1[index]);
         }
-
     }
 
     //========================================================================
