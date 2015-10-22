@@ -8,9 +8,13 @@ add_executable(rand_test EXCLUDE_FROM_ALL "rand_test.cpp"
 target_link_libraries(rand_test pnicore)
 add_test(rand_test rand_test)
 
+add_executable(rand_gen EXCLUDE_FROM_ALL rand_gen.cpp)
+target_link_libraries(rand_gen pnicore)
+
 #add the check target to emulate GNU 'check' target
 add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND})
 add_dependencies(check rand_test)
+add_dependencies(check rand_gen)
 
 add_subdirectory(index_maps)
 add_subdirectory(types)

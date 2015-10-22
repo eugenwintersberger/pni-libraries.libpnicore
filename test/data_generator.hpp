@@ -80,6 +80,7 @@ template<typename T> class random_generator
 template<typename T> class random_generator<std::complex<T>>
 {
     private:
+        typedef pni::core::type_info<T> tinfo_type;
         random_generator<T> _real_generator;
         random_generator<T> _imag_generator;
     public:
@@ -89,8 +90,8 @@ template<typename T> class random_generator<std::complex<T>>
         {}
 
         random_generator():
-            _real_generator(),
-            _imag_generator()
+            _real_generator(tinfo_type::min(),tinfo_type::max()),
+            _imag_generator(tinfo_type::min(),tinfo_type::max())
         {}
         
         std::complex<T> operator()()

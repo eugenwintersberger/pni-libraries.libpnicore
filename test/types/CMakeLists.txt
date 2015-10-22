@@ -16,6 +16,9 @@ link_directories("${CMAKE_CURRENT_BINARY_DIR}/../../src")
 add_executable(type_test EXCLUDE_FROM_ALL ${SOURCES})
 target_link_libraries(type_test pnicore)
 
+add_executable(show_type_info EXCLUDE_FROM_ALL show_type_info.cpp)
+target_link_libraries(show_type_info pnicore)
+
 add_subdirectory(conversion)
 add_subdirectory(traits)
 
@@ -23,5 +26,5 @@ add_test(NAME type_test
          COMMAND type_test
          WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/../
          )
-add_dependencies(check type_test)
+add_dependencies(check type_test show_type_info)
 

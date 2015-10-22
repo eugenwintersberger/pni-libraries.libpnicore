@@ -57,7 +57,7 @@ namespace core{
         //!
         //! \return minimum value of a type
         //!
-        static T min()
+        static constexpr T min()
         {
             return std::numeric_limits<T>::min();
         }
@@ -71,7 +71,7 @@ namespace core{
         //!
         //! \return maximum value of a type
         //!
-        static T max()
+        static constexpr T max()
         {
             return std::numeric_limits<T>::max();
         }
@@ -98,7 +98,7 @@ namespace core{
         //! 
         //! \return minimum value of a float type
         //!
-        static T min()
+        static constexpr T min()
         {
             return -std::numeric_limits<T>::max(); 
         }
@@ -112,7 +112,7 @@ namespace core{
         //!
         //! \return maximum value of a float type
         //!
-        static T max()
+        static constexpr T max()
         {
             return std::numeric_limits<T>::max();
         }
@@ -173,7 +173,7 @@ namespace core{
         //! returns the smallest value that can be represented by type T.
         //! \return lower limit of T
         //!
-        static T min()
+        static constexpr T min()
         {
             return min_max<T,std::is_floating_point<T>::value>::min();
         }
@@ -186,7 +186,7 @@ namespace core{
         //!
         //! \return upper limit of T
         //!
-        static T max() 
+        static constexpr T max() 
         { 
             return min_max<T,std::is_floating_point<T>::value>::max();
         }
@@ -211,11 +211,11 @@ namespace core{
 
         //---------------------------------------------------------------------
         //! return the minimum value of the Complex32 type
-        static T min() { return type_info<T>::min(); }
+        static constexpr T min() { return type_info<T>::min(); }
 
         //---------------------------------------------------------------------
         //! return the maximum value of the Complex32 type
-        static T max() { return type_info<T>::max(); }
+        static constexpr T max() { return type_info<T>::max(); }
 
     };
 
