@@ -24,14 +24,13 @@
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE testing math operations on arrays
 #include <boost/test/unit_test.hpp>
-#include <boost/math/special_functions/fpclassify.hpp>
 #include <boost/current_function.hpp>
 #include <pni/core/algorithms/math/inplace_arithmetics.hpp>
 
 #include "array_types.hpp"
 #include <cmath>
-#include "../data_generator.hpp"
 #include "number_ranges.hpp"
+#include "fixture.hpp"
 
 
 namespace boost{
@@ -49,38 +48,6 @@ namespace math{
 }
 
 
-template<typename AT> struct fixture
-{
-    typedef AT array_type;
-    typedef typename AT::value_type value_type;
-    typedef random_generator<value_type> generator_type; 
-        
-    generator_type gen_rhs;
-    generator_type gen_lhs;
-    shape_t shape;
-    array_type lhs_orig;
-    array_type lhs;
-    value_type rhs_scalar;
-    array_type rhs;
-    pni::core::type_id_t tid;
-    pni::core::string type_name;
-
-    template<typename RT> fixture(const RT &r):
-        gen_rhs(r.rhs_min(),r.rhs_max()),
-        gen_lhs(r.lhs_min(),r.lhs_max()),
-        shape(shape_t{2,3,4}),
-        lhs_orig(array_type::create(shape)),
-        lhs(array_type::create(shape)),
-        rhs_scalar(gen_rhs()),
-        rhs(array_type::create(shape)),
-        tid(pni::core::type_id_map<value_type>::type_id),
-        type_name(str_from_type_id(tid))
-    {
-        std::generate(lhs.begin(),lhs.end(),gen_lhs); 
-        std::generate(rhs.begin(),rhs.end(),gen_rhs);
-        std::copy(lhs.begin(),lhs.end(),lhs_orig.begin());
-    }
-};
 
 typedef inplace_arithmetics ipa_type; 
 
@@ -88,7 +55,8 @@ BOOST_AUTO_TEST_SUITE(inplace_arithmetics_test)
 
     BOOST_AUTO_TEST_CASE_TEMPLATE(add_scalar_test,AT,all_array_types)
     {
-        fixture<AT> f((add_ranges<typename AT::value_type>()));
+        typedef typename AT::value_type value_type;
+        fixture<AT> f((add_ranges<value_type>()));
     
         ipa_type::add(f.lhs,f.rhs_scalar);
 
@@ -103,7 +71,8 @@ BOOST_AUTO_TEST_SUITE(inplace_arithmetics_test)
             }
             else
             {
-                BOOST_CHECK_EQUAL(f.lhs[i],f.lhs_orig[i]+f.rhs_scalar);
+                BOOST_CHECK_EQUAL(f.lhs[i],
+                                  value_type(f.lhs_orig[i]+f.rhs_scalar));
             }
         }
     }
@@ -111,7 +80,8 @@ BOOST_AUTO_TEST_SUITE(inplace_arithmetics_test)
     //========================================================================
     BOOST_AUTO_TEST_CASE_TEMPLATE(add_array_test,AT,all_array_types)
     {
-        fixture<AT> f((add_ranges<typename AT::value_type>()));
+        typedef typename AT::value_type value_type;
+        fixture<AT> f((add_ranges<value_type>()));
     
         ipa_type::add(f.lhs,f.rhs);
 
@@ -126,7 +96,8 @@ BOOST_AUTO_TEST_SUITE(inplace_arithmetics_test)
             }
             else
             {
-                BOOST_CHECK_EQUAL(f.lhs[i],f.lhs_orig[i]+f.rhs[i]);
+                BOOST_CHECK_EQUAL(f.lhs[i],
+                                  value_type(f.lhs_orig[i]+f.rhs[i]));
             }
         }
 
@@ -135,7 +106,8 @@ BOOST_AUTO_TEST_SUITE(inplace_arithmetics_test)
     //========================================================================
     BOOST_AUTO_TEST_CASE_TEMPLATE(sub_scalar_test,AT,all_array_types)
     {
-        fixture<AT> f((add_ranges<typename AT::value_type>()));
+        typedef typename AT::value_type value_type;
+        fixture<AT> f((add_ranges<value_type>()));
     
         ipa_type::sub(f.lhs,f.rhs_scalar);
 
@@ -150,7 +122,8 @@ BOOST_AUTO_TEST_SUITE(inplace_arithmetics_test)
             }
             else
             {
-                BOOST_CHECK_EQUAL(f.lhs[i],f.lhs_orig[i]-f.rhs_scalar);
+                BOOST_CHECK_EQUAL(f.lhs[i],
+                                  value_type(f.lhs_orig[i]-f.rhs_scalar));
             }
         }
     }
@@ -158,7 +131,8 @@ BOOST_AUTO_TEST_SUITE(inplace_arithmetics_test)
     //========================================================================
     BOOST_AUTO_TEST_CASE_TEMPLATE(sub_array_test,AT,all_array_types)
     {
-        fixture<AT> f((add_ranges<typename AT::value_type>()));
+        typedef typename AT::value_type value_type;
+        fixture<AT> f((add_ranges<value_type>()));
     
         ipa_type::sub(f.lhs,f.rhs);
 
@@ -173,7 +147,8 @@ BOOST_AUTO_TEST_SUITE(inplace_arithmetics_test)
             }
             else
             {
-                BOOST_CHECK_EQUAL(f.lhs[i],f.lhs_orig[i]-f.rhs[i]);
+                BOOST_CHECK_EQUAL(f.lhs[i],
+                                  value_type(f.lhs_orig[i]-f.rhs[i]));
             }
         }
     }
@@ -181,7 +156,8 @@ BOOST_AUTO_TEST_SUITE(inplace_arithmetics_test)
     //========================================================================
     BOOST_AUTO_TEST_CASE_TEMPLATE(test_div_scalar,AT,all_array_types)
     {
-        fixture<AT> f((div_ranges<typename AT::value_type>()));
+        typedef typename AT::value_type value_type;
+        fixture<AT> f((div_ranges<value_type>()));
 
         ipa_type::div(f.lhs,f.rhs_scalar);
     
@@ -196,7 +172,8 @@ BOOST_AUTO_TEST_SUITE(inplace_arithmetics_test)
             }
             else
             {
-                BOOST_CHECK_EQUAL(f.lhs[i],f.lhs_orig[i]/f.rhs_scalar);
+                BOOST_CHECK_EQUAL(f.lhs[i],
+                                  value_type(f.lhs_orig[i]/f.rhs_scalar));
             }
         }
     }
@@ -220,7 +197,8 @@ BOOST_AUTO_TEST_SUITE(inplace_arithmetics_test)
             }
             else
             {
-                BOOST_CHECK_EQUAL(f.lhs[i],f.lhs_orig[i]/f.rhs[i]);
+                BOOST_CHECK_EQUAL(f.lhs[i],
+                                  value_type(f.lhs_orig[i]/f.rhs[i]));
             }
         }
     }
@@ -228,7 +206,8 @@ BOOST_AUTO_TEST_SUITE(inplace_arithmetics_test)
     //========================================================================
     BOOST_AUTO_TEST_CASE_TEMPLATE(test_mult_scalar,AT,all_array_types)
     {
-        fixture<AT> f((mult_ranges<typename AT::value_type>()));
+        typedef typename AT::value_type value_type;
+        fixture<AT> f((mult_ranges<value_type>()));
 
         ipa_type::mult(f.lhs,f.rhs_scalar);
         
@@ -243,7 +222,8 @@ BOOST_AUTO_TEST_SUITE(inplace_arithmetics_test)
             }
             else
             {
-                BOOST_CHECK_EQUAL(f.lhs[i],(f.lhs_orig[i]*f.rhs_scalar));
+                BOOST_CHECK_EQUAL(f.lhs[i],
+                                  value_type(f.lhs_orig[i]*f.rhs_scalar));
             }
         }
     }
@@ -251,7 +231,8 @@ BOOST_AUTO_TEST_SUITE(inplace_arithmetics_test)
     //========================================================================
     BOOST_AUTO_TEST_CASE_TEMPLATE(test_mult_array,AT,all_array_types)
     {
-        fixture<AT> f((mult_ranges<typename AT::value_type>()));
+        typedef typename AT::value_type value_type;
+        fixture<AT> f((mult_ranges<value_type>()));
 
         ipa_type::mult(f.lhs,f.rhs);
 
@@ -266,7 +247,8 @@ BOOST_AUTO_TEST_SUITE(inplace_arithmetics_test)
             }
             else
             {
-                BOOST_CHECK_EQUAL(f.lhs[i],(f.lhs_orig[i]*f.rhs[i]));
+                BOOST_CHECK_EQUAL(f.lhs[i],
+                                  value_type(f.lhs_orig[i]*f.rhs[i]));
             }
         }
     }

@@ -26,7 +26,10 @@
 #include <pni/core/types.hpp>
 #include <cmath>
 
-template<typename T> struct add_ranges
+template<
+         typename T,
+         bool is_signed = true
+        > struct add_ranges
 {
     T rhs_min() const { return 0.5*pni::core::type_info<T>::min(); }
     T rhs_max() const { return 0.5*pni::core::type_info<T>::max(); }
@@ -35,7 +38,7 @@ template<typename T> struct add_ranges
     T lhs_max() const { return rhs_max(); } 
 };
 
-template<typename T> struct add_ranges<std::complex<T>>
+template<typename T> struct add_ranges<std::complex<T>,true>
 {
     T rhs_min() const { return 0.5*pni::core::type_info<T>::min(); }
     T rhs_max() const { return 0.5*pni::core::type_info<T>::max(); }
@@ -74,8 +77,8 @@ template<typename T> struct div_ranges
     T rhs_min() const { return T(1); }
     T rhs_max() const { return 0.5*pni::core::type_info<T>::max(); }
 
-    T lhs_min() const { return 0.8*pni::core::type_info<T>::min(); }
-    T lhs_max() const { return 0.8*pni::core::type_info<T>::max(); } 
+    T lhs_min() const { return 0.5*pni::core::type_info<T>::min(); }
+    T lhs_max() const { return 0.5*pni::core::type_info<T>::max(); } 
 };
 
 template<typename T> struct div_ranges<std::complex<T>>
