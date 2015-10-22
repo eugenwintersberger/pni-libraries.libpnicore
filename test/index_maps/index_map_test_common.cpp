@@ -1,31 +1,41 @@
-//!
-//! (c) Copyright 2012 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
-//!
-//! This file is part of libpnicore.
-//!
-//! libpnicore is free software: you can redistribute it and/or modify
-//! it under the terms of the GNU General Public License as published by
-//! the Free Software Foundation, either version 2 of the License, or
-//! (at your option) any later version.
-//!
-//! libpnicore is distributed in the hope that it will be useful,
-//! but WITHOUT ANY WARRANTY; without even the implied warranty of
-//! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//! GNU General Public License for more details.
-//!
-//! You should have received a copy of the GNU General Public License
-//! along with libpnicore.  If not, see <http://www.gnu.org/licenses/>.
-//!
-//! ===========================================================================
-//!
-//!  Created on: Oct 19, 2013
-//!      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
-//!
-#include <boost/current_function.hpp>
-#include<cppunit/extensions/HelperMacros.h>
+//
+// (c) Copyright 2012 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
+//
+// This file is part of libpnicore.
+//
+// libpnicore is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+//
+// libpnicore is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with libpnicore.  If not, see <http://www.gnu.org/licenses/>.
+//
+// ===========================================================================
+//
+//  Created on: Oct 19, 2013
+//      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
+//
 
+#include <boost/test/unit_test.hpp>
+#include <boost/mpl/list.hpp>
+#include <vector>
+#include <list>
 #include <pni/core/arrays/index_map/index_maps.hpp>
-#include "index_map_test_common.hpp"
+
+using namespace pni::core;
+
+typedef boost::mpl::list<std::vector<size_t>,
+                         std::vector<ssize_t>,
+                         std::vector<unsigned int>,
+                         std::list<size_t>,
+                         std::list<ssize_t>,
+                         std::list<unsigned int>> index_types;
 
 typedef fixed_dim_cindex_map<1> c_index_map_array_1;
 typedef fixed_dim_cindex_map<2> c_index_map_array_2;
@@ -63,3 +73,8 @@ using test3_template = index_map_test_common<test3_params,MAP,3,3>;
 CPPUNIT_TEST_SUITE_REGISTRATION(test3_template<dynamic_cindex_map>);
 CPPUNIT_TEST_SUITE_REGISTRATION(test3_template<c_index_map_array_1>);
 CPPUNIT_TEST_SUITE_REGISTRATION(test3_template<static_map3>);
+
+BOOST_AUTO_TEST_SUITE(index_map_test_common)
+
+
+BOOST_AUTO_TEST_SUITE_END()
