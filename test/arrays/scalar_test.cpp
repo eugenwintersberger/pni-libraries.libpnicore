@@ -1,49 +1,69 @@
-//!
-//! (c) Copyright 2011 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
-//!
-//! This file is part of libpnicore.
-//!
-//! libpnicore is free software: you can redistribute it and/or modify
-//! it under the terms of the GNU General Public License as published by
-//! the Free Software Foundation, either version 2 of the License, or
-//! (at your option) any later version.
-//!
-//! libpnicore is distributed in the hope that it will be useful,
-//! but WITHOUT ANY WARRANTY; without even the implied warranty of
-//! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//! GNU General Public License for more details.
-//!
-//! You should have received a copy of the GNU General Public License
-//! along with libpnicore.  If not, see <http://www.gnu.org/licenses/>.
-//!
-//! ===========================================================================
-//!
-//!  Created on: Sep 02, 2011
-//!      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
-//!
+//
+// (c) Copyright 2011 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
+//
+// This file is part of libpnicore.
+//
+// libpnicore is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+//
+// libpnicore is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with libpnicore.  If not, see <http://www.gnu.org/licenses/>.
+//
+// ===========================================================================
+//
+//  Created on: Sep 02, 2011
+//      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
+//
+
+#include <boost/test/unit_test.hpp>
+#include "../types.hpp"
+#include "../data_generator.hpp"
 #include<iostream>
 #include<typeinfo>
 
-#include<cppunit/extensions/HelperMacros.h>
+using namespace pni::core;
 
-#include "scalar_test.hpp"
+template<typename T> struct scalar_fixture
+{
+    typedef random_generator<T> generator_type;
+    generator_type generator;
+    T v;
 
-CPPUNIT_TEST_SUITE_REGISTRATION(scalar_test<uint8>);
-CPPUNIT_TEST_SUITE_REGISTRATION(scalar_test<int8>);
-CPPUNIT_TEST_SUITE_REGISTRATION(scalar_test<uint16>);
-CPPUNIT_TEST_SUITE_REGISTRATION(scalar_test<int16>);
-CPPUNIT_TEST_SUITE_REGISTRATION(scalar_test<uint32>);
-CPPUNIT_TEST_SUITE_REGISTRATION(scalar_test<int32>);
-CPPUNIT_TEST_SUITE_REGISTRATION(scalar_test<uint64>);
-CPPUNIT_TEST_SUITE_REGISTRATION(scalar_test<int64>);
+    scalar_fixture():
+        generator(),
+        v(generator())
+    {}
+};
 
-CPPUNIT_TEST_SUITE_REGISTRATION(scalar_test<float32>);
-CPPUNIT_TEST_SUITE_REGISTRATION(scalar_test<float64>);
-CPPUNIT_TEST_SUITE_REGISTRATION(scalar_test<float128>);
+BOOST_AUTO_TEST_SUITE(scalar_test)
 
-CPPUNIT_TEST_SUITE_REGISTRATION(scalar_test<complex32>);
-CPPUNIT_TEST_SUITE_REGISTRATION(scalar_test<complex64>);
-CPPUNIT_TEST_SUITE_REGISTRATION(scalar_test<complex128>);
+    BOOST_AUTO_TEST_SUITE_TEMPLATE(test_construction,T,numeric_types)   
+    {
+        typedef scalar_fixture<T> fixture_type;
+        fixture_type fixture; 
+
+        scalar<T> s;
+        BOOST_CHECK_EQUAL(s.rank(),0);
+        BOOST_CHECK_EQUAL(s.size(),1);
+
+        //check the default constructor
+        scalar<T> s1(fixture.v);
+        BOOST_CHECK_EQUAL(T(s1),fixture.v);
+
+        //copy construction
+        scalar<T> s2 = s1;
+        BOOST_CHECK_EQUAL(
+    }
+
+BOOST_AUTO_TEST_SUITE_END()
+
 
 
 

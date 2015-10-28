@@ -49,7 +49,7 @@ namespace math{
 
 
 
-typedef inplace_arithmetics ipa_type; 
+typedef inplace_arithmetics ip_type; 
 
 BOOST_AUTO_TEST_SUITE(inplace_arithmetics_test)
 
@@ -58,7 +58,7 @@ BOOST_AUTO_TEST_SUITE(inplace_arithmetics_test)
         typedef typename AT::value_type value_type;
         fixture<AT> f((add_ranges<value_type>()));
     
-        ipa_type::add(f.lhs,f.rhs_scalar);
+        ip_type::add(f.lhs,f.rhs_scalar);
 
         for(size_t i=0;i<f.lhs.size();++i) 
         {
@@ -83,7 +83,7 @@ BOOST_AUTO_TEST_SUITE(inplace_arithmetics_test)
         typedef typename AT::value_type value_type;
         fixture<AT> f((add_ranges<value_type>()));
     
-        ipa_type::add(f.lhs,f.rhs);
+        ip_type::add(f.lhs,f.rhs);
 
         for(size_t i=0;i<f.lhs.size();++i) 
         {
@@ -109,7 +109,7 @@ BOOST_AUTO_TEST_SUITE(inplace_arithmetics_test)
         typedef typename AT::value_type value_type;
         fixture<AT> f((add_ranges<value_type>()));
     
-        ipa_type::sub(f.lhs,f.rhs_scalar);
+        ip_type::sub(f.lhs,f.rhs_scalar);
 
         for(size_t i=0;i<f.lhs.size();++i) 
         {
@@ -134,7 +134,7 @@ BOOST_AUTO_TEST_SUITE(inplace_arithmetics_test)
         typedef typename AT::value_type value_type;
         fixture<AT> f((add_ranges<value_type>()));
     
-        ipa_type::sub(f.lhs,f.rhs);
+        ip_type::sub(f.lhs,f.rhs);
 
         for(size_t i=0;i<f.lhs.size();++i) 
         {
@@ -159,7 +159,7 @@ BOOST_AUTO_TEST_SUITE(inplace_arithmetics_test)
         typedef typename AT::value_type value_type;
         fixture<AT> f((div_ranges<value_type>()));
 
-        ipa_type::div(f.lhs,f.rhs_scalar);
+        ip_type::div(f.lhs,f.rhs_scalar);
     
         for(size_t i=0;i<f.lhs.size();++i)
         {
@@ -184,7 +184,7 @@ BOOST_AUTO_TEST_SUITE(inplace_arithmetics_test)
         typedef typename AT::value_type value_type;
         fixture<AT> f((div_ranges<value_type>()));
 
-        ipa_type::div(f.lhs,f.rhs);
+        ip_type::div(f.lhs,f.rhs);
 
         for(size_t i=0;i<f.lhs.size();++i)
         {
@@ -209,7 +209,7 @@ BOOST_AUTO_TEST_SUITE(inplace_arithmetics_test)
         typedef typename AT::value_type value_type;
         fixture<AT> f((mult_ranges<value_type>()));
 
-        ipa_type::mult(f.lhs,f.rhs_scalar);
+        ip_type::mult(f.lhs,f.rhs_scalar);
         
         for(size_t i=0;i<f.lhs.size();++i)
         {
@@ -234,7 +234,7 @@ BOOST_AUTO_TEST_SUITE(inplace_arithmetics_test)
         typedef typename AT::value_type value_type;
         fixture<AT> f((mult_ranges<value_type>()));
 
-        ipa_type::mult(f.lhs,f.rhs);
+        ip_type::mult(f.lhs,f.rhs);
 
         for(size_t i=0;i<f.lhs.size();++i)
         {

@@ -163,7 +163,6 @@ BOOST_AUTO_TEST_SUITE(type_info_test)
     BOOST_AUTO_TEST_CASE(test_type_info_bool)
     {
         typedef type_info<bool> info_type;
-        typedef std::numeric_limits<bool> limits_type; 
 
         BOOST_CHECK_EQUAL(info_type::min(),false);
         BOOST_CHECK_EQUAL(info_type::max(),true);
@@ -177,7 +176,6 @@ BOOST_AUTO_TEST_SUITE(type_info_test)
     BOOST_AUTO_TEST_CASE(test_type_info_bool_t)
     {
         typedef type_info<bool_t> info_type;
-        typedef std::numeric_limits<bool_t> limits_type; 
 
         BOOST_CHECK_EQUAL(info_type::min(),false);
         BOOST_CHECK_EQUAL(info_type::max(),true);

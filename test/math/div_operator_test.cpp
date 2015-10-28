@@ -116,7 +116,6 @@ BOOST_AUTO_TEST_SUITE(div_operator_test)
     {
         typedef fixture<AT> fixture_type; 
         typedef typename fixture_type::value_type value_type;
-        typedef typename fixture_type::scalar_type scalar_type;
 
         fixture_type f((div_ranges<value_type>()));
         auto result = AT::create(f.shape);
@@ -142,9 +141,7 @@ BOOST_AUTO_TEST_SUITE(div_operator_test)
     BOOST_AUTO_TEST_CASE_TEMPLATE(operator_on_view_test,AT,all_array_types)
     {
         typedef fixture<AT> fixture_type; 
-        typedef typename fixture_type::array_type array_type;
         typedef typename fixture_type::value_type value_type;
-        typedef typename fixture_type::scalar_type scalar_type;
         typedef dynamic_array<value_type> result_type;
 
         fixture_type f((div_ranges<value_type>()));
