@@ -27,6 +27,7 @@
 #include "array_types.hpp"
 #include <boost/mpl/joint_view.hpp>
 #include <iostream>
+#include "../compiler_version.hpp"
 
 using namespace pni::core;
 
@@ -34,10 +35,14 @@ using namespace pni::core;
 #define NY 125
 
 typedef  boost::mpl::joint_view<dynamic_arrays,
+#if GCC_VERSION > 40800
                                 boost::mpl::joint_view<
                                 fixed_dim_arrays<2>,
                                 static_arrays<100,125>
                                 >
+#else 
+                                fixed_dim_arrays<2>
+#endif
                                 > all_array_types;
 
 template<typename AT> struct array_view_test_fixture
