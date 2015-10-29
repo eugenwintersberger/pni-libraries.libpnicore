@@ -36,7 +36,7 @@ using namespace pni::core;
 typedef  boost::mpl::joint_view<dynamic_arrays,
                                 boost::mpl::joint_view<
                                 fixed_dim_arrays<2>,
-                                static_arrays<100,125>
+                                static_arrays<NX,NY>
                                 >
                                 > all_array_types;
 
