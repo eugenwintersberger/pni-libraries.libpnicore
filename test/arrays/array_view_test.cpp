@@ -1,97 +1,84 @@
-//!
-//! (c) Copyright 2012 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
-//!
-//! This file is part of libpnicore.
-//!
-//! libpnicore is free software: you can redistribute it and/or modify
-//! it under the terms of the GNU General Public License as published by
-//! the Free Software Foundation, either version 2 of the License, or
-//! (at your option) any later version.
-//!
-//! libpnicore is distributed in the hope that it will be useful,
-//! but WITHOUT ANY WARRANTY; without even the implied warranty of
-//! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//! GNU General Public License for more details.
-//!
-//! You should have received a copy of the GNU General Public License
-//! along with libpnicore.  If not, see <http://www.gnu.org/licenses/>.
-//!
-//! ===========================================================================
-//!
-//!  Created on: May 14, 2012
-//!      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
-//!/
-#include<cppunit/extensions/HelperMacros.h>
-
+//
+// (c) Copyright 2012 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
+//
+// This file is part of libpnicore.
+//
+// libpnicore is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+//
+// libpnicore is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with libpnicore.  If not, see <http://www.gnu.org/licenses/>.
+//
+// ===========================================================================
+//
+//  Created on: May 14, 2012
+//      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
+//
+#include <boost/test/unit_test.hpp>
+#include <pni/core/arrays.hpp>
+#include "../data_generator.hpp"
+#include "array_types.hpp"
+#include <boost/mpl/joint_view.hpp>
 #include <iostream>
-#include <boost/shared_ptr.hpp>
-#include <boost/current_function.hpp>
 
-#include "array_view_test.hpp"
+using namespace pni::core;
 
+#define NX 100
+#define NY 125
 
+typedef  boost::mpl::joint_view<dynamic_arrays,
+                                boost::mpl::joint_view<
+                                fixed_dim_arrays<2>,
+                                static_arrays<100,125>
+                                >
+                                > all_array_types;
 
-template<typename T> using dyn_array_view_test = array_view_test<dynamic_array<T> >;
+template<typename AT> struct array_view_test_fixture
+{
+    typedef AT                            array_type;
+    typedef array_view<AT>                view_type;
+    typedef typename AT::value_type       value_type;
+    typedef random_generator<value_type>  generator_type;
+    typedef std::vector<slice>            slice_vector;
+    typedef typename array_type::map_type map_type;
+    typedef array_selection               selection_type;
 
-CPPUNIT_TEST_SUITE_REGISTRATION(dyn_array_view_test<uint8>);
-CPPUNIT_TEST_SUITE_REGISTRATION(dyn_array_view_test<int8>);
-CPPUNIT_TEST_SUITE_REGISTRATION(dyn_array_view_test<uint16>);
-CPPUNIT_TEST_SUITE_REGISTRATION(dyn_array_view_test<int16>);
-CPPUNIT_TEST_SUITE_REGISTRATION(dyn_array_view_test<uint32>);
-CPPUNIT_TEST_SUITE_REGISTRATION(dyn_array_view_test<int32>);
-CPPUNIT_TEST_SUITE_REGISTRATION(dyn_array_view_test<uint64>);
-CPPUNIT_TEST_SUITE_REGISTRATION(dyn_array_view_test<int64>);
-CPPUNIT_TEST_SUITE_REGISTRATION(dyn_array_view_test<float32>);
-CPPUNIT_TEST_SUITE_REGISTRATION(dyn_array_view_test<float64>);
-CPPUNIT_TEST_SUITE_REGISTRATION(dyn_array_view_test<float128>);
-CPPUNIT_TEST_SUITE_REGISTRATION(dyn_array_view_test<complex32>);
-CPPUNIT_TEST_SUITE_REGISTRATION(dyn_array_view_test<complex64>);
-CPPUNIT_TEST_SUITE_REGISTRATION(dyn_array_view_test<complex128>);
-CPPUNIT_TEST_SUITE_REGISTRATION(dyn_array_view_test<string>);
-CPPUNIT_TEST_SUITE_REGISTRATION(dyn_array_view_test<bool_t>);
+    generator_type generator;
+    shape_t shape;
+    array_type a;
 
-template<typename T>
-using fix_array_view_test = array_view_test<fixed_dim_array<T,2>>;
+    array_view_test_fixture():
+        generator(),
+        shape({NX,NY}),
+        a(array_type::create(shape))
+    {
+        std::generate(a.begin(),a.end(),generator); 
+    }
+};
 
-CPPUNIT_TEST_SUITE_REGISTRATION(fix_array_view_test<uint8>);
-CPPUNIT_TEST_SUITE_REGISTRATION(fix_array_view_test<int8>);
-CPPUNIT_TEST_SUITE_REGISTRATION(fix_array_view_test<uint16>);
-CPPUNIT_TEST_SUITE_REGISTRATION(fix_array_view_test<int16>);
-CPPUNIT_TEST_SUITE_REGISTRATION(fix_array_view_test<uint32>);
-CPPUNIT_TEST_SUITE_REGISTRATION(fix_array_view_test<int32>);
-CPPUNIT_TEST_SUITE_REGISTRATION(fix_array_view_test<uint64>);
-CPPUNIT_TEST_SUITE_REGISTRATION(fix_array_view_test<int64>);
-CPPUNIT_TEST_SUITE_REGISTRATION(fix_array_view_test<float32>);
-CPPUNIT_TEST_SUITE_REGISTRATION(fix_array_view_test<float64>);
-CPPUNIT_TEST_SUITE_REGISTRATION(fix_array_view_test<float128>);
-CPPUNIT_TEST_SUITE_REGISTRATION(fix_array_view_test<complex32>);
-CPPUNIT_TEST_SUITE_REGISTRATION(fix_array_view_test<complex64>);
-CPPUNIT_TEST_SUITE_REGISTRATION(fix_array_view_test<complex128>);
-CPPUNIT_TEST_SUITE_REGISTRATION(fix_array_view_test<string>);
-CPPUNIT_TEST_SUITE_REGISTRATION(fix_array_view_test<bool_t>);
+BOOST_AUTO_TEST_SUITE(array_view_test)
 
-template<typename T> 
-using static_array_view_test = array_view_test<static_array<T,NX,NY>>;
-CPPUNIT_TEST_SUITE_REGISTRATION(static_array_view_test<uint8>);
-CPPUNIT_TEST_SUITE_REGISTRATION(static_array_view_test<int8>);
-CPPUNIT_TEST_SUITE_REGISTRATION(static_array_view_test<uint16>);
-CPPUNIT_TEST_SUITE_REGISTRATION(static_array_view_test<int16>);
-CPPUNIT_TEST_SUITE_REGISTRATION(static_array_view_test<uint32>);
-CPPUNIT_TEST_SUITE_REGISTRATION(static_array_view_test<int32>);
-CPPUNIT_TEST_SUITE_REGISTRATION(static_array_view_test<uint64>);
-CPPUNIT_TEST_SUITE_REGISTRATION(static_array_view_test<int64>);
-CPPUNIT_TEST_SUITE_REGISTRATION(static_array_view_test<float32>);
-CPPUNIT_TEST_SUITE_REGISTRATION(static_array_view_test<float64>);
-CPPUNIT_TEST_SUITE_REGISTRATION(static_array_view_test<float128>);
-CPPUNIT_TEST_SUITE_REGISTRATION(static_array_view_test<complex32>);
-CPPUNIT_TEST_SUITE_REGISTRATION(static_array_view_test<complex64>);
-CPPUNIT_TEST_SUITE_REGISTRATION(static_array_view_test<complex128>);
-CPPUNIT_TEST_SUITE_REGISTRATION(static_array_view_test<string>);
-CPPUNIT_TEST_SUITE_REGISTRATION(static_array_view_test<bool_t>);
+    BOOST_AUTO_TEST_CASE_TEMPLATE(test_construction,AT,all_array_types)
+    {
+        typedef array_view_test_fixture<AT> fixture_type; 
+        typedef typename fixture_type::view_type view_type;
+        typedef typename fixture_type::selection_type selection_type;
+        typedef typename fixture_type::slice_vector slice_vector;
 
 
+        fixture_type fixture;
+       
+        slice_vector slices{slice(0,3),slice(3,7)};
+        view_type v1(fixture.a,selection_type::create(slices));
 
+    }
 
-
-
+BOOST_AUTO_TEST_SUITE_END()
 

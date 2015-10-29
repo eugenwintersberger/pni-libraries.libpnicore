@@ -1,8 +1,7 @@
 #need to define the version of the library
 set(SOURCES scalar_test.cpp
-            #array_selection_test.cpp
-            #arrays_test.cpp
-            #array_view_test.cpp
+            array_selection_test.cpp
+            array_view_test.cpp
             #array_view_unary_arithmetic_test.cpp
             #dynamic_mdarray_test.cpp
             #fix_mdarray_test.cpp
@@ -22,5 +21,7 @@ add_test(NAME arrays_test
          COMMAND arrays_test
          WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/../
          )
+
+add_dependencies(check arrays_test)
 
 

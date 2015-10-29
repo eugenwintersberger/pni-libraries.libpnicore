@@ -21,12 +21,12 @@
 //  Created on: Sep 02, 2011
 //      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
 //
-
+#define BOOST_TEST_DYN_LINK
+#define BOOST_TEST_MODULE testing scalar array
 #include <boost/test/unit_test.hpp>
-#include "../types.hpp"
 #include "../data_generator.hpp"
-#include<iostream>
-#include<typeinfo>
+#include <typeinfo>
+#include <pni/core/arrays/scalar.hpp>
 
 using namespace pni::core;
 
@@ -42,12 +42,15 @@ template<typename T> struct scalar_fixture
     {}
 };
 
+#define SETUP_SCALAR_FIXTURE() \
+    typedef scalar_fixture<T> fixture_type; \
+    fixture_type fixture
+
 BOOST_AUTO_TEST_SUITE(scalar_test)
 
-    BOOST_AUTO_TEST_SUITE_TEMPLATE(test_construction,T,numeric_types)   
+    BOOST_AUTO_TEST_CASE_TEMPLATE(test_construction,T,numeric_types)   
     {
-        typedef scalar_fixture<T> fixture_type;
-        fixture_type fixture; 
+        SETUP_SCALAR_FIXTURE();
 
         scalar<T> s;
         BOOST_CHECK_EQUAL(s.rank(),0);
@@ -59,7 +62,53 @@ BOOST_AUTO_TEST_SUITE(scalar_test)
 
         //copy construction
         scalar<T> s2 = s1;
-        BOOST_CHECK_EQUAL(
+        BOOST_CHECK_EQUAL(T(s2),T(s1));
+    }
+    
+    //========================================================================
+    BOOST_AUTO_TEST_CASE_TEMPLATE(test_assignment,T,numeric_types)
+    {
+        SETUP_SCALAR_FIXTURE();
+
+        scalar<T> s(fixture.v);
+        scalar<T> a;
+
+        a = s;
+        BOOST_CHECK_EQUAL(T(a),T(s));
+    }
+
+    //========================================================================
+    BOOST_AUTO_TEST_CASE_TEMPLATE(test_access_unchecked,T,numeric_types)
+    {
+        SETUP_SCALAR_FIXTURE();
+
+        scalar<T> s = fixture.v;
+        BOOST_CHECK_EQUAL(s[0],fixture.v);
+        BOOST_CHECK_EQUAL(s[1],fixture.v);
+    }
+
+    //========================================================================
+    BOOST_AUTO_TEST_CASE_TEMPLATE(test_access_checked,T,numeric_types)
+    {
+        SETUP_SCALAR_FIXTURE();
+
+        scalar<T> s = fixture.v;
+        BOOST_CHECK_EQUAL(s.at(0),fixture.v);
+        BOOST_CHECK_EQUAL(s.at(1),fixture.v);
+    }
+    
+    //========================================================================
+    BOOST_AUTO_TEST_CASE_TEMPLATE(test_comparison,T,numeric_types)
+    {
+        SETUP_SCALAR_FIXTURE();
+
+        scalar<T> a = fixture.generator();
+        scalar<T> b = a;
+        scalar<T> c(fixture.generator());
+
+        BOOST_CHECK(a==b);
+        BOOST_CHECK(a==a);
+        BOOST_CHECK(a!=c);
     }
 
 BOOST_AUTO_TEST_SUITE_END()

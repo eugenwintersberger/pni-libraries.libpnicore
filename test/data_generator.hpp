@@ -90,8 +90,8 @@ template<typename T> class random_generator<std::complex<T>>
         {}
 
         random_generator():
-            _real_generator(tinfo_type::min(),tinfo_type::max()),
-            _imag_generator(tinfo_type::min(),tinfo_type::max())
+            _real_generator(),
+            _imag_generator()
         {}
         
         std::complex<T> operator()()
