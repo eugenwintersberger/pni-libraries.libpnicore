@@ -14,6 +14,6 @@ add_test(NAME index_maps_test
          WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/../
          )
 
-     #add_dependencies(check index_maps_test)
+add_dependencies(check index_maps_test)
 
 
