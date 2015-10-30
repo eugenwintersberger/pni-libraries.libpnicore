@@ -25,6 +25,7 @@
 #include <pni/core/arrays.hpp>
 #include <pni/core/types.hpp>
 #include <boost/mpl/list.hpp>
+#include <boost/mpl/joint_view.hpp>
 #include <cstddef>
 
 typedef boost::mpl::list<pni::core::dynamic_array<pni::core::uint8>,
@@ -40,13 +41,19 @@ typedef boost::mpl::list<pni::core::dynamic_array<pni::core::uint8>,
                          pni::core::dynamic_array<pni::core::float128>,
                          pni::core::dynamic_array<pni::core::complex32>,
                          pni::core::dynamic_array<pni::core::complex64>,
-                         pni::core::dynamic_array<pni::core::complex128>,
-                         pni::core::dynamic_array<pni::core::string>,
+                         pni::core::dynamic_array<pni::core::complex128>>
+                         numeric_dynamic_arrays;
+
+typedef boost::mpl::list<pni::core::dynamic_array<pni::core::string>,
                          pni::core::dynamic_array<pni::core::bool_t>>
-                         dynamic_arrays;
+                         nonnumeric_dynamic_arrays;
+
+typedef boost::mpl::joint_view<numeric_dynamic_arrays,
+                               nonnumeric_dynamic_arrays>
+                               all_dynamic_arrays;
 
 template<size_t NDIMS>
-using fixed_dim_arrays = 
+using numeric_fixed_dim_arrays = 
         boost::mpl::list<pni::core::fixed_dim_array<pni::core::uint8,NDIMS>,
                          pni::core::fixed_dim_array<pni::core::uint16,NDIMS>,
                          pni::core::fixed_dim_array<pni::core::uint32,NDIMS>,
@@ -60,12 +67,21 @@ using fixed_dim_arrays =
                          pni::core::fixed_dim_array<pni::core::float128,NDIMS>,
                          pni::core::fixed_dim_array<pni::core::complex32,NDIMS>,
                          pni::core::fixed_dim_array<pni::core::complex64,NDIMS>,
-                         pni::core::fixed_dim_array<pni::core::complex128,NDIMS>,
-                         pni::core::fixed_dim_array<pni::core::string,NDIMS>,
+                         pni::core::fixed_dim_array<pni::core::complex128,NDIMS>>;
+                         
+
+template<size_t NDIMS>
+using nonnumeric_fixed_dim_arrays = 
+        boost::mpl::list<pni::core::fixed_dim_array<pni::core::string,NDIMS>,
                          pni::core::fixed_dim_array<pni::core::bool_t,NDIMS>>;
 
+template<size_t NDIMS>
+using all_fixed_dim_arrays = 
+        boost::mpl::joint_view<numeric_fixed_dim_arrays<NDIMS>,
+                               nonnumeric_fixed_dim_arrays<NDIMS>>;
+
 template<size_t... DIMS>
-using static_arrays = 
+using numeric_static_arrays = 
         boost::mpl::list<pni::core::static_array<pni::core::uint8,DIMS... >,
                          pni::core::static_array<pni::core::uint16,DIMS... >,
                          pni::core::static_array<pni::core::uint32,DIMS... >,
@@ -79,7 +95,15 @@ using static_arrays =
                          pni::core::static_array<pni::core::float128,DIMS... >,
                          pni::core::static_array<pni::core::complex32,DIMS... >,
                          pni::core::static_array<pni::core::complex64,DIMS... >,
-                         pni::core::static_array<pni::core::complex128,DIMS... >,
-                         pni::core::static_array<pni::core::string,DIMS... >,
+                         pni::core::static_array<pni::core::complex128,DIMS...>>;
+
+template<size_t... DIMS>
+using nonnumeric_static_arrays = 
+        boost::mpl::list<pni::core::static_array<pni::core::string,DIMS... >,
                          pni::core::static_array<pni::core::bool_t,DIMS... >>;
+
+template<size_t... DIMS>
+using all_static_arrays = 
+        boost::mpl::joint_view<numeric_static_arrays<DIMS...>,
+                               nonnumeric_static_arrays<DIMS...>>;
                          

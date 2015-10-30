@@ -1,55 +1,231 @@
-//!
-//! (c) Copyright 2013 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
-//!
-//! This file is part of libpnicore.
-//!
-//! libpnicore is free software: you can redistribute it and/or modify
-//! it under the terms of the GNU General Public License as published by
-//! the Free Software Foundation, either version 2 of the License, or
-//! (at your option) any later version.
-//!
-//! libpnicore is distributed in the hope that it will be useful,
-//! but WITHOUT ANY WARRANTY; without even the implied warranty of
-//! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//! GNU General Public License for more details.
-//!
-//! You should have received a copy of the GNU General Public License
-//! along with libpnicore.  If not, see <http://www.gnu.org/licenses/>.
-//!
-//! ===========================================================================
-//!
-//!  Created on: Oct 28, 2013
-//!      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
-//!
-#include<cppunit/extensions/HelperMacros.h>
+//
+// (c) Copyright 2013 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
+//
+// This file is part of libpnicore.
+//
+// libpnicore is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+//
+// libpnicore is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with libpnicore.  If not, see <http://www.gnu.org/licenses/>.
+//
+// ===========================================================================
+//
+//  Created on: Oct 28, 2013
+//      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
+//
 
-#include <iostream>
-#include <boost/shared_ptr.hpp>
+#include <boost/test/unit_test.hpp>
+#include <pni/core/arrays.hpp>
+#include "array_types.hpp"
+#include "../data_generator.hpp"
 
-#include "dynamic_mdarray_test.hpp"
+using namespace pni::core;
+
+template<typename AT> struct dynamic_array_test_fixture
+{
+    typedef AT array_type;
+    typedef typename AT::map_type map_type; 
+    typedef typename AT::storage_type storage_type;
+    typedef typename array_type::value_type value_type;
+    typedef random_generator<value_type> generator_type;
+    
+    generator_type generator;
+    shape_t shape;
+
+    dynamic_array_test_fixture():
+        generator(),
+        shape(shape_t{2,3,5})
+    {}
+};
+
+BOOST_AUTO_TEST_SUITE(dynamic_mdarray_test)
+
+    BOOST_AUTO_TEST_CASE_TEMPLATE(test_default_construction,AT,all_dynamic_arrays)
+    {
+        AT a;
+        BOOST_CHECK_EQUAL(a.size(),0);
+        BOOST_CHECK_EQUAL(a.rank(),0);
+    }
+
+    //========================================================================
+    BOOST_AUTO_TEST_CASE_TEMPLATE(test_standard_construction,AT,all_dynamic_arrays)
+    {
+        typedef dynamic_array_test_fixture<AT> fixture_type; 
+        fixture_type fixture;
+        
+        auto map = map_utils<typename fixture_type::map_type>::create(fixture.shape);
+        BOOST_CHECK_EQUAL(map.max_elements(),30);
+        typename fixture_type::storage_type storage(map.max_elements()); 
+        BOOST_CHECK_EQUAL(storage.size(),30);
+        AT a(map,storage);
+
+        BOOST_CHECK_EQUAL(a.size(),storage.size());
+        BOOST_CHECK_EQUAL(a.rank(),3);
+
+        AT a2(std::move(map),std::move(storage));
+        BOOST_CHECK_EQUAL(a2.size(),a.size());
+        BOOST_CHECK_EQUAL(a2.rank(),a.rank());
+        BOOST_CHECK_EQUAL(map.rank(),0);
+        BOOST_CHECK_EQUAL(storage.size(),0);
+    }
+
+    //========================================================================
+    BOOST_AUTO_TEST_CASE_TEMPLATE(test_copy_construction,AT,all_dynamic_arrays)
+    {
+        typedef dynamic_array_test_fixture<AT> fixture_type; 
+        fixture_type fixture;
+
+        auto map = map_utils<typename fixture_type::map_type>::create(fixture.shape);
+        typename fixture_type::storage_type storage(map.max_elements()); 
+        AT a(map,storage);
+
+        AT b(a);
+        BOOST_CHECK_EQUAL(a.size(),b.size());
+        BOOST_CHECK_EQUAL(a.rank(),b.rank());
+    }
+
+    //========================================================================
+    BOOST_AUTO_TEST_CASE_TEMPLATE(test_move_construction,AT,all_dynamic_arrays)
+    {
+        typedef dynamic_array_test_fixture<AT> fixture_type; 
+        fixture_type fixture;
+
+        auto map = map_utils<typename fixture_type::map_type>::create(fixture.shape);
+        typename fixture_type::storage_type storage(map.max_elements()); 
+        AT a(map,storage);
+
+        AT b(std::move(a));
+        BOOST_CHECK_EQUAL(a.size(),0);
+        BOOST_CHECK_EQUAL(a.rank(),0);
+        BOOST_CHECK_EQUAL(b.size(),storage.size());
+        BOOST_CHECK_EQUAL(b.rank(),3);
+    }
+
+    //========================================================================
+    BOOST_AUTO_TEST_CASE_TEMPLATE(test_fixed_dim_construction,AT,all_dynamic_arrays)
+    {
+        typedef dynamic_array_test_fixture<AT> fixture_type;
+        typedef typename fixture_type::value_type value_type;
+        typedef fixed_dim_array<value_type,3> farray_type;
+
+        fixture_type fixture; 
+
+        auto farray = farray_type::create(fixture.shape);
+        std::generate(farray.begin(),farray.begin(),fixture.generator);
+        AT a(farray);
+        auto s = a.template shape<shape_t>();
+        BOOST_CHECK_EQUAL_COLLECTIONS(s.begin(),s.end(),fixture.shape.begin(),
+                                      fixture.shape.end());
+        BOOST_CHECK_EQUAL_COLLECTIONS(a.begin(),a.end(),
+                                      farray.begin(),farray.end());
+
+    }
+
+    //========================================================================
+    BOOST_AUTO_TEST_CASE_TEMPLATE(test_static_construction,AT,all_dynamic_arrays)
+    {
+        typedef dynamic_array_test_fixture<AT> fixture_type; 
+        typedef typename fixture_type::value_type value_type;
+        typedef static_array<value_type,2,3,5> sarray_type; 
+
+        fixture_type fixture;
+
+        auto sarray = sarray_type::create(fixture.shape);
+        std::generate(sarray.begin(),sarray.end(),fixture.generator);
+        AT a(sarray);
+        auto s = a.template shape<shape_t>();
+        BOOST_CHECK_EQUAL_COLLECTIONS(s.begin(),s.end(),fixture.shape.begin(),
+                                      fixture.shape.end());
+        BOOST_CHECK_EQUAL_COLLECTIONS(a.begin(),a.end(),
+                                      sarray.begin(),sarray.end());
+    }
+
+    //========================================================================
+    BOOST_AUTO_TEST_CASE_TEMPLATE(test_copy_assignment,AT,all_dynamic_arrays)
+    {
+        typedef dynamic_array_test_fixture<AT> fixture_type;
+        typedef typename fixture_type::map_type map_type;
+        typedef typename fixture_type::storage_type storage_type; 
+
+        fixture_type fixture;
+
+        auto map = map_utils<map_type>::create(fixture.shape);
+        storage_type storage(map.max_elements());
+        AT a(std::move(map),std::move(storage));
+        std::generate(a.begin(),a.end(),fixture.generator);
+
+        AT b = a;
+        BOOST_CHECK_EQUAL(b.size(),a.size());
+        BOOST_CHECK_EQUAL(b.rank(),a.rank());
+        BOOST_CHECK_EQUAL_COLLECTIONS(a.begin(),a.end(),b.begin(),b.end());
+    }
+
+    //========================================================================
+    BOOST_AUTO_TEST_CASE_TEMPLATE(test_move_assignment,AT,all_dynamic_arrays)
+    {
+        typedef dynamic_array_test_fixture<AT> fixture_type;
+        typedef typename fixture_type::map_type map_type;
+        typedef typename fixture_type::storage_type storage_type; 
+
+        fixture_type fixture;
+
+        auto map = map_utils<map_type>::create(fixture.shape);
+        storage_type storage(map.max_elements());
+        std::generate(storage.begin(),storage.end(),fixture.generator);
+        AT a(map,storage);
+
+        AT b = std::move(a);
+        BOOST_CHECK_EQUAL(b.size(),storage.size());
+        BOOST_CHECK_EQUAL(b.rank(),map.rank());
+        BOOST_CHECK_EQUAL_COLLECTIONS(b.begin(),b.end(),
+                                      storage.begin(),storage.end());
+        
+        BOOST_CHECK_EQUAL(a.size(),0);
+        BOOST_CHECK_EQUAL(a.rank(),0);
+    }
+
+    //========================================================================
+    BOOST_AUTO_TEST_CASE_TEMPLATE(test_assign_from_fixed_dim,AT,all_dynamic_arrays)
+    {
+        typedef dynamic_array_test_fixture<AT> fixture_type;
+        typedef typename fixture_type::value_type value_type;
+        typedef fixed_dim_array<value_type,3> farray_type;
+
+        fixture_type fixture; 
+
+        auto farray = farray_type::create(fixture.shape);
+        std::generate(farray.begin(),farray.begin(),fixture.generator);
+        auto a = AT::create(fixture.shape);
+        a = farray;
+        BOOST_CHECK_EQUAL_COLLECTIONS(a.begin(),a.end(),
+                                      farray.begin(),farray.end());
+    }
+    
+    //========================================================================
+    BOOST_AUTO_TEST_CASE_TEMPLATE(test_assign_from_static,AT,all_dynamic_arrays)
+    {
+        typedef dynamic_array_test_fixture<AT> fixture_type; 
+        typedef typename fixture_type::value_type value_type;
+        typedef static_array<value_type,2,3,5> sarray_type; 
+
+        fixture_type fixture;
+
+        auto sarray = sarray_type::create(fixture.shape);
+        std::generate(sarray.begin(),sarray.end(),fixture.generator);
+        auto a = AT::create(fixture.shape);
+        a = sarray;
+        BOOST_CHECK_EQUAL_COLLECTIONS(a.begin(),a.end(),
+                                      sarray.begin(),sarray.end());
+
+    }
+BOOST_AUTO_TEST_SUITE_END()
 
 
-
-#define DYNARRAY_TEST_REGISTRATION(type)\
-static CPPUNIT_NS::AutoRegisterSuite< dynamic_mdarray_test<dynamic_array<type> > >  \
-             CPPUNIT_MAKE_UNIQUE_NAME(autoRegisterRegistry__ )
-
-
-
-//-------------------dynamic array tests-----------------------------------
-DYNARRAY_TEST_REGISTRATION(uint8);
-DYNARRAY_TEST_REGISTRATION(int8);
-DYNARRAY_TEST_REGISTRATION(uint16);
-DYNARRAY_TEST_REGISTRATION(int16);
-DYNARRAY_TEST_REGISTRATION(uint32);
-DYNARRAY_TEST_REGISTRATION(int32);
-DYNARRAY_TEST_REGISTRATION(uint64);
-DYNARRAY_TEST_REGISTRATION(int64);
-DYNARRAY_TEST_REGISTRATION(float32);
-DYNARRAY_TEST_REGISTRATION(float64);
-DYNARRAY_TEST_REGISTRATION(float128);
-DYNARRAY_TEST_REGISTRATION(complex32);
-DYNARRAY_TEST_REGISTRATION(complex64);
-DYNARRAY_TEST_REGISTRATION(complex128);
-DYNARRAY_TEST_REGISTRATION(string);
-DYNARRAY_TEST_REGISTRATION(bool_t);

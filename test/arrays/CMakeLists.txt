@@ -2,13 +2,12 @@
 set(SOURCES scalar_test.cpp
             array_selection_test.cpp
             array_view_test.cpp
-            #array_view_unary_arithmetic_test.cpp
-            #dynamic_mdarray_test.cpp
-            #fix_mdarray_test.cpp
-            #mdarray_test.cpp
-            #mdarray_unary_arithmetic_test.cpp
-            #static_mdarray_test.cpp
-            #array_view_utils_test.cpp
+            array_view_unary_arithmetic_test.cpp
+            dynamic_mdarray_test.cpp
+            fix_mdarray_test.cpp
+            static_mdarray_test.cpp
+            mdarray_test.cpp
+            array_view_utils_test.cpp
     )
 
 
