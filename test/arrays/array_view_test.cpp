@@ -70,9 +70,6 @@ template<typename AT> struct array_view_test_fixture
 
 #define SETUP_VIEW_FIXTURE()\
         typedef array_view_test_fixture<AT> fixture_type;  \
-        typedef typename fixture_type::view_type view_type; \
-        typedef typename fixture_type::selection_type selection_type; \
-        typedef typename fixture_type::slice_vector slice_vector; \
         fixture_type fixture 
 
 BOOST_AUTO_TEST_SUITE(array_view_test)
@@ -97,13 +94,15 @@ BOOST_AUTO_TEST_SUITE(array_view_test)
     BOOST_AUTO_TEST_CASE_TEMPLATE(test_construction,AT,all_array_types)
     {
         SETUP_VIEW_FIXTURE();
+        typedef typename AT::view_type view_type;
+        typedef std::vector<slice> slice_vector;
 
         slice_vector slices{slice(0,3),slice(3,7)};
-        view_type v1(fixture.a,selection_type::create(slices));
+        view_type v1(fixture.a,array_selection::create(slices));
         check_view(v1,shape_t{3,4});
     
         slices = slice_vector{slice(1),slice(3,7)};
-        view_type v2(fixture.a,selection_type::create(slices));
+        view_type v2(fixture.a,array_selection::create(slices));
         check_view(v2,shape_t{4});
     }
 
@@ -111,6 +110,8 @@ BOOST_AUTO_TEST_SUITE(array_view_test)
     BOOST_AUTO_TEST_CASE_TEMPLATE(test_construction_from_array,AT,all_array_types)
     {
         SETUP_VIEW_FIXTURE();
+        typedef typename AT::view_type view_type;
+        typedef std::vector<slice> slice_vector;
 
         slice_vector selection{slice(0,3),slice(3,7)};
         shape_t view_shape{3,4};
@@ -142,9 +143,11 @@ BOOST_AUTO_TEST_SUITE(array_view_test)
     BOOST_AUTO_TEST_CASE_TEMPLATE(test_linear_access,AT,all_array_types)
     {
         SETUP_VIEW_FIXTURE();
+        typedef typename AT::view_type view_type;
+        typedef std::vector<slice> slice_vector;
 
         //create a selection
-        auto s = selection_type::create(slice_vector{slice(0,1),slice(2,7)});
+        auto s = array_selection::create(slice_vector{slice(0,1),slice(2,7)});
         view_type view(fixture.a,s);
         check_view(view,shape_t{5});
 
@@ -194,9 +197,11 @@ BOOST_AUTO_TEST_SUITE(array_view_test)
     {
         SETUP_VIEW_FIXTURE();
         typedef typename AT::value_type value_type;        
+        typedef typename AT::view_type view_type;
+        typedef std::vector<slice> slice_vector;
 
         //create the view
-        auto s = selection_type::create(slice_vector{slice(10,35,2),slice(100,125,3)});
+        auto s = array_selection::create(slice_vector{slice(10,35,2),slice(100,125,3)});
         view_type v(fixture.a,s);
         check_view(v,shape_t{13,9});
 
@@ -214,7 +219,7 @@ BOOST_AUTO_TEST_SUITE(array_view_test)
             BOOST_CHECK_EQUAL(*iter,*diter);
 
         //-----now we need to check if the data arrived at the original array------
-        selection_type  selection(shape_t{13,9},shape_t{10,100},shape_t{2,3});
+        array_selection  selection(shape_t{13,9},shape_t{10,100},shape_t{2,3});
         index_iterator<shape_t,dynamic_cindex_map> index_iter(shape_t{13,9},0);
         value_type v1,v2;
         size_t i = 0;
@@ -235,6 +240,8 @@ BOOST_AUTO_TEST_SUITE(array_view_test)
     {
         SETUP_VIEW_FIXTURE();
         typedef typename AT::value_type value_type;
+        typedef typename AT::view_type view_type;
+        typedef std::vector<slice> slice_vector;
 
         //select roi
         auto s = array_selection::create(slice_vector{slice(1,10),slice(0,100)});
@@ -265,7 +272,8 @@ BOOST_AUTO_TEST_SUITE(array_view_test)
     {
         SETUP_VIEW_FIXTURE();
         typedef typename AT::value_type value_type;
-
+        typedef typename AT::view_type view_type;
+        typedef std::vector<slice> slice_vector;
      
         slice_vector slices{slice(10,40),slice(0,100)};
         view_type view(fixture.a,array_selection::create(slices));

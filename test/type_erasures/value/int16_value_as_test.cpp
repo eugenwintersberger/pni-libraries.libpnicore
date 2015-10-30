@@ -114,7 +114,6 @@ BOOST_AUTO_TEST_SUITE(int16_value_as_test)
     BOOST_AUTO_TEST_CASE(test_as_int16)
     {
         typedef int16 target_type;
-        typedef pni::core::type_info<target_type> tinfo_type; 
 
         fixture_type f(sinfo_type::min(),sinfo_type::max());
         value v(f.value_1);
@@ -125,7 +124,6 @@ BOOST_AUTO_TEST_SUITE(int16_value_as_test)
     BOOST_AUTO_TEST_CASE(test_as_int32)
     {
         typedef int32 target_type;
-        typedef pni::core::type_info<target_type> tinfo_type; 
         
         fixture_type f(sinfo_type::min(),sinfo_type::max());
         value v(f.value_1);
@@ -136,7 +134,6 @@ BOOST_AUTO_TEST_SUITE(int16_value_as_test)
     BOOST_AUTO_TEST_CASE(test_as_int64)
     {
         typedef int64 target_type;
-        typedef pni::core::type_info<target_type> tinfo_type; 
         
         fixture_type f(sinfo_type::min(),sinfo_type::max());
         value v(f.value_1);

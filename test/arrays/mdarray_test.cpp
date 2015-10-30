@@ -171,7 +171,6 @@ BOOST_AUTO_TEST_SUITE(test_mdarray)
     BOOST_AUTO_TEST_CASE_TEMPLATE(test_linear_access_pointer,AT,array_types)
     {
         typedef test_mdarray_fixture<AT> fixture_type;
-        typedef typename fixture_type::value_type value_type;
         
         fixture_type fixture; 
 

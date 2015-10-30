@@ -146,8 +146,6 @@ BOOST_AUTO_TEST_SUITE(fix_mdarray_test)
     BOOST_AUTO_TEST_CASE_TEMPLATE(test_move_assignment,AT,array_types)
     {
         typedef fix_mdarray_test_fixture<AT> fixture_type; 
-        typedef typename fixture_type::map_type map_type;
-        typedef typename fixture_type::storage_type storage_type;
         fixture_type fixture;
         
         auto a = AT::create(fixture.shape);
