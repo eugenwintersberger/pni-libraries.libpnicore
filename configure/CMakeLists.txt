@@ -1,15 +1,15 @@
-include(GNUInstallDirs)
 include(CheckTypeSize)
 include(CheckCXXSourceCompiles)
 include(CheckCXXCompilerFlag)
 include(FindBoost)
-include(FindPkgConfig)
 
-message("Installation path: ${CMAKE_INSTALL_LIBDIR}")
-message("Architecture: ${CMAKE_LIBRARY_ARCHITECTURE}")
+if(CMAKE_HOST_UNIX)
+    include(FindPkgConfig)
+    include(GNUInstallDirs)
 
-if(NOT PKG_CONFIG_FOUND)
-    message("Could not find pkg-config ... try without it!")
+    if(NOT PKG_CONFIG_FOUND)
+        message("Could not find pkg-config ... try without it!")
+    endif()
 endif()
    
 #setup for GNU CXX compiler
@@ -55,14 +55,9 @@ include(configure/CheckTypeSizes.txt)
 set(Boost_USE_STATIC_LIBS OFF)
 set(Boost_USE_MULTITHREADED OFF)
 set(Boost_USE_STATIC_RUNTIME OFF)
-find_package(Boost 1.41 COMPONENTS program_options 
-                                   system 
-                                   regex 
-                                   unit_test_framework)
-
-if(Boost_FOUND)
-    include_directories(${Boost_INCLUDE_DIRS})
-endif()
-#stop the build here if we do not find BOOST!
-
+find_package(Boost 1.41 REQUIRED 
+             COMPONENTS program_options 
+                        system 
+                        regex 
+                        unit_test_framework)
 
