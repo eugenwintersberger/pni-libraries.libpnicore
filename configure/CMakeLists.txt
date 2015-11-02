@@ -60,7 +60,9 @@ find_package(Boost 1.41 COMPONENTS program_options
                                    regex 
                                    unit_test_framework)
 
-if(PKG_CONFIG_FOUND)
-    pkg_search_module(CPPUNIT REQUIRED cppunit)
+if(Boost_FOUND)
+    include_directories(${Boost_INCLUDE_DIRS})
 endif()
+#stop the build here if we do not find BOOST!
+
 

@@ -1,13 +1,15 @@
 #need to define the version of the library
-set(SOURCES 
+set(SOURCES index_map_tests.cpp
             #index_maps_test.cpp
             #index_map_test_common.cpp 
-            cindex_implementation_test.cpp )
+            cindex_implementation_test.cpp 
+            )
 
 
 link_directories("${CMAKE_CURRENT_BINARY_DIR}/../../src")
+add_definitions(-DBOOST_TEST_NO_MAIN)
 add_executable(index_maps_test EXCLUDE_FROM_ALL ${SOURCES})
-target_link_libraries(index_maps_test pnicore)
+target_link_libraries(index_maps_test pnicore ${Boost_LIBRARIES})
 
 add_test(NAME index_maps_test 
          COMMAND index_maps_test
