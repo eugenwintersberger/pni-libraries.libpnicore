@@ -50,6 +50,15 @@ namespace cindex_implementation_test
 
     typedef std::vector<offset_test_arg> offset_test_args;
 
+    typedef struct{
+        slice_vector sel;
+        index_type shape;
+        index_type sel_index;
+        size_t expected_offset;
+    } sel_offset_test_arg;
+
+    typedef std::vector<sel_offset_test_arg> sel_offset_test_args;
+
     //------------------------------------------------------------------------
     void test_index(const offset_test_arg &arg)
     {
@@ -63,6 +72,14 @@ namespace cindex_implementation_test
     void test_offset(const offset_test_arg &arg)
     {
         BOOST_CHECK_EQUAL(map_type::offset(arg.shape,arg.index),
+                          arg.expected_offset);
+    }
+
+    //------------------------------------------------------------------------
+    void test_selection_offset(const sel_offset_test_arg &arg)
+    {
+        array_selection s = array_selection::create(arg.sel);
+        BOOST_CHECK_EQUAL(map_type::offset(s,arg.shape,arg.sel_index),
                           arg.expected_offset);
     }
 
@@ -85,6 +102,15 @@ int cindex_implementation_test_init()
     ts->add(BOOST_PARAM_TEST_CASE(&test_ns::test_offset,
                                   offset_args.begin(),
                                   offset_args.end()));
+
+    test_ns::sel_offset_test_args soffset_args = {
+    {{slice(5,7)},{10},{1},6},
+    {{slice(3,8),slice(7,10)},{10,20},{2,1},5*20+8}
+    };
+
+    ts->add(BOOST_PARAM_TEST_CASE(&test_ns::test_selection_offset,
+                                  soffset_args.begin(),
+                                  soffset_args.end()));
 
     framework::master_test_suite().add(ts);
 

@@ -289,7 +289,7 @@ namespace core{
                      >::value
                      >::type
                     >
-            size_t offset(const array_selection &s,const CTYPE &index)
+            size_t offset(const array_selection &s,const CTYPE &index) const
             {
                 return implementation_type::template offset(s,_shape,index);
             }

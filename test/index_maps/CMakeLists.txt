@@ -1,7 +1,8 @@
 #need to define the version of the library
 set(SOURCES index_map_tests.cpp
-            #index_maps_test.cpp
-            #index_map_test_common.cpp 
+            dynamic_cindex_map_test.cpp 
+            fixed_dim_cindex_map_test.cpp
+            static_cindex_map_test.cpp
             cindex_implementation_test.cpp 
             )
 

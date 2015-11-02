@@ -25,11 +25,15 @@
 #include <boost/test/unit_test.hpp>
 
 extern int cindex_implementation_test_init();
+extern int dynamic_cindex_map_test_init();
+extern int fixed_dim_cindex_map_test_init();
 
 
 bool init_function()
 {
     cindex_implementation_test_init(); 
+    dynamic_cindex_map_test_init();
+    fixed_dim_cindex_map_test_init();
     return true;
 }
 
