@@ -1,30 +1,33 @@
-//!
-//! (c) Copyright 2012 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
-//!
-//! This file is part of libpnicore.
-//!
-//! libpnicore is free software: you can redistribute it and/or modify
-//! it under the terms of the GNU General Public License as published by
-//! the Free Software Foundation, either version 2 of the License, or
-//! (at your option) any later version.
-//!
-//! libpnicore is distributed in the hope that it will be useful,
-//! but WITHOUT ANY WARRANTY; without even the implied warranty of
-//! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//! GNU General Public License for more details.
-//!
-//! You should have received a copy of the GNU General Public License
-//! along with libpnicore.  If not, see <http://www.gnu.org/licenses/>.
-//!
-//! ===========================================================================
-//!
-//!  Created on: May 15, 2012
-//!      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
-//!
+//
+// (c) Copyright 2012 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
+//
+// This file is part of libpnicore.
+//
+// libpnicore is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+//
+// libpnicore is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with libpnicore.  If not, see <http://www.gnu.org/licenses/>.
+//
+// ===========================================================================
+//
+//  Created on: May 15, 2012
+//      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
+//
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE testing container utilities
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 #include <boost/test/unit_test.hpp>
+#pragma GCC diagnostic pop
 #include <boost/current_function.hpp>
 #include <pni/core/arrays/slice.hpp>
 #include <iostream>
@@ -45,7 +48,7 @@ BOOST_AUTO_TEST_CASE(test_construction)
     slice s(f,l);
     BOOST_CHECK_EQUAL(s.first(),f);
     BOOST_CHECK_EQUAL(s.last(),l);
-    BOOST_CHECK_EQUAL(s.stride(),1);
+    BOOST_CHECK_EQUAL(s.stride(),1u);
 
     //test construction with stride
     size_t stride = 2;
@@ -82,12 +85,12 @@ BOOST_AUTO_TEST_CASE(test_functions)
     size_t f=20,l=100,stride=13;
     slice s(f,l,stride);
 
-    BOOST_CHECK_EQUAL(size(s),7);
-    BOOST_CHECK_EQUAL(span(s),80);
+    BOOST_CHECK_EQUAL(size(s),7u);
+    BOOST_CHECK_EQUAL(span(s),80u);
 
     slice s1(1,3,2);
-    BOOST_CHECK_EQUAL(size(s1),1);
-    BOOST_CHECK_EQUAL(span(s1),2);
+    BOOST_CHECK_EQUAL(size(s1),1u);
+    BOOST_CHECK_EQUAL(span(s1),2u);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

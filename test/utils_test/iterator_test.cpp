@@ -1,28 +1,31 @@
-//!
-//! (c) Copyright 2012 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
-//!
-//! This file is part of libpnicore.
-//!
-//! libpnicore is free software: you can redistribute it and/or modify
-//! it under the terms of the GNU General Public License as published by
-//! the Free Software Foundation, either version 2 of the License, or
-//! (at your option) any later version.
-//!
-//! libpnicore is distributed in the hope that it will be useful,
-//! but WITHOUT ANY WARRANTY; without even the implied warranty of
-//! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//! GNU General Public License for more details.
-//!
-//! You should have received a copy of the GNU General Public License
-//! along with libpnicore.  If not, see <http://www.gnu.org/licenses/>.
-//!
-//! ===========================================================================
-//!
-//!  Created on: Jul 12, 2012
-//!      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
-//!
+//
+// (c) Copyright 2012 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
+//
+// This file is part of libpnicore.
+//
+// libpnicore is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+//
+// libpnicore is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with libpnicore.  If not, see <http://www.gnu.org/licenses/>.
+//
+// ===========================================================================
+//
+//  Created on: Jul 12, 2012
+//      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
+//
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 #include <boost/test/unit_test.hpp>
+#pragma GCC diagnostic pop
 #include <boost/current_function.hpp>
 #include <pni/core/utilities/container_iterator.hpp>
 #include <algorithm>
@@ -317,7 +320,7 @@ BOOST_AUTO_TEST_CASE(test_ptr_access)
     typedef container_iterator<std::vector<string>> iterator_t;
 
     iterator_t first(&v,0);
-    BOOST_CHECK_EQUAL(first->size(),5);
+    BOOST_CHECK_EQUAL(first->size(),5u);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

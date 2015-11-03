@@ -22,7 +22,10 @@
 //      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
 //
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 #include <boost/test/unit_test.hpp>
+#pragma GCC diagnostic pop
 #include <boost/mpl/list.hpp>
 #include <boost/mpl/joint_view.hpp>
 #include <list>
@@ -78,7 +81,7 @@ BOOST_AUTO_TEST_SUITE(container_utils_std_test)
 
         //without initializiation value
         auto c1 = utils_type::create(10);
-        BOOST_CHECK_EQUAL(c1.size(),10);
+        BOOST_CHECK_EQUAL(c1.size(),10u);
 
         //with initializiation value
         auto init_value = generator_type()();

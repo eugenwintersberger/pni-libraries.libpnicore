@@ -24,7 +24,10 @@
 
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE testing the value_ref type earsure
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 #include <boost/test/unit_test.hpp>
+#pragma GCC diagnostic pop
 #include <boost/test/floating_point_comparison.hpp>
 
 #include <pni/core/types.hpp>

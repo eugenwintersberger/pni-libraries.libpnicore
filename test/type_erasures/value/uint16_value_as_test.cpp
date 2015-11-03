@@ -1,8 +1,8 @@
-//!
-//! (c) Copyright 2015 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
-//!
-//! This file is part of libpnicore.
-//!
+//
+// (c) Copyright 2015 DESY, Eugen Wintersberger <eugen.wintersberger@desy.de>
+//
+// This file is part of libpnicore.
+//
 // libpnicore is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 2 of the License, or
@@ -22,7 +22,10 @@
 //      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
 //
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 #include <boost/test/unit_test.hpp>
+#pragma GCC diagnostic pop
 #include <boost/test/floating_point_comparison.hpp>
 #include <pni/core/types.hpp>
 #include <pni/core/type_erasures.hpp>
