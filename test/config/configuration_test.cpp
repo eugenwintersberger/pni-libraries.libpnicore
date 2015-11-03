@@ -23,8 +23,10 @@
 //
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE test configuration components
-
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 #include <boost/test/unit_test.hpp>
+#pragma GCC diagnostic pop
 #include <boost/current_function.hpp>
 
 #include <vector>
@@ -61,10 +63,10 @@ BOOST_AUTO_TEST_CASE(test_configfile)
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
     parse(config_file,"config/pni.cfg");
-    BOOST_CHECK_EQUAL((config_file.value<size_t>("pnicore.nthreads")),4);
+    BOOST_CHECK_EQUAL((config_file.value<size_t>("pnicore.nthreads")),4u);
 
     configuration c = std::move(config_file);
-    BOOST_CHECK_EQUAL((c.value<size_t>("pnicore.nthreads")),4);
+    BOOST_CHECK_EQUAL((c.value<size_t>("pnicore.nthreads")),4u);
 
 }
 
@@ -76,13 +78,13 @@ BOOST_AUTO_TEST_CASE(test_configcli)
 
     parse(config_cli,args);
 
-    BOOST_CHECK_EQUAL(config_cli.value<size_t>("nthreads"),4);
+    BOOST_CHECK_EQUAL(config_cli.value<size_t>("nthreads"),4u);
 
     auto o = config_cli.value<std::vector<size_t>>("nruns");
-    BOOST_CHECK_EQUAL(o.size(),3);
-    BOOST_CHECK_EQUAL(o[0],1);
-    BOOST_CHECK_EQUAL(o[1],4);
-    BOOST_CHECK_EQUAL(o[2],10);
+    BOOST_CHECK_EQUAL(o.size(),3u);
+    BOOST_CHECK_EQUAL(o[0],1u);
+    BOOST_CHECK_EQUAL(o[1],4u);
+    BOOST_CHECK_EQUAL(o[2],10u);
 
     configuration conf;
     BOOST_CHECK_THROW(
