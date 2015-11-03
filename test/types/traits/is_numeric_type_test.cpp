@@ -21,7 +21,11 @@
 //  Created on: Jan 5, 2015
 //      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
 //
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 #include <boost/test/unit_test.hpp>
+#pragma GCC diagnostic pop
 #include <pni/core/types/types.hpp>
 #include <pni/core/types/traits.hpp>
 

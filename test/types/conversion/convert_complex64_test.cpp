@@ -21,8 +21,10 @@
 //  Created on: Dec 29, 2014
 //      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
 //
-
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 #include <boost/test/unit_test.hpp>
+#pragma GCC diangostic pop
 #include <boost/test/floating_point_comparison.hpp>
 #include <pni/core/types/convert.hpp>
 

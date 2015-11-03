@@ -23,7 +23,10 @@
 //
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE testing data type features
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 #include <boost/test/unit_test.hpp>
+#pragma GCC diagnostic pop
 #include <iostream>
 #include <pni/core/types.hpp>
 
@@ -99,7 +102,6 @@ BOOST_AUTO_TEST_SUITE(binary_test)
     //========================================================================
     BOOST_AUTO_TEST_CASE(test_io_operator)
     {
-        std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
         binary  b = 'a';
 
         BOOST_CHECK_EQUAL(b,'a');

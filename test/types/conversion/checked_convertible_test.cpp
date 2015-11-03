@@ -23,7 +23,10 @@
 //
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE testing type conversion features
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 #include <boost/test/unit_test.hpp>
+#pragma GCC diagnostic push
 #include <pni/core/types/checked_convertible.hpp>
 
 using namespace pni::core; 
