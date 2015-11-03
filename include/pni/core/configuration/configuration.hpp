@@ -25,9 +25,13 @@
 #pragma once
 
 #include <iostream>
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#pragma GCC diagnostic ignored "-Wunused-variable"
 #include <boost/program_options.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/tokenizer.hpp>
+#pragma GCC diagnostic pop
 #include "../types.hpp"
 #include "../error/exceptions.hpp"
 #include "config_option.hpp"
