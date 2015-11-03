@@ -22,7 +22,11 @@
 //      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
 //
 #define BOOST_TEST_DYN_LINK
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#pragma GCC diagnostic ignored "-Wunused-variable"
 #include <boost/test/unit_test.hpp>
+#pragma GCC diagnostic pop
 
 extern int cindex_implementation_test_init();
 extern int dynamic_cindex_map_test_init();

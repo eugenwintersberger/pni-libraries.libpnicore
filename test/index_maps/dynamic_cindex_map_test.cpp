@@ -22,7 +22,10 @@
 //      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
 //
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 #include <boost/test/unit_test.hpp>
+#pragma GCC diagnostic pop
 #include <boost/test/parameterized_test.hpp>
 #include <boost/mpl/list.hpp>
 #include <vector>
@@ -69,7 +72,7 @@ namespace dynamic_cindex_map_test{
     {
         shape_t s{20};
         auto map = map_utils<map_type>::create(s);
-        BOOST_CHECK_EQUAL(map.max_elements(),20);
+        BOOST_CHECK_EQUAL(map.max_elements(),20u);
         BOOST_CHECK_EQUAL(map.rank(),s.size());
         BOOST_CHECK_EQUAL(map.size(),s.size());
         BOOST_CHECK_EQUAL_COLLECTIONS(map.begin(),map.end(),s.begin(),
@@ -77,7 +80,7 @@ namespace dynamic_cindex_map_test{
 
         s = shape_t{3,4,5};
         map = map_utils<map_type>::create(s);
-        BOOST_CHECK_EQUAL(map.max_elements(),60);
+        BOOST_CHECK_EQUAL(map.max_elements(),60u);
         BOOST_CHECK_EQUAL(map.rank(),s.size());
         BOOST_CHECK_EQUAL(map.size(),s.size());
         BOOST_CHECK_EQUAL_COLLECTIONS(map.begin(),map.end(),s.begin(),
@@ -85,7 +88,7 @@ namespace dynamic_cindex_map_test{
         
         s = shape_t{1024,1000};
         map = map_utils<map_type>::create(s);
-        BOOST_CHECK_EQUAL(map.max_elements(),1024*1000);
+        BOOST_CHECK_EQUAL(map.max_elements(),1024u*1000u);
         BOOST_CHECK_EQUAL(map.rank(),s.size());
         BOOST_CHECK_EQUAL(map.size(),s.size());
         BOOST_CHECK_EQUAL_COLLECTIONS(map.begin(),map.end(),s.begin(),

@@ -21,7 +21,10 @@
 //  Created on: Nov 2, 2015
 //      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
 //
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 #include <boost/test/unit_test.hpp>
+#pragma GCC diagnostic pop
 #include <boost/test/parameterized_test.hpp>
 #include <boost/mpl/list.hpp>
 #include <vector>
@@ -43,13 +46,13 @@ namespace static_cindex_map_test{
     void test_offset()
     {
         auto map1 = map_utils<map_type_1d>::create({20});
-        BOOST_CHECK_EQUAL(map1.offset(vector_index_type{10}),10);
+        BOOST_CHECK_EQUAL(map1.offset(vector_index_type{10}),10u);
 
         auto map2 = map_utils<map_type_2d>::create({1024,100});
-        BOOST_CHECK_EQUAL(map2.offset(vector_index_type{1000,55}),100055);
+        BOOST_CHECK_EQUAL(map2.offset(vector_index_type{1000,55}),100055u);
 
         auto map3 = map_utils<map_type_3d>::create({3,4,5});
-        BOOST_CHECK_EQUAL(map3.offset(vector_index_type{2,1,2}),47);
+        BOOST_CHECK_EQUAL(map3.offset(vector_index_type{2,1,2}),47u);
     }
     
     //------------------------------------------------------------------------
@@ -57,11 +60,11 @@ namespace static_cindex_map_test{
     {
         array_selection s = array_selection::create(slice_vector{slice(5,7)});
         auto map1 = map_utils<map_type_1d>::create({10});
-        BOOST_CHECK_EQUAL(map1.offset(s,vector_index_type{1}),6);
+        BOOST_CHECK_EQUAL(map1.offset(s,vector_index_type{1}),6u);
         
         s = array_selection::create(slice_vector{slice(3,8),slice(7,10)});
         auto map2 = map_utils<map_type_2d>::create({10,20});
-        BOOST_CHECK_EQUAL(map2.offset(s,vector_index_type{2,1}),5*20+8);
+        BOOST_CHECK_EQUAL(map2.offset(s,vector_index_type{2,1}),5u*20u+8u);
     }
 
     //------------------------------------------------------------------------
@@ -92,7 +95,7 @@ namespace static_cindex_map_test{
 
         shape_t s{20};
         auto map1 = map_utils<map_type_1d>::create(s);
-        BOOST_CHECK_EQUAL(map1.max_elements(),20);
+        BOOST_CHECK_EQUAL(map1.max_elements(),20u);
         BOOST_CHECK_EQUAL(map1.rank(),s.size());
         BOOST_CHECK_EQUAL(map1.size(),s.size());
         BOOST_CHECK_EQUAL_COLLECTIONS(map1.begin(),map1.end(),
@@ -100,7 +103,7 @@ namespace static_cindex_map_test{
 
         s = shape_t{3,4,5};
         auto map2 = map_utils<map_type_3d>::create(s);
-        BOOST_CHECK_EQUAL(map2.max_elements(),60);
+        BOOST_CHECK_EQUAL(map2.max_elements(),60u);
         BOOST_CHECK_EQUAL(map2.rank(),s.size());
         BOOST_CHECK_EQUAL(map2.size(),s.size());
         BOOST_CHECK_EQUAL_COLLECTIONS(map2.begin(),map2.end(),
@@ -108,7 +111,7 @@ namespace static_cindex_map_test{
         
         s = shape_t{1024,1000};
         auto map3 = map_utils<map_type_2d>::create(s);
-        BOOST_CHECK_EQUAL(map3.max_elements(),1024*1000);
+        BOOST_CHECK_EQUAL(map3.max_elements(),1024u*1000u);
         BOOST_CHECK_EQUAL(map3.rank(),s.size());
         BOOST_CHECK_EQUAL(map3.size(),s.size());
         BOOST_CHECK_EQUAL_COLLECTIONS(map3.begin(),map3.end(),
