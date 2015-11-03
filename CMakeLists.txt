@@ -11,6 +11,9 @@ endif()
 
 #===========================provide some user options==========================
 option(BOOST_PREFIX "installation prefix of the local BOOST installation" "/usr")
+set(BOOST_ROOT CACHE PATH "Prefix of the Boost installation")
+set(BOOST_INCLUDEDIR CACHE PATH "Path to the Boost header files")
+set(BOOST_LIBRARYDIR CACHE PATH "Path to the Boost runtime libraries")
 
 #======================do here some setup work=================================
 include(configure/CMakeLists.txt)

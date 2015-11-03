@@ -10,4 +10,5 @@ set(SOURCES bool.cpp
             traits.cpp
    )
 
+include_directories(${Boost_INCLUDE_DIR})
 add_library(type_objects OBJECT ${SOURCES})

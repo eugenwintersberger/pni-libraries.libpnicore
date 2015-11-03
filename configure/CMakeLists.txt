@@ -10,6 +10,9 @@ if(CMAKE_HOST_UNIX)
     if(NOT PKG_CONFIG_FOUND)
         message("Could not find pkg-config ... try without it!")
     endif()
+else()
+    set(CMAKE_INSTALL_FULL_LIBDIR ${CMAKE_INSTALL_PREFIX}/lib)
+    message("Installation path for Windows: ${CMAKE_INSTALL_FULL_LIBDIR}")
 endif()
    
 #setup for GNU CXX compiler
@@ -53,7 +56,7 @@ include(configure/CheckTypeSizes.txt)
 #==========need to check for several libraries if they are installed=============
 
 set(Boost_USE_STATIC_LIBS OFF)
-set(Boost_USE_MULTITHREADED OFF)
+set(Boost_USE_MULTITHREADED ON)
 set(Boost_USE_STATIC_RUNTIME OFF)
 find_package(Boost 1.41 REQUIRED 
              COMPONENTS program_options 
