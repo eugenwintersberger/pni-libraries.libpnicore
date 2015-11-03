@@ -23,7 +23,10 @@
 //
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE testing scalar array
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 #include <boost/test/unit_test.hpp>
+#pragma GCC diagnostic pop
 #include "../data_generator.hpp"
 #include <typeinfo>
 #include <pni/core/arrays/scalar.hpp>
@@ -53,8 +56,8 @@ BOOST_AUTO_TEST_SUITE(scalar_test)
         SETUP_SCALAR_FIXTURE();
 
         scalar<T> s;
-        BOOST_CHECK_EQUAL(s.rank(),0);
-        BOOST_CHECK_EQUAL(s.size(),1);
+        BOOST_CHECK_EQUAL(s.rank(),0u);
+        BOOST_CHECK_EQUAL(s.size(),1u);
 
         //check the default constructor
         scalar<T> s1(fixture.v);

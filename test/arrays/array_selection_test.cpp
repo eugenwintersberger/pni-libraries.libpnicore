@@ -22,7 +22,10 @@
 //      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
 //
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 #include <boost/test/unit_test.hpp>
+#pragma GCC diagnostic pop
 #include <pni/core/algorithms.hpp>
 #include <pni/core/arrays/array_selection.hpp>
 #include <pni/core/arrays/index_map/index_maps.hpp>
@@ -94,9 +97,9 @@ BOOST_FIXTURE_TEST_SUITE(array_selection_test,array_selection_fixture)
     {
         array_selection sel1;
         auto sel1_shape = sel1.shape<shape_t>();
-        BOOST_CHECK_EQUAL(sel1.rank(),0);
+        BOOST_CHECK_EQUAL(sel1.rank(),0u);
         BOOST_CHECK_EQUAL(sel1.shape<shape_t>(),shape_t());
-        BOOST_CHECK_EQUAL(sel1.size(),0);
+        BOOST_CHECK_EQUAL(sel1.size(),0u);
     }
 
     //========================================================================
@@ -109,8 +112,8 @@ BOOST_FIXTURE_TEST_SUITE(array_selection_test,array_selection_fixture)
         index_type o({0,0,0}); 
         index_type str({1,1,1});
         array_selection sel(s,o,str);
-        BOOST_CHECK_EQUAL(sel.rank(),2);
-        BOOST_CHECK_EQUAL(sel.size(),100*100);
+        BOOST_CHECK_EQUAL(sel.rank(),2u);
+        BOOST_CHECK_EQUAL(sel.size(),100u*100u);
 
         auto sel_shape = sel.shape<index_type>();
         BOOST_CHECK_EQUAL_COLLECTIONS(s.begin()+1,s.end(),
@@ -158,8 +161,8 @@ BOOST_FIXTURE_TEST_SUITE(array_selection_test,array_selection_fixture)
         BOOST_CHECK_EQUAL_COLLECTIONS(s_shape.begin(),s_shape.end(),
                                       r_shape.begin(),r_shape.end());
 
-        BOOST_CHECK_EQUAL(s_orig.size(),0);
-        BOOST_CHECK_EQUAL(s_orig.rank(),0);
+        BOOST_CHECK_EQUAL(s_orig.size(),0u);
+        BOOST_CHECK_EQUAL(s_orig.rank(),0u);
         BOOST_CHECK_EQUAL(s_orig.shape<index_type>(),index_type());
     }
 
@@ -169,14 +172,14 @@ BOOST_FIXTURE_TEST_SUITE(array_selection_test,array_selection_fixture)
         using namespace array_selection_test_types;
 
         //testing the default internal objects
-        BOOST_CHECK_EQUAL(sel_1.rank(),1);
+        BOOST_CHECK_EQUAL(sel_1.rank(),1u);
         auto sel_1_shape = sel_1.shape<index_type>();
         index_type sel_1_shape_ref = {8};
         BOOST_CHECK_EQUAL_COLLECTIONS(sel_1_shape.begin(),sel_1_shape.end(),
                                       sel_1_shape_ref.begin(),
                                       sel_1_shape_ref.end());
 
-        BOOST_CHECK_EQUAL(sel_2.rank(),2);
+        BOOST_CHECK_EQUAL(sel_2.rank(),2u);
         auto sel_2_shape = sel_2.shape<index_type>();
         index_type sel_2_shape_ref = {8,2};
         BOOST_CHECK_EQUAL_COLLECTIONS(sel_2_shape.begin(),sel_2_shape.end(),
@@ -192,8 +195,8 @@ BOOST_FIXTURE_TEST_SUITE(array_selection_test,array_selection_fixture)
         slice_type slices{slice(0,10),slice(1,30,2),slice(2)};
         array_selection s = array_selection::create(slices);
 
-        BOOST_CHECK_EQUAL(s.size(),10*15);
-        BOOST_CHECK_EQUAL(s.rank(),2);
+        BOOST_CHECK_EQUAL(s.size(),10u*15u);
+        BOOST_CHECK_EQUAL(s.rank(),2u);
         index_type ref_shape{10,15};
         auto ss = s.shape<index_type>();
         BOOST_CHECK_EQUAL_COLLECTIONS(ss.begin(),ss.end(),
@@ -232,8 +235,8 @@ BOOST_FIXTURE_TEST_SUITE(array_selection_test,array_selection_fixture)
         BOOST_CHECK_EQUAL_COLLECTIONS(s_shape.begin(),s_shape.end(),
                                       r_shape.begin(),r_shape.end());
 
-        BOOST_CHECK_EQUAL(s_orig.size(),0);
-        BOOST_CHECK_EQUAL(s_orig.rank(),0);
+        BOOST_CHECK_EQUAL(s_orig.size(),0u);
+        BOOST_CHECK_EQUAL(s_orig.rank(),0u);
         BOOST_CHECK_EQUAL(s_orig.shape<index_type>(),index_type());
     }
 
@@ -283,15 +286,15 @@ BOOST_FIXTURE_TEST_SUITE(array_selection_test,array_selection_fixture)
     //========================================================================
     BOOST_AUTO_TEST_CASE(test_start_offset)
     {
-        BOOST_CHECK_EQUAL(start_offset(m1,sel_1),42);
-        BOOST_CHECK_EQUAL(start_offset(m2,sel_2),211);
+        BOOST_CHECK_EQUAL(start_offset(m1,sel_1),42u);
+        BOOST_CHECK_EQUAL(start_offset(m2,sel_2),211u);
     }
 
     //========================================================================
     BOOST_AUTO_TEST_CASE(test_end_offset)
     {
-        BOOST_CHECK_EQUAL(last_offset(m1,sel_1),182);
-        BOOST_CHECK_EQUAL(last_offset(m2,sel_2),913);
+        BOOST_CHECK_EQUAL(last_offset(m1,sel_1),182u);
+        BOOST_CHECK_EQUAL(last_offset(m2,sel_2),913u);
     }
 
     //========================================================================

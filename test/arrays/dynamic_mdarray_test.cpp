@@ -22,7 +22,10 @@
 //      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
 //
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 #include <boost/test/unit_test.hpp>
+#pragma GCC diagnostic pop
 #include <pni/core/arrays.hpp>
 #include "array_types.hpp"
 #include "../data_generator.hpp"
@@ -51,8 +54,8 @@ BOOST_AUTO_TEST_SUITE(dynamic_mdarray_test)
     BOOST_AUTO_TEST_CASE_TEMPLATE(test_default_construction,AT,all_dynamic_arrays)
     {
         AT a;
-        BOOST_CHECK_EQUAL(a.size(),0);
-        BOOST_CHECK_EQUAL(a.rank(),0);
+        BOOST_CHECK_EQUAL(a.size(),0u);
+        BOOST_CHECK_EQUAL(a.rank(),0u);
     }
 
     //========================================================================
@@ -62,19 +65,19 @@ BOOST_AUTO_TEST_SUITE(dynamic_mdarray_test)
         fixture_type fixture;
         
         auto map = map_utils<typename fixture_type::map_type>::create(fixture.shape);
-        BOOST_CHECK_EQUAL(map.max_elements(),30);
+        BOOST_CHECK_EQUAL(map.max_elements(),30u);
         typename fixture_type::storage_type storage(map.max_elements()); 
-        BOOST_CHECK_EQUAL(storage.size(),30);
+        BOOST_CHECK_EQUAL(storage.size(),30u);
         AT a(map,storage);
 
         BOOST_CHECK_EQUAL(a.size(),storage.size());
-        BOOST_CHECK_EQUAL(a.rank(),3);
+        BOOST_CHECK_EQUAL(a.rank(),3u);
 
         AT a2(std::move(map),std::move(storage));
         BOOST_CHECK_EQUAL(a2.size(),a.size());
         BOOST_CHECK_EQUAL(a2.rank(),a.rank());
-        BOOST_CHECK_EQUAL(map.rank(),0);
-        BOOST_CHECK_EQUAL(storage.size(),0);
+        BOOST_CHECK_EQUAL(map.rank(),0u);
+        BOOST_CHECK_EQUAL(storage.size(),0u);
     }
 
     //========================================================================
@@ -103,10 +106,10 @@ BOOST_AUTO_TEST_SUITE(dynamic_mdarray_test)
         AT a(map,storage);
 
         AT b(std::move(a));
-        BOOST_CHECK_EQUAL(a.size(),0);
-        BOOST_CHECK_EQUAL(a.rank(),0);
+        BOOST_CHECK_EQUAL(a.size(),0u);
+        BOOST_CHECK_EQUAL(a.rank(),0u);
         BOOST_CHECK_EQUAL(b.size(),storage.size());
-        BOOST_CHECK_EQUAL(b.rank(),3);
+        BOOST_CHECK_EQUAL(b.rank(),3u);
     }
 
     //========================================================================
@@ -188,8 +191,8 @@ BOOST_AUTO_TEST_SUITE(dynamic_mdarray_test)
         BOOST_CHECK_EQUAL_COLLECTIONS(b.begin(),b.end(),
                                       storage.begin(),storage.end());
         
-        BOOST_CHECK_EQUAL(a.size(),0);
-        BOOST_CHECK_EQUAL(a.rank(),0);
+        BOOST_CHECK_EQUAL(a.size(),0u);
+        BOOST_CHECK_EQUAL(a.rank(),0u);
     }
 
     //========================================================================

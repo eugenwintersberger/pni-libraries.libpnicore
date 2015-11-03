@@ -22,7 +22,10 @@
 //      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
 //
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 #include <boost/test/unit_test.hpp>
+#pragma GCC diagnostic pop
 #include <pni/core/arrays.hpp>
 
 #include "array_types.hpp"
@@ -56,8 +59,8 @@ BOOST_AUTO_TEST_SUITE(fix_mdarray_test)
     BOOST_AUTO_TEST_CASE_TEMPLATE(test_default_construction,AT,array_types)
     {
         AT a;
-        BOOST_CHECK_EQUAL(a.size(),0);
-        BOOST_CHECK_EQUAL(a.rank(),3);
+        BOOST_CHECK_EQUAL(a.size(),0u);
+        BOOST_CHECK_EQUAL(a.rank(),3u);
     }
 
     //========================================================================
@@ -84,8 +87,8 @@ BOOST_AUTO_TEST_SUITE(fix_mdarray_test)
         BOOST_CHECK_EQUAL(b.size(),a.size());
         BOOST_CHECK_EQUAL(b.rank(),a.rank());
 
-        BOOST_CHECK_EQUAL(storage.size(),0);
-        BOOST_CHECK_EQUAL(map.max_elements(),0);
+        BOOST_CHECK_EQUAL(storage.size(),0u);
+        BOOST_CHECK_EQUAL(map.max_elements(),0u);
     }
 
     //========================================================================
@@ -122,7 +125,7 @@ BOOST_AUTO_TEST_SUITE(fix_mdarray_test)
         BOOST_CHECK_EQUAL(b.size(),storage.size());
         BOOST_CHECK_EQUAL(b.rank(),map.rank());
 
-        BOOST_CHECK_EQUAL(a.size(),0);
+        BOOST_CHECK_EQUAL(a.size(),0u);
     }
 
     //========================================================================
@@ -160,7 +163,7 @@ BOOST_AUTO_TEST_SUITE(fix_mdarray_test)
         BOOST_CHECK_EQUAL(c.size(),a.size());
         BOOST_CHECK_EQUAL(c.rank(),a.rank());
 
-        BOOST_CHECK_EQUAL(b.size(),0);
+        BOOST_CHECK_EQUAL(b.size(),0u);
     }
 
 BOOST_AUTO_TEST_SUITE_END()

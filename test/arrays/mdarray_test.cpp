@@ -22,7 +22,10 @@
 //      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
 //
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 #include <boost/test/unit_test.hpp>
+#pragma GCC diagnostic pop
 #include <pni/core/arrays.hpp>
 
 #include "array_types.hpp"
@@ -143,8 +146,8 @@ BOOST_AUTO_TEST_SUITE(test_mdarray)
 
         fixture_type fixture;
         auto a = AT::create(fixture.shape);
-        BOOST_CHECK_EQUAL(a.size(),30);
-        BOOST_CHECK_EQUAL(a.rank(),3);
+        BOOST_CHECK_EQUAL(a.size(),30u);
+        BOOST_CHECK_EQUAL(a.rank(),3u);
         BOOST_CHECK(AT::type_id == type_id_map<value_type>::type_id);
     }
 

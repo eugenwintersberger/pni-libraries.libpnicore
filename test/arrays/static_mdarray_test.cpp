@@ -22,7 +22,10 @@
 //      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
 //
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 #include <boost/test/unit_test.hpp>
+#pragma GCC diagnostic pop
 #include <pni/core/arrays.hpp>
 
 #include "array_types.hpp"
@@ -59,8 +62,8 @@ BOOST_AUTO_TEST_SUITE(static_mdarray_test)
     BOOST_AUTO_TEST_CASE_TEMPLATE(test_default_constructor,AT,array_types)
     {
         AT a;
-        BOOST_CHECK_EQUAL(a.size(),30);
-        BOOST_CHECK_EQUAL(a.rank(),3);
+        BOOST_CHECK_EQUAL(a.size(),30u);
+        BOOST_CHECK_EQUAL(a.rank(),3u);
     }
 
     //========================================================================
