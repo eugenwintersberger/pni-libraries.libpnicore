@@ -1,6 +1,7 @@
 
 #build some commonly used code
 set(COMMON_SOURCES compare.cpp data_generator.cpp)
+include_directories(${Boost_INCLUDE_DIR})
 add_library(test_common EXCLUDE_FROM_ALL OBJECT ${COMMON_SOURCES})
 
 add_executable(rand_test EXCLUDE_FROM_ALL "rand_test.cpp"
