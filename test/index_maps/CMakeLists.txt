@@ -16,6 +16,14 @@ add_test(NAME index_maps_test
          COMMAND index_maps_test
          WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/../
          )
+     message("${PROJECT_BINARY_DIR}")
+         message("${BOOST_LIBRARYDIR}")
+         message("${BOOST_LIBRARYDIR};$ENV{PATH}")
+set_tests_properties(index_maps_test PROPERTIES 
+    ENVIRONMENT
+    "$ENV{PATH}=$ENV{PATH};D:\\Development\\libpnicore-build\\src;D:\\Development\\boost-install\\lib")          
+get_test_property(index_maps_test ENVIRONMENT IMTEST_ENV)
+message("${IMTEST_ENV}")
 
 add_dependencies(check index_maps_test)
 

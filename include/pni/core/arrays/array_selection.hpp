@@ -26,6 +26,10 @@
 #include <vector>
 #include <algorithm>
 
+#if COMPILER == MSVC
+#include <numeric>
+#endif
+
 #ifdef NOFOREACH
 #include <boost/foreach.hpp>
 #endif

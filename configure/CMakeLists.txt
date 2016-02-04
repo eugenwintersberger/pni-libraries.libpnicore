@@ -33,6 +33,11 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     add_definitions(-DCOMPILER=GCC)
 endif()
 
+if(CMAKE_CXX_COMPILER_ID EQUAL MSVC)
+    
+    add_definitions(-DCOMPILER=MSVC)
+endif()
+
 if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     message("found clang compliler...")
 
