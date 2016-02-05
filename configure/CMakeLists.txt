@@ -30,12 +30,12 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
 
     #for this version the compiler has to support c++11 flag
     add_definitions(-std=c++11)
-    add_definitions(-DCOMPILER=GCC)
+    add_definitions(-DGCC)
 endif()
 
-if(CMAKE_CXX_COMPILER_ID EQUAL MSVC)
-    
-    add_definitions(-DCOMPILER=MSVC)
+if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    message(STATUS "found Microsoft C++ compiler ...") 
+    add_definitions(-DMSVC)
 endif()
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
@@ -52,7 +52,7 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
 
     #for this version the compiler has to support c++11 flag
     add_definitions(-std=c++11)
-    add_definitions(-DCOMPILER=CLANG)
+    add_definitions(-DCLANG)
 endif()
 
 #===================================check the size of data types===============
