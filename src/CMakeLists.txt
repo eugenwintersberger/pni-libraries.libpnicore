@@ -18,8 +18,16 @@ add_library(pnicore SHARED $<TARGET_OBJECTS:type_objects>
                            $<TARGET_OBJECTS:array_objects>
                            $<TARGET_OBJECTS:configuration_objects>
                            $<TARGET_OBJECTS:type_erasure_objects>
-                           $<TARGET_OBJECTS:misc_objects>)
-target_link_libraries(pnicore ${Boost_LIBRARIES})
+                           $<TARGET_OBJECTS:misc_objects>) 
+
+if(CMAKE_CXX_COMPILER_ID MATCHES MSVC)
+    message(STATUS "Linking is done automatically!")
+else()
+    message(STATUS "Dynamic linking required with GCC")
+target_link_libraries(pnicore
+                           ${Boost_PROGRAM_OPTIONS_LIBRARY}
+                           ${Boost_REGEX_LIBRARY})
+endif()
 
 #set the version and SO version of the library
 set_target_properties(pnicore PROPERTIES VERSION "${LIBRARY_VERSION}"
