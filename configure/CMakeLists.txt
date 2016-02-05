@@ -14,9 +14,12 @@ else()
     set(CMAKE_INSTALL_FULL_LIBDIR ${CMAKE_INSTALL_PREFIX}/lib)
     message("Installation path for Windows: ${CMAKE_INSTALL_FULL_LIBDIR}")
 endif()
+
+message(STATUS "Found compiler id: ${CMAKE_CXX_COMPILER_ID}")
    
 #setup for GNU CXX compiler
-if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+
     message("found GNU compiler ...")
     #setup some default compiler flags
     add_definitions(-Wextra -pedantic -Wall -Wno-psabi)
@@ -31,14 +34,14 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     #for this version the compiler has to support c++11 flag
     add_definitions(-std=c++11)
     add_definitions(-DGCC)
-endif()
 
-if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+
     message(STATUS "found Microsoft C++ compiler ...") 
     add_definitions(-DMSVC)
-endif()
+    
+elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 
-if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     message("found clang compliler...")
 
     add_definitions(-Wextra -pedantic -Wall)
@@ -53,6 +56,10 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     #for this version the compiler has to support c++11 flag
     add_definitions(-std=c++11)
     add_definitions(-DCLANG)
+endif()
+
+
+if()
 endif()
 
 #===================================check the size of data types===============

@@ -30,6 +30,33 @@
 namespace pni{
 namespace core{
 
+#ifdef MSVC
+	template<size_t N,size_t... DIMS>	class win_storage
+	{
+		public:
+			typedef size_t value_type; 
+			typedef const size_t *const_iterator;
+		private:
+			constexpr static value_type _data[N] = { DIMS... };
+		public:
+			
+			constexpr size_t size() const
+			{
+				return N;
+			}
+
+			const_iterator begin() const
+			{
+				return _data;
+			}
+
+			const_iterator end() const
+			{
+				return &_data[N];
+			}
+	};
+#endif
+
     //!
     //! \ingroup index_mapping_classes
     //! \brief the static general index map template 
@@ -65,7 +92,11 @@ namespace core{
         public:
             //=================public types====================================
             //! storage type
+#ifdef MSVC
+			typedef win_storage<sizeof...(DIMS),DIMS...> storage_type;
+#else
             typedef std::array<size_t,sizeof...(DIMS)> storage_type;
+#endif
             //! policy type
             typedef MAP_IMP     implementation_type;
             //! index type 
@@ -74,7 +105,11 @@ namespace core{
             typedef typename storage_type::const_iterator const_iterator;
         private:
             //! storage for shape information
+#ifdef MSVC
+			static storage_type _shape;
+#else
             constexpr static storage_type _shape = {{DIMS...}};
+#endif
         public:
 
             //-----------------------------------------------------------------

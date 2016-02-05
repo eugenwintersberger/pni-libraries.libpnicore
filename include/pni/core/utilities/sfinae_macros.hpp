@@ -105,7 +105,13 @@ namespace core{
     //! \ingroup utility_classes
     //! \brief shortcut for std::enable_if
     //! 
+#ifdef MSVC
+#pragma optimize("",off)
+#endif
     template<typename C> using enable_if = invoke<std::enable_if<C::value>>;
+#ifdef MSVC
+#pragma optimize("",on)
+#endif
     
     //------------------------------------------------------------------------
     //!
