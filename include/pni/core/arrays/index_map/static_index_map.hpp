@@ -74,7 +74,7 @@ namespace core{
             typedef typename storage_type::const_iterator const_iterator;
         private:
             //! storage for shape information
-            constexpr static storage_type _shape{{DIMS...}};
+            constexpr static storage_type _shape = {{DIMS...}};
         public:
 
             //-----------------------------------------------------------------
