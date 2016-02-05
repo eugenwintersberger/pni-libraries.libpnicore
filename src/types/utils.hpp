@@ -41,14 +41,11 @@ namespace core{
             CTYPE _container;
         public:
 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-parameter"
-            template<typename T> void operator()(T x)
+            template<typename T> void operator()(T)
             {
                 type_id_t tid = type_id_map<T>::type_id;
                 _container.push_back(tid);
             }
-#pragma GCC diagnostic pop
 
             CTYPE get() const
             {

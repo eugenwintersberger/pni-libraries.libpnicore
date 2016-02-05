@@ -126,10 +126,7 @@ namespace core {
             //! 
             //! \return value of type T
             //!
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-parameter"
             operator T() const { return this->_data[0]; }
-#pragma GCC diagnostic pop
 
             //===================linear access operators========================
             //!
