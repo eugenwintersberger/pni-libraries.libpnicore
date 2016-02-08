@@ -32,6 +32,7 @@
 #include "../error/exceptions.hpp"
 #include "../error/exception_utils.hpp"
 #include "type_info.hpp"
+#include "../windows.hpp"
 
 
 namespace pni{
@@ -49,7 +50,8 @@ namespace core{
     //! \param target_tid ID of the target type
     //! \return true if types are unchecked convertible, false otherwise
     //! 
-    bool is_unchecked_convertible(type_id_t source_tid,type_id_t target_tid);
+    PNICORE_EXPORT 
+	bool is_unchecked_convertible(type_id_t source_tid,type_id_t target_tid);
 
     //------------------------------------------------------------------------
     //!
@@ -63,6 +65,7 @@ namespace core{
     //! \param target_tid ID of the target type
     //! \return true if types are checked convertible, false otherwise
     //! 
+	PNICORE_EXPORT
     bool is_checked_convertible(type_id_t source_tid,type_id_t target_tid);
 
     //------------------------------------------------------------------------
@@ -77,6 +80,7 @@ namespace core{
     //! \param target_tid ID of the target type
     //! \return true if types are , false otherwise
     //! 
+	PNICORE_EXPORT
     bool is_convertible(type_id_t source_tid,type_id_t target_tid);
 
 

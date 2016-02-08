@@ -190,7 +190,13 @@ namespace core{
         //! \return converted value
         static T convert(const S &value)
         {
+#ifdef MSVC
+#pragma warning(disable: 4244)
+#endif
             return T(value);
+#ifdef MSVC
+#pragma warning(default: 4244)
+#endif
         }
     };
 
@@ -226,12 +232,12 @@ namespace core{
             {
                 return converter<T,S>::convert(value);
             }
-            catch(const boost::numeric::positive_overflow &error)
+            catch(const boost::numeric::positive_overflow &)
             {
                 throw range_error(EXCEPTION_RECORD,
                         "Source value exceeded range of target type!");
             }
-            catch(const boost::numeric::negative_overflow &error)
+            catch(const boost::numeric::negative_overflow &)
             {
                 throw range_error(EXCEPTION_RECORD,
                         "Source value exceeded range of target type!");

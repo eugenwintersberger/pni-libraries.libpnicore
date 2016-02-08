@@ -24,6 +24,7 @@
 #pragma once
 
 #include <iostream>
+#include "../windows.hpp"
 
 namespace pni{
 namespace core{
@@ -36,7 +37,7 @@ namespace core{
     //! required but not provided (or at the moment not available). 
     //! It thus denotes the absence of type information.
     //!
-    struct none {};
+    struct PNICORE_EXPORT none {};
 
     //------------------------------------------------------------------------
     //!
@@ -50,7 +51,7 @@ namespace core{
     //! \param n none instance
     //! \return reference to the output stream
     //!
-    std::ostream &operator<<(std::ostream &stream,const none &n);
+    PNICORE_EXPORT std::ostream &operator<<(std::ostream &stream,const none &n);
 
     //------------------------------------------------------------------------
     //!
@@ -64,7 +65,7 @@ namespace core{
     //! \param n none instance
     //! \return reference to the input stream
     //!
-    std::istream &operator>>(std::istream &stream,none &n);
+    PNICORE_EXPORT std::istream &operator>>(std::istream &stream,none &n);
 
     //------------------------------------------------------------------------
     //!
@@ -77,7 +78,7 @@ namespace core{
     //! \param b instance on the rhs of the operator
     //! \return always true
     //! 
-    bool operator==(const none &a,const none &b);
+    PNICORE_EXPORT bool operator==(const none &a,const none &b);
 
     //------------------------------------------------------------------------
     //!
@@ -91,7 +92,7 @@ namespace core{
     //! \param b instnace on the rhs of the operator
     //! \return always false
     //!
-    bool operator!=(const none &a,const none &b);
+    PNICORE_EXPORT bool operator!=(const none &a,const none &b);
 
 //end of namespace
 }

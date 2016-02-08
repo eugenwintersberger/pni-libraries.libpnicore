@@ -45,6 +45,18 @@ template<typename T> struct distribution_map<T,true>
     typedef std::uniform_int_distribution<T> distribution_type;
 };
 
+#ifdef MSVC
+template<> struct distribution_map<uint8, true>
+{
+	typedef std::uniform_int_distribution<uint16> distribution_type;
+};
+
+template<> struct distribution_map<int8, true>
+{
+	typedef std::uniform_int_distribution<int16> distribution_type;
+};
+#endif
+
 //------------------distribution for floating point types-----------------------
 template<typename T> struct distribution_map<T,false>
 {
@@ -56,7 +68,8 @@ template<typename T> class random_generator
 {
     private:
         std::mt19937_64 _engine;
-        typename distribution_map<T,type_info<T>::is_integer>::distribution_type _distribution;
+		typedef distribution_map<T, pni::core::type_info<T>::is_integer> map_t;
+        typename map_t::distribution_type _distribution;
 
     public:
         random_generator(T a,T b):
@@ -66,9 +79,9 @@ template<typename T> class random_generator
 
         random_generator():
             _engine(std::random_device()()),
-            _distribution(0.2*type_info<T>::min(),0.2*type_info<T>::max())
-        { 
-        }
+            _distribution(0.2*pni::core::type_info<T>::min(),
+				          0.2*pni::core::type_info<T>::max())
+        {}
 
         T operator()()
         {
@@ -76,13 +89,54 @@ template<typename T> class random_generator
         }
 };
 
-//-----------------------------------------------------------------------------
+#ifdef MSVC
+template<> class random_generator<uint8>
+{
+    private:        
+        random_generator<uint16> _generator;
+
+	public:
+		random_generator(uint8 a,uint8 b):
+			_generator(uint16(a),uint16(b))
+		{}
+
+		random_generator():
+			_generator(0,255)
+		{}
+
+		uint8 operator()()
+		{
+			return uint8(_generator());
+		}
+};
+
+template<> class random_generator<int8>
+{
+private:
+	random_generator<int16> _generator;
+
+public:
+	random_generator(int8 a, int8 b) :
+		_generator(int16(a), int16(b))
+	{}
+
+	random_generator() :
+		_generator(-127,127)
+	{}
+
+	int8 operator()()
+	{
+		return int8(_generator());
+	}
+};
+#endif
+//--------------------------------------			----
 template<typename T> class random_generator<std::complex<T>>
 {
     private:
         typedef pni::core::type_info<T> tinfo_type;
         random_generator<T> _real_generator;
-        random_generator<T> _imag_generator;
+       	random_generator<T> _imag_generator;
     public:
         random_generator(T a,T b):
             _real_generator(a,b),

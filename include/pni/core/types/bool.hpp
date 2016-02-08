@@ -24,6 +24,7 @@
 #pragma once
 
 #include <iostream>
+#include "../windows.hpp"
 
 namespace pni{
 namespace core{
@@ -40,7 +41,7 @@ namespace core{
     //! This type prevents the C++ compiler to overload std:vector<bool_t> 
     //! making boolean values available for libpniio.
     //!
-    class bool_t
+    class PNICORE_EXPORT bool_t
     {
         private:
             bool _value; //!< data element holding the current boolean value
@@ -61,10 +62,10 @@ namespace core{
 
     
     //! output operator for bool_t
-    std::ostream &operator<<(std::ostream &stream,const bool_t &b);
+    PNICORE_EXPORT std::ostream &operator<<(std::ostream &stream,const bool_t &b);
 
     //! input operator for bool_t
-    std::istream &operator>>(std::istream &stream,bool_t &b);
+    PNICORE_EXPORT std::istream &operator>>(std::istream &stream,bool_t &b);
 //end of namespace
 }
 }

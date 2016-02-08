@@ -25,6 +25,7 @@
 
 #include "types.hpp"
 #include <boost/mpl/contains.hpp>
+#include "../windows.hpp"
 
 namespace pni{
 namespace core{
@@ -140,7 +141,7 @@ namespace core{
     //! \param tid type ID of the type to check
     //! \return true if tid refers to a numeric type, false otherwise
     //!
-    bool is_numeric(type_id_t tid);
+    PNICORE_EXPORT bool is_numeric(type_id_t tid);
 
     //------------------------------------------------------------------------
     //!
@@ -153,7 +154,7 @@ namespace core{
     //! \param tid type ID of the type to check
     //! \return true if tid refers to an integer type, false otherwise
     //!
-    bool is_integer(type_id_t tid);
+    PNICORE_EXPORT bool is_integer(type_id_t tid);
 
     //------------------------------------------------------------------------
     //! 
@@ -166,7 +167,7 @@ namespace core{
     //! \param tid type ID of the type to check
     //! \return true if tid refers to a complex type, false otherwise
     //! 
-    bool is_complex(type_id_t tid);
+    PNICORE_EXPORT bool is_complex(type_id_t tid);
 
     //------------------------------------------------------------------------
     //!
@@ -179,7 +180,7 @@ namespace core{
     //! \param tid id of the type to check
     //! \return true if tid refers to a float type, false otherwise
     //!
-    bool is_float(type_id_t tid);
+    PNICORE_EXPORT bool is_float(type_id_t tid);
     
 //end of namespace
 }

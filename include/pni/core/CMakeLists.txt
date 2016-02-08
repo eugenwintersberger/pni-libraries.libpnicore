@@ -6,6 +6,7 @@ set(HEADER_FILES arrays.hpp
                  error.hpp
                  type_erasures.hpp
                  algorithms.hpp
+                 windows.hpp
                  )
 
 install(FILES ${HEADER_FILES} 

@@ -24,10 +24,14 @@
 
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE testing type traits and related functions
+#ifdef GCC
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#endif
 #include <boost/test/unit_test.hpp>
+#ifdef GCC
 #pragma GCC diagnostic pop
+#endif
 #include <pni/core/types/types.hpp>
 #include <pni/core/types/traits.hpp>
 #include <vector>

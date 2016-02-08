@@ -20,6 +20,7 @@ add_library(pnicore SHARED $<TARGET_OBJECTS:type_objects>
                            $<TARGET_OBJECTS:type_erasure_objects>
                            $<TARGET_OBJECTS:misc_objects>) 
 
+
 if(CMAKE_CXX_COMPILER_ID MATCHES MSVC)
     message(STATUS "Linking is done automatically!")
 else()

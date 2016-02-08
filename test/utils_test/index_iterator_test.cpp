@@ -22,10 +22,14 @@
 //      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
 //
 
+#ifdef GCC
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#endif GCC
 #include <boost/test/unit_test.hpp>
+#ifdef GCC
 #pragma GCC diagnostic pop
+#endif
 #include <boost/test/test_case_template.hpp>
 #include <boost/mpl/list.hpp>
 #include <boost/current_function.hpp>

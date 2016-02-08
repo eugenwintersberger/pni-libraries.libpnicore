@@ -32,6 +32,7 @@
 #include "array_holder.hpp"
 #include "array_iterator.hpp"
 #include "../algorithms.hpp"
+#include "../windows.hpp"
 
 
 namespace pni{
@@ -71,7 +72,7 @@ namespace core{
     //! ensures index checking.  See code examples at the various member 
     //! functions for more detail about the methods.
     //!
-    class array //the type erasure
+    class PNICORE_EXPORT array //the type erasure
     {
         private:
             //! local pointer type used to hold the array
@@ -112,8 +113,14 @@ namespace core{
                     _throw_not_allocated_error(r);
             }
 
-            //! pointer to an instance of array_holder 
+            //! pointer to an instance of array_holder
+#ifdef MSVC
+#pragma warning(disable:4251)
+#endif
             pointer_type _ptr; 
+#ifdef MSVC
+#pragma warning(default:4251)
+#endif
         public:
             //====================public types=================================
             typedef value value_type; //!< value type of the array

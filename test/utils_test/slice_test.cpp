@@ -24,10 +24,14 @@
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE testing container utilities
 
+#ifdef GCC
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#endif GCC
 #include <boost/test/unit_test.hpp>
+#ifdef GCC
 #pragma GCC diagnostic pop
+#endif
 #include <boost/current_function.hpp>
 #include <pni/core/arrays/slice.hpp>
 #include <iostream>

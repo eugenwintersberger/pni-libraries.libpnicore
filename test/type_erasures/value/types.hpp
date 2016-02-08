@@ -25,7 +25,8 @@
 #include <pni/core/types.hpp>
 #include <boost/mpl/list.hpp>
 
-typedef boost::mpl::list<pni::core::uint8,
+typedef boost::mpl::list<
+	                     //pni::core::uint8,
                          pni::core::int8,
                          pni::core::uint16,
                          pni::core::int16,

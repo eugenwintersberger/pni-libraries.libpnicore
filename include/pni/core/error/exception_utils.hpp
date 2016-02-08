@@ -32,6 +32,8 @@
 #include "../error/exceptions.hpp"
 #include "../utilities/service.hpp"
 
+#include "../windows.hpp"
+
 namespace pni{
 namespace core{
 
@@ -127,7 +129,7 @@ namespace core{
     //! \param dimsize size of the dimension
     //! \return true if index<dimsize, flase otherwise
     //! 
-    bool check_index_in_dim(size_t index,size_t dimsize);
+    bool PNICORE_EXPORT check_index_in_dim(size_t index,size_t dimsize);
 
     //-------------------------------------------------------------------------
     //!
@@ -143,8 +145,8 @@ namespace core{
     //! \param i exception_record for the location where to perform the check
     //! performed
     //!
-    void check_index_in_dim(size_t index,size_t dimsize,
-                            const exception_record &i);
+    void PNICORE_EXPORT check_index_in_dim(size_t index,size_t dimsize,
+                                           const exception_record &i);
 
     //-------------------------------------------------------------------------
     //!

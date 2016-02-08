@@ -35,6 +35,7 @@
 #include<boost/current_function.hpp>
 
 #include "../types/types.hpp"
+#include "../windows.hpp"
 
 namespace pni{
 namespace core{
@@ -87,12 +88,18 @@ EXCEPTION_FORWARD(MemoryNotAllocatedError)
     \endcode
     */
     //!
-    class exception_record
+    class PNICORE_EXPORT exception_record
     {
         private:
+#ifdef MSVC
+#pragma warning(disable: 4251)
+#endif
             string _file;     //!< source file where the exception occured
             size_t _line;     //!< line number in the source file
             string _function; //!< function in which the error occured
+#ifdef MSVC
+#pragma warning(default: 4251)
+#endif
         public:
             //===================constructors and destructor===================
             //! no default constructor
@@ -119,7 +126,8 @@ EXCEPTION_FORWARD(MemoryNotAllocatedError)
     //! \ingroup error_classes
     //! \brief error record output operator
     //!
-    std::ostream &operator<<(std::ostream &o,const exception_record &rec); 
+    PNICORE_EXPORT 
+    std::ostream & operator<<(std::ostream &o,const exception_record &rec); 
 
     //-------------------------------------------------------------------------
     //!
@@ -128,15 +136,24 @@ EXCEPTION_FORWARD(MemoryNotAllocatedError)
     //!
     //! This is the base class for all exceptions used in this library. 
     //!
-    class exception:public std::exception
+#ifdef MSVC
+#pragma warning(disable:4275)
+#endif
+    class PNICORE_EXPORT exception:public std::exception
     {
         private:
+#ifdef MSVC
+#pragma warning(disable:4251)
+#endif
             //! name of the exception
             string _name;
             //! description of the error occured
             string _description; 
             //! exception records
             std::list<exception_record> _records;
+#ifdef MSVC
+#pragma warning(default: 4251)
+#endif
         protected:
             //! \brief ouptut method
             //!
@@ -271,7 +288,9 @@ EXCEPTION_FORWARD(MemoryNotAllocatedError)
             friend std::ostream &operator<<(std::ostream &, const exception &);
             
     };
-
+#ifdef MSVC
+#pragma warning(default:4275)
+#endif
 
     //--------------------------------------------------------------------------
     //! 
@@ -281,7 +300,7 @@ EXCEPTION_FORWARD(MemoryNotAllocatedError)
     //! This exception is typically raised when allocation of memory on the 
     //! heap fails. In other words when a call to new leads to a nullptr.
     //!
-    class memory_allocation_error: public exception 
+    class PNICORE_EXPORT memory_allocation_error: public exception 
     {
         public:
             //! default constructor
@@ -318,7 +337,7 @@ EXCEPTION_FORWARD(MemoryNotAllocatedError)
     //! This exception is usually thrown if one tries to access not allocated 
     //! memory.
     //!
-    class memory_not_allocated_error: public exception
+    class PNICORE_EXPORT memory_not_allocated_error: public exception
     {
         public:
             //! default constructor
@@ -357,7 +376,7 @@ EXCEPTION_FORWARD(MemoryNotAllocatedError)
     //!
     //! Raised in cases where the Shape objects of two objects are not equal.
     //!
-    class shape_mismatch_error: public exception 
+    class PNICORE_EXPORT shape_mismatch_error: public exception 
     {
         public:
             //! default constructor
@@ -396,7 +415,7 @@ EXCEPTION_FORWARD(MemoryNotAllocatedError)
     //! This exception will be raised in cases where buffer sizes do not meet 
     //! the requirements.
     //!
-    class size_mismatch_error: public exception 
+    class PNICORE_EXPORT size_mismatch_error: public exception 
     {
         public:
             //! default constructor
@@ -434,7 +453,7 @@ EXCEPTION_FORWARD(MemoryNotAllocatedError)
     //! Raised if the index passed to a [] operator exceeds the size of the
     //! container it belongs to.
     //!
-    class index_error: public exception 
+    class PNICORE_EXPORT index_error: public exception 
     {
         public:
             //! default constructor
@@ -470,7 +489,7 @@ EXCEPTION_FORWARD(MemoryNotAllocatedError)
     //!
     //! Raised in cases where a problem with the key of a hash map occurs.
     //!
-    class key_error: public exception
+    class PNICORE_EXPORT key_error: public exception
     {
         public:
             //! default constructor
@@ -505,7 +524,7 @@ EXCEPTION_FORWARD(MemoryNotAllocatedError)
     //!
     //! Raised typically in cases of problems with files.
     //!
-    class file_error: public exception 
+    class PNICORE_EXPORT file_error: public exception 
     {
         public:
             //! default constructor
@@ -541,7 +560,7 @@ EXCEPTION_FORWARD(MemoryNotAllocatedError)
     //!
     //! This exception is raised in cases of errors concerning data types.
     //!
-    class type_error: public exception 
+    class PNICORE_EXPORT type_error: public exception 
     {
         public:
             //! default constructor
@@ -577,7 +596,7 @@ EXCEPTION_FORWARD(MemoryNotAllocatedError)
     //! This exception is raised in cases where a particular variable takes 
     //! an inappropriate value.
     //!
-    class value_error: public exception 
+    class PNICORE_EXPORT value_error: public exception 
     {
         public:
             //! default constructor
@@ -613,7 +632,7 @@ EXCEPTION_FORWARD(MemoryNotAllocatedError)
     //! This exception is raised in cases where data values exceed the range
     //! spanned by their data type.
     //!
-    class range_error: public exception 
+    class PNICORE_EXPORT range_error: public exception 
     {
         public:
             //! default constructor
@@ -650,7 +669,7 @@ EXCEPTION_FORWARD(MemoryNotAllocatedError)
     //! as not implemented. Such an approach can be quite useful for debugging
     //! and development.
     //!
-    class not_implemented_error:public exception
+    class PNICORE_EXPORT not_implemented_error:public exception
     {
         public:
             //! default construtor
@@ -689,7 +708,7 @@ EXCEPTION_FORWARD(MemoryNotAllocatedError)
     //!
     //! Exception thrown in case of iterator errors.
     //!
-    class iterator_error:public exception
+    class PNICORE_EXPORT iterator_error:public exception
     {
         public:
             //! default constructor
@@ -727,7 +746,7 @@ EXCEPTION_FORWARD(MemoryNotAllocatedError)
     //! Thrown in cases where a command line argument (do not confuse this 
     //! with an option has an inapropriate value or is missing).
     //!
-    class cli_argument_error:public exception
+    class PNICORE_EXPORT cli_argument_error:public exception
     {
         public:
             //------------------------------------------------------------------
@@ -763,7 +782,7 @@ EXCEPTION_FORWARD(MemoryNotAllocatedError)
     //! Exception thrown in cases where a command line option is missing or 
     //! has an inapropriate value.
     //!
-    class cli_option_error:public exception
+    class PNICORE_EXPORT cli_option_error:public exception
     {
         public:
             //------------------------------------------------------------------
@@ -798,7 +817,7 @@ EXCEPTION_FORWARD(MemoryNotAllocatedError)
     //! Thrown in case of a general CLI error not related to arguments or 
     //! options.
     //!
-    class cli_error:public exception
+    class PNICORE_EXPORT cli_error:public exception
     {
         public:
             //------------------------------------------------------------------
@@ -833,7 +852,7 @@ EXCEPTION_FORWARD(MemoryNotAllocatedError)
     //! This is exception is not intended to manage an error at all. It is 
     //! thrown in the case that a user makes a help request from the CLI.
     //!
-    class cli_help_request:public exception
+    class PNICORE_EXPORT cli_help_request:public exception
     {
         public:
             //------------------------------------------------------------------

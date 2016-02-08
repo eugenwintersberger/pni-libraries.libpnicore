@@ -24,6 +24,7 @@
 #pragma once
 
 #include "configuration.hpp"
+#include "../windows.hpp"
 
 namespace pni{
 namespace core{
@@ -39,7 +40,7 @@ namespace core{
     //! \param argv argument values
     //!\return vector with arguments and options
     //!
-    std::vector<string> cliargs2vector(int argc,char **argv);
+    std::vector<string> PNICORE_EXPORT cliargs2vector(int argc,char **argv);
 
     //-------------------------------------------------------------------------
     //!
@@ -72,8 +73,9 @@ namespace core{
     //! \param unregistered flag to allow unregistered options
     //! \return a vector with uncrecognized options
     //!
-    std::vector<string> parse(configuration &c,const std::vector<string> &args,
-                              bool unregistered=false);
+    std::vector<string> 
+    PNICORE_EXPORT parse(configuration &c,const std::vector<string> &args,
+                         bool unregistered=false);
 
     //-------------------------------------------------------------------------
     //!
@@ -85,7 +87,7 @@ namespace core{
     //! \param c reference to the configuration object
     //! \param fname name of the configuration file
     //!
-    void parse(configuration &c,const string &fname);
+    void PNICORE_EXPORT parse(configuration &c,const string &fname);
 
 //end of namespace
 }

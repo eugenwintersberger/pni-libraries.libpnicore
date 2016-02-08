@@ -108,7 +108,7 @@ namespace core{
         {
             return str2type_id.at(s);
         }
-        catch(std::out_of_range &error)
+        catch(std::out_of_range &)
         {
             string msg = "String ["+s+"] does not represent a type!";
             throw key_error(EXCEPTION_RECORD,s);
@@ -122,7 +122,7 @@ namespace core{
         {
             return type_id2str.at(id);
         }
-        catch(std::out_of_range &error)
+        catch(std::out_of_range &)
         {
             std::stringstream ss;
             ss<<"Type id ["<<id<<"] does not have a string representation!";

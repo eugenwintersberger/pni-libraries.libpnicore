@@ -32,6 +32,8 @@
 #include "utils.hpp"
 #include "../types/traits.hpp"
 
+#include "../windows.hpp"
+
 namespace pni{
 namespace core{
 
@@ -43,7 +45,7 @@ namespace core{
     //! \ingroup type_erasure_classes
     //!\brief type erasure for POD data
     //!
-    class value
+    class PNICORE_EXPORT value
     {
         private:
             //! internal pointer type 
@@ -97,7 +99,13 @@ namespace core{
             }
 
             //! pointer holding the value stored
+#ifdef MSVC
+#pragma warning(disable:4251)
+#endif
             pointer_type _ptr;
+#ifdef MSVC
+#pragma warning(default:4251)
+#endif
         public:
             //================constructors and destructor======================
             //! default constructor
@@ -254,7 +262,7 @@ namespace core{
     //! \param rv reference to value 
     //! \return type ID of the erased type
     //!
-    type_id_t type_id(const value &rv);
+    PNICORE_EXPORT type_id_t type_id(const value &rv);
 
     //------------------------------------------------------------------------
     //!
@@ -283,7 +291,7 @@ namespace core{
     //! \param tid type ID of the requested type
     //! \return instance of value holding data of type tid  
     //!
-    value make_value(type_id_t tid);
+    PNICORE_EXPORT value make_value(type_id_t tid);
 
 //end of namespace
 }

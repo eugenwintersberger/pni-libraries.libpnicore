@@ -21,10 +21,14 @@
 //  Created on: Oct 01, 2012
 //      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
 //
+#ifdef GCC
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#endif
 #include <boost/test/unit_test.hpp>
+#ifdef GCC
 #pragma GCC diagnostic pop
+#endif
 #include <boost/test/floating_point_comparison.hpp>
 #include <pni/core/types.hpp>
 #include <boost/mpl/list.hpp>
@@ -42,7 +46,7 @@ BOOST_AUTO_TEST_SUITE(type_info_test)
     //========================================================================
     BOOST_AUTO_TEST_CASE_TEMPLATE(test_type_info_uint,T,unsigned_int_types)
     {
-        typedef type_info<T> info_type;
+        typedef pni::core::type_info<T> info_type;
         typedef std::numeric_limits<T> limits_type; 
 
         BOOST_CHECK_EQUAL(info_type::min(),limits_type::min());
@@ -55,7 +59,7 @@ BOOST_AUTO_TEST_SUITE(type_info_test)
     //========================================================================
     BOOST_AUTO_TEST_CASE_TEMPLATE(test_type_info_int,T,signed_int_types)
     {
-        typedef type_info<int8> info_type;
+        typedef pni::core::type_info<int8> info_type;
         typedef std::numeric_limits<int8> limits_type; 
 
         BOOST_CHECK_EQUAL(info_type::min(),limits_type::min());
@@ -68,20 +72,20 @@ BOOST_AUTO_TEST_SUITE(type_info_test)
     //========================================================================
     BOOST_AUTO_TEST_CASE(test_type_info_int_sizes)
     {
-        BOOST_CHECK(type_info<uint8>::size==1);
-        BOOST_CHECK(type_info<int8>::size==1);
-        BOOST_CHECK(type_info<uint16>::size==2);
-        BOOST_CHECK(type_info<int16>::size==2);
-        BOOST_CHECK(type_info<uint32>::size==4);
-        BOOST_CHECK(type_info<int32>::size==4);
-        BOOST_CHECK(type_info<uint64>::size==8);
-        BOOST_CHECK(type_info<int64>::size==8);
+        BOOST_CHECK(pni::core::type_info<uint8>::size==1);
+        BOOST_CHECK(pni::core::type_info<int8>::size==1);
+        BOOST_CHECK(pni::core::type_info<uint16>::size==2);
+        BOOST_CHECK(pni::core::type_info<int16>::size==2);
+        BOOST_CHECK(pni::core::type_info<uint32>::size==4);
+        BOOST_CHECK(pni::core::type_info<int32>::size==4);
+        BOOST_CHECK(pni::core::type_info<uint64>::size==8);
+        BOOST_CHECK(pni::core::type_info<int64>::size==8);
     }
 
     //========================================================================
     BOOST_AUTO_TEST_CASE(test_type_info_float32)
     {
-        typedef type_info<float32> info_type;
+        typedef pni::core::type_info<float32> info_type;
         typedef std::numeric_limits<float32> limits_type; 
 
         BOOST_CHECK_CLOSE(info_type::min(),-limits_type::max(),1.e-6);
@@ -95,7 +99,7 @@ BOOST_AUTO_TEST_SUITE(type_info_test)
     //========================================================================
     BOOST_AUTO_TEST_CASE(test_type_info_float64)
     {
-        typedef type_info<float64> info_type;
+        typedef pni::core::type_info<float64> info_type;
         typedef std::numeric_limits<float64> limits_type; 
 
         BOOST_CHECK_CLOSE(info_type::min(),-limits_type::max(),1.e-12);
@@ -109,7 +113,7 @@ BOOST_AUTO_TEST_SUITE(type_info_test)
     //========================================================================
     BOOST_AUTO_TEST_CASE(test_type_info_float128)
     {
-        typedef type_info<float128> info_type;
+        typedef pni::core::type_info<float128> info_type;
         typedef std::numeric_limits<float128> limits_type; 
 
         BOOST_CHECK_CLOSE(info_type::min(),-limits_type::max(),1.e-12);
@@ -123,7 +127,7 @@ BOOST_AUTO_TEST_SUITE(type_info_test)
 //========================================================================
     BOOST_AUTO_TEST_CASE(test_type_info_complex32)
     {
-        typedef type_info<complex32> info_type;
+        typedef pni::core::type_info<complex32> info_type;
         typedef std::numeric_limits<float32> limits_type; 
 
         BOOST_CHECK_CLOSE(info_type::min(),-limits_type::max(),1.e-6);
@@ -137,7 +141,7 @@ BOOST_AUTO_TEST_SUITE(type_info_test)
     //========================================================================
     BOOST_AUTO_TEST_CASE(test_type_info_complex64)
     {
-        typedef type_info<complex64> info_type;
+        typedef pni::core::type_info<complex64> info_type;
         typedef std::numeric_limits<float64> limits_type; 
 
         BOOST_CHECK_CLOSE(info_type::min(),-limits_type::max(),1.e-12);
@@ -151,7 +155,7 @@ BOOST_AUTO_TEST_SUITE(type_info_test)
     //========================================================================
     BOOST_AUTO_TEST_CASE(test_type_info_complex128)
     {
-        typedef type_info<complex128> info_type;
+        typedef pni::core::type_info<complex128> info_type;
         typedef std::numeric_limits<float128> limits_type; 
 
         BOOST_CHECK_CLOSE(info_type::min(),-limits_type::max(),1.e-12);
@@ -165,7 +169,7 @@ BOOST_AUTO_TEST_SUITE(type_info_test)
     //========================================================================
     BOOST_AUTO_TEST_CASE(test_type_info_bool)
     {
-        typedef type_info<bool> info_type;
+        typedef pni::core::type_info<bool> info_type;
 
         BOOST_CHECK_EQUAL(info_type::min(),false);
         BOOST_CHECK_EQUAL(info_type::max(),true);
@@ -178,7 +182,7 @@ BOOST_AUTO_TEST_SUITE(type_info_test)
     //========================================================================
     BOOST_AUTO_TEST_CASE(test_type_info_bool_t)
     {
-        typedef type_info<bool_t> info_type;
+        typedef pni::core::type_info<bool_t> info_type;
 
         BOOST_CHECK_EQUAL(info_type::min(),false);
         BOOST_CHECK_EQUAL(info_type::max(),true);
@@ -191,7 +195,7 @@ BOOST_AUTO_TEST_SUITE(type_info_test)
     //========================================================================
     BOOST_AUTO_TEST_CASE(test_type_info_binary)
     {
-        typedef type_info<binary> info_type;
+        typedef pni::core::type_info<binary> info_type;
             
         BOOST_CHECK(info_type::size==1);
         BOOST_CHECK(info_type::is_integer);

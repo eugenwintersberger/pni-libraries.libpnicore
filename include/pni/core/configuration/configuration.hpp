@@ -38,6 +38,7 @@
 #endif 
 #include "../types.hpp"
 #include "../error/exceptions.hpp"
+#include "../windows.hpp"
 #include "config_option.hpp"
 #include "config_argument.hpp"
 
@@ -54,7 +55,7 @@ namespace core{
     //! This class holds the configuration of a program or library that has 
     //! been extracted from various sources.
     //!
-    class configuration 
+    class PNICORE_EXPORT configuration 
     {
         private:
             //! stores the program options

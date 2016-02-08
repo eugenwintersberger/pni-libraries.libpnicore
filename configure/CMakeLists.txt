@@ -57,6 +57,7 @@ elseif(CMAKE_CXX_COMPILER_ID MATCHES MSVC)
     message(STATUS "found Microsoft C++ compiler ...") 
     add_definitions(-DMSVC)
     add_definitions(-DBOOST_ALL_DYN_LINK)
+    add_definitions(-DDLL_BUILD)
     
 elseif(CMAKE_CXX_COMPILER_ID MATCHES Clang)
     #=========================================================================

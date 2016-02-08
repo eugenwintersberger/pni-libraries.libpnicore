@@ -30,6 +30,8 @@
 #include "value_holder.hpp"
 #include "utils.hpp"
 
+#include "../windows.hpp"
+
 namespace pni{
 namespace core{
 
@@ -40,7 +42,7 @@ namespace core{
     //! \brief type erasure for references to POD data
     //!
     //!
-    class value_ref
+    class PNICORE_EXPORT value_ref
     {
         private:
             //! internal pointer type used to hold the reference instance
@@ -118,7 +120,13 @@ namespace core{
             }
 
             //! pointer holding the value stored
+#ifdef MSVC
+#pragma warning(disable:4251)
+#endif
             pointer_type _ptr;
+#ifdef MSVC
+#pragma warning(default:4251)
+#endif
         public:
             //================constructors and destructor======================
             //!
@@ -319,7 +327,7 @@ namespace core{
     //! \param v reference to value_ref
     //! \return instance of value with the content of value_ref
     //!
-    value to_value(const value_ref &v);
+    PNICORE_EXPORT value to_value(const value_ref &v);
 
 //end of namespace
 }

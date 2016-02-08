@@ -28,6 +28,7 @@
 #include "../utilities/sfinae_macros.hpp"
 #include <functional>
 #include <boost/mpl/for_each.hpp>
+#include "../windows.hpp"
 
 
 namespace pni{
@@ -59,7 +60,7 @@ namespace core{
     //! \param v binary data 
     //! \return type ID for binary 
     //!
-    type_id_t get_type_id(const binary &v);
+    PNICORE_EXPORT type_id_t get_type_id(const binary &v);
 
     //-------------------------------------------------------------------------
     //!
@@ -69,7 +70,7 @@ namespace core{
     //! \param v boolean data
     //! \return typeID for bool_t
     //!
-    type_id_t get_type_id(const bool_t &v);
+    PNICORE_EXPORT type_id_t get_type_id(const bool_t &v);
 
 
     //-------------------------------------------------------------------------
@@ -83,7 +84,7 @@ namespace core{
     //! \param v string data
     //! \return type ID for string type
     //! 
-    type_id_t get_type_id(const string &v);
+    PNICORE_EXPORT type_id_t get_type_id(const string &v);
 
 
     //-------------------------------------------------------------------------
@@ -155,7 +156,7 @@ namespace core{
     //! \param s string representation of the type
     //! \return corresponding type ID
     //!
-    type_id_t type_id_from_str(const string &s);
+    PNICORE_EXPORT type_id_t type_id_from_str(const string &s);
 
     //-------------------------------------------------------------------------
     //!
@@ -170,7 +171,7 @@ namespace core{
     //! \param id type ID of the type
     //! \return string representation of the type
     //!
-    string str_from_type_id(type_id_t id);
+    PNICORE_EXPORT string str_from_type_id(type_id_t id);
    
 //end of namespace
 }

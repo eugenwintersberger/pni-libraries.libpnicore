@@ -27,6 +27,7 @@
 #include <utility>
 
 #include "../error/exceptions.hpp"
+#include "../windows.hpp"
 
 namespace pni{
 namespace core{
@@ -46,7 +47,7 @@ namespace core{
     //! steps between each subsequent element. If the stride is not 1 
     //! the last index will be adopted so that the 
     //!
-    class slice
+    class PNICORE_EXPORT slice
     {
         private:
             size_t _first;  //!< first index in the slice
@@ -165,11 +166,11 @@ namespace core{
     }; 
 
     //! output operator
-    std::ostream &operator<<(std::ostream &o,const slice &s);
+    PNICORE_EXPORT std::ostream &operator<<(std::ostream &o,const slice &s);
 
-    bool operator==(const slice &lhs,const slice &rhs);
+    PNICORE_EXPORT bool operator==(const slice &lhs,const slice &rhs);
 
-    bool operator!=(const slice &lhs,const slice &rhs);
+    PNICORE_EXPORT bool operator!=(const slice &lhs,const slice &rhs);
 
     //-------------------------------------------------------------------------
     //! 
@@ -186,7 +187,7 @@ namespace core{
     //! \param s slice object 
     //! \return number of spanned elements
     //!
-    size_t size(const slice &s);
+    PNICORE_EXPORT size_t size(const slice &s);
 
     //-------------------------------------------------------------------------
     //!
@@ -202,7 +203,7 @@ namespace core{
     //! \param s slice for which to compute the span
     //! \return total number of elements
     //!
-    size_t span(const slice &s);
+    PNICORE_EXPORT size_t span(const slice &s);
 
 //end of namespace
 }

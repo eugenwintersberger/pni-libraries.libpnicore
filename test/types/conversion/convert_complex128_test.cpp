@@ -21,10 +21,14 @@
 //  Created on: Dec 29, 2014
 //      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
 //
+#ifdef GCC
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#endif
 #include <boost/test/unit_test.hpp>
+#ifdef GCC
 #pragma GCC diagnostic pop
+#endif
 #include <boost/test/floating_point_comparison.hpp>
 #include <pni/core/types/convert.hpp>
 
@@ -147,11 +151,13 @@ BOOST_AUTO_TEST_SUITE(convert_complex128_test)
         BOOST_CHECK_CLOSE(base_type(19),value.real(),1.e-16);
         BOOST_CHECK_CLOSE(base_type(-4.5),value.imag(),1.e-16);
 
+#ifdef GCC
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Woverflow"
         BOOST_CHECK_THROW(convert<target_type>(source_type(1.e+400,-2e+400)),
                           range_error);
 #pragma GCC diagnostic pop
+#endif
     }
 
     //=========================================================================
