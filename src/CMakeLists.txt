@@ -40,6 +40,7 @@ else()
     #install the libraries - on Windows
     install(TARGETS pnicore 
             LIBRARY DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}
+            RUNTIME DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}
             ARCHIVE DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR})
 endif()
 

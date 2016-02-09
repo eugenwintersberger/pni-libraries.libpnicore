@@ -58,6 +58,11 @@ elseif(CMAKE_CXX_COMPILER_ID MATCHES MSVC)
     add_definitions(-DMSVC)
     add_definitions(-DBOOST_ALL_DYN_LINK)
     add_definitions(-DDLL_BUILD)
+
+    #need to setup the installation directories
+    set(CMAKE_INSTALL_FULL_LIBDIR "${CMAKE_INSTALL_PREFIX}/lib")
+    set(CMAKE_INSTALL_FULL_INCLUDEDIR "${CMAKE_INSTALL_PREFIX}/include")
+
     
 elseif(CMAKE_CXX_COMPILER_ID MATCHES Clang)
     #=========================================================================
