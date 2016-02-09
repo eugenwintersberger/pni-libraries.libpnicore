@@ -22,10 +22,14 @@
 //      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
 //
 #define BOOST_TEST_DYN_LINK
+#ifdef GCC
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#endif
 #include <boost/test/unit_test.hpp>
+#ifdef GCC
 #pragma GCC diagnostic pop
+#endif
 #include <boost/test/parameterized_test.hpp>
 #include <vector>
 #include <list>

@@ -31,28 +31,117 @@ namespace pni{
 namespace core{
 
 #ifdef MSVC
+
+	template<typename CTYPE> class reverse_iterator
+	{
+		public:
+			typedef typename CTYPE::value_type value_type;
+			typedef reverse_iterator<CTYPE> iterator_type;
+		private:
+			const CTYPE *_container;
+			ssize_t _state;
+		public:
+			//default constructor
+			reverse_iterator() :
+				_container(nullptr),
+				_state(-1)
+			{}
+
+			//copy constructor - default implementation should be enough
+			reverse_iterator(const reverse_iterator &i) = default;
+
+			//initialize with container
+			reverse_iterator(const CTYPE &c) :
+				_container(&c),
+				_state(_container->size() - 1)
+			{}
+
+			//copy assignment - the default implementation is good enough
+			reverse_iterator &operator=(const reverse_iterator &i) = default;
+
+			operator bool() const
+			{
+				return !((!_container) || (_state == -1) || (_state >= _container->size()));
+			}
+
+			value_type operator*() const
+			{
+				return (*_container)[_state];
+			}
+
+			value_type *operator->() const
+			{
+				return &(*this);
+			}
+
+			iterator_type &operator++()
+			{
+				_state--;
+				return *this;
+			}
+
+			iterator_type operator++(int)
+			{
+				iterator_type temp = *this;
+				++(*this);
+				return temp;
+			}
+
+			iterator_type &operator--()
+			{
+				_state++;
+				return *this;
+			}
+
+			iterator_type operator--(int)
+			{
+				iterator_type temp = *this;
+				--(*this);
+				return temp;
+			}
+
+			bool operator==(const iterator_type &i)
+			{
+				if (_container != i._container) return false;
+				else if (_state != i._state) return false;
+				return true;
+			}
+
+			bool operator!=(const iterator_type &i)
+			{
+				return !(*this == i);
+			}
+
+	};
+	
+
 	template<size_t N,size_t... DIMS>	class win_storage
 	{
 		public:
 			typedef size_t value_type; 
 			typedef const size_t *const_iterator;
+			typedef win_storage<N, DIMS...> container_type;
+			typedef reverse_iterator<container_type> const_reverse_iterator;
 		private:
 			constexpr static value_type _data[N] = { DIMS... };
 		public:
 			
-			constexpr size_t size() const
+			constexpr size_t size() const {	return N; }
+
+			const_iterator begin() const { return _data; }
+
+			size_t operator[](size_t index) const {	return _data[index]; }
+
+			const_iterator end() const { return &_data[N]; }
+
+			const_reverse_iterator rbegin() const
 			{
-				return N;
+				return const_reverse_iterator(*this);
 			}
 
-			const_iterator begin() const
+			const_reverse_iterator rend() const
 			{
-				return _data;
-			}
-
-			const_iterator end() const
-			{
-				return &_data[N];
+				return const_reverse_iterator();
 			}
 	};
 #endif
@@ -253,9 +342,16 @@ namespace core{
 
     };
     
+#ifdef MSVC
+	template<typename MAP_IMP, size_t... DIMS>
+	typename static_index_map<MAP_IMP, DIMS...>::storage_type
+		static_index_map<MAP_IMP, DIMS...>::_shape;
+#else
 template<typename MAP_IMP,size_t... DIMS> 
     constexpr typename static_index_map<MAP_IMP,DIMS...>::storage_type 
     static_index_map<MAP_IMP,DIMS...>::_shape;
+
+#endif
 //end of namespace
 }
 }

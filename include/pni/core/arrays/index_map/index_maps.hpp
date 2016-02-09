@@ -135,7 +135,7 @@ namespace core{
             {
                 storage = container_utils<storage_type>::create(c.size());
             }
-            catch(size_mismatch_error &error)
+            catch(size_mismatch_error &)
             {
                 std::stringstream ss;
                 ss<<"The map supports only a fixed number of dimensions ("
@@ -165,7 +165,7 @@ namespace core{
             {
                 storage = container_utils<storage_type>::create(shape);
             }
-            catch(size_mismatch_error &error)
+            catch(size_mismatch_error &)
             {
                 throw shape_mismatch_error(EXCEPTION_RECORD,
                     "Rank of user shape ("

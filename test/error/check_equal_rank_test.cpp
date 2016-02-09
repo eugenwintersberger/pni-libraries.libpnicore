@@ -23,10 +23,14 @@
 //
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE testing error utilities
+#ifdef GCC
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#endif
 #include <boost/test/unit_test.hpp>
+#ifdef GCC
 #pragma GCC diagnostic pop
+#endif
 #include <boost/current_function.hpp>
 #include <vector>
 #include <list>

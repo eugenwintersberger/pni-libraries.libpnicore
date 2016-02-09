@@ -21,10 +21,14 @@
 //  Created on: Nov 2, 2015
 //      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
 //
+#ifdef GCC
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#endif
 #include <boost/test/unit_test.hpp>
+#ifdef GCC
 #pragma GCC diagnostic pop
+#endif
 #include <boost/test/parameterized_test.hpp>
 #include <boost/mpl/list.hpp>
 #include <vector>
