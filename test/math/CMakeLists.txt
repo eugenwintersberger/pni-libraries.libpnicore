@@ -12,6 +12,10 @@ add_executable(math_test EXCLUDE_FROM_ALL ${SOURCES} $<TARGET_OBJECTS:test_commo
 add_executable(random_ranges EXCLUDE_FROM_ALL random_ranges.cpp)
 
 target_link_libraries(math_test pnicore)
+if(CMAKE_CXX_COMPILER_ID MATCHES GNU)
+    target_link_libraries(math_test ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
+endif()
+
 target_link_libraries(random_ranges pnicore)
 
 add_test(NAME math_test 

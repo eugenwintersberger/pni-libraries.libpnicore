@@ -24,10 +24,14 @@
 
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE testing the array type earsure
+#ifdef GCC
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#endif
 #include <boost/test/unit_test.hpp>
+#ifdef GCC
 #pragma GCC diagnostic pop
+#endif
 #include <pni/core/type_erasures.hpp>
 
 #include "array_types.hpp"

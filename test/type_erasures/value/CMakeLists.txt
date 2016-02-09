@@ -25,15 +25,10 @@ link_directories("${CMAKE_CURRENT_BINARY_DIR}/../../../src")
 add_executable(value_test EXCLUDE_FROM_ALL ${SOURCES} $<TARGET_OBJECTS:test_common>)
 
 target_link_libraries(value_test pnicore)
-
-if(CPPUNIT_FOUND)
-    #add include directories
-    include_directories(${CPPUNIT_INCLUDE_DIRS})
-
-    #add libraries
-    target_link_libraries(value_test ${CPPUNIT_LIBRARIES})
-
+if(CMAKE_CXX_COMPILER_ID MATCHES GNU)
+    target_link_libraries(value_test ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
 endif()
+
 
 add_test(NAME "type_erasure_test:value"
          COMMAND value_test

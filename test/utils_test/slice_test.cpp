@@ -27,7 +27,7 @@
 #ifdef GCC
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-#endif GCC
+#endif 
 #include <boost/test/unit_test.hpp>
 #ifdef GCC
 #pragma GCC diagnostic pop

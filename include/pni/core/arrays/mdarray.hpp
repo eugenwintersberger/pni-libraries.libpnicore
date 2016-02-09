@@ -96,7 +96,7 @@ namespace core {
             
             //==================public members=================================
             //! type ID of the element type
-            static const type_id_t type_id; 
+            static constexpr type_id_t type_id = type_id_map<value_type>::type_id;
         private:
             //! Index map of the array 
             IMAP _imap;  
@@ -906,10 +906,10 @@ namespace core {
         static const bool is_multidim = true;
     };
 
-    //set data for static member attribute
+    //need a declaration for the static constexpr attribute
     template<typename STORAGE,typename IMAP,typename IPA>
-    const type_id_t mdarray<STORAGE,IMAP,IPA>::type_id = 
-    type_id_map<typename STORAGE::value_type>::type_id;
+    constexpr type_id_t mdarray<STORAGE,IMAP,IPA>::type_id;
+    
     //=====================non-member operators================================
 
     //!

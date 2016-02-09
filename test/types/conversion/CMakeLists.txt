@@ -24,7 +24,11 @@ set(SOURCES unchecked_convertible_test.cpp
 
 link_directories("${CMAKE_CURRENT_BINARY_DIR}/../../src")
 add_executable(conversion_test EXCLUDE_FROM_ALL ${SOURCES})
-target_link_libraries(conversion_test pnicore ${CPPUNIT_LIBRARIES})
+target_link_libraries(conversion_test pnicore)
+
+if(CMAKE_CXX_COMPILER_ID MATCHES GNU)
+    target_link_libraries(conversion_test ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
+endif()
 
 
 add_test(NAME "types:conversion_test" 
