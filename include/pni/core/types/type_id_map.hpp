@@ -41,7 +41,7 @@ namespace core{
 #define CREATE_TYPE_ID_MAP(type,tid)\
     template<> struct type_id_map<type>\
     {\
-        static const type_id_t type_id = tid;\
+        static constexpr type_id_t type_id = tid;\
     }
 
     //-------------------------------------------------------------------------
@@ -55,7 +55,7 @@ namespace core{
     struct type_id_map
     {
         //! id value for type T
-        static const type_id_t type_id = type_id_t::NONE; 
+        static constexpr type_id_t type_id = type_id_t::NONE; 
     };
 
     //! \cond NO_API_DOC
