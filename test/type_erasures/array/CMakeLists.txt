@@ -5,6 +5,10 @@ set(SOURCES
         array_iterator_test.cpp
     )
 
+if(CMAKE_CXX_COMPILER_ID MATCHES MSVC)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /bigobj")
+endif()
+
 add_executable(array_test EXCLUDE_FROM_ALL ${SOURCES} $<TARGET_OBJECTS:test_common>)
 
 target_link_libraries(array_test pnicore)

@@ -57,7 +57,7 @@ namespace core{
     {
         type_id_vector types = conversion_map.at(source_tid);
         
-        return std::count(types.begin(),types.end(),target_tid);
+        return std::count(types.begin(),types.end(),target_tid)!=0;
     }
 
 

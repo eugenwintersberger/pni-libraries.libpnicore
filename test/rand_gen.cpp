@@ -80,8 +80,8 @@ void generate_numbers(size_t n,const string &lbound,const string &ubound)
 {
     typedef random_generator<T> generator_type; 
 
-    T lower_bound = type_info<T>::min();
-    T upper_bound = type_info<T>::max();
+    T lower_bound = pni::core::type_info<T>::min();
+    T upper_bound = pni::core::type_info<T>::max();
 
     if(!lbound.empty())
         lower_bound = boost::lexical_cast<T>(lbound);

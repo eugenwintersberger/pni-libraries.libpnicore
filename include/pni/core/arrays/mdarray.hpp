@@ -376,7 +376,7 @@ namespace core {
                 {
                     return _data.at(i); 
                 }
-                catch(std::out_of_range &error)
+                catch(std::out_of_range &)
                 {
                     std::stringstream ss;
                     ss<<"Index "<<i<<" is out of range ("<<size()<<")!";
@@ -401,7 +401,7 @@ namespace core {
                 {
                     return _data.at(i); 
                 }
-                catch(std::out_of_range &error)
+                catch(std::out_of_range &)
                 {
                     std::stringstream ss;
                     ss<<"Index "<<i<<" is out of range ("<<size()<<")!";

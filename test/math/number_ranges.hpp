@@ -31,8 +31,8 @@ template<
          bool is_signed = true
         > struct add_ranges
 {
-    T rhs_min() const { return 0.5*pni::core::type_info<T>::min(); }
-    T rhs_max() const { return 0.5*pni::core::type_info<T>::max(); }
+    T rhs_min() const { return pni::core::type_info<T>::min()/T(2); }
+    T rhs_max() const { return pni::core::type_info<T>::max()/T(2); }
 
     T lhs_min() const { return rhs_min(); }
     T lhs_max() const { return rhs_max(); } 
@@ -40,8 +40,8 @@ template<
 
 template<typename T> struct add_ranges<std::complex<T>,true>
 {
-    T rhs_min() const { return 0.5*pni::core::type_info<T>::min(); }
-    T rhs_max() const { return 0.5*pni::core::type_info<T>::max(); }
+    T rhs_min() const { return pni::core::type_info<T>::min()/T(2); }
+    T rhs_max() const { return pni::core::type_info<T>::max()/T(2); }
 
     T lhs_min() const { return rhs_min(); }
     T lhs_max() const { return rhs_max(); } 
@@ -54,9 +54,9 @@ template<typename T> struct mult_ranges
         using namespace boost::math;
         T min = pni::core::type_info<T>::min();
 
-        return sign(min)*std::sqrt(sign(min)*min); 
+        return sign(min)*T(std::sqrt(sign(min)*min)); 
     }
-    T rhs_max() const { return std::sqrt(pni::core::type_info<T>::max()); }
+    T rhs_max() const { return T(std::sqrt(pni::core::type_info<T>::max())); }
 
     T lhs_min() const { return rhs_min(); }
     T lhs_max() const { return rhs_max(); } 
@@ -65,20 +65,21 @@ template<typename T> struct mult_ranges
 template<typename T> struct mult_ranges<std::complex<T>>
 {
     mult_ranges<T> base_range;
-    T rhs_min() const { return 0.5*base_range.rhs_min(); }
-    T rhs_max() const { return 0.5*base_range.rhs_max(); }
 
-    T lhs_min() const { return 0.5*base_range.lhs_min(); }
-    T lhs_max() const { return 0.5*base_range.lhs_max(); } 
+    T rhs_min() const { return T(0.5)*base_range.rhs_min(); }
+    T rhs_max() const { return T(0.5)*base_range.rhs_max(); }
+
+    T lhs_min() const { return T(0.5)*base_range.lhs_min(); }
+    T lhs_max() const { return T(0.5)*base_range.lhs_max(); } 
 };
 
 template<typename T> struct div_ranges
 {
     T rhs_min() const { return T(1); }
-    T rhs_max() const { return 0.5*pni::core::type_info<T>::max(); }
+    T rhs_max() const { return pni::core::type_info<T>::max()/T(2); }
 
-    T lhs_min() const { return 0.5*pni::core::type_info<T>::min(); }
-    T lhs_max() const { return 0.5*pni::core::type_info<T>::max(); } 
+    T lhs_min() const { return pni::core::type_info<T>::min()/T(2); }
+    T lhs_max() const { return pni::core::type_info<T>::max()/T(2); } 
 };
 
 template<typename T> struct div_ranges<std::complex<T>>

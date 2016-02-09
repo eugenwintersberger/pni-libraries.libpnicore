@@ -21,11 +21,14 @@
 //  Created on: Nov 28, 2013
 //      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
 //
-
+#ifdef GCC
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#endif
 #include <boost/test/unit_test.hpp>
+#ifdef GCC
 #pragma GCC diagnostic pop
+#endif
 #include <boost/mpl/joint_view.hpp>
 #include "array_types.hpp"
 #include "../data_generator.hpp"
@@ -58,10 +61,10 @@ template<typename AT> struct fixture
     array_type lhs;
     array_type lhs_orig;
 
-    fixture(typename type_info<value_type>::base_type rhs_lbound,
-            typename type_info<value_type>::base_type rhs_ubound,
-            typename type_info<value_type>::base_type lhs_lbound,
-            typename type_info<value_type>::base_type lhs_ubound):
+    fixture(typename pni::core::type_info<value_type>::base_type rhs_lbound,
+            typename pni::core::type_info<value_type>::base_type rhs_ubound,
+            typename pni::core::type_info<value_type>::base_type lhs_lbound,
+            typename pni::core::type_info<value_type>::base_type lhs_ubound):
         shape(shape_t{2,3,5}),
         generator_rhs(rhs_lbound,rhs_ubound),
         generator_lhs(lhs_lbound,lhs_ubound),

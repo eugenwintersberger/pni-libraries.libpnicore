@@ -6,6 +6,10 @@ set(SOURCES add_operator_test.cpp
             sub_operator_test.cpp
     )
 
+if(CMAKE_CXX_COMPILER_ID MATCHES MSVC)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /bigobj")
+endif()
+
 
 link_directories("${CMAKE_CURRENT_BINARY_DIR}/../../src")
 add_executable(math_test EXCLUDE_FROM_ALL ${SOURCES} $<TARGET_OBJECTS:test_common>)

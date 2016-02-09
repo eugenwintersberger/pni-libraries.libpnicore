@@ -90,7 +90,8 @@ BOOST_AUTO_TEST_SUITE(binary_test)
         uint8 *rptr = new uint8[10];
         binary_type *bptr = new binary_type[10];
 
-        for(size_t i=0;i<10;i++)
+		//the number range for the loop is ok for uint8
+        for(uint8 i=0;i<10;i++)
         {
             rptr[i] = i;
             bptr[i] = i;

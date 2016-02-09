@@ -79,9 +79,20 @@ template<typename T> class random_generator
 
         random_generator():
             _engine(std::random_device()()),
+#ifdef MSVC
+// the bounds are computed as doubles due to the 0.2 prefactors. 
+// However, for an interger random generator these values will be converted 
+// back to an integer which most naturally causes some loss of information. 
+// Anyhow for our purpose this is ok and we can safely ignore the 
+// warning of MSVC.
+#pragma warning(disable:4244)
+#endif
             _distribution(0.2*pni::core::type_info<T>::min(),
 				          0.2*pni::core::type_info<T>::max())
         {}
+#ifdef MSVC
+#pragma warning(default:4244)
+#endif
 
         T operator()()
         {
