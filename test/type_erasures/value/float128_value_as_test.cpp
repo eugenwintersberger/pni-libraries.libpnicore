@@ -43,10 +43,16 @@ typedef fixture<value_type> fixture_type;
 
 BOOST_AUTO_TEST_SUITE(float128_value_as_test)
 
+	fixture_type create_fixture()
+	{
+		return fixture_type(value_type(0.5)*sinfo_type::min(),
+			value_type(0.5)*sinfo_type::max());
+	}
+
     BOOST_AUTO_TEST_CASE(test_as_uint8)
     {
         typedef uint8 target_type;
-        fixture_type f(sinfo_type::min(),sinfo_type::max());
+        fixture_type f=create_fixture();
         value v(f.value_1);
         BOOST_CHECK_THROW(v.as<target_type>(),type_error);
     }
@@ -55,7 +61,7 @@ BOOST_AUTO_TEST_SUITE(float128_value_as_test)
     BOOST_AUTO_TEST_CASE(test_as_uint16)
     {
         typedef uint16 target_type;
-        fixture_type f(sinfo_type::min(),sinfo_type::max());
+        fixture_type f=create_fixture();
         value v(f.value_1);
         BOOST_CHECK_THROW(v.as<target_type>(),type_error);
     }
@@ -64,7 +70,7 @@ BOOST_AUTO_TEST_SUITE(float128_value_as_test)
     BOOST_AUTO_TEST_CASE(test_as_uint32)
     {
         typedef uint32 target_type;
-        fixture_type f(sinfo_type::min(),sinfo_type::max());
+        fixture_type f=create_fixture();
         value v(f.value_1);
         BOOST_CHECK_THROW(v.as<target_type>(),type_error);
     }
@@ -73,7 +79,7 @@ BOOST_AUTO_TEST_SUITE(float128_value_as_test)
     BOOST_AUTO_TEST_CASE(test_as_uint64)
     {
         typedef uint64 target_type;
-        fixture_type f(sinfo_type::min(),sinfo_type::max());
+        fixture_type f=create_fixture();
         value v(f.value_1);
         BOOST_CHECK_THROW(v.as<target_type>(),type_error);
     }
@@ -82,7 +88,7 @@ BOOST_AUTO_TEST_SUITE(float128_value_as_test)
     BOOST_AUTO_TEST_CASE(test_as_int8)
     {
         typedef int8 target_type;
-        fixture_type f(sinfo_type::min(),sinfo_type::max());
+        fixture_type f=create_fixture();
         value v(f.value_1);
         BOOST_CHECK_THROW(v.as<target_type>(),type_error);
     }
@@ -91,7 +97,7 @@ BOOST_AUTO_TEST_SUITE(float128_value_as_test)
     BOOST_AUTO_TEST_CASE(test_as_int16)
     {
         typedef int16 target_type;
-        fixture_type f(sinfo_type::min(),sinfo_type::max());
+        fixture_type f=create_fixture();
         value v(f.value_1);
         BOOST_CHECK_THROW(v.as<target_type>(),type_error);
     }
@@ -100,7 +106,7 @@ BOOST_AUTO_TEST_SUITE(float128_value_as_test)
     BOOST_AUTO_TEST_CASE(test_as_int32)
     {
         typedef int32 target_type;
-        fixture_type f(sinfo_type::min(),sinfo_type::max());
+        fixture_type f=create_fixture();
         value v(f.value_1);
         BOOST_CHECK_THROW(v.as<target_type>(),type_error);
     }
@@ -109,7 +115,7 @@ BOOST_AUTO_TEST_SUITE(float128_value_as_test)
     BOOST_AUTO_TEST_CASE(test_as_int64)
     {
         typedef int64 target_type;
-        fixture_type f(sinfo_type::min(),sinfo_type::max());
+        fixture_type f=create_fixture();
         value v(f.value_1);
         BOOST_CHECK_THROW(v.as<target_type>(),type_error);
     }
@@ -119,7 +125,8 @@ BOOST_AUTO_TEST_SUITE(float128_value_as_test)
     {
         typedef float32 target_type;
         typedef pni::core::type_info<target_type> tinfo_type;
-        fixture_type f(tinfo_type::min(),tinfo_type::max());
+        fixture_type f(value_type(target_type(0.5)*tinfo_type::min()),
+			           value_type(target_type(0.5)*tinfo_type::max()));
         value v(f.value_1);
         BOOST_CHECK_EQUAL(v.as<target_type>(),
                           convert<target_type>(f.value_1));
@@ -135,22 +142,26 @@ BOOST_AUTO_TEST_SUITE(float128_value_as_test)
     {
         typedef float64 target_type;
         typedef pni::core::type_info<target_type> tinfo_type;
-        fixture_type f(tinfo_type::min(),tinfo_type::max());
+        fixture_type f(value_type(target_type(0.5)*tinfo_type::min()),
+			           value_type(target_type(0.5)*tinfo_type::max()));
         value v(f.value_1);
         BOOST_CHECK_EQUAL(v.as<target_type>(),
                           convert<target_type>(f.value_1));
         
+#ifndef MSVC
+		//on MSVC 2014 (VS 2015) float64 and float128 have equal size
         v = sinfo_type::min();
         BOOST_CHECK_THROW(v.as<target_type>(),range_error);
         v = sinfo_type::max();
         BOOST_CHECK_THROW(v.as<target_type>(),range_error);
+#endif
     }
 
     //========================================================================
     BOOST_AUTO_TEST_CASE(test_as_float128)
     {
         typedef float128 target_type;
-        fixture_type f(sinfo_type::min(),sinfo_type::max());
+        fixture_type f=create_fixture();
         value v(f.value_1);
         BOOST_CHECK_EQUAL(v.as<target_type>(),
                           convert<target_type>(f.value_1));
@@ -176,23 +187,28 @@ BOOST_AUTO_TEST_SUITE(float128_value_as_test)
     BOOST_AUTO_TEST_CASE(test_as_complex64)
     {
         typedef complex64 target_type;
-        typedef pni::core::type_info<target_type> tinfo_type;
-        fixture_type f(tinfo_type::min(),tinfo_type::max());
+        typedef pni::core::type_info<float64> tinfo_type;
+        fixture_type f(value_type(float64(0.5)*tinfo_type::min()),
+			           value_type(float64(0.5)*tinfo_type::max()));
         value v(f.value_1);
         BOOST_CHECK_EQUAL(v.as<target_type>(),
                           convert<target_type>(f.value_1));
         
+#ifndef MSVC
+		// does not work on MSVC 2014 (VS 2015) where float64 and float128
+		// are of equal size
         v = sinfo_type::min();
         BOOST_CHECK_THROW(v.as<target_type>(),range_error);
         v = sinfo_type::max();
         BOOST_CHECK_THROW(v.as<target_type>(),range_error);
+#endif
     }
 
     //========================================================================
     BOOST_AUTO_TEST_CASE(test_as_complex128)
     {
         typedef complex128 target_type;
-        fixture_type f(sinfo_type::min(),sinfo_type::max());
+        fixture_type f=create_fixture();
         value v(f.value_1);
         BOOST_CHECK_EQUAL(v.as<target_type>(),
                           convert<target_type>(f.value_1));
@@ -202,7 +218,7 @@ BOOST_AUTO_TEST_SUITE(float128_value_as_test)
     BOOST_AUTO_TEST_CASE(test_as_string)
     {
         typedef string target_type;
-        fixture_type f(sinfo_type::min(),sinfo_type::max());
+        fixture_type f=create_fixture();
         value v(f.value_1);
         BOOST_CHECK_THROW(v.as<target_type>(),type_error);
     }
@@ -211,7 +227,7 @@ BOOST_AUTO_TEST_SUITE(float128_value_as_test)
     BOOST_AUTO_TEST_CASE(test_as_binary)
     {
         typedef binary target_type;
-        fixture_type f(sinfo_type::min(),sinfo_type::max());
+        fixture_type f=create_fixture();
         value v(f.value_1);
         BOOST_CHECK_THROW(v.as<target_type>(),type_error);
     }
@@ -220,7 +236,7 @@ BOOST_AUTO_TEST_SUITE(float128_value_as_test)
     BOOST_AUTO_TEST_CASE(test_as_bool)
     {
         typedef bool_t target_type;
-        fixture_type f(sinfo_type::min(),sinfo_type::max());
+        fixture_type f=create_fixture();
         value v(f.value_1);
         BOOST_CHECK_THROW(v.as<target_type>(),type_error);
     }
