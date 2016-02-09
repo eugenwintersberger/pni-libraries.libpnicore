@@ -21,10 +21,14 @@
 //  Created on: Jul 25, 2012
 //      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
 //
+#ifdef GCC
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#endif
 #include <boost/test/unit_test.hpp>
+#ifdef GCC
 #pragma GCC diagnostic pop
+#endif
 
 #include <pni/core/algorithms/math/add_op.hpp>
 #include "array_types.hpp"
