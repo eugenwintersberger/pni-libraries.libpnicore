@@ -24,7 +24,7 @@
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 #include <boost/test/unit_test.hpp>
-#pragma GCC diangostic pop
+#pragma GCC diagnostic pop
 #include <boost/test/floating_point_comparison.hpp>
 #include <pni/core/types/convert.hpp>
 

@@ -7,7 +7,10 @@ set(SOURCES
 
 add_executable(array_test EXCLUDE_FROM_ALL ${SOURCES} $<TARGET_OBJECTS:test_common>)
 
-target_link_libraries(array_test pnicore ${CPPUNIT_LIBRARIES})
+target_link_libraries(array_test pnicore)
+if(CMAKE_CXX_COMPILER_ID MATCHES GNU)
+    target_link_libraries(array_test ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
+endif()
 
 
 add_test(NAME "type_erasure_test:array"
