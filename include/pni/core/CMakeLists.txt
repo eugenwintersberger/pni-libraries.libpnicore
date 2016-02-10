@@ -10,7 +10,8 @@ set(HEADER_FILES arrays.hpp
                  )
 
 install(FILES ${HEADER_FILES} 
-        DESTINATION ${CMAKE_INSTALL_FULL_INCLUDEDIR}/pni/core/)
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/pni/core/
+        COMPONENT development)
 
 add_subdirectory("algorithms")
 add_subdirectory("arrays")

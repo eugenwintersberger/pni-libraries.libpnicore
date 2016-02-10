@@ -11,4 +11,5 @@ set(HEADER_FILES array_holder.hpp
                  )
 
 install(FILES ${HEADER_FILES} 
-        DESTINATION ${CMAKE_INSTALL_FULL_INCLUDEDIR}/pni/core/type_erasures)
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/pni/core/type_erasures
+        COMPONENT development)

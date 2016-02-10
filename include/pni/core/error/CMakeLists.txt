@@ -3,5 +3,6 @@ set(HEADER_FILES exceptions.hpp
                  )
 
 install(FILES ${HEADER_FILES} 
-        DESTINATION ${CMAKE_INSTALL_FULL_INCLUDEDIR}/pni/core/error)
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/pni/core/error
+        COMPONENT development)
 

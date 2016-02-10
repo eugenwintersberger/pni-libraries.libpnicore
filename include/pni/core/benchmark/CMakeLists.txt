@@ -5,4 +5,5 @@ set(HEADER_FILES benchmark_result.hpp
                  )
 
 install(FILES ${HEADER_FILES} 
-    DESTINATION ${CMAKE_INSTALL_FULL_INCLUDEDIR}/pni/core/benchmark)
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/pni/core/benchmark
+    COMPONENT development)

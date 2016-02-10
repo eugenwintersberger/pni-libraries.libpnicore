@@ -6,4 +6,5 @@ set(HEADER_FILES cli_args.hpp
                  )
 
 install(FILES ${HEADER_FILES}
-        DESTINATION ${CMAKE_INSTALL_FULL_INCLUDEDIR}/pni/core/configuration)
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/pni/core/configuration
+        COMPONENT development)

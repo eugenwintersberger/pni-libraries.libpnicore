@@ -1,6 +1,13 @@
 cmake_minimum_required(VERSION 2.8)
 project(libpnicore)
+#need to define the version of the library
+set(MAJOR_VERSION "1")
+set(MINOR_VERSION "0")
+set(PATCH_VERSION "0")
+set(LIBRARY_VERSION "${MAJOR_VERSION}.${MINOR_VERSION}.${PATCH_VERSION}")
+
 include(CTest)
+include(CPackComponent)
 
 set(CMAKE_FAMILY_VERSION "${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}")
 
@@ -18,11 +25,6 @@ set(BOOST_LIBRARYDIR CACHE PATH "Path to the Boost runtime libraries")
 #======================do here some setup work=================================
 include(configure/CMakeLists.txt)
 
-#need to define the version of the library
-set(MAJOR_VERSION "1")
-set(MINOR_VERSION "0")
-set(PATCH_VERSION "0")
-set(LIBRARY_VERSION "${MAJOR_VERSION}.${MINOR_VERSION}.${PATCH_VERSION}")
 
 #as libpnicore is in most part a template library and should thus be 
 #treated like a static library. In most cases all code using 
@@ -40,3 +42,46 @@ add_subdirectory("src")
 add_subdirectory("doc")
 add_subdirectory("test")
 
+#-----------------------------------------------------------------------------
+# Configuration for the package generator
+#-----------------------------------------------------------------------------
+set(CPACK_GENERATOR WIX)
+set(CPACK_PACKAGE_VENDOR "DESY")
+set(CPACK_VERSION_MAJOR "${MAJOR_VERSION}")
+set(CPACK_VERSION_MINOR "${MINOR_VERSION}")
+set(CPACK_VERSION_PATCH "${PATCH_VERSION}")
+
+
+cpack_add_component(libraries
+    DISPLAY_NAME "Libraries"
+    DESCRIPTION "Runtime libraries"
+    GROUP "Runtime")
+
+
+cpack_add_component(development
+    DISPLAY_NAME "Development files"
+    DESCRIPTION "Header files for the library"
+    DEPENDS "libraries"
+    GROUP "Development")
+
+cpack_add_component(doc_html
+    DISPLAY_NAME "HTML"
+    DESCRIPTION "Documentation as HTML pages"
+    GROUP "Documentation")
+
+cpack_add_component(doc_examples
+    DISPLAY_NAME "Examples"
+    DESCRIPTION "Usage examples for the library"
+    GROUP "Documentation")
+
+cpack_add_component(doc_pdf
+    DISPLAY_NAME "PDF"
+    DESCRIPTION "Documentation as PDF"
+    GROUP "Documentation")
+
+cpack_add_component_group(Documentation)
+
+
+
+include(CPack)
+include(CPackWIX)

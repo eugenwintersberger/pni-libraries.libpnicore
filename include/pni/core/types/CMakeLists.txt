@@ -18,5 +18,6 @@ set(HEADER_FILES binary.hpp
                  )
 
 install(FILES ${HEADER_FILES} 
-        DESTINATION ${CMAKE_INSTALL_FULL_INCLUDEDIR}/pni/core/types)
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/pni/core/types
+        COMPONENT development)
 

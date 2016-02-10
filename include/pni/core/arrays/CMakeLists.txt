@@ -13,6 +13,7 @@ set(HEADER_FILES array_arithmetic.hpp
                  )
 
 install(FILES ${HEADER_FILES} 
-        DESTINATION ${CMAKE_INSTALL_FULL_INCLUDEDIR}/pni/core/arrays)
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/pni/core/arrays
+        COMPONENT development)
 
 add_subdirectory("index_map")

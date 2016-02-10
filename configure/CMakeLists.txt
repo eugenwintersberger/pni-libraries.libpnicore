@@ -60,6 +60,8 @@ elseif(CMAKE_CXX_COMPILER_ID MATCHES MSVC)
     add_definitions(-DDLL_BUILD)
 
     #need to setup the installation directories
+    set(CMAKE_INSTALL_LIBDIR "lib")
+    set(CMAKE_INSTALL_INCLUDEDIR "include")
     set(CMAKE_INSTALL_FULL_LIBDIR "${CMAKE_INSTALL_PREFIX}/lib")
     set(CMAKE_INSTALL_FULL_INCLUDEDIR "${CMAKE_INSTALL_PREFIX}/include")
 

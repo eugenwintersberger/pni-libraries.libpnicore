@@ -5,4 +5,5 @@ set(HEADER_FILES c_index_map_imp.hpp
                  )
 
 install(FILES ${HEADER_FILES} 
-        DESTINATION ${CMAKE_INSTALL_FULL_INCLUDEDIR}/pni/core/arrays/index_map)
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/pni/core/arrays/index_map
+        COMPONENT development)
