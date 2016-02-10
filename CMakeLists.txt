@@ -54,7 +54,7 @@ set(CPACK_VERSION_PATCH "${PATCH_VERSION}")
 
 set(CPACK_WIX_PRODUCT_ICON "resources/icon.ico")
 set(CPACK_WIX_UI_BANNER "resources/banner.ico")
-set(CPACK_WIX_UI_DIALOG "resources/ui_dialog.ico")
+set(CPACK_WIX_UI_DIALOG "resources/ui_dialog.bmp")
 
 
 cpack_add_component(libraries
