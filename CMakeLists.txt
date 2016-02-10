@@ -53,6 +53,7 @@ set(CPACK_VERSION_MINOR "${MINOR_VERSION}")
 set(CPACK_VERSION_PATCH "${PATCH_VERSION}")
 
 set(CPACK_WIX_PRODUCT_ICON "resources/icon.ico")
+set(CPACK_WIX_UI_BANNER "resources/banner.ico")
 
 
 cpack_add_component(libraries
