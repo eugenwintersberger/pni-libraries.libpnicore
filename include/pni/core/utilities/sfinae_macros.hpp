@@ -105,7 +105,7 @@ namespace core{
     //! \ingroup utility_classes
     //! \brief shortcut for std::enable_if
     //! 
-#ifdef MSVC
+#ifdef _MSC_VER
     template<typename C> using enable_if = std::enable_if_t<C::value>;
 #else
 	template<typename C> using enable_if = invoke<std::enable_if<C::value>>;

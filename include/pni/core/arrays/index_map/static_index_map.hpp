@@ -30,7 +30,7 @@
 namespace pni{
 namespace core{
 
-#ifdef MSVC
+#ifdef _MSC_VER
 
 	template<typename CTYPE> class reverse_iterator
 	{
@@ -181,7 +181,7 @@ namespace core{
         public:
             //=================public types====================================
             //! storage type
-#ifdef MSVC
+#ifdef _MSC_VER
 			typedef win_storage<sizeof...(DIMS),DIMS...> storage_type;
 #else
             typedef std::array<size_t,sizeof...(DIMS)> storage_type;
@@ -194,7 +194,7 @@ namespace core{
             typedef typename storage_type::const_iterator const_iterator;
         private:
             //! storage for shape information
-#ifdef MSVC
+#ifdef _MSC_VER
 			static storage_type _shape;
 #else
             constexpr static storage_type _shape = {{DIMS...}};
@@ -342,7 +342,7 @@ namespace core{
 
     };
     
-#ifdef MSVC
+#ifdef _MSC_VER
 	template<typename MAP_IMP, size_t... DIMS>
 	typename static_index_map<MAP_IMP, DIMS...>::storage_type
 		static_index_map<MAP_IMP, DIMS...>::_shape;

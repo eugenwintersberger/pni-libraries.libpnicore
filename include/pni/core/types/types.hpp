@@ -31,7 +31,7 @@
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/joint_view.hpp>
 
-#ifdef MSVC
+#ifdef _MSC_VER
 #include <basetsd.h>
 typedef SSIZE_T ssize_t;
 #endif

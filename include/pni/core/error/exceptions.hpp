@@ -91,13 +91,13 @@ EXCEPTION_FORWARD(MemoryNotAllocatedError)
     class PNICORE_EXPORT exception_record
     {
         private:
-#ifdef MSVC
+#ifdef _MSC_VER
 #pragma warning(disable: 4251)
 #endif
             string _file;     //!< source file where the exception occured
             size_t _line;     //!< line number in the source file
             string _function; //!< function in which the error occured
-#ifdef MSVC
+#ifdef _MSC_VER
 #pragma warning(default: 4251)
 #endif
         public:
@@ -136,13 +136,13 @@ EXCEPTION_FORWARD(MemoryNotAllocatedError)
     //!
     //! This is the base class for all exceptions used in this library. 
     //!
-#ifdef MSVC
+#ifdef _MSC_VER
 #pragma warning(disable:4275)
 #endif
     class PNICORE_EXPORT exception:public std::exception
     {
         private:
-#ifdef MSVC
+#ifdef _MSC_VER
 #pragma warning(disable:4251)
 #endif
             //! name of the exception
@@ -151,7 +151,7 @@ EXCEPTION_FORWARD(MemoryNotAllocatedError)
             string _description; 
             //! exception records
             std::list<exception_record> _records;
-#ifdef MSVC
+#ifdef _MSC_VER
 #pragma warning(default: 4251)
 #endif
         protected:
@@ -288,7 +288,7 @@ EXCEPTION_FORWARD(MemoryNotAllocatedError)
             friend std::ostream &operator<<(std::ostream &, const exception &);
             
     };
-#ifdef MSVC
+#ifdef _MSC_VER
 #pragma warning(default:4275)
 #endif
 

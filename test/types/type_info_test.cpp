@@ -118,7 +118,7 @@ BOOST_AUTO_TEST_SUITE(type_info_test)
 
         BOOST_CHECK_CLOSE(info_type::min(),-limits_type::max(),1.e-12);
         BOOST_CHECK_CLOSE(info_type::max(),+limits_type::max(),1.e-12);
-#ifdef MSVC
+#ifdef _MSC_VER
 		BOOST_CHECK(info_type::size == 8);
 #else
         BOOST_CHECK(info_type::size==16);
@@ -164,7 +164,7 @@ BOOST_AUTO_TEST_SUITE(type_info_test)
 
         BOOST_CHECK_CLOSE(info_type::min(),-limits_type::max(),1.e-12);
         BOOST_CHECK_CLOSE(info_type::max(),+limits_type::max(),1.e-12);
-#ifdef MSVC
+#ifdef _MSC_VER
 		BOOST_CHECK(info_type::size == 16);
 #else
         BOOST_CHECK(info_type::size==32);

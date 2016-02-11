@@ -26,7 +26,7 @@
 #include <vector>
 #include <algorithm>
 
-#ifdef MSVC
+#ifdef _MSC_VER
 #include <numeric>
 #endif
 

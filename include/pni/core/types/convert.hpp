@@ -190,11 +190,11 @@ namespace core{
         //! \return converted value
         static T convert(const S &value)
         {
-#ifdef MSVC
+#ifdef _MSC_VER
 #pragma warning(disable: 4244)
 #endif
             return T(value);
-#ifdef MSVC
+#ifdef _MSC_VER
 #pragma warning(default: 4244)
 #endif
         }

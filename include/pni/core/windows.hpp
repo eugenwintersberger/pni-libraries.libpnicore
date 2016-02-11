@@ -23,7 +23,7 @@
 //!
 #pragma once
 
-#ifdef MSVC
+#ifdef _MSC_VER
 	#ifdef DLL_BUILD
 		#define PNICORE_EXPORT __declspec(dllexport)
 	#else

@@ -45,7 +45,7 @@ template<typename T> struct distribution_map<T,true>
     typedef std::uniform_int_distribution<T> distribution_type;
 };
 
-#ifdef MSVC
+#ifdef _MSC_VER
 template<> struct distribution_map<uint8, true>
 {
 	typedef std::uniform_int_distribution<uint16> distribution_type;
@@ -79,7 +79,7 @@ template<typename T> class random_generator
 
         random_generator():
             _engine(std::random_device()()),
-#ifdef MSVC
+#ifdef _MSC_VER
 // the bounds are computed as doubles due to the 0.2 prefactors. 
 // However, for an interger random generator these values will be converted 
 // back to an integer which most naturally causes some loss of information. 
@@ -90,7 +90,7 @@ template<typename T> class random_generator
             _distribution(0.2*pni::core::type_info<T>::min(),
 				          0.2*pni::core::type_info<T>::max())
         {}
-#ifdef MSVC
+#ifdef _MSC_VER
 #pragma warning(default:4244)
 #endif
 
@@ -100,7 +100,7 @@ template<typename T> class random_generator
         }
 };
 
-#ifdef MSVC
+#ifdef _MSC_VER
 template<> class random_generator<uint8>
 {
     private:        
