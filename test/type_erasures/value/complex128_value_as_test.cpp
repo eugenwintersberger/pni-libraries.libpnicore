@@ -21,12 +21,12 @@
 //  Created on: Jan 9, 2015
 //      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
 //
-#ifdef GCC
+#ifdef __GNUG__
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 #endif
 #include <boost/test/unit_test.hpp>
-#ifdef GCC
+#ifdef __GNUG__
 #pragma GCC diagnostic pop
 #endif
 #include <boost/test/floating_point_comparison.hpp>
@@ -174,7 +174,7 @@ BOOST_AUTO_TEST_SUITE(complex128_value_as_test)
         BOOST_CHECK_EQUAL(v.as<target_type>(),
                           convert<target_type>(f.value_1));
        
-#ifndef MSVC
+#ifndef _MSC_VER
 		//this does not work for the MSVC 2014 (VS2015) as float64 and 
 		//float128 have the same size
         v = sinfo_type::min();

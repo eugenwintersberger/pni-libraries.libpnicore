@@ -21,12 +21,12 @@
 //  Created on: Dec 27, 2014
 //      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
 //
-#ifdef GCC
+#ifdef __GNUG__
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 #endif
 #include <boost/test/unit_test.hpp>
-#ifdef GCC
+#ifdef __GNUG__
 #pragma GCC diagnostic pop
 #endif
 #include <boost/test/floating_point_comparison.hpp>
@@ -123,7 +123,7 @@ BOOST_AUTO_TEST_SUITE(convert_float128_test)
         
         BOOST_CHECK_CLOSE(target_type(19),
                           convert<target_type>(source_type(19)),1.e-16);
-#ifdef GCC
+#ifdef __GNUG__
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Woverflow"
 
@@ -171,7 +171,7 @@ BOOST_AUTO_TEST_SUITE(convert_float128_test)
         BOOST_CHECK_CLOSE(base_type(19),value.real(),1.e-16);
         BOOST_CHECK_CLOSE(base_type(0),value.imag(),1.e-16);
 
-#ifdef GCC
+#ifdef __GNUG__
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Woverflow"
         BOOST_CHECK_THROW(convert<target_type>(source_type(1.e+400)),

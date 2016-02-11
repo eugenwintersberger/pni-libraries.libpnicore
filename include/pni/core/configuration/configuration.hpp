@@ -25,7 +25,7 @@
 #pragma once
 
 #include <iostream>
-#ifdef GCC
+#ifdef __GNUG__
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 #pragma GCC diagnostic ignored "-Wunused-variable"
@@ -33,7 +33,7 @@
 #include <boost/program_options.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/tokenizer.hpp>
-#ifdef GCC
+#ifdef __GNUG__
 #pragma GCC diagnostic pop
 #endif 
 #include "../types.hpp"

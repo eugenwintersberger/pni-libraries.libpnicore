@@ -21,12 +21,12 @@
 //  Created on: Jan 7, 2015
 //      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
 //
-#ifdef GCC
+#ifdef __GNUG__
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 #endif
 #include <boost/test/unit_test.hpp>
-#ifdef GCC
+#ifdef __GNUG__
 #pragma GCC diagnostic pop
 #endif
 #include <boost/test/floating_point_comparison.hpp>

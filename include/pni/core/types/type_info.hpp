@@ -161,12 +161,12 @@ namespace core{
         //! \param value value for which to check the sign
         //! \return true if value<0, false otherwise
         //!
-#ifdef GCC
+#ifdef __GNUG__
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wtype-limits"
 #endif 
         static bool is_negative(T value) { return value<0; }
-#ifdef GCC
+#ifdef __GNUG__
 #pragma GCC diagnostic pop
 #endif
 

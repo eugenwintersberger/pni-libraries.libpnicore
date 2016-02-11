@@ -55,14 +55,12 @@ if(CMAKE_CXX_COMPILER_ID MATCHES GNU)
 
     #for this version the compiler has to support c++11 flag
     add_definitions(-std=c++11)
-    add_definitions(-DGCC)
 
 elseif(CMAKE_CXX_COMPILER_ID MATCHES MSVC)
     #=========================================================================
     #setup for the Microsoft C++ compiler 
     #=========================================================================
     message(STATUS "found Microsoft C++ compiler ...") 
-    add_definitions(-DMSVC)
     add_definitions(-DBOOST_ALL_DYN_LINK)
     add_definitions(-DDLL_BUILD)
 
@@ -91,7 +89,6 @@ elseif(CMAKE_CXX_COMPILER_ID MATCHES Clang)
 
     #for this version the compiler has to support c++11 flag
     add_definitions(-std=c++11)
-    add_definitions(-DCLANG)
 endif()
 
 

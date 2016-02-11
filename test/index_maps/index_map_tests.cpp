@@ -23,13 +23,13 @@
 //
 #define BOOST_TEST_DYN_LINK
 
-#ifdef GCC
+#ifdef __GNUG__
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 #pragma GCC diagnostic ignored "-Wunused-variable"
 #endif
 #include <boost/test/unit_test.hpp>
-#ifdef GCC
+#ifdef __GNUG__
 #pragma GCC diagnostic pop
 #endif
 

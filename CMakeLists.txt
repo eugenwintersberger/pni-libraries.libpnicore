@@ -46,48 +46,50 @@ add_subdirectory("resources")
 #-----------------------------------------------------------------------------
 # Configuration for the package generator
 #-----------------------------------------------------------------------------
-set(CPACK_GENERATOR WIX)
-set(CPACK_PACKAGE_VENDOR "DESY")
-set(CPACK_PACKAGE_VERSION_MAJOR "${MAJOR_VERSION}")
-set(CPACK_PACKAGE_VERSION_MINOR "${MINOR_VERSION}")
-set(CPACK_PACKAGE_VERSION_PATCH "${PATCH_VERSION}")
+if(CMAKE_CXX_COMPILER_ID MATCHES MSVC)
+    set(CPACK_GENERATOR WIX)
+    set(CPACK_PACKAGE_VENDOR "DESY")
+    set(CPACK_PACKAGE_VERSION_MAJOR "${MAJOR_VERSION}")
+    set(CPACK_PACKAGE_VERSION_MINOR "${MINOR_VERSION}")
+    set(CPACK_PACKAGE_VERSION_PATCH "${PATCH_VERSION}")
 
-set(CPACK_WIX_PRODUCT_ICON "resources/icon.ico")
-set(CPACK_WIX_UI_BANNER "resources/banner.bmp")
-set(CPACK_WIX_UI_DIALOG "resources/ui_dialog.bmp")
-set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/COPYING.txt")
-
-
-cpack_add_component(libraries
-    DISPLAY_NAME "Libraries"
-    DESCRIPTION "Runtime libraries"
-    GROUP "Runtime")
+    set(CPACK_WIX_PRODUCT_ICON "resources/icon.ico")
+    set(CPACK_WIX_UI_BANNER "resources/banner.bmp")
+    set(CPACK_WIX_UI_DIALOG "resources/ui_dialog.bmp")
+    set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/COPYING.txt")
 
 
-cpack_add_component(development
-    DISPLAY_NAME "Development files"
-    DESCRIPTION "Header files for the library"
-    DEPENDS "libraries"
-    GROUP "Development")
-
-cpack_add_component(doc_html
-    DISPLAY_NAME "HTML"
-    DESCRIPTION "Documentation as HTML pages"
-    GROUP "Documentation")
-
-cpack_add_component(doc_examples
-    DISPLAY_NAME "Examples"
-    DESCRIPTION "Usage examples for the library"
-    GROUP "Documentation")
-
-cpack_add_component(doc_pdf
-    DISPLAY_NAME "PDF"
-    DESCRIPTION "Documentation as PDF"
-    GROUP "Documentation")
-
-cpack_add_component_group(Documentation)
+    cpack_add_component(libraries
+        DISPLAY_NAME "Libraries"
+        DESCRIPTION "Runtime libraries"
+        GROUP "Runtime")
 
 
+    cpack_add_component(development
+        DISPLAY_NAME "Development files"
+        DESCRIPTION "Header files for the library"
+        DEPENDS "libraries"
+        GROUP "Development")
 
-include(CPack)
-include(CPackWIX)
+    cpack_add_component(doc_html
+        DISPLAY_NAME "HTML"
+        DESCRIPTION "Documentation as HTML pages"
+        GROUP "Documentation")
+
+    cpack_add_component(doc_examples
+        DISPLAY_NAME "Examples"
+        DESCRIPTION "Usage examples for the library"
+        GROUP "Documentation")
+
+    cpack_add_component(doc_pdf
+        DISPLAY_NAME "PDF"
+        DESCRIPTION "Documentation as PDF"
+        GROUP "Documentation")
+
+    cpack_add_component_group(Documentation)
+
+
+
+    include(CPack)
+    include(CPackWIX)
+endif()
