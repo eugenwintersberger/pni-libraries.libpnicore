@@ -52,9 +52,11 @@ set(CPACK_VERSION_MAJOR "${MAJOR_VERSION}")
 set(CPACK_VERSION_MINOR "${MINOR_VERSION}")
 set(CPACK_VERSION_PATCH "${PATCH_VERSION}")
 
+configure_file(COPYING.txt COPYING.txt COPYONLY)
 set(CPACK_WIX_PRODUCT_ICON "resources/icon.ico")
-set(CPACK_WIX_UI_BANNER "resources/banner.ico")
+set(CPACK_WIX_UI_BANNER "resources/banner.bmp")
 set(CPACK_WIX_UI_DIALOG "resources/ui_dialog.bmp")
+set(CPACK_RESOURCE_FILE_LICENSE "COPYING.txt")
 
 
 cpack_add_component(libraries
