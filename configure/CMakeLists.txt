@@ -17,9 +17,16 @@ endif()
 
 #==========need to check for several libraries if they are installed===========
 
-set(Boost_USE_STATIC_LIBS OFF)
+if(CMAKE_CXX_COMPILER_ID MATCHES MSVC)
+    #on windows we use static linking - makes the library easier 
+    #to distribute
+    set(Boost_USE_STATIC_LIBS ON)
+    set(Boost_USE_STATIC_RUNTIME ON)
+else()
+    set(Boost_USE_STATIC_LIBS OFF)
+    set(Boost_USE_STATIC_RUNTIME OFF)
+endif()
 set(Boost_USE_MULTITHREADED ON)
-set(Boost_USE_STATIC_RUNTIME OFF)
 find_package(Boost 1.41 REQUIRED 
              COMPONENTS program_options 
                         system 

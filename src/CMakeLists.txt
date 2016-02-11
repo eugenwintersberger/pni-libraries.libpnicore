@@ -20,6 +20,17 @@ add_library(pnicore SHARED $<TARGET_OBJECTS:type_objects>
                            $<TARGET_OBJECTS:type_erasure_objects>
                            $<TARGET_OBJECTS:misc_objects>) 
 
+#on Windows we need also a static library
+if(CMAKE_CXX_COMPILER_ID MATCHES MSVC)
+add_library(pnicore_static STATIC $<TARGET_OBJECTS:type_objects>
+                           $<TARGET_OBJECTS:benchmark_objects>
+                           $<TARGET_OBJECTS:array_objects>
+                           $<TARGET_OBJECTS:configuration_objects>
+                           $<TARGET_OBJECTS:type_erasure_objects>
+                           $<TARGET_OBJECTS:misc_objects>) 
+endif()
+
+
 
 if(CMAKE_CXX_COMPILER_ID MATCHES GNU)
 target_link_libraries(pnicore
@@ -38,7 +49,7 @@ if(CMAKE_HOST_UNIX)
             LIBRARY DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR})
 else()
     #install the libraries - on Windows
-    install(TARGETS pnicore 
+    install(TARGETS pnicore pnicore_static
             LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
             RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR}
             ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
