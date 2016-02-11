@@ -48,9 +48,9 @@ add_subdirectory("resources")
 #-----------------------------------------------------------------------------
 set(CPACK_GENERATOR WIX)
 set(CPACK_PACKAGE_VENDOR "DESY")
-set(CPACK_VERSION_MAJOR "${MAJOR_VERSION}")
-set(CPACK_VERSION_MINOR "${MINOR_VERSION}")
-set(CPACK_VERSION_PATCH "${PATCH_VERSION}")
+set(CPACK_PACKAGE_VERSION_MAJOR "${MAJOR_VERSION}")
+set(CPACK_PACKAGE_VERSION_MINOR "${MINOR_VERSION}")
+set(CPACK_PACKAGE_VERSION_PATCH "${PATCH_VERSION}")
 
 configure_file(COPYING.txt COPYING.txt COPYONLY)
 set(CPACK_WIX_PRODUCT_ICON "resources/icon.ico")
