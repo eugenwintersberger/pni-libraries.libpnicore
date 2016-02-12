@@ -30,7 +30,6 @@ set(Boost_USE_MULTITHREADED ON)
 find_package(Boost 1.41 REQUIRED 
              COMPONENTS program_options 
                         system 
-                        regex 
                         unit_test_framework)
 
 message(STATUS "${Boost_LIBRARY_DIRS}")

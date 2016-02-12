@@ -1,10 +1,14 @@
 
-#gather all source files for the library
-
+#-----------------------------------------------------------------------------
+# On UNIX systems we have to ensure that reallocatable code is built 
+#-----------------------------------------------------------------------------
 if(CMAKE_HOST_UNIX)
     add_definitions(-fPIC)
 endif()
 
+#-----------------------------------------------------------------------------
+# build all the components required to assemble the library
+#-----------------------------------------------------------------------------
 add_subdirectory(types)
 add_subdirectory(benchmark)
 add_subdirectory(arrays)
@@ -12,7 +16,10 @@ add_subdirectory(configuration)
 add_subdirectory(type_erasures)
 add_subdirectory(misc)
 
-#set up the library target
+#-----------------------------------------------------------------------------
+# assemble the shared library - this will be built on Unix and Windows 
+# platforms
+#-----------------------------------------------------------------------------
 add_library(pnicore SHARED $<TARGET_OBJECTS:type_objects>
                            $<TARGET_OBJECTS:benchmark_objects>
                            $<TARGET_OBJECTS:array_objects>
@@ -20,30 +27,41 @@ add_library(pnicore SHARED $<TARGET_OBJECTS:type_objects>
                            $<TARGET_OBJECTS:type_erasure_objects>
                            $<TARGET_OBJECTS:misc_objects>) 
 
-#on Windows we need also a static library
-if(CMAKE_CXX_COMPILER_ID MATCHES MSVC)
-add_library(pnicore_static STATIC $<TARGET_OBJECTS:type_objects>
-                           $<TARGET_OBJECTS:benchmark_objects>
-                           $<TARGET_OBJECTS:array_objects>
-                           $<TARGET_OBJECTS:configuration_objects>
-                           $<TARGET_OBJECTS:type_erasure_objects>
-                           $<TARGET_OBJECTS:misc_objects>) 
-endif()
-
-
-
+#-----------------------------------------------------------------------------
+# In the case of the GNU compiler we have to link with the BOOST 
+# libraries. On Windows they are statically linked automatically. 
+#-----------------------------------------------------------------------------
 if(CMAKE_CXX_COMPILER_ID MATCHES GNU)
 target_link_libraries(pnicore
                            ${Boost_PROGRAM_OPTIONS_LIBRARY}
-                           ${Boost_REGEX_LIBRARY}
                            ${Boost_SYSTEM_LIBRARY})
 endif()
 
-#set the version and SO version of the library
+#set the package and SO version of the library
 set_target_properties(pnicore PROPERTIES VERSION "${LIBRARY_VERSION}"
                                        SOVERSION "${SO_VERSION}")
 
+#-----------------------------------------------------------------------------
+# on Windows we also build the static library
+#-----------------------------------------------------------------------------
+if(CMAKE_CXX_COMPILER_ID MATCHES MSVC)
+    add_library(pnicore_static STATIC 
+                               $<TARGET_OBJECTS:type_objects>
+                               $<TARGET_OBJECTS:benchmark_objects>
+                               $<TARGET_OBJECTS:array_objects>
+                               $<TARGET_OBJECTS:configuration_objects>
+                               $<TARGET_OBJECTS:type_erasure_objects>
+                               $<TARGET_OBJECTS:misc_objects>) 
+endif()
 
+
+
+#-----------------------------------------------------------------------------
+# do the installation - there is some extra work we have to do on 
+# Windows. The Windows Installer does not support absolut installation 
+# paths, which makes absolut sense as the prefix is choosen during 
+# the installation.
+#-----------------------------------------------------------------------------
 if(CMAKE_HOST_UNIX)
     install(TARGETS pnicore 
             LIBRARY DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR})
