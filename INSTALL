@@ -5,13 +5,15 @@ Installing pnicore
     ---------------------------------
 Minimum requirements:
 -> C++ Compiler g++ >= 4.7
--> Boost library > 1.4
 -> cmake >= 2.8.0
 -> doxygen  (to build the documentation)
+-> sphinx - to build the documentation
 -> pdflatex to build the users guide
 -> cppunit  (to build unit tests)
 -> pkg-config needed to configure additional required packages
 -> pdflatex to build the users guide
+-> Boost unit-test - to run the tests
+-> Boost program_options - required for the program options feature
 
 2.) Obtaining the sources
     ---------------------
