@@ -18,3 +18,5 @@ utbmark
 *.tif
 build
 .cccc
+/.cproject
+/.project
