@@ -20,8 +20,8 @@ endif()
 if(CMAKE_CXX_COMPILER_ID MATCHES MSVC)
     #on windows we use static linking - makes the library easier 
     #to distribute
-    set(Boost_USE_STATIC_LIBS ON)
-    set(Boost_USE_STATIC_RUNTIME ON)
+    set(Boost_USE_STATIC_LIBS OFF)
+    set(Boost_USE_STATIC_RUNTIME OFF)
 else()
     set(Boost_USE_STATIC_LIBS OFF)
     set(Boost_USE_STATIC_RUNTIME OFF)
