@@ -1,12 +1,5 @@
 
 #-----------------------------------------------------------------------------
-# On UNIX systems we have to ensure that reallocatable code is built 
-#-----------------------------------------------------------------------------
-if(CMAKE_HOST_UNIX)
-    add_definitions(-fPIC)
-endif()
-
-#-----------------------------------------------------------------------------
 # build all the components required to assemble the library
 #-----------------------------------------------------------------------------
 add_subdirectory(types)
@@ -16,43 +9,49 @@ add_subdirectory(configuration)
 add_subdirectory(type_erasures)
 add_subdirectory(misc)
 
-#-----------------------------------------------------------------------------
-# assemble the shared library - this will be built on Unix and Windows 
-# platforms
-#-----------------------------------------------------------------------------
-add_library(pnicore SHARED $<TARGET_OBJECTS:type_objects>
-                           $<TARGET_OBJECTS:benchmark_objects>
-                           $<TARGET_OBJECTS:array_objects>
-                           $<TARGET_OBJECTS:configuration_objects>
-                           $<TARGET_OBJECTS:type_erasure_objects>
-                           $<TARGET_OBJECTS:misc_objects>) 
+set(LIB_TARGETS)
 
 #-----------------------------------------------------------------------------
-# In the case of the GNU compiler we have to link with the BOOST 
-# libraries. On Windows they are statically linked automatically. 
+# building the shared library
 #-----------------------------------------------------------------------------
-if(CMAKE_CXX_COMPILER_ID MATCHES GNU)
-target_link_libraries(pnicore
-                           ${Boost_PROGRAM_OPTIONS_LIBRARY}
-                           ${Boost_SYSTEM_LIBRARY})
-endif()
+if(BUILD_SHARED_LIBRARIES)
+    message(STATUS "Building shared libraries ...")
+    add_library(pnicore_shared SHARED 
+                               $<TARGET_OBJECTS:type_objects_shared>
+                               $<TARGET_OBJECTS:benchmark_objects_shared>
+                               $<TARGET_OBJECTS:array_objects_shared>
+                               $<TARGET_OBJECTS:configuration_objects_shared>
+                               $<TARGET_OBJECTS:type_erasure_objects_shared>
+                               $<TARGET_OBJECTS:misc_objects_shared>) 
 
-#set the package and SO version of the library
-set_target_properties(pnicore PROPERTIES VERSION "${LIBRARY_VERSION}"
-                                       SOVERSION "${SO_VERSION}")
+    target_link_libraries(pnicore_shared
+                               ${Boost_PROGRAM_OPTIONS_LIBRARY}
+                               ${Boost_SYSTEM_LIBRARY})
+    #set the package and SO version of the library
+    set_target_properties(pnicore_shared PROPERTIES 
+                          VERSION "${LIBRARY_VERSION}"
+                          SOVERSION "${SO_VERSION}"
+                          OUTPUT_NAME pnicore)
+    list(APPEND LIB_TARGETS pnicore_shared)
+endif(BUILD_SHARED_LIBRARIES)
+
 
 #-----------------------------------------------------------------------------
-# on Windows we also build the static library
+# building the static library if requested by the user
 #-----------------------------------------------------------------------------
-if(CMAKE_CXX_COMPILER_ID MATCHES MSVC)
+if(BUILD_STATIC_LIBRARIES)
+    message(STATUS "Building static libraries ...")
     add_library(pnicore_static STATIC 
-                               $<TARGET_OBJECTS:type_objects>
-                               $<TARGET_OBJECTS:benchmark_objects>
-                               $<TARGET_OBJECTS:array_objects>
-                               $<TARGET_OBJECTS:configuration_objects>
-                               $<TARGET_OBJECTS:type_erasure_objects>
-                               $<TARGET_OBJECTS:misc_objects>) 
-endif()
+                               $<TARGET_OBJECTS:type_objects_static>
+                               $<TARGET_OBJECTS:benchmark_objects_static>
+                               $<TARGET_OBJECTS:array_objects_static>
+                               $<TARGET_OBJECTS:configuration_objects_static>
+                               $<TARGET_OBJECTS:type_erasure_objects_static>
+                               $<TARGET_OBJECTS:misc_objects_static>) 
+    set_target_properties(pnicore_static PROPERTIES
+                          OUTPUT_NAME pnicore)
+    list(APPEND LIB_TARGETS pnicore_static)
+endif(BUILD_STATIC_LIBRARIES)
 
 
 
@@ -62,17 +61,12 @@ endif()
 # paths, which makes absolut sense as the prefix is choosen during 
 # the installation.
 #-----------------------------------------------------------------------------
-if(CMAKE_HOST_UNIX)
-    install(TARGETS pnicore 
-            LIBRARY DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR})
-else()
-    #install the libraries - on Windows
-    install(TARGETS pnicore pnicore_static
-            LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-            RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR}
-            ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-            COMPONENT libraries)
-endif()
+#install the libraries - on Windows
+install(TARGETS ${LIB_TARGETS}
+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        COMPONENT libraries)
 
 
 #-----------------------------------------------------------------------------
