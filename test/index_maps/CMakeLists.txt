@@ -10,7 +10,7 @@ set(SOURCES index_map_tests.cpp
 link_directories("${CMAKE_CURRENT_BINARY_DIR}/../../src")
 add_definitions(-DBOOST_TEST_NO_MAIN)
 add_executable(index_maps_test EXCLUDE_FROM_ALL ${SOURCES})
-target_link_libraries(index_maps_test pnicore )
+target_link_libraries(index_maps_test pnicore_shared )
 
 if(CMAKE_CXX_COMPILER_ID MATCHES GNU)
     target_link_libraries(index_maps_test ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})

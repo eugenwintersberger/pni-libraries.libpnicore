@@ -6,11 +6,11 @@ add_library(test_common EXCLUDE_FROM_ALL OBJECT ${COMMON_SOURCES})
 
 add_executable(rand_test EXCLUDE_FROM_ALL "rand_test.cpp"
                              $<TARGET_OBJECTS:test_common>)
-target_link_libraries(rand_test pnicore)
+target_link_libraries(rand_test pnicore_shared)
 #add_test(rand_test rand_test) -- need a better test here
 
 add_executable(rand_gen EXCLUDE_FROM_ALL rand_gen.cpp)
-target_link_libraries(rand_gen pnicore)
+target_link_libraries(rand_gen pnicore_shared)
 
 #add the check target to emulate GNU 'check' target
 add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND})

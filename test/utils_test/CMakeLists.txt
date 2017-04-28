@@ -9,7 +9,7 @@ set(SOURCES container_utils_array_test.cpp
 
 link_directories("${CMAKE_CURRENT_BINARY_DIR}/../../src")
 add_executable(utils_test EXCLUDE_FROM_ALL ${SOURCES} $<TARGET_OBJECTS:test_common>)
-target_link_libraries(utils_test pnicore)
+target_link_libraries(utils_test pnicore_shared)
 
 if(CMAKE_CXX_COMPILER_ID MATCHES GNU)
     target_link_libraries(utils_test ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})

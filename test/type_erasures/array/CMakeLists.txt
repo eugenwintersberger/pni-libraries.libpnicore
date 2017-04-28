@@ -11,7 +11,7 @@ endif()
 
 add_executable(array_test EXCLUDE_FROM_ALL ${SOURCES} $<TARGET_OBJECTS:test_common>)
 
-target_link_libraries(array_test pnicore)
+target_link_libraries(array_test pnicore_shared)
 if(CMAKE_CXX_COMPILER_ID MATCHES GNU)
     target_link_libraries(array_test ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
 endif()

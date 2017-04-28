@@ -15,13 +15,13 @@ set(SOURCES binary_test.cpp
 include_directories(${Boost_INCLUDE_DIR})
 link_directories("${CMAKE_CURRENT_BINARY_DIR}/../../src")
 add_executable(type_test EXCLUDE_FROM_ALL ${SOURCES})
-target_link_libraries(type_test pnicore)
+target_link_libraries(type_test pnicore_shared)
 if(CMAKE_CXX_COMPILER_ID MATCHES GNU)
     target_link_libraries(type_test ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
 endif()
 
 add_executable(show_type_info EXCLUDE_FROM_ALL show_type_info.cpp)
-target_link_libraries(show_type_info pnicore)
+target_link_libraries(show_type_info pnicore_shared)
 
 
 add_subdirectory(conversion)
