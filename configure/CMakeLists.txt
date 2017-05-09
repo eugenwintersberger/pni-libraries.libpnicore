@@ -43,7 +43,7 @@ if(BUILD_STATIC_LIBRARIES)
                                                 system       
                                                 unit_test_framework)
                                                 
-    set(Boost_UNIT_TEST_FRAMEWORK_STATICLIBRARY ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
+    set(Boost_UNIT_TEST_FRAMEWORK_STATIC_LIBRARY ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
     set(Boost_SYSTEM_STATIC_LIBRARY ${Boost_SYSTEM_LIBRARY})
     set(Boost_PROGRAM_OPTIONS_STATIC_LIBRARY ${Boost_PROGRAM_OPTIONS_LIBRARY})
     message(STATUS "Found static libraries for Boost")

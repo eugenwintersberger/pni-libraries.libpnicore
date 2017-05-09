@@ -9,25 +9,27 @@ set(SOURCES scalar_test.cpp
             mdarray_test.cpp
             array_view_utils_test.cpp
     )
-    
-list(GET SOURCES 0 FIRST_SOURCE_FILE)
-set_source_files_properties(${FIRST_SOURCE_FILE} PROPERTIES
-                            COMPILE_DEFINITIONS "BOOST_TEST_DYN_LINK; BOOST_TEST_MODULE=Testing array functions")
-
+   
 if(CMAKE_CXX_COMPILER_ID MATCHES MSVC)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /bigobj")
 endif()
 
-add_executable(arrays_test EXCLUDE_FROM_ALL ${SOURCES} $<TARGET_OBJECTS:test_common>)
-target_link_libraries(arrays_test pnicore_shared
-                                  ${Boost_UNIT_TEST_FRAMEWORK_SHARED_LIBRARY})
+if(BUILD_SHARED_LIBRARIES)
+    set_shared_test_defs(SOURCES "Testing array functions")    
+
+    add_executable(arrays_test_shared EXCLUDE_FROM_ALL ${SOURCES}
+                                                $<TARGET_OBJECTS:test_common>)
+    target_link_libraries(arrays_test_shared pnicore_shared
+                                      ${Boost_UNIT_TEST_FRAMEWORK_SHARED_LIBRARY})
+
+    add_test(NAME arrays_test_shared 
+             COMMAND arrays_test_shared
+             WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/test
+             )
+
+    add_dependencies(check arrays_test_shared)
+endif(BUILD_SHARED_LIBRARIES)
 
 
-add_test(NAME arrays_test 
-         COMMAND arrays_test
-         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/../
-         )
-
-add_dependencies(check arrays_test)
 
 
