@@ -51,7 +51,8 @@ if(BUILD_STATIC_LIBRARIES)
     message(STATUS "System: ${Boost_SYSTEM_STATIC_LIBRARY}")
     message(STATUS "Program Options: ${Boost_PROGRAM_OPTIONS_STATIC_LIBRARY}")
 endif(BUILD_STATIC_LIBRARIES)
-                         
+
+link_directories(${Boost_LIBRARY_DIRS})                         
 add_definitions(${Boost_LIB_DIAGNOSTIC_DEFINITIONS})
 
 #======================compiler specific configuration========================   

@@ -25,8 +25,8 @@ if(BUILD_SHARED_LIBRARIES)
                                $<TARGET_OBJECTS:misc_objects_shared>) 
 
     target_link_libraries(pnicore_shared INTERFACE
-                               ${Boost_PROGRAM_OPTIONS_LIBRARY}
-                               ${Boost_SYSTEM_LIBRARY})
+                               ${Boost_PROGRAM_OPTIONS_SHARED_LIBRARY}
+                               ${Boost_SYSTEM_SHARED_LIBRARY})
     #set the package and SO version of the library
     set_target_properties(pnicore_shared PROPERTIES 
                           VERSION "${LIBRARY_VERSION}"
