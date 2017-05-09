@@ -11,14 +11,12 @@ set(SOURCES binary_test.cpp
             str_from_type_id_test.cpp
     )
 
+set_source_files_properties(binary_test.cpp PROPERTIES 
+                            COMPILE_DEFINITIONS "BOOST_TEST_DYN_LINK; BOOST_TEST_MODULE=testing type features")
 
-include_directories(${Boost_INCLUDE_DIR})
-link_directories("${CMAKE_CURRENT_BINARY_DIR}/../../src")
 add_executable(type_test EXCLUDE_FROM_ALL ${SOURCES})
-target_link_libraries(type_test pnicore_shared)
-if(CMAKE_CXX_COMPILER_ID MATCHES GNU)
-    target_link_libraries(type_test ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
-endif()
+target_link_libraries(type_test pnicore_shared
+                                ${Boost_UNIT_TEST_FRAMEWORK_SHARED_LIBRARY})
 
 add_executable(show_type_info EXCLUDE_FROM_ALL show_type_info.cpp)
 target_link_libraries(show_type_info pnicore_shared)

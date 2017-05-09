@@ -21,7 +21,6 @@
 //  Created on: Nov 13, 2013
 //      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
 //
-#define BOOST_TEST_DYN_LINK
 #ifdef __GNUG__
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"

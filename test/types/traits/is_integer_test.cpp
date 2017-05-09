@@ -22,8 +22,6 @@
 //      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
 //
 
-#define BOOST_TEST_DYN_LINK
-#define BOOST_TEST_MODULE testing type traits and related functions
 #ifdef __GNUG__
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"

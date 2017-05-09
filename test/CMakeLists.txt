@@ -4,6 +4,13 @@ set(COMMON_SOURCES compare.cpp data_generator.cpp)
 include_directories(${Boost_INCLUDE_DIR})
 add_library(test_common EXCLUDE_FROM_ALL OBJECT ${COMMON_SOURCES})
 
+macro(set_shared_test_defs source_list mod_description)
+    list(GET ${source_list} 0 FIRST_SOURCE_FILE)
+    message(STATUS "First source file is ${FIRST_SOURCE_FILE}")
+    set_source_files_properties(${FIRST_SOURCE_FILE} PROPERTIES
+                                COMPILE_DEFINITIONS "BOOST_TEST_DYN_LINK; BOOST_TEST_MODULE=${mod_description}")
+endmacro()
+
 add_executable(rand_test EXCLUDE_FROM_ALL "rand_test.cpp"
                              $<TARGET_OBJECTS:test_common>)
 target_link_libraries(rand_test pnicore_shared)

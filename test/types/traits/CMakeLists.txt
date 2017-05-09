@@ -14,15 +14,14 @@ set(SOURCES is_integer_type_test.cpp
             is_non_numeric_type_test.cpp
     )
 
+list(GET SOURCES 0 FIRST_SOURCE_FILE)
+set_source_files_properties(${FIRST_SOURCE_FILE} PROPERTIES 
+                            COMPILE_DEFINITIONS "BOOST_TEST_DYN_LINK; BOOST_TEST_MODULE=testing type traits")
 
-
-link_directories("${CMAKE_CURRENT_BINARY_DIR}/../../src")
 add_executable(traits_test EXCLUDE_FROM_ALL ${SOURCES})
-target_link_libraries(traits_test pnicore_shared)
+target_link_libraries(traits_test pnicore_shared
+                                  ${Boost_UNIT_TEST_FRAMEWORK_SHARED_LIBRARY})
 
-if(CMAKE_CXX_COMPILER_ID MATCHES GNU)
-    target_link_libraries(traits_test ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
-endif()
 
 
 add_test(NAME "types:traits_test" 

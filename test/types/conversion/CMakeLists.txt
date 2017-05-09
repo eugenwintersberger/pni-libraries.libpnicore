@@ -21,14 +21,12 @@ set(SOURCES unchecked_convertible_test.cpp
     )
 
 
-
-link_directories("${CMAKE_CURRENT_BINARY_DIR}/../../src")
+list(GET SOURCES 0 FIRST_SOURCE_FILE)
+set_source_files_properties(${FIRST_SOURCE_FILE} PROPERTIES 
+                            COMPILE_DEFINITIONS "BOOST_TEST_DYN_LINK; BOOST_TEST_MODULE=Testing type conversion")
 add_executable(conversion_test EXCLUDE_FROM_ALL ${SOURCES})
-target_link_libraries(conversion_test pnicore_shared)
-
-if(CMAKE_CXX_COMPILER_ID MATCHES GNU)
-    target_link_libraries(conversion_test ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
-endif()
+target_link_libraries(conversion_test pnicore_shared
+                                      ${Boost_UNIT_TEST_FRAMEWORK_SHARED_LIBRARY})
 
 
 add_test(NAME "types:conversion_test" 

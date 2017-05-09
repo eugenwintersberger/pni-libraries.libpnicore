@@ -7,14 +7,11 @@ set(SOURCES index_map_tests.cpp
             )
 
 
-link_directories("${CMAKE_CURRENT_BINARY_DIR}/../../src")
-add_definitions(-DBOOST_TEST_NO_MAIN)
+set_source_files_properties(index_map_tests.cpp PROPERTIES
+                            COMPILE_DEFINITIONS "BOOST_TEST_ALTERNATIVE_INIT_API;  BOOST_TEST_NO_MAIN; BOOST_TEST_DYN_LINK; BOOST_TEST_MODULE=testing index maps")
 add_executable(index_maps_test EXCLUDE_FROM_ALL ${SOURCES})
-target_link_libraries(index_maps_test pnicore_shared )
-
-if(CMAKE_CXX_COMPILER_ID MATCHES GNU)
-    target_link_libraries(index_maps_test ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
-endif()
+target_link_libraries(index_maps_test pnicore_shared 
+                                      ${Boost_UNIT_TEST_FRAMEWORK_SHARED_LIBRARY})
 
 add_test(NAME index_maps_test 
          COMMAND index_maps_test

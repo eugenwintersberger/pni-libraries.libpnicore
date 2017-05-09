@@ -21,8 +21,6 @@
 //  Created on: Sep 02, 2011
 //      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
 //
-#define BOOST_TEST_DYN_LINK
-#define BOOST_TEST_MODULE testing scalar array
 #ifdef __GNUG__
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"

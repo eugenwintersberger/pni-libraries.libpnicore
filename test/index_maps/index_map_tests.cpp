@@ -21,14 +21,13 @@
 //  Created on: Nov 2, 2015
 //      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
 //
-#define BOOST_TEST_DYN_LINK
-
 #ifdef __GNUG__
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 #pragma GCC diagnostic ignored "-Wunused-variable"
 #endif
 #include <boost/test/unit_test.hpp>
+#include <boost/bind.hpp>
 #ifdef __GNUG__
 #pragma GCC diagnostic pop
 #endif
@@ -48,5 +47,5 @@ bool init_function()
 
 int main(int argc,char **argv)
 {
-    return boost::unit_test::unit_test_main(&init_function,argc,argv);
+    return ::boost::unit_test::unit_test_main(&init_function,argc,argv);
 }

@@ -17,23 +17,41 @@ endif()
 
 #==========need to check for several libraries if they are installed===========
 
-if(CMAKE_CXX_COMPILER_ID MATCHES MSVC)
-    #on windows we use static linking - makes the library easier 
-    #to distribute
-    set(Boost_USE_STATIC_LIBS OFF)
-    set(Boost_USE_STATIC_RUNTIME OFF)
-else()
-    set(Boost_USE_STATIC_LIBS OFF)
-    set(Boost_USE_STATIC_RUNTIME OFF)
-endif()
+# boost parameters common to all platforms
 set(Boost_USE_MULTITHREADED ON)
-find_package(Boost 1.41 REQUIRED 
-             COMPONENTS program_options 
-                        system 
-                        unit_test_framework)
+set(Boost_USE_STATIC_RUNTIME OFF)
 
-message(STATUS "${Boost_LIBRARY_DIRS}")
-link_directories(${Boost_LIBRARY_DIRS})
+#find first the dynamic libraries
+if(BUILD_SHARED_LIBRARIES)
+    set(Boost_USE_STATIC_LIBS OFF)
+    find_package(Boost 1.41 REQUIRED COMPONENTS program_options 
+                                                system       
+                                                unit_test_framework)
+                                                
+    set(Boost_UNIT_TEST_FRAMEWORK_SHARED_LIBRARY ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
+    set(Boost_SYSTEM_SHARED_LIBRARY ${Boost_SYSTEM_LIBRARY})
+    set(Boost_PROGRAM_OPTIONS_SHARED_LIBRARY ${Boost_PROGRAM_OPTIONS_LIBRARY})
+    message(STATUS "Found shared libraries for Boost")
+    message(STATUS "Unit test framework: ${Boost_UNIT_TEST_FRAMEWORK_SHARED_LIBRARY}")
+    message(STATUS "System: ${Boost_SYSTEM_SHARED_LIBRARY}")
+    message(STATUS "Program Options: ${Boost_PROGRAM_OPTIONS_SHARED_LIBRARY}")
+endif(BUILD_SHARED_LIBRARIES)
+
+if(BUILD_STATIC_LIBRARIES)
+    set(Boost_USE_STATIC_LIBS ON)
+    find_package(Boost 1.41 REQUIRED COMPONENTS program_options 
+                                                system       
+                                                unit_test_framework)
+                                                
+    set(Boost_UNIT_TEST_FRAMEWORK_STATICLIBRARY ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
+    set(Boost_SYSTEM_STATIC_LIBRARY ${Boost_SYSTEM_LIBRARY})
+    set(Boost_PROGRAM_OPTIONS_STATIC_LIBRARY ${Boost_PROGRAM_OPTIONS_LIBRARY})
+    message(STATUS "Found static libraries for Boost")
+    message(STATUS "Unit test framework: ${Boost_UNIT_TEST_FRAMEWORK_STATIC_LIBRARY}")
+    message(STATUS "System: ${Boost_SYSTEM_STATIC_LIBRARY}")
+    message(STATUS "Program Options: ${Boost_PROGRAM_OPTIONS_STATIC_LIBRARY}")
+endif(BUILD_STATIC_LIBRARIES)
+                         
 add_definitions(${Boost_LIB_DIAGNOSTIC_DEFINITIONS})
 
 #======================compiler specific configuration========================   

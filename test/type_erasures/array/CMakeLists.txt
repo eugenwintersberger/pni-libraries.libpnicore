@@ -5,16 +5,16 @@ set(SOURCES
         array_iterator_test.cpp
     )
 
+set_shared_test_defs(SOURCES "testing the array type erasure")
+
 if(CMAKE_CXX_COMPILER_ID MATCHES MSVC)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /bigobj")
 endif()
 
 add_executable(array_test EXCLUDE_FROM_ALL ${SOURCES} $<TARGET_OBJECTS:test_common>)
 
-target_link_libraries(array_test pnicore_shared)
-if(CMAKE_CXX_COMPILER_ID MATCHES GNU)
-    target_link_libraries(array_test ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
-endif()
+target_link_libraries(array_test pnicore_shared 
+                                 ${Boost_UNIT_TEST_FRAMEWORK_SHARED_LIBRARY})
 
 
 add_test(NAME "type_erasure_test:array"

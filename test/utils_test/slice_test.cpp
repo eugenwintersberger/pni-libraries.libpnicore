@@ -21,9 +21,6 @@
 //  Created on: May 15, 2012
 //      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
 //
-#define BOOST_TEST_DYN_LINK
-#define BOOST_TEST_MODULE testing container utilities
-
 #ifdef __GNUG__
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
