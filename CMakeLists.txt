@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.0)
 project(pnicore
-        LANGUAGES CXX
+        LANGUAGES CXX C
         VERSION 1.0.0)
 
 include(CTest) # - activate testing
@@ -46,12 +46,7 @@ set(BUILD_STATIC_LIBRARIES ON CACHE BOOL "Build static libraries")
 include(configure/CMakeLists.txt)
 
 
-
-
-include_directories("./include")
-
 #need this to get the generated header files into the build.
-include_directories("${PROJECT_BINARY_DIR}/include")
 add_subdirectory("include")
 add_subdirectory("src")
 add_subdirectory("doc")

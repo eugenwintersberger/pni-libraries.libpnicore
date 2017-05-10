@@ -27,6 +27,14 @@ if(BUILD_SHARED_LIBRARIES)
     target_link_libraries(pnicore_shared INTERFACE
                                ${Boost_PROGRAM_OPTIONS_SHARED_LIBRARY}
                                ${Boost_SYSTEM_SHARED_LIBRARY})
+                               
+    #set private and public include directories
+    target_include_directories(pnicore_shared 
+        PRIVATE ${PROJECT_SOURCE_DIR}/include
+        INTERFACE
+        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
+        
     #set the package and SO version of the library
     set_target_properties(pnicore_shared PROPERTIES 
                           VERSION "${PROJECT_VERSION}"

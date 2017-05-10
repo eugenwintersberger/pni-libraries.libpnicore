@@ -10,6 +10,8 @@ if((CMAKE_HOST_SYSTEM_NAME MATCHES Linux) AND
     # determine the installation paths    
     include(GNUInstallDirs)
     message(STATUS "Installation directories for Linux: ")
+    
+    set(CMAKE_INSTALL_DOCDIR ${CMAKE_INSTALL_DATAROOTDIR}/doc/${PROJECT_NAME}-${PROJECT_VERSION})
    
 elseif(CMAKE_SYSTEM_NAME MATCHES Windows)
 
@@ -35,6 +37,12 @@ endif()
     # for both platforms
     #
     set(CMAKE_INSTALL_PACKAGEDIR ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME})
+    
+    if(CMAKE_INSTALL_PREFIX)
+        message(STATUS "Prefix is: ${CMAKE_INSTALL_PREFIX}")
+    else()
+        message(STATUS "Prefix is: unknown")
+    endif()
     message(STATUS "Libraries: ${CMAKE_INSTALL_LIBDIR}")
     message(STATUS "Binaries:  ${CMAKE_INSTALL_BINDIR}")
     message(STATUS "Headers :  ${CMAKE_INSTALL_INCLUDEDIR}")
