@@ -21,11 +21,13 @@ if(BUILD_SHARED_LIBRARIES)
          message("${PROJECT_BINARY_DIR}")
              message("${BOOST_LIBRARYDIR}")
              message("${BOOST_LIBRARYDIR};$ENV{PATH}")
-    set_tests_properties(index_maps_test PROPERTIES 
-        ENVIRONMENT
-        "$ENV{PATH}=$ENV{PATH};D:\\Development\\libpnicore-build\\src;D:\\Development\\boost-install\\lib")          
+
+    message(STATUS "Current environment path: $ENV{PATH}")
+    message(STATUS "Current library: $<TARGET_FILE_DIR:pnicore_shared>")
+    set_property(TEST index_maps_test APPEND PROPERTY
+                 ENVIRONMENT "PATH=$ENV{PATH}\;D:\\Development\\libpnicore-build\\src\\Debug;C:\\Program Files\\DESY Software Distribution\\lib")          
     get_test_property(index_maps_test ENVIRONMENT IMTEST_ENV)
-    message("${IMTEST_ENV}")
+    message("My test path: ${IMTEST_ENV}")
 
     add_dependencies(check index_maps_test)
 endif(BUILD_SHARED_LIBRARIES)

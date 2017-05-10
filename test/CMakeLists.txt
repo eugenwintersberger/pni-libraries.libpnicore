@@ -4,6 +4,8 @@ set(COMMON_SOURCES compare.cpp data_generator.cpp)
 include_directories(${Boost_INCLUDE_DIR})
 add_library(test_common EXCLUDE_FROM_ALL OBJECT ${COMMON_SOURCES})
 
+set(CTEST_ENVIRONMENT "PATH=C:/Program Files/DESY Software Distribution/lib\;D:/Development/libpnicore-build/src/Debug\;%PATH%")
+
 macro(set_shared_test_defs source_list mod_description)
     list(GET ${source_list} 0 FIRST_SOURCE_FILE)
     message(STATUS "First source file is ${FIRST_SOURCE_FILE}")
