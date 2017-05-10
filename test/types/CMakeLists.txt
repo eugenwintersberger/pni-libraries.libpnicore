@@ -14,11 +14,11 @@ set(SOURCES binary_test.cpp
 if(BUILD_SHARED_LIBRARIES)
     set_shared_test_defs(SOURCES "testing type features")
 
-    add_executable(type_test EXCLUDE_FROM_ALL ${SOURCES})
+    add_executable(type_test ${SOURCES})
     target_link_libraries(type_test pnicore_shared
                                     ${Boost_UNIT_TEST_FRAMEWORK_SHARED_LIBRARY})
 
-    add_executable(show_type_info EXCLUDE_FROM_ALL show_type_info.cpp)
+    add_executable(show_type_info show_type_info.cpp)
     target_link_libraries(show_type_info pnicore_shared)
 
 
@@ -28,7 +28,11 @@ if(BUILD_SHARED_LIBRARIES)
     add_test(NAME type_test 
              COMMAND type_test
              WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/test
-             )
-    add_dependencies(check type_test show_type_info)
+             )    
+             
+    if(CMAKE_CXX_COMPILER_ID MATCHES MSVC)
+        set_property(TEST type_test APPEND PROPERTY
+                     ENVIRONMENT "PATH=${PATH_STRING}")
+    endif()
 endif(BUILD_SHARED_LIBRARIES)
 

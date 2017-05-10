@@ -23,7 +23,7 @@ set(SOURCES value_construction_test.cpp
 if(BUILD_SHARED_LIBRARIES)    
     set_shared_test_defs(SOURCES "testing the value type erasure")
 
-    add_executable(value_test EXCLUDE_FROM_ALL ${SOURCES} $<TARGET_OBJECTS:test_common>)
+    add_executable(value_test ${SOURCES} $<TARGET_OBJECTS:test_common>)
 
     target_link_libraries(value_test pnicore_shared
                                      ${Boost_UNIT_TEST_FRAMEWORK_SHARED_LIBRARY})
@@ -33,8 +33,12 @@ if(BUILD_SHARED_LIBRARIES)
              COMMAND value_test
              WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/test
              )
+             
+    if(CMAKE_CXX_COMPILER_ID MATCHES MSVC)
+        set_property(TEST "type_erasure_test:value" APPEND PROPERTY
+                     ENVIRONMENT "PATH=${PATH_STRING}")
+    endif()
 
-    add_dependencies(check value_test)
 endif(BUILD_SHARED_LIBRARIES)
 
 

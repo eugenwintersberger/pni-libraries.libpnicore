@@ -17,8 +17,8 @@ endif()
 if(BUILD_SHARED_LIBRARIES)
     set_shared_test_defs(SOURCES "Testing array functions")    
 
-    add_executable(arrays_test_shared EXCLUDE_FROM_ALL ${SOURCES}
-                                                $<TARGET_OBJECTS:test_common>)
+    add_executable(arrays_test_shared ${SOURCES}
+                                      $<TARGET_OBJECTS:test_common>)
     target_link_libraries(arrays_test_shared pnicore_shared
                                       ${Boost_UNIT_TEST_FRAMEWORK_SHARED_LIBRARY})
 
@@ -26,8 +26,12 @@ if(BUILD_SHARED_LIBRARIES)
              COMMAND arrays_test_shared
              WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/test
              )
-
-    add_dependencies(check arrays_test_shared)
+             
+    if(CMAKE_CXX_COMPILER_ID MATCHES MSVC)
+        set_property(TEST arrays_test_shared APPEND PROPERTY
+                     ENVIRONMENT "PATH=${PATH_STRING}")
+    endif()
+    
 endif(BUILD_SHARED_LIBRARIES)
 
 

@@ -9,7 +9,7 @@ set(SOURCES container_utils_array_test.cpp
 if(BUILD_SHARED_LIBRARIES)
     set_shared_test_defs(SOURCES "testing utilty code")
 
-    add_executable(utils_test EXCLUDE_FROM_ALL ${SOURCES} $<TARGET_OBJECTS:test_common>)
+    add_executable(utils_test ${SOURCES} $<TARGET_OBJECTS:test_common>)
     target_link_libraries(utils_test pnicore_shared
                                      ${Boost_UNIT_TEST_FRAMEWORK_SHARED_LIBRARY})
 
@@ -18,6 +18,10 @@ if(BUILD_SHARED_LIBRARIES)
              COMMAND utils_test
              WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/test
              )
-
-    add_dependencies(check utils_test)
+             
+    if(CMAKE_CXX_COMPILER_ID MATCHES MSVC)
+        set_property(TEST utils_test APPEND PROPERTY
+                     ENVIRONMENT "PATH=${PATH_STRING}") 
+    endif()
+    
 endif(BUILD_SHARED_LIBRARIES)

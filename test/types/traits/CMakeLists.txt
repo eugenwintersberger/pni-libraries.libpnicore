@@ -17,7 +17,7 @@ set(SOURCES is_integer_type_test.cpp
 if(BUILD_SHARED_LIBRARIES)
     set_shared_test_defs(SOURCES "testing type traits")
 
-    add_executable(traits_test EXCLUDE_FROM_ALL ${SOURCES})
+    add_executable(traits_test ${SOURCES})
     target_link_libraries(traits_test pnicore_shared
                                       ${Boost_UNIT_TEST_FRAMEWORK_SHARED_LIBRARY})
 
@@ -25,7 +25,11 @@ if(BUILD_SHARED_LIBRARIES)
              COMMAND traits_test
              WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/test
              )
-
-    add_dependencies(check traits_test)
+             
+    if(CMAKE_CXX_COMPILER_ID MATCHES MSVC)
+        set_property(TEST "types:traits_test" APPEND PROPERTY
+                     ENVIRONMENT "PATH=${PATH_STRING}")
+    endif()
+    
 endif(BUILD_SHARED_LIBRARIES)
 
