@@ -52,7 +52,7 @@ add_custom_command(OUTPUT libpnicore_ug.pdf
 add_custom_target(users_guide  DEPENDS libpnicore_ug.pdf )
 
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/libpnicore_ug.pdf
-    DESTINATION "${CMAKE_INSTALL_FULL_DOCDIR}${LIBRARY_VERSION}-doc"
+    DESTINATION ${CMAKE_INSTALL_DOCDIR}
         OPTIONAL
         COMPONENT doc_pdf
         )

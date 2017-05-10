@@ -1,16 +1,34 @@
-cmake_minimum_required(VERSION 2.8)
-project(libpnicore)
-#need to define the version of the library
-set(MAJOR_VERSION "1")
-set(MINOR_VERSION "0")
-set(PATCH_VERSION "0")
-set(LIBRARY_VERSION "${MAJOR_VERSION}.${MINOR_VERSION}.${PATCH_VERSION}")
+cmake_minimum_required(VERSION 3.0)
+project(pnicore
+        LANGUAGES CXX
+        VERSION 1.0.0)
 
-include(CTest)
-include(CPackComponent)
+include(CTest) # - activate testing
 
-set(CMAKE_FAMILY_VERSION "${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}")
+#
+#as libpnicore is in most part a template library and should thus be 
+#treated like a static library. In most cases all code using 
+#libpnicore has to be rebuilt if something in the headers is changed.
+#we thus set the SO version to the package version. This is also 
+#the way the boost libraries are packaged.
+#
+set(SO_VERSION ${PROJECT_VERSION})
 
+#
+# for windows we need two additional components 
+# - we have to build an MSI package for installation
+# - we need to add a package configuration file so that the library
+#   can be found with the find_package command
+#
+if(CMAKE_CXX_COMPILER_ID MATCHES MSVC)
+    include(CPackComponent)
+    include(CMakePackageConfigHelpers)
+endif()
+
+
+#
+# set the default build type
+# 
 if(NOT CMAKE_BUILD_TYPE)
     message("No build type specified - default is RELEASE")
     set(CMAKE_BUILD_TYPE RELEASE)
@@ -28,17 +46,12 @@ set(BUILD_STATIC_LIBRARIES ON CACHE BOOL "Build static libraries")
 include(configure/CMakeLists.txt)
 
 
-#as libpnicore is in most part a template library and should thus be 
-#treated like a static library. In most cases all code using 
-#libpnicore has to be rebuilt if something in the headers is changed.
-#we thus set the SO version to the package version. This is also 
-#the way the boost libraries are packaged.
-set(SO_VERSION ${LIBRARY_VERSION})
+
 
 include_directories("./include")
 
 #need this to get the generated header files into the build.
-include_directories("${CMAKE_CURRENT_BINARY_DIR}/include")
+include_directories("${PROJECT_BINARY_DIR}/include")
 add_subdirectory("include")
 add_subdirectory("src")
 add_subdirectory("doc")
@@ -49,6 +62,13 @@ add_subdirectory("resources")
 # Configuration for the package generator
 #-----------------------------------------------------------------------------
 if(CMAKE_CXX_COMPILER_ID MATCHES MSVC)
+    #for windows we also create a cmake config package    
+    write_basic_package_version_file(
+        "${PROJECT_BINARY_DIR}/libpnicore-config-version.cmake"
+        VERSION ${LIBRARY_VERSION}
+        COMPATIBILITY AnyNewerVersion)
+    
+
     set(CPACK_GENERATOR WIX)
     set(CPACK_PACKAGE_VENDOR "DESY")
     set(CPACK_PACKAGE_VERSION_MAJOR "1")
@@ -59,7 +79,7 @@ if(CMAKE_CXX_COMPILER_ID MATCHES MSVC)
     set(CPACK_WIX_PRODUCT_ICON "resources/icon.ico")
     set(CPACK_WIX_UI_BANNER "resources/banner.bmp")
     set(CPACK_WIX_UI_DIALOG "resources/ui_dialog.bmp")
-    set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/COPYING.txt")
+    set(CPACK_RESOURCE_FILE_LICENSE "${PROJECT_SOURCE_DIR}/COPYING.txt")
 
 
     cpack_add_component(libraries

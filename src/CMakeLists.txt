@@ -9,7 +9,7 @@ add_subdirectory(configuration)
 add_subdirectory(type_erasures)
 add_subdirectory(misc)
 
-set(LIB_TARGETS)
+set(LIB_TARGETS) # list of libray targets which will be installed
 
 #-----------------------------------------------------------------------------
 # building the shared library
@@ -29,7 +29,7 @@ if(BUILD_SHARED_LIBRARIES)
                                ${Boost_SYSTEM_SHARED_LIBRARY})
     #set the package and SO version of the library
     set_target_properties(pnicore_shared PROPERTIES 
-                          VERSION "${LIBRARY_VERSION}"
+                          VERSION "${PROJECT_VERSION}"
                           SOVERSION "${SO_VERSION}"
                           OUTPUT_NAME pnicore)
     list(APPEND LIB_TARGETS pnicore_shared)
@@ -41,6 +41,11 @@ endif(BUILD_SHARED_LIBRARIES)
 #-----------------------------------------------------------------------------
 if(BUILD_STATIC_LIBRARIES)
     message(STATUS "Building static libraries ...")
+    if(CMAKE_SYSTEM_NAME MATCHES Windows)
+        set(STATIC_LIBNAME pnicore_static)
+    else()
+        set(STATIC_LIBNAME pnicore)
+    endif()
     add_library(pnicore_static STATIC 
                                $<TARGET_OBJECTS:type_objects_static>
                                $<TARGET_OBJECTS:benchmark_objects_static>
@@ -49,7 +54,7 @@ if(BUILD_STATIC_LIBRARIES)
                                $<TARGET_OBJECTS:type_erasure_objects_static>
                                $<TARGET_OBJECTS:misc_objects_static>) 
     set_target_properties(pnicore_static PROPERTIES
-                          OUTPUT_NAME pnicore)
+                          OUTPUT_NAME ${STATIC_LIBNAME})
     list(APPEND LIB_TARGETS pnicore_static)
 endif(BUILD_STATIC_LIBRARIES)
 
@@ -75,7 +80,7 @@ install(TARGETS ${LIB_TARGETS}
 #
 # We do not need this on Windows.
 #-----------------------------------------------------------------------------
-if(CMAKE_HOST_UNIX)
+if(CMAKE_SYSTEM_NAME MATCHES Linux)
     #obtain the compiler flags used to build the target
     get_directory_property(PNICORE_CMP_FLAGS_LIST DIRECTORY 
                            ${CMAKE_CURRENT_SOURCE_DIR} COMPILE_DEFINITIONS) 
@@ -89,5 +94,10 @@ if(CMAKE_HOST_UNIX)
     configure_file(pnicore.pc.cmake pnicore.pc @ONLY)
     install(FILES "${CMAKE_CURRENT_BINARY_DIR}/pnicore.pc" 
             DESTINATION "${CMAKE_INSTALL_FULL_LIBDIR}/pkgconfig")
+elseif(CMAKE_SYSTEM_NAME MATCHES Windows)
+    # on the Windows platform we also install the cmake package 
+    # configuration file. This should make using the library easier
+    # on Windows.
+
 endif()
 
