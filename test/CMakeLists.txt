@@ -1,7 +1,6 @@
 
 #build some commonly used code
 set(COMMON_SOURCES compare.cpp data_generator.cpp)
-include_directories(${Boost_INCLUDE_DIR})
 add_library(test_common EXCLUDE_FROM_ALL OBJECT ${COMMON_SOURCES})
 
 macro(set_shared_test_defs source_list mod_description)

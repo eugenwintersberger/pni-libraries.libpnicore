@@ -22,7 +22,6 @@ set(SO_VERSION ${PROJECT_VERSION})
 #
 if(CMAKE_CXX_COMPILER_ID MATCHES MSVC)
     include(CPackComponent)
-    include(CMakePackageConfigHelpers)
 endif()
 
 
@@ -45,6 +44,13 @@ set(BUILD_STATIC_LIBRARIES ON CACHE BOOL "Build static libraries")
 #======================do here some setup work=================================
 include(configure/CMakeLists.txt)
 
+include(CMakePackageConfigHelpers)
+#for windows we also create a cmake config package    
+write_basic_package_version_file(
+     "${PROJECT_BINARY_DIR}/${PROJECT_NAME}-config-${PROJECT_VERSION}.cmake"
+     VERSION ${PROJECT_VERSION}
+     COMPATIBILITY AnyNewerVersion)
+
 
 #need this to get the generated header files into the build.
 add_subdirectory("include")
@@ -57,11 +63,7 @@ add_subdirectory("resources")
 # Configuration for the package generator
 #-----------------------------------------------------------------------------
 if(CMAKE_CXX_COMPILER_ID MATCHES MSVC)
-    #for windows we also create a cmake config package    
-    write_basic_package_version_file(
-        "${PROJECT_BINARY_DIR}/libpnicore-config-version.cmake"
-        VERSION ${LIBRARY_VERSION}
-        COMPATIBILITY AnyNewerVersion)
+   
     
 
     set(CPACK_GENERATOR WIX)
