@@ -60,7 +60,7 @@ install(TARGETS pnicore_shared
         
 install(EXPORT pnicore_targets
         DESTINATION ${CMAKE_INSTALL_PACKAGEDIR}
-        COMPONENT Development)
+        COMPONENT development)
 
 
 #-----------------------------------------------------------------------------

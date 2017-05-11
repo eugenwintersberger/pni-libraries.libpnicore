@@ -54,12 +54,12 @@ write_basic_package_version_file(
      
 install(FILES ${PROJECT_BINARY_DIR}/${PROJECT_NAME}-config-${PROJECT_VERSION}.cmake
         DESTINATION ${CMAKE_INSTALL_PACKAGEDIR}
-        COMPONENT Development)
+        COMPONENT development)
         
 configure_file(pnicore-config.cmake.in pnicore-config.cmake COPYONLY)
 install(FILES ${PROJECT_BINARY_DIR}/pnicore-config.cmake
         DESTINATION ${CMAKE_INSTALL_PACKAGEDIR}
-        COMPONENT Development)
+        COMPONENT development)
 
 
 #need this to get the generated header files into the build.
