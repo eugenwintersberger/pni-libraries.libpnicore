@@ -9,6 +9,9 @@ add_subdirectory(configuration)
 add_subdirectory(type_erasures)
 add_subdirectory(misc)
 
+set(CMAKE_DEBUG_TARGET_PROPERTIES
+    INCLUDE_DIRECTORIES)
+    
 
 #-----------------------------------------------------------------------------
 # building the shared library
@@ -28,9 +31,9 @@ target_link_libraries(pnicore_shared INTERFACE
                            
 #set private and public include directories
 target_include_directories(pnicore_shared 
-    PRIVATE ${PROJECT_SOURCE_DIR}/include
+    PRIVATE ${Boost_INCLUDE_DIRS} ${PROJECT_SOURCE_DIR}/include
     INTERFACE
-    $<BUILD_INTERFACE: ${Boost_INCLUDE_DIRS} ${PROJECT_SOURCE_DIR}/include>    
+    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>    
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
     
 #set the package and SO version of the library

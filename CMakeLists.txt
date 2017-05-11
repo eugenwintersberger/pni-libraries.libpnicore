@@ -5,6 +5,8 @@ project(pnicore
 
 include(CTest) # - activate testing
 
+
+
 #
 #as libpnicore is in most part a template library and should thus be 
 #treated like a static library. In most cases all code using 
