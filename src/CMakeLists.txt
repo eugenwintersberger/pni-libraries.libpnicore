@@ -30,7 +30,7 @@ target_link_libraries(pnicore_shared INTERFACE
 target_include_directories(pnicore_shared 
     PRIVATE ${PROJECT_SOURCE_DIR}/include
     INTERFACE
-    $<BUILD_INTERFACE: ${Boost_INCLUDE_DIRS} ${PROJECT_SOURCE_DIR}/include>
+    $<BUILD_INTERFACE: ${Boost_INCLUDE_DIRS} ${PROJECT_SOURCE_DIR}/include>    
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
     
 #set the package and SO version of the library
@@ -49,10 +49,15 @@ set_target_properties(pnicore_shared PROPERTIES
 #-----------------------------------------------------------------------------
 #install the libraries - on Windows
 install(TARGETS pnicore_shared
+        EXPORT pnicore_targets
         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
         COMPONENT libraries)
+        
+install(EXPORT pnicore_targets
+        DESTINATION ${CMAKE_INSTALL_PACKAGEDIR}
+        COMPONENT Development)
 
 
 #-----------------------------------------------------------------------------

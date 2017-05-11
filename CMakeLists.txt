@@ -49,6 +49,15 @@ write_basic_package_version_file(
      "${PROJECT_BINARY_DIR}/${PROJECT_NAME}-config-${PROJECT_VERSION}.cmake"
      VERSION ${PROJECT_VERSION}
      COMPATIBILITY AnyNewerVersion)
+     
+install(FILES ${PROJECT_BINARY_DIR}/${PROJECT_NAME}-config-${PROJECT_VERSION}.cmake
+        DESTINATION ${CMAKE_INSTALL_PACKAGEDIR}
+        COMPONENT Development)
+        
+configure_file(pnicore-config.cmake.in pnicore-config.cmake COPYONLY)
+install(FILES ${PROJECT_BINARY_DIR}/pnicore-config.cmake
+        DESTINATION ${CMAKE_INSTALL_PACKAGEDIR}
+        COMPONENT Development)
 
 
 #need this to get the generated header files into the build.
@@ -107,7 +116,7 @@ if(CMAKE_CXX_COMPILER_ID MATCHES MSVC)
 
     cpack_add_component_group(Documentation)
 
-
+	set(CPACK_WIX_CMAKE_PACKAGE_REGISTRY "pnicore")
 
     include(CPack)
     include(CPackWIX)
