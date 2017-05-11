@@ -30,7 +30,7 @@ target_link_libraries(pnicore_shared INTERFACE
 target_include_directories(pnicore_shared 
     PRIVATE ${PROJECT_SOURCE_DIR}/include
     INTERFACE
-    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
+    $<BUILD_INTERFACE: ${Boost_INCLUDE_DIRS} ${PROJECT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
     
 #set the package and SO version of the library
