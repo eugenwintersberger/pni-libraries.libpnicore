@@ -9,62 +9,35 @@ add_subdirectory(configuration)
 add_subdirectory(type_erasures)
 add_subdirectory(misc)
 
-set(LIB_TARGETS) # list of libray targets which will be installed
 
 #-----------------------------------------------------------------------------
 # building the shared library
 #-----------------------------------------------------------------------------
-if(BUILD_SHARED_LIBRARIES)
-    message(STATUS "Building shared libraries ...")
-    add_library(pnicore_shared SHARED 
-                               $<TARGET_OBJECTS:type_objects_shared>
-                               $<TARGET_OBJECTS:benchmark_objects_shared>
-                               $<TARGET_OBJECTS:array_objects_shared>
-                               $<TARGET_OBJECTS:configuration_objects_shared>
-                               $<TARGET_OBJECTS:type_erasure_objects_shared>
-                               $<TARGET_OBJECTS:misc_objects_shared>) 
+message(STATUS "Building shared libraries ...")
+add_library(pnicore_shared SHARED 
+                           $<TARGET_OBJECTS:type_objects>
+                           $<TARGET_OBJECTS:benchmark_objects>
+                           $<TARGET_OBJECTS:array_objects>
+                           $<TARGET_OBJECTS:configuration_objects>
+                           $<TARGET_OBJECTS:type_erasure_objects>
+                           $<TARGET_OBJECTS:misc_objects>) 
 
-    target_link_libraries(pnicore_shared INTERFACE
-                               ${Boost_PROGRAM_OPTIONS_SHARED_LIBRARY}
-                               ${Boost_SYSTEM_SHARED_LIBRARY})
-                               
-    #set private and public include directories
-    target_include_directories(pnicore_shared 
-        PRIVATE ${PROJECT_SOURCE_DIR}/include
-        INTERFACE
-        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
-        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
-        
-    #set the package and SO version of the library
-    set_target_properties(pnicore_shared PROPERTIES 
-                          VERSION "${PROJECT_VERSION}"
-                          SOVERSION "${SO_VERSION}"
-                          OUTPUT_NAME pnicore)
-    list(APPEND LIB_TARGETS pnicore_shared)
-endif(BUILD_SHARED_LIBRARIES)
-
-
-#-----------------------------------------------------------------------------
-# building the static library if requested by the user
-#-----------------------------------------------------------------------------
-if(BUILD_STATIC_LIBRARIES)
-    message(STATUS "Building static libraries ...")
-    if(CMAKE_SYSTEM_NAME MATCHES Windows)
-        set(STATIC_LIBNAME pnicore_static)
-    else()
-        set(STATIC_LIBNAME pnicore)
-    endif()
-    add_library(pnicore_static STATIC 
-                               $<TARGET_OBJECTS:type_objects_static>
-                               $<TARGET_OBJECTS:benchmark_objects_static>
-                               $<TARGET_OBJECTS:array_objects_static>
-                               $<TARGET_OBJECTS:configuration_objects_static>
-                               $<TARGET_OBJECTS:type_erasure_objects_static>
-                               $<TARGET_OBJECTS:misc_objects_static>) 
-    set_target_properties(pnicore_static PROPERTIES
-                          OUTPUT_NAME ${STATIC_LIBNAME})
-    list(APPEND LIB_TARGETS pnicore_static)
-endif(BUILD_STATIC_LIBRARIES)
+target_link_libraries(pnicore_shared INTERFACE
+                           ${Boost_PROGRAM_OPTIONS_LIBRARY}
+                           ${Boost_SYSTEM_LIBRARY})
+                           
+#set private and public include directories
+target_include_directories(pnicore_shared 
+    PRIVATE ${PROJECT_SOURCE_DIR}/include
+    INTERFACE
+    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
+    
+#set the package and SO version of the library
+set_target_properties(pnicore_shared PROPERTIES 
+                      VERSION "${PROJECT_VERSION}"
+                      SOVERSION "${SO_VERSION}"
+                      OUTPUT_NAME pnicore)
 
 
 
@@ -75,7 +48,7 @@ endif(BUILD_STATIC_LIBRARIES)
 # the installation.
 #-----------------------------------------------------------------------------
 #install the libraries - on Windows
-install(TARGETS ${LIB_TARGETS}
+install(TARGETS pnicore_shared
         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}

@@ -14,25 +14,22 @@ if(CMAKE_CXX_COMPILER_ID MATCHES MSVC)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /bigobj")
 endif()
 
-if(BUILD_SHARED_LIBRARIES)
-    set_shared_test_defs(SOURCES "Testing array functions")    
+set_shared_test_defs(SOURCES "Testing array functions")    
 
-    add_executable(arrays_test_shared ${SOURCES}
-                                      $<TARGET_OBJECTS:test_common>)
-    target_link_libraries(arrays_test_shared pnicore_shared
-                                      ${Boost_UNIT_TEST_FRAMEWORK_SHARED_LIBRARY})
+add_executable(arrays_test ${SOURCES} $<TARGET_OBJECTS:test_common>)
+target_link_libraries(arrays_test pnicore_shared
+                                         ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
 
-    add_test(NAME arrays_test_shared 
-             COMMAND arrays_test_shared
-             WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/test
-             )
-             
-    if(CMAKE_CXX_COMPILER_ID MATCHES MSVC)
-        set_property(TEST arrays_test_shared APPEND PROPERTY
-                     ENVIRONMENT "PATH=${PATH_STRING}")
-    endif()
+add_test(NAME arrays_test
+         COMMAND arrays_test
+         WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/test
+         )
+         
+if(CMAKE_HOST_SYSTEM_NAME MATCHES Windows)
+    set_property(TEST arrays_test APPEND PROPERTY 
+                 ENVIRONMENT "PATH=${PATH_STRING}")
+endif()
     
-endif(BUILD_SHARED_LIBRARIES)
 
 
 

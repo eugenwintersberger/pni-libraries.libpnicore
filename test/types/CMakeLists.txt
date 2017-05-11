@@ -11,28 +11,26 @@ set(SOURCES binary_test.cpp
             str_from_type_id_test.cpp
     )
 
-if(BUILD_SHARED_LIBRARIES)
-    set_shared_test_defs(SOURCES "testing type features")
+set_shared_test_defs(SOURCES "testing type features")
 
-    add_executable(type_test ${SOURCES})
-    target_link_libraries(type_test pnicore_shared
-                                    ${Boost_UNIT_TEST_FRAMEWORK_SHARED_LIBRARY})
+add_executable(type_test ${SOURCES})
+target_link_libraries(type_test pnicore_shared
+                                ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
 
-    add_executable(show_type_info show_type_info.cpp)
-    target_link_libraries(show_type_info pnicore_shared)
+add_executable(show_type_info show_type_info.cpp)
+target_link_libraries(show_type_info pnicore_shared)
 
 
-    add_subdirectory(conversion)
-    add_subdirectory(traits)
+add_subdirectory(conversion)
+add_subdirectory(traits)
 
-    add_test(NAME type_test 
-             COMMAND type_test
-             WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/test
-             )    
-             
-    if(CMAKE_CXX_COMPILER_ID MATCHES MSVC)
-        set_property(TEST type_test APPEND PROPERTY
-                     ENVIRONMENT "PATH=${PATH_STRING}")
-    endif()
-endif(BUILD_SHARED_LIBRARIES)
+add_test(NAME type_test 
+         COMMAND type_test
+         WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/test
+         )    
+         
+if(CMAKE_HOST_SYSTEM_NAME MATCHES Windows)
+    set_property(TEST type_test APPEND PROPERTY
+                 ENVIRONMENT "PATH=${PATH_STRING}")
+endif()
 

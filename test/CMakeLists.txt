@@ -11,14 +11,14 @@ macro(set_shared_test_defs source_list mod_description)
 endmacro()
 
 #need to setup the PATH environment on windows - this is important 
-#otherwise the tests will not run
-if(CMAKE_CXX_COMPILER_ID MATCHES MSVC)
+#otherwise the tests will not run since they would not be able to find teh appropriate libraries
+if(CMAKE_HOST_SYSTEM_NAME MATCHES Windows)
     set(PATH_STRING "$ENV{PATH};$<TARGET_FILE_DIR:pnicore_shared>;${Boost_LIBRARY_DIRS}")
     string(REPLACE ";" "\\;" PATH_STRING "${PATH_STRING}")
 endif()
 
 add_executable(rand_test "rand_test.cpp" $<TARGET_OBJECTS:test_common>)
-target_link_libraries(rand_test pnicore_shared)
+target_link_libraries(rand_test PRIVATE pnicore_shared)
 
 
 add_executable(rand_gen rand_gen.cpp)

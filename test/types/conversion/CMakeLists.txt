@@ -21,21 +21,19 @@ set(SOURCES unchecked_convertible_test.cpp
     )
 
 
-if(BUILD_SHARED_LIBRARIES)
-    set_shared_test_defs(SOURCES "Testing type conversions")
-    add_executable(conversion_test ${SOURCES})
-    target_link_libraries(conversion_test pnicore_shared
-                                          ${Boost_UNIT_TEST_FRAMEWORK_SHARED_LIBRARY})
+set_shared_test_defs(SOURCES "Testing type conversions")
+add_executable(conversion_test ${SOURCES})
+target_link_libraries(conversion_test pnicore_shared
+                                      ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
 
-    add_test(NAME "types:conversion_test" 
-             COMMAND conversion_test
-             WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/test
-             )
-             
-    if(CMAKE_CXX_COMPILER_ID MATCHES MSVC)
-        set_property(TEST "types:conversion_test" APPEND PROPERTY
-                     ENVIRONMENT "PATH=${PATH_STRING}")
-    endif()
+add_test(NAME "types:conversion_test" 
+         COMMAND conversion_test
+         WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/test
+         )
+         
+if(CMAKE_HOST_SYSTEM_NAME MATCHES Windows)
+    set_property(TEST "types:conversion_test" APPEND PROPERTY
+                 ENVIRONMENT "PATH=${PATH_STRING}")
+endif()
     
-endif(BUILD_SHARED_LIBRARIES)
 

@@ -7,23 +7,21 @@ set(SOURCES index_map_tests.cpp
             )
 
 
-if(BUILD_SHARED_LIBRARIES)
-    set_source_files_properties(index_map_tests.cpp PROPERTIES
-                                COMPILE_DEFINITIONS "BOOST_TEST_DYN_LINK")
-    add_executable(index_maps_test ${SOURCES})
-    target_link_libraries(index_maps_test pnicore_shared 
-                                          ${Boost_UNIT_TEST_FRAMEWORK_SHARED_LIBRARY})
+set_source_files_properties(index_map_tests.cpp PROPERTIES
+                            COMPILE_DEFINITIONS "BOOST_TEST_DYN_LINK")
+add_executable(index_maps_test ${SOURCES})
+target_link_libraries(index_maps_test pnicore_shared 
+                                      ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
 
-    add_test(NAME index_maps_test 
-             COMMAND index_maps_test
-             WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/test
-             )
+add_test(NAME index_maps_test 
+         COMMAND index_maps_test
+         WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/test
+         )
+
+if(CMAKE_HOST_SYSTEM_NAME MATCHES Windows)
+    set_property(TEST index_maps_test APPEND PROPERTY
+                                      ENVIRONMENT "PATH=${PATH_STRING}")     
+endif()
     
-    if(CMAKE_CXX_COMPILER_ID MATCHES MSVC)
-        set_property(TEST index_maps_test APPEND PROPERTY
-                                          ENVIRONMENT "PATH=${PATH_STRING}")     
-    endif()
-    
-endif(BUILD_SHARED_LIBRARIES)
 
 
