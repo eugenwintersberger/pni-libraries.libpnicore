@@ -36,7 +36,7 @@ endif()
     # the installation path the the cmake package file is the same 
     # for both platforms
     #
-    set(CMAKE_INSTALL_PACKAGEDIR ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME})
+    set(CMAKE_INSTALL_PACKAGEDIR ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}-${PROJECT_VERSION})
     
     if(CMAKE_INSTALL_PREFIX)
         message(STATUS "Prefix is: ${CMAKE_INSTALL_PREFIX}")
