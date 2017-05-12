@@ -3,7 +3,8 @@ project(pnicore
         LANGUAGES CXX C
         VERSION 1.0.0)
 
-include(CTest) # - activate testing
+include(CTest)             # - activate testing
+set(CMAKE_CXX_STANDARD 11) # - we need C++11 for the entire code
 
 
 
