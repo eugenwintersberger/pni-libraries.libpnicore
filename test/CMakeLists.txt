@@ -1,14 +1,9 @@
-
-#
-# we need this for everything in this directory
-#
-include_directories(${Boost_INCLUDE_DIRS} ${PROJECT_SOURCE_DIR}/include)
-
 #
 #build some commonly used code
 # 
 set(COMMON_SOURCES compare.cpp data_generator.cpp)
 add_library(test_common EXCLUDE_FROM_ALL OBJECT ${COMMON_SOURCES})
+target_include_directories(test_common PRIVATE ${Boost_INCLUDE_DIRS} ${PROJECT_SOURCE_DIR}/include)
 
 #
 # this macro will be used by all tests to build properly with Boost unit test
