@@ -45,6 +45,9 @@ set(BOOST_LIBRARYDIR CACHE PATH "Path to the Boost runtime libraries")
 #======================do here some setup work=================================
 include(configure/CMakeLists.txt)
 
+set(PACKAGE_VERSION_FILE_NAME "${PROJECT_NAME}-config-${PROJECT_VERSION}.cmake")
+set(PACKAGE_CONFIG_FILE_NAME "${PROJECT_NAME}-config.cmake")
+
 include(CMakePackageConfigHelpers)
 #for windows we also create a cmake config package    
 write_basic_package_version_file(
@@ -52,12 +55,12 @@ write_basic_package_version_file(
      VERSION ${PROJECT_VERSION}
      COMPATIBILITY AnyNewerVersion)
      
-install(FILES ${PROJECT_BINARY_DIR}/${PROJECT_NAME}-config-${PROJECT_VERSION}.cmake
+install(FILES ${PROJECT_BINARY_DIR}/${PACKAGE_VERSION_FILE_NAME}
         DESTINATION ${CMAKE_INSTALL_PACKAGEDIR}
         COMPONENT development)
         
-configure_file(pnicore-config.cmake.in pnicore-config.cmake COPYONLY)
-install(FILES ${PROJECT_BINARY_DIR}/pnicore-config.cmake
+configure_file(pnicore-config.cmake.in ${PACKAGE_CONFIG_FILE_NAME} COPYONLY)
+install(FILES ${PROJECT_BINARY_DIR}/${PACKAGE_CONFIG_FILE_NAME}
         DESTINATION ${CMAKE_INSTALL_PACKAGEDIR}
         COMPONENT development)
 
