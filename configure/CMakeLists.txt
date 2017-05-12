@@ -85,9 +85,6 @@ if(CMAKE_CXX_COMPILER_ID MATCHES GNU)
         add_definitions(-O0 -g -fno-inline -DDEBUG)
     endif()
 
-    #for this version the compiler has to support c++11 flag
-    add_definitions(-std=c++11)
-
 elseif(CMAKE_CXX_COMPILER_ID MATCHES MSVC)
     #=========================================================================
     #setup for the Microsoft C++ compiler 
@@ -112,8 +109,6 @@ elseif(CMAKE_CXX_COMPILER_ID MATCHES Clang)
         add_definitions(-O0 -g -fno-inline -DDEBUG)
     endif()
 
-    #for this version the compiler has to support c++11 flag
-    add_definitions(-std=c++11)
 endif()
 
 #===================================check the size of data types===============

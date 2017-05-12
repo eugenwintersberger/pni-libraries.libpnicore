@@ -27,6 +27,7 @@ add_library(pnicore_shared SHARED
 
 target_link_libraries(pnicore_shared INTERFACE Boost::program_options
                                                Boost::system)
+target_compiler_feature(pnicore_shared PUBLIC cxx_std_11)
                            
 #set private and public include directories
 target_include_directories(pnicore_shared 
