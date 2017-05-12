@@ -30,7 +30,7 @@ target_link_libraries(pnicore_shared INTERFACE Boost::program_options
                            
 #set private and public include directories
 target_include_directories(pnicore_shared 
-    PRIVATE ${Boost_INCLUDE_DIRS} ${PROJECT_SOURCE_DIR}/include
+    PRIVATE ${PROJECT_SOURCE_DIR}/include
     INTERFACE
     $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>    
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
