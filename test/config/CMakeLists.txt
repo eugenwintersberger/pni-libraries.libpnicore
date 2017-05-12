@@ -3,8 +3,7 @@ set(SOURCES  configuration_test.cpp)
 
 set_shared_test_defs(SOURCES "testing the configuration facilities")
 add_executable(config_test ${SOURCES} $<TARGET_OBJECTS:test_common>)
-target_link_libraries(config_test pnicore_shared
-                                  ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
+target_link_libraries(config_test pnicore_shared Boost::unit_test_framework)
 
 configure_file(pni.cfg.cmake pni.cfg)
 

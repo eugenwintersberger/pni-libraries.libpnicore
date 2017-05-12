@@ -5,8 +5,7 @@ set(SOURCES value_ref_construction_test.cpp
 
 set_shared_test_defs(SOURCES "testing the value_ref type erasure")
 add_executable(value_ref_test ${SOURCES} $<TARGET_OBJECTS:test_common>)
-target_link_libraries(value_ref_test pnicore_shared
-                                     ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
+target_link_libraries(value_ref_test pnicore_shared Boost::unit_test_framework)
 
 
 add_test(NAME "type_erasure_test:value_ref"

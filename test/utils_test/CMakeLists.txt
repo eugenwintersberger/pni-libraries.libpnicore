@@ -9,8 +9,7 @@ set(SOURCES container_utils_array_test.cpp
 set_shared_test_defs(SOURCES "testing utilty code")
 
 add_executable(utils_test ${SOURCES} $<TARGET_OBJECTS:test_common>)
-target_link_libraries(utils_test pnicore_shared
-                                 ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
+target_link_libraries(utils_test pnicore_shared Boost::unit_test_framework)
 
 
 add_test(NAME utils_test 

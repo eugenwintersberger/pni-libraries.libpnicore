@@ -14,8 +14,7 @@ set(SOURCES binary_test.cpp
 set_shared_test_defs(SOURCES "testing type features")
 
 add_executable(type_test ${SOURCES})
-target_link_libraries(type_test pnicore_shared
-                                ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
+target_link_libraries(type_test pnicore_shared Boost::unit_test_framework)
 
 add_executable(show_type_info show_type_info.cpp)
 target_link_libraries(show_type_info pnicore_shared)

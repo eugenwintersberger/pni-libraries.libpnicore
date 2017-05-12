@@ -10,8 +10,7 @@ set(SOURCES index_map_tests.cpp
 set_source_files_properties(index_map_tests.cpp PROPERTIES
                             COMPILE_DEFINITIONS "BOOST_TEST_DYN_LINK")
 add_executable(index_maps_test ${SOURCES})
-target_link_libraries(index_maps_test pnicore_shared 
-                                      ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
+target_link_libraries(index_maps_test pnicore_shared Boost::unit_test_framework)
 
 add_test(NAME index_maps_test 
          COMMAND index_maps_test

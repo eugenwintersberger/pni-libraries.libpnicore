@@ -12,8 +12,7 @@ endif()
 set_shared_test_defs(SOURCES "testing the array type erasure")
 
 add_executable(array_test ${SOURCES} $<TARGET_OBJECTS:test_common>)
-target_link_libraries(array_test pnicore_shared 
-                                 ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
+target_link_libraries(array_test pnicore_shared Boost::unit_test_framework)
 
 add_test(NAME "type_erasure_test:array"
          COMMAND array_test

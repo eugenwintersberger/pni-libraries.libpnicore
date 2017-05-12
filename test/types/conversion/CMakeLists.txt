@@ -23,8 +23,7 @@ set(SOURCES unchecked_convertible_test.cpp
 
 set_shared_test_defs(SOURCES "Testing type conversions")
 add_executable(conversion_test ${SOURCES})
-target_link_libraries(conversion_test pnicore_shared
-                                      ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
+target_link_libraries(conversion_test pnicore_shared Boost::unit_test_framework)
 
 add_test(NAME "types:conversion_test" 
          COMMAND conversion_test

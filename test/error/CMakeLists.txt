@@ -9,8 +9,8 @@ set(SOURCES check_equal_size_test.cpp
 set_shared_test_defs(SOURCES "testing error functions")
 
 add_executable(error_test ${SOURCES} $<TARGET_OBJECTS:test_common>)
-target_link_libraries(error_test pnicore_shared
-                                 ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
+target_link_libraries(error_test pnicore_shared Boost::unit_test_framework)
+                                 
 
 
 add_test(NAME error_test 

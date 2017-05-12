@@ -17,8 +17,7 @@ set(SOURCES is_integer_type_test.cpp
 set_shared_test_defs(SOURCES "testing type traits")
 
 add_executable(traits_test ${SOURCES})
-target_link_libraries(traits_test pnicore_shared
-                                  ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
+target_link_libraries(traits_test pnicore_shared Boost::unit_test_framework )
 
 add_test(NAME "types:traits_test" 
          COMMAND traits_test

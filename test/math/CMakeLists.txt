@@ -15,8 +15,7 @@ set_shared_test_defs(SOURCES "testing array arithmetics")
 add_executable(math_test ${SOURCES} $<TARGET_OBJECTS:test_common>)
 add_executable(random_ranges random_ranges.cpp)
 
-target_link_libraries(math_test pnicore_shared
-                                ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
+target_link_libraries(math_test pnicore_shared Boost::unit_test_framework)
 
 target_link_libraries(random_ranges pnicore_shared)
 
