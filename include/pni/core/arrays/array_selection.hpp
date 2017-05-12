@@ -25,10 +25,7 @@
 
 #include <vector>
 #include <algorithm>
-
-#ifdef _MSC_VER
 #include <numeric>
-#endif
 
 #ifdef NOFOREACH
 #include <boost/foreach.hpp>
