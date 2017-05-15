@@ -294,7 +294,7 @@ namespace core{
 
 
             //! output operator
-            friend std::ostream &operator<<(std::ostream &o,const configuration &c);
+            friend PNICORE_EXPORT std::ostream& operator<<(std::ostream &o,const configuration &c);
 
     };
 

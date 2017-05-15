@@ -33,7 +33,7 @@ namespace pni{
 namespace core{
 
     //--------------------------------------------------------------------------
-    std::ostream &configuration::print(std::ostream &o) const
+    std::ostream& configuration::print(std::ostream &o) const
     {
         return o<<_visible_opts;
     }
@@ -95,7 +95,7 @@ namespace core{
     }
 
     //--------------------------------------------------------------------------
-    std::ostream &operator<<(std::ostream &o,const configuration &c)
+    std::ostream& operator<<(std::ostream &o,const configuration &c)
     {
         return c.print(o);
     }

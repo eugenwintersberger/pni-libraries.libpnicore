@@ -27,7 +27,7 @@ add_library(pnicore_shared SHARED
 
 target_link_libraries(pnicore_shared INTERFACE Boost::program_options
                                                Boost::system)
-
+target_compile_definitions(pnicore_shared PUBLIC BOOST_ALL_DYN_LINK)
 
                            
 #set private and public include directories
