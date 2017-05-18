@@ -60,7 +60,7 @@ install(FILES ${PROJECT_BINARY_DIR}/${PACKAGE_VERSION_FILE_NAME}
         DESTINATION ${CMAKE_INSTALL_PACKAGEDIR}
         COMPONENT development)
         
-configure_file(pnicore-config.cmake.in ${PACKAGE_CONFIG_FILE_NAME} COPYONLY)
+configure_file(${PACKAGE_CONFIG_FILE_NAME} ${PACKAGE_CONFIG_FILE_NAME} COPYONLY)
 install(FILES ${PROJECT_BINARY_DIR}/${PACKAGE_CONFIG_FILE_NAME}
         DESTINATION ${CMAKE_INSTALL_PACKAGEDIR}
         COMPONENT development)
@@ -122,7 +122,7 @@ if(CMAKE_CXX_COMPILER_ID MATCHES MSVC)
 
     cpack_add_component_group(Documentation)
 
-	set(CPACK_WIX_CMAKE_PACKAGE_REGISTRY "pnicore")
+    set(CPACK_WIX_CMAKE_PACKAGE_REGISTRY "pnicore")
 
     include(CPack)
     include(CPackWIX)

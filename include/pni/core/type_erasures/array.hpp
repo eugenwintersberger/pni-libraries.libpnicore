@@ -397,7 +397,7 @@ namespace core{
     //! \param a reference to the array 
     //! \return the type ID 
     //! 
-    type_id_t type_id(const array &a);
+    PNICORE_EXPORT type_id_t type_id(const array &a);
 
 //end of namespace
 }
