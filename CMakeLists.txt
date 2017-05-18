@@ -15,55 +15,22 @@ set(CMAKE_CXX_STANDARD 11) # - we need C++11 for the entire code
 #we thus set the SO version to the package version. This is also 
 #the way the boost libraries are packaged.
 #
-set(SO_VERSION ${PROJECT_VERSION})
+set(pnicore_SO_VERSION ${pnicore_VERSION})
 
 #
 # for windows we need two additional components 
 # - we have to build an MSI package for installation
 # - we need to add a package configuration file so that the library
 #   can be found with the find_package command
+# the packaging is independent of the compiler used thus we have to check the
+# system name.
 #
-if(CMAKE_CXX_COMPILER_ID MATCHES MSVC)
+if(CMAKE_SYSTEM_NAME MATCHES Windows)
     include(CPackComponent)
 endif()
 
-
-#
-# set the default build type
-# 
-if(NOT CMAKE_BUILD_TYPE)
-    message("No build type specified - default is RELEASE")
-    set(CMAKE_BUILD_TYPE RELEASE)
-endif()
-
-#===========================provide some user options==========================
-option(BOOST_PREFIX "installation prefix of the local BOOST installation" "/usr")
-set(BOOST_ROOT CACHE PATH "Prefix of the Boost installation")
-set(BOOST_INCLUDEDIR CACHE PATH "Path to the Boost header files")
-set(BOOST_LIBRARYDIR CACHE PATH "Path to the Boost runtime libraries")
-
-
 #======================do here some setup work=================================
 include(configure/CMakeLists.txt)
-
-set(PACKAGE_VERSION_FILE_NAME "${PROJECT_NAME}-config-${PROJECT_VERSION}.cmake")
-set(PACKAGE_CONFIG_FILE_NAME "${PROJECT_NAME}-config.cmake")
-
-include(CMakePackageConfigHelpers)
-#for windows we also create a cmake config package    
-write_basic_package_version_file(
-     "${PROJECT_BINARY_DIR}/${PROJECT_NAME}-config-${PROJECT_VERSION}.cmake"
-     VERSION ${PROJECT_VERSION}
-     COMPATIBILITY AnyNewerVersion)
-     
-install(FILES ${PROJECT_BINARY_DIR}/${PACKAGE_VERSION_FILE_NAME}
-        DESTINATION ${CMAKE_INSTALL_PACKAGEDIR}
-        COMPONENT development)
-        
-configure_file(${PACKAGE_CONFIG_FILE_NAME} ${PACKAGE_CONFIG_FILE_NAME} COPYONLY)
-install(FILES ${PROJECT_BINARY_DIR}/${PACKAGE_CONFIG_FILE_NAME}
-        DESTINATION ${CMAKE_INSTALL_PACKAGEDIR}
-        COMPONENT development)
 
 
 #need this to get the generated header files into the build.
@@ -72,12 +39,12 @@ add_subdirectory("src")
 add_subdirectory("doc")
 add_subdirectory("test")
 add_subdirectory("resources")
+add_subdirectory("cmake")
 
 #-----------------------------------------------------------------------------
 # Configuration for the package generator
 #-----------------------------------------------------------------------------
 if(CMAKE_CXX_COMPILER_ID MATCHES MSVC)
-   
     
 
     set(CPACK_GENERATOR WIX)

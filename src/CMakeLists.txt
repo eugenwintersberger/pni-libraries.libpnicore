@@ -51,7 +51,7 @@ set_target_properties(pnicore_shared PROPERTIES
 # paths, which makes absolut sense as the prefix is choosen during 
 # the installation.
 #-----------------------------------------------------------------------------
-#install the libraries - on Windows
+#install the libraries 
 install(TARGETS pnicore_shared
         EXPORT pnicore_targets
         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
@@ -62,6 +62,10 @@ install(TARGETS pnicore_shared
 install(EXPORT pnicore_targets
         DESTINATION ${CMAKE_INSTALL_PACKAGEDIR}
         COMPONENT development)
+
+export(EXPORT pnicore_targets
+       FILE ${PROJECT_BINARY_DIR}/cmake/pnicore_targets.cmake)
+
 
 
 #-----------------------------------------------------------------------------
