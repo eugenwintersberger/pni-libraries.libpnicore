@@ -22,28 +22,31 @@ set(TEST_LOG_PATH ${PROJECT_BINARY_DIR}/test/logs)
 set(TEST_REPORT_PATH ${PROJECT_BINARY_DIR}/test/logs)
 
 #
-# setup lists for log and report files
-#
-set(TEST_LOG_FILES )
-set(TEST_REPORT_FILES )
-
-#
 # macro adding a test including all command line options to write logging files
 #
 macro (add_logging_test test_name test_target working_dir)
     set(TEST_LOG_FILE ${TEST_LOG_PATH}/${test_target}.log.xml)
     set(TEST_REPORT_FILE ${TEST_REPORT_PATH}/${test_target}.report.xml)
 
+    message(STATUS "log file: ${TEST_LOG_FILE}")
+    message(STATUS "report file: ${TEST_REPORT_FILE}")
+
+    #we need to create separate options configurations depending on the Boost
+    #version installed 
+    if(Boost_VERSION EQUAL 106200)
+        message(STATUS "Setting up test for Boost Unit test version 1.6.2")
+        set(LOG_OPTIONS --logger=XML,all,${TEST_LOG_FILE})
+        set(REPORT_OPTIONS --report_level=detailed --report_format=XML --report_sink=${TEST_REPORT_FILE})
+    else()
+        message(FATAL_ERROR "Have no configuration yet for this")
+    endif()
+   
     add_test(NAME "${test_name}"
-             COMMAND ${test_target} 
-                    --log_level=all --log_format=xml
-                    --log_sink=${TEST_LOG_FILE}
-                    --report_level=detailed --report_format=xml
-                    --report_sink=${TEST_REPORT_FILE}
+             COMMAND ${test_target} ${LOG_OPTIONS} ${REPORT_OPTIONS}
              WORKING_DIRECTORY ${working_dir})
-    
-list(APPEND TEST_LOG_FILES "${TEST_LOG_FILE}")
-list(APPEND TEST_REPORT_FILES "${TEST_REPORT_FILE}")
+    #in all cases we have to remove the log and report files
+    set_property(DIRECTORY APPEND PROPERTY ADDITIONAL_MAKE_CLEAN_FILES
+    ${TEST_LOG_FILE} ${TEST_REPORT_FILE})
 endmacro()
 
 #
@@ -81,11 +84,4 @@ add_subdirectory(math)
 add_subdirectory(error)
 add_subdirectory(exceptions)
 add_subdirectory(logs)
-
-#
-# print a list of all log and report files
-#
-message(STATUS "Create the following test log files: ${TEST_LOG_FILES}")
-message(STATUS "Create the following report files: ${TEST_REPORT_FILES}")
-
 
