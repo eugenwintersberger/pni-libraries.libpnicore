@@ -48,6 +48,7 @@ add_subdirectory(type_erasures)
 add_subdirectory(config)
 add_subdirectory(math)
 add_subdirectory(error)
+add_subdirectory(exceptions)
 
 
 
