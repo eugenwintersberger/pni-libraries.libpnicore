@@ -16,6 +16,37 @@ macro(set_shared_test_defs source_list mod_description)
 endmacro()
 
 #
+# set the path where all the test reports and logs will be stored
+#
+set(TEST_LOG_PATH ${PROJECT_BINARY_DIR}/test/logs)
+set(TEST_REPORT_PATH ${PROJECT_BINARY_DIR}/test/logs)
+
+#
+# setup lists for log and report files
+#
+set(TEST_LOG_FILES )
+set(TEST_REPORT_FILES )
+
+#
+# macro adding a test including all command line options to write logging files
+#
+macro (add_logging_test test_name test_target working_dir)
+    set(TEST_LOG_FILE ${TEST_LOG_PATH}/${test_target}.log.xml)
+    set(TEST_REPORT_FILE ${TEST_REPORT_PATH}/${test_target}.report.xml)
+
+    add_test(NAME "${test_name}"
+             COMMAND ${test_target} 
+                    --log_level=all --log_format=xml
+                    --log_sink=${TEST_LOG_FILE}
+                    --report_level=detailed --report_format=xml
+                    --report_sink=${TEST_REPORT_FILE}
+             WORKING_DIRECTORY ${working_dir})
+    
+list(APPEND TEST_LOG_FILES "${TEST_LOG_FILE}")
+list(APPEND TEST_REPORT_FILES "${TEST_REPORT_FILE}")
+endmacro()
+
+#
 # need to setup the PATH environment on Windows - this is important 
 # otherwise the tests will not run since they would not be able to find teh 
 # appropriate libraries
@@ -38,13 +69,6 @@ add_executable(rand_gen rand_gen.cpp)
 target_link_libraries(rand_gen pnicore_shared)
 
 #
-# options used to generate test output
-#
-set(TEST_LOG_OPTIONS --log_level=all --log_format=xml)
-set(TEST_REPORT_OPTIONS --report_level=detailed --report_format=xml)
-set(TEST_OPTIONS ${TEST_LOG_OPTIONS} ${TEST_REPORT_OPTIONS})
-
-#
 # build all the other tests
 #
 add_subdirectory(index_maps)
@@ -56,7 +80,12 @@ add_subdirectory(config)
 add_subdirectory(math)
 add_subdirectory(error)
 add_subdirectory(exceptions)
+add_subdirectory(logs)
 
-
+#
+# print a list of all log and report files
+#
+message(STATUS "Create the following test log files: ${TEST_LOG_FILES}")
+message(STATUS "Create the following report files: ${TEST_REPORT_FILES}")
 
 
