@@ -243,6 +243,7 @@ EXCEPTION_FORWARD(MemoryNotAllocatedError)
             //! \param n exception_record to append 
             //!
             void append(const exception_record &n) { _records.push_back(n); }
+            void push_back(const exception_record &n) { _records.push_back(n); }
 
             //-----------------------------------------------------------------
             //!
@@ -260,6 +261,15 @@ EXCEPTION_FORWARD(MemoryNotAllocatedError)
             //! description
             //!
             const string &description() const { return _description; }
+
+            //-----------------------------------------------------------------
+            //!
+            //! \brief get number of record
+            //!
+            //! Returns the number of records associated with this exception.
+            //!
+            //! \return number of records
+            size_t size() const { return _records.size(); }
 
             //-----------------------------------------------------------------
             //! 

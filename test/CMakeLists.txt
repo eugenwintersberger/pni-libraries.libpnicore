@@ -38,6 +38,13 @@ add_executable(rand_gen rand_gen.cpp)
 target_link_libraries(rand_gen pnicore_shared)
 
 #
+# options used to generate test output
+#
+set(TEST_LOG_OPTIONS --log_level=all --log_format=xml)
+set(TEST_REPORT_OPTIONS --report_level=detailed --report_format=xml)
+set(TEST_OPTIONS ${TEST_LOG_OPTIONS} ${TEST_REPORT_OPTIONS})
+
+#
 # build all the other tests
 #
 add_subdirectory(index_maps)
