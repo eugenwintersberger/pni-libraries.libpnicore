@@ -114,5 +114,5 @@ elseif(CMAKE_CXX_COMPILER_ID MATCHES Clang)
 endif()
 
 #===================================check the size of data types===============
-include(configure/CheckTypeSizes.txt)
+include(configure/CheckTypeSizes.cmake)
 
