@@ -72,3 +72,159 @@ target_compile_definitions(size_mismatch_error_test
 add_logging_test("Exceptions:size_mismatch_error"
                  size_mismatch_error_test
                  ${PROJECT_BINARY_DIR}/test/exceptions)
+
+#===============================================================================
+add_executable(index_error_test 
+               index_error_test.cpp)
+target_link_libraries(index_error_test PRIVATE
+                      pnicore_shared
+                      Boost::unit_test_framework)
+target_compile_definitions(index_error_test
+                      PRIVATE
+     BOOST_TEST_DYN_LINK; BOOST_TEST_MODULE="testing index error exception")
+add_logging_test("Exceptions:index_error_test"
+                 index_error_test
+                 ${PROJECT_BINARY_DIR}/test/exceptions)
+
+#===============================================================================
+add_executable(key_error_test 
+               key_error_test.cpp)
+target_link_libraries(key_error_test PRIVATE
+                      pnicore_shared
+                      Boost::unit_test_framework)
+target_compile_definitions(key_error_test
+                      PRIVATE
+     BOOST_TEST_DYN_LINK; BOOST_TEST_MODULE="testing key error exception")
+add_logging_test("Exceptions:key_error_test"
+                 key_error_test
+                 ${PROJECT_BINARY_DIR}/test/exceptions)
+
+#===============================================================================
+add_executable(file_error_test 
+               file_error_test.cpp)
+target_link_libraries(file_error_test PRIVATE
+                      pnicore_shared
+                      Boost::unit_test_framework)
+target_compile_definitions(file_error_test
+                      PRIVATE
+     BOOST_TEST_DYN_LINK; BOOST_TEST_MODULE="testing file error exception")
+add_logging_test("Exceptions:file_error_test"
+                 file_error_test
+                 ${PROJECT_BINARY_DIR}/test/exceptions)
+
+#===============================================================================
+add_executable(type_error_test 
+               type_error_test.cpp)
+target_link_libraries(type_error_test PRIVATE
+                      pnicore_shared
+                      Boost::unit_test_framework)
+target_compile_definitions(type_error_test
+                      PRIVATE
+     BOOST_TEST_DYN_LINK; BOOST_TEST_MODULE="testing type error exception")
+add_logging_test("Exceptions:type_error_test"
+                 type_error_test
+                 ${PROJECT_BINARY_DIR}/test/exceptions)
+
+#===============================================================================
+add_executable(value_error_test 
+               value_error_test.cpp)
+target_link_libraries(value_error_test PRIVATE
+                      pnicore_shared
+                      Boost::unit_test_framework)
+target_compile_definitions(value_error_test
+                      PRIVATE
+     BOOST_TEST_DYN_LINK; BOOST_TEST_MODULE="testing value error exception")
+add_logging_test("Exceptions:value_error_test"
+                 value_error_test
+                 ${PROJECT_BINARY_DIR}/test/exceptions)
+
+#===============================================================================
+add_executable(range_error_test 
+               range_error_test.cpp)
+target_link_libraries(range_error_test PRIVATE
+                      pnicore_shared
+                      Boost::unit_test_framework)
+target_compile_definitions(range_error_test
+                      PRIVATE
+     BOOST_TEST_DYN_LINK; BOOST_TEST_MODULE="testing range error exception")
+add_logging_test("Exceptions:range_error_test"
+                 range_error_test
+                 ${PROJECT_BINARY_DIR}/test/exceptions)
+
+#===============================================================================
+add_executable(not_implemented_error_test 
+               not_implemented_error_test.cpp)
+target_link_libraries(not_implemented_error_test PRIVATE
+                      pnicore_shared
+                      Boost::unit_test_framework)
+target_compile_definitions(not_implemented_error_test
+                      PRIVATE
+     BOOST_TEST_DYN_LINK; BOOST_TEST_MODULE="testing not-implemented error exception")
+add_logging_test("Exceptions:not_implemented_error_test"
+                 not_implemented_error_test
+                 ${PROJECT_BINARY_DIR}/test/exceptions)
+
+#===============================================================================
+add_executable(iterator_error_test 
+               iterator_error_test.cpp)
+target_link_libraries(iterator_error_test PRIVATE
+                      pnicore_shared
+                      Boost::unit_test_framework)
+target_compile_definitions(iterator_error_test
+                      PRIVATE
+     BOOST_TEST_DYN_LINK; BOOST_TEST_MODULE="testing iterator error exception")
+add_logging_test("Exceptions:iterator_error_test"
+                 iterator_error_test
+                 ${PROJECT_BINARY_DIR}/test/exceptions)
+
+#===============================================================================
+add_executable(cli_argument_error_test 
+               cli_argument_error_test.cpp)
+target_link_libraries(cli_argument_error_test PRIVATE
+                      pnicore_shared
+                      Boost::unit_test_framework)
+target_compile_definitions(cli_argument_error_test
+                      PRIVATE
+              BOOST_TEST_DYN_LINK; BOOST_TEST_MODULE="testing CLI argument error exception")
+add_logging_test("Exceptions:cli_argument_error_test"
+                 cli_argument_error_test
+                 ${PROJECT_BINARY_DIR}/test/exceptions)
+
+#===============================================================================
+add_executable(cli_option_error_test 
+               cli_option_error_test.cpp)
+target_link_libraries(cli_option_error_test PRIVATE
+                      pnicore_shared
+                      Boost::unit_test_framework)
+target_compile_definitions(cli_option_error_test
+                      PRIVATE
+              BOOST_TEST_DYN_LINK; BOOST_TEST_MODULE="testing CLI option error exception")
+add_logging_test("Exceptions:cli_option_error_test"
+                 cli_option_error_test
+                 ${PROJECT_BINARY_DIR}/test/exceptions)
+
+#===============================================================================
+add_executable(cli_error_test 
+               cli_error_test.cpp)
+target_link_libraries(cli_error_test PRIVATE
+                      pnicore_shared
+                      Boost::unit_test_framework)
+target_compile_definitions(cli_error_test
+                      PRIVATE
+          BOOST_TEST_DYN_LINK; BOOST_TEST_MODULE="testing general CLI error exception")
+add_logging_test("Exceptions:cli_error_test"
+                 cli_error_test
+                 ${PROJECT_BINARY_DIR}/test/exceptions)
+
+#===============================================================================
+add_executable(cli_help_request_test 
+               cli_help_request_test.cpp)
+target_link_libraries(cli_help_request_test PRIVATE
+                      pnicore_shared
+                      Boost::unit_test_framework)
+target_compile_definitions(cli_help_request_test
+                      PRIVATE
+          BOOST_TEST_DYN_LINK; BOOST_TEST_MODULE="testing CLI help request exception")
+add_logging_test("Exceptions:cli_help_request_test"
+                 cli_help_request_test
+                 ${PROJECT_BINARY_DIR}/test/exceptions)

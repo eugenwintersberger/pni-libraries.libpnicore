@@ -842,7 +842,7 @@ EXCEPTION_FORWARD(MemoryNotAllocatedError)
             //! \param d description
             //!
             cli_error(const exception_record &r,const string &d):
-                exception("cli_eror",r,d)
+                exception("cli_error",r,d)
             {}
 
             //------------------------------------------------------------------
