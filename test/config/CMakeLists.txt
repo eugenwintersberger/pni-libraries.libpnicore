@@ -9,8 +9,3 @@ configure_file(pni.cfg.cmake pni.cfg)
 
 add_logging_test("config_test" config_test ${PROJECT_BINARY_DIR}/test/config)
          
-if(CMAKE_HOST_SYSTEM_NAME MATCHES Windows)
-    set_property(TEST config_test APPEND PROPERTY
-                 ENVIRONMENT "PATH=${PATH_STRING}")
-endif()
-    

@@ -13,8 +13,3 @@ target_link_libraries(error_test pnicore_shared Boost::unit_test_framework)
                                  
 add_logging_test("error_test" error_test ${PROJECT_BINARY_DIR}/test/error)
          
-if(CMAKE_HOST_SYSTEM_NAME MATCHES Windows)
-    set_property(TEST error_test APPEND PROPERTY
-                 ENVIRONMENT "PATH=${PATH_STRING}")
-endif()
-

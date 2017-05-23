@@ -11,10 +11,3 @@ target_link_libraries(value_ref_test pnicore_shared Boost::unit_test_framework)
 add_logging_test("type_erasure_test:value_ref" value_ref_test 
                  ${PROJECT_BINARY_DIR}/test/type_erasures/value_ref)    
          
-if(CMAKE_HOST_SYSTEM_NAME MATCHES Windows)
-    set_property(TEST "type_erasure_test:value_ref" APPEND PROPERTY
-                 ENVIRONMENT "PATH=${PATH_STRING}")
-endif()
-    
-
-

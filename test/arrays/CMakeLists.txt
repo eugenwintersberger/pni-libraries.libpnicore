@@ -23,12 +23,3 @@ add_logging_test("arrays_test"
                  arrays_test 
                  ${PROJECT_BINARY_DIR}/test/arrays)
          
-if(CMAKE_HOST_SYSTEM_NAME MATCHES Windows)
-    set_property(TEST "arrays_test" APPEND PROPERTY 
-                 ENVIRONMENT "PATH=${PATH_STRING}")
-endif()
-    
-
-
-
-

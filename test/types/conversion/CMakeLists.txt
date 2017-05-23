@@ -28,9 +28,3 @@ target_link_libraries(conversion_test pnicore_shared Boost::unit_test_framework)
 add_logging_test("types:conversion_test" conversion_test 
                  ${PROJECT_BINARY_DIR}/test/types/conversion)
          
-if(CMAKE_HOST_SYSTEM_NAME MATCHES Windows)
-    set_property(TEST "types:conversion_test" APPEND PROPERTY
-                 ENVIRONMENT "PATH=${PATH_STRING}")
-endif()
-    
-

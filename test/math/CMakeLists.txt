@@ -21,8 +21,3 @@ target_link_libraries(random_ranges pnicore_shared)
 
 add_logging_test("math_test" math_test ${PROJECT_BINARY_DIR}/test/math)
          
-if(CMAKE_HOST_SYSTEM_NAME MATCHES Windows)
-    set_property(TEST math_test APPEND PROPERTY
-                 ENVIRONMENT "PATH=${PATH_STRING}")
-endif()
-    
