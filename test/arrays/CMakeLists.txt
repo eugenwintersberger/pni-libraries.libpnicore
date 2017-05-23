@@ -19,12 +19,12 @@ set_shared_test_defs(SOURCES "Testing array functions")
 add_executable(arrays_test ${SOURCES} $<TARGET_OBJECTS:test_common>)
 target_link_libraries(arrays_test pnicore_shared Boost::unit_test_framework)
 
-add_logging_test("array_test" 
-                 array_test 
+add_logging_test("arrays_test" 
+                 arrays_test 
                  ${PROJECT_BINARY_DIR}/test/arrays)
          
 if(CMAKE_HOST_SYSTEM_NAME MATCHES Windows)
-    set_property(TEST arrays_test APPEND PROPERTY 
+    set_property(TEST "arrays_test" APPEND PROPERTY 
                  ENVIRONMENT "PATH=${PATH_STRING}")
 endif()
     
