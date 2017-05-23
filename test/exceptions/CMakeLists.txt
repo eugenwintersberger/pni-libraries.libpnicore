@@ -46,3 +46,29 @@ target_compile_definitions(memory_not_allocated_error_test
 add_logging_test("Exceptions:memory_not_allocated_error"
                  memory_not_allocated_error_test
                  ${PROJECT_BINARY_DIR}/test/exceptions)
+
+#===============================================================================
+add_executable(shape_mismatch_error_test 
+               shape_mismatch_error_test.cpp)
+target_link_libraries(shape_mismatch_error_test PRIVATE
+                      pnicore_shared
+                      Boost::unit_test_framework)
+target_compile_definitions(shape_mismatch_error_test
+                      PRIVATE
+     BOOST_TEST_DYN_LINK; BOOST_TEST_MODULE="testing shape mismatch exception")
+add_logging_test("Exceptions:shape_mismatch_error"
+                 shape_mismatch_error_test
+                 ${PROJECT_BINARY_DIR}/test/exceptions)
+
+#===============================================================================
+add_executable(size_mismatch_error_test 
+               size_mismatch_error_test.cpp)
+target_link_libraries(size_mismatch_error_test PRIVATE
+                      pnicore_shared
+                      Boost::unit_test_framework)
+target_compile_definitions(size_mismatch_error_test
+                      PRIVATE
+     BOOST_TEST_DYN_LINK; BOOST_TEST_MODULE="testing size mismatch exception")
+add_logging_test("Exceptions:size_mismatch_error"
+                 size_mismatch_error_test
+                 ${PROJECT_BINARY_DIR}/test/exceptions)
