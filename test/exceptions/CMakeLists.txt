@@ -11,6 +11,7 @@ add_test(NAME "Exceptions:exception_record_test"
          WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/test/exceptions)
 
 
+
 add_executable(exception_test exception_test.cpp)
 target_link_libraries(exception_test pnicore_shared
                       Boost::unit_test_framework)
@@ -27,4 +28,10 @@ set(CLEAN_FILES exception_test.log.xml exception_test.report.xml
                 exception_record_test.log.xml exception_record_test.report.xml)
 set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES
     "${CLEAN_FILES}")
-         
+
+if(CMAKE_HOST_SYSTEM_NAME MATCHES Windows)
+    set_property(TEST "Exceptions:exception_test" APPEND PROPERTY
+        ENVIRONMENT "PATH=${PATH_STRING}")
+    set_property(TEST "Exceptions:exception_record_test" APPEND PROPERTY
+        ENVIRONMENT "PATH=${PATH_STRING}")
+endif()
