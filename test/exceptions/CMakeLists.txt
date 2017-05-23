@@ -21,6 +21,7 @@ add_logging_test("Exceptions:exception_test"
                  ${PROJECT_BINARY_DIR}/test/exceptions)
 
 
+#===============================================================================
 add_executable(memory_allocation_error_test 
                memory_allocation_error_test.cpp)
 target_link_libraries(memory_allocation_error_test PRIVATE
@@ -28,7 +29,20 @@ target_link_libraries(memory_allocation_error_test PRIVATE
                       Boost::unit_test_framework)
 target_compile_definitions(memory_allocation_error_test
                       PRIVATE
-     BOOST_TEST_DYN_LINK; BOOST_TEST_MODULE="testing memory error exception")
+     BOOST_TEST_DYN_LINK; BOOST_TEST_MODULE="testing memory allocation error exception")
 add_logging_test("Exceptions:memory_allocation_error"
                  memory_allocation_error_test
+                 ${PROJECT_BINARY_DIR}/test/exceptions)
+
+#===============================================================================
+add_executable(memory_not_allocated_error_test 
+               memory_not_allocated_error_test.cpp)
+target_link_libraries(memory_not_allocated_error_test PRIVATE
+                      pnicore_shared
+                      Boost::unit_test_framework)
+target_compile_definitions(memory_not_allocated_error_test
+                      PRIVATE
+     BOOST_TEST_DYN_LINK; BOOST_TEST_MODULE="testing memory not allocated exception")
+add_logging_test("Exceptions:memory_not_allocated_error"
+                 memory_not_allocated_error_test
                  ${PROJECT_BINARY_DIR}/test/exceptions)
