@@ -12,10 +12,8 @@ add_executable(utils_test ${SOURCES} $<TARGET_OBJECTS:test_common>)
 target_link_libraries(utils_test pnicore_shared Boost::unit_test_framework)
 
 
-add_test(NAME utils_test 
-         COMMAND utils_test
-         WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/test
-         )
+add_logging_test("utils_test" utils_test 
+                 ${PROJECT_BINARY_DIR}/test/utils_test)
          
 if(CMAKE_HOST_SYSTEM_NAME MATCHES Windows)
     set_property(TEST utils_test APPEND PROPERTY

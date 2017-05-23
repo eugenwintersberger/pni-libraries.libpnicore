@@ -11,12 +11,7 @@ set_shared_test_defs(SOURCES "testing error functions")
 add_executable(error_test ${SOURCES} $<TARGET_OBJECTS:test_common>)
 target_link_libraries(error_test pnicore_shared Boost::unit_test_framework)
                                  
-
-
-add_test(NAME error_test 
-         COMMAND error_test
-         WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/test
-         )    
+add_logging_test("error_test" error_test ${PROJECT_BINARY_DIR}/test/error)
          
 if(CMAKE_HOST_SYSTEM_NAME MATCHES Windows)
     set_property(TEST error_test APPEND PROPERTY

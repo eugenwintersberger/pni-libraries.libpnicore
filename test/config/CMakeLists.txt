@@ -7,10 +7,7 @@ target_link_libraries(config_test pnicore_shared Boost::unit_test_framework)
 
 configure_file(pni.cfg.cmake pni.cfg)
 
-add_test(NAME config_test 
-         COMMAND config_test
-         WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/test
-         )
+add_logging_test("config_test" config_test ${PROJECT_BINARY_DIR}/test/config)
          
 if(CMAKE_HOST_SYSTEM_NAME MATCHES Windows)
     set_property(TEST config_test APPEND PROPERTY

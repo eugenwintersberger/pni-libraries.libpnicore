@@ -19,10 +19,7 @@ target_link_libraries(math_test pnicore_shared Boost::unit_test_framework)
 
 target_link_libraries(random_ranges pnicore_shared)
 
-add_test(NAME math_test 
-         COMMAND math_test
-         WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/test
-         )
+add_logging_test("math_test" math_test ${PROJECT_BINARY_DIR}/test/math)
          
 if(CMAKE_HOST_SYSTEM_NAME MATCHES Windows)
     set_property(TEST math_test APPEND PROPERTY

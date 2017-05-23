@@ -64,7 +64,7 @@ BOOST_AUTO_TEST_CASE(test_configfile)
 {
     std::cout<<BOOST_CURRENT_FUNCTION<<std::endl;
 
-    parse(config_file,"config/pni.cfg");
+    parse(config_file,"pni.cfg");
     BOOST_CHECK_EQUAL((config_file.value<size_t>("pnicore.nthreads")),4u);
 
     configuration c = std::move(config_file);

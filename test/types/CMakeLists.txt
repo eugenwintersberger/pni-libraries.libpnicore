@@ -23,10 +23,7 @@ target_link_libraries(show_type_info pnicore_shared)
 add_subdirectory(conversion)
 add_subdirectory(traits)
 
-add_test(NAME type_test 
-         COMMAND type_test
-         WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/test
-         )    
+add_logging_test("type_test" type_test ${PROJECT_BINARY_DIR}/test/types)
          
 if(CMAKE_HOST_SYSTEM_NAME MATCHES Windows)
     set_property(TEST type_test APPEND PROPERTY

@@ -19,10 +19,8 @@ set_shared_test_defs(SOURCES "testing type traits")
 add_executable(traits_test ${SOURCES})
 target_link_libraries(traits_test pnicore_shared Boost::unit_test_framework)
 
-add_test(NAME "types:traits_test" 
-         COMMAND traits_test
-         WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/test
-         )
+add_logging_test("types:traits_test" traits_test 
+                 ${PROJECT_BINARY_DIR}/test/types/traits)
          
 if(CMAKE_HOST_SYSTEM_NAME MATCHES Windows)
     set_property(TEST "types:traits_test" APPEND PROPERTY

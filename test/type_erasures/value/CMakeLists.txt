@@ -27,10 +27,8 @@ add_executable(value_test ${SOURCES} $<TARGET_OBJECTS:test_common>)
 target_link_libraries(value_test pnicore_shared Boost::unit_test_framework)
 
 
-add_test(NAME "type_erasure_test:value"
-         COMMAND value_test
-         WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/test
-         )
+add_logging_test("type_erasure_test:value" value_test
+                 ${PROJECT_BINARY_DIR}/test/type_erasures/value)
          
 if(CMAKE_HOST_SYSTEM_NAME MATCHES Windows)
     set_property(TEST "type_erasure_test:value" APPEND PROPERTY

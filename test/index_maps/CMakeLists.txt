@@ -12,10 +12,7 @@ set_source_files_properties(index_map_tests.cpp PROPERTIES
 add_executable(index_maps_test ${SOURCES})
 target_link_libraries(index_maps_test pnicore_shared Boost::unit_test_framework)
 
-add_test(NAME index_maps_test 
-         COMMAND index_maps_test
-         WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/test
-         )
+add_logging_test("index_maps_test" index_maps_test ${PROJECT_BINARY_DIR}/test/index_maps)
 
 if(CMAKE_HOST_SYSTEM_NAME MATCHES Windows)
     set_property(TEST index_maps_test APPEND PROPERTY
