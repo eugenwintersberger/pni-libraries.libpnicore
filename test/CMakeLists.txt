@@ -16,6 +16,16 @@ macro(set_shared_test_defs source_list mod_description)
 endmacro()
 
 #
+# need to setup the PATH environment on Windows - this is important 
+# otherwise the tests will not run since they would not be able to find teh 
+# appropriate libraries
+#
+if(CMAKE_HOST_SYSTEM_NAME MATCHES Windows)
+    set(PATH_STRING "$ENV{PATH};$<TARGET_FILE_DIR:pnicore_shared>;${Boost_LIBRARY_DIRS}")
+    string(REPLACE ";" "\\;" PATH_STRING "${PATH_STRING}")
+endif()
+
+#
 # set the path where all the test reports and logs will be stored
 #
 set(TEST_LOG_PATH ${PROJECT_BINARY_DIR}/test/logs)
@@ -58,21 +68,12 @@ macro (add_logging_test test_name test_target working_dir)
 
     #finally we have to setup the path on Windows systems in order to run 
     #the tests
-    if(CMAKE_HOST_SYTEM_NAME MATCHES Windows)
-        set_property(TEST ${test_name} APPEND PROPERTY
+    if(CMAKE_HOST_SYSTEM_NAME MATCHES Windows)
+        set_property(TEST "${test_name}" APPEND PROPERTY
             ENVIRONMENT "PATH=${PATH_STRING}")
     endif()
 endmacro()
 
-#
-# need to setup the PATH environment on Windows - this is important 
-# otherwise the tests will not run since they would not be able to find teh 
-# appropriate libraries
-#
-if(CMAKE_HOST_SYSTEM_NAME MATCHES Windows)
-    set(PATH_STRING "$ENV{PATH};$<TARGET_FILE_DIR:pnicore_shared>;${Boost_LIBRARY_DIRS}")
-    string(REPLACE ";" "\\;" PATH_STRING "${PATH_STRING}")
-endif()
 
 #
 # build test program for the random number generator
