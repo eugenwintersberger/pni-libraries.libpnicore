@@ -55,6 +55,13 @@ macro (add_logging_test test_name test_target working_dir)
     #in all cases we have to remove the log and report files
     set_property(DIRECTORY APPEND PROPERTY ADDITIONAL_MAKE_CLEAN_FILES
     ${TEST_LOG_FILE} ${TEST_REPORT_FILE})
+
+    #finally we have to setup the path on Windows systems in order to run 
+    #the tests
+    if(CMAKE_HOST_SYTEM_NAME MATCHES Windows)
+        set_property(TEST ${test_name} APPEND PROPERTY
+            ENVIRONMENT "PATH=${PATH_STRING}")
+    endif()
 endmacro()
 
 #

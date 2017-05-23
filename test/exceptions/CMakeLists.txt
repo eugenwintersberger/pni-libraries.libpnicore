@@ -20,9 +20,15 @@ add_logging_test("Exceptions:exception_test"
                  exception_test
                  ${PROJECT_BINARY_DIR}/test/exceptions)
 
-if(CMAKE_HOST_SYSTEM_NAME MATCHES Windows)
-    set_property(TEST "Exceptions:exception_test" APPEND PROPERTY
-        ENVIRONMENT "PATH=${PATH_STRING}")
-    set_property(TEST "Exceptions:exception_record_test" APPEND PROPERTY
-        ENVIRONMENT "PATH=${PATH_STRING}")
-endif()
+
+add_executable(memory_allocation_error_test 
+               memory_allocation_error_test.cpp)
+target_link_libraries(memory_allocation_error_test PRIVATE
+                      pnicore_shared
+                      Boost::unit_test_framework)
+target_compile_definitions(memory_allocation_error_test
+                      PRIVATE
+     BOOST_TEST_DYN_LINK; BOOST_TEST_MODULE="testing memory error exception")
+add_logging_test("Exceptions:memory_allocation_error"
+                 memory_allocation_error_test
+                 ${PROJECT_BINARY_DIR}/test/exceptions)
