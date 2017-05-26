@@ -6,19 +6,30 @@ project(pnicore
 include(CTest)             # - activate testing
 set(CMAKE_CXX_STANDARD 11) # - we need C++11 for the entire code
 
+set(PNICORE_DETAILED_PREFIX OFF CACHE BOOL "For developers only - set full install prefix")
+if(PNICORE_DETAILED_PREFIX)
+  set(ARCH_PATH "${CMAKE_SYSTEM_PROCESSOR}-${CMAKE_SYSTEM_NAME}")
 
+  if(CMAKE_CXX_COMPILER_ID MATCHES GNU)
+    set(COMPILER_PATH "gcc-${CMAKE_CXX_COMPILER_VERSION}")
+  endif()
+
+  if(CMAKE_INSTALL_PREFIX)
+    set(CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}/${ARCH_PATH}/${COMPILER_PATH}/${CMAKE_BUILD_TYPE}")
+  endif()
+endif()
 
 #
-#as libpnicore is in most part a template library and should thus be 
-#treated like a static library. In most cases all code using 
+#as libpnicore is in most part a template library and should thus be
+#treated like a static library. In most cases all code using
 #libpnicore has to be rebuilt if something in the headers is changed.
-#we thus set the SO version to the package version. This is also 
+#we thus set the SO version to the package version. This is also
 #the way the boost libraries are packaged.
 #
 set(pnicore_SO_VERSION ${pnicore_VERSION})
 
 #
-# for windows we need two additional components 
+# for windows we need two additional components
 # - we have to build an MSI package for installation
 # - we need to add a package configuration file so that the library
 #   can be found with the find_package command
@@ -45,14 +56,14 @@ add_subdirectory("cmake")
 # Configuration for the package generator
 #-----------------------------------------------------------------------------
 if(CMAKE_CXX_COMPILER_ID MATCHES MSVC)
-    
+
 
     set(CPACK_GENERATOR WIX)
     set(CPACK_PACKAGE_VENDOR "DESY")
     set(CPACK_PACKAGE_VERSION_MAJOR "1")
     set(CPACK_PACKAGE_VERSION_MINOR "0")
     set(CPACK_PACKAGE_VERSION_PATCH "0")
-    
+
 
     set(CPACK_WIX_PRODUCT_ICON "resources/icon.ico")
     set(CPACK_WIX_UI_BANNER "resources/banner.bmp")

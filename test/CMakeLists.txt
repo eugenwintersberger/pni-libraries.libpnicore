@@ -1,6 +1,6 @@
 #
 #build some commonly used code
-# 
+#
 set(COMMON_SOURCES compare.cpp data_generator.cpp)
 add_library(test_common EXCLUDE_FROM_ALL OBJECT ${COMMON_SOURCES})
 target_include_directories(test_common PRIVATE ${Boost_INCLUDE_DIRS} ${PROJECT_SOURCE_DIR}/include)
@@ -38,11 +38,8 @@ macro (add_logging_test test_name test_target working_dir)
     set(TEST_LOG_FILE ${TEST_LOG_PATH}/${test_target}.log.xml)
     set(TEST_REPORT_FILE ${TEST_REPORT_PATH}/${test_target}.report.xml)
 
-    message(STATUS "log file: ${TEST_LOG_FILE}")
-    message(STATUS "report file: ${TEST_REPORT_FILE}")
-
     #we need to create separate options configurations depending on the Boost
-    #version installed 
+    #version installed
     if(Boost_VERSION EQUAL 106200)
         message(STATUS "Setting up test for Boost Unit test version 1.6.2")
         set(LOG_OPTIONS --logger=XML,all,${TEST_LOG_FILE})
@@ -58,7 +55,7 @@ macro (add_logging_test test_name test_target working_dir)
             list(APPEND LOG_OPTIONS "--report_format=XML")
         endif()
     endif()
-   
+
     add_test(NAME "${test_name}"
              COMMAND ${test_target} ${LOG_OPTIONS} ${REPORT_OPTIONS}
              WORKING_DIRECTORY ${working_dir})
@@ -66,14 +63,13 @@ macro (add_logging_test test_name test_target working_dir)
     set_property(DIRECTORY APPEND PROPERTY ADDITIONAL_MAKE_CLEAN_FILES
     ${TEST_LOG_FILE} ${TEST_REPORT_FILE})
 
-    #finally we have to setup the path on Windows systems in order to run 
+    #finally we have to setup the path on Windows systems in order to run
     #the tests
     if(CMAKE_HOST_SYSTEM_NAME MATCHES Windows)
         set_property(TEST "${test_name}" APPEND PROPERTY
             ENVIRONMENT "PATH=${PATH_STRING}")
     endif()
 endmacro()
-
 
 #
 # build test program for the random number generator
@@ -100,4 +96,3 @@ add_subdirectory(math)
 add_subdirectory(error)
 add_subdirectory(exceptions)
 add_subdirectory(logs)
-
