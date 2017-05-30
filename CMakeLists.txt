@@ -6,19 +6,41 @@ project(pnicore
 include(CTest)             # - activate testing
 set(CMAKE_CXX_STANDARD 11) # - we need C++11 for the entire code
 
-set(PNICORE_DETAILED_PREFIX OFF CACHE BOOL "For developers only - set full install prefix")
-if(PNICORE_DETAILED_PREFIX)
-  set(ARCH_PATH "${CMAKE_SYSTEM_PROCESSOR}-${CMAKE_SYSTEM_NAME}")
+#
+# on Linux systems we always have to ensure that a build type is given at 
+# configuration time.
+#
+if(CMAKE_SYSTEM_NAME MATCHES Linux)
+    if(NOT CMAKE_BUILD_TYPE)
+        set(CMAKE_BUILD_TYPE Release)
+    endif()
+endif()
 
-  if(CMAKE_CXX_COMPILER_ID MATCHES GNU)
-    set(COMPILER_PATH "gcc-${CMAKE_CXX_COMPILER_VERSION}")
-  elseif(CMAKE_CXX_COMPILER_ID MATCHES MSVC)
-      set(COMPILER_PATH "msvc-${CMAKE_CXX_COMPILER_VERSION}")
-  endif()
 
-  if(CMAKE_INSTALL_PREFIX)
-    set(CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}/${ARCH_PATH}/${COMPILER_PATH}/$<CONFIG>")
-  endif()
+#
+# we fetch the dependencies from conan for the build
+#
+set(PNICORE_CONAN_DEPS OFF CACHE BOOL "Installing depdencies from Conan")
+
+if(PNICORE_CONAN_DEPS)
+
+    find_program(CONAN conan)
+    if(CONAN MATCHES "CONAN-NONFOUND")
+        message(FATAL_ERROR "Could not find conan executable to install dependencies")
+    endif()
+
+    if(NOT EXISTS ${PROJECT_BINARY_DIR}/conan.cmake)
+        message(STATUS "Downloading conan.cmake file from github")
+        file(DOWNLOAD "https://raw.githubusercontent.com/conan-io/cmake-conan/master/conan.cmake"
+             ${PROJECT_BINARY_DIR}/conan.cmake)
+    endif()
+
+    include(${PROJECT_BINARY_DIR}/conan.cmake)
+
+    conan_cmake_run(REQUIRES "Boost/1.64.0@wintersb/stable"
+                    BASIC_SETUP
+                    BUILD missing)
+
 endif()
 
 #
