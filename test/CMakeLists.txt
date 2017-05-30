@@ -21,7 +21,9 @@ endmacro()
 # appropriate libraries
 #
 if(CMAKE_HOST_SYSTEM_NAME MATCHES Windows)
-    set(PATH_STRING "$ENV{PATH};$<TARGET_FILE_DIR:pnicore_shared>;${Boost_LIBRARY_DIRS}")
+    get_filename_component(Boost_ROOT_PATH ${Boost_LIBRARY_DIRS} DIRECTORY)
+    set(PATH_STRING
+        "$ENV{PATH};$<TARGET_FILE_DIR:pnicore_shared>;${Boost_ROOT_PATH}/bin;${Boost_ROOT_PATH}/lib")
     string(REPLACE ";" "\\;" PATH_STRING "${PATH_STRING}")
 endif()
 
@@ -82,6 +84,18 @@ target_link_libraries(rand_test PRIVATE pnicore_shared)
 #
 add_executable(rand_gen rand_gen.cpp)
 target_link_libraries(rand_gen pnicore_shared)
+
+#
+# build the environment test program
+#
+add_executable(environment_test environment_test.cpp)
+add_test(NAME "Environment:test"
+         COMMAND environment_test
+         WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/test)
+if(CMAKE_HOST_SYSTEM_NAME MATCHES Windows)
+    set_property(TEST "Environment:test" APPEND PROPERTY
+        ENVIRONMENT "PATH=${PATH_STRING}")
+endif()
 
 #
 # build all the other tests

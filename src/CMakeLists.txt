@@ -25,8 +25,8 @@ add_library(pnicore_shared SHARED
                            $<TARGET_OBJECTS:type_erasure_objects>
                            $<TARGET_OBJECTS:misc_objects>)
 
-target_link_libraries(pnicore_shared INTERFACE Boost::program_options
-                                               Boost::system)
+target_link_libraries(pnicore_shared PUBLIC Boost::program_options Boost::system)
+
 target_compile_definitions(pnicore_shared PUBLIC BOOST_ALL_DYN_LINK)
 
 
