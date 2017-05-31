@@ -7,22 +7,25 @@ include(CTest)             # - activate testing
 set(CMAKE_CXX_STANDARD 11) # - we need C++11 for the entire code
 
 #
-# on Linux systems we always have to ensure that a build type is given at 
-# configuration time.
+# We always have to ensure that a build type is given at 
+# configuration time. We can ignore this on Windows but it is required 
+# on Linux.
 #
-if(CMAKE_SYSTEM_NAME MATCHES Linux)
-    if(NOT CMAKE_BUILD_TYPE)
-        set(CMAKE_BUILD_TYPE Release)
-    endif()
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Release)
 endif()
 
 
 #
-# we fetch the dependencies from conan for the build
+# on Windows we try to fetch Boost by default from Conan
 #
-set(PNICORE_CONAN_DEPS OFF CACHE BOOL "Installing depdencies from Conan")
+if(CMAKE_HOST_SYSTEM_NAME MATCHES Windows)
+    set(PNICORE_CONAN_BOOST ON CACHE BOOL "Installing depdencies from Conan")
+else()
+    set(PNICORE_CONAN_BOOST OFF CACHE BOOL "Installing depdencies from Conan")
+endif()
 
-if(PNICORE_CONAN_DEPS)
+if(PNICORE_CONAN_BOOST)
 
     find_program(CONAN conan)
     if(CONAN MATCHES "CONAN-NONFOUND")
