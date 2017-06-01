@@ -16,8 +16,8 @@ macro(set_shared_test_defs source_list mod_description)
 endmacro()
 
 #
-# need to setup the PATH environment on Windows - this is important 
-# otherwise the tests will not run since they would not be able to find teh 
+# need to setup the PATH environment on Windows - this is important
+# otherwise the tests will not run since they would not be able to find teh
 # appropriate libraries
 #
 if(CMAKE_HOST_SYSTEM_NAME MATCHES Windows)
@@ -43,9 +43,10 @@ macro (add_logging_test test_name test_target working_dir)
     #we need to create separate options configurations depending on the Boost
     #version installed
     if(Boost_VERSION EQUAL 106200)
-        message(STATUS "Setting up test for Boost Unit test version 1.6.2")
+        message(STATUS "Setting up test for Boost Unit test version 1.62")
+        message(STATUS " .. Due to a bug in 1.62 there will be no reporting but only logs")
         set(LOG_OPTIONS --logger=XML,all,${TEST_LOG_FILE})
-        set(REPORT_OPTIONS --report_level=detailed --report_format=XML --report_sink=${TEST_REPORT_FILE})
+        #set(REPORT_OPTIONS --report_level=detailed --report_format=XML --report_sink=${TEST_REPORT_FILE})
     else()
         set(LOG_OPTIONS --log_level=all --log_sink=${TEST_LOG_FILE})
         set(REPORT_OPTIONS --report_level=detailed --report_sink=${TEST_REPORT_FILE})

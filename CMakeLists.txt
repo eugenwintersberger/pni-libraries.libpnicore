@@ -7,8 +7,8 @@ include(CTest)             # - activate testing
 set(CMAKE_CXX_STANDARD 11) # - we need C++11 for the entire code
 
 #
-# We always have to ensure that a build type is given at 
-# configuration time. We can ignore this on Windows but it is required 
+# We always have to ensure that a build type is given at
+# configuration time. We can ignore this on Windows but it is required
 # on Linux.
 #
 if(NOT CMAKE_BUILD_TYPE)
@@ -40,8 +40,9 @@ if(PNICORE_CONAN_BOOST)
 
     include(${PROJECT_BINARY_DIR}/conan.cmake)
 
-    conan_cmake_run(REQUIRES "Boost/1.64.0@wintersb/stable"
+    conan_cmake_run(REQUIRES "Boost/1.62.0@lasote/stable"
                     BASIC_SETUP
+                    OPTIONS "Boost:shared=True"
                     BUILD missing)
 
 endif()
