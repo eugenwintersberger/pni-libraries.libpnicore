@@ -6,19 +6,21 @@ project(pnicore
 include(CTest)             # - activate testing
 set(CMAKE_CXX_STANDARD 11) # - we need C++11 for the entire code
 
-#
+# =============================================================================
 # We always have to ensure that a build type is given at
 # configuration time. We can ignore this on Windows but it is required
 # on Linux.
-#
-if(NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE Release)
+# =============================================================================
+if(CMAKE_HOST_SYSTEM_NAME MATCHES Linux)
+    if(NOT CMAKE_BUILD_TYPE)
+        set(CMAKE_BUILD_TYPE Release STRING CACHE "Build type")
+    endif()
 endif()
 
 
-#
+# =============================================================================
 # on Windows we try to fetch Boost by default from Conan
-#
+# =============================================================================
 if(CMAKE_HOST_SYSTEM_NAME MATCHES Windows)
     set(PNICORE_CONAN_BOOST ON CACHE BOOL "Installing depdencies from Conan")
 else()
@@ -43,6 +45,7 @@ if(PNICORE_CONAN_BOOST)
     conan_cmake_run(REQUIRES "Boost/1.62.0@lasote/stable"
                     BASIC_SETUP
                     OPTIONS "Boost:shared=True"
+                    IMPORT "bin, *.dll -> bin"
                     BUILD missing)
 
 endif()
@@ -88,9 +91,9 @@ if(CMAKE_CXX_COMPILER_ID MATCHES MSVC)
 
     set(CPACK_GENERATOR WIX)
     set(CPACK_PACKAGE_VENDOR "DESY")
-    set(CPACK_PACKAGE_VERSION_MAJOR "1")
-    set(CPACK_PACKAGE_VERSION_MINOR "0")
-    set(CPACK_PACKAGE_VERSION_PATCH "0")
+    set(CPACK_PACKAGE_VERSION_MAJOR "${pnicore_VERSION_MAJOR}")
+    set(CPACK_PACKAGE_VERSION_MINOR "${pnicore_VERSION_MINOR}")
+    set(CPACK_PACKAGE_VERSION_PATCH "${pnicore_VERSION_PATCH}")
 
 
     set(CPACK_WIX_PRODUCT_ICON "resources/icon.ico")
