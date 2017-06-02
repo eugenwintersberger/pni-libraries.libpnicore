@@ -9,8 +9,9 @@ set(CMAKE_CXX_STANDARD 11) # - we need C++11 for the entire code
 #
 # On linux it is mandatory to provide a build type during configuration
 #
-if(CMAKE_SYSTEM_NAME MATCHES Linux AND NOT CMAKE_BUILD_TYPE)
-    message(FATAL_ERROR "On Linux a build type (CMAKE_BUILD_TYPE) must be provided during configuration")
+if(NOT CMAKE_BUILD_TYPE)
+    message(MESSAGE "We only support single configuration builds!")
+    message(FATAL_ERROR "CMAKE_BUILD_TYPE must be provided during configuration")
 endif()
 
 #
