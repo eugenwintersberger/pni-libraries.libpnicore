@@ -14,6 +14,11 @@ if(NOT CMAKE_BUILD_TYPE)
     message(FATAL_ERROR "CMAKE_BUILD_TYPE must be provided during configuration")
 endif()
 
+if(CMAKE_HOST_SYSTEM_NAME MATCHES Windows)
+    configure_file(make.bat.in make.bat @ONLY)
+    configure_file(test.bat.in test.bat @ONLY)
+endif()
+
 #
 #as libpnicore is in most part a template library and should thus be
 #treated like a static library. In most cases all code using
