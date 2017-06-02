@@ -6,6 +6,15 @@ project(pnicore
 include(CTest)             # - activate testing
 set(CMAKE_CXX_STANDARD 11) # - we need C++11 for the entire code
 
+#
+#as libpnicore is in most part a template library and should thus be
+#treated like a static library. In most cases all code using
+#libpnicore has to be rebuilt if something in the headers is changed.
+#we thus set the SO version to the package version. This is also
+#the way the boost libraries are packaged.
+#
+set(pnicore_SO_VERSION ${pnicore_VERSION})
+
 # =============================================================================
 # We always have to ensure that a build type is given at
 # configuration time. We can ignore this on Windows but it is required
@@ -13,7 +22,7 @@ set(CMAKE_CXX_STANDARD 11) # - we need C++11 for the entire code
 # =============================================================================
 if(CMAKE_HOST_SYSTEM_NAME MATCHES Linux)
     if(NOT CMAKE_BUILD_TYPE)
-        set(CMAKE_BUILD_TYPE Release STRING CACHE "Build type")
+        set(CMAKE_BUILD_TYPE Released CACHE STRING "Build type")
     endif()
 endif()
 
@@ -50,14 +59,7 @@ if(PNICORE_CONAN_BOOST)
 
 endif()
 
-#
-#as libpnicore is in most part a template library and should thus be
-#treated like a static library. In most cases all code using
-#libpnicore has to be rebuilt if something in the headers is changed.
-#we thus set the SO version to the package version. This is also
-#the way the boost libraries are packaged.
-#
-set(pnicore_SO_VERSION ${pnicore_VERSION})
+
 
 #
 # for windows we need two additional components
@@ -70,6 +72,15 @@ set(pnicore_SO_VERSION ${pnicore_VERSION})
 if(CMAKE_SYSTEM_NAME MATCHES Windows)
     include(CPackComponent)
 endif()
+
+# =============================================================================
+# setting up the output directory for library, archive and runtime targets
+#
+# This should be the same on all platforms just to avoid confusion
+# =============================================================================
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib)
+set(CMAKE_ARCHVIE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib)
 
 #======================do here some setup work=================================
 include(configure/CMakeLists.txt)

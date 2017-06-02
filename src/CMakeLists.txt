@@ -27,9 +27,6 @@ add_library(pnicore_shared SHARED
 
 target_link_libraries(pnicore_shared PUBLIC Boost::program_options Boost::system)
 
-#target_compile_definitions(pnicore_shared PUBLIC BOOST_ALL_DYN_LINK)
-
-
 #set private and public include directories
 target_include_directories(pnicore_shared
     PRIVATE ${PROJECT_SOURCE_DIR}/include
@@ -40,7 +37,7 @@ target_include_directories(pnicore_shared
 #set the package and SO version of the library
 set_target_properties(pnicore_shared PROPERTIES
                       VERSION "${PROJECT_VERSION}"
-                      SOVERSION "${SO_VERSION}"
+                      #SOVERSION "${pnicore_SO_VERSION}"
                       OUTPUT_NAME pnicore)
 
 
