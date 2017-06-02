@@ -15,17 +15,6 @@ macro(set_shared_test_defs source_list mod_description)
                                 COMPILE_DEFINITIONS "BOOST_TEST_DYN_LINK; BOOST_TEST_MODULE=${mod_description}")
 endmacro()
 
-#
-# need to setup the PATH environment on Windows - this is important
-# otherwise the tests will not run since they would not be able to find teh
-# appropriate libraries
-#
-if(CMAKE_HOST_SYSTEM_NAME MATCHES Windows)
-    get_filename_component(Boost_ROOT_PATH ${Boost_LIBRARY_DIRS} DIRECTORY)
-    set(PATH_STRING
-        "$ENV{PATH};$<TARGET_FILE_DIR:pnicore_shared>;${Boost_ROOT_PATH}/bin;${Boost_ROOT_PATH}/lib")
-    string(REPLACE ";" "\\;" PATH_STRING "${PATH_STRING}")
-endif()
 
 #
 # set the path where all the test reports and logs will be stored
@@ -68,12 +57,6 @@ macro (add_logging_test test_name test_target working_dir)
     set_property(DIRECTORY APPEND PROPERTY ADDITIONAL_MAKE_CLEAN_FILES
     ${TEST_LOG_FILE} ${TEST_REPORT_FILE})
 
-    #finally we have to setup the path on Windows systems in order to run
-    #the tests
-    if(CMAKE_HOST_SYSTEM_NAME MATCHES Windows)
-        set_property(TEST "${test_name}" APPEND PROPERTY
-            ENVIRONMENT "PATH=${PATH_STRING}")
-    endif()
 endmacro()
 
 #
@@ -95,10 +78,6 @@ add_executable(environment_test environment_test.cpp)
 add_test(NAME "Environment:test"
          COMMAND environment_test
          WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/test)
-if(CMAKE_HOST_SYSTEM_NAME MATCHES Windows)
-    set_property(TEST "Environment:test" APPEND PROPERTY
-        ENVIRONMENT "PATH=${PATH_STRING}")
-endif()
 
 #
 # build all the other tests
