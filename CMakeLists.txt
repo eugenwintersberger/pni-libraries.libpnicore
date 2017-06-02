@@ -7,6 +7,13 @@ include(CTest)             # - activate testing
 set(CMAKE_CXX_STANDARD 11) # - we need C++11 for the entire code
 
 #
+# On linux it is mandatory to provide a build type during configuration
+#
+if(CMAKE_SYSTEM_NAME MATCHES Linux AND NOT CMAKE_BUILD_TYPE)
+    message(FATAL_ERROR "On Linux a build type (CMAKE_BUILD_TYPE) must be provided during configuration")
+endif()
+
+#
 #as libpnicore is in most part a template library and should thus be
 #treated like a static library. In most cases all code using
 #libpnicore has to be rebuilt if something in the headers is changed.
@@ -14,17 +21,6 @@ set(CMAKE_CXX_STANDARD 11) # - we need C++11 for the entire code
 #the way the boost libraries are packaged.
 #
 set(pnicore_SO_VERSION ${pnicore_VERSION})
-
-# =============================================================================
-# We always have to ensure that a build type is given at
-# configuration time. We can ignore this on Windows but it is required
-# on Linux.
-# =============================================================================
-if(CMAKE_HOST_SYSTEM_NAME MATCHES Linux)
-    if(NOT CMAKE_BUILD_TYPE)
-        set(CMAKE_BUILD_TYPE Released CACHE STRING "Build type")
-    endif()
-endif()
 
 
 # =============================================================================
@@ -54,7 +50,7 @@ if(PNICORE_CONAN_BOOST)
     conan_cmake_run(REQUIRES "Boost/1.62.0@lasote/stable"
                     BASIC_SETUP
                     OPTIONS "Boost:shared=True"
-                    IMPORT "bin, *.dll -> bin"
+                    IMPORTS "bin, *.dll -> bin"
                     BUILD missing)
 
 endif()
