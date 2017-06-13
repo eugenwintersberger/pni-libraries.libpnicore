@@ -6,18 +6,16 @@ project(pnicore
 include(CTest)             # - activate testing
 set(CMAKE_CXX_STANDARD 11) # - we need C++11 for the entire code
 
-#
-# On linux it is mandatory to provide a build type during configuration
-#
-if(NOT CMAKE_BUILD_TYPE)
-    message(MESSAGE "We only support single configuration builds!")
-    message(FATAL_ERROR "CMAKE_BUILD_TYPE must be provided during configuration")
-endif()
+include(cmake/common/InstallConfig.cmake)   #setup the install paths
+include(cmake/common/OutputDirConfig.cmake) #setting up output directories for
+                                            #the build
+include(cmake/common/PackageConfig.cmake)   #create some basic variables for
+                                            #cmake packages
 
-if(CMAKE_HOST_SYSTEM_NAME MATCHES Windows)
-    configure_file(make.bat.in make.bat @ONLY)
-    configure_file(test.bat.in test.bat @ONLY)
-endif()
+include(cmake/common/EnsureBuildType.cmake)
+include(cmake/common/WindowsUtils.cmake)
+
+
 
 #
 #as libpnicore is in most part a template library and should thus be
@@ -32,26 +30,17 @@ set(pnicore_SO_VERSION ${pnicore_VERSION})
 # =============================================================================
 # on Windows we try to fetch Boost by default from Conan
 # =============================================================================
-if(CMAKE_HOST_SYSTEM_NAME MATCHES Windows)
-    set(PNICORE_CONAN_BOOST ON CACHE BOOL "Installing depdencies from Conan")
-else()
-    set(PNICORE_CONAN_BOOST OFF CACHE BOOL "Installing depdencies from Conan")
+if(NOT CONAN_BOOST)
+    if(CMAKE_HOST_SYSTEM_NAME MATCHES Windows)
+        set(CONAN_BOOST ON CACHE BOOL "Installing depdencies from Conan")
+    else()
+        set(CONAN_BOOST OFF CACHE BOOL "Installing depdencies from Conan")
+    endif()
 endif()
 
-if(PNICORE_CONAN_BOOST)
+if(CONAN_BOOST)
 
-    find_program(CONAN conan)
-    if(CONAN MATCHES "CONAN-NONFOUND")
-        message(FATAL_ERROR "Could not find conan executable to install dependencies")
-    endif()
-
-    if(NOT EXISTS ${PROJECT_BINARY_DIR}/conan.cmake)
-        message(STATUS "Downloading conan.cmake file from github")
-        file(DOWNLOAD "https://raw.githubusercontent.com/conan-io/cmake-conan/master/conan.cmake"
-             ${PROJECT_BINARY_DIR}/conan.cmake)
-    endif()
-
-    include(${PROJECT_BINARY_DIR}/conan.cmake)
+    include(cmake/common/ConanSetup.cmake)
 
     conan_cmake_run(REQUIRES "Boost/1.62.0@lasote/stable"
                     BASIC_SETUP
@@ -75,16 +64,10 @@ if(CMAKE_SYSTEM_NAME MATCHES Windows)
     include(CPackComponent)
 endif()
 
-# =============================================================================
-# setting up the output directory for library, archive and runtime targets
-#
-# This should be the same on all platforms just to avoid confusion
-# =============================================================================
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib)
-set(CMAKE_ARCHVIE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib)
+
 
 #======================do here some setup work=================================
+include(cmake/CMakeLists.txt)
 include(configure/CMakeLists.txt)
 
 
