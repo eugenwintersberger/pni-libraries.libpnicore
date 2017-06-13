@@ -9,17 +9,16 @@ set(SOURCES scalar_test.cpp
             mdarray_test.cpp
             array_view_utils_test.cpp
     )
-   
+
 if(CMAKE_CXX_COMPILER_ID MATCHES MSVC)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /bigobj")
 endif()
 
-set_shared_test_defs(SOURCES "Testing array functions")    
+set_boost_test_definitions(SOURCES "Testing array functions")
 
 add_executable(arrays_test ${SOURCES} $<TARGET_OBJECTS:test_common>)
 target_link_libraries(arrays_test pnicore_shared Boost::unit_test_framework)
 
-add_logging_test("arrays_test" 
-                 arrays_test 
-                 ${PROJECT_BINARY_DIR}/test/arrays)
-         
+add_boost_logging_test("arrays_test"
+                       arrays_test
+                       ${PROJECT_BINARY_DIR}/test/arrays)

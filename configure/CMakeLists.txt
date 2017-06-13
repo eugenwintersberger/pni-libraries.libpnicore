@@ -3,12 +3,9 @@ include(CheckCXXSourceCompiles)
 include(CheckCXXCompilerFlag)
 
 #==========need to check for several libraries if they are installed===========
+include(${PROJECT_SOURCE_DIR}/cmake/common/BoostLibrarySetup.cmake)
 
 # boost parameters common to all platforms
-set(Boost_USE_MULTITHREADED ON)
-set(Boost_USE_STATIC_RUNTIME OFF)
-
-set(Boost_USE_STATIC_LIBS OFF)
 find_package(Boost 1.41 REQUIRED COMPONENTS program_options
                                             system
                                             unit_test_framework)
