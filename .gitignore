@@ -17,6 +17,7 @@ utbmark
 ./Makefile
 *.tif
 build
+install
 .cccc
 .project
 .cproject

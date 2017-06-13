@@ -32,9 +32,9 @@ set(pnicore_SO_VERSION ${pnicore_VERSION})
 # =============================================================================
 if(NOT CONAN_BOOST)
     if(CMAKE_HOST_SYSTEM_NAME MATCHES Windows)
-        set(CONAN_BOOST ON CACHE BOOL "Installing depdencies from Conan")
+        set(CONAN_BOOST ON CACHE BOOL "Using Boost from Conan repository!")
     else()
-        set(CONAN_BOOST OFF CACHE BOOL "Installing depdencies from Conan")
+        set(CONAN_BOOST OFF CACHE BOOL "Using Boost from Conan repository!")
     endif()
 endif()
 
@@ -77,7 +77,6 @@ add_subdirectory("src")
 add_subdirectory("doc")
 add_subdirectory("test")
 add_subdirectory("resources")
-add_subdirectory("cmake")
 
 #-----------------------------------------------------------------------------
 # Configuration for the package generator
