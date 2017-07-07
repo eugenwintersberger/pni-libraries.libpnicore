@@ -47,7 +47,7 @@ namespace core{
 //! \brief macro creating an instance of ExceptionRecord
 //!
 #define EXCEPTION_RECORD\
-    exception_record(__FILE__,__LINE__,BOOST_CURRENT_FUNCTION)
+    pni::core::exception_record(__FILE__,__LINE__,BOOST_CURRENT_FUNCTION)
 
 //! 
 //! \ingroup error_classes
