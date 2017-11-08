@@ -21,16 +21,9 @@ set(SOURCES unchecked_convertible_test.cpp
     )
 
 
-set_shared_test_defs(SOURCES "Testing type conversions")
+set_boost_test_definitions(SOURCES "Testing type conversions")
 add_executable(conversion_test ${SOURCES})
 target_link_libraries(conversion_test pnicore_shared Boost::unit_test_framework)
 
-add_logging_test("types:conversion_test" conversion_test 
-                 ${PROJECT_BINARY_DIR}/test/types/conversion)
-         
-if(CMAKE_HOST_SYSTEM_NAME MATCHES Windows)
-    set_property(TEST "types:conversion_test" APPEND PROPERTY
-                 ENVIRONMENT "PATH=${PATH_STRING}")
-endif()
-    
-
+add_boost_logging_test("types:conversion_test" conversion_test
+                       ${PROJECT_BINARY_DIR}/test/types/conversion)

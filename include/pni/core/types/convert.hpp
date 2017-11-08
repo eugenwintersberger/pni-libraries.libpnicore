@@ -41,8 +41,6 @@
 namespace pni{
 namespace core{
 
-    using namespace boost::numeric;
-
     //!
     //! \ingroup type_classes_internal
     //! \brief simple numeric converter

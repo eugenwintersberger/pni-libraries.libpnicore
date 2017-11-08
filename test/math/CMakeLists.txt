@@ -10,7 +10,7 @@ if(CMAKE_CXX_COMPILER_ID MATCHES MSVC)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /bigobj")
 endif()
 
-set_shared_test_defs(SOURCES "testing array arithmetics")
+set_boost_test_definitions(SOURCES "testing array arithmetics")
 
 add_executable(math_test ${SOURCES} $<TARGET_OBJECTS:test_common>)
 add_executable(random_ranges random_ranges.cpp)
@@ -19,10 +19,4 @@ target_link_libraries(math_test pnicore_shared Boost::unit_test_framework)
 
 target_link_libraries(random_ranges pnicore_shared)
 
-add_logging_test("math_test" math_test ${PROJECT_BINARY_DIR}/test/math)
-         
-if(CMAKE_HOST_SYSTEM_NAME MATCHES Windows)
-    set_property(TEST math_test APPEND PROPERTY
-                 ENVIRONMENT "PATH=${PATH_STRING}")
-endif()
-    
+add_boost_logging_test("math_test" math_test ${PROJECT_BINARY_DIR}/test/math)

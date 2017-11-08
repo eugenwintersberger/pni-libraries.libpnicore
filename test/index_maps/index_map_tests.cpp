@@ -21,6 +21,7 @@
 //  Created on: Nov 2, 2015
 //      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
 //
+#define BOOST_TEST_DYN_LINK
 #ifdef __GNUG__
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
@@ -39,7 +40,7 @@ extern int fixed_dim_cindex_map_test_init();
 
 bool init_function()
 {
-    cindex_implementation_test_init(); 
+    cindex_implementation_test_init();
     dynamic_cindex_map_test_init();
     fixed_dim_cindex_map_test_init();
     return true;

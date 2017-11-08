@@ -1,10 +1,17 @@
 #
+# load some utilities
+#
+include(${PROJECT_SOURCE_DIR}/cmake/common/BoostTestConfig.cmake)
+
+
+#
 #build some commonly used code
-# 
+#
 set(COMMON_SOURCES compare.cpp data_generator.cpp)
-add_library(test_common EXCLUDE_FROM_ALL OBJECT ${COMMON_SOURCES})
+add_library(test_common OBJECT ${COMMON_SOURCES})
 target_include_directories(test_common PRIVATE ${Boost_INCLUDE_DIRS} ${PROJECT_SOURCE_DIR}/include)
 
+<<<<<<< HEAD
 #
 # this macro will be used by all tests to build properly with Boost unit test
 #
@@ -70,6 +77,8 @@ if(CMAKE_HOST_SYSTEM_NAME MATCHES Windows)
     set(PATH_STRING "$ENV{PATH};$<TARGET_FILE_DIR:pnicore_shared>;${Boost_LIBRARY_DIRS}")
     string(REPLACE ";" "\\;" PATH_STRING "${PATH_STRING}")
 endif()
+=======
+>>>>>>> branch 'master' of git@github.com:pni-libraries/libpnicore.git
 
 #
 # build test program for the random number generator
@@ -84,6 +93,14 @@ add_executable(rand_gen rand_gen.cpp)
 target_link_libraries(rand_gen pnicore_shared)
 
 #
+# build the environment test program
+#
+add_executable(environment_test environment_test.cpp)
+add_test(NAME "Environment:test"
+         COMMAND environment_test
+         WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/test)
+
+#
 # build all the other tests
 #
 add_subdirectory(index_maps)
@@ -96,4 +113,3 @@ add_subdirectory(math)
 add_subdirectory(error)
 add_subdirectory(exceptions)
 add_subdirectory(logs)
-

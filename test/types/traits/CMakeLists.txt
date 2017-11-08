@@ -10,21 +10,14 @@ set(SOURCES is_integer_type_test.cpp
 
             is_numeric_type_test.cpp
             is_numeric_test.cpp
-            
+
             is_non_numeric_type_test.cpp
     )
 
-set_shared_test_defs(SOURCES "testing type traits")
+set_boost_test_definitions(SOURCES "testing type traits")
 
 add_executable(traits_test ${SOURCES})
 target_link_libraries(traits_test pnicore_shared Boost::unit_test_framework)
 
-add_logging_test("types:traits_test" traits_test 
-                 ${PROJECT_BINARY_DIR}/test/types/traits)
-         
-if(CMAKE_HOST_SYSTEM_NAME MATCHES Windows)
-    set_property(TEST "types:traits_test" APPEND PROPERTY
-                 ENVIRONMENT "PATH=${PATH_STRING}")
-endif()
-    
-
+add_boost_logging_test("types:traits_test" traits_test
+                       ${PROJECT_BINARY_DIR}/test/types/traits)

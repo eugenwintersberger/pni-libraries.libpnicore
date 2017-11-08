@@ -20,20 +20,12 @@ set(SOURCES value_construction_test.cpp
             bool_value_as_test.cpp
     )
 
-set_shared_test_defs(SOURCES "testing the value type erasure")
+set_boost_test_definitions(SOURCES "testing the value type erasure")
 
 add_executable(value_test ${SOURCES} $<TARGET_OBJECTS:test_common>)
 
 target_link_libraries(value_test pnicore_shared Boost::unit_test_framework)
 
 
-add_logging_test("type_erasure_test:value" value_test
-                 ${PROJECT_BINARY_DIR}/test/type_erasures/value)
-         
-if(CMAKE_HOST_SYSTEM_NAME MATCHES Windows)
-    set_property(TEST "type_erasure_test:value" APPEND PROPERTY
-                 ENVIRONMENT "PATH=${PATH_STRING}")
-endif()
-
-
-
+add_boost_logging_test("type_erasure_test:value" value_test
+                       ${PROJECT_BINARY_DIR}/test/type_erasures/value)

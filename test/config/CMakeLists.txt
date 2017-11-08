@@ -1,16 +1,10 @@
 #need to define the version of the library
 set(SOURCES  configuration_test.cpp)
 
-set_shared_test_defs(SOURCES "testing the configuration facilities")
+set_boost_test_definitions(SOURCES "testing the configuration facilities")
 add_executable(config_test ${SOURCES} $<TARGET_OBJECTS:test_common>)
 target_link_libraries(config_test pnicore_shared Boost::unit_test_framework)
 
 configure_file(pni.cfg.cmake pni.cfg)
 
-add_logging_test("config_test" config_test ${PROJECT_BINARY_DIR}/test/config)
-         
-if(CMAKE_HOST_SYSTEM_NAME MATCHES Windows)
-    set_property(TEST config_test APPEND PROPERTY
-                 ENVIRONMENT "PATH=${PATH_STRING}")
-endif()
-    
+add_boost_logging_test("config_test" config_test ${PROJECT_BINARY_DIR}/test/config)

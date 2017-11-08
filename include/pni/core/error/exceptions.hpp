@@ -47,7 +47,7 @@ namespace core{
 //! \brief macro creating an instance of ExceptionRecord
 //!
 #define EXCEPTION_RECORD\
-    exception_record(__FILE__,__LINE__,BOOST_CURRENT_FUNCTION)
+    pni::core::exception_record(__FILE__,__LINE__,BOOST_CURRENT_FUNCTION)
 
 //! 
 //! \ingroup error_classes
@@ -295,7 +295,7 @@ EXCEPTION_FORWARD(MemoryNotAllocatedError)
 
             //-----------------------------------------------------------------
             //! output operator for exceptions
-            friend std::ostream &operator<<(std::ostream &, const exception &);
+            friend PNICORE_EXPORT std::ostream &operator<<(std::ostream &, const exception &);
             
     };
 #ifdef _MSC_VER
@@ -335,7 +335,7 @@ EXCEPTION_FORWARD(MemoryNotAllocatedError)
 
             //-----------------------------------------------------------------
             //! output operator
-            friend std::ostream &
+            friend PNICORE_EXPORT std::ostream &
                 operator<<(std::ostream &o,const memory_allocation_error &e);
     };
 
@@ -374,7 +374,7 @@ EXCEPTION_FORWARD(MemoryNotAllocatedError)
 
             //----------------------------------------------------------------
             //! output operator
-            friend std::ostream &operator<<(std::ostream &o,const
+            friend PNICORE_EXPORT std::ostream &operator<<(std::ostream &o,const
                     memory_not_allocated_error &e);
     };
 
@@ -413,7 +413,7 @@ EXCEPTION_FORWARD(MemoryNotAllocatedError)
 
             //----------------------------------------------------------------
             //! output operator
-            friend std::ostream &
+            friend PNICORE_EXPORT std::ostream &
                 operator<<(std::ostream &o,const shape_mismatch_error &e);
     };
 
@@ -451,7 +451,7 @@ EXCEPTION_FORWARD(MemoryNotAllocatedError)
 
             //----------------------------------------------------------------
             //! output operator
-            friend std::ostream &
+            friend PNICORE_EXPORT std::ostream &
                 operator<<(std::ostream &o,const size_mismatch_error &e);
     };
 
@@ -488,7 +488,7 @@ EXCEPTION_FORWARD(MemoryNotAllocatedError)
 
             //----------------------------------------------------------------
             //! output operator
-            friend std::ostream &
+            friend PNICORE_EXPORT std::ostream &
                 operator<<(std::ostream &o,const index_error &e);
     };
 
@@ -523,7 +523,7 @@ EXCEPTION_FORWARD(MemoryNotAllocatedError)
 
             //----------------------------------------------------------------
             //! output operator
-            friend std::ostream &
+            friend PNICORE_EXPORT std::ostream &
                 operator<<(std::ostream &o,const key_error &e);
     };
 
@@ -558,7 +558,7 @@ EXCEPTION_FORWARD(MemoryNotAllocatedError)
 
             //----------------------------------------------------------------
             //! output operator
-            friend std::ostream &
+            friend PNICORE_EXPORT std::ostream &
                 operator<<(std::ostream &o,const file_error &e);
 
     };
@@ -594,7 +594,7 @@ EXCEPTION_FORWARD(MemoryNotAllocatedError)
 
             //----------------------------------------------------------------
             //! output operator
-            friend std::ostream &
+            friend PNICORE_EXPORT std::ostream &
                 operator<<(std::ostream &o,const type_error &e);
     };
 
@@ -630,7 +630,7 @@ EXCEPTION_FORWARD(MemoryNotAllocatedError)
 
             //----------------------------------------------------------------
             //! output operator
-            friend std::ostream &
+            friend PNICORE_EXPORT std::ostream &
                 operator<<(std::ostream &o,const value_error &e);
     };
 
@@ -666,7 +666,7 @@ EXCEPTION_FORWARD(MemoryNotAllocatedError)
 
             //----------------------------------------------------------------
             //! output operator
-            friend std::ostream &
+            friend PNICORE_EXPORT std::ostream &
                 operator<<(std::ostream &o,const range_error &e);
     };
 
@@ -706,7 +706,7 @@ EXCEPTION_FORWARD(MemoryNotAllocatedError)
 
             //----------------------------------------------------------------
             //! output operator
-            friend std::ostream &
+            friend PNICORE_EXPORT std::ostream &
                 operator<<(std::ostream &o,const not_implemented_error &e);
     };
 
@@ -743,7 +743,7 @@ EXCEPTION_FORWARD(MemoryNotAllocatedError)
 
             //-----------------------------------------------------------------
             //! output operator
-            friend std::ostream &
+            friend PNICORE_EXPORT std::ostream &
                 operator<<(std::ostream &o,const iterator_error &e);
     };
     
@@ -780,7 +780,7 @@ EXCEPTION_FORWARD(MemoryNotAllocatedError)
 
             //------------------------------------------------------------------
             //! output operator
-            friend std::ostream &
+            friend PNICORE_EXPORT std::ostream &
                 operator<<(std::ostream &o,const cli_argument_error &e);
     };
 
@@ -815,7 +815,7 @@ EXCEPTION_FORWARD(MemoryNotAllocatedError)
 
             //------------------------------------------------------------------
             //! output operator
-            friend std::ostream &
+            friend PNICORE_EXPORT std::ostream &
             operator<<(std::ostream &o,const cli_option_error &e);
     };
 
@@ -851,7 +851,7 @@ EXCEPTION_FORWARD(MemoryNotAllocatedError)
 
             //------------------------------------------------------------------
             //! output operator
-            friend std::ostream &operator<<(std::ostream &o,const cli_error &e);
+            friend PNICORE_EXPORT std::ostream &operator<<(std::ostream &o,const cli_error &e);
     };
 
     //--------------------------------------------------------------------------
@@ -886,7 +886,7 @@ EXCEPTION_FORWARD(MemoryNotAllocatedError)
 
             //----------------------------------------------------------------
             //! output operator
-            friend std::ostream &
+            friend PNICORE_EXPORT std::ostream &
             operator<<(std::ostream &o,const cli_help_request &e);
     };
 }
