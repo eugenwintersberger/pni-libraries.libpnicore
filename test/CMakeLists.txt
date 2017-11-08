@@ -28,15 +28,12 @@ macro (add_logging_test test_name test_target working_dir)
     set(TEST_LOG_FILE ${TEST_LOG_PATH}/${test_target}.log.xml)
     set(TEST_REPORT_FILE ${TEST_REPORT_PATH}/${test_target}.report.xml)
 
-    message(STATUS "log file: ${TEST_LOG_FILE}")
-    message(STATUS "report file: ${TEST_REPORT_FILE}")
-
     #we need to create separate options configurations depending on the Boost
     #version installed 
     if(Boost_VERSION EQUAL 106200)
         message(STATUS "Setting up test for Boost Unit test version 1.6.2")
         set(LOG_OPTIONS --logger=XML,all,${TEST_LOG_FILE})
-        set(REPORT_OPTIONS --report_level=detailed --report_format=XML --report_sink=${TEST_REPORT_FILE})
+        #set(REPORT_OPTIONS --report_level=detailed --report_format=XML --report_sink=${TEST_REPORT_FILE})
     else()
         set(LOG_OPTIONS --log_level=all --log_sink=${TEST_LOG_FILE})
         set(REPORT_OPTIONS --report_level=detailed --report_sink=${TEST_REPORT_FILE})

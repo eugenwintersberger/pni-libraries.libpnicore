@@ -1,0 +1,383 @@
+.. documentation on arrays
+
+=======================
+Multidimensional arrays
+=======================
+
+C++ has no multidimensional array type (MDA) in its standard library. 
+However, MDAs are crucial for the developmemt of scientific applications.
+One of the reasons for the continuing success of languages like Fortran or Python
+is their excellent support for MDAs\footnote{For Python arrays are introduced by
+the \texttt{numpy} package.}. The lack of an MDA type in C++
+was indeed the spark that initiated the developement of \libpnicore.  Before
+discussing `libpnicore` s array facilities some terminology should be defined: 
+
+
+element type (ET)   
+    referes to the data type of the individual elements stored in an MDA. For
+    MDAs this will typically be a numeric type like an integer or a floating
+    point number.
+
+rank :math:`r`
+    denotes the number of dimensions of an MDA 
+
+shape :math:`\mathbf{s}`
+    is a vector of dimension :math:`r` whose elements are the
+    number of elements along each dimension. The elements of :math:`\mathbf{s}` are
+    denoted as :math:`s_i` with :math:`i=0,\dots,r-1` 
+
+The hart of `libpnicore` s MDA support is the :cpp:class:`mdarray` template.
+:cpp:class:`mdarray` is extremely powerfull. Thus, using :cpp:class:`mdarray`
+directly to define array types is not for the faint harted.  To simplify the
+usage of multidimensional arrays the library provides three templates derived
+form :cpp:class:`mdarray` which are easy to use.  
+
++------------------------------------------+------------------------------------+
+|template alias                            |description                         |
++==========================================+====================================+
+|*static_array<T,size_t ...N>*             | a static arrays whose shape, rank, |
+|                                          | and element type are fixed at      |
+|                                          | compile time.                      |
++------------------------------------------+------------------------------------+
+|*fixed_dim_array<T,R>*                    | element type and rank are fixed at |
+|                                          | compile time but the shape can be  |
+|                                          | changed at runtime.                |
++------------------------------------------+------------------------------------+
+|*dynamic_array<T>*                        | a fully dynamic array type where   |
+|                                          | only the element type must be      | 
+|                                          | known at compile time. The rank    |
+|                                          | as well as the shape can be        |
+|                                          | altered at runtime                 |
++------------------------------------------+------------------------------------+
+
+
+These types are all defined in :file:`pni/core/arrays.hpp`.
+In addition to this two basic templates there are several utility classes and
+templates like
+
+\begin{center}
+\begin{tabular}{m{0.15\linewidth}p{0.7\linewidth}}
+\arrayview &  a template providing a particular view on an array (see
+Sec.~\ref{sec:array:array_slicing}) \\
+\arrayerasure & a type erasure that can be used with any instance of an array
+template (see Chapter~\ref{chapter:type_erasure})
+\end{tabular}
+\end{center}
+
+All array types derived from :cpp:class:`mdarray` provide the following features
+
+* unary and binary arithmetics if the element type is a numeric type.
+* slicing to extract only a part of a large array
+* simple access to data elements using variadic operators.
+* all array types are full STL compliant containers and thus can be used
+  along with STL algorithms.
+
+.. ============================================================================
+
+Array construction and inquery
+==============================
+    
+Constructing arrays is rather simple by means of the :cpp:meth:`create` function
+provided by the array templates. The next example shows how to create arrays 
+using this static function
+
+\inputminted[fontsize=\small,
+             linenos,firstline=24,
+             frame=lines,
+             label=examples/array\_create.cpp]
+{cpp}{../examples/array_create.cpp}
+In line $12$ a concrete array type is defined from the \texttt{dynamic\_array}
+utility template.
+The \texttt{::create} function comes in three flavors as shown in the previous
+example
+\begin{description}
+\item[line 17] it takes the shape of the array as a container and constructs the
+array from this. In this case the storage container is allocated internally. 
+\item[line 20] the storage container is passed along with the shape.
+\item[line 24] here the shape and the container are passed as initializer lists
+- this can make the syntax more readable in some cases.
+\end{description}
+After an array has been created we may want to retrieve some of its basic
+properties. In the next example we do exactly this 
+
+\inputminted[fontsize=\small,
+             linenos,
+             firstline=24,
+             frame=lines,
+             label=examples/array\_inquery.cpp]
+{cpp}{../examples/array_inquery.cpp}
+The important part is the implementation of the \texttt{show\_info} function
+template starting at line $14$. The function template \texttt{type\_id} is used in
+line $17$ to retrieve the type ID of the arrays element type. \texttt{rank} in line
+$18$ returns the number of dimension and \texttt{size} in line $23$ the total
+number of elements stored in the array. 
+The \texttt{shape} template function in line $20$ returns the number of elements
+along each dimension stored in a user provided container type.
+
+The content of arrays can be copied to and from containers using the standard 
+\texttt{std::copy} template function from the STL. In addition a version of the
+assignment operator is provided which allows assignment of values from an
+initializer list. This is particularly useful for static arrays which basically
+do not require construction. 
+\begin{minted}[fontsize=\small,linenos,frame=lines]{cpp}
+typedef .... static_array_type; 
+
+static_array_type a;
+
+a = {1,2,3,4,5};
+\end{minted}
+
+%%%============================================================================
+\section{Linear access to data}
+As already mentioned in the first section of this chapter, the array types
+provided by \libpnicore\ are fully STL compliant containers. They provided all
+the iterators required by the STL. 
+Before we have a look on STL lets first investigate how to simply access data
+elements in an array
+
+\inputminted[fontsize=\small,
+             linenos,
+             firstline=24,
+             frame=lines,
+             label=examples/array\_linear\_access.cpp]
+{cpp}{../examples/array_linear_access.cpp}
+For all array types the new C++ {\em for-each} construction can be used as shown
+in lines $24$ and $34$. Unchecked access (no index bounds are checked) is
+provided via the \texttt{[]} operator as demonstrated in line $27$. Finally, in
+cases where the index should be checked use the \texttt{at()} method like in lines 
+$30$ and $31$.
+Some of the operations in this example can be done much more efficient with STL
+algorithms as demonstrated in the next example
+
+\inputminted[fontsize=\small,
+             linenos,
+             firstline=24,
+             frame=lines,
+             label=examples/array\_stl.cpp]
+{cpp}{../examples/array_stl.cpp}
+In line $19$ \texttt{std::fill} is used to initialize the array to $0$ and 
+\texttt{std::generate} in line $25$ fills it with random numbers using a lambda
+expression . The rest of the example should be trivial (if not, please lookup a
+good C++ STL reference).
+
+%%%============================================================================
+\section{Multidimensional access}
+
+Though being an important feature, linear access to multidimensional arrays is
+not always useful. In particular the last example where we pretended to work on
+image data implementing algorithms would be rather tedious if we would have had
+only linear access. It is natural for such objects to think in pixel coordinates
+$(i,j)$ rather than the linear offset in memory. 
+\libpnicore\ provides easy multidimensional access to the data stored in an
+array. The next example shows how to use this feature to work only on a small
+region of the image data as defined in the last example
+\inputminted[fontsize=\small,
+             linenos,
+             firstline=24,
+             frame=lines,
+             label=examples/array\_multiindex.cpp]
+{cpp}{../examples/array_multiindex.cpp}
+The interesting part here are lines $36$ and $37$. You can pass the
+multidimensional indexes either as a variadic argument list to the  \texttt{()}
+operator of the array type (as in line $36$) or you can use a container like 
+in line $37$. The former approach might look a bit more familiar, however, in
+some cases when decisions have to made at runtime the container approach might
+fits better. However, passing containers reduces access performance
+approximately by a factor of 2. Thus, as a rule of thumb you should always use
+the variadic form when you know the number of dimensions the array has and
+containers only in those cases where this information is only available at
+runtime.
+
+%%%============================================================================
+\section{Array views and slicing}
+
+In the previous example multiindex access was used to do work on only a small
+part of the image data. \libpnicore\ provides view types for arrays which would
+make these operations easier. Views are created by passing instances of \texttt{
+slice} to the \texttt{()} operator of an array type. Slices in \libpnicore\ work
+pretty much the same as in python. Lets have a look on the following example
+\inputminted[fontsize=\small,
+             linenos,
+             firstline=24,
+             frame=lines,
+             label=examples/array\_view.cpp]
+{cpp}{../examples/array_view.cpp}
+The view is created in line $30$ where the slices are passed instead of integer
+indices to the \texttt{()} operator. A slice selects an entire index range along a
+dimension. The first argument to the \texttt{slice} constructor is the starting
+index and the last the stop index of the range. The stop index is not included
+(just as it is the case with Python slices). If the \texttt{()} operator of an
+array is called with any of its arguments being a slice a view object is
+returned instead of a single value or reference to a single value. 
+View objects are pretty much like arrays themselves. However, they do not hold
+data by themselves but only a reference to the original array. 
+Like arrays they are fully STL compliant containers and thus can be used with
+STL algorithms as shown in lines $31$ and $33$. 
+
+View types can be copied and moved and thus can be stored in STL containers as
+shown in the next example
+\inputminted[fontsize=\small,
+             linenos,
+             firstline=24,
+             frame=lines,
+             label=examples/array\_view\_container.cpp]{cpp}
+{../examples/array_view_container.cpp}
+Here we apply the algorithms from the previous example not to a single but to
+several selections in the image. As shown in lines $32$ to $34$ we can safely
+store views in a container and later iterate over it.
+
+In general views make algorithm development much easier as we have to develop
+algorithms only for entire arrays. If it should be applied to only a part of an
+array we can use a view and pass it to the algorithm. As views expose the same
+interface as an array the algorithm should work on views too.
+
+%%%============================================================================
+\section{Arithmetic expressions}
+
+Array and view types fully support the common arithmetic
+operators \texttt{+}, \texttt{*}, \texttt{/}, and \texttt{-} in their binary and unary
+forms. The binary versions are implemented as expression templates avoiding the
+allocation of unnecessary temporary and giving the compiler more possibilities
+to optimize the code. 
+Views, arrays and scalars can be mixed within all arithmetic expressions. 
+There is nothing magical with expression templates as they work entirely
+transparent to the user. Just use the arithmetic expressions as you are used to
+\inputminted[fontsize=\small,
+             linenos,
+             firstline=24,
+             frame=lines,
+             label=examples/array\_arithmetic1.cpp]
+{cpp}{../examples/array_arithmetic1.cpp}
+The important line here is $24$ where arrays and scalars are mixed in an
+arithmetic expression.
+One can also mix arrays, selections, and scalars as the next examples 
+shows
+\inputminted[fontsize=\small,
+             linenos,
+             firstline=24,
+             frame=lines,
+             label=examples/array\_arithmetic2.cpp]
+{cpp}{../examples/array_arithmetic2.cpp}
+In line $30$ a single image frame is selected from a stack of images and used in
+line $31$ in an arithmetic expression. In fact, what we are doing here is,
+we are writing the corrected data back on the stack since \texttt{curr\_frame} is
+just a view on the particular image in the stack.
+
+%%%============================================================================
+\section{Example: matrix-vector and matrix-matrix multiplication}
+In the last example matrix vector multiplications are treated. The full code can
+be viewed in \texttt{array\_arithmetic3.cpp} in the source distribution. But lets
+first start with the header
+\inputminted[fontsize=\small,
+             linenos,
+             firstline=24,
+             lastline=39,
+             firstnumber=24,
+             frame=lines,
+             label=examples/array\_arithmetic3.cpp]
+{cpp}{../examples/array_arithmetic3.cpp}
+Besides including all required header files matrix and vector templates are 
+defined in lines $37$ and $38$ using the new C++11 template aliasing.
+
+\subsection{Matrix vector multiplication}
+The implementation of the matrix vector multiplication is shown in the next
+block. In other words
+\begin{align}
+ \mathbf{r} = A\mathbf{v} \mbox{ or } r_j = A_{j,i}v_i
+\end{align}
+with $A$ denoting a $N\times N$ matrix and $\mathbf{r}$ and $\mathbf{v}$ are
+$N$-dimensional vectors. In all formulas Einsteins sum convention is used.
+\inputminted[fontsize=\small,
+             linenos,
+             firstline=64,
+             lastline=80,
+             firstnumber=64,
+             frame=lines,
+             label=examples/array\_arithmetic3.cpp]
+{cpp}{../examples/array_arithmetic3.cpp}
+In line $74$ we select the $i$-th row of the matrix and compute the inner
+product of the row vector and the input vector in line $75$. 
+
+\subsection{Vector matrix multiplication}
+The vector matrix multiplication
+\begin{align}
+ \mathbf{r} = \mathbf{v}A\mbox{ or } r_i = v_j A_{j,i}
+\end{align}
+is computed analogously 
+\inputminted[fontsize=\small,
+             linenos,
+             firstline=80,
+             lastline=95,
+             firstnumber=80,
+             frame=lines,
+             label=examples/array\_arithmetic3.cpp]
+{cpp}{../examples/array_arithmetic3.cpp}
+despite the fact that we are choosing the appropriate column instead of a row in 
+line $90$. 
+
+\subsection{Matrix matrix multiplication}
+Finally we need an implementation for the matrix - matrix
+multiplication
+\begin{align}
+C = AB \mbox{ or } C_{i,j} = A_{i,k}B_{k,j}
+\end{align}
+\inputminted[fontsize=\small,
+             linenos,
+             firstline=96,
+             lastline=115,
+             firstnumber=96,
+             frame=lines,
+             label=examples/array\_arithmetics3.cpp]
+{cpp}{../examples/array_arithmetic3.cpp}
+The rows and columns are selected in lines $107$ and $108$ respectively. 
+Line $109$ finally computes the inner product of the row and column vector.
+
+\subsection{Putting it all together: the main function}
+Finally the main program shows a simple application of these template functions. 
+\inputminted[fontsize=\small,
+             linenos,
+             firstline=116,
+             lastline=138,
+             firstnumber=116,
+             frame=lines,
+             label=examples/array\_arithemtic3.cpp]
+{cpp}{../examples/array_arithmetic3.cpp}
+It is important to understand that the appropriate function is determined by the
+types of the arguments (vector or matrix). This is a rather nice example of how
+to use the typing system of C++ to add meaning to objects. For the exact
+implementation of the output operators please consult the full source code in 
+\cpp{array\_arithmetic3.cpp}.
+
+The output of the program is
+\begin{minted}{bash}
+>./array_arithmetic3
+m1 = 
+| 1 2 3 |
+| 4 5 6 |
+| 7 8 9 |
+
+m2 = 
+| 9 8 7 |
+| 6 5 4 |
+| 3 2 1 |
+
+v  = 
+| 1 |
+| 2 |
+| 3 |
+
+m1.v = 
+| 14 |
+| 32 |
+| 50 |
+
+v.m1 = 
+| 30 |
+| 36 |
+| 42 |
+
+m1.m2 = 
+| 30 24 18 |
+| 84 69 54 |
+| 138 114 90 |
+\end{minted}
