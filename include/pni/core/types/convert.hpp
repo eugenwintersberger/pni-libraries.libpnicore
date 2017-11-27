@@ -25,17 +25,17 @@
 //
 #pragma once
 
-#include "type_id_map.hpp"
+#include <pni/core/types/type_id_map.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/numeric/conversion/cast.hpp>
 
-#include "../error/exceptions.hpp"
-#include "../error/exception_utils.hpp"
-#include "type_info.hpp"
-#include "unchecked_convertible.hpp"
-#include "checked_convertible.hpp"
-#include "convertible.hpp"
-#include "type_conversion.hpp"
+#include <pni/core/error/exceptions.hpp>
+#include <pni/core/error/exception_utils.hpp>
+#include <pni/core/types/type_info.hpp>
+#include <pni/core/types/unchecked_convertible.hpp>
+#include <pni/core/types/checked_convertible.hpp>
+#include <pni/core/types/convertible.hpp>
+#include <pni/core/types/type_conversion.hpp>
 
 
 namespace pni{

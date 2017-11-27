@@ -23,8 +23,8 @@
 //
 #pragma once
 
-#include "../algorithms.hpp"
-#include "array_holder_interface.hpp"
+#include <pni/core/algorithms.hpp>
+#include <pni/core/type_erasures/array_holder_interface.hpp>
 
 namespace pni{
 namespace core{

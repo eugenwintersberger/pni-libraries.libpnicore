@@ -23,7 +23,7 @@
 //
 #pragma once
 
-#include "../arrays.hpp"
+#include <pni/core/arrays.hpp>
 
 namespace pni{
 namespace core{

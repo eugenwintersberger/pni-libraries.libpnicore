@@ -24,7 +24,7 @@
 
 #pragma once
 
-#include "../types/types.hpp"
+#include <pni/core/types/types.hpp>
 
 
 namespace pni{

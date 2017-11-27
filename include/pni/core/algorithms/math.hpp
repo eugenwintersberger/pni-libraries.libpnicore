@@ -23,9 +23,9 @@
 //
 #pragma once
 
-#include "math/add_op.hpp"
-#include "math/div_op.hpp"
-#include "math/inplace_arithmetics.hpp"
-#include "math/mult_op.hpp"
-#include "math/op_traits.hpp"
-#include "math/sub_op.hpp"
+#include <pni/core/algorithms/math/add_op.hpp>
+#include <pni/core/algorithms/math/div_op.hpp>
+#include <pni/core/algorithms/math/inplace_arithmetics.hpp>
+#include <pni/core/algorithms/math/mult_op.hpp>
+#include <pni/core/algorithms/math/op_traits.hpp>
+#include <pni/core/algorithms/math/sub_op.hpp>

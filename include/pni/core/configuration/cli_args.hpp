@@ -25,7 +25,7 @@
 
 #include <iostream>
 #include <vector>
-#include "../types.hpp"
+#include <pni/core/types.hpp>
 
 extern "C"
 {

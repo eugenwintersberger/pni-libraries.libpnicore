@@ -34,8 +34,8 @@
 #include<list>
 #include<boost/current_function.hpp>
 
-#include "../types/types.hpp"
-#include "../windows.hpp"
+#include <pni/core/types/types.hpp>
+#include <pni/core/windows.hpp>
 
 namespace pni{
 namespace core{

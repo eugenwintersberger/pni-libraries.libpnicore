@@ -24,8 +24,8 @@
 #pragma once
 
 #include <iostream>
-#include "value.hpp"
-#include "value_ref.hpp"
+#include <pni/core/type_erasures/value.hpp>
+#include <pni/core/type_erasures/value_ref.hpp>
 
 namespace pni{
 namespace core{

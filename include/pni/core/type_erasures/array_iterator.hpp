@@ -23,9 +23,9 @@
 //
 #pragma once
 
-#include "../error/exceptions.hpp" 
-#include "value.hpp"
-#include "value_ref.hpp"
+#include <pni/core/error/exceptions.hpp>
+#include <pni/core/type_erasures/value.hpp>
+#include <pni/core/type_erasures/value_ref.hpp>
 
 namespace pni{
 namespace core{

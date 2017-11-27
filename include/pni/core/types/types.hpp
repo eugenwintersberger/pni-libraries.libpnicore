@@ -36,9 +36,9 @@
 typedef SSIZE_T ssize_t;
 #endif
 
-#include "binary.hpp"
-#include "bool.hpp"
-#include "none.hpp"
+#include <pni/core/types/binary.hpp>
+#include <pni/core/types/bool.hpp>
+#include <pni/core/types/none.hpp>
 
 namespace pni{
 namespace core{

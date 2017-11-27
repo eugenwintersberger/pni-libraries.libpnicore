@@ -25,10 +25,10 @@
 #pragma once
 #include <sstream>
 #include <boost/lexical_cast.hpp>
-#include "index_map.hpp"
-#include "static_index_map.hpp"
-#include "c_index_map_imp.hpp"
-#include "../../utilities/container_utils.hpp"
+#include <pni/core/arrays/index_map/index_map.hpp>
+#include <pni/core/arrays/index_map/static_index_map.hpp>
+#include <pni/core/arrays/index_map/c_index_map_imp.hpp>
+#include <pni/core/utilities/container_utils.hpp>
 
 namespace pni{
 namespace core{

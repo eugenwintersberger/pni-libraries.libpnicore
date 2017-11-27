@@ -24,7 +24,7 @@
 #pragma once
 
 
-#include "benchmark/benchmark_result.hpp"
-#include "benchmark/benchmark_runner.hpp"
-#include "benchmark/chrono_timer.hpp"
-#include "benchmark/clock_timer.hpp"
+#include <pni/core/benchmark/benchmark_result.hpp>
+#include <pni/core/benchmark/benchmark_runner.hpp>
+#include <pni/core/benchmark/chrono_timer.hpp>
+#include <pni/core/benchmark/clock_timer.hpp>

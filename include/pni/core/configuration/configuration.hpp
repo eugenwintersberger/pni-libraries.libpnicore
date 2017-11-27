@@ -36,11 +36,11 @@
 #ifdef __GNUG__
 #pragma GCC diagnostic pop
 #endif 
-#include "../types.hpp"
-#include "../error/exceptions.hpp"
-#include "../windows.hpp"
-#include "config_option.hpp"
-#include "config_argument.hpp"
+#include <pni/core/types.hpp>
+#include <pni/core/error/exceptions.hpp>
+#include <pni/core/windows.hpp>
+#include <pni/core/configuration/config_option.hpp>
+#include <pni/core/configuration/config_argument.hpp>
 
 //set an abriviation for the namespace
 namespace popts = boost::program_options;

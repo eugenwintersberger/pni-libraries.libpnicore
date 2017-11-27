@@ -23,8 +23,8 @@
 //
 #pragma once
 
-#include "op_traits.hpp"
-#include "../../utilities/container_iterator.hpp"
+#include <pni/core/algorithms/math/op_traits.hpp>
+#include <pni/core/utilities/container_iterator.hpp>
 
 namespace pni{
 namespace core{

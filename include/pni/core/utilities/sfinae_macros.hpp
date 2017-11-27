@@ -25,8 +25,8 @@
 #pragma once
 
 #include <type_traits>
-#include "../types/traits.hpp"
-#include "../types/complex_utils.hpp"
+#include <pni/core/types/traits.hpp>
+#include <pni/core/types/complex_utils.hpp>
 
 namespace pni{
 namespace core{

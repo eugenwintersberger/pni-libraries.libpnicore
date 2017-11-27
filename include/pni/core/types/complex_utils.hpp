@@ -26,7 +26,7 @@
 #pragma once
 
 #include "types.hpp"
-#include "../windows.hpp"
+#include <pni/core/windows.hpp>
 
 
 namespace pni{

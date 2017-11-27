@@ -24,20 +24,20 @@
 #pragma once
 
 
-#include "types/binary.hpp"
-#include "types/bool.hpp"
-#include "types/checked_convertible.hpp"
-#include "types/complex_utils.hpp"
-#include "types/container_trait.hpp"
-#include "types/convert.hpp"
-#include "types/convertible.hpp"
-#include "types/id_type_map.hpp"
-#include "types/none.hpp"
-#include "types/type_class_map.hpp"
-#include "types/type_conversion.hpp"
-#include "types/type_id_map.hpp"
-#include "types/type_info.hpp"
-#include "types/types.hpp"
-#include "types/type_utils.hpp"
-#include "types/unchecked_convertible.hpp"
-#include "types/traits.hpp"
+#include <pni/core/types/binary.hpp>
+#include <pni/core/types/bool.hpp>
+#include <pni/core/types/checked_convertible.hpp>
+#include <pni/core/types/complex_utils.hpp>
+#include <pni/core/types/container_trait.hpp>
+#include <pni/core/types/convert.hpp>
+#include <pni/core/types/convertible.hpp>
+#include <pni/core/types/id_type_map.hpp>
+#include <pni/core/types/none.hpp>
+#include <pni/core/types/type_class_map.hpp>
+#include <pni/core/types/type_conversion.hpp>
+#include <pni/core/types/type_id_map.hpp>
+#include <pni/core/types/type_info.hpp>
+#include <pni/core/types/types.hpp>
+#include <pni/core/types/type_utils.hpp>
+#include <pni/core/types/unchecked_convertible.hpp>
+#include <pni/core/types/traits.hpp>

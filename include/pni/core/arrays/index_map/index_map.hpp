@@ -26,7 +26,7 @@
 #include <algorithm>
 #include <numeric>
 
-#include "../../utilities/container_utils.hpp"
+#include <pni/core/utilities/container_utils.hpp>
 
 namespace pni{
 namespace core{

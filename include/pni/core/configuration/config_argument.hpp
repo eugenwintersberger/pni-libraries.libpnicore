@@ -23,8 +23,8 @@
 ///
 #pragma once
 
-#include "../types.hpp"
-#include "config_option.hpp"
+#include <pni/core/types.hpp>
+#include <pni/core/configuration/config_option.hpp>
 
 
 namespace pni{

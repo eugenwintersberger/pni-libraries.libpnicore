@@ -28,7 +28,7 @@
 #include <boost/mpl/contains.hpp>
 #include <boost/mpl/map.hpp>
 #include <boost/mpl/at.hpp>
-#include "id_type_map.hpp"
+#include <pni/core/types/id_type_map.hpp>
 
 namespace pni{
 namespace core{

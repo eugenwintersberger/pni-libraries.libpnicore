@@ -23,11 +23,11 @@
 //
 #pragma once
 
-#include "core/algorithms.hpp"
-#include "core/arrays.hpp"
-#include "core/benchmark.hpp"
-#include "core/configuration.hpp"
-#include "core/error.hpp"
-#include "core/type_erasures.hpp"
-#include "core/types.hpp"
-#include "core/utilities.hpp"
+#include <pni/core/algorithms.hpp>
+#include <pni/core/arrays.hpp>
+#include <pni/core/benchmark.hpp>
+#include <pni/core/configuration.hpp>
+#include <pni/core/error.hpp>
+#include <pni/core/type_erasures.hpp>
+#include <pni/core/types.hpp>
+#include <pni/core/utilities.hpp>

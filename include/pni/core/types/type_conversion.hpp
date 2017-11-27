@@ -25,14 +25,14 @@
 //
 #pragma once
 
-#include "type_id_map.hpp"
+#include <pni/core/types/type_id_map.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/numeric/conversion/cast.hpp>
 
-#include "../error/exceptions.hpp"
-#include "../error/exception_utils.hpp"
-#include "type_info.hpp"
-#include "../windows.hpp"
+#include <pni/core/error/exceptions.hpp>
+#include <pni/core/error/exception_utils.hpp>
+#include <pni/core/types/type_info.hpp>
+#include <pni/core/windows.hpp>
 
 
 namespace pni{

@@ -23,8 +23,8 @@
 //
 #pragma once
 
-#include "unchecked_convertible.hpp"
-#include "checked_convertible.hpp"
+#include <pni/core/types/unchecked_convertible.hpp>
+#include <pni/core/types/checked_convertible.hpp>
 
 namespace pni{
 namespace core{

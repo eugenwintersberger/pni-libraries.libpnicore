@@ -23,4 +23,4 @@
 //
 #pragma once
 
-#include "algorithms/math.hpp"
+#include <pni/core/algorithms/math.hpp>

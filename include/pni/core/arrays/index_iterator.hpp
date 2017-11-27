@@ -25,7 +25,7 @@
 
 #include <algorithm>
 #include <vector>
-#include "index_map/index_maps.hpp"
+#include <pni/core/arrays/index_map/index_maps.hpp>
 
 namespace pni{
 namespace core{

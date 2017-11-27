@@ -27,8 +27,8 @@
 #include <iostream>
 #include <sstream>
 #include <tuple>
-#include "../error/exceptions.hpp"
-#include "sfinae_macros.hpp"
+#include <pni/core/error/exceptions.hpp>
+#include <pni/core/utilities/sfinae_macros.hpp>
 
 namespace pni{
 namespace core{

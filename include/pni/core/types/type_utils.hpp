@@ -24,11 +24,11 @@
 #pragma once
 
 #include <map>
-#include "type_id_map.hpp"
-#include "../utilities/sfinae_macros.hpp"
+#include <pni/core/types/type_id_map.hpp>
+#include <pni/core/utilities/sfinae_macros.hpp>
 #include <functional>
 #include <boost/mpl/for_each.hpp>
-#include "../windows.hpp"
+#include <pni/core/windows.hpp>
 
 
 namespace pni{

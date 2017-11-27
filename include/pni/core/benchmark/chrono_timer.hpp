@@ -23,7 +23,7 @@
 //
 #pragma once
 
-#include "../types.hpp"
+#include <pni/core/types.hpp>
 
 #include<chrono>
 #include<iostream>

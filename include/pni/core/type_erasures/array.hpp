@@ -25,14 +25,14 @@
 #include<iostream>
 #include<memory>
 
-#include "../error/exceptions.hpp"
-#include "../error/exception_utils.hpp"
-#include "../types/types.hpp"
-#include "../arrays.hpp"
-#include "array_holder.hpp"
-#include "array_iterator.hpp"
-#include "../algorithms.hpp"
-#include "../windows.hpp"
+#include <pni/core/error/exceptions.hpp>
+#include <pni/core/error/exception_utils.hpp>
+#include <pni/core/types/types.hpp>
+#include <pni/core/arrays.hpp>
+#include <pni/core/type_erasures/array_holder.hpp>
+#include <pni/core/type_erasures/array_iterator.hpp>
+#include <pni/core/algorithms.hpp>
+#include <pni/core/windows.hpp>
 
 
 namespace pni{

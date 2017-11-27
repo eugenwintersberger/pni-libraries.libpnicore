@@ -25,12 +25,12 @@
 #include<iostream>
 #include<memory>
 
-#include "../error/exceptions.hpp"
-#include "../types/types.hpp"
-#include "value_holder.hpp"
-#include "utils.hpp"
+#include <pni/core/error/exceptions.hpp>
+#include <pni/core/types/types.hpp>
+#include <pni/core/type_erasures/value_holder.hpp>
+#include <pni/core/type_erasures/utils.hpp>
 
-#include "../windows.hpp"
+#include <pni/core/windows.hpp>
 
 namespace pni{
 namespace core{

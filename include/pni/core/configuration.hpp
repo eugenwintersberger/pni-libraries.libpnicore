@@ -24,8 +24,8 @@
 #pragma once
 
 
-#include "configuration/cli_args.hpp"
-#include "configuration/config_argument.hpp"
-#include "configuration/config_option.hpp"
-#include "configuration/config_parser.hpp"
-#include "configuration/configuration.hpp"
+#include <pni/core/configuration/cli_args.hpp>
+#include <pni/core/configuration/config_argument.hpp>
+#include <pni/core/configuration/config_option.hpp>
+#include <pni/core/configuration/config_parser.hpp>
+#include <pni/core/configuration/configuration.hpp>

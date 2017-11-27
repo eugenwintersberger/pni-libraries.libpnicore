@@ -22,7 +22,7 @@
 //      Author: Eugen Wintersberger <eugen.wintersberger@desy.de>
 //
 #pragma once
-#include "benchmark_result.hpp"
+#include <pni/core/benchmark/benchmark_result.hpp>
 #include <list>
 #include <functional>
 #include <cmath>

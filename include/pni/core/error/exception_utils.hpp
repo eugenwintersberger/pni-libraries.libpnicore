@@ -29,10 +29,9 @@
 #include <algorithm>
 #include <boost/units/detail/utility.hpp>
 
-#include "../error/exceptions.hpp"
-#include "../utilities/service.hpp"
-
-#include "../windows.hpp"
+#include <pni/core/error/exceptions.hpp>
+#include <pni/core/utilities/service.hpp>
+#include <pni/core/windows.hpp>
 
 namespace pni{
 namespace core{

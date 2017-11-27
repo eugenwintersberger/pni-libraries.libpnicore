@@ -25,11 +25,11 @@
 #include<iostream>
 #include<memory>
 
-#include "../types/types.hpp"
-#include "../types/convert.hpp"
-#include "../types/type_conversion.hpp"
-#include "../types/traits.hpp"
-#include "value_holder.hpp"
+#include <pni/core/types/types.hpp>
+#include <pni/core/types/convert.hpp>
+#include <pni/core/types/type_conversion.hpp>
+#include <pni/core/types/traits.hpp>
+#include <pni/core/type_erasures/value_holder.hpp>
 
 namespace pni{
 namespace core{

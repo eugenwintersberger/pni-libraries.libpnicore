@@ -29,7 +29,7 @@
 #include <boost/mpl/size_t.hpp>
 #include <boost/lexical_cast.hpp>
 
-#include "../utilities/container_utils.hpp"
+#include <pni/core/utilities/container_utils.hpp>
 
 namespace pni{
 namespace core{

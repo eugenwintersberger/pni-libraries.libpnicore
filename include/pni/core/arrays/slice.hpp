@@ -26,8 +26,8 @@
 #include <iostream>
 #include <utility>
 
-#include "../error/exceptions.hpp"
-#include "../windows.hpp"
+#include <pni/core/error/exceptions.hpp>
+#include <pni/core/windows.hpp>
 
 namespace pni{
 namespace core{

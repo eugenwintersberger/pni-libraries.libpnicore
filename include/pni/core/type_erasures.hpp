@@ -23,12 +23,12 @@
 //
 #pragma once
 
-#include "type_erasures/array_holder.hpp"
-#include "type_erasures/array_holder_interface.hpp"
-#include "type_erasures/array.hpp"
-#include "type_erasures/array_iterator.hpp"
-#include "type_erasures/value_holder.hpp"
-#include "type_erasures/value_holder_interface.hpp"
-#include "type_erasures/value.hpp"
-#include "type_erasures/value_ref.hpp"
-#include "type_erasures/make_array.hpp"
+#include <pni/core/type_erasures/array_holder.hpp>
+#include <pni/core/type_erasures/array_holder_interface.hpp>
+#include <pni/core/type_erasures/array.hpp>
+#include <pni/core/type_erasures/array_iterator.hpp>
+#include <pni/core/type_erasures/value_holder.hpp>
+#include <pni/core/type_erasures/value_holder_interface.hpp>
+#include <pni/core/type_erasures/value.hpp>
+#include <pni/core/type_erasures/value_ref.hpp>
+#include <pni/core/type_erasures/make_array.hpp>

@@ -24,6 +24,6 @@
 #pragma once
 
 
-#include "utilities/container_iterator.hpp"
-#include "utilities/container_utils.hpp"
-#include "utilities/service.hpp"
+#include <pni/core/utilities/container_iterator.hpp>
+#include <pni/core/utilities/container_utils.hpp>
+#include <pni/core/utilities/service.hpp>

@@ -24,7 +24,7 @@
 #pragma once
 
 #include <type_traits>
-#include "../error/exceptions.hpp" 
+#include <pni/core/error/exceptions.hpp>
 
 namespace pni{
 namespace core{

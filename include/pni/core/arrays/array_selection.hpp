@@ -31,10 +31,10 @@
 #include <boost/foreach.hpp>
 #endif
 
-#include "../utilities/container_utils.hpp"
-#include "../error/exception_utils.hpp"
-#include "../algorithms.hpp"
-#include "slice.hpp"
+#include <pni/core/utilities/container_utils.hpp>
+#include <pni/core/error/exception_utils.hpp>
+#include <pni/core/algorithms.hpp>
+#include <pni/core/arrays/slice.hpp>
 
 namespace pni{
 namespace core{

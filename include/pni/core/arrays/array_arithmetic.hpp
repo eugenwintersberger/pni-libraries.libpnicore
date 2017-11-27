@@ -23,12 +23,12 @@
 //
 #pragma once
 
-#include "mdarray.hpp"
-#include "index_map/index_maps.hpp"
-#include "../types/complex_utils.hpp"
-#include "scalar.hpp"
-#include "../algorithms.hpp"
-#include "../utilities/sfinae_macros.hpp"
+#include <pni/core/arrays/mdarray.hpp>
+#include <pni/core/arrays/index_map/index_maps.hpp>
+#include <pni/core/types/complex_utils.hpp>
+#include <pni/core/arrays/scalar.hpp>
+#include <pni/core/algorithms.hpp>
+#include <pni/core/utilities/sfinae_macros.hpp>
 
 namespace pni{
 namespace core{

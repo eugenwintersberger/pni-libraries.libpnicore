@@ -23,8 +23,8 @@
 ///
 #pragma once
 
-#include "configuration.hpp"
-#include "../windows.hpp"
+#include <pni/core/configuration/configuration.hpp>
+#include <pni/core/windows.hpp>
 
 namespace pni{
 namespace core{

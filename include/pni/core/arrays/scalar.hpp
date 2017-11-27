@@ -27,8 +27,8 @@
 #include <iostream>
 #include <array>
 
-#include "../types.hpp"
-#include "scalar_iterator.hpp"
+#include <pni/core/types.hpp>
+#include <pni/core/arrays/scalar_iterator.hpp>
 
 namespace pni {
 namespace core {

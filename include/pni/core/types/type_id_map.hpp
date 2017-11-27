@@ -23,7 +23,7 @@
 //
 #pragma once
 
-#include "types.hpp"
+#include <pni/core/types/types.hpp>
 #include <boost/mpl/pair.hpp>
 #include <boost/mpl/map.hpp>
 #include <boost/mpl/find_if.hpp>

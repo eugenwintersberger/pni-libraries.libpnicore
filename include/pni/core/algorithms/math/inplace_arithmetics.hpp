@@ -27,9 +27,9 @@
 #include <limits>
 #include <functional>
 
-#include "../../error/exception_utils.hpp"
-#include "../../types.hpp"
-#include "../../utilities/sfinae_macros.hpp"
+#include <pni/core/error/exception_utils.hpp>
+#include <pni/core/types.hpp>
+#include <pni/core/utilities/sfinae_macros.hpp>
 
 namespace pni{
 namespace core{

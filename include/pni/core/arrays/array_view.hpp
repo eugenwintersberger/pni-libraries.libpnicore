@@ -27,11 +27,11 @@
 
 #include <memory>
 #include <functional>
-#include "index_map/index_maps.hpp"
-#include "../utilities.hpp"
-#include "array_selection.hpp"
-#include "array_view_utils.hpp"
-#include "../algorithms.hpp"
+#include <pni/core/arrays/index_map/index_maps.hpp>
+#include <pni/core/utilities.hpp>
+#include <pni/core/arrays/array_selection.hpp>
+#include <pni/core/arrays/array_view_utils.hpp>
+#include <pni/core/algorithms.hpp>
 
 namespace pni{
 namespace core{

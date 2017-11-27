@@ -25,12 +25,12 @@
 
 #include <vector>
 #include <array>
-#include "arrays/mdarray.hpp"
-#include "arrays/array_view.hpp"
-#include "arrays/array_factory.hpp"
-#include "arrays/slice.hpp"
-#include "arrays/array_arithmetic.hpp"
-#include "arrays/index_iterator.hpp"
+#include <pni/core/arrays/mdarray.hpp>
+#include <pni/core/arrays/array_view.hpp>
+#include <pni/core/arrays/array_factory.hpp>
+#include <pni/core/arrays/slice.hpp>
+#include <pni/core/arrays/array_arithmetic.hpp>
+#include <pni/core/arrays/index_iterator.hpp>
 
 
 namespace pni{
