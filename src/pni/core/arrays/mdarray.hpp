@@ -43,6 +43,7 @@
 #include <pni/core/arrays/array_factory.hpp>
 #include <pni/core/arrays/array_view_utils.hpp>
 #include <pni/core/arrays/index_map/index_maps.hpp>
+#include <pni/core/types/type_id_map.hpp>
 #include <pni/core/algorithms.hpp>
 
 
