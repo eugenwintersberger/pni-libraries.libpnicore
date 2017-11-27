@@ -22,3 +22,4 @@ install
 .project
 .cproject
 .settings/
+/project.cson
