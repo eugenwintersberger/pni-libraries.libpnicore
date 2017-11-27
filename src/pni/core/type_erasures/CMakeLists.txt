@@ -1,16 +1,16 @@
 #
 # manage header files
 #
-set(HEADER_FILES array_holder.hpp
-                 array_holder_interface.hpp
-                 array.hpp
-                 array_iterator.hpp
-                 value_holder.hpp
-                 value_holder_interface.hpp
-                 value.hpp
-                 value_ref.hpp
-                 make_array.hpp
-                 utils.hpp
+set(HEADER_FILES ${CMAKE_CURRENT_SOURCE_DIR}/array_holder.hpp
+                 ${CMAKE_CURRENT_SOURCE_DIR}/array_holder_interface.hpp
+                 ${CMAKE_CURRENT_SOURCE_DIR}/array.hpp
+                 ${CMAKE_CURRENT_SOURCE_DIR}/array_iterator.hpp
+                 ${CMAKE_CURRENT_SOURCE_DIR}/value_holder.hpp
+                 ${CMAKE_CURRENT_SOURCE_DIR}/value_holder_interface.hpp
+                 ${CMAKE_CURRENT_SOURCE_DIR}/value.hpp
+                 ${CMAKE_CURRENT_SOURCE_DIR}/value_ref.hpp
+                 ${CMAKE_CURRENT_SOURCE_DIR}/make_array.hpp
+                 ${CMAKE_CURRENT_SOURCE_DIR}/utils.hpp
                  )
 
 install(FILES ${HEADER_FILES} 
@@ -21,10 +21,9 @@ add_doxygen_source_deps(${HEADER_FILES})
 #
 # build submodule
 # 
-set(SOURCES array.cpp value.cpp value_ref.cpp )
+set(SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/array.cpp 
+            ${CMAKE_CURRENT_SOURCE_DIR}/value.cpp 
+            ${CMAKE_CURRENT_SOURCE_DIR}/value_ref.cpp )
 
-add_library(type_erasure_objects OBJECT ${SOURCES})
-set_property(TARGET type_erasure_objects PROPERTY POSITION_INDEPENDENT_CODE ON)
-target_include_directories(type_erasure_objects PUBLIC
-                           $<BUILD_INTERFACE: ${Boost_INCLUDE_DIRS} ${PROJECT_SOURCE_DIR}/src>
-                           $<INSTALL_INTERFACE: ${CMAKE_INSTALL_INCLUDEDIR}>)
+set(PNICORE_LIBRARY_SOURCES ${PNICORE_LIBRARY_SOURCES} ${SOURCES} PARENT_SCOPE)
+set(PNICORE_LIBRARY_HEADERS ${PNICORE_LIBRARY_HEADERS} ${HEADER_FILES} PARENT_SCOPE)

@@ -18,6 +18,7 @@ add_doxygen_source_deps(${HEADER_FILES})
 # build all the components required to assemble the library
 #-----------------------------------------------------------------------------
 set(PNICORE_LIBRARY_SOURCES )
+set(PNICORE_LIBRARY_HEADERS )
 add_subdirectory(algorithms)
 add_subdirectory(arrays)
 add_subdirectory(benchmark)
@@ -36,13 +37,8 @@ set(CMAKE_DEBUG_TARGET_PROPERTIES
 # building the shared library
 #-----------------------------------------------------------------------------
 message(STATUS "Building shared libraries ...")
-add_library(pnicore_shared SHARED 
-                           $<TARGET_OBJECTS:type_objects>
-                           $<TARGET_OBJECTS:benchmark_objects>
-                           $<TARGET_OBJECTS:array_objects>
-                           $<TARGET_OBJECTS:configuration_objects>
-                           $<TARGET_OBJECTS:type_erasure_objects>
-                           $<TARGET_OBJECTS:misc_objects>) 
+add_library(pnicore_shared SHARED ${PNICORE_LIBRARY_SOURCES}
+	                              ${PNICORE_LIBRARY_HEADERS}) 
 
 target_link_libraries(pnicore_shared INTERFACE Boost::program_options
                                                Boost::system)

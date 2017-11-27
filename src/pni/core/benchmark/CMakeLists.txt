@@ -1,10 +1,10 @@
 #
 # manage header files
 #
-set(HEADER_FILES benchmark_result.hpp 
-                 benchmark_runner.hpp 
-                 chrono_timer.hpp 
-                 clock_timer.hpp
+set(HEADER_FILES ${CMAKE_CURRENT_SOURCE_DIR}/benchmark_result.hpp 
+                 ${CMAKE_CURRENT_SOURCE_DIR}/benchmark_runner.hpp 
+                 ${CMAKE_CURRENT_SOURCE_DIR}/chrono_timer.hpp 
+                 ${CMAKE_CURRENT_SOURCE_DIR}/clock_timer.hpp
                  )
 
 install(FILES ${HEADER_FILES} 
@@ -15,15 +15,12 @@ add_doxygen_source_deps(${HEADER_FILES})
 #
 # build submodule
 #
-set(SOURCES benchmark_result.cpp
-            benchmark_runner.cpp
-            chrono_timer.cpp
-            clock_timer.cpp
+set(SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/benchmark_result.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/benchmark_runner.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/chrono_timer.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/clock_timer.cpp
    )
 
 
-add_library(benchmark_objects OBJECT ${SOURCES})
-set_property(TARGET benchmark_objects PROPERTY POSITION_INDEPENDENT_CODE ON)
-target_include_directories(benchmark_objects PUBLIC
-                           $<BUILD_INTERFACE: ${Boost_INCLUDE_DIRS} ${PROJECT_SOURCE_DIR}/src>
-                           $<INSTALL_INTERFACE: ${CMAKE_INSTALL_INCLUDEDIR}>)
+set(PNICORE_LIBRARY_SOURCES ${PNICORE_LIBRARY_SOURCES} ${SOURCES} PARENT_SCOPE)
+set(PNICORE_LIBRARY_HEADERS ${PNICORE_LIBRARY_HEADERS} ${HEADER_FILES} PARENT_SCOPE)

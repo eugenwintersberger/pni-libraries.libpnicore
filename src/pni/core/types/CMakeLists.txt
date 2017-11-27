@@ -1,23 +1,23 @@
 #
 # manage header files
 #
-set(HEADER_FILES binary.hpp
-                 complex_utils.hpp
-                 id_type_map.hpp
-                 type_class_map.hpp
-                 type_conversion.hpp
-                 type_id_map.hpp
-                 type_info.hpp
-                 types.hpp
-                 type_utils.hpp
-                 container_trait.hpp
-                 bool.hpp
-                 none.hpp
-                 unchecked_convertible.hpp
-                 checked_convertible.hpp
-                 convertible.hpp
-                 convert.hpp
-                 traits.hpp
+set(HEADER_FILES ${CMAKE_CURRENT_SOURCE_DIR}/binary.hpp
+                 ${CMAKE_CURRENT_SOURCE_DIR}/complex_utils.hpp
+                 ${CMAKE_CURRENT_SOURCE_DIR}/id_type_map.hpp
+                 ${CMAKE_CURRENT_SOURCE_DIR}/type_class_map.hpp
+                 ${CMAKE_CURRENT_SOURCE_DIR}/type_conversion.hpp
+                 ${CMAKE_CURRENT_SOURCE_DIR}/type_id_map.hpp
+                 ${CMAKE_CURRENT_SOURCE_DIR}/type_info.hpp
+                 ${CMAKE_CURRENT_SOURCE_DIR}/types.hpp
+                 ${CMAKE_CURRENT_SOURCE_DIR}/type_utils.hpp
+                 ${CMAKE_CURRENT_SOURCE_DIR}/container_trait.hpp
+                 ${CMAKE_CURRENT_SOURCE_DIR}/bool.hpp
+                 ${CMAKE_CURRENT_SOURCE_DIR}/none.hpp
+                 ${CMAKE_CURRENT_SOURCE_DIR}/unchecked_convertible.hpp
+                 ${CMAKE_CURRENT_SOURCE_DIR}/checked_convertible.hpp
+                 ${CMAKE_CURRENT_SOURCE_DIR}/convertible.hpp
+                 ${CMAKE_CURRENT_SOURCE_DIR}/convert.hpp
+                 ${CMAKE_CURRENT_SOURCE_DIR}/traits.hpp
                  )
 
 install(FILES ${HEADER_FILES} 
@@ -28,20 +28,17 @@ add_doxygen_source_deps(${HEADER_FILES})
 #
 # build submodule
 #
-set(SOURCES bool.cpp
-            complex_utils.cpp
-            is_unchecked_convertible.cpp
-            is_checked_convertible.cpp
-            is_convertible.cpp
-            none.cpp
-            type_conversion.cpp
-            types.cpp
-            type_utils.cpp
-            traits.cpp
+set(SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/bool.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/complex_utils.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/is_unchecked_convertible.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/is_checked_convertible.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/is_convertible.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/none.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/type_conversion.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/types.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/type_utils.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/traits.cpp
    )
 
-add_library(type_objects OBJECT ${SOURCES})
-set_property(TARGET type_objects PROPERTY POSITION_INDEPENDENT_CODE ON)
-target_include_directories(type_objects PUBLIC
-                           $<BUILD_INTERFACE: ${Boost_INCLUDE_DIRS} ${PROJECT_SOURCE_DIR}/src>
-                           $<INSTALL_INTERFACE: ${CMAKE_INSTALL_INCLUDEDIR}>)
+set(PNICORE_LIBRARY_SOURCES ${PNICORE_LIBRARY_SOURCES} ${SOURCES} PARENT_SCOPE)
+set(PNICORE_LIBRARY_HEADERS ${PNICORE_LIBRARY_HEADERS} ${HEADER_FILES} PARENT_SCOPE)
