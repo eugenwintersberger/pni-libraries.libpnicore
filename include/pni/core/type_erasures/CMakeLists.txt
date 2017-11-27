@@ -13,3 +13,4 @@ set(HEADER_FILES array_holder.hpp
 install(FILES ${HEADER_FILES} 
         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/pni/core/type_erasures
         COMPONENT development)
+add_doxygen_source_deps(${HEADER_FILES})

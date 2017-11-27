@@ -20,4 +20,5 @@ set(HEADER_FILES binary.hpp
 install(FILES ${HEADER_FILES} 
         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/pni/core/types
         COMPONENT development)
+add_doxygen_source_deps(${HEADER_FILES})
 

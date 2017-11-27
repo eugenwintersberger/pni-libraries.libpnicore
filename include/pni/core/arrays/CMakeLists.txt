@@ -15,5 +15,6 @@ set(HEADER_FILES array_arithmetic.hpp
 install(FILES ${HEADER_FILES} 
         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/pni/core/arrays
         COMPONENT development)
+add_doxygen_source_deps(${HEADER_FILES})
 
 add_subdirectory("index_map")

@@ -8,3 +8,4 @@ set(HEADER_FILES cli_args.hpp
 install(FILES ${HEADER_FILES}
         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/pni/core/configuration
         COMPONENT development)
+add_doxygen_source_deps(${HEADER_FILES})
