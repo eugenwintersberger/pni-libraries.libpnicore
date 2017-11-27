@@ -17,6 +17,7 @@ Contents:
    types
    arrays
    type_erasures
+   configuration
 
 
 

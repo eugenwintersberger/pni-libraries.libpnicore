@@ -9,6 +9,7 @@ set(RSTFILES index.rst
              types.rst
              arrays.rst
              type_erasures.rst
+             configuration.rst
     )
 
 foreach(SRC ${RSTFILES})
