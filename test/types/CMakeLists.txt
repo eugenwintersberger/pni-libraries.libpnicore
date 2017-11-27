@@ -11,7 +11,7 @@ set(SOURCES binary_test.cpp
             str_from_type_id_test.cpp
     )
 
-set_shared_test_defs(SOURCES "testing type features")
+set_boost_test_definitions(SOURCES "testing type features")
 
 add_executable(type_test ${SOURCES})
 target_link_libraries(type_test pnicore_shared Boost::unit_test_framework)
@@ -23,7 +23,7 @@ target_link_libraries(show_type_info pnicore_shared)
 add_subdirectory(conversion)
 add_subdirectory(traits)
 
-add_logging_test("type_test" type_test ${PROJECT_BINARY_DIR}/test/types)
+add_boost_logging_test("type_test" type_test ${PROJECT_BINARY_DIR}/test/types)
          
 if(CMAKE_HOST_SYSTEM_NAME MATCHES Windows)
     set_property(TEST type_test APPEND PROPERTY
