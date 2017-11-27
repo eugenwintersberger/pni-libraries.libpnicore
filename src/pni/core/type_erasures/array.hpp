@@ -32,7 +32,8 @@
 #include <pni/core/type_erasures/array_holder.hpp>
 #include <pni/core/type_erasures/array_iterator.hpp>
 #include <pni/core/algorithms.hpp>
-#include <pni/core/windows.hpp>
+
+#include "../../../../src/pni/core/windows.hpp"
 
 
 namespace pni{

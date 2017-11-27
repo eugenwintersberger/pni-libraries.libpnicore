@@ -32,7 +32,7 @@
 #include <pni/core/type_erasures/utils.hpp>
 #include <pni/core/types/traits.hpp>
 
-#include <pni/core/windows.hpp>
+#include "../../../../src/pni/core/windows.hpp"
 
 namespace pni{
 namespace core{

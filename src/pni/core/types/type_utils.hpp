@@ -28,7 +28,8 @@
 #include <pni/core/utilities/sfinae_macros.hpp>
 #include <functional>
 #include <boost/mpl/for_each.hpp>
-#include <pni/core/windows.hpp>
+
+#include "../../../../src/pni/core/windows.hpp"
 
 
 namespace pni{

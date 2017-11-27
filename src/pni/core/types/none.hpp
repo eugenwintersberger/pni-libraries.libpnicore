@@ -24,7 +24,8 @@
 #pragma once
 
 #include <iostream>
-#include <pni/core/windows.hpp>
+
+#include "../../../../src/pni/core/windows.hpp"
 
 namespace pni{
 namespace core{

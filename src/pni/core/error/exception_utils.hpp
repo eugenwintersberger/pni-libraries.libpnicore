@@ -31,7 +31,8 @@
 
 #include <pni/core/error/exceptions.hpp>
 #include <pni/core/utilities/service.hpp>
-#include <pni/core/windows.hpp>
+
+#include "../../../../src/pni/core/windows.hpp"
 
 namespace pni{
 namespace core{
