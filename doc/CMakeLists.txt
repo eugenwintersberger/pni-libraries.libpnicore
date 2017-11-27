@@ -1,16 +1,19 @@
 #build documentation
 include(FindDoxygen)
 
-#list of sources for the documentation
-set(HDR_DIR ../include/pni/core)
-
 if(DOXYGEN_FOUND)
     configure_file(Doxyfile.cmake ./Doxyfile @ONLY)
     configure_file(mainpage.dox.cmake mainpage.dox @ONLY)
+    set_source_files_properties(Doxyfile mainpage.dox
+	                            PROPERTIES GENERATED TRUE)
 
     #--------------------------run doxygen------------------------------------
-    add_custom_command(OUTPUT html COMMAND ${DOXYGEN_EXECUTABLE} Doxyfile)
-    add_custom_target(api_doc SOURCES "html")
+    add_custom_command(OUTPUT doxygen.stamp
+                       COMMAND ${DOXYGEN_EXECUTABLE} Doxyfile
+                       COMMAND echo "timestamp" &> doxygen.stamp
+                       DEPENDS  Doxyfile mainpage.dox
+                     )
+    add_custom_target(api_doc SOURCES doxygen.stamp)
 
     #------------------install the HTML documentation-------------------------
     install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/html"
@@ -22,12 +25,12 @@ if(DOXYGEN_FOUND)
 else(DOXYGEN_FOUND)
     message("--- Disable building documentation")
 endif(DOXYGEN_FOUND)
+
+
 add_subdirectory(users_guide)
 add_subdirectory(examples)
 
-
-add_custom_target(pdf DEPENDS users_guide)
-add_custom_target(html DEPENDS api_doc)
+add_custom_target(html DEPENDS api_doc users_guide)
 
 
 add_custom_target(install-html
