@@ -18,6 +18,7 @@ Contents:
    arrays
    type_erasures
    configuration
+   benchmarks
 
 
 
