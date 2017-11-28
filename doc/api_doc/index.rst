@@ -10,3 +10,4 @@ This is the API documentation for *libpnicore*.
    type_api
    exception_api
    type_erasure_api
+   configuration_api
