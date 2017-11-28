@@ -24,3 +24,10 @@ if(DOXYGEN_FOUND)
 else(DOXYGEN_FOUND)
     message("--- Disable building documentation")
 endif(DOXYGEN_FOUND)
+
+set(RST_FILES index.rst)
+foreach(F ${RST_FILES})
+	configure_file(${F} ${F} COPYONLY)
+endforeach()
+
+add_sphinx_source(${RST_FILES})

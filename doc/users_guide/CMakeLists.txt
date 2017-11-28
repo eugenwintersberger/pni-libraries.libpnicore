@@ -1,6 +1,6 @@
 
 add_subdirectory(_images)
-configure_file(conf.py.in conf.py @ONLY)
+
 
 set(RSTFILES index.rst
              introduction.rst
@@ -18,7 +18,4 @@ foreach(SRC ${RSTFILES})
 endforeach()
 
 
-add_custom_target(users_guide
-                  COMMAND sphinx-build -bhtml . build/html
-                  WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-                  SOURCES ${RSTFILES})
+add_sphinx_source(${RSTFILES})
