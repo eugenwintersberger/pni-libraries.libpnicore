@@ -8,3 +8,4 @@ This is the API documentation for *libpnicore*.
    :maxdepth: 1
    
    type_api
+   exception_api

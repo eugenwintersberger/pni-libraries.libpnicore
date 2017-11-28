@@ -78,7 +78,7 @@ Operators
 .. doxygenclass:: pni::core::binary_t
    :members:
    
-.. doxygenfunction:: pni::core::operator<<(std::ostream &,const binary_t &)
+.. doxygenfunction:: pni::core::operator<<(std::ostream &, const binary_t< NTYPE > &)
 
 
 
