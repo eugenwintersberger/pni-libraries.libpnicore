@@ -27,9 +27,10 @@ endif(DOXYGEN_FOUND)
 
 set(RST_FILES index.rst
               type_api.rst
-              exception_api.rst)
+              exception_api.rst
+              type_erasure_api.rst)
 foreach(F ${RST_FILES})
-	configure_file(${F} ${F} @ONLY)
+	configure_file(${F} ${F} COPYONLY)
 endforeach()
 
 add_sphinx_source(${RST_FILES})

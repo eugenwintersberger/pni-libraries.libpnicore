@@ -390,7 +390,7 @@ namespace core{
 
     //-------------------------------------------------------------------------
     //! 
-    //! \ingroup mdim_array_classes
+    //! \ingroup type_erasure_classes
     //! \brief get type id
     //! 
     //! Get the type ID of the array stored in an array type erasure.
