@@ -25,7 +25,8 @@ else(DOXYGEN_FOUND)
     message("--- Disable building documentation")
 endif(DOXYGEN_FOUND)
 
-set(RST_FILES index.rst)
+set(RST_FILES index.rst
+              type_api.rst)
 foreach(F ${RST_FILES})
 	configure_file(${F} ${F} COPYONLY)
 endforeach()
