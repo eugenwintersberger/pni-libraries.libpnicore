@@ -4,20 +4,6 @@
 Data Types
 ==========
 
-..
-    \newcommand{\dtype}[1]{\texttt{#1}}
-    \newcommand{\podt}[2]{\dtype{#1#2}}
-    \newcommand{\typeid}[1]{\texttt{type\_id\_t::#1}}
-    \newcommand{\typeclass}[1]{\texttt{ type\_class\_t::#1}}
-    \newcommand{\typeidmap}{\texttt{type\_id\_map}}
-    \newcommand{\idtypemap}{\texttt{id\_type\_map}}
-    \newcommand{\typeclassmap}{\texttt{type\_class\_map}}
-    \newcommand{\strrep}[1]{\texttt{"#1"}}
-    \newcommand{\unchecked}{\textcolor{ForestGreen}{U}}
-    \newcommand{\checked}{\textcolor{blue}{C}}
-    \newcommand{\none}{\textcolor{red}{N}}
-
-
 =========================   ======================  ============================  ===============================
 :cpp:enum:`type_class_t`    data type               :cpp:enum:`type_id_t`         description
 =========================   ======================  ============================  ===============================
@@ -44,25 +30,25 @@ An overview of the primitive data types provided by `libpnicore`.
 
 .. ===================================================================================
 
-`libpnicore` provides a set of data types of well defined size and utility
+*libpnicore* provides a set of data types of well defined size and utility
 functions related to type management.  The basic header file required to use
-`libpnicorex` s type facilities is 
+*libpnicore* s type facilities is 
 
 .. code-block:: cpp
     
     #include <pni/core/types.hpp>
 
-The data types provided by `libpnicore` include
+The data types provided by *libpnicore* include
 
 * numeric types with all their arithmetic operations
 * string types (currently only one member)
-* and utility types like :cpp:type:`binary`, :cpp:type:`bool`, and 
+* and utility types like :cpp:type:`binary_t`, :cpp:type:`bool_t`, and 
   :cpp:type:`none`.
 
 All this types together are refered to as `primitive types`.  The numeric types
 are ensured to have the same size on each platform and architecture supported
 by `libpnicore`. They are mostly aliases to the types defined by the C standard
-library.  However, the utility types :cpp:type:`binary`, :cpp:type:`bool`, and
+library.  However, the utility types :cpp:type:`binary_t`, :cpp:type:`bool_t`, and
 :cpp:type:`none` are unique to `libpnicore` and will be explained in more
 detail in the last sections of this chapter.
 
@@ -107,11 +93,12 @@ For numeric types there are also some other templates for a more detailed type
 classification 
 
 ======================================= ==========================================================
+template                                description
 ======================================= ==========================================================
-:cpp:member:`is_integer_type<T>::value`  :cpp:any:`true` if :cpp:any:`T` is an integer type
-:cpp:member:`is_float_type<T>::value`    :cpp:any:`true` if :cpp:any:`T` is a floating point type
-:cpp:member:`is_complex_type<T>::value`  :cpp:any:`true` if :cpp:any:`T` is a complex number
-:cpp:member:`is_numeric_type<T>::value`  :cpp:any:`true` if :cpp:any:`T` is any of the above types
+:cpp:member:`is_integer_type<T>::value`  **true** if :cpp:any:`T` is an integer type
+:cpp:member:`is_float_type<T>::value`    **true** if :cpp:any:`T` is a floating point type
+:cpp:member:`is_complex_type<T>::value`  **true** if :cpp:any:`T` is a complex number
+:cpp:member:`is_numeric_type<T>::value`  **true** if :cpp:any:`T` is any of the above types
 ======================================= ==========================================================
 
 
@@ -144,10 +131,11 @@ data type                string representation
 Data types and their string representations.
 
 .. ============================================================================
+
 The recommended way to deal with type information at runtime are the
 :cpp:enum:`type_id_t` enumerations.  At some point in time a program might has
 to determine the type ID of a variable type or of the element type of a
-container.  The basic facility to achieve this is the :cpp:fun:`type_id`
+container.  The basic facility to achieve this is the :cpp:func:`type_id`
 function defined in :file:`pni/core/type_utils.hpp`.  The usage of this
 function is rather simple as shown here
 
@@ -223,7 +211,7 @@ realize such a type. However, this approach has two disadvantages
 Consequently :cpp:type:`binary` was implemented as a thin wrapper around an
 appropriately sized integer type with all arithmetic operators stripped away.
 A short example of how to use binary is the :file:`copy_file.cpp` example in
-the :cpp:file:`examples` directory of the source distribution of `libpnicore`. 
+the :file:`examples` directory of the source distribution of *libpnicore*. 
 
 .. todo:: add here the code of the example file
 
@@ -256,7 +244,7 @@ For all practical purposes this type can be ignored.
 The :cpp:type:`bool_t` type
 ===========================
 
-Unlike the C programming language C++ provides a native :cpp:type:`bool` type.
+Unlike the C programming language C++ provides a native :cpp:type:`bool_t` type.
 Unfortunately the C++ standardization committee made some unfortunate decisions
 with :cpp:type:`bool` and STL containers. :cpp:class:`std::vector` for instance
 is in most cases specialized for the standard C++ :cpp:type:`bool` type.  In
@@ -264,7 +252,7 @@ the most common STL implementation :cpp:class:`std::vector` is considered an
 array of individual bits. Meaning that every byte in the vector is storing a
 total of *8* :cpp:type:`bool` values. Consequently we cannot obtain an address
 for a particular bit but only for the byte where it is stored.  Hence
-:cpp:class:`std::vector<bool>` does not provide the :cpp:meth:`data` method
+:cpp:class:`std::vector<bool>` does not provide the :cpp:func:`data` method
 which is required for storage containers used with the :cpp:class:`mdarray`
 templates (see :ref:`arrays`). 
 
