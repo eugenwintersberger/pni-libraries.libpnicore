@@ -29,7 +29,7 @@
 #include <functional>
 #include <boost/mpl/for_each.hpp>
 
-#include "../../../../src/pni/core/windows.hpp"
+#include <pni/core/windows.hpp>
 
 
 namespace pni{

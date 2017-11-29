@@ -25,7 +25,7 @@
 
 #include <iostream>
 
-#include "../../../../src/pni/core/windows.hpp"
+#include <pni/core/windows.hpp>
 
 namespace pni{
 namespace core{
