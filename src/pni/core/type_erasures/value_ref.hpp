@@ -30,7 +30,7 @@
 #include <pni/core/type_erasures/value_holder.hpp>
 #include <pni/core/type_erasures/utils.hpp>
 
-#include "../../../../src/pni/core/windows.hpp"
+#include <pni/core/windows.hpp>
 
 namespace pni{
 namespace core{

@@ -36,7 +36,7 @@
 
 #include <pni/core/types/types.hpp>
 
-#include "../../../../src/pni/core/windows.hpp"
+#include <pni/core/windows.hpp>
 
 namespace pni{
 namespace core{

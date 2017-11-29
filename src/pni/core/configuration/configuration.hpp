@@ -38,7 +38,7 @@
 #endif 
 #include <pni/core/types.hpp>
 #include <pni/core/error/exceptions.hpp>
-#include "../../../../src/pni/core/windows.hpp"
+#include <pni/core/windows.hpp>
 #include <pni/core/configuration/config_option.hpp>
 #include <pni/core/configuration/config_argument.hpp>
 
