@@ -29,7 +29,8 @@ set(RST_FILES index.rst
               type_api.rst
               exception_api.rst
               type_erasure_api.rst
-              configuration_api.rst)
+              configuration_api.rst
+              mdarray_api.rst)
 foreach(F ${RST_FILES})
 	configure_file(${F} ${F} COPYONLY)
 endforeach()

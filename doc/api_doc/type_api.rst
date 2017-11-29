@@ -57,7 +57,7 @@ Utility functions
 :cpp:class:`pni::core::none`
 ============================
 
-.. doxygenclass:: pni::core::none
+.. doxygenstruct:: pni::core::none
    :members:
    
 Operators

@@ -11,3 +11,4 @@ This is the API documentation for *libpnicore*.
    exception_api
    type_erasure_api
    configuration_api
+   mdarray_api

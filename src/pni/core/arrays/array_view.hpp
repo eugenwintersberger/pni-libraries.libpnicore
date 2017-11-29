@@ -32,6 +32,9 @@
 #include <pni/core/arrays/array_selection.hpp>
 #include <pni/core/arrays/array_view_utils.hpp>
 #include <pni/core/algorithms.hpp>
+#include <pni/core/types/types.hpp>
+#include <pni/core/types/container_trait.hpp>
+#include <pni/core/types/type_id_map.hpp>
 
 namespace pni{
 namespace core{
@@ -43,21 +46,22 @@ namespace core{
     //! The ArrayView class provides a view on the part of an array. No new 
     //! memory is allocated.  An array view can be obtained from an array 
     //! using the () operator. 
-    /*!
-    \code
-    darray<float32> a(std::vector<size_t>{3,4,10});
-    
-    //create a (4,10) view from the above array 
-    auto view = a(1,slice{0,4},Slice{0,10});
-    
-    //the view can now be used like any other array - however, no new 
-    //memory isallocated.
-    
-    //create an array from the view
-    darray<float32> roi(view.shape<std::vector<size_t> >(),
-                     darray<float32>::storage_type(view));
-    \endcode
-    !*/
+    //!
+    //! \code
+    //! darray<float32> a(std::vector<size_t>{3,4,10});
+    //!
+    //! //create a (4,10) view from the above array
+    //! auto view = a(1,slice{0,4},Slice{0,10});
+    //!
+    //! //the view can now be used like any other array - however, no new
+    //! //memory isallocated.
+    //!
+    //! //create an array from the view
+    //! darray<float32> roi(view.shape<std::vector<size_t> >(),
+    //!                 darray<float32>::storage_type(view));
+    //! \endcode
+    //!
+    //! \tparam ATYPE array type for the view
     //!
     template<typename ATYPE> 
     class array_view
@@ -65,27 +69,27 @@ namespace core{
         public:
             //====================public types=================================
             //! storage type
-            typedef ATYPE storage_type;
+            using storage_type =  ATYPE;
             //! type of the data values
-            typedef typename ATYPE::value_type value_type;             
+            using value_type = typename ATYPE::value_type;
             //! type of the view 
-            typedef array_view<storage_type> array_type;
+            using array_type =  array_view<storage_type>;
             //! shared pointer type
-            typedef std::shared_ptr<array_type> shared_ptr;
+            using shared_ptr =  std::shared_ptr<array_type>;
             //! unique pointer type
-            typedef std::unique_ptr<array_type> unique_ptr; 
+            using unique_ptr =  std::unique_ptr<array_type>;
             //! iterator type
-            typedef container_iterator<array_type> iterator;      
+            using iterator = container_iterator<array_type>;
             //! const iterator type
-            typedef container_iterator<const array_type> const_iterator; 
+            using const_iterator = container_iterator<const array_type>;
             //! view type
-            typedef array_view<array_type> view_type;
+            using view_type = array_view<array_type>;
             //! index type
-            typedef std::vector<size_t> index_type;
+            using index_type = std::vector<size_t>;
             //! inplace arithetic type
-            typedef typename ATYPE::inplace_arithmetic inplace_arithmetic;
+            using inplace_arithmetic = typename ATYPE::inplace_arithmetic;
             //! map type
-            typedef index_map<index_type,typename ATYPE::map_type::implementation_type> map_type;
+            using map_type =  index_map<index_type,typename ATYPE::map_type::implementation_type>;
             //========================public members===========================
             //! type id of the value_type
             static const type_id_t type_id = ATYPE::type_id;
