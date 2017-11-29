@@ -15,6 +15,7 @@ include(cmake/common/PackageConfig.cmake)   #create some basic variables for
 include(cmake/common/EnsureBuildType.cmake)
 include(cmake/common/WindowsUtils.cmake)
 include(cmake/common/DoxygenUtils.cmake)
+include(cmake/common/SphinxUtils.cmake)
 
 
 

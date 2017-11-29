@@ -27,12 +27,10 @@
 
 #include <pni/core/error/exceptions.hpp>
 #include <pni/core/types/types.hpp>
-#include <pni/core/arrays.hpp>
 #include <pni/core/type_erasures/value_holder.hpp>
 #include <pni/core/type_erasures/utils.hpp>
 #include <pni/core/types/traits.hpp>
-
-#include "../../../../src/pni/core/windows.hpp"
+#include <pni/core/windows.hpp>
 
 namespace pni{
 namespace core{
@@ -49,7 +47,7 @@ namespace core{
     {
         private:
             //! internal pointer type 
-            typedef std::unique_ptr<value_holder_interface> pointer_type;
+            using pointer_type = std::unique_ptr<value_holder_interface>;
 
             template<typename T>
             using enable_primitive = std::enable_if<is_primitive_type<T>::value>;

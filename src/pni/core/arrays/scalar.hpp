@@ -29,11 +29,12 @@
 
 #include <pni/core/types.hpp>
 #include <pni/core/arrays/scalar_iterator.hpp>
+#include <pni/core/arrays/array_view.hpp>
 
 namespace pni {
 namespace core {
 
-    template<typename ATYPE> class array_view;
+    //template<typename ATYPE> class array_view;
 
     //! 
     //! \ingroup mdim_array_classes

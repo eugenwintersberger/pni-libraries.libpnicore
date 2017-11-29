@@ -27,13 +27,8 @@
 #include <algorithm>
 #include <numeric>
 
-#ifdef NOFOREACH
-#include <boost/foreach.hpp>
-#endif
-
 #include <pni/core/utilities/container_utils.hpp>
 #include <pni/core/error/exception_utils.hpp>
-#include <pni/core/algorithms.hpp>
 #include <pni/core/arrays/slice.hpp>
 
 namespace pni{
@@ -221,11 +216,7 @@ namespace core{
                 auto stride = cutils_type::create(s.size());
 
                 size_t index = 0;
-#ifdef NOFOREACH
-                BOOST_FOREACH(auto sl,s)
-#else
                 for(auto sl: s)
-#endif
                 {
                     offset[index] = sl.first();
                     stride[index] = sl.stride();

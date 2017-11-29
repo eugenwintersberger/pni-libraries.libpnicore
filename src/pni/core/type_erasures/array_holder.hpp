@@ -79,6 +79,11 @@ namespace core{
                 _object(std::move(o._object)) 
             {}
 
+            //!
+            //! \brief virtual destructor
+            //!
+            virtual ~array_holder() {}
+
             //-----------------------------------------------------------------
             //!
             //! \brief clone the holder

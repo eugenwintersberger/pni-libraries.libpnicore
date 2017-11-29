@@ -28,12 +28,9 @@
 #include <pni/core/error/exceptions.hpp>
 #include <pni/core/error/exception_utils.hpp>
 #include <pni/core/types/types.hpp>
-#include <pni/core/arrays.hpp>
 #include <pni/core/type_erasures/array_holder.hpp>
 #include <pni/core/type_erasures/array_iterator.hpp>
-#include <pni/core/algorithms.hpp>
-
-#include "../../../../src/pni/core/windows.hpp"
+#include <pni/core/windows.hpp>
 
 
 namespace pni{
@@ -390,7 +387,7 @@ namespace core{
 
     //-------------------------------------------------------------------------
     //! 
-    //! \ingroup mdim_array_classes
+    //! \ingroup type_erasure_classes
     //! \brief get type id
     //! 
     //! Get the type ID of the array stored in an array type erasure.
