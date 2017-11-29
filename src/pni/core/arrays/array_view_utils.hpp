@@ -38,20 +38,6 @@
 
 namespace pni{
 namespace core{
-
-    //template<typename ATYPE> class array_view;
-    
-    //==============================Define some useful macros===================
-
-
-
-
-
-
-
-
-
-
   
     //-------------------------------------------------------------------------
     //!
