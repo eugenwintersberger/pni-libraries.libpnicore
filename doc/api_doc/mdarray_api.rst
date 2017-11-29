@@ -8,11 +8,33 @@ Multidimensional array API
 .. doxygenclass:: pni::core::mdarray
    :members:
 
+Operators
+---------
+
+.. doxygenfunction:: pni::core::operator==(const mdarray< STORAGE, IMAP, IPA > &, const mdarray< STORAGE, IMAP, IPA > &)
+
+.. doxygenfunction:: pni::core::operator!=(const mdarray< STORAGE, IMAP, IPA > &, const mdarray< STORAGE, IMAP, IPA > &)
+
+.. doxygenfunction:: pni::core::operator>>(std::istream &, mdarray< STORAGE, IMAP, IPA > &)
+
+.. doxygenfunction:: pni::core::operator<<(std::ostream &, const mdarray< STORAGE, IMAP, IPA > &)
+
 :cpp:class:`array_view`
 =======================
 
 .. doxygenclass:: pni::core::array_view
    :members:
+
+Operators
+---------
+
+.. doxygenfunction:: pni::core::operator==(const array_view< ATYPE > &, const array_view< ATYPE > &)
+
+.. doxygenfunction:: pni::core::operator!=(const array_view< ATYPE > &, const array_view< ATYPE > &)
+
+.. doxygenfunction:: pni::core::operator>>(std::istream &, array_view< ATYPE > &)
+
+.. doxygenfunction:: pni::core::operator<<(std::ostream &, const array_view< ATYPE > &)
 
 
 :cpp:class:`scalar`
