@@ -30,8 +30,8 @@
 #include <pni/core/arrays/index_map/index_maps.hpp>
 #include <pni/core/utilities.hpp>
 #include <pni/core/arrays/array_selection.hpp>
-#include <pni/core/arrays/array_view_utils.hpp>
-#include <pni/core/algorithms.hpp>
+#include <pni/core/arrays/index_utilities.hpp>
+#include <pni/core/algorithms/math/inplace_arithmetics.hpp>
 #include <pni/core/types/types.hpp>
 #include <pni/core/types/container_trait.hpp>
 #include <pni/core/types/type_id_map.hpp>

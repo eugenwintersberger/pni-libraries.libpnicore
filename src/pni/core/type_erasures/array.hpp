@@ -28,12 +28,9 @@
 #include <pni/core/error/exceptions.hpp>
 #include <pni/core/error/exception_utils.hpp>
 #include <pni/core/types/types.hpp>
-#include <pni/core/arrays.hpp>
 #include <pni/core/type_erasures/array_holder.hpp>
 #include <pni/core/type_erasures/array_iterator.hpp>
-#include <pni/core/algorithms.hpp>
-
-#include "../../../../src/pni/core/windows.hpp"
+#include <pni/core/windows.hpp>
 
 
 namespace pni{

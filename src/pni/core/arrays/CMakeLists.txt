@@ -13,6 +13,7 @@ set(HEADER_FILES ${CMAKE_CURRENT_SOURCE_DIR}/array_arithmetic.hpp
                  ${CMAKE_CURRENT_SOURCE_DIR}/scalar.hpp
                  ${CMAKE_CURRENT_SOURCE_DIR}/scalar_iterator.hpp
                  ${CMAKE_CURRENT_SOURCE_DIR}/slice.hpp
+                 ${CMAKE_CURRENT_SOURCE_DIR}/index_utilities.hpp
                  )
 
 install(FILES ${HEADER_FILES} 

@@ -40,12 +40,7 @@ namespace core{
         }
         shape_t shape = s.shape<shape_t>();
         o<<"effective shape: ( ";
-#ifdef NOFOREACH
-        BOOST_FOREACH(auto v,shape)
-#else
-        for(auto v: shape)
-#endif
-            o<<v<<" ";
+        for(auto v: shape) o<<v<<" ";
         
         o<<")"<<std::endl;
 
