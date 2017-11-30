@@ -30,6 +30,7 @@
 #include <pni/core/utilities/container_utils.hpp>
 #include <pni/core/error/exception_utils.hpp>
 #include <pni/core/arrays/slice.hpp>
+#include <pni/core/windows.hpp>
 
 namespace pni{
 namespace core{
@@ -65,7 +66,7 @@ namespace core{
     //! array //! this must be modified to (1,i,j) which is the major purpose 
     //! of this type.
     //!
-    class array_selection
+    class PNICORE_EXPORT array_selection
     {
         private:
             //! private index type
@@ -111,8 +112,7 @@ namespace core{
             //!
             //! \brief default constructor
             //!
-            explicit array_selection(): _oshape(0), _offset(0), _stride(0)
-            {}
+            explicit array_selection();
 
             //-----------------------------------------------------------------
             //!
@@ -125,12 +125,7 @@ namespace core{
             //! \param ostride strides of the selection in the original array
             //!
             explicit array_selection(index_type &&oshape,index_type &ooffset,
-                                     index_type &&ostride):
-                _oshape(std::move(oshape)),
-                _offset(std::move(ooffset)),
-                _stride(std::move(ostride))
-            {
-            }
+                                     index_type &&ostride);
             
             //-----------------------------------------------------------------
             //!
@@ -143,62 +138,31 @@ namespace core{
             //!
             explicit array_selection(const index_type &oshape,
                                      const index_type &ooffset,
-                                     const index_type &ostride):
-                _oshape(oshape),
-                _offset(ooffset),
-                _stride(ostride)
-            {
-            }
+                                     const index_type &ostride);
 
             //-----------------------------------------------------------------
             //!
             //! \brief copy constructor
             //!
-            explicit array_selection(const array_selection &s):
-                _oshape(s._oshape),
-                _offset(s._offset),
-                _stride(s._stride)
-            { }
+            explicit array_selection(const array_selection &s);
 
             //-----------------------------------------------------------------
             //!
             //! \brief move constructor
             //!
-            array_selection(array_selection &&s):
-                _oshape(std::move(s._oshape)),
-                _offset(std::move(s._offset)),
-                _stride(std::move(s._stride))
-            { }
+            array_selection(array_selection &&s);
 
             //-----------------------------------------------------------------
             //!
             //! \brief copy assignment operator
             //!
-            array_selection &operator=(const array_selection &s)
-            {
-                if(this == &s) return *this;
-
-                _oshape = s._oshape;
-                _offset = s._offset;
-                _stride = s._stride;
-
-                return *this;
-            }
+            array_selection &operator=(const array_selection &s);
 
             //-----------------------------------------------------------------
             //!
             //! \brief move asignment operator
             //!
-            array_selection &operator=(array_selection &&s)
-            {
-                if(this == &s) return *this;
-
-                _oshape = std::move(s._oshape);
-                _offset = std::move(s._offset);
-                _stride = std::move(s._stride);
-
-                return *this;
-            }
+            array_selection &operator=(array_selection &&s);
 
 
             //-----------------------------------------------------------------
@@ -241,10 +205,7 @@ namespace core{
             //! 
             //! \return effective rank
             //! 
-            size_t rank() const 
-            { 
-                return _oshape.size() - std::count(_oshape.begin(),_oshape.end(),1);
-            }
+            size_t rank() const;
 
             //-----------------------------------------------------------------
             //!
@@ -257,17 +218,7 @@ namespace core{
             //! \tparam CTYPE container type
             //! \return instance of CTYPE with effective shape
             //!
-            template<typename CTYPE> CTYPE shape() const
-            {
-                typedef container_utils<CTYPE>  cutils_type;
-                auto c = cutils_type::create(rank());
-
-                //now we have to copy only those values from the original shape
-                //that are not equal 1
-                std::copy_if(_oshape.begin(),_oshape.end(),c.begin(),
-                             [](size_t i){ return i!=1; });
-                return c;
-            }
+            template<typename CTYPE> CTYPE shape() const;
 
             //----------------------------------------------------------------- 
             //! 
@@ -279,18 +230,7 @@ namespace core{
             //! 
             //! \return number of elements
             //!
-            size_t size() const 
-            { 
-                typedef typename index_type::value_type value_type;
-                if(_oshape.empty()) return 0; //not initialized 
-
-                if(rank() == 0) return 1; //scalar element selected 
-
-                //compute the size and return it
-                return std::accumulate(_oshape.begin(),_oshape.end(),
-                                      value_type(1),
-                                      std::multiplies<value_type>());
-            }
+            size_t size() const;
 
             //=========methods to retrieve full selection information==========
             //!
@@ -301,7 +241,7 @@ namespace core{
             //! 
             //! \return reference to full shape
             //!
-            const index_type &full_shape() const { return _oshape; }
+            const index_type &full_shape() const noexcept;
 
             //-----------------------------------------------------------------
             //! 
@@ -313,13 +253,7 @@ namespace core{
             //! \tparam CTYPE container type
             //! \return instance of CTYPE with the full shape
             //!
-            template<typename CTYPE> CTYPE full_shape() const 
-            {
-                typedef container_utils<CTYPE> cutils_type; 
-                auto c = cutils_type::create(_oshape.size());
-                std::copy(_oshape.begin(),_oshape.end(),c.begin());
-                return c;
-            }
+            template<typename CTYPE> CTYPE full_shape() const;
 
             //-----------------------------------------------------------------
             //!
@@ -330,7 +264,7 @@ namespace core{
             //!
             //! \return reference to offsets
             //!
-            const index_type &offset() const { return _offset; }
+            const index_type &offset() const noexcept;
 
             //-----------------------------------------------------------------
             //! 
@@ -340,13 +274,7 @@ namespace core{
             //! \tparam CTYPE container type
             //! \return instance of CTYPE with offset values
             //!
-            template<typename CTYPE> CTYPE offset() const
-            {
-                typedef container_utils<CTYPE> cutils_type;
-                auto c = cutils_type::create(_offset.size());
-                std::copy(_offset.begin(),_offset.end(),c.begin());
-                return c;
-            }
+            template<typename CTYPE> CTYPE offset() const;
 
             //-----------------------------------------------------------------
             //! 
@@ -355,7 +283,7 @@ namespace core{
             //! Return a reference to the stride container of the selection.
             //! \return stride reference
             //!
-            const index_type &stride() const { return _stride; }
+            const index_type &stride() const noexcept;
 
             //-----------------------------------------------------------------
             //! 
@@ -366,14 +294,7 @@ namespace core{
             //! \tparam CTYPE container type
             //! \return instance of CTYPE with the stride values
             //!
-            template<typename CTYPE> CTYPE stride() const
-            {
-                typedef container_utils<CTYPE> cutils_type;
-                auto c = cutils_type::create(_stride.size());
-
-                std::copy(_stride.begin(),_stride.end(),c.begin());
-                return c;
-            }
+            template<typename CTYPE> CTYPE stride() const;
 
             //================get indices======================================
             //! 
@@ -417,34 +338,7 @@ namespace core{
                      typename ITYPE,
                      typename OITYPE
                     > 
-            void index(const ITYPE &sindex,OITYPE &oindex) const
-            {
-#ifdef DEBUG
-                //check here if the size (rank) of the original shape of the
-                //selection matches that of the original index.
-                check_equal_size(_oshape,oindex,EXCEPTION_RECORD);
-                //check if the size of the selection index container matches the
-                //effective rank of the selection
-                check_equal_size(shape<ITYPE>(),sindex,EXCEPTION_RECORD);
-#endif
-
-                //now we have to add index*stride from the selection index too
-                //the appropriate locations
-                auto os_iter = _oshape.begin(); //iter. over original shape
-                auto st_iter = _stride.begin(); //iter. over selection strides
-                auto si_iter = sindex.begin();  //iter. over selection index
-                auto of_iter = _offset.begin(); //iter. over the offset
-
-                //loop over output index
-                for(auto &oi: oindex)
-                {
-                    size_t index = *of_iter++;
-                    //oi = *of_iter++;
-                    if(*os_iter++ != 1) index += (*st_iter)*(*si_iter++);
-                    ++st_iter;  //need to increment this guy in any case
-                    oi = index;
-                }
-            }
+            void index(const ITYPE &sindex,OITYPE &oindex) const;
 
             //-----------------------------------------------------------------
             //!
@@ -465,17 +359,97 @@ namespace core{
                      typename OITYPE,
                      typename ITYPE
                     > 
-            OITYPE index(const ITYPE &sindex) const
-            {
-                typedef container_utils<OITYPE> cutils_type;
-                auto oindex = cutils_type::create(_oshape.size());
-
-                try{ index(sindex,oindex); }
-                EXCEPTION_FORWARD(size_mismatch_error);
-
-                return oindex;
-            }
+            OITYPE index(const ITYPE &sindex) const;
     };
+
+    template<typename CTYPE>
+    CTYPE array_selection::shape() const
+    {
+        typedef container_utils<CTYPE>  cutils_type;
+        auto c = cutils_type::create(rank());
+
+        //now we have to copy only those values from the original shape
+        //that are not equal 1
+        std::copy_if(_oshape.begin(),_oshape.end(),c.begin(),
+                     [](size_t i){ return i!=1; });
+        return c;
+    }
+
+    template<typename CTYPE> CTYPE
+	array_selection::full_shape() const
+    {
+        typedef container_utils<CTYPE> cutils_type;
+        auto c = cutils_type::create(_oshape.size());
+        std::copy(_oshape.begin(),_oshape.end(),c.begin());
+        return c;
+    }
+
+    template<typename CTYPE>
+    CTYPE array_selection::offset() const
+    {
+        typedef container_utils<CTYPE> cutils_type;
+        auto c = cutils_type::create(_offset.size());
+        std::copy(_offset.begin(),_offset.end(),c.begin());
+        return c;
+    }
+
+    template<typename CTYPE>
+    CTYPE array_selection::stride() const
+    {
+    	typedef container_utils<CTYPE> cutils_type;
+    	auto c = cutils_type::create(_stride.size());
+
+    	std::copy(_stride.begin(),_stride.end(),c.begin());
+    	return c;
+    }
+
+    template<
+	typename ITYPE,
+	typename OITYPE
+	>
+    void array_selection::index(const ITYPE &sindex,OITYPE &oindex) const
+    {
+#ifdef DEBUG
+//check here if the size (rank) of the original shape of the
+    	//selection matches that of the original index.
+    	check_equal_size(_oshape,oindex,EXCEPTION_RECORD);
+    	//check if the size of the selection index container matches the
+    	//effective rank of the selection
+    	check_equal_size(shape<ITYPE>(),sindex,EXCEPTION_RECORD);
+#endif
+
+    	//now we have to add index*stride from the selection index too
+    	//the appropriate locations
+    	auto os_iter = _oshape.begin(); //iter. over original shape
+    	auto st_iter = _stride.begin(); //iter. over selection strides
+    	auto si_iter = sindex.begin();  //iter. over selection index
+    	auto of_iter = _offset.begin(); //iter. over the offset
+
+    	//loop over output index
+    	for(auto &oi: oindex)
+    	{
+    		size_t index = *of_iter++;
+    		//oi = *of_iter++;
+    		if(*os_iter++ != 1) index += (*st_iter)*(*si_iter++);
+    		++st_iter;  //need to increment this guy in any case
+    		oi = index;
+    	}
+    }
+
+    template<
+	typename OITYPE,
+	typename ITYPE
+	>
+    OITYPE array_selection::index(const ITYPE &sindex) const
+    {
+    	typedef container_utils<OITYPE> cutils_type;
+    	auto oindex = cutils_type::create(_oshape.size());
+
+    	try{ index(sindex,oindex); }
+    	EXCEPTION_FORWARD(size_mismatch_error);
+
+    	return oindex;
+    }
 
     
     //-------------------------------------------------------------------------
