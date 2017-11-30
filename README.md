@@ -1,4 +1,4 @@
-#libpnicore
+# libpnicore
                                    
 
 libpnicore is the foundation of the PNI library stack. It provides data structures
@@ -12,7 +12,7 @@ structures include
 * type erasures for scalar and array objects
 * a set of exceptions used by all other libraries 
 
-##Installation
+## Installation
 
 On Linux the following software is required to build the libpnicore
 
