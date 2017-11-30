@@ -111,6 +111,11 @@ namespace core{
     	return _stride;
     }
 
+    const array_selection::index_type &array_selection::full_shape() const noexcept
+    {
+    	return _oshape;
+    }
+
     //======================implementation of general purpose methods===========
     std::ostream &operator<<(std::ostream &o,const array_selection &s)
     {
