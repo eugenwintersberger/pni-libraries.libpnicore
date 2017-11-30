@@ -40,7 +40,7 @@ message(STATUS "Building shared libraries ...")
 add_library(pnicore_shared SHARED ${PNICORE_LIBRARY_SOURCES}
 	                              ${PNICORE_LIBRARY_HEADERS}) 
 
-target_link_libraries(pnicore_shared INTERFACE Boost::program_options
+target_link_libraries(pnicore_shared PUBLIC Boost::program_options
                                                Boost::system)
 target_compile_definitions(pnicore_shared PUBLIC BOOST_ALL_DYN_LINK)
 
