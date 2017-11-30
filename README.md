@@ -1,7 +1,7 @@
 # libpnicore
                                    
 
-libpnicore is the foundation of the PNI library stack. It provides data structures
+*libpnicore* is the foundation of the PNI library stack. It provides data structures
 and functions used by all other libraries within the stack. These data
 structures include
 
@@ -14,12 +14,12 @@ structures include
 
 ## Installation
 
-On Linux the following software is required to build the libpnicore
+On Linux the following software is required to build the *libpnicore*
 
 * [gcc](https://gcc.gnu.org/) >= 4.8
 * [cmake](https://cmake.org/) >= 3.5
-* [doxygen](http://www.stack.nl/~dimitri/doxygen/)
-* [sphinx](http://www.sphinx-doc.org/en/stable/)
+* [doxygen](http://www.stack.nl/~dimitri/doxygen/) to generate XML API documentation
+* [sphinx](http://www.sphinx-doc.org/en/stable/) to generate HTML and PDF documentation
 * [Boost](http://www.boost.org/) >= 1.55
 
 Acquire the sources either by either cloning this repository or by 
@@ -48,4 +48,26 @@ $ make install
 
 ## Usage
 
-C
+*libpnicore* installs a CMake package file along with its files. So using the 
+library from within CMake is rather simple. Your `CMakeLists.txt` includes
+the `pnicore` package as any other package 
+
+```cmake
+cmake_minimum_required(VERSION 3.5.0)
+project(test_pnicore LANGUAGES CXX C VERSION 0.0.1)
+set(CMAKE_CXX_STANDARD 11)
+
+find_package(pnicore REQUIRED)
+
+add_executable(test_pnicore test_pnicore.cpp)
+target_link_libraries(test_pnicore pnicore_shared)
+```
+
+As we are relying on CMake version higher than 3.3 we can use the imported 
+targets feature. In this case all dependencies required to build and link
+with *libpnicore* are automatically pulled in by the `pnicore_shared` 
+target.
+
+In cases where you have *libpnicore* installed to locations where cmake 
+is not automatically looking for packages you may have to set the 
+`pnicore_DIR` variable when calling cmake the first time. 
