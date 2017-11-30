@@ -14,4 +14,36 @@ structures include
 
 ##Installation
 
+On Linux the following software is required to build the libpnicore
+
+* gcc >= 4.8
+* cmake 
+* doxygen
+* sphinx
+* Boost >= 1.55
+
+Acquire the sources either by either cloning this repository or by 
+
+```bash
+$ git clone https://github.com/pni-libraries/libpnicore.git
+```
+
+alternatively you could also download a source tarball from the release 
+site of this project. Once the you have the sources create a build 
+directory and run cmake 
+
+```bash
+$ mkdir libpnicore-build
+$ cd libpnicore-build
+$ cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/opt/pni ../libpnicore
+```
+In the example we have chosen to install the library below `/opt/pni`. 
+To test build and install the library use 
+
+```bash
+$ make
+$ make test
+$ make install
+```
+
 ##Usage
