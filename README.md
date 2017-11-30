@@ -16,11 +16,11 @@ structures include
 
 On Linux the following software is required to build the libpnicore
 
-* gcc >= 4.8
-* cmake 
-* doxygen
-* sphinx
-* Boost >= 1.55
+* [gcc](https://gcc.gnu.org/) >= 4.8
+* [cmake](https://cmake.org/) >= 3.5
+* [doxygen](http://www.stack.nl/~dimitri/doxygen/)
+* [sphinx](http://www.sphinx-doc.org/en/stable/)
+* [Boost](http://www.boost.org/) >= 1.55
 
 Acquire the sources either by either cloning this repository or by 
 
@@ -46,4 +46,6 @@ $ make test
 $ make install
 ```
 
-##Usage
+## Usage
+
+C
