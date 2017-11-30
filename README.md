@@ -66,7 +66,8 @@ target_link_libraries(test_pnicore pnicore_shared)
 As we are relying on CMake version higher than 3.3 we can use the imported 
 targets feature. In this case all dependencies required to build and link
 with *libpnicore* are automatically pulled in by the `pnicore_shared` 
-target.
+target. Be aware of the `CMAKE_CXX_STANDARD` variable set to `11` in the 
+above example. This is absolutely mandatory if you want to use *libpnicore*!
 
 In cases where you have *libpnicore* installed to locations where cmake 
 is not automatically looking for packages you may have to set the 
