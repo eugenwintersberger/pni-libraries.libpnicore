@@ -32,24 +32,14 @@ set(pnicore_SO_VERSION ${pnicore_VERSION})
 # =============================================================================
 # on Windows we try to fetch Boost by default from Conan
 # =============================================================================
-if(NOT CONAN_BOOST)
-    if(CMAKE_HOST_SYSTEM_NAME MATCHES Windows)
-        set(CONAN_BOOST ON CACHE BOOL "Using Boost from Conan repository!")
-    else()
-        set(CONAN_BOOST OFF CACHE BOOL "Using Boost from Conan repository!")
-    endif()
-endif()
+set(WITH_CONAN OFF CACHE BOOL "Pull dependencies from conan repository")
 
-if(CONAN_BOOST)
-
+if(WITH_CONAN)
     include(cmake/common/ConanSetup.cmake)
 
-    conan_cmake_run(REQUIRES "Boost/1.62.0@lasote/stable"
+    conan_cmake_run(CONANFILE conanfile.txt
                     BASIC_SETUP
-                    OPTIONS "Boost:shared=True"
-                    IMPORTS "bin, *.dll -> bin"
                     BUILD missing)
-
 endif()
 
 
