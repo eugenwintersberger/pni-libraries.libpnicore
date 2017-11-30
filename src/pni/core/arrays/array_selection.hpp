@@ -111,8 +111,7 @@ namespace core{
             //!
             //! \brief default constructor
             //!
-            explicit array_selection(): _oshape(0), _offset(0), _stride(0)
-            {}
+            explicit array_selection();
 
             //-----------------------------------------------------------------
             //!
@@ -125,12 +124,7 @@ namespace core{
             //! \param ostride strides of the selection in the original array
             //!
             explicit array_selection(index_type &&oshape,index_type &ooffset,
-                                     index_type &&ostride):
-                _oshape(std::move(oshape)),
-                _offset(std::move(ooffset)),
-                _stride(std::move(ostride))
-            {
-            }
+                                     index_type &&ostride);
             
             //-----------------------------------------------------------------
             //!
@@ -143,62 +137,31 @@ namespace core{
             //!
             explicit array_selection(const index_type &oshape,
                                      const index_type &ooffset,
-                                     const index_type &ostride):
-                _oshape(oshape),
-                _offset(ooffset),
-                _stride(ostride)
-            {
-            }
+                                     const index_type &ostride);
 
             //-----------------------------------------------------------------
             //!
             //! \brief copy constructor
             //!
-            explicit array_selection(const array_selection &s):
-                _oshape(s._oshape),
-                _offset(s._offset),
-                _stride(s._stride)
-            { }
+            explicit array_selection(const array_selection &s);
 
             //-----------------------------------------------------------------
             //!
             //! \brief move constructor
             //!
-            array_selection(array_selection &&s):
-                _oshape(std::move(s._oshape)),
-                _offset(std::move(s._offset)),
-                _stride(std::move(s._stride))
-            { }
+            array_selection(array_selection &&s);
 
             //-----------------------------------------------------------------
             //!
             //! \brief copy assignment operator
             //!
-            array_selection &operator=(const array_selection &s)
-            {
-                if(this == &s) return *this;
-
-                _oshape = s._oshape;
-                _offset = s._offset;
-                _stride = s._stride;
-
-                return *this;
-            }
+            array_selection &operator=(const array_selection &s);
 
             //-----------------------------------------------------------------
             //!
             //! \brief move asignment operator
             //!
-            array_selection &operator=(array_selection &&s)
-            {
-                if(this == &s) return *this;
-
-                _oshape = std::move(s._oshape);
-                _offset = std::move(s._offset);
-                _stride = std::move(s._stride);
-
-                return *this;
-            }
+            array_selection &operator=(array_selection &&s);
 
 
             //-----------------------------------------------------------------
@@ -241,10 +204,7 @@ namespace core{
             //! 
             //! \return effective rank
             //! 
-            size_t rank() const 
-            { 
-                return _oshape.size() - std::count(_oshape.begin(),_oshape.end(),1);
-            }
+            size_t rank() const;
 
             //-----------------------------------------------------------------
             //!
@@ -279,18 +239,7 @@ namespace core{
             //! 
             //! \return number of elements
             //!
-            size_t size() const 
-            { 
-                typedef typename index_type::value_type value_type;
-                if(_oshape.empty()) return 0; //not initialized 
-
-                if(rank() == 0) return 1; //scalar element selected 
-
-                //compute the size and return it
-                return std::accumulate(_oshape.begin(),_oshape.end(),
-                                      value_type(1),
-                                      std::multiplies<value_type>());
-            }
+            size_t size() const;
 
             //=========methods to retrieve full selection information==========
             //!
@@ -330,7 +279,7 @@ namespace core{
             //!
             //! \return reference to offsets
             //!
-            const index_type &offset() const { return _offset; }
+            const index_type &offset() const noexcept;
 
             //-----------------------------------------------------------------
             //! 
@@ -355,7 +304,7 @@ namespace core{
             //! Return a reference to the stride container of the selection.
             //! \return stride reference
             //!
-            const index_type &stride() const { return _stride; }
+            const index_type &stride() const noexcept;
 
             //-----------------------------------------------------------------
             //! 
