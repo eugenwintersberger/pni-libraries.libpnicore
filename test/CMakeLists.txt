@@ -7,6 +7,7 @@ include(${PROJECT_SOURCE_DIR}/cmake/common/BoostTestConfig.cmake)
 #
 #build some commonly used code
 #
+include_directories(${PROJECT_SOURCE_DIR}/src)
 set(COMMON_SOURCES compare.cpp data_generator.cpp)
 add_library(test_common OBJECT ${COMMON_SOURCES})
 target_include_directories(test_common PRIVATE ${Boost_INCLUDE_DIRS} ${PROJECT_SOURCE_DIR}/include)

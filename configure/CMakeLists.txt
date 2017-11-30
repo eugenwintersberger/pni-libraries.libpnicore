@@ -16,7 +16,6 @@ message(STATUS "System: ${Boost_SYSTEM_LIBRARY}")
 message(STATUS "Program Options: ${Boost_PROGRAM_OPTIONS_LIBRARY}")
 
 link_directories(${Boost_LIBRARY_DIRS})
-add_definitions(${Boost_LIB_DIAGNOSTIC_DEFINITIONS})
 
 #======================compiler specific configuration========================
 if(CMAKE_CXX_COMPILER_ID MATCHES GNU)
