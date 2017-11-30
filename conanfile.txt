@@ -1,0 +1,12 @@
+[requires]
+Boost/1.62.0@lasote/stable
+
+[generators]
+cmake
+
+[options]
+Boost:shared=True
+
+[imports]
+bin, *.dll -> ./bin
+lib, *.lib -> ./lib

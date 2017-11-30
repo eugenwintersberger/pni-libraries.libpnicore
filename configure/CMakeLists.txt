@@ -14,9 +14,9 @@ message(STATUS "Found shared libraries for Boost")
 message(STATUS "Unit test framework: ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY}")
 message(STATUS "System: ${Boost_SYSTEM_LIBRARY}")
 message(STATUS "Program Options: ${Boost_PROGRAM_OPTIONS_LIBRARY}")
+message(STATUS "Boost link directory: ${Boost_LIBRARY_DIRS}")
 
 link_directories(${Boost_LIBRARY_DIRS})
-add_definitions(${Boost_LIB_DIAGNOSTIC_DEFINITIONS})
 
 #======================compiler specific configuration========================
 if(CMAKE_CXX_COMPILER_ID MATCHES GNU)
