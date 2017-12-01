@@ -28,11 +28,6 @@
 #include <array>
 
 #include <functional>
-#include <boost/mpl/contains.hpp>
-#include <boost/mpl/vector.hpp>
-#include <boost/mpl/placeholders.hpp>
-#include <boost/mpl/count_if.hpp>
-#include <boost/mpl/size.hpp>
 #include <pni/core/arrays/slice.hpp>
 #include <pni/core/arrays/array_view.hpp>
 
@@ -76,9 +71,9 @@ namespace core{
     struct array_view_trait<ATYPE,true>    
     {
         //! non-const view type
-        typedef array_view<ATYPE> type;
+        using type = array_view<ATYPE>;
         //! const view type
-        typedef array_view<const ATYPE> const_type;
+        using const_type = array_view<const ATYPE>;
     };
 
     //-------------------------------------------------------------------------
@@ -93,9 +88,9 @@ namespace core{
     struct array_view_trait<ATYPE,false>
     {
         //! single element reference
-        typedef typename ATYPE::value_type& type;
+        using type = typename ATYPE::value_type&;
         //! single element value 
-        typedef typename ATYPE::value_type  const_type;
+        using const_type = typename ATYPE::value_type;
 
     };
 
@@ -131,9 +126,9 @@ namespace core{
     struct view_provider<ATYPE,false>
     {
         //! reference type
-        typedef typename array_view_trait<ATYPE,false>::type ref_type;
+        using ref_type = typename array_view_trait<ATYPE,false>::type;
         //! const type (value type)
-        typedef typename array_view_trait<ATYPE,false>::const_type type;
+        using type = typename array_view_trait<ATYPE,false>::const_type;
        
         //---------------------------------------------------------------------
         //!
@@ -158,7 +153,7 @@ namespace core{
                 > 
         static ref_type get_reference(CTYPE &c,MAP &map,ITYPES ...indexes)
         {
-            typedef std::array<size_t,sizeof...(ITYPES)> array_type; 
+            using array_type = std::array<size_t,sizeof...(ITYPES)>;
 #ifdef DEBUG
             array_type buffer{{size_t(indexes)...}};
             check_indexes(buffer,map,EXCEPTION_RECORD);
@@ -191,7 +186,7 @@ namespace core{
                 >
         static type get_value(const CTYPE &c,MAP &map,ITYPES ...indexes)
         {
-            typedef std::array<size_t,sizeof...(ITYPES)> array_type;
+            using array_type = std::array<size_t,sizeof...(ITYPES)>;
 #ifdef DEBUG
             array_type buffer{{size_t(indexes)...}};
             check_indexes(buffer,map,EXCEPTION_RECORD);
@@ -217,9 +212,9 @@ namespace core{
     struct view_provider<ATYPE,true>
     {
         //! reference type
-        typedef typename array_view_trait<ATYPE,true>::type ref_type;
+        using ref_type = typename array_view_trait<ATYPE,true>::type;
         //! const reference type
-        typedef typename array_view_trait<ATYPE,true>::const_type type;
+        using type = typename array_view_trait<ATYPE,true>::const_type;
        
         //---------------------------------------------------------------------
         //!
@@ -242,7 +237,7 @@ namespace core{
                 > 
         static ref_type get_reference(CTYPE &c,MAP &,ITYPES ...indexes)
         {
-            typedef std::array<slice,sizeof...(ITYPES)> array_type; 
+            using array_type = std::array<slice,sizeof...(ITYPES)>;
 
             return ref_type(c,array_selection::create(
                             array_type{{slice(indexes)...}}));
@@ -270,7 +265,7 @@ namespace core{
                 >
         static type get_value(const CTYPE &c,MAP &,ITYPES ...indexes)
         {
-            typedef std::array<slice,sizeof...(ITYPES)> array_type;
+            using array_type = std::array<slice,sizeof...(ITYPES)>;
 
             return type(c,array_selection::create(
                         array_type{{slice(indexes)...}}));
