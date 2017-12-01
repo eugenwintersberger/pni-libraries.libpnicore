@@ -15,7 +15,7 @@ before_script:
     
 script:
     - docker exec -it build bash -c "cd build && cmake -DCMAKE_BUILD_TYPE=Release .."
-    - docker exec -it build bash -c "cd build && make -j4"
+    - docker exec -it build bash -c "cd build && make"
     - docker exec -it build bash -c "cd build && make test"
     
 after_script:
