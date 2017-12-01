@@ -1,0 +1,14 @@
+language: cpp
+sudo: required
+dist: trusty
+
+
+services:
+    -docker
+    
+before_script:
+    - docker run --name build -it -v"$PWD:/src" eugenwintersberger/debian_9:latest
+    
+script:
+    - ls -l 
+    
