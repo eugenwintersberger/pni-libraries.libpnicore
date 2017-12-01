@@ -23,12 +23,7 @@
 //
 #pragma once
 
-#include <boost/mpl/arithmetic.hpp>
-#include <boost/mpl/times.hpp>
-#include <boost/mpl/vector.hpp>
-#include <boost/mpl/size_t.hpp>
-#include <boost/lexical_cast.hpp>
-
+#include <sstream>
 #include <pni/core/utilities/container_utils.hpp>
 
 namespace pni{
@@ -50,13 +45,13 @@ namespace core{
     template<typename ATYPE> struct array_factory
     {
         //! shortcut for the array type
-        typedef ATYPE array_type;
+        using array_type =  ATYPE;
         //! value type of the array
-        typedef typename array_type::value_type value_type;
+        using value_type = typename array_type::value_type;
         //! map type of the array
-        typedef typename array_type::map_type map_type;
+        using map_type =  typename array_type::map_type;
         //! storage type of the array
-        typedef typename array_type::storage_type storage_type;
+        using storage_type = typename array_type::storage_type;
 
 
         //---------------------------------------------------------------------
@@ -133,11 +128,14 @@ namespace core{
         {
             auto map = map_utils<map_type>::create(s);
             if(map.max_elements() != data.size())
-                throw size_mismatch_error(EXCEPTION_RECORD,
-                        "Total number of elements from map ("
-                        +boost::lexical_cast<string>(map.max_elements())+
-                        ") does not match data size ("
-                        +boost::lexical_cast<string>(data.size())+")!");
+            {
+            	std::stringstream ss;
+            	ss<<"Total number of elements from map ("
+                  <<map.max_elements()
+				  <<") does not match data size ("
+				  <<data.size()<<")!";
+                throw size_mismatch_error(EXCEPTION_RECORD,ss.str());
+            }
 
             auto storage = container_utils<storage_type>::create(data.size());
             std::copy(data.begin(),data.end(),storage.begin());
@@ -176,11 +174,14 @@ namespace core{
         {
             auto map = map_utils<map_type>::create(shape);
             if(map.max_elements() != data.size())
-                throw size_mismatch_error(EXCEPTION_RECORD,
-                        "Total number of elements from map ("
-                        +boost::lexical_cast<string>(map.max_elements())+
-                        "does not match data size ("
-                        +boost::lexical_cast<string>(data.size())+")!");
+            {
+            	std::stringstream ss;
+            	ss<<"Total number of elements from map ("
+            	  <<map.max_elements()
+				  <<"does not match data size ("
+				  <<data.size()<<")!";
+                throw size_mismatch_error(EXCEPTION_RECORD,ss.str());
+            }
 
             auto storage = container_utils<storage_type>::create(data.size());
             std::copy(data.begin(),data.end(),storage.begin());

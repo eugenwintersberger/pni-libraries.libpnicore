@@ -31,6 +31,7 @@
 #include <pni/core/arrays/slice.hpp>
 #include <pni/core/arrays/array_arithmetic.hpp>
 #include <pni/core/arrays/index_iterator.hpp>
+#include <boost/mpl/size_t.hpp>
 
 
 namespace pni{

@@ -27,7 +27,6 @@
 #include <pni/core/types/type_id_map.hpp>
 #include <pni/core/utilities/sfinae_macros.hpp>
 #include <functional>
-#include <boost/mpl/for_each.hpp>
 
 #include <pni/core/windows.hpp>
 

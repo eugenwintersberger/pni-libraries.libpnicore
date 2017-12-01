@@ -24,3 +24,4 @@ install
 .settings/
 /project.cson
 /Debug/
+/test-build/

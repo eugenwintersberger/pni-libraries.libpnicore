@@ -24,10 +24,6 @@
 #pragma once
 
 #include <pni/core/types/types.hpp>
-#include <boost/mpl/pair.hpp>
-#include <boost/mpl/map.hpp>
-#include <boost/mpl/find_if.hpp>
-#include <boost/type_traits/is_same.hpp>
 
 namespace pni{
 namespace core{
