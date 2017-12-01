@@ -7,8 +7,12 @@ services:
     - docker
     
 before_script:
-    - docker run --name build -it -v"$PWD:/src" eugenwintersberger/debian_9:latest
+    - docker run --name build -i -d -v"$PWD:/src" eugenwintersberger/debian_9:latest
+    - docker exec -it build ls
     
 script:
-    - ls -l 
+    - docker exec -it build ls
+    
+after_script:
+    - docker container stop build
     
