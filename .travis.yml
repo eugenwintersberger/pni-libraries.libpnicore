@@ -4,7 +4,7 @@ dist: trusty
 
 
 services:
-    -docker
+    - docker
     
 before_script:
     - docker run --name build -it -v"$PWD:/src" eugenwintersberger/debian_9:latest
