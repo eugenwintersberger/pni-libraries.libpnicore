@@ -16,8 +16,9 @@ set(SOURCES is_integer_type_test.cpp
 
 set_boost_test_definitions(SOURCES "testing type traits")
 
-add_executable(traits_test ${SOURCES})
+add_executable(traits_test EXCLUDE_FROM_ALL ${SOURCES})
 target_link_libraries(traits_test pnicore_shared Boost::unit_test_framework)
+add_dependencies(check traits_test)
 
 add_boost_logging_test("types:traits_test" traits_test
                        ${PROJECT_BINARY_DIR}/test/types/traits)

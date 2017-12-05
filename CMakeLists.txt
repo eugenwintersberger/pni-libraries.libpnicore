@@ -4,6 +4,7 @@ project(pnicore
         VERSION 1.1.0)
 
 include(CTest)             # - activate testing
+add_custom_target(check)
 set(CMAKE_CXX_STANDARD 11) # - we need C++11 for the entire code
 
 include(cmake/common/InstallConfig.cmake)   #setup the install paths

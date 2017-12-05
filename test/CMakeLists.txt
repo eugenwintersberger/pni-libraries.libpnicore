@@ -3,34 +3,38 @@
 #
 include(${PROJECT_SOURCE_DIR}/cmake/common/BoostTestConfig.cmake)
 
-
 #
 #build some commonly used code
 #
 include_directories(${PROJECT_SOURCE_DIR}/src)
 set(COMMON_SOURCES compare.cpp data_generator.cpp)
-add_library(test_common OBJECT ${COMMON_SOURCES})
+add_library(test_common EXCLUDE_FROM_ALL OBJECT ${COMMON_SOURCES})
 target_include_directories(test_common PRIVATE ${Boost_INCLUDE_DIRS} ${PROJECT_SOURCE_DIR}/include)
 
 #
 # build test program for the random number generator
 #
-add_executable(rand_test "rand_test.cpp" $<TARGET_OBJECTS:test_common>)
+add_executable(rand_test EXCLUDE_FROM_ALL "rand_test.cpp" $<TARGET_OBJECTS:test_common>)
 target_link_libraries(rand_test PRIVATE pnicore_shared)
 
 #
 # build random number generator
 #
-add_executable(rand_gen rand_gen.cpp)
+add_executable(rand_gen EXCLUDE_FROM_ALL rand_gen.cpp)
 target_link_libraries(rand_gen pnicore_shared)
 
 #
 # build the environment test program
 #
-add_executable(environment_test environment_test.cpp)
+add_executable(environment_test EXCLUDE_FROM_ALL environment_test.cpp)
 add_test(NAME "Environment:test"
          COMMAND environment_test
          WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/test)
+        
+add_dependencies(check test_common 
+                       rand_test 
+                       rand_gen 
+                       environment_test)
 
 #
 # build all the other tests

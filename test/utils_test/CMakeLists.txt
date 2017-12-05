@@ -8,8 +8,9 @@ set(SOURCES container_utils_array_test.cpp
 
 set_boost_test_definitions(SOURCES "testing utilty code")
 
-add_executable(utils_test ${SOURCES} $<TARGET_OBJECTS:test_common>)
+add_executable(utils_test EXCLUDE_FROM_ALL ${SOURCES} $<TARGET_OBJECTS:test_common>)
 target_link_libraries(utils_test pnicore_shared Boost::unit_test_framework)
+add_dependencies(check utils_test)
 
 
 add_boost_logging_test("utils_test" utils_test
