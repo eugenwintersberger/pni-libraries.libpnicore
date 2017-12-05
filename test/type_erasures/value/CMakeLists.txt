@@ -22,7 +22,8 @@ set(SOURCES value_construction_test.cpp
 
 set_boost_test_definitions(SOURCES "testing the value type erasure")
 
-add_executable(value_test ${SOURCES} $<TARGET_OBJECTS:test_common>)
+add_executable(value_test EXCLUDE_FROM_ALL ${SOURCES} $<TARGET_OBJECTS:test_common>)
+add_dependencies(check value_test)
 
 target_link_libraries(value_test pnicore_shared Boost::unit_test_framework)
 

@@ -13,11 +13,12 @@ set(SOURCES binary_test.cpp
 
 set_boost_test_definitions(SOURCES "testing type features")
 
-add_executable(type_test ${SOURCES})
+add_executable(type_test EXCLUDE_FROM_ALL ${SOURCES})
 target_link_libraries(type_test pnicore_shared Boost::unit_test_framework)
 
-add_executable(show_type_info show_type_info.cpp)
+add_executable(show_type_info EXCLUDE_FROM_ALL show_type_info.cpp)
 target_link_libraries(show_type_info pnicore_shared)
+add_dependencies(check type_test show_type_info)
 
 
 add_subdirectory(conversion)

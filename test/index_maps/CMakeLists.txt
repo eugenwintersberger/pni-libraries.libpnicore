@@ -10,8 +10,9 @@ set(SOURCES index_map_tests.cpp
 # and only necessary as we have to implement the main function here
 # by ourselves. 
 
-add_executable(index_maps_test ${SOURCES})
+add_executable(index_maps_test EXCLUDE_FROM_ALL ${SOURCES})
 target_link_libraries(index_maps_test pnicore_shared Boost::unit_test_framework)
+add_dependencies(check index_maps_test)
 
 add_boost_logging_test("index_maps_test"
                        index_maps_test
