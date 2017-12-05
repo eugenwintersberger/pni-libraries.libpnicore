@@ -25,7 +25,6 @@
 
 #include <vector>
 #include <algorithm>
-#include <numeric>
 
 #include <pni/core/utilities/container_utils.hpp>
 #include <pni/core/error/exception_utils.hpp>

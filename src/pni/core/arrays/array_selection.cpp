@@ -23,6 +23,7 @@
 //!
 
 #include <pni/core/arrays/array_selection.hpp>
+#include <numeric>
 
 namespace pni{
 namespace core{
