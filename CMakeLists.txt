@@ -4,8 +4,6 @@ project(pnicore
         VERSION 1.1.0)
 
 include(CTest)             # - activate testing
-add_custom_target(check
-                  COMMAND ${CMAKE_CTEST_COMMAND})
 set(CMAKE_CXX_STANDARD 11) # - we need C++11 for the entire code
 
 include(cmake/common/InstallConfig.cmake)   #setup the install paths
@@ -20,6 +18,11 @@ include(cmake/common/DoxygenUtils.cmake)
 include(cmake/common/SphinxUtils.cmake)
 
 
+#
+# add a check target that runs the tests
+#
+add_custom_target(check
+    COMMAND ${CMAKE_CTEST_COMMAND} -C ${CMAKE_BUILD_TYPE})
 
 #
 #as libpnicore is in most part a template library and should thus be
