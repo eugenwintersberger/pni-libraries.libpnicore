@@ -3,7 +3,7 @@ if((NOT TARGET Boost::system) AND (NOT TARGET Boost::program_options))
 
 	set(Boost_USE_MULTITHREADED ON)
 	set(Boost_USE_STATIC_RUNTIME OFF)
-	find_package(Boost 1.41 REQUIRED COMPONENTS program_options system)
+	find_package(Boost @Boost_MAJOR_VERSION@.@Boost_MINOR_VERSION@.@Boost_SUBMINOR_VERSION@ REQUIRED COMPONENTS program_options system)
 	if(NOT Boost_FOUND)
 		message(FATAL_ERROR "Could not find boost libraries - you may have to set the BOOST_ROOT variable!")
 	endif()

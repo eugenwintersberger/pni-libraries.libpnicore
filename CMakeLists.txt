@@ -41,7 +41,7 @@ set(WITH_CONAN OFF CACHE BOOL "Pull dependencies from conan repository")
 
 if(WITH_CONAN)
     include(cmake/common/ConanSetup.cmake)
-
+    include(conan.cmake)
     conan_cmake_run(CONANFILE conanfile.txt
                     BASIC_SETUP
                     BUILD missing)
@@ -64,8 +64,9 @@ endif()
 
 
 #======================do here some setup work=================================
-include(cmake/CMakeLists.txt)
 include(configure/CMakeLists.txt)
+include(cmake/CMakeLists.txt)
+
 
 
 #need this to get the generated header files into the build.
