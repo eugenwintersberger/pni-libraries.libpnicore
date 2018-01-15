@@ -2,21 +2,27 @@ language: cpp
 sudo: required
 dist: trusty
 
+env:
+    - IMAGE=debian_9 
+    - IMAGE=docker-debian-8 
+    - IMAGE=docker-ubuntu-17.10
+    - BUILDTYPE=Debug
+    - BUILDTYPE=Release
 
 services:
     - docker
     
 before_script:
-    - docker run --name build -i -d -v"$PWD:/src" eugenwintersberger/debian_9:latest
+    - docker run --name build -i -d -v"$PWD:/src" eugenwintersberger/$IMAGE:latest
     - docker exec -it build ls
     - docker exec -it build bash -c "git submodule init"
     - docker exec -it build bash -c "git submodule update --remote"
     - docker exec -it build bash -c "mkdir build"
     
 script:
-    - docker exec -it build bash -c "cd build && cmake -G Ninja -DCMAKE_BUILD_TYPE=Release .."
-    - docker exec -it build bash -c "cd build && cmake --build . --target all --config Release"
-    - docker exec -it build bash -c "cd build && cmake --build . --target check --config Release"
+    - docker exec -e BUILDTYPE -it build bash -c "cd build && cmake -G Ninja -DCMAKE_BUILD_TYPE=$BUILDTYPE .."
+    - docker exec -e BUILDTYPE -it build bash -c "cd build && cmake --build . --target all --config $BUILDTYPE"
+    - docker exec -e BUILDTYPE -it build bash -c "cd build && cmake --build . --target check --config $BUILDTYPE"
     
 after_script:
     - docker container stop build
