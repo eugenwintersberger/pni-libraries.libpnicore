@@ -25,3 +25,4 @@ install
 /project.cson
 /Debug/
 /test-build/
+/.externalToolBuilders/
