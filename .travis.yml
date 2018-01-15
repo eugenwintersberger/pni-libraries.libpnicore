@@ -3,11 +3,12 @@ sudo: required
 dist: trusty
 
 env:
-    - IMAGE=debian_9 
-    - IMAGE=docker-debian-8 
-    - IMAGE=docker-ubuntu-17.10
-    - BUILDTYPE=Debug
-    - BUILDTYPE=Release
+    - IMAGE=debian_9 BUILDTYPE=Debug
+    - IMAGE=debian_9 BUILDTYPE=Release
+    - IMAGE=docker-debian-8 BUILDTYPE=Debug
+    - IMAGE=docker-debian-8 BUILDTYPE=Release
+    - IMAGE=docker-ubuntu-17.10 BUILDTYPE=Debug
+    - IMAGE=docker-ubuntu-17.10 BUILDTYPE=Release
 
 services:
     - docker
