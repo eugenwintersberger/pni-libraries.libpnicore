@@ -55,7 +55,7 @@ target_include_directories(pnicore_shared
 #set the package and SO version of the library
 set_target_properties(pnicore_shared PROPERTIES 
                       VERSION "${PROJECT_VERSION}"
-                      SOVERSION "${SO_VERSION}"
+                      SOVERSION "${PROJECT_VERSION}"
                       OUTPUT_NAME pnicore)
 
 
