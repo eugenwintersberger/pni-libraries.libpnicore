@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.0)
 project(pnicore
         LANGUAGES CXX C
-        VERSION 1.1.0)
+        VERSION 1.1.1)
 
 include(CTest)             # - activate testing
 set(CMAKE_CXX_STANDARD 11) # - we need C++11 for the entire code
