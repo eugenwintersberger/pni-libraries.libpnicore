@@ -1,0 +1,174 @@
+
+
+<!doctype html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Users guide &#8212; libpnicore  documentation</title>
+    
+    <link rel="stylesheet" href="../_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="libpnicore  documentation" href="../index.html" />
+    <link rel="next" title="The PNI library stack" href="introduction.html" />
+    <link rel="prev" title="pnicore documentation" href="../index.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="introduction.html" title="The PNI library stack"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../index.html" title="pnicore documentation"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">libpnicore  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../index.html"
+                        title="previous chapter">pnicore documentation</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="introduction.html"
+                        title="next chapter">The PNI library stack</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/users_guide/index.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="users-guide">
+<h1>Users guide<a class="headerlink" href="#users-guide" title="Permalink to this headline">¶</a></h1>
+<p>Contents:</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">The PNI library stack</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="introduction.html#how-to-read-this-manual">How to read this manual</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#installing-pre-built-binary-packages">Installing pre-built binary packages</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#install-from-sources">Install from sources</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="using.html">Using <cite>libpnicore</cite></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="using.html#include-files">Include files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="using.html#building-and-linking">Building and linking</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="types.html">Data Types</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="types.html#compile-time-type-identification">Compile time type identification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="types.html#identifying-types-at-runtime">Identifying types at runtime</a></li>
+<li class="toctree-l2"><a class="reference internal" href="types.html#the-binary-type">The <code class="docutils literal"><span class="pre">binary</span></code> type</a></li>
+<li class="toctree-l2"><a class="reference internal" href="types.html#the-none-type">The <code class="docutils literal"><span class="pre">none</span></code> type</a></li>
+<li class="toctree-l2"><a class="reference internal" href="types.html#the-bool-t-type">The <code class="docutils literal"><span class="pre">bool_t</span></code> type</a></li>
+<li class="toctree-l2"><a class="reference internal" href="types.html#numeric-type-conversion">Numeric type conversion</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="arrays.html">Multidimensional arrays</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="arrays.html#array-construction-and-inquery">Array construction and inquery</a></li>
+<li class="toctree-l2"><a class="reference internal" href="arrays.html#linear-access-to-data">Linear access to data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="arrays.html#multidimensional-access">Multidimensional access</a></li>
+<li class="toctree-l2"><a class="reference internal" href="arrays.html#array-views-and-slicing">Array views and slicing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="arrays.html#arithmetic-expressions">Arithmetic expressions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="arrays.html#example-matrix-vector-and-matrix-matrix-multiplication">Example: matrix-vector and matrix-matrix multiplication</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="type_erasures.html">Type erasures</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="type_erasures.html#the-value-type-erasures">The <code class="docutils literal"><span class="pre">value</span></code> type erasures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="type_erasures.html#the-value-ref-type-erasure">The <code class="docutils literal"><span class="pre">value_ref</span></code> type erasure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="type_erasures.html#type-erasures-for-arrays">Type erasures for arrays</a></li>
+<li class="toctree-l2"><a class="reference internal" href="type_erasures.html#an-example-reading-tabular-ascii-data">An example: reading tabular ASCII data</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="configuration.html">Program configuration utilities</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="configuration.html#command-line-options-and-arguments">Command line options and arguments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration.html#configuration-files">Configuration files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration.html#using-configuration-files-and-command-line-options-together">Using configuration files and command line options together</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="benchmarks.html">Benchmarks</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="benchmarks.html#iterator-benchmarks">Iterator benchmarks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="benchmarks.html#multidimensional-index-access">Multidimensional index access</a></li>
+<li class="toctree-l2"><a class="reference internal" href="benchmarks.html#arithmetics">Arithmetics</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="introduction.html" title="The PNI library stack"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../index.html" title="pnicore documentation"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">libpnicore  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2016, Eugen Wintersberger.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.9.
+    </div>
+  </body>
+</html>

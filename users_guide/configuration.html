@@ -1,0 +1,270 @@
+
+
+<!doctype html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Program configuration utilities &#8212; libpnicore  documentation</title>
+    
+    <link rel="stylesheet" href="../_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="libpnicore  documentation" href="../index.html" />
+    <link rel="up" title="Users guide" href="index.html" />
+    <link rel="next" title="Benchmarks" href="benchmarks.html" />
+    <link rel="prev" title="Type erasures" href="type_erasures.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="benchmarks.html" title="Benchmarks"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="type_erasures.html" title="Type erasures"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">libpnicore  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Users guide</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Program configuration utilities</a><ul>
+<li><a class="reference internal" href="#command-line-options-and-arguments">Command line options and arguments</a><ul>
+<li><a class="reference internal" href="#unix-conventions">Unix conventions</a></li>
+<li><a class="reference internal" href="#creating-a-simple-program-configuration">Creating a simple program configuration</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#configuration-files">Configuration files</a></li>
+<li><a class="reference internal" href="#using-configuration-files-and-command-line-options-together">Using configuration files and command line options together</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="type_erasures.html"
+                        title="previous chapter">Type erasures</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="benchmarks.html"
+                        title="next chapter">Benchmarks</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/users_guide/configuration.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="program-configuration-utilities">
+<h1>Program configuration utilities<a class="headerlink" href="#program-configuration-utilities" title="Permalink to this headline">¶</a></h1>
+<p>One of the most tedious tasks when writing applications is how to handle its
+configuration. There are several possibilities how a user can tell a program
+about input arguments and parameters</p>
+<ul class="simple">
+<li>via command line options and arguments</li>
+<li>via environment variables of the calling shell</li>
+<li>and via configuration files.</li>
+</ul>
+<p>It is important to note that this is information the program has only read-only
+access too. <em>libpnicore</em> provides some simple functions to make programs aware
+of command line options and arguments as well as of configuration files. The
+facility provided by <em>libpnicore</em> is based on the <code class="xref cpp cpp-any docutils literal"><span class="pre">boost::program_options</span></code>
+library. However, its interface is much easier to use.
+What makes this facility so interesting for scientific applications is the fact
+that every option or argument can be given a distinct data type.</p>
+<div class="section" id="command-line-options-and-arguments">
+<h2>Command line options and arguments<a class="headerlink" href="#command-line-options-and-arguments" title="Permalink to this headline">¶</a></h2>
+<p>One possibility to provide information to a program is by means of command line
+arguments and options which are passed to the program when called from a shell
+by the user. This is particularly true for Unix systems where many programs are
+called via the command line rather than via a Desktop.</p>
+<p>In this section we will deal with all the basics required to use <em>libpnicore</em> s
+configuration facilities. Read this in any case even if you only want to use a
+configuration file as many of the things written is true also for configuration
+files.</p>
+<div class="section" id="unix-conventions">
+<h3>Unix conventions<a class="headerlink" href="#unix-conventions" title="Permalink to this headline">¶</a></h3>
+<p>In the Unix world we have to distinguish between command line <em>arguments</em>
+and <em>options</em>. The former ones are strings which can typically appear
+anywhere in the command calling the program from the shell. The meaning of a
+particular option depends only on its position within the command used to run a
+program.
+The latter ones, <em>options</em>, are introduced by special tokens in the calling
+command. This token determines the meaning of a particular option. Thus options
+can appear in any order after the name of the program.
+To get a better feeling about arguments and options lets have a look on a
+typical command line call on a Unix or Linux system</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>&gt; program -oresult.dat --wavelength<span class="o">=</span><span class="m">1</span>.234 in1.dat in2.dat in3.dat
+</pre></div>
+</div>
+<p>The three input files at the end of the call (<code class="file docutils literal"><span class="pre">in1.dat</span></code>, <code class="file docutils literal"><span class="pre">in2.dat</span></code>, and
+<code class="file docutils literal"><span class="pre">in3.dat</span></code>) are passed as arguments. They can appear in any order and there
+is no way to distinguish one from the other and will be processed in the order
+of their appearance. This is in contrast to <code class="file docutils literal"><span class="pre">result.dat</span></code> and <cite>1.234</cite>
+which are passed as options. An option can be identified by a <em>short name</em> (by
+convention this must be a single character) as it is the case for <code class="file docutils literal"><span class="pre">result.dat</span></code>
+or by a <em>long name</em>, like for <cite>1.234</cite>, which must be a
+string without whitespaces. Short names are are introduced by a single <cite>-</cite>
+and followed immediately by the value of the option. Long names start with
+<cite>&#8211;</cite> followed by a <cite>=</cite> and the value of the option. An option can have both,
+a long and a short name. While short names are typically used when a program is
+called interactively by a user to minimize the typing effort, long names are
+mostly used when a program is called from a script. As they are not limited to a
+single character long names can be chosen much more descriptive than short
+names. Being restricted to a single character short names are sometimes only
+used for options which are frequently used in interactive calls while scarcely
+used options have only a long name.</p>
+</div>
+<div class="section" id="creating-a-simple-program-configuration">
+<h3>Creating a simple program configuration<a class="headerlink" href="#creating-a-simple-program-configuration" title="Permalink to this headline">¶</a></h3>
+<p>Creating a configuration for a program involves three classes</p>
+<ul class="simple">
+<li><code class="xref cpp cpp-class docutils literal"><span class="pre">configuration</span></code> which, in the end, will hold the configuration data and provide access to it.</li>
+<li><code class="xref cpp cpp-class docutils literal"><span class="pre">config_option</span></code> describing a single command line option</li>
+<li><code class="xref cpp cpp-class docutils literal"><span class="pre">config_argument</span></code> which we will use to describe command line arguments</li>
+</ul>
+<p>Lets start with the above example. The source code of the program would maybe
+look like this</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;pni/core/types.hpp&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;pni/core/config/configuration.hpp&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;pni/core/config/config_parser.hpp&gt;</span><span class="cp"></span>
+
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">pni</span><span class="o">::</span><span class="n">core</span><span class="p">;</span>
+
+<span class="k">typedef</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">input_files</span><span class="p">;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span><span class="kt">char</span> <span class="o">**</span><span class="n">argv</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">configuration</span> <span class="n">config</span><span class="p">;</span>
+    <span class="n">config</span><span class="p">.</span><span class="n">add_option</span><span class="p">(</span><span class="n">config_option</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span><span class="p">(</span><span class="s">&quot;output&quot;</span><span class="p">,</span><span class="s">&quot;o&quot;</span><span class="p">,</span><span class="s">&quot;output file&quot;</span><span class="p">));</span>
+    <span class="n">config</span><span class="p">.</span><span class="n">add_option</span><span class="p">(</span><span class="n">config_option</span><span class="o">&lt;</span><span class="n">float64</span><span class="o">&gt;</span><span class="p">(</span><span class="s">&quot;wavelength&quot;</span><span class="p">,</span><span class="s">&quot;w&quot;</span><span class="p">));</span>
+    <span class="n">config</span><span class="p">.</span><span class="n">add_argument</span><span class="p">(</span><span class="n">config_argument</span><span class="o">&lt;</span><span class="n">input_files</span><span class="o">&gt;</span><span class="p">(</span><span class="s">&quot;input&quot;</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">));</span>
+
+    <span class="n">parse</span><span class="p">(</span><span class="n">config</span><span class="p">,</span><span class="n">cliargs2vector</span><span class="p">(</span><span class="n">argc</span><span class="p">,</span><span class="n">argv</span><span class="p">));</span>
+
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="configuration-files">
+<h2>Configuration files<a class="headerlink" href="#configuration-files" title="Permalink to this headline">¶</a></h2>
+<p>Configuration files handled by <em>libpnicore</em> follow the <cite>INI</cite>-file syntax as
+used by Windows.
+An example file would look like this</p>
+<div class="highlight-ini"><div class="highlight"><pre><span></span><span class="c1">#experiment.cfg</span>
+<span class="k">[beam]</span>
+<span class="na">wavelength</span> <span class="o">=</span> <span class="s">1.543</span>
+<span class="na">divergence</span> <span class="o">=</span> <span class="s">0.12</span>
+<span class="na">diameter</span>   <span class="o">=</span> <span class="s">1.23</span>
+
+<span class="k">[sample]</span>
+<span class="na">name</span> <span class="o">=</span> <span class="s">sample1</span>
+<span class="na">description</span> <span class="o">=</span> <span class="s">first sample in the series</span>
+</pre></div>
+</div>
+<p>To read this file create the following configuration in the program</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;pni/core/types.hpp&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;pni/core/configuration.hpp&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;pni/core/config_parser.hpp&gt;</span><span class="cp"></span>
+
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">pni</span><span class="o">::</span><span class="n">core</span><span class="p">;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span><span class="kt">char</span> <span class="o">**</span><span class="n">argv</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">configuration</span> <span class="n">config</span><span class="p">;</span>
+
+    <span class="n">config</span><span class="p">.</span><span class="n">add_option</span><span class="p">(</span><span class="n">config_option</span><span class="o">&lt;</span><span class="n">float64</span><span class="o">&gt;</span><span class="p">(</span><span class="s">&quot;beam.wavelength&quot;</span><span class="p">,</span><span class="s">&quot;&quot;</span><span class="p">));</span>
+    <span class="n">config</span><span class="p">.</span><span class="n">add_option</span><span class="p">(</span><span class="n">config_option</span><span class="o">&lt;</span><span class="n">float64</span><span class="o">&gt;</span><span class="p">(</span><span class="s">&quot;beam.divergence&quot;</span><span class="p">,</span><span class="s">&quot;&quot;</span><span class="p">));</span>
+    <span class="n">config</span><span class="p">.</span><span class="n">add_option</span><span class="p">(</span><span class="n">config_option</span><span class="o">&lt;</span><span class="n">float64</span><span class="o">&gt;</span><span class="p">(</span><span class="s">&quot;beam.diameter&quot;</span><span class="p">,</span><span class="s">&quot;&quot;</span><span class="p">));</span>
+    <span class="n">config</span><span class="p">.</span><span class="n">add_option</span><span class="p">(</span><span class="n">config_option</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span><span class="p">(</span><span class="s">&quot;sample.name&quot;</span><span class="p">,</span><span class="s">&quot;&quot;</span><span class="p">));</span>
+    <span class="n">config</span><span class="p">.</span><span class="n">add_option</span><span class="p">(</span><span class="n">config_option</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span><span class="p">(</span><span class="s">&quot;sample.description&quot;</span><span class="p">,</span><span class="s">&quot;&quot;</span><span class="p">));</span>
+
+    <span class="n">parse</span><span class="p">(</span><span class="n">config</span><span class="p">,</span><span class="s">&quot;experiment.cfg&quot;</span><span class="p">);</span>
+
+    <span class="c1">//use the options</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="using-configuration-files-and-command-line-options-together">
+<h2>Using configuration files and command line options together<a class="headerlink" href="#using-configuration-files-and-command-line-options-together" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="benchmarks.html" title="Benchmarks"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="type_erasures.html" title="Type erasures"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">libpnicore  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Users guide</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2016, Eugen Wintersberger.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.9.
+    </div>
+  </body>
+</html>

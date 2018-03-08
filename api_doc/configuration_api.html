@@ -1,0 +1,629 @@
+
+
+<!doctype html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Configuration API &#8212; libpnicore  documentation</title>
+    
+    <link rel="stylesheet" href="../_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="libpnicore  documentation" href="../index.html" />
+    <link rel="up" title="API documentation" href="index.html" />
+    <link rel="next" title="Multidimensional array API" href="mdarray_api.html" />
+    <link rel="prev" title="Type erasures" href="type_erasure_api.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="mdarray_api.html" title="Multidimensional array API"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="type_erasure_api.html" title="Type erasures"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">libpnicore  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">API documentation</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Configuration API</a><ul>
+<li><a class="reference internal" href="#cli-args"><code class="docutils literal"><span class="pre">cli_args</span></code></a></li>
+<li><a class="reference internal" href="#config-argument"><code class="docutils literal"><span class="pre">config_argument</span></code></a></li>
+<li><a class="reference internal" href="#config-option"><code class="docutils literal"><span class="pre">config_option</span></code></a></li>
+<li><a class="reference internal" href="#configuration"><code class="docutils literal"><span class="pre">configuration</span></code></a></li>
+<li><a class="reference internal" href="#functions">Functions</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="type_erasure_api.html"
+                        title="previous chapter">Type erasures</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="mdarray_api.html"
+                        title="next chapter">Multidimensional array API</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/api_doc/configuration_api.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="configuration-api">
+<h1>Configuration API<a class="headerlink" href="#configuration-api" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="cli-args">
+<h2><code class="xref cpp cpp-class docutils literal"><span class="pre">cli_args</span></code><a class="headerlink" href="#cli-args" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="_CPPv2N3pni4core8cli_argsE">
+<span id="pni::core::cli_args"></span><span class="target" id="pnicoreclasspni_1_1core_1_1cli__args"></span><em class="property">class </em><code class="descclassname">pni::core::</code><code class="descname">cli_args</code><a class="headerlink" href="#_CPPv2N3pni4core8cli_argsE" title="Permalink to this definition">¶</a></dt>
+<dd><p>class managing CLI options </p>
+<p>This class is used to hold CLI options in a form convineant for the program_options class. The intention of this class is to act as a exception save container for custom built command line options that are generated from a container of strings. The content of this string is than presented in way that the program options class can parse it.</p>
+<p><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">std</span><span class="p">::</span><span class="nb">list</span><span class="o">&lt;</span><span class="n">std</span><span class="p">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">strlist</span><span class="p">;</span>
+
+<span class="o">......</span><span class="n">code</span> <span class="n">omitted</span> <span class="o">.....</span>
+
+<span class="n">cli_args</span> <span class="n">args</span><span class="p">(</span><span class="n">strlist</span><span class="p">);</span>
+<span class="n">program_config</span> <span class="n">config</span><span class="p">;</span>
+
+<span class="o">......</span><span class="n">setup</span> <span class="n">of</span> <span class="n">config</span> <span class="ow">is</span> <span class="n">omitted</span> <span class="o">....</span>
+
+<span class="n">config</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">argc</span><span class="p">(),</span><span class="n">const_cast</span><span class="o">&lt;</span><span class="n">char</span><span class="o">**&gt;</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">argv</span><span class="p">()));</span>
+</pre></div>
+</div>
+ ! Instances of <a class="reference internal" href="#pnicoreclasspni_1_1core_1_1cli__args"><span class="std std-ref">cli_args</span></a> are first class objects and do memory management by themselfe. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Functions</p>
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> CTYPE&gt;</dt>
+<dt id="_CPPv2N3pni4core8cli_args8cli_argsERK5CTYPE">
+<span id="pni::core::cli_args::cli_args__CTYPECR"></span><span class="target" id="pnicoreclasspni_1_1core_1_1cli__args_1af833fc27a280f2d7fe8778a598eb8561"></span><code class="descname">cli_args</code><span class="sig-paren">(</span><em class="property">const</em> CTYPE &amp;<em>str_cont</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3pni4core8cli_args8cli_argsERK5CTYPE" title="Permalink to this definition">¶</a></dt>
+<dd><p>constructor </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3pni4core8cli_argsD0Ev">
+<span id="pni::core::cli_args::~cli_args"></span><span class="target" id="pnicoreclasspni_1_1core_1_1cli__args_1aef64f7a72eb62e02494db6b36e58cd23"></span><code class="descname">~cli_args</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3pni4core8cli_argsD0Ev" title="Permalink to this definition">¶</a></dt>
+<dd><p>destructor </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2NK3pni4core8cli_args4argvEv">
+<span id="pni::core::cli_args::argvC"></span><span class="target" id="pnicoreclasspni_1_1core_1_1cli__args_1a9290b3064e44ceaebfa07a138d070dff"></span><em class="property">const</em> char **<code class="descname">argv</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv2NK3pni4core8cli_args4argvEv" title="Permalink to this definition">¶</a></dt>
+<dd><p>get the argument values </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2NK3pni4core8cli_args4argcEv">
+<span id="pni::core::cli_args::argcC"></span><span class="target" id="pnicoreclasspni_1_1core_1_1cli__args_1ada9534d9773321b237f6370d1ed1a22d"></span>int <code class="descname">argc</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv2NK3pni4core8cli_args4argcEv" title="Permalink to this definition">¶</a></dt>
+<dd><p>get the number of arguments </p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</div>
+<div class="section" id="config-argument">
+<h2><code class="xref cpp cpp-class docutils literal"><span class="pre">config_argument</span></code><a class="headerlink" href="#config-argument" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt>
+<span class="target" id="pnicoreclasspni_1_1core_1_1config__argument"></span><em class="property">template </em>&lt;typename <em>T</em>&gt;</dt>
+<dt id="_CPPv2N3pni4core15config_argumentE">
+<span id="pni::core::config_argument"></span><em class="property">class </em><code class="descclassname">pni::core::</code><code class="descname">config_argument</code><a class="headerlink" href="#_CPPv2N3pni4core15config_argumentE" title="Permalink to this definition">¶</a></dt>
+<dd><p>class describing a program argument </p>
+<p>Class holds all the information required for a command line arguments. Arguments have at least a long name which can later be used to identify the argument in the program configuration. However, this name never shows up in the help list.</p>
+<p>Command line arguments are identified by there position in the total argument list. If this position is -1 then all the values from a current starting position to the end of the argument list belong to this argument.</p>
+<p><dl class="docutils">
+<dt><strong>Template Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal"><span class="pre">T</span></code>: type of the argument </li>
+</ul>
+</dd>
+</dl>
+</p>
+<p>Inherits from <a class="reference internal" href="#pnicoreclasspni_1_1core_1_1config__option"><span class="std std-ref">pni::core::config_option&lt; T &gt;</span></a></p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Functions</p>
+<dl class="function">
+<dt id="_CPPv2N3pni4core15config_argument15config_argumentEv">
+<span id="pni::core::config_argument::config_argument"></span><span class="target" id="pnicoreclasspni_1_1core_1_1config__argument_1a6fb5e50f4a9b1bf7ecc789df8d0b40dd"></span><code class="descname">config_argument</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3pni4core15config_argument15config_argumentEv" title="Permalink to this definition">¶</a></dt>
+<dd><p>default constructor </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3pni4core15config_argument15config_argumentERK6stringiP1T">
+<span id="pni::core::config_argument::config_argument__stringCR.i.TP"></span><span class="target" id="pnicoreclasspni_1_1core_1_1config__argument_1a818801c178e8f41123f6fbac7b9a515a"></span><code class="descname">config_argument</code><span class="sig-paren">(</span><em class="property">const</em> string &amp;<em>lname</em>, int <em>pos</em>, T *<em>exref</em> = nullptr<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3pni4core15config_argument15config_argumentERK6stringiP1T" title="Permalink to this definition">¶</a></dt>
+<dd><p>constructor </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal"><span class="pre">lname</span></code>: long name of the option </li>
+<li><code class="docutils literal"><span class="pre">pos</span></code>: position of the argument </li>
+<li><code class="docutils literal"><span class="pre">exref</span></code>: optional external reference </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3pni4core15config_argument15config_argumentERK6stringi1TP1T">
+<span id="pni::core::config_argument::config_argument__stringCR.i.T.TP"></span><span class="target" id="pnicoreclasspni_1_1core_1_1config__argument_1aae42a985182999d166b1175e4edcbe72"></span><code class="descname">config_argument</code><span class="sig-paren">(</span><em class="property">const</em> string &amp;<em>lname</em>, int <em>pos</em>, T <em>default_value</em>, T *<em>exref</em> = nullptr<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3pni4core15config_argument15config_argumentERK6stringi1TP1T" title="Permalink to this definition">¶</a></dt>
+<dd><p>constructor </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal"><span class="pre">lname</span></code>: long name of the option </li>
+<li><code class="docutils literal"><span class="pre">pos</span></code>: position of the argument </li>
+<li><code class="docutils literal"><span class="pre">default_value</span></code>: the default value to use for this option </li>
+<li><code class="docutils literal"><span class="pre">exref</span></code>: external reference </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3pni4core15config_argumentD0Ev">
+<span id="pni::core::config_argument::~config_argument"></span><span class="target" id="pnicoreclasspni_1_1core_1_1config__argument_1af79333e49944c0a4f7b542f7e6744e60"></span><code class="descname">~config_argument</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3pni4core15config_argumentD0Ev" title="Permalink to this definition">¶</a></dt>
+<dd><p>destructor </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2NK3pni4core15config_argument8positionEv">
+<span id="pni::core::config_argument::positionC"></span><span class="target" id="pnicoreclasspni_1_1core_1_1config__argument_1ac13c6d861dfdf92782a4b841fc395e3a"></span>int <code class="descname">position</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv2NK3pni4core15config_argument8positionEv" title="Permalink to this definition">¶</a></dt>
+<dd><p>get short name </p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</div>
+<div class="section" id="config-option">
+<h2><code class="xref cpp cpp-class docutils literal"><span class="pre">config_option</span></code><a class="headerlink" href="#config-option" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt>
+<span class="target" id="pnicoreclasspni_1_1core_1_1config__option"></span><em class="property">template </em>&lt;typename <em>T</em>&gt;</dt>
+<dt id="_CPPv2N3pni4core13config_optionE">
+<span id="pni::core::config_option"></span><em class="property">class </em><code class="descclassname">pni::core::</code><code class="descname">config_option</code><a class="headerlink" href="#_CPPv2N3pni4core13config_optionE" title="Permalink to this definition">¶</a></dt>
+<dd><p>class describing a program option </p>
+<p>Class holds all the information required for a command line option. Each command line option has at least a long name. The short name, a single letter, can be left empty. In addition every option is associated with a value the user has to pass. The only exception from this rule are Bool options. Such options are only considered as flags without taking any argument.</p>
+<p><dl class="docutils">
+<dt><strong>Template Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal"><span class="pre">T</span></code>: data type of the option </li>
+</ul>
+</dd>
+</dl>
+</p>
+<p>Subclassed by <a class="reference internal" href="#pnicoreclasspni_1_1core_1_1config__argument"><span class="std std-ref">pni::core::config_argument&lt; T &gt;</span></a></p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Functions</p>
+<dl class="function">
+<dt id="_CPPv2N3pni4core13config_option13config_optionEv">
+<span id="pni::core::config_option::config_option"></span><span class="target" id="pnicoreclasspni_1_1core_1_1config__option_1a8a6f0558a5cc83b886a9875baef4a283"></span><code class="descname">config_option</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3pni4core13config_option13config_optionEv" title="Permalink to this definition">¶</a></dt>
+<dd><p>default constructor </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3pni4core13config_option13config_optionERK6stringRK6stringRK6stringP1T">
+<span id="pni::core::config_option::config_option__stringCR.stringCR.stringCR.TP"></span><span class="target" id="pnicoreclasspni_1_1core_1_1config__option_1a8a77a9051a4e7853c081b3b3b721d285"></span><code class="descname">config_option</code><span class="sig-paren">(</span><em class="property">const</em> string &amp;<em>lname</em>, <em class="property">const</em> string &amp;<em>sname</em>, <em class="property">const</em> string &amp;<em>description</em>, T *<em>exref</em> = nullptr<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3pni4core13config_option13config_optionERK6stringRK6stringRK6stringP1T" title="Permalink to this definition">¶</a></dt>
+<dd><p>constructor </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal"><span class="pre">lname</span></code>: long name of the option </li>
+<li><code class="docutils literal"><span class="pre">sname</span></code>: short name (single letter) of the option </li>
+<li><code class="docutils literal"><span class="pre">description</span></code>: doc string of the option </li>
+<li><code class="docutils literal"><span class="pre">exref</span></code>: optional external reference </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3pni4core13config_option13config_optionERK6stringRK6stringRK6string1TP1T">
+<span id="pni::core::config_option::config_option__stringCR.stringCR.stringCR.T.TP"></span><span class="target" id="pnicoreclasspni_1_1core_1_1config__option_1a59144456721680ec35e45fa88fba4369"></span><code class="descname">config_option</code><span class="sig-paren">(</span><em class="property">const</em> string &amp;<em>lname</em>, <em class="property">const</em> string &amp;<em>sname</em>, <em class="property">const</em> string &amp;<em>description</em>, T <em>default_value</em>, T *<em>exref</em> = nullptr<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3pni4core13config_option13config_optionERK6stringRK6stringRK6string1TP1T" title="Permalink to this definition">¶</a></dt>
+<dd><p>constructor </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal"><span class="pre">lname</span></code>: long name of the option </li>
+<li><code class="docutils literal"><span class="pre">sname</span></code>: short name (single letter) of the option </li>
+<li><code class="docutils literal"><span class="pre">description</span></code>: doc string of the option </li>
+<li><code class="docutils literal"><span class="pre">default_value</span></code>: the default value to use for this option </li>
+<li><code class="docutils literal"><span class="pre">exref</span></code>: external reference </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3pni4core13config_optionD0Ev">
+<span id="pni::core::config_option::~config_option"></span><span class="target" id="pnicoreclasspni_1_1core_1_1config__option_1a5fd8b27769790dcf5f016438c9f41b75"></span><em class="property">virtual</em> <code class="descname">~config_option</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3pni4core13config_optionD0Ev" title="Permalink to this definition">¶</a></dt>
+<dd><p>destructor </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2NK3pni4core13config_option9long_nameEv">
+<span id="pni::core::config_option::long_nameC"></span><span class="target" id="pnicoreclasspni_1_1core_1_1config__option_1ac021b95c6ef33339e24782a47b59dab3"></span>string <code class="descname">long_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv2NK3pni4core13config_option9long_nameEv" title="Permalink to this definition">¶</a></dt>
+<dd><p>get long name </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2NK3pni4core13config_option10short_nameEv">
+<span id="pni::core::config_option::short_nameC"></span><span class="target" id="pnicoreclasspni_1_1core_1_1config__option_1afa6c9adc81255c7b1bdc7f85eca929fc"></span>string <code class="descname">short_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv2NK3pni4core13config_option10short_nameEv" title="Permalink to this definition">¶</a></dt>
+<dd><p>get short name </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2NK3pni4core13config_option11descriptionEv">
+<span id="pni::core::config_option::descriptionC"></span><span class="target" id="pnicoreclasspni_1_1core_1_1config__option_1a3795edc0246b1106d9e7cda5c0e0872e"></span>string <code class="descname">description</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv2NK3pni4core13config_option11descriptionEv" title="Permalink to this definition">¶</a></dt>
+<dd><p>get description </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2NK3pni4core13config_option13default_valueEv">
+<span id="pni::core::config_option::default_valueC"></span><span class="target" id="pnicoreclasspni_1_1core_1_1config__option_1aa95745340fac0c68e7f2b94164f2e7be"></span>T <code class="descname">default_value</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv2NK3pni4core13config_option13default_valueEv" title="Permalink to this definition">¶</a></dt>
+<dd><p>get default value </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2NK3pni4core13config_option18external_referenceEv">
+<span id="pni::core::config_option::external_referenceC"></span><span class="target" id="pnicoreclasspni_1_1core_1_1config__option_1a4732cb2a0cf6757dde1ebbd87d959ab0"></span><em class="property">const</em> T *<code class="descname">external_reference</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv2NK3pni4core13config_option18external_referenceEv" title="Permalink to this definition">¶</a></dt>
+<dd><p>get external refernce </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2NK3pni4core13config_option11has_defaultEv">
+<span id="pni::core::config_option::has_defaultC"></span><span class="target" id="pnicoreclasspni_1_1core_1_1config__option_1a06c5540981eab09c3209391eed275b60"></span>bool <code class="descname">has_default</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv2NK3pni4core13config_option11has_defaultEv" title="Permalink to this definition">¶</a></dt>
+<dd><p>check if option has a default value </p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</div>
+<div class="section" id="configuration">
+<h2><code class="xref cpp cpp-class docutils literal"><span class="pre">configuration</span></code><a class="headerlink" href="#configuration" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="_CPPv2N3pni4core13configurationE">
+<span id="pni::core::configuration"></span><span class="target" id="pnicoreclasspni_1_1core_1_1configuration"></span><em class="property">class </em><code class="descclassname">pni::core::</code><code class="descname">configuration</code><a class="headerlink" href="#_CPPv2N3pni4core13configurationE" title="Permalink to this definition">¶</a></dt>
+<dd><p>configuration class </p>
+<p>This class holds the configuration of a program or library that has been extracted from various sources. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Functions</p>
+<dl class="function">
+<dt id="_CPPv2N3pni4core13configuration13configurationEv">
+<span id="pni::core::configuration::configuration"></span><span class="target" id="pnicoreclasspni_1_1core_1_1configuration_1a39a9445a62b8b35e7f9923d1fe007c9d"></span><code class="descname">configuration</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3pni4core13configuration13configurationEv" title="Permalink to this definition">¶</a></dt>
+<dd><p>default constructor </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3pni4core13configuration13configurationERK13configuration">
+<span id="pni::core::configuration::configuration__configurationCR"></span><span class="target" id="pnicoreclasspni_1_1core_1_1configuration_1a67d1ae591f6a735a18c127426ceb5c3a"></span><code class="descname">configuration</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv2N3pni4core13configuration13configurationEv" title="pni::core::configuration::configuration">configuration</a> &amp;<em>c</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3pni4core13configuration13configurationERK13configuration" title="Permalink to this definition">¶</a></dt>
+<dd><p>copy constructor - deleted </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3pni4core13configuration13configurationERR13configuration">
+<span id="pni::core::configuration::configuration__configurationRR"></span><span class="target" id="pnicoreclasspni_1_1core_1_1configuration_1aa55b5d5b06d04897c86e4c2462d3a7f4"></span><code class="descname">configuration</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv2N3pni4core13configuration13configurationEv" title="pni::core::configuration::configuration">configuration</a> &amp;&amp;<em>c</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3pni4core13configuration13configurationERR13configuration" title="Permalink to this definition">¶</a></dt>
+<dd><p>move constructor </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3pni4core13configurationD0Ev">
+<span id="pni::core::configuration::~configuration"></span><span class="target" id="pnicoreclasspni_1_1core_1_1configuration_1af8eaf5ae61fb18296d9381440df2f1bf"></span><code class="descname">~configuration</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3pni4core13configurationD0Ev" title="Permalink to this definition">¶</a></dt>
+<dd><p>destructor </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2NK3pni4core13configuration15visible_optionsEv">
+<span id="pni::core::configuration::visible_optionsC"></span><span class="target" id="pnicoreclasspni_1_1core_1_1configuration_1a6c49a8298b788b027fb97e95333a0fc1"></span><em class="property">const</em> popts::options_description &amp;<code class="descname">visible_options</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv2NK3pni4core13configuration15visible_optionsEv" title="Permalink to this definition">¶</a></dt>
+<dd><p>get visible options </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>return the visible options </dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2NK3pni4core13configuration14hidden_optionsEv">
+<span id="pni::core::configuration::hidden_optionsC"></span><span class="target" id="pnicoreclasspni_1_1core_1_1configuration_1a9e24154d62c46eed802e31fce47fbcbf"></span><em class="property">const</em> popts::options_description &amp;<code class="descname">hidden_options</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv2NK3pni4core13configuration14hidden_optionsEv" title="Permalink to this definition">¶</a></dt>
+<dd><p>get hidden options </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>return hidden options description </dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2NK3pni4core13configuration9argumentsEv">
+<span id="pni::core::configuration::argumentsC"></span><span class="target" id="pnicoreclasspni_1_1core_1_1configuration_1a2e021d4daf48be202ed05fd5d5088f97"></span><em class="property">const</em> popts::positional_options_description &amp;<code class="descname">arguments</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv2NK3pni4core13configuration9argumentsEv" title="Permalink to this definition">¶</a></dt>
+<dd><p>get arguments </p>
+<p>Return reference to the arguments of the configuration.</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>return positional options description </dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2NK3pni4core13configuration3mapEv">
+<span id="pni::core::configuration::mapC"></span><span class="target" id="pnicoreclasspni_1_1core_1_1configuration_1a373b818cfc095d4c03201786c97390c6"></span><em class="property">const</em> popts::variables_map &amp;<code class="descname">map</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv2NK3pni4core13configuration3mapEv" title="Permalink to this definition">¶</a></dt>
+<dd><p>get variables map </p>
+<p>Return a const reference to the configuration variables map stored in the configuration class.</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>reference to the variables map </dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2NK3pni4core13configuration10has_optionERK6string">
+<span id="pni::core::configuration::has_option__stringCRC"></span><span class="target" id="pnicoreclasspni_1_1core_1_1configuration_1a94b958743c83c3c82a2a13a3882ef10a"></span>bool <code class="descname">has_option</code><span class="sig-paren">(</span><em class="property">const</em> string &amp;<em>name</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv2NK3pni4core13configuration10has_optionERK6string" title="Permalink to this definition">¶</a></dt>
+<dd><p>check if option is there </p>
+<p>Return true if a particular option has been passed by the user. If the option is present true is returned otherwise false.</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>true if option exists </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal"><span class="pre">name</span></code>: long name of the option </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2NK3pni4core13configuration5valueERK6string">
+<span id="pni::core::configuration::value__stringCRC"></span><span class="target" id="pnicoreclasspni_1_1core_1_1configuration_1a1888f3a733e6670294dc14ef36f683ba"></span>T <code class="descname">value</code><span class="sig-paren">(</span><em class="property">const</em> string &amp;<em>name</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv2NK3pni4core13configuration5valueERK6string" title="Permalink to this definition">¶</a></dt>
+<dd><p>return the value of an option </p>
+<p>Template method returning the value of an option as instance of type T. If the option was created with a default value this value will be returned. If the option was created without default value an exception will be thrown.</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>value of the option as instance of type T </dd>
+<dt><strong>Template Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal"><span class="pre">T</span></code>: return type of the method </li>
+</ul>
+</dd>
+<dt><strong>Exceptions</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal"><a class="reference internal" href="exception_api.html#pnicoreclasspni_1_1core_1_1cli__option__error"><span class="std std-ref"><span class="pre">cli_option_error</span></span></a></code>: if option is not present and has no default value </li>
+</ul>
+</dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal"><span class="pre">name</span></code>: long name of the option </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3pni4core13configuration10add_optionERK13config_optionI1TEb">
+<span id="pni::core::configuration::add_option__config_option:T:CR.b"></span><span class="target" id="pnicoreclasspni_1_1core_1_1configuration_1a0cf1108a4a5f525ae416b0a1505771db"></span>void <code class="descname">add_option</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv2N3pni4core13config_optionE" title="pni::core::config_option">config_option</a>&lt;T&gt; &amp;<em>opt</em>, bool <em>visible</em> = true<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3pni4core13configuration10add_optionERK13config_optionI1TEb" title="Permalink to this definition">¶</a></dt>
+<dd><p>add a program option </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N3pni4core13configuration10add_optionERK13config_optionIbEb">
+<span id="pni::core::configuration::add_option__config_option:b:CR.b"></span><span class="target" id="pnicoreclasspni_1_1core_1_1configuration_1ac4b1b58d108d72ed792d5c2bacdf691f"></span>void <code class="descname">add_option</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv2N3pni4core13config_optionE" title="pni::core::config_option">config_option</a>&lt;bool&gt; &amp;<em>opt</em>, bool <em>visible</em> = true<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3pni4core13configuration10add_optionERK13config_optionIbEb" title="Permalink to this definition">¶</a></dt>
+<dd><p>add an boolean option </p>
+<p>Overloaded version of the add_option template member for bool variables.</p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal"><span class="pre">opt</span></code>: boolean configuration option </li>
+<li><code class="docutils literal"><span class="pre">visible</span></code>: visibility flag </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv2N3pni4core13configuration12add_argumentERK15config_argumentI1TE">
+<span id="pni::core::configuration::add_argument__config_argument:T:CR"></span><span class="target" id="pnicoreclasspni_1_1core_1_1configuration_1ad3932d220cea768205914d77ea235954"></span>void <code class="descname">add_argument</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv2N3pni4core15config_argumentE" title="pni::core::config_argument">config_argument</a>&lt;T&gt; &amp;<em>arg</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3pni4core13configuration12add_argumentERK15config_argumentI1TE" title="Permalink to this definition">¶</a></dt>
+<dd><p>add argument </p>
+<p>Adds an argument to the configuration. <dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal"><span class="pre">arg</span></code>: argument </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Friends</p>
+<dl class="function">
+<dt>
+<span class="target" id="pnicoreclasspni_1_1core_1_1configuration_1a9c8374db7d6528cbc23815df677bcf57"></span><code class="descname">PNICORE_EXPORT std::ostream&amp; operator&lt;&lt;(std::ostream &amp; o, const  configuration  &amp; c)</code></dt>
+<dd><p>output operator </p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</div>
+<div class="section" id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p>doxygenfunction: Unable to resolve multiple matches for function &#8220;operator&lt;&lt;&#8221; with arguments (std::ostream &amp;, const cli_args &amp;) in doxygen xml output for project &#8220;pnicore&#8221; from directory: /home/jkotan/sources/libpnicore-build/doc/api_doc/xml.
+Potential matches:
+</p>
+<div class="last highlight-default"><div class="highlight"><pre><span></span><span class="o">-</span> <span class="n">PNICORE_EXPORT</span> <span class="n">std</span><span class="p">::</span><span class="n">ostream</span> <span class="o">&amp;</span> <span class="n">pni</span><span class="p">::</span><span class="n">core</span><span class="p">::</span><span class="n">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">std</span><span class="p">::</span><span class="n">ostream</span> <span class="o">&amp;</span><span class="p">,</span> <span class="n">const</span>  <span class="n">bool_t</span>  <span class="o">&amp;</span><span class="p">)</span>
+<span class="o">-</span> <span class="n">PNICORE_EXPORT</span> <span class="n">std</span><span class="p">::</span><span class="n">ostream</span> <span class="o">&amp;</span> <span class="n">pni</span><span class="p">::</span><span class="n">core</span><span class="p">::</span><span class="n">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">std</span><span class="p">::</span><span class="n">ostream</span> <span class="o">&amp;</span><span class="p">,</span> <span class="n">const</span>  <span class="n">exception_record</span>  <span class="o">&amp;</span><span class="p">)</span>
+<span class="o">-</span> <span class="n">PNICORE_EXPORT</span> <span class="n">std</span><span class="p">::</span><span class="n">ostream</span> <span class="o">&amp;</span> <span class="n">pni</span><span class="p">::</span><span class="n">core</span><span class="p">::</span><span class="n">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">std</span><span class="p">::</span><span class="n">ostream</span> <span class="o">&amp;</span><span class="p">,</span> <span class="n">const</span>  <span class="n">none</span>  <span class="o">&amp;</span><span class="p">)</span>
+<span class="o">-</span> <span class="n">PNICORE_EXPORT</span> <span class="n">std</span><span class="p">::</span><span class="n">ostream</span> <span class="o">&amp;</span> <span class="n">pni</span><span class="p">::</span><span class="n">core</span><span class="p">::</span><span class="n">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">std</span><span class="p">::</span><span class="n">ostream</span> <span class="o">&amp;</span><span class="p">,</span> <span class="n">const</span>  <span class="nb">slice</span>  <span class="o">&amp;</span><span class="p">)</span>
+<span class="o">-</span> <span class="n">PNICORE_EXPORT</span> <span class="n">std</span><span class="p">::</span><span class="n">ostream</span> <span class="o">&amp;</span> <span class="n">pni</span><span class="p">::</span><span class="n">core</span><span class="p">::</span><span class="n">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">std</span><span class="p">::</span><span class="n">ostream</span> <span class="o">&amp;</span><span class="p">,</span> <span class="n">const</span>  <span class="n">type_id_t</span>  <span class="o">&amp;</span><span class="p">)</span>
+<span class="o">-</span> <span class="n">std</span><span class="p">::</span><span class="n">ostream</span> <span class="o">&amp;</span><span class="n">pni</span><span class="p">::</span><span class="n">core</span><span class="p">::</span><span class="n">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">std</span><span class="p">::</span><span class="n">ostream</span><span class="o">&amp;</span><span class="p">,</span> <span class="n">const</span> <span class="n">array_selection</span><span class="o">&amp;</span><span class="p">)</span>
+<span class="o">-</span> <span class="n">std</span><span class="p">::</span><span class="n">ostream</span> <span class="o">&amp;</span><span class="n">pni</span><span class="p">::</span><span class="n">core</span><span class="p">::</span><span class="n">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">std</span><span class="p">::</span><span class="n">ostream</span><span class="o">&amp;</span><span class="p">,</span> <span class="n">const</span> <span class="n">benchmark_result</span><span class="o">&amp;</span><span class="p">)</span>
+<span class="o">-</span> <span class="n">std</span><span class="p">::</span><span class="n">ostream</span> <span class="o">&amp;</span><span class="n">pni</span><span class="p">::</span><span class="n">core</span><span class="p">::</span><span class="n">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">std</span><span class="p">::</span><span class="n">ostream</span><span class="o">&amp;</span><span class="p">,</span> <span class="n">const</span> <span class="n">cli_args</span><span class="o">&amp;</span><span class="p">)</span>
+<span class="o">-</span> <span class="n">std</span><span class="p">::</span><span class="n">ostream</span> <span class="o">&amp;</span><span class="n">pni</span><span class="p">::</span><span class="n">core</span><span class="p">::</span><span class="n">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">std</span><span class="p">::</span><span class="n">ostream</span><span class="o">&amp;</span><span class="p">,</span> <span class="n">const</span> <span class="n">cli_argument_error</span><span class="o">&amp;</span><span class="p">)</span>
+<span class="o">-</span> <span class="n">std</span><span class="p">::</span><span class="n">ostream</span> <span class="o">&amp;</span><span class="n">pni</span><span class="p">::</span><span class="n">core</span><span class="p">::</span><span class="n">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">std</span><span class="p">::</span><span class="n">ostream</span><span class="o">&amp;</span><span class="p">,</span> <span class="n">const</span> <span class="n">cli_error</span><span class="o">&amp;</span><span class="p">)</span>
+<span class="o">-</span> <span class="n">std</span><span class="p">::</span><span class="n">ostream</span> <span class="o">&amp;</span><span class="n">pni</span><span class="p">::</span><span class="n">core</span><span class="p">::</span><span class="n">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">std</span><span class="p">::</span><span class="n">ostream</span><span class="o">&amp;</span><span class="p">,</span> <span class="n">const</span> <span class="n">cli_help_request</span><span class="o">&amp;</span><span class="p">)</span>
+<span class="o">-</span> <span class="n">std</span><span class="p">::</span><span class="n">ostream</span> <span class="o">&amp;</span><span class="n">pni</span><span class="p">::</span><span class="n">core</span><span class="p">::</span><span class="n">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">std</span><span class="p">::</span><span class="n">ostream</span><span class="o">&amp;</span><span class="p">,</span> <span class="n">const</span> <span class="n">cli_option_error</span><span class="o">&amp;</span><span class="p">)</span>
+<span class="o">-</span> <span class="n">std</span><span class="p">::</span><span class="n">ostream</span> <span class="o">&amp;</span><span class="n">pni</span><span class="p">::</span><span class="n">core</span><span class="p">::</span><span class="n">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">std</span><span class="p">::</span><span class="n">ostream</span><span class="o">&amp;</span><span class="p">,</span> <span class="n">const</span> <span class="n">configuration</span><span class="o">&amp;</span><span class="p">)</span>
+<span class="o">-</span> <span class="n">std</span><span class="p">::</span><span class="n">ostream</span> <span class="o">&amp;</span><span class="n">pni</span><span class="p">::</span><span class="n">core</span><span class="p">::</span><span class="n">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">std</span><span class="p">::</span><span class="n">ostream</span><span class="o">&amp;</span><span class="p">,</span> <span class="n">const</span> <span class="n">exception</span><span class="o">&amp;</span><span class="p">)</span>
+<span class="o">-</span> <span class="n">std</span><span class="p">::</span><span class="n">ostream</span> <span class="o">&amp;</span><span class="n">pni</span><span class="p">::</span><span class="n">core</span><span class="p">::</span><span class="n">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">std</span><span class="p">::</span><span class="n">ostream</span><span class="o">&amp;</span><span class="p">,</span> <span class="n">const</span> <span class="n">file_error</span><span class="o">&amp;</span><span class="p">)</span>
+<span class="o">-</span> <span class="n">std</span><span class="p">::</span><span class="n">ostream</span> <span class="o">&amp;</span><span class="n">pni</span><span class="p">::</span><span class="n">core</span><span class="p">::</span><span class="n">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">std</span><span class="p">::</span><span class="n">ostream</span><span class="o">&amp;</span><span class="p">,</span> <span class="n">const</span> <span class="n">index_error</span><span class="o">&amp;</span><span class="p">)</span>
+<span class="o">-</span> <span class="n">std</span><span class="p">::</span><span class="n">ostream</span> <span class="o">&amp;</span><span class="n">pni</span><span class="p">::</span><span class="n">core</span><span class="p">::</span><span class="n">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">std</span><span class="p">::</span><span class="n">ostream</span><span class="o">&amp;</span><span class="p">,</span> <span class="n">const</span> <span class="n">iterator_error</span><span class="o">&amp;</span><span class="p">)</span>
+<span class="o">-</span> <span class="n">std</span><span class="p">::</span><span class="n">ostream</span> <span class="o">&amp;</span><span class="n">pni</span><span class="p">::</span><span class="n">core</span><span class="p">::</span><span class="n">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">std</span><span class="p">::</span><span class="n">ostream</span><span class="o">&amp;</span><span class="p">,</span> <span class="n">const</span> <span class="n">key_error</span><span class="o">&amp;</span><span class="p">)</span>
+<span class="o">-</span> <span class="n">std</span><span class="p">::</span><span class="n">ostream</span> <span class="o">&amp;</span><span class="n">pni</span><span class="p">::</span><span class="n">core</span><span class="p">::</span><span class="n">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">std</span><span class="p">::</span><span class="n">ostream</span><span class="o">&amp;</span><span class="p">,</span> <span class="n">const</span> <span class="n">memory_allocation_error</span><span class="o">&amp;</span><span class="p">)</span>
+<span class="o">-</span> <span class="n">std</span><span class="p">::</span><span class="n">ostream</span> <span class="o">&amp;</span><span class="n">pni</span><span class="p">::</span><span class="n">core</span><span class="p">::</span><span class="n">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">std</span><span class="p">::</span><span class="n">ostream</span><span class="o">&amp;</span><span class="p">,</span> <span class="n">const</span> <span class="n">memory_not_allocated_error</span><span class="o">&amp;</span><span class="p">)</span>
+<span class="o">-</span> <span class="n">std</span><span class="p">::</span><span class="n">ostream</span> <span class="o">&amp;</span><span class="n">pni</span><span class="p">::</span><span class="n">core</span><span class="p">::</span><span class="n">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">std</span><span class="p">::</span><span class="n">ostream</span><span class="o">&amp;</span><span class="p">,</span> <span class="n">const</span> <span class="n">not_implemented_error</span><span class="o">&amp;</span><span class="p">)</span>
+<span class="o">-</span> <span class="n">std</span><span class="p">::</span><span class="n">ostream</span> <span class="o">&amp;</span><span class="n">pni</span><span class="p">::</span><span class="n">core</span><span class="p">::</span><span class="n">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">std</span><span class="p">::</span><span class="n">ostream</span><span class="o">&amp;</span><span class="p">,</span> <span class="n">const</span> <span class="n">range_error</span><span class="o">&amp;</span><span class="p">)</span>
+<span class="o">-</span> <span class="n">std</span><span class="p">::</span><span class="n">ostream</span> <span class="o">&amp;</span><span class="n">pni</span><span class="p">::</span><span class="n">core</span><span class="p">::</span><span class="n">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">std</span><span class="p">::</span><span class="n">ostream</span><span class="o">&amp;</span><span class="p">,</span> <span class="n">const</span> <span class="n">shape_mismatch_error</span><span class="o">&amp;</span><span class="p">)</span>
+<span class="o">-</span> <span class="n">std</span><span class="p">::</span><span class="n">ostream</span> <span class="o">&amp;</span><span class="n">pni</span><span class="p">::</span><span class="n">core</span><span class="p">::</span><span class="n">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">std</span><span class="p">::</span><span class="n">ostream</span><span class="o">&amp;</span><span class="p">,</span> <span class="n">const</span> <span class="n">size_mismatch_error</span><span class="o">&amp;</span><span class="p">)</span>
+<span class="o">-</span> <span class="n">std</span><span class="p">::</span><span class="n">ostream</span> <span class="o">&amp;</span><span class="n">pni</span><span class="p">::</span><span class="n">core</span><span class="p">::</span><span class="n">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">std</span><span class="p">::</span><span class="n">ostream</span><span class="o">&amp;</span><span class="p">,</span> <span class="n">const</span> <span class="n">type_error</span><span class="o">&amp;</span><span class="p">)</span>
+<span class="o">-</span> <span class="n">std</span><span class="p">::</span><span class="n">ostream</span> <span class="o">&amp;</span><span class="n">pni</span><span class="p">::</span><span class="n">core</span><span class="p">::</span><span class="n">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">std</span><span class="p">::</span><span class="n">ostream</span><span class="o">&amp;</span><span class="p">,</span> <span class="n">const</span> <span class="n">value_error</span><span class="o">&amp;</span><span class="p">)</span>
+<span class="o">-</span> <span class="n">template</span> <span class="o">&lt;</span><span class="n">typename</span> <span class="n">ATYPE</span><span class="o">&gt;</span>
+  <span class="n">std</span><span class="p">::</span><span class="n">ostream</span> <span class="o">&amp;</span><span class="n">pni</span><span class="p">::</span><span class="n">core</span><span class="p">::</span><span class="n">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">std</span><span class="p">::</span><span class="n">ostream</span><span class="o">&amp;</span><span class="p">,</span> <span class="n">const</span> <span class="n">array_view</span><span class="o">&lt;</span><span class="n">ATYPE</span><span class="o">&gt;&amp;</span><span class="p">)</span>
+<span class="o">-</span> <span class="n">template</span> <span class="o">&lt;</span><span class="n">typename</span> <span class="n">NTYPE</span><span class="o">&gt;</span>
+  <span class="n">std</span><span class="p">::</span><span class="n">ostream</span> <span class="o">&amp;</span><span class="n">pni</span><span class="p">::</span><span class="n">core</span><span class="p">::</span><span class="n">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">std</span><span class="p">::</span><span class="n">ostream</span><span class="o">&amp;</span><span class="p">,</span> <span class="n">const</span> <span class="n">binary_t</span><span class="o">&lt;</span><span class="n">NTYPE</span><span class="o">&gt;&amp;</span><span class="p">)</span>
+<span class="o">-</span> <span class="n">template</span> <span class="o">&lt;</span><span class="n">typename</span> <span class="n">STORAGE</span><span class="p">,</span> <span class="n">typename</span> <span class="n">IMAP</span><span class="p">,</span> <span class="n">typename</span> <span class="n">IPA</span><span class="o">&gt;</span>
+  <span class="n">std</span><span class="p">::</span><span class="n">ostream</span> <span class="o">&amp;</span><span class="n">pni</span><span class="p">::</span><span class="n">core</span><span class="p">::</span><span class="n">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">std</span><span class="p">::</span><span class="n">ostream</span><span class="o">&amp;</span><span class="p">,</span> <span class="n">const</span> <span class="n">mdarray</span><span class="o">&lt;</span><span class="n">STORAGE</span><span class="p">,</span> <span class="n">IMAP</span><span class="p">,</span> <span class="n">IPA</span><span class="o">&gt;&amp;</span><span class="p">)</span>
+<span class="o">-</span> <span class="n">template</span> <span class="o">&lt;</span><span class="n">typename</span> <span class="n">T</span><span class="o">&gt;</span>
+  <span class="n">std</span><span class="p">::</span><span class="n">ostream</span> <span class="o">&amp;</span><span class="n">pni</span><span class="p">::</span><span class="n">core</span><span class="p">::</span><span class="n">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">std</span><span class="p">::</span><span class="n">ostream</span><span class="o">&amp;</span><span class="p">,</span> <span class="n">const</span> <span class="n">scalar</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<dl class="function">
+<dt>
+<span class="target" id="pnicoregroup__config__classes_1gac5daeb53002140daf2770b7e6650e4ce"></span><code class="descname">std::vector&lt; string &gt; PNICORE_EXPORT pni::core::cliargs2vector(int argc, char ** argv)</code></dt>
+<dd><p>store cli options in vector </p>
+<p>This function stores CLI options and arguments in a vector.</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>vector with arguments and options </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal"><span class="pre">argc</span></code>: number of arguments </li>
+<li><code class="docutils literal"><span class="pre">argv</span></code>: argument values </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p>doxygenfunction: Unable to resolve multiple matches for function &#8220;pni::core::parse&#8221; with arguments (configuration &amp;, const std::vector&lt; string &gt; &amp;, bool) in doxygen xml output for project &#8220;pnicore&#8221; from directory: /home/jkotan/sources/libpnicore-build/doc/api_doc/xml.
+Potential matches:
+</p>
+<div class="last highlight-default"><div class="highlight"><pre><span></span><span class="o">-</span> <span class="n">std</span><span class="p">::</span><span class="n">vector</span><span class="o">&lt;</span> <span class="n">string</span> <span class="o">&gt;</span> <span class="n">PNICORE_EXPORT</span> <span class="n">pni</span><span class="p">::</span><span class="n">core</span><span class="p">::</span><span class="n">parse</span><span class="p">(</span><span class="n">configuration</span>  <span class="o">&amp;</span><span class="p">,</span> <span class="n">const</span> <span class="n">std</span><span class="p">::</span><span class="n">vector</span><span class="o">&lt;</span>  <span class="n">string</span>  <span class="o">&gt;</span> <span class="o">&amp;</span><span class="p">,</span> <span class="nb">bool</span><span class="p">)</span>
+<span class="o">-</span> <span class="n">void</span> <span class="n">PNICORE_EXPORT</span> <span class="n">pni</span><span class="p">::</span><span class="n">core</span><span class="p">::</span><span class="n">parse</span><span class="p">(</span><span class="n">configuration</span>  <span class="o">&amp;</span><span class="p">,</span> <span class="n">const</span>  <span class="n">string</span>  <span class="o">&amp;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p>doxygenfunction: Unable to resolve multiple matches for function &#8220;pni::core::parse&#8221; with arguments (configuration &amp;, const string &amp;) in doxygen xml output for project &#8220;pnicore&#8221; from directory: /home/jkotan/sources/libpnicore-build/doc/api_doc/xml.
+Potential matches:
+</p>
+<div class="last highlight-default"><div class="highlight"><pre><span></span><span class="o">-</span> <span class="n">std</span><span class="p">::</span><span class="n">vector</span><span class="o">&lt;</span> <span class="n">string</span> <span class="o">&gt;</span> <span class="n">PNICORE_EXPORT</span> <span class="n">pni</span><span class="p">::</span><span class="n">core</span><span class="p">::</span><span class="n">parse</span><span class="p">(</span><span class="n">configuration</span>  <span class="o">&amp;</span><span class="p">,</span> <span class="n">const</span> <span class="n">std</span><span class="p">::</span><span class="n">vector</span><span class="o">&lt;</span>  <span class="n">string</span>  <span class="o">&gt;</span> <span class="o">&amp;</span><span class="p">,</span> <span class="nb">bool</span><span class="p">)</span>
+<span class="o">-</span> <span class="n">void</span> <span class="n">PNICORE_EXPORT</span> <span class="n">pni</span><span class="p">::</span><span class="n">core</span><span class="p">::</span><span class="n">parse</span><span class="p">(</span><span class="n">configuration</span>  <span class="o">&amp;</span><span class="p">,</span> <span class="n">const</span>  <span class="n">string</span>  <span class="o">&amp;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="mdarray_api.html" title="Multidimensional array API"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="type_erasure_api.html" title="Type erasures"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">libpnicore  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >API documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2016, Eugen Wintersberger.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.9.
+    </div>
+  </body>
+</html>

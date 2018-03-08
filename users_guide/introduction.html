@@ -1,0 +1,163 @@
+
+
+<!doctype html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>The PNI library stack &#8212; libpnicore  documentation</title>
+    
+    <link rel="stylesheet" href="../_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="libpnicore  documentation" href="../index.html" />
+    <link rel="up" title="Users guide" href="index.html" />
+    <link rel="next" title="Installation" href="installation.html" />
+    <link rel="prev" title="Users guide" href="index.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="installation.html" title="Installation"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Users guide"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">libpnicore  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Users guide</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">The PNI library stack</a><ul>
+<li><a class="reference internal" href="#how-to-read-this-manual">How to read this manual</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Users guide</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="installation.html"
+                        title="next chapter">Installation</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/users_guide/introduction.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="the-pni-library-stack">
+<h1>The PNI library stack<a class="headerlink" href="#the-pni-library-stack" title="Permalink to this headline">¶</a></h1>
+<div class="figure align-center" id="id1">
+<span id="libstack"></span><a class="reference internal image-reference" href="../_images/pni-cpp-libraries.png"><img alt="../_images/pni-cpp-libraries.png" src="../_images/pni-cpp-libraries.png" style="width: 50%;" /></a>
+<p class="caption"><span class="caption-number">Fig. 1 </span><span class="caption-text">The PNI library stack is a collection of C++ libraries developed with the
+intention to simplify the process of writing application in the PNI field.
+<cite>libpnicore</cite> , the library described in this manual is the foundation of
+this stack. It provides all the basic data structures and facilities used
+by all other libraries.</span></p>
+</div>
+<p><cite>libpnicore</cite> is one of the PNI libraries developed within the framework of the
+HDRI project. As shown in <a class="reference internal" href="#libstack"><span class="std std-numref">Fig. 1</span></a> <cite>libpnicore</cite> it is the
+foundation for all libraries in the stack. None of them can be used
+without it.  <cite>libpnicore</cite> provides the basic data structures used by all other
+PNI libraries.  This includes</p>
+<ul class="simple">
+<li>well defined data types</li>
+<li>multidimensional arrays</li>
+<li>configuration facilities</li>
+<li>type erasures.</li>
+</ul>
+<div class="section" id="how-to-read-this-manual">
+<h2>How to read this manual<a class="headerlink" href="#how-to-read-this-manual" title="Permalink to this headline">¶</a></h2>
+<p>For a new user the best way to read this manual is from beginning to the end.
+One may can omit the next chapter about installation of the library if this is
+done by your local system administrator. In any case, a new user should should
+definitely start with Chapter~ref{chapter:using_library}.</p>
+<p>The library makes heavy use of C++11 features. There are plenty of websites on
+the internet explaining those new features. For an experienced C++ programmer
+the Wiki sitecite{web:cpp11wiki} describing the new features for C++11 might be
+enough. However, new users with less experience in modern C++ may should
+purchase one of the excellent books available on this language.</p>
+<p>A reader already familiar with libpnicoremay uses this guide as a short
+reference to the most important features. In any case, more detailed information
+about each class can be found in the API documentation.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="installation.html" title="Installation"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Users guide"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">libpnicore  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Users guide</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2016, Eugen Wintersberger.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.9.
+    </div>
+  </body>
+</html>

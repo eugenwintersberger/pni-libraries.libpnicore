@@ -1,4 +1,0 @@
-[pnicore]
-
-nthreads = 4
-
