@@ -1,4 +1,4 @@
-/*! \mainpage @CMAKE_PROJECT_NAME@ @LIBRARY_VERSION@ documentation
+/*! \mainpage @CMAKE_PROJECT_NAME@ @PROJECT_VERSION@ documentation
 
 Libpnicore is a utility library for a bunch of PNI related libraries. 
 It provides the basic data structures and type definitions as well as 
