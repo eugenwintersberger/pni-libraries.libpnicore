@@ -72,3 +72,5 @@ above example. This is absolutely mandatory if you want to use *libpnicore*!
 In cases where you have *libpnicore* installed to locations where cmake 
 is not automatically looking for packages you may have to set the 
 `pnicore_DIR` variable when calling cmake the first time. 
+
+More information can be found at [online documentation](https://pni-libraries.github.io/libpnicore/index.html).
