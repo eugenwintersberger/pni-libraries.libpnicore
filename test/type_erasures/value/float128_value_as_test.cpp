@@ -148,7 +148,7 @@ BOOST_AUTO_TEST_SUITE(float128_value_as_test)
         BOOST_CHECK_EQUAL(v.as<target_type>(),
                           convert<target_type>(f.value_1));
         
-#if !defined _MSC_VER && !defined __arm__
+#if !defined(_MSC_VER) && !defined(__arm__)
 		//on MSVC 2014 (VS 2015) float64 and float128 have equal size
         v = sinfo_type::min();
         BOOST_CHECK_THROW(v.as<target_type>(),range_error);
@@ -194,7 +194,7 @@ BOOST_AUTO_TEST_SUITE(float128_value_as_test)
         BOOST_CHECK_EQUAL(v.as<target_type>(),
                           convert<target_type>(f.value_1));
         
-#if !defined _MSC_VER && !defined __arm__
+#if !defined(_MSC_VER) && !defined(__arm__)
 		// does not work on MSVC 2014 (VS 2015) where float64 and float128
 		// are of equal size
         v = sinfo_type::min();

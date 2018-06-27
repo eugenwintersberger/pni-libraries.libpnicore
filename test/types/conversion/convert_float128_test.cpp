@@ -123,10 +123,10 @@ BOOST_AUTO_TEST_SUITE(convert_float128_test)
         
         BOOST_CHECK_CLOSE(target_type(19),
                           convert<target_type>(source_type(19)),1.e-16);
-#if defined __GNUG__  && !defined __arm__
+#if defined(__GNUG__)  && !defined(__arm__)
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Woverflow"
-	
+
         BOOST_CHECK_THROW(convert<target_type>(source_type(1.e+320)),
                           range_error);
 	BOOST_CHECK_THROW(convert<target_type>(source_type(-1.e+320)),
@@ -171,7 +171,7 @@ BOOST_AUTO_TEST_SUITE(convert_float128_test)
         BOOST_CHECK_CLOSE(base_type(19),value.real(),1.e-16);
         BOOST_CHECK_CLOSE(base_type(0),value.imag(),1.e-16);
 
-#if defined __GNUG__  && !defined __arm__
+#if defined(__GNUG__)  && !defined(__arm__)
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Woverflow"
         BOOST_CHECK_THROW(convert<target_type>(source_type(1.e+400)),
