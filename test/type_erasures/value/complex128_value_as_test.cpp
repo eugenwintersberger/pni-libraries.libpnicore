@@ -174,7 +174,7 @@ BOOST_AUTO_TEST_SUITE(complex128_value_as_test)
         BOOST_CHECK_EQUAL(v.as<target_type>(),
                           convert<target_type>(f.value_1));
        
-#ifndef _MSC_VER
+#if !defined(_MSC_VER) && !defined(__arm__)
 		//this does not work for the MSVC 2014 (VS2015) as float64 and 
 		//float128 have the same size
         v = sinfo_type::min();

@@ -25,9 +25,4 @@ add_subdirectory(conversion)
 add_subdirectory(traits)
 
 add_boost_logging_test("type_test" type_test ${PROJECT_BINARY_DIR}/test/types)
-         
-if(CMAKE_HOST_SYSTEM_NAME MATCHES Windows)
-    set_property(TEST type_test APPEND PROPERTY
-                 ENVIRONMENT "PATH=${PATH_STRING}")
-endif()
 
