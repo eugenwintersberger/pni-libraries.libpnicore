@@ -1,14 +1,14 @@
 #need to define the version of the library
-set(SOURCES # binary_test.cpp
-#            bool_test.cpp
-#            type_class_map_test.cpp
-#            type_id_map_test.cpp
-#            id_type_map_test.cpp
+set(SOURCES binary_test.cpp
+            bool_test.cpp
+            type_class_map_test.cpp
+            type_id_map_test.cpp
+            id_type_map_test.cpp
             container_trait_test.cpp
-#            type_id_test.cpp
-#            type_info_test.cpp
-#            type_id_from_str_test.cpp
-#            str_from_type_id_test.cpp
+            type_id_test.cpp
+            type_info_test.cpp
+            type_id_from_str_test.cpp
+            str_from_type_id_test.cpp
 )
 
 set_boost_test_definitions(SOURCES "testing type features")
