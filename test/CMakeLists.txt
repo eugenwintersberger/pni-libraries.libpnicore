@@ -40,7 +40,7 @@ add_dependencies(check test_common
 # build all the other tests
 #
 add_subdirectory(index_maps)
-add_subdirectory(types)
+# add_subdirectory(types)
 add_subdirectory(arrays)
 add_subdirectory(utils_test)
 add_subdirectory(type_erasures)
