@@ -118,10 +118,12 @@ BOOST_AUTO_TEST_SUITE(type_info_test)
 
         BOOST_CHECK_CLOSE(info_type::min(),-limits_type::max(),1.e-12);
         BOOST_CHECK_CLOSE(info_type::max(),+limits_type::max(),1.e-12);
-#if defined(__GNUG__)  && !defined(__arm__)
-        BOOST_CHECK(info_type::size==16);
-#else
+#ifdef _MSC_VER
 	BOOST_CHECK(info_type::size == 8);
+#elif defined(__arm__)
+	BOOST_CHECK(info_type::size == 8);
+#else
+        BOOST_CHECK(info_type::size==16);
 #endif
         BOOST_CHECK(!info_type::is_integer);
         BOOST_CHECK(info_type::is_signed);
@@ -164,10 +166,12 @@ BOOST_AUTO_TEST_SUITE(type_info_test)
 
         BOOST_CHECK_CLOSE(info_type::min(),-limits_type::max(),1.e-12);
         BOOST_CHECK_CLOSE(info_type::max(),+limits_type::max(),1.e-12);
-#if defined(__GNUG__)  && !defined(__arm__)
-        BOOST_CHECK(info_type::size==32);
-#else
+#ifdef _MSC_VER
 	BOOST_CHECK(info_type::size == 16);
+#elif defined(__arm__)
+	BOOST_CHECK(info_type::size == 16);
+#else
+        BOOST_CHECK(info_type::size==32);
 #endif
         BOOST_CHECK(!info_type::is_integer);
         BOOST_CHECK(info_type::is_signed);
