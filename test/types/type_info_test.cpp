@@ -118,14 +118,10 @@ BOOST_AUTO_TEST_SUITE(type_info_test)
 
         BOOST_CHECK_CLOSE(info_type::min(),-limits_type::max(),1.e-12);
         BOOST_CHECK_CLOSE(info_type::max(),+limits_type::max(),1.e-12);
-#ifdef _MSC_VER
-		BOOST_CHECK(info_type::size == 8);
-#else
-#ifdef __arm__
-		BOOST_CHECK(info_type::size == 8);
+#if defined(_MSC_VER) || defined(__arm__)
+	BOOST_CHECK(info_type::size == 8);
 #else
         BOOST_CHECK(info_type::size==16);
-#endif
 #endif
         BOOST_CHECK(!info_type::is_integer);
         BOOST_CHECK(info_type::is_signed);
@@ -168,14 +164,10 @@ BOOST_AUTO_TEST_SUITE(type_info_test)
 
         BOOST_CHECK_CLOSE(info_type::min(),-limits_type::max(),1.e-12);
         BOOST_CHECK_CLOSE(info_type::max(),+limits_type::max(),1.e-12);
-#ifdef _MSC_VER
-		BOOST_CHECK(info_type::size == 16);
-#else
-#ifdef __arm__
-		BOOST_CHECK(info_type::size == 16);
+#if defined(_MSC_VER) || defined(__arm__)
+	BOOST_CHECK(info_type::size == 16);
 #else
         BOOST_CHECK(info_type::size==32);
-#endif
 #endif
         BOOST_CHECK(!info_type::is_integer);
         BOOST_CHECK(info_type::is_signed);
