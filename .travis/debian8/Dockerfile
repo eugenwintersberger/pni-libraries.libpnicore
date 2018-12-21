@@ -4,7 +4,7 @@ MAINTAINER DESY, Jan Kotanski <jankotan@gmail.com>
 
 RUN /bin/bash -c 'echo "deb http://ftp.debian.org/debian jessie-backports main contrib non-free" > /etc/apt/sources.list.d/debian-backports.list'
 
-RUN apt-get -qq update && apt-get -qq install -y software-properties-common curl
+RUN apt-get -qq update && apt-get -qq -y install software-properties-common curl
 
 RUN curl http://repos.pni-hdri.de/debian_repo.pub.gpg | apt-key add -
 RUN add-apt-repository "deb http://repos.pni-hdri.de/apt/debian jessie main" -y

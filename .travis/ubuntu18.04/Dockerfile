@@ -11,6 +11,7 @@ RUN curl http://repos.pni-hdri.de/debian_repo.pub.gpg | apt-key add -
 RUN add-apt-repository "deb http://repos.pni-hdri.de/apt/debian buster main" -y
 RUN apt-get -qq update && apt-get -qq -y dist-upgrade
 
+RUN /bin/bash -c 'echo "Europe/Berlin" > /etc/timezone'
 RUN apt-get -qq update && apt-get -qq -y install cmake ninja-build python-pip g++ doxygen python-sphinx git libboost-all-dev gfortran
 
 RUN apt-get clean
