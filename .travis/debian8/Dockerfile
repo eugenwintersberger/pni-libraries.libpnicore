@@ -13,7 +13,7 @@ RUN apt-get -qq update && apt-get -qq -y dist-upgrade
 
 RUN apt-get -y install ninja-build python-setuptools g++ doxygen git libboost-all-dev
 RUN apt-get -y -t jessie-backports install cmake
-RUN apt-get -y gfortran
+RUN apt-get -y install gfortran
 RUN apt-get clean
 
 RUN easy_install pip
