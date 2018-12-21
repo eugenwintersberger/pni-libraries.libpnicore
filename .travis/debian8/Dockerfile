@@ -11,9 +11,8 @@ RUN add-apt-repository "deb http://repos.pni-hdri.de/apt/debian jessie main" -y
 
 RUN apt-get -qq update && apt-get -qq -y dist-upgrade
 
-RUN apt-get -y install ninja-build python-setuptools g++ doxygen git libboost-all-dev
-RUN apt-get -y -t jessie-backports install cmake
-RUN apt-get -y install gfortran
+RUN apt-get -qq update && apt-get -qq -y install ninja-build python-setuptools g++ doxygen git libboost-all-dev gfortran
+RUN apt-get -qq update && apt-get -y -t jessie-backports install cmake
 RUN apt-get clean
 
 RUN easy_install pip
@@ -21,7 +20,6 @@ RUN pip install conan
 RUN pip install gitpython
 
 RUN conan remote remove conan-center
-RUN conan remote remove conan-transit
 RUN conan remote add conan-community https://api.bintray.com/conan/conan-community/conan
 RUN conan remote add conan-center https://conan.bintray.com
 RUN conan remote add conan-transit https://conan-transit.bintray.com
