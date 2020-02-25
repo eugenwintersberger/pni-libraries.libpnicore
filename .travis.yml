@@ -25,7 +25,7 @@ before_script:
     - docker exec -it build bash -c "mkdir build"
     
 script:
-    - docker exec -e BUILDTYPE -it build bash -c "cd build && cmake -G Ninja -DCMAKE_BUILD_TYPE=$BUILDTYPE .."
+    - docker exec -e BUILDTYPE -it build bash -c "cd build && cmake -G Ninja -DCMAKE_CXX_FLAGS="-Wdeprecated-copy" -DCMAKE_BUILD_TYPE=$BUILDTYPE .."
     - docker exec -e BUILDTYPE -it build bash -c "cd build && cmake --build . --target all --config $BUILDTYPE"
     - docker exec -e BUILDTYPE -it build bash -c "cd build && cmake --build . --target check --config $BUILDTYPE"
     
