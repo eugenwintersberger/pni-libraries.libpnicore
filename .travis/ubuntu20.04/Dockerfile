@@ -11,8 +11,8 @@ RUN /bin/bash -c 'echo "Europe/Berlin" > /etc/timezone'
 RUN apt-get -qq update && export DEBIAN_FRONTEND=noninteractive && apt-get  -y install cmake ninja-build python3-pip g++ doxygen python3-sphinx git libboost-all-dev gfortran
 
 RUN apt-get clean
-RUN pip install conan
-RUN pip install gitpython
+RUN pip3 install conan
+RUN pip3 install gitpython
 
 RUN conan remote remove conan-center
 RUN conan remote add conan-community https://api.bintray.com/conan/conan-community/conan
