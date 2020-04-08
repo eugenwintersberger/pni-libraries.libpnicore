@@ -30,7 +30,7 @@
 #ifdef __GNUG__
 #pragma GCC diagnostic pop
 #endif
-#include <boost/test/test_case_template.hpp>
+#include <boost/test/unit_test.hpp>
 #include <boost/mpl/list.hpp>
 #include <boost/current_function.hpp>
 #include <vector>
