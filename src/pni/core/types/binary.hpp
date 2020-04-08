@@ -91,7 +91,7 @@ namespace core{
             binary_t(const binary_t<storage_type> &o):
                 _value(o._value)
             {}
-
+            binary_t<storage_type>& operator=(const binary_t<storage_type>&) = default;
             //-----------------------------------------------------------------
             //! conversion operator
             //! 
