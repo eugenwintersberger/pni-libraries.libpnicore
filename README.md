@@ -20,7 +20,7 @@ On Linux the following software is required to build the *libpnicore*
 * [cmake](https://cmake.org/) >= 3.5
 * [doxygen](http://www.stack.nl/~dimitri/doxygen/) to generate XML API documentation
 * [sphinx](http://www.sphinx-doc.org/en/stable/) to generate HTML and PDF documentation
-* [Boost](http://www.boost.org/) >= 1.55
+* [Boost](http://www.boost.org/) >= 1.60
 
 Acquire the sources either by either cloning this repository or by 
 

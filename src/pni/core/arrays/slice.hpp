@@ -139,6 +139,7 @@ namespace core{
             //===============assignment operators==============================
             //! copy assignment operator
             slice &operator=(const slice &s);
+	    slice(const slice&) = default;
 
             //=================public member methods===========================
             //! 

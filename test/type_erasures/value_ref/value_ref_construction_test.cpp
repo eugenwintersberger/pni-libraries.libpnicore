@@ -30,7 +30,7 @@
 #ifdef __GNUG__
 #pragma GCC diagnostic pop
 #endif 
-#include <boost/test/floating_point_comparison.hpp>
+#include <boost/test/tools/floating_point_comparison.hpp>
 
 #include <pni/core/types.hpp>
 #include <pni/core/type_erasures.hpp>
