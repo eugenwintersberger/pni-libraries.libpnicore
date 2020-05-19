@@ -13,6 +13,7 @@ RUN apt-get -qq update && apt-get -qq -y dist-upgrade
 RUN apt-get -qq update && apt-get -qq -y install cmake ninja-build python-pip g++ doxygen python-sphinx git libboost-all-dev gfortran
 
 RUN apt-get clean
+RUN pip install --upgrade jinja2
 RUN pip install conan
 RUN pip install gitpython
 
