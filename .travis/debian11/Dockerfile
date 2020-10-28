@@ -1,7 +1,6 @@
 FROM debian:bullseye
 
 MAINTAINER DESY, Jan Kotanski <jankotan@gmail.com>
-RUN apt-get -y remove unattended-upgrades
 RUN /bin/bash -c 'echo "deb http://ftp.de.debian.org/debian bullseye main" > /etc/apt/sources.list.d/debian9de.list'
 RUN apt-get -qq update && apt-get -qq -y install libterm-readline-gnu-perl software-properties-common coreutils gnupg2 procps apt-utils curl apt-transport-https gnupg2 ca-certificates
 RUN curl http://repos.pni-hdri.de/debian_repo.pub.gpg | apt-key add -
