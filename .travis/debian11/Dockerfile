@@ -6,7 +6,7 @@ RUN apt-get update
 RUN apt-get install -y base-passwd
 RUN apt-get -qq update && apt-get -qq -y install libterm-readline-gnu-perl software-properties-common coreutils gnupg2 procps apt-utils curl apt-transport-https gnupg2 ca-certificates
 RUN curl http://repos.pni-hdri.de/debian_repo.pub.gpg | apt-key add -
-RUN add-apt-repository "deb http://repos.pni-hdri.de/apt/debian buster main" -y
+RUN add-apt-repository "deb http://repos.pni-hdri.de/apt/debian bullseye main" -y
 # RUN apt-get -qq update && apt-get -qq -y dist-upgrade
 
 RUN apt-get -qq update && apt-get -qq -y install cmake ninja-build python3-pip g++ doxygen python3-sphinx git libboost-all-dev gfortran
