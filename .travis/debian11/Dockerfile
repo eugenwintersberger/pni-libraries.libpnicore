@@ -9,11 +9,11 @@ RUN curl http://repos.pni-hdri.de/debian_repo.pub.gpg | apt-key add -
 RUN add-apt-repository "deb http://repos.pni-hdri.de/apt/debian buster main" -y
 # RUN apt-get -qq update && apt-get -qq -y dist-upgrade
 
-RUN apt-get -qq update && apt-get -qq -y install cmake ninja-build python-pip g++ doxygen python-sphinx git libboost-all-dev gfortran
+RUN apt-get -qq update && apt-get -qq -y install cmake ninja-build python3-pip g++ doxygen python3-sphinx git libboost-all-dev gfortran
 
 RUN apt-get clean
-RUN pip install conan
-RUN pip install gitpython
+RUN pip3 install conan
+RUN pip3 install gitpython
 
 RUN conan remote remove conan-center
 RUN conan remote add conan-community https://api.bintray.com/conan/conan-community/conan
