@@ -1,11 +1,13 @@
 FROM debian:bullseye
 
 MAINTAINER DESY, Jan Kotanski <jankotan@gmail.com>
-RUN /bin/bash -c 'echo "deb http://ftp.de.debian.org/debian bullseye main" > /etc/apt/sources.list.d/debian9de.list'
+# RUN /bin/bash -c 'echo "deb http://ftp.de.debian.org/debian bullseye main" > /etc/apt/sources.list.d/debian9de.list'
+RUN apt-get update
+RUN apt-get install -y base-passwd
 RUN apt-get -qq update && apt-get -qq -y install libterm-readline-gnu-perl software-properties-common coreutils gnupg2 procps apt-utils curl apt-transport-https gnupg2 ca-certificates
 RUN curl http://repos.pni-hdri.de/debian_repo.pub.gpg | apt-key add -
 RUN add-apt-repository "deb http://repos.pni-hdri.de/apt/debian buster main" -y
-RUN apt-get -qq update && apt-get -qq -y dist-upgrade
+# RUN apt-get -qq update && apt-get -qq -y dist-upgrade
 
 RUN apt-get -qq update && apt-get -qq -y install cmake ninja-build python-pip g++ doxygen python-sphinx git libboost-all-dev gfortran
 
