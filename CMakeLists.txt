@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.0)
+cmake_policy(SET CMP0058 NEW)
 project(pnicore
         LANGUAGES CXX C
         VERSION 1.1.1)
