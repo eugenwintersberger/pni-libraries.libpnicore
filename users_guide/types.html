@@ -2,42 +2,30 @@
 
 <!doctype html>
 
-
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
     <title>Data Types &#8212; libpnicore 1.1.1 documentation</title>
-    
     <link rel="stylesheet" href="../_static/bizstyle.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../',
-        VERSION:     '1.1.1',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
-      };
-    </script>
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="../_static/bizstyle.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="libpnicore 1.1.1 documentation" href="../index.html" />
-    <link rel="up" title="Users guide" href="index.html" />
     <link rel="next" title="Multidimensional arrays" href="arrays.html" />
     <link rel="prev" title="Using libpnicore" href="using.html" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <!--[if lt IE 9]>
     <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
     <![endif]-->
-  </head>
-  <body role="document">
+  </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -56,16 +44,16 @@
     </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <h3><a href="../index.html">Table of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Data Types</a><ul>
 <li><a class="reference internal" href="#compile-time-type-identification">Compile time type identification</a></li>
 <li><a class="reference internal" href="#identifying-types-at-runtime">Identifying types at runtime</a></li>
-<li><a class="reference internal" href="#the-binary-type">The <code class="docutils literal"><span class="pre">binary</span></code> type</a></li>
-<li><a class="reference internal" href="#the-none-type">The <code class="docutils literal"><span class="pre">none</span></code> type</a></li>
-<li><a class="reference internal" href="#the-bool-t-type">The <code class="docutils literal"><span class="pre">bool_t</span></code> type</a></li>
+<li><a class="reference internal" href="#the-binary-type">The <code class="docutils literal notranslate"><span class="pre">binary</span></code> type</a></li>
+<li><a class="reference internal" href="#the-none-type">The <code class="docutils literal notranslate"><span class="pre">none</span></code> type</a></li>
+<li><a class="reference internal" href="#the-bool-t-type">The <code class="docutils literal notranslate"><span class="pre">bool_t</span></code> type</a></li>
 <li><a class="reference internal" href="#numeric-type-conversion">Numeric type conversion</a><ul>
-<li><a class="reference internal" href="#the-convert-function-template">The <code class="docutils literal"><span class="pre">convert()</span></code> function template</a></li>
+<li><a class="reference internal" href="#the-convert-function-template">The <code class="docutils literal notranslate"><span class="pre">convert()</span></code> function template</a></li>
 </ul>
 </li>
 </ul>
@@ -81,18 +69,20 @@
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="../_sources/users_guide/types.txt"
+      <li><a href="../_sources/users_guide/types.rst.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -113,96 +103,96 @@
 <col width="29%" />
 </colgroup>
 <thead valign="bottom">
-<tr class="row-odd"><th class="head"><code class="xref cpp cpp-enum docutils literal"><span class="pre">type_class_t</span></code></th>
+<tr class="row-odd"><th class="head"><code class="xref cpp cpp-enum docutils literal notranslate"><span class="pre">type_class_t</span></code></th>
 <th class="head">data type</th>
-<th class="head"><code class="xref cpp cpp-enum docutils literal"><span class="pre">type_id_t</span></code></th>
+<th class="head"><code class="xref cpp cpp-enum docutils literal notranslate"><span class="pre">type_id_t</span></code></th>
 <th class="head">description</th>
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td><code class="xref cpp cpp-enumerator docutils literal"><span class="pre">INTEGER</span></code></td>
-<td><code class="xref cpp cpp-type docutils literal"><span class="pre">uint8</span></code></td>
-<td><code class="xref cpp cpp-enumerator docutils literal"><span class="pre">UINT8</span></code></td>
+<tr class="row-even"><td><code class="xref cpp cpp-enumerator docutils literal notranslate"><span class="pre">INTEGER</span></code></td>
+<td><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">uint8</span></code></td>
+<td><code class="xref cpp cpp-enumerator docutils literal notranslate"><span class="pre">UINT8</span></code></td>
 <td>8Bit unsinged integer</td>
 </tr>
-<tr class="row-odd"><td><code class="xref cpp cpp-enumerator docutils literal"><span class="pre">INTEGER</span></code></td>
-<td><code class="xref cpp cpp-type docutils literal"><span class="pre">int8</span></code></td>
-<td><code class="xref cpp cpp-enumerator docutils literal"><span class="pre">INT8</span></code></td>
+<tr class="row-odd"><td><code class="xref cpp cpp-enumerator docutils literal notranslate"><span class="pre">INTEGER</span></code></td>
+<td><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">int8</span></code></td>
+<td><code class="xref cpp cpp-enumerator docutils literal notranslate"><span class="pre">INT8</span></code></td>
 <td>8Bit signed integer</td>
 </tr>
-<tr class="row-even"><td><code class="xref cpp cpp-enumerator docutils literal"><span class="pre">INTEGER</span></code></td>
-<td><code class="xref cpp cpp-type docutils literal"><span class="pre">uint16</span></code></td>
-<td><code class="xref cpp cpp-enumerator docutils literal"><span class="pre">UINT16</span></code></td>
+<tr class="row-even"><td><code class="xref cpp cpp-enumerator docutils literal notranslate"><span class="pre">INTEGER</span></code></td>
+<td><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">uint16</span></code></td>
+<td><code class="xref cpp cpp-enumerator docutils literal notranslate"><span class="pre">UINT16</span></code></td>
 <td>16Bit unsigned integer</td>
 </tr>
-<tr class="row-odd"><td><code class="xref cpp cpp-enumerator docutils literal"><span class="pre">INTEGER</span></code></td>
-<td><code class="xref cpp cpp-type docutils literal"><span class="pre">int16</span></code></td>
-<td><code class="xref cpp cpp-enumerator docutils literal"><span class="pre">INT16</span></code></td>
+<tr class="row-odd"><td><code class="xref cpp cpp-enumerator docutils literal notranslate"><span class="pre">INTEGER</span></code></td>
+<td><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">int16</span></code></td>
+<td><code class="xref cpp cpp-enumerator docutils literal notranslate"><span class="pre">INT16</span></code></td>
 <td>16Bit signed integer</td>
 </tr>
-<tr class="row-even"><td><code class="xref cpp cpp-enumerator docutils literal"><span class="pre">INTEGER</span></code></td>
-<td><code class="xref cpp cpp-type docutils literal"><span class="pre">uint32</span></code></td>
-<td><code class="xref cpp cpp-enumerator docutils literal"><span class="pre">UINT32</span></code></td>
+<tr class="row-even"><td><code class="xref cpp cpp-enumerator docutils literal notranslate"><span class="pre">INTEGER</span></code></td>
+<td><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">uint32</span></code></td>
+<td><code class="xref cpp cpp-enumerator docutils literal notranslate"><span class="pre">UINT32</span></code></td>
 <td>32Bit unsigned integer</td>
 </tr>
-<tr class="row-odd"><td><code class="xref cpp cpp-enumerator docutils literal"><span class="pre">INTEGER</span></code></td>
-<td><code class="xref cpp cpp-type docutils literal"><span class="pre">int32</span></code></td>
-<td><code class="xref cpp cpp-enumerator docutils literal"><span class="pre">INT32</span></code></td>
+<tr class="row-odd"><td><code class="xref cpp cpp-enumerator docutils literal notranslate"><span class="pre">INTEGER</span></code></td>
+<td><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">int32</span></code></td>
+<td><code class="xref cpp cpp-enumerator docutils literal notranslate"><span class="pre">INT32</span></code></td>
 <td>32Bit signed integer</td>
 </tr>
-<tr class="row-even"><td><code class="xref cpp cpp-enumerator docutils literal"><span class="pre">INTEGER</span></code></td>
-<td><code class="xref cpp cpp-type docutils literal"><span class="pre">uint64</span></code></td>
-<td><code class="xref cpp cpp-enumerator docutils literal"><span class="pre">UINT64</span></code></td>
+<tr class="row-even"><td><code class="xref cpp cpp-enumerator docutils literal notranslate"><span class="pre">INTEGER</span></code></td>
+<td><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">uint64</span></code></td>
+<td><code class="xref cpp cpp-enumerator docutils literal notranslate"><span class="pre">UINT64</span></code></td>
 <td>64Bit unsigned integer</td>
 </tr>
-<tr class="row-odd"><td><code class="xref cpp cpp-enumerator docutils literal"><span class="pre">INTEGER</span></code></td>
-<td><code class="xref cpp cpp-type docutils literal"><span class="pre">int64</span></code></td>
-<td><code class="xref cpp cpp-enumerator docutils literal"><span class="pre">INT64</span></code></td>
+<tr class="row-odd"><td><code class="xref cpp cpp-enumerator docutils literal notranslate"><span class="pre">INTEGER</span></code></td>
+<td><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">int64</span></code></td>
+<td><code class="xref cpp cpp-enumerator docutils literal notranslate"><span class="pre">INT64</span></code></td>
 <td>64Bit signed integer</td>
 </tr>
-<tr class="row-even"><td><code class="xref cpp cpp-enumerator docutils literal"><span class="pre">FLOAT</span></code></td>
-<td><code class="xref cpp cpp-type docutils literal"><span class="pre">float32</span></code></td>
-<td><code class="xref cpp cpp-enumerator docutils literal"><span class="pre">FLOAT32</span></code></td>
+<tr class="row-even"><td><code class="xref cpp cpp-enumerator docutils literal notranslate"><span class="pre">FLOAT</span></code></td>
+<td><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">float32</span></code></td>
+<td><code class="xref cpp cpp-enumerator docutils literal notranslate"><span class="pre">FLOAT32</span></code></td>
 <td>32Bit IEEE floating point type</td>
 </tr>
-<tr class="row-odd"><td><code class="xref cpp cpp-enumerator docutils literal"><span class="pre">FLOAT</span></code></td>
-<td><code class="xref cpp cpp-type docutils literal"><span class="pre">float64</span></code></td>
-<td><code class="xref cpp cpp-enumerator docutils literal"><span class="pre">FLOAT64</span></code></td>
+<tr class="row-odd"><td><code class="xref cpp cpp-enumerator docutils literal notranslate"><span class="pre">FLOAT</span></code></td>
+<td><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">float64</span></code></td>
+<td><code class="xref cpp cpp-enumerator docutils literal notranslate"><span class="pre">FLOAT64</span></code></td>
 <td>64Bit IEEE floating point type</td>
 </tr>
-<tr class="row-even"><td><code class="xref cpp cpp-enumerator docutils literal"><span class="pre">FLOAT</span></code></td>
-<td><code class="xref cpp cpp-type docutils literal"><span class="pre">float128</span></code></td>
-<td><code class="xref cpp cpp-enumerator docutils literal"><span class="pre">FLOAT128</span></code></td>
+<tr class="row-even"><td><code class="xref cpp cpp-enumerator docutils literal notranslate"><span class="pre">FLOAT</span></code></td>
+<td><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">float128</span></code></td>
+<td><code class="xref cpp cpp-enumerator docutils literal notranslate"><span class="pre">FLOAT128</span></code></td>
 <td>128Bit IEEE floating point type</td>
 </tr>
-<tr class="row-odd"><td><code class="xref cpp cpp-enumerator docutils literal"><span class="pre">COMPLEX</span></code></td>
-<td><code class="xref cpp cpp-type docutils literal"><span class="pre">complex32</span></code></td>
-<td><code class="xref cpp cpp-enumerator docutils literal"><span class="pre">COMPLEX32</span></code></td>
+<tr class="row-odd"><td><code class="xref cpp cpp-enumerator docutils literal notranslate"><span class="pre">COMPLEX</span></code></td>
+<td><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">complex32</span></code></td>
+<td><code class="xref cpp cpp-enumerator docutils literal notranslate"><span class="pre">COMPLEX32</span></code></td>
 <td>32Bit IEEE complex float type</td>
 </tr>
-<tr class="row-even"><td><code class="xref cpp cpp-enumerator docutils literal"><span class="pre">COMPLEX</span></code></td>
-<td><code class="xref cpp cpp-type docutils literal"><span class="pre">complex64</span></code></td>
-<td><code class="xref cpp cpp-enumerator docutils literal"><span class="pre">COMPLEX64</span></code></td>
+<tr class="row-even"><td><code class="xref cpp cpp-enumerator docutils literal notranslate"><span class="pre">COMPLEX</span></code></td>
+<td><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">complex64</span></code></td>
+<td><code class="xref cpp cpp-enumerator docutils literal notranslate"><span class="pre">COMPLEX64</span></code></td>
 <td>64Bit IEEE complex float type</td>
 </tr>
-<tr class="row-odd"><td><code class="xref cpp cpp-enumerator docutils literal"><span class="pre">COMPLEX</span></code></td>
-<td><code class="xref cpp cpp-type docutils literal"><span class="pre">complex128</span></code></td>
-<td><code class="xref cpp cpp-enumerator docutils literal"><span class="pre">COMPLEX128</span></code></td>
+<tr class="row-odd"><td><code class="xref cpp cpp-enumerator docutils literal notranslate"><span class="pre">COMPLEX</span></code></td>
+<td><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">complex128</span></code></td>
+<td><code class="xref cpp cpp-enumerator docutils literal notranslate"><span class="pre">COMPLEX128</span></code></td>
 <td>128Bit IEEE complex float type</td>
 </tr>
-<tr class="row-even"><td><code class="xref cpp cpp-enumerator docutils literal"><span class="pre">STRING</span></code></td>
-<td><code class="xref cpp cpp-type docutils literal"><span class="pre">string</span></code></td>
-<td><code class="xref cpp cpp-enumerator docutils literal"><span class="pre">STRING</span></code></td>
+<tr class="row-even"><td><code class="xref cpp cpp-enumerator docutils literal notranslate"><span class="pre">STRING</span></code></td>
+<td><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">string</span></code></td>
+<td><code class="xref cpp cpp-enumerator docutils literal notranslate"><span class="pre">STRING</span></code></td>
 <td>string  type</td>
 </tr>
-<tr class="row-odd"><td><code class="xref cpp cpp-enumerator docutils literal"><span class="pre">BINARY</span></code></td>
-<td><code class="xref cpp cpp-type docutils literal"><span class="pre">binary</span></code></td>
-<td><code class="xref cpp cpp-enumerator docutils literal"><span class="pre">BINARY</span></code></td>
+<tr class="row-odd"><td><code class="xref cpp cpp-enumerator docutils literal notranslate"><span class="pre">BINARY</span></code></td>
+<td><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">binary</span></code></td>
+<td><code class="xref cpp cpp-enumerator docutils literal notranslate"><span class="pre">BINARY</span></code></td>
 <td>binary type</td>
 </tr>
-<tr class="row-even"><td><code class="xref cpp cpp-enumerator docutils literal"><span class="pre">NONE</span></code></td>
-<td><code class="xref cpp cpp-type docutils literal"><span class="pre">none</span></code></td>
-<td><code class="xref cpp cpp-enumerator docutils literal"><span class="pre">NONE</span></code></td>
+<tr class="row-even"><td><code class="xref cpp cpp-enumerator docutils literal notranslate"><span class="pre">NONE</span></code></td>
+<td><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">none</span></code></td>
+<td><code class="xref cpp cpp-enumerator docutils literal notranslate"><span class="pre">NONE</span></code></td>
 <td>none type</td>
 </tr>
 </tbody>
@@ -211,33 +201,33 @@
 <p><em>libpnicore</em> provides a set of data types of well defined size and utility
 functions related to type management.  The basic header file required to use
 <em>libpnicore</em> s type facilities is</p>
-<div class="highlight-cpp"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;pni/core/types.hpp&gt;</span><span class="cp"></span>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;pni/core/types.hpp&gt;</span><span class="cp"></span>
 </pre></div>
 </div>
 <p>The data types provided by <em>libpnicore</em> include</p>
 <ul class="simple">
 <li>numeric types with all their arithmetic operations</li>
 <li>string types (currently only one member)</li>
-<li>and utility types like <code class="xref cpp cpp-type docutils literal"><span class="pre">binary_t</span></code>, <code class="xref cpp cpp-type docutils literal"><span class="pre">bool_t</span></code>, and
-<code class="xref cpp cpp-type docutils literal"><span class="pre">none</span></code>.</li>
+<li>and utility types like <code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">binary_t</span></code>, <code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">bool_t</span></code>, and
+<code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">none</span></code>.</li>
 </ul>
 <p>All this types together are refered to as <cite>primitive types</cite>.  The numeric types
 are ensured to have the same size on each platform and architecture supported
 by <cite>libpnicore</cite>. They are mostly aliases to the types defined by the C standard
-library.  However, the utility types <code class="xref cpp cpp-type docutils literal"><span class="pre">binary_t</span></code>, <code class="xref cpp cpp-type docutils literal"><span class="pre">bool_t</span></code>, and
-<code class="xref cpp cpp-type docutils literal"><span class="pre">none</span></code> are unique to <cite>libpnicore</cite> and will be explained in more
+library.  However, the utility types <code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">binary_t</span></code>, <code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">bool_t</span></code>, and
+<code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">none</span></code> are unique to <cite>libpnicore</cite> and will be explained in more
 detail in the last sections of this chapter.</p>
 <p>Every type in <cite>libpnicore</cite> is associated with an ID represented by the
-<code class="xref cpp cpp-enum docutils literal"><span class="pre">type_id_t</span></code> enumeration type. Additionally every type belongs to a
-particular type class defined by the <code class="xref cpp cpp-enum docutils literal"><span class="pre">type_class_t</span></code> enumeration type.
+<code class="xref cpp cpp-enum docutils literal notranslate"><span class="pre">type_id_t</span></code> enumeration type. Additionally every type belongs to a
+particular type class defined by the <code class="xref cpp cpp-enum docutils literal notranslate"><span class="pre">type_class_t</span></code> enumeration type.
 Table~ref{tab:types:basic_types} gives an overview over the primitive types
-provided by <cite>libpnicore</cite> and their corresponding <code class="xref cpp cpp-enum docutils literal"><span class="pre">type_id_t</span></code> and
-<code class="xref cpp cpp-enum docutils literal"><span class="pre">type_class_t</span></code> values.</p>
+provided by <cite>libpnicore</cite> and their corresponding <code class="xref cpp cpp-enum docutils literal notranslate"><span class="pre">type_id_t</span></code> and
+<code class="xref cpp cpp-enum docutils literal notranslate"><span class="pre">type_class_t</span></code> values.</p>
 <div class="section" id="compile-time-type-identification">
 <h2>Compile time type identification<a class="headerlink" href="#compile-time-type-identification" title="Permalink to this headline">¶</a></h2>
 <p>To obtain the ID or class of a type at compile time use the
-<code class="xref cpp cpp-class docutils literal"><span class="pre">type_id_map</span></code> or <code class="xref cpp cpp-class docutils literal"><span class="pre">type_class_map</span></code> type maps.</p>
-<div class="highlight-cpp"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;pni/core/types.hpp&gt;</span><span class="cp"></span>
+<code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">type_id_map</span></code> or <code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">type_class_map</span></code> type maps.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;pni/core/types.hpp&gt;</span><span class="cp"></span>
 
 <span class="k">using</span> <span class="k">namespace</span> <span class="n">pni</span><span class="o">::</span><span class="n">core</span><span class="p">;</span>
 
@@ -248,8 +238,8 @@ provided by <cite>libpnicore</cite> and their corresponding <code class="xref cp
 <span class="n">type_class_map</span><span class="o">&lt;</span><span class="n">float32</span><span class="o">&gt;::</span><span class="n">type_class</span> <span class="o">==</span> <span class="n">type_class_t</span><span class="o">::</span><span class="n">FLOAT</span><span class="p">;</span>
 </pre></div>
 </div>
-<p>For IDs the other way around is also possible with the <code class="xref cpp cpp-class docutils literal"><span class="pre">id_type_map</span></code></p>
-<div class="highlight-cpp"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;pni/core/types.hpp&gt;</span><span class="cp"></span>
+<p>For IDs the other way around is also possible with the <code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">id_type_map</span></code></p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;pni/core/types.hpp&gt;</span><span class="cp"></span>
 
 <span class="k">using</span> <span class="k">namespace</span> <span class="n">pni</span><span class="o">::</span><span class="n">core</span><span class="p">;</span>
 
@@ -270,17 +260,17 @@ classification</p>
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td><code class="xref cpp cpp-member docutils literal"><span class="pre">is_integer_type&lt;T&gt;::value</span></code></td>
-<td><strong>true</strong> if <code class="xref cpp cpp-any docutils literal"><span class="pre">T</span></code> is an integer type</td>
+<tr class="row-even"><td><code class="xref cpp cpp-member docutils literal notranslate"><span class="pre">is_integer_type&lt;T&gt;::value</span></code></td>
+<td><strong>true</strong> if <code class="xref cpp cpp-any docutils literal notranslate"><span class="pre">T</span></code> is an integer type</td>
 </tr>
-<tr class="row-odd"><td><code class="xref cpp cpp-member docutils literal"><span class="pre">is_float_type&lt;T&gt;::value</span></code></td>
-<td><strong>true</strong> if <code class="xref cpp cpp-any docutils literal"><span class="pre">T</span></code> is a floating point type</td>
+<tr class="row-odd"><td><code class="xref cpp cpp-member docutils literal notranslate"><span class="pre">is_float_type&lt;T&gt;::value</span></code></td>
+<td><strong>true</strong> if <code class="xref cpp cpp-any docutils literal notranslate"><span class="pre">T</span></code> is a floating point type</td>
 </tr>
-<tr class="row-even"><td><code class="xref cpp cpp-member docutils literal"><span class="pre">is_complex_type&lt;T&gt;::value</span></code></td>
-<td><strong>true</strong> if <code class="xref cpp cpp-any docutils literal"><span class="pre">T</span></code> is a complex number</td>
+<tr class="row-even"><td><code class="xref cpp cpp-member docutils literal notranslate"><span class="pre">is_complex_type&lt;T&gt;::value</span></code></td>
+<td><strong>true</strong> if <code class="xref cpp cpp-any docutils literal notranslate"><span class="pre">T</span></code> is a complex number</td>
 </tr>
-<tr class="row-odd"><td><code class="xref cpp cpp-member docutils literal"><span class="pre">is_numeric_type&lt;T&gt;::value</span></code></td>
-<td><strong>true</strong> if <code class="xref cpp cpp-any docutils literal"><span class="pre">T</span></code> is any of the above types</td>
+<tr class="row-odd"><td><code class="xref cpp cpp-member docutils literal notranslate"><span class="pre">is_numeric_type&lt;T&gt;::value</span></code></td>
+<td><strong>true</strong> if <code class="xref cpp cpp-any docutils literal notranslate"><span class="pre">T</span></code> is any of the above types</td>
 </tr>
 </tbody>
 </table>
@@ -298,67 +288,67 @@ classification</p>
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td><code class="xref cpp cpp-type docutils literal"><span class="pre">uint8</span></code></td>
-<td>&#8220;uint8&#8221;, &#8220;ui8&#8221;</td>
+<tr class="row-even"><td><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">uint8</span></code></td>
+<td>“uint8”, “ui8”</td>
 </tr>
-<tr class="row-odd"><td><code class="xref cpp cpp-type docutils literal"><span class="pre">int8</span></code></td>
-<td>&#8220;int8&#8221;, &#8220;i8&#8221;</td>
+<tr class="row-odd"><td><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">int8</span></code></td>
+<td>“int8”, “i8”</td>
 </tr>
-<tr class="row-even"><td><code class="xref cpp cpp-type docutils literal"><span class="pre">uint16</span></code></td>
-<td>&#8220;uint16&#8221;, &#8220;ui16&#8221;</td>
+<tr class="row-even"><td><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">uint16</span></code></td>
+<td>“uint16”, “ui16”</td>
 </tr>
-<tr class="row-odd"><td><code class="xref cpp cpp-type docutils literal"><span class="pre">int16</span></code></td>
-<td>&#8220;int16&#8221;, &#8220;i16&#8221;</td>
+<tr class="row-odd"><td><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">int16</span></code></td>
+<td>“int16”, “i16”</td>
 </tr>
-<tr class="row-even"><td><code class="xref cpp cpp-type docutils literal"><span class="pre">uint32</span></code></td>
-<td>&#8220;uint32&#8221;, &#8220;ui32&#8221;</td>
+<tr class="row-even"><td><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">uint32</span></code></td>
+<td>“uint32”, “ui32”</td>
 </tr>
-<tr class="row-odd"><td><code class="xref cpp cpp-type docutils literal"><span class="pre">int32</span></code></td>
-<td>&#8220;int32&#8221;, &#8220;i32&#8221;</td>
+<tr class="row-odd"><td><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">int32</span></code></td>
+<td>“int32”, “i32”</td>
 </tr>
-<tr class="row-even"><td><code class="xref cpp cpp-type docutils literal"><span class="pre">uint64</span></code></td>
-<td>&#8220;uint64&#8221;, &#8220;ui64&#8221;</td>
+<tr class="row-even"><td><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">uint64</span></code></td>
+<td>“uint64”, “ui64”</td>
 </tr>
-<tr class="row-odd"><td><code class="xref cpp cpp-type docutils literal"><span class="pre">int64</span></code></td>
-<td>&#8220;int64&#8221;, &#8220;i64&#8221;</td>
+<tr class="row-odd"><td><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">int64</span></code></td>
+<td>“int64”, “i64”</td>
 </tr>
-<tr class="row-even"><td><code class="xref cpp cpp-type docutils literal"><span class="pre">float32</span></code></td>
-<td>&#8220;float32&#8221;, &#8220;f32&#8221;</td>
+<tr class="row-even"><td><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">float32</span></code></td>
+<td>“float32”, “f32”</td>
 </tr>
-<tr class="row-odd"><td><code class="xref cpp cpp-type docutils literal"><span class="pre">float64</span></code></td>
-<td>&#8220;float64&#8221;, &#8220;f64&#8221;</td>
+<tr class="row-odd"><td><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">float64</span></code></td>
+<td>“float64”, “f64”</td>
 </tr>
-<tr class="row-even"><td><code class="xref cpp cpp-type docutils literal"><span class="pre">float128</span></code></td>
-<td>&#8220;float128&#8221;, &#8220;f128&#8221;</td>
+<tr class="row-even"><td><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">float128</span></code></td>
+<td>“float128”, “f128”</td>
 </tr>
-<tr class="row-odd"><td><code class="xref cpp cpp-type docutils literal"><span class="pre">complex32</span></code></td>
-<td>&#8220;complex32&#8221;, &#8220;c32&#8221;</td>
+<tr class="row-odd"><td><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">complex32</span></code></td>
+<td>“complex32”, “c32”</td>
 </tr>
-<tr class="row-even"><td><code class="xref cpp cpp-type docutils literal"><span class="pre">complex64</span></code></td>
-<td>&#8220;complex64&#8221;, &#8220;c64&#8221;</td>
+<tr class="row-even"><td><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">complex64</span></code></td>
+<td>“complex64”, “c64”</td>
 </tr>
-<tr class="row-odd"><td><code class="xref cpp cpp-type docutils literal"><span class="pre">complex128</span></code></td>
-<td>&#8220;complex128&#8221;, &#8220;c128&#8221;</td>
+<tr class="row-odd"><td><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">complex128</span></code></td>
+<td>“complex128”, “c128”</td>
 </tr>
-<tr class="row-even"><td><code class="xref cpp cpp-type docutils literal"><span class="pre">string</span></code></td>
-<td>&#8220;string&#8221;, &#8220;str&#8221;</td>
+<tr class="row-even"><td><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">string</span></code></td>
+<td>“string”, “str”</td>
 </tr>
-<tr class="row-odd"><td><code class="xref cpp cpp-type docutils literal"><span class="pre">binary</span></code></td>
-<td>&#8220;binary&#8221;, &#8220;binary&#8221;</td>
+<tr class="row-odd"><td><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">binary</span></code></td>
+<td>“binary”, “binary”</td>
 </tr>
-<tr class="row-even"><td><code class="xref cpp cpp-type docutils literal"><span class="pre">none</span></code></td>
-<td>&#8220;none&#8221;</td>
+<tr class="row-even"><td><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">none</span></code></td>
+<td>“none”</td>
 </tr>
 </tbody>
 </table>
 <p>Data types and their string representations.</p>
 <p>The recommended way to deal with type information at runtime are the
-<code class="xref cpp cpp-enum docutils literal"><span class="pre">type_id_t</span></code> enumerations.  At some point in time a program might has
+<code class="xref cpp cpp-enum docutils literal notranslate"><span class="pre">type_id_t</span></code> enumerations.  At some point in time a program might has
 to determine the type ID of a variable type or of the element type of a
-container.  The basic facility to achieve this is the <code class="xref cpp cpp-func docutils literal"><span class="pre">type_id()</span></code>
-function defined in <code class="file docutils literal"><span class="pre">pni/core/type_utils.hpp</span></code>.  The usage of this
+container.  The basic facility to achieve this is the <code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">type_id()</span></code>
+function defined in <code class="file docutils literal notranslate"><span class="pre">pni/core/type_utils.hpp</span></code>.  The usage of this
 function is rather simple as shown here</p>
-<div class="highlight-cpp"><div class="highlight"><pre><span></span><span class="cp">#incldue&lt;pni/core/types.hpp&gt;</span>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#incldue&lt;pni/core/types.hpp&gt;</span>
 
 <span class="k">using</span> <span class="k">namespace</span> <span class="n">pni</span><span class="o">::</span><span class="n">core</span><span class="p">;</span>
 
@@ -369,7 +359,7 @@ function is rather simple as shown here</p>
 </pre></div>
 </div>
 <p>The important thing to notice here is that no matter what type the
-<code class="xref cpp cpp-func docutils literal"><span class="pre">get_data()</span></code> function returns, <code class="xref cpp cpp-func docutils literal"><span class="pre">type_id()</span></code> will give you the
+<code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">get_data()</span></code> function returns, <code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">type_id()</span></code> will give you the
 type ID.  In cases where the type ID is given and a classification of the type
 has to be made four functions are provided where each takes a type ID as its
 single most argument</p>
@@ -384,16 +374,16 @@ single most argument</p>
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td><code class="xref cpp cpp-func docutils literal"><span class="pre">is_integer(type_id_t)()</span></code></td>
+<tr class="row-even"><td><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">is_integer(type_id_t)()</span></code></td>
 <td>returns true if the type ID refers to an integer type</td>
 </tr>
-<tr class="row-odd"><td><code class="xref cpp cpp-func docutils literal"><span class="pre">is_float(type_id_t)()</span></code></td>
+<tr class="row-odd"><td><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">is_float(type_id_t)()</span></code></td>
 <td>returns true if the type ID refers to a float type</td>
 </tr>
-<tr class="row-even"><td><code class="xref cpp cpp-func docutils literal"><span class="pre">is_complex(type_id_t)()</span></code></td>
+<tr class="row-even"><td><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">is_complex(type_id_t)()</span></code></td>
 <td>returns true if the type ID refers to a complex type</td>
 </tr>
-<tr class="row-odd"><td><code class="xref cpp cpp-func docutils literal"><span class="pre">is_numeric(type_id_t)()</span></code></td>
+<tr class="row-odd"><td><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">is_numeric(type_id_t)()</span></code></td>
 <td>returns true if the type ID refers to a numeric type</td>
 </tr>
 </tbody>
@@ -401,12 +391,12 @@ single most argument</p>
 <p>Another important scenario is the situation where a user uses the string
 representation to tell a program with which type it should work.  In such a
 situation you either want to convert the string representation of a type into a
-value of <code class="xref cpp cpp-enum docutils literal"><span class="pre">type_id_t</span></code> or vica verse. The library provides two
-functions for this purpose <code class="xref cpp cpp-func docutils literal"><span class="pre">type_id_from_str()</span></code> which converts the
-string representation of a type to a value of <code class="xref cpp cpp-enum docutils literal"><span class="pre">type_id_t</span></code> and
-<code class="xref cpp cpp-func docutils literal"><span class="pre">str_from_type_id()</span></code> which performs the opposite operation.  The usage
+value of <code class="xref cpp cpp-enum docutils literal notranslate"><span class="pre">type_id_t</span></code> or vica verse. The library provides two
+functions for this purpose <code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">type_id_from_str()</span></code> which converts the
+string representation of a type to a value of <code class="xref cpp cpp-enum docutils literal notranslate"><span class="pre">type_id_t</span></code> and
+<code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">str_from_type_id()</span></code> which performs the opposite operation.  The usage
 of this two guys is again straight forward.</p>
-<div class="highlight-cpp"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;pni/core/types.hpp&gt;</span><span class="cp"></span>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;pni/core/types.hpp&gt;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&lt;pni/core/type_utils.hpp&gt;</span><span class="cp"></span>
 
 <span class="k">using</span> <span class="k">namespace</span> <span class="n">pni</span><span class="o">::</span><span class="n">core</span><span class="p">;</span>
@@ -421,60 +411,60 @@ of this two guys is again straight forward.</p>
 </div>
 </div>
 <div class="section" id="the-binary-type">
-<span id="using-binary"></span><h2>The <code class="xref cpp cpp-type docutils literal"><span class="pre">binary</span></code> type<a class="headerlink" href="#the-binary-type" title="Permalink to this headline">¶</a></h2>
+<span id="using-binary"></span><h2>The <code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">binary</span></code> type<a class="headerlink" href="#the-binary-type" title="Permalink to this headline">¶</a></h2>
 <p>In many cases uninterpreted binary data should be transfered from one location
 to the other (a typical example would be to copy the content of one file to
 another).
-Typically one would use a type alias to something like <code class="xref cpp cpp-type docutils literal"><span class="pre">uint8</span></code> to
+Typically one would use a type alias to something like <code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">uint8</span></code> to
 realize such a type. However, this approach has two disadvantages</p>
 <ul class="simple">
-<li>as <code class="xref cpp cpp-type docutils literal"><span class="pre">uint8</span></code> is a numeric type with all arithmetic operators
+<li>as <code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">uint8</span></code> is a numeric type with all arithmetic operators
 available which we do not want for uninterpreted binary data</li>
-<li>a mere type alias would make <code class="xref cpp cpp-type docutils literal"><span class="pre">uint8</span></code> and <code class="xref cpp cpp-type docutils literal"><span class="pre">binary</span></code>
+<li>a mere type alias would make <code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">uint8</span></code> and <code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">binary</span></code>
 indistinguishable and thus we could not specialize template classes for
 each of them.</li>
 </ul>
-<p>Consequently <code class="xref cpp cpp-type docutils literal"><span class="pre">binary</span></code> was implemented as a thin wrapper around an
+<p>Consequently <code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">binary</span></code> was implemented as a thin wrapper around an
 appropriately sized integer type with all arithmetic operators stripped away.
-A short example of how to use binary is the <code class="file docutils literal"><span class="pre">copy_file.cpp</span></code> example in
-the <code class="file docutils literal"><span class="pre">examples</span></code> directory of the source distribution of <em>libpnicore</em>.</p>
-<p>In lines $8$ and $10$ we include the <code class="file docutils literal"><span class="pre">pni/core/types.hpp</span></code> header file and
+A short example of how to use binary is the <code class="file docutils literal notranslate"><span class="pre">copy_file.cpp</span></code> example in
+the <code class="file docutils literal notranslate"><span class="pre">examples</span></code> directory of the source distribution of <em>libpnicore</em>.</p>
+<p>In lines $8$ and $10$ we include the <code class="file docutils literal notranslate"><span class="pre">pni/core/types.hpp</span></code> header file and
 instruct the compiler to use the texttt{pni::core} namespace by default. In
 line $12$ a vector type with binary elements is defined and an instance of this
 type is allocated in line $24$.  In line $27$ data is read from the input file
 and stored in the vector. Now, it is clear from here that a vector of type
-<code class="xref cpp cpp-type docutils literal"><span class="pre">char</span></code> would have perfectly served the same purpose. The major
-difference is that unlike <code class="xref cpp cpp-type docutils literal"><span class="pre">char</span></code> <code class="xref cpp cpp-type docutils literal"><span class="pre">binary</span></code> has absolutely no
+<code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">char</span></code> would have perfectly served the same purpose. The major
+difference is that unlike <code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">char</span></code> <code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">binary</span></code> has absolutely no
 semantics. In practice there is nothing much you can do without it rather than
 store it back to another stream as it is done in line $33$.</p>
 </div>
 <div class="section" id="the-none-type">
-<span id="using-none"></span><h2>The <code class="xref cpp cpp-type docutils literal"><span class="pre">none</span></code> type<a class="headerlink" href="#the-none-type" title="Permalink to this headline">¶</a></h2>
-<p>The <code class="xref cpp cpp-type docutils literal"><span class="pre">none</span></code> type represents the absence of a type. It is a dummy type
+<span id="using-none"></span><h2>The <code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">none</span></code> type<a class="headerlink" href="#the-none-type" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">none</span></code> type represents the absence of a type. It is a dummy type
 of very limited functionality and is mainly used internally by
-<cite>libpnicore</cite>. One major application of the <code class="xref cpp cpp-type docutils literal"><span class="pre">none</span></code> type is to do default
+<cite>libpnicore</cite>. One major application of the <code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">none</span></code> type is to do default
 construction of type erasures (see <span class="xref std std-ref">type_erasures</span>).
 For all practical purposes this type can be ignored.</p>
 </div>
 <div class="section" id="the-bool-t-type">
-<span id="using-bool"></span><h2>The <code class="xref cpp cpp-type docutils literal"><span class="pre">bool_t</span></code> type<a class="headerlink" href="#the-bool-t-type" title="Permalink to this headline">¶</a></h2>
-<p>Unlike the C programming language C++ provides a native <code class="xref cpp cpp-type docutils literal"><span class="pre">bool_t</span></code> type.
+<span id="using-bool"></span><h2>The <code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">bool_t</span></code> type<a class="headerlink" href="#the-bool-t-type" title="Permalink to this headline">¶</a></h2>
+<p>Unlike the C programming language C++ provides a native <code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">bool_t</span></code> type.
 Unfortunately the C++ standardization committee made some unfortunate decisions
-with <code class="xref cpp cpp-type docutils literal"><span class="pre">bool</span></code> and STL containers. <code class="xref cpp cpp-class docutils literal"><span class="pre">std::vector</span></code> for instance
-is in most cases specialized for the standard C++ <code class="xref cpp cpp-type docutils literal"><span class="pre">bool</span></code> type.  In
-the most common STL implementation <code class="xref cpp cpp-class docutils literal"><span class="pre">std::vector</span></code> is considered an
+with <code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">bool</span></code> and STL containers. <code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">std::vector</span></code> for instance
+is in most cases specialized for the standard C++ <code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">bool</span></code> type.  In
+the most common STL implementation <code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">std::vector</span></code> is considered an
 array of individual bits. Meaning that every byte in the vector is storing a
-total of <em>8</em> <code class="xref cpp cpp-type docutils literal"><span class="pre">bool</span></code> values. Consequently we cannot obtain an address
+total of <em>8</em> <code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">bool</span></code> values. Consequently we cannot obtain an address
 for a particular bit but only for the byte where it is stored.  Hence
-<code class="xref cpp cpp-class docutils literal"><span class="pre">std::vector</span></code> does not provide the <code class="xref cpp cpp-func docutils literal"><span class="pre">data()</span></code> method
-which is required for storage containers used with the <code class="xref cpp cpp-class docutils literal"><span class="pre">mdarray</span></code>
+<code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">std::vector</span></code> does not provide the <code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">data()</span></code> method
+which is required for storage containers used with the <code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">mdarray</span></code>
 templates (see <span class="xref std std-ref">arrays</span>).</p>
 <p>To overcome this problem a new boolean type was included in <cite>libpnicore</cite> which
-can be converted to <code class="xref cpp cpp-type docutils literal"><span class="pre">bool</span></code> but uses a single byte for each boolean
-value and thus can use the <code class="xref cpp cpp-class docutils literal"><span class="pre">std::vector</span></code> template. So use the
-<cite>libpnicore</cite> <code class="xref cpp cpp-type docutils literal"><span class="pre">bool_t</span></code> type whenever working with <cite>libpnicore</cite>
+can be converted to <code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">bool</span></code> but uses a single byte for each boolean
+value and thus can use the <code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">std::vector</span></code> template. So use the
+<cite>libpnicore</cite> <code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">bool_t</span></code> type whenever working with <cite>libpnicore</cite>
 templates or whenever the address of a container element is required. For all
-other purposes the default C++ <code class="xref cpp cpp-type docutils literal"><span class="pre">bool</span></code> type can be used.</p>
+other purposes the default C++ <code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">bool</span></code> type can be used.</p>
 </div>
 <div class="section" id="numeric-type-conversion">
 <h2>Numeric type conversion<a class="headerlink" href="#numeric-type-conversion" title="Permalink to this headline">¶</a></h2>
@@ -487,8 +477,8 @@ avoid truncation errors as they would typically occur when using the standard
 C++ rules.</p>
 <p>The basic rule for conversion between two integer type A and B is as follows</p>
 <blockquote>
-<div>A value of type <code class="xref cpp cpp-type docutils literal"><span class="pre">S</span></code> can only be converted to type <code class="xref cpp cpp-type docutils literal"><span class="pre">B</span></code>
-if the value does not exceed the numeric range of type <code class="xref cpp cpp-type docutils literal"><span class="pre">B</span></code>.</div></blockquote>
+<div>A value of type <code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">S</span></code> can only be converted to type <code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">B</span></code>
+if the value does not exceed the numeric range of type <code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">B</span></code>.</div></blockquote>
 <p>A consequence of this rule is that a signed integer can only be converted
 to an unsigned type if its value is larger than 0. This is different
 from the standard C++ rule where the unsigned target type will just overflow.</p>
@@ -502,11 +492,11 @@ the first rule applies to the base type of the complex type) but one cannot
 convert a complex value to a scalar float type.</p>
 <p>Several types cannot be converted to anything than themselves</p>
 <ul class="simple">
-<li><code class="xref cpp cpp-type docutils literal"><span class="pre">bool_t</span></code> which can be only the result of a boolean operation.</li>
-<li><code class="xref cpp cpp-type docutils literal"><span class="pre">binary</span></code> as this type is considered to be a completely opaque type
+<li><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">bool_t</span></code> which can be only the result of a boolean operation.</li>
+<li><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">binary</span></code> as this type is considered to be a completely opaque type
 conversion to any other type is prohibited. Furthermore no type can be
 converted to binary.</li>
-<li><code class="xref cpp cpp-type docutils literal"><span class="pre">string</span></code> conversion to string is done exclusively carried out by
+<li><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">string</span></code> conversion to string is done exclusively carried out by
 formatters provided by the IO library.</li>
 </ul>
 <p>The library distinguishes between two kinds of type conversion</p>
@@ -556,7 +546,7 @@ used.</p>
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td><code class="xref cpp cpp-type docutils literal"><span class="pre">uint8</span></code></td>
+<tr class="row-even"><td><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">uint8</span></code></td>
 <td>unchecked</td>
 <td>unchecked</td>
 <td>unchecked</td>
@@ -572,7 +562,7 @@ used.</p>
 <td>unchecked</td>
 <td>unchecked</td>
 </tr>
-<tr class="row-odd"><td><code class="xref cpp cpp-type docutils literal"><span class="pre">uint16</span></code></td>
+<tr class="row-odd"><td><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">uint16</span></code></td>
 <td>checked</td>
 <td>unchecked</td>
 <td>unchecked</td>
@@ -588,7 +578,7 @@ used.</p>
 <td>unchecked</td>
 <td>unchecked</td>
 </tr>
-<tr class="row-even"><td><code class="xref cpp cpp-type docutils literal"><span class="pre">uint32</span></code></td>
+<tr class="row-even"><td><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">uint32</span></code></td>
 <td>checked</td>
 <td>checked</td>
 <td>unchecked</td>
@@ -604,7 +594,7 @@ used.</p>
 <td>unchecked</td>
 <td>unchecked</td>
 </tr>
-<tr class="row-odd"><td><code class="xref cpp cpp-type docutils literal"><span class="pre">uint64</span></code></td>
+<tr class="row-odd"><td><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">uint64</span></code></td>
 <td>checked</td>
 <td>checked</td>
 <td>checked</td>
@@ -620,7 +610,7 @@ used.</p>
 <td>unchecked</td>
 <td>unchecked</td>
 </tr>
-<tr class="row-even"><td><code class="xref cpp cpp-type docutils literal"><span class="pre">int8</span></code></td>
+<tr class="row-even"><td><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">int8</span></code></td>
 <td>checked</td>
 <td>checked</td>
 <td>checked</td>
@@ -636,7 +626,7 @@ used.</p>
 <td>unchecked</td>
 <td>unchecked</td>
 </tr>
-<tr class="row-odd"><td><code class="xref cpp cpp-type docutils literal"><span class="pre">int16</span></code></td>
+<tr class="row-odd"><td><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">int16</span></code></td>
 <td>checked</td>
 <td>checked</td>
 <td>checked</td>
@@ -652,7 +642,7 @@ used.</p>
 <td>unchecked</td>
 <td>unchecked</td>
 </tr>
-<tr class="row-even"><td><code class="xref cpp cpp-type docutils literal"><span class="pre">int32</span></code></td>
+<tr class="row-even"><td><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">int32</span></code></td>
 <td>checked</td>
 <td>checked</td>
 <td>checked</td>
@@ -668,7 +658,7 @@ used.</p>
 <td>unchecked</td>
 <td>unchecked</td>
 </tr>
-<tr class="row-odd"><td><code class="xref cpp cpp-type docutils literal"><span class="pre">int64</span></code></td>
+<tr class="row-odd"><td><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">int64</span></code></td>
 <td>checked</td>
 <td>checked</td>
 <td>checked</td>
@@ -684,7 +674,7 @@ used.</p>
 <td>unchecked</td>
 <td>unchecked</td>
 </tr>
-<tr class="row-even"><td><code class="xref cpp cpp-type docutils literal"><span class="pre">float32</span></code></td>
+<tr class="row-even"><td><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">float32</span></code></td>
 <td>none</td>
 <td>none</td>
 <td>none</td>
@@ -700,7 +690,7 @@ used.</p>
 <td>unchecked</td>
 <td>unchecked</td>
 </tr>
-<tr class="row-odd"><td><code class="xref cpp cpp-type docutils literal"><span class="pre">float64</span></code></td>
+<tr class="row-odd"><td><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">float64</span></code></td>
 <td>none</td>
 <td>none</td>
 <td>none</td>
@@ -716,7 +706,7 @@ used.</p>
 <td>unchecked</td>
 <td>unchecked</td>
 </tr>
-<tr class="row-even"><td><code class="xref cpp cpp-type docutils literal"><span class="pre">float128</span></code></td>
+<tr class="row-even"><td><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">float128</span></code></td>
 <td>none</td>
 <td>none</td>
 <td>none</td>
@@ -732,7 +722,7 @@ used.</p>
 <td>checked</td>
 <td>unchecked</td>
 </tr>
-<tr class="row-odd"><td><code class="xref cpp cpp-type docutils literal"><span class="pre">complex32</span></code></td>
+<tr class="row-odd"><td><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">complex32</span></code></td>
 <td>none</td>
 <td>none</td>
 <td>none</td>
@@ -748,7 +738,7 @@ used.</p>
 <td>unchecked</td>
 <td>unchecked</td>
 </tr>
-<tr class="row-even"><td><code class="xref cpp cpp-type docutils literal"><span class="pre">complex64</span></code></td>
+<tr class="row-even"><td><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">complex64</span></code></td>
 <td>none</td>
 <td>none</td>
 <td>none</td>
@@ -764,7 +754,7 @@ used.</p>
 <td>unchecked</td>
 <td>unchecked</td>
 </tr>
-<tr class="row-odd"><td><code class="xref cpp cpp-type docutils literal"><span class="pre">complex128</span></code></td>
+<tr class="row-odd"><td><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">complex128</span></code></td>
 <td>none</td>
 <td>none</td>
 <td>none</td>
@@ -784,16 +774,16 @@ used.</p>
 </table>
 <p>Type matrix showing between which types  conversion is possible.</p>
 <div class="section" id="the-convert-function-template">
-<h3>The <code class="xref cpp cpp-func docutils literal"><span class="pre">convert()</span></code> function template<a class="headerlink" href="#the-convert-function-template" title="Permalink to this headline">¶</a></h3>
+<h3>The <code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">convert()</span></code> function template<a class="headerlink" href="#the-convert-function-template" title="Permalink to this headline">¶</a></h3>
 <p>At the heart of <cite>libpnicore</cite> s type conversion system is the cpp{convert}
 function template. The declaration of the template looks somehow like this</p>
-<div class="highlight-cpp"><div class="highlight"><pre><span></span><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">ST</span><span class="p">,</span><span class="k">typename</span> <span class="n">TT</span><span class="o">&gt;</span> <span class="n">TT</span> <span class="n">convert</span><span class="p">(</span><span class="k">const</span> <span class="n">ST</span> <span class="o">&amp;</span><span class="n">v</span><span class="p">);</span>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">ST</span><span class="p">,</span><span class="k">typename</span> <span class="n">TT</span><span class="o">&gt;</span> <span class="n">TT</span> <span class="n">convert</span><span class="p">(</span><span class="k">const</span> <span class="n">ST</span> <span class="o">&amp;</span><span class="n">v</span><span class="p">);</span>
 </pre></div>
 </div>
 <p>A value of a particular source type (denoted by the template parameter
-<code class="xref cpp cpp-type docutils literal"><span class="pre">ST</span></code>) is passed as an argument to the <code class="xref cpp cpp-func docutils literal"><span class="pre">convert()</span></code> template. The value
+<code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">ST</span></code>) is passed as an argument to the <code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">convert()</span></code> template. The value
 of this argument will then be converted to a value of the target type
-<code class="xref cpp cpp-type docutils literal"><span class="pre">TT</span></code> and returned from the function template.
+<code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">TT</span></code> and returned from the function template.
 This function template throws two exceptions</p>
 <table border="1" class="docutils">
 <colgroup>
@@ -806,10 +796,10 @@ This function template throws two exceptions</p>
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td><code class="xref cpp cpp-type docutils literal"><span class="pre">type_error</span></code></td>
+<tr class="row-even"><td><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">type_error</span></code></td>
 <td>in situations where the type conversion is not possible</td>
 </tr>
-<tr class="row-odd"><td><code class="xref cpp cpp-type docutils literal"><span class="pre">range_error</span></code></td>
+<tr class="row-odd"><td><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">range_error</span></code></td>
 <td>where the source value does not fit into the target type</td>
 </tr>
 </tbody>
@@ -818,22 +808,22 @@ This function template throws two exceptions</p>
 .. code-block:: cpp</p>
 <blockquote>
 <div>auto f = convert&lt;float32&gt;(int32(5));</div></blockquote>
-<p>In this example a value of type <code class="xref cpp cpp-type docutils literal"><span class="pre">int32</span></code> is successfully converted
-to a value of type <code class="xref cpp cpp-type docutils literal"><span class="pre">float32</span></code>, while</p>
-<div class="highlight-cpp"><div class="highlight"><pre><span></span><span class="k">auto</span> <span class="n">f</span> <span class="o">=</span> <span class="n">convert</span><span class="o">&lt;</span><span class="n">uint16</span><span class="o">&gt;</span><span class="p">(</span><span class="n">float32</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">));</span> <span class="c1">// throws type_error</span>
+<p>In this example a value of type <code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">int32</span></code> is successfully converted
+to a value of type <code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">float32</span></code>, while</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">auto</span> <span class="n">f</span> <span class="o">=</span> <span class="n">convert</span><span class="o">&lt;</span><span class="n">uint16</span><span class="o">&gt;</span><span class="p">(</span><span class="n">float32</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">));</span> <span class="c1">// throws type_error</span>
 </pre></div>
 </div>
-<p>leads to <code class="xref cpp cpp-type docutils literal"><span class="pre">type_error</span></code>. According to the conversion policies mentioned
+<p>leads to <code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">type_error</span></code>. According to the conversion policies mentioned
 above a float value cannot be converted to an integer due to truncation issues.</p>
-<div class="highlight-cpp"><div class="highlight"><pre><span></span><span class="k">auto</span> <span class="n">f</span> <span class="o">=</span> <span class="n">convert</span><span class="o">&lt;</span><span class="n">uint32</span><span class="o">&gt;</span><span class="p">(</span><span class="n">int32</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">));</span> <span class="c1">//throws range_error</span>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">auto</span> <span class="n">f</span> <span class="o">=</span> <span class="n">convert</span><span class="o">&lt;</span><span class="n">uint32</span><span class="o">&gt;</span><span class="p">(</span><span class="n">int32</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">));</span> <span class="c1">//throws range_error</span>
 </pre></div>
 </div>
-<p><code class="xref cpp cpp-type docutils literal"><span class="pre">range_error</span></code> will be thrown as a negative value cannot be converted to an
+<p><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">range_error</span></code> will be thrown as a negative value cannot be converted to an
 unsigned type. A similar situation would be</p>
-<div class="highlight-cpp"><div class="highlight"><pre><span></span><span class="k">auto</span> <span class="n">f</span> <span class="o">=</span> <span class="n">convert</span><span class="o">&lt;</span><span class="n">uint8</span><span class="o">&gt;</span><span class="p">(</span><span class="n">int16</span><span class="p">(</span><span class="mi">10000</span><span class="p">));</span> <span class="c1">//throws range_error</span>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">auto</span> <span class="n">f</span> <span class="o">=</span> <span class="n">convert</span><span class="o">&lt;</span><span class="n">uint8</span><span class="o">&gt;</span><span class="p">(</span><span class="n">int16</span><span class="p">(</span><span class="mi">10000</span><span class="p">));</span> <span class="c1">//throws range_error</span>
 </pre></div>
 </div>
-<p>where <code class="xref cpp cpp-type docutils literal"><span class="pre">range_error</span></code> would indicate that it is impossible to store a
+<p>where <code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">range_error</span></code> would indicate that it is impossible to store a
 value of 10000 in an 8-Bit unsigned variable.</p>
 </div>
 </div>
@@ -863,7 +853,7 @@ value of 10000 in an 8-Bit unsigned variable.</p>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2016, Eugen Wintersberger.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.9.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.4.
     </div>
   </body>
 </html>

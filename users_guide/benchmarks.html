@@ -2,42 +2,30 @@
 
 <!doctype html>
 
-
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
     <title>Benchmarks &#8212; libpnicore 1.1.1 documentation</title>
-    
     <link rel="stylesheet" href="../_static/bizstyle.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../',
-        VERSION:     '1.1.1',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
-      };
-    </script>
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="../_static/bizstyle.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="libpnicore 1.1.1 documentation" href="../index.html" />
-    <link rel="up" title="Users guide" href="index.html" />
     <link rel="next" title="API documentation" href="../api_doc/index.html" />
     <link rel="prev" title="Program configuration utilities" href="configuration.html" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <!--[if lt IE 9]>
     <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
     <![endif]-->
-  </head>
-  <body role="document">
+  </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -56,7 +44,7 @@
     </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <h3><a href="../index.html">Table of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Benchmarks</a><ul>
 <li><a class="reference internal" href="#iterator-benchmarks">Iterator benchmarks</a></li>
@@ -79,18 +67,20 @@
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="../_sources/users_guide/benchmarks.txt"
+      <li><a href="../_sources/users_guide/benchmarks.rst.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -103,7 +93,7 @@
             
   <div class="section" id="benchmarks">
 <h1>Benchmarks<a class="headerlink" href="#benchmarks" title="Permalink to this headline">¶</a></h1>
-<p>To check the overall performance of the <code class="xref cpp cpp-class docutils literal"><span class="pre">mdarray</span></code> template provided by the
+<p>To check the overall performance of the <code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">mdarray</span></code> template provided by the
 library benchmark programs have been written whose results will be presented in
 this chapter.
 Three particular aspects are investigated by the benchmarks</p>
@@ -114,8 +104,8 @@ Three particular aspects are investigated by the benchmarks</p>
 </ul>
 <p>To keep the number of benchmark results within reasonable bounds all benchmarks
 have been performend with the three predefined specializations of the
-<code class="xref cpp cpp-class docutils literal"><span class="pre">mdarray</span></code> template: <code class="xref cpp cpp-class docutils literal"><span class="pre">dynamic_array</span></code>,
-<code class="xref cpp cpp-class docutils literal"><span class="pre">fixed_dim_array</span></code>, and <code class="xref cpp cpp-class docutils literal"><span class="pre">static_array</span></code>. In addition to
+<code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">mdarray</span></code> template: <code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">dynamic_array</span></code>,
+<code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">fixed_dim_array</span></code>, and <code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">static_array</span></code>. In addition to
 the plain array templates also their view types have been taken into
 account. The view types are interesting as they add
 some additional code which may cause some overhead.</p>
@@ -141,15 +131,15 @@ writing results respectively.</p>
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td><code class="xref cpp cpp-class docutils literal"><span class="pre">dynamic_array</span></code></td>
+<tr class="row-even"><td><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">dynamic_array</span></code></td>
 <td>1.02/1.04</td>
 <td>2.50/2.96</td>
 </tr>
-<tr class="row-odd"><td><code class="xref cpp cpp-class docutils literal"><span class="pre">fixed_dim_array</span></code></td>
+<tr class="row-odd"><td><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">fixed_dim_array</span></code></td>
 <td>0.99/1.00</td>
 <td>2.52/2.89</td>
 </tr>
-<tr class="row-even"><td><code class="xref cpp cpp-class docutils literal"><span class="pre">static_array</span></code></td>
+<tr class="row-even"><td><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">static_array</span></code></td>
 <td>1.00/1.00</td>
 <td>2.07/2.40</td>
 </tr>
@@ -157,7 +147,7 @@ writing results respectively.</p>
 </table>
 <p>All numbers in this table are normalized to the raw pointer performance
 and thus reflect directly any performance penalty or advantage over
-direct pointer access. Only the <code class="xref cpp cpp-class docutils literal"><span class="pre">dynamic_array</span></code> class shows
+direct pointer access. Only the <code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">dynamic_array</span></code> class shows
 a small performance penalty of 2 to 4 % over the C code. The other
 two array classes run as fast as plain C programs.</p>
 <p>In all cases iterating over a view shows significant performance penalties.
@@ -166,24 +156,24 @@ the data via a pointer. This is simply due to additional overhead the
 view template introduces.</p>
 <p>The iterator write benchmarks run basically the following code for
 <em>libpnicore</em></p>
-<div class="highlight-cpp"><div class="highlight"><pre><span></span><span class="k">for</span><span class="p">(</span><span class="k">auto</span> <span class="o">&amp;</span><span class="nl">x</span><span class="p">:</span> <span class="n">data</span><span class="p">)</span>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">for</span><span class="p">(</span><span class="k">auto</span> <span class="o">&amp;</span><span class="nl">x</span><span class="p">:</span> <span class="n">data</span><span class="p">)</span>
     <span class="n">x</span> <span class="o">=</span> <span class="n">buffer</span><span class="p">;</span>
 </pre></div>
 </div>
 <p>which must compete with</p>
-<div class="highlight-c"><div class="highlight"><pre><span></span><span class="n">T</span> <span class="o">*</span><span class="n">data</span> <span class="o">=</span> <span class="n">new</span> <span class="n">T</span><span class="p">[</span><span class="n">N</span><span class="p">];</span>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">T</span> <span class="o">*</span><span class="n">data</span> <span class="o">=</span> <span class="n">new</span> <span class="n">T</span><span class="p">[</span><span class="n">N</span><span class="p">];</span>
 
 <span class="k">for</span><span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">N</span><span class="p">;</span><span class="o">++</span><span class="n">i</span><span class="p">)</span>
     <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">buffer</span><span class="p">;</span>
 </pre></div>
 </div>
 <p>in C. For the read benchmark C++ uses essentially</p>
-<div class="highlight-cpp"><div class="highlight"><pre><span></span><span class="k">for</span><span class="p">(</span><span class="k">auto</span> <span class="nl">x</span><span class="p">:</span> <span class="n">data</span><span class="p">)</span>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">for</span><span class="p">(</span><span class="k">auto</span> <span class="nl">x</span><span class="p">:</span> <span class="n">data</span><span class="p">)</span>
     <span class="n">buffer</span> <span class="o">=</span> <span class="n">x</span><span class="p">;</span>
 </pre></div>
 </div>
 <p>and C</p>
-<div class="highlight-cpp"><div class="highlight"><pre><span></span><span class="n">T</span> <span class="o">*</span><span class="n">data</span> <span class="o">=</span> <span class="k">new</span> <span class="n">T</span><span class="p">[</span><span class="n">N</span><span class="p">];</span>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">T</span> <span class="o">*</span><span class="n">data</span> <span class="o">=</span> <span class="k">new</span> <span class="n">T</span><span class="p">[</span><span class="n">N</span><span class="p">];</span>
 
 <span class="k">for</span><span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">N</span><span class="p">;</span><span class="o">++</span><span class="n">i</span><span class="p">)</span>
     <span class="n">buffer</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
@@ -221,32 +211,32 @@ development rather useless for high performance applications.</p>
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td><code class="xref cpp cpp-class docutils literal"><span class="pre">dynamic_array</span></code></td>
+<tr class="row-even"><td><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">dynamic_array</span></code></td>
 <td>1.03/1.02</td>
 <td>3.82/4.63</td>
 <td>3.33/3.76</td>
 </tr>
-<tr class="row-odd"><td><code class="xref cpp cpp-class docutils literal"><span class="pre">dynamci_array</span></code>-view</td>
+<tr class="row-odd"><td><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">dynamci_array</span></code>-view</td>
 <td>3.39/6.31</td>
 <td>6.29/6.49</td>
 <td>4.23/5.41</td>
 </tr>
-<tr class="row-even"><td><code class="xref cpp cpp-class docutils literal"><span class="pre">fixed_dim_array</span></code></td>
+<tr class="row-even"><td><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">fixed_dim_array</span></code></td>
 <td>0.94/0.97</td>
 <td>3.27/3.79</td>
 <td>3.29/3.53</td>
 </tr>
-<tr class="row-odd"><td><code class="xref cpp cpp-class docutils literal"><span class="pre">fixed_dim_array</span></code>-view</td>
+<tr class="row-odd"><td><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">fixed_dim_array</span></code>-view</td>
 <td>3.27/6.04</td>
 <td>5.02/6.26</td>
 <td>4.03/5.15</td>
 </tr>
-<tr class="row-even"><td><code class="xref cpp cpp-class docutils literal"><span class="pre">static_array</span></code></td>
+<tr class="row-even"><td><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">static_array</span></code></td>
 <td>0.97/0.97</td>
 <td>3.08/3.75</td>
 <td>3.25/3.67</td>
 </tr>
-<tr class="row-odd"><td><code class="xref cpp cpp-class docutils literal"><span class="pre">static_array</span></code>-view</td>
+<tr class="row-odd"><td><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">static_array</span></code>-view</td>
 <td>2.78/3.58</td>
 <td>4.66/5.92</td>
 <td>4.83/5.33</td>
@@ -254,7 +244,7 @@ development rather useless for high performance applications.</p>
 </tbody>
 </table>
 <p>For C++ writing the loop look basically like this</p>
-<div class="highlight-cpp"><div class="highlight"><pre><span></span><span class="c1">//with variadic access</span>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">//with variadic access</span>
 <span class="k">for</span><span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">nx</span><span class="p">;</span><span class="o">++</span><span class="n">i</span><span class="p">)</span>
     <span class="k">for</span><span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">j</span><span class="o">&lt;</span><span class="n">ny</span><span class="p">;</span><span class="o">++</span><span class="n">j</span><span class="p">)</span>
         <span class="n">data</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">)</span> <span class="o">=</span> <span class="n">buffer</span><span class="p">;</span>
@@ -266,7 +256,7 @@ development rather useless for high performance applications.</p>
 </pre></div>
 </div>
 <p>The C writing loop has the basic structure</p>
-<div class="highlight-c"><div class="highlight"><pre><span></span><span class="k">for</span><span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">nx</span><span class="p">;</span><span class="o">++</span><span class="n">i</span><span class="p">)</span>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">for</span><span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">nx</span><span class="p">;</span><span class="o">++</span><span class="n">i</span><span class="p">)</span>
     <span class="k">for</span><span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">j</span><span class="o">&lt;</span><span class="n">ny</span><span class="p">;</span><span class="o">++</span><span class="n">j</span><span class="p">)</span>
         <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="n">ny</span><span class="o">+</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">buffer</span><span class="p">;</span>
 </pre></div>
@@ -276,12 +266,12 @@ operators are flipped.</p>
 <p>It follows immediately from this table that passing the multidimensional index
 as a variadic argument list is the fastest way of how to access the data.
 The performance is virtually equal to those of using direct pointer access.
-Using the container types <code class="xref cpp cpp-class docutils literal"><span class="pre">std::vector</span></code> or <code class="xref cpp cpp-class docutils literal"><span class="pre">std::array</span></code> to
+Using the container types <code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">std::vector</span></code> or <code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">std::array</span></code> to
 pass the index will cause in a performance penalty of 200 to 300 % for
 virtually all array types.
 As with linear access via iterators, there is a significant performance penalty
 when accessing data via a view. One surprising aspect of the results is the fact
-that at least for <code class="xref cpp cpp-class docutils literal"><span class="pre">fixed_dim_array</span></code> and <code class="xref cpp cpp-class docutils literal"><span class="pre">static_array</span></code>
+that at least for <code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">fixed_dim_array</span></code> and <code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">static_array</span></code>
 variadic access outperforms even pointer access.</p>
 <p>The reasons for the huge performance penalties are yet unclear. However, we hope
 that they can be reduced in further releases.</p>
@@ -290,19 +280,19 @@ that they can be reduced in further releases.</p>
 <h2>Arithmetics<a class="headerlink" href="#arithmetics" title="Permalink to this headline">¶</a></h2>
 <p>Last but not least a feasible  array type has to provide arithmetic operators
 of reasonable performance. This last section compares the unary and binary
-arithmetic operators for the <code class="xref cpp cpp-class docutils literal"><span class="pre">mdarray</span> <span class="pre">specializations.</span>
+arithmetic operators for the <code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">mdarray</span> <span class="pre">specializations.</span>
 <span class="pre">Unlike</span> <span class="pre">for</span> <span class="pre">the</span> <span class="pre">other</span> <span class="pre">benchmarks</span> <span class="pre">the</span> <span class="pre">arithmetic</span> <span class="pre">benchmarks</span> <span class="pre">cover</span> <span class="pre">only</span> <span class="pre">the</span>
-<span class="pre">:cpp:class:`dynamic_array</span></code> and <code class="xref cpp cpp-class docutils literal"><span class="pre">fixed_dim_array</span></code> specializations of
-<code class="xref cpp cpp-class docutils literal"><span class="pre">mdarray</span></code>.</p>
+<span class="pre">:cpp:class:`dynamic_array</span></code> and <code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">fixed_dim_array</span></code> specializations of
+<code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">mdarray</span></code>.</p>
 <div class="section" id="unary-arithmetics">
 <h3>Unary arithmetics<a class="headerlink" href="#unary-arithmetics" title="Permalink to this headline">¶</a></h3>
-<p><em>libpnicore</em> s <code class="xref cpp cpp-class docutils literal"><span class="pre">mdarray</span></code> template provides the following unary arithmetic
+<p><em>libpnicore</em> s <code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">mdarray</span></code> template provides the following unary arithmetic
 operators</p>
 <ul class="simple">
-<li><code class="xref cpp cpp-any docutils literal"><span class="pre">+=</span></code> unary addition</li>
-<li><code class="xref cpp cpp-any docutils literal"><span class="pre">-=</span></code> unary subtraction</li>
-<li><code class="xref cpp cpp-any docutils literal"><span class="pre">*=</span></code> unary multiplication</li>
-<li><code class="xref cpp cpp-any docutils literal"><span class="pre">/=</span></code> unary division</li>
+<li><code class="xref cpp cpp-any docutils literal notranslate"><span class="pre">+=</span></code> unary addition</li>
+<li><code class="xref cpp cpp-any docutils literal notranslate"><span class="pre">-=</span></code> unary subtraction</li>
+<li><code class="xref cpp cpp-any docutils literal notranslate"><span class="pre">*=</span></code> unary multiplication</li>
+<li><code class="xref cpp cpp-any docutils literal notranslate"><span class="pre">/=</span></code> unary division</li>
 </ul>
 <p>where the operations are applied element-wise on the LHS of the operator.
 All operators accept either an array type or a scalar type as their RHS.
@@ -315,40 +305,40 @@ In the following table <em>a</em> and <em>b</em> denote arrays while <em>s</em> 
 </colgroup>
 <thead valign="bottom">
 <tr class="row-odd"><th class="head">operation</th>
-<th class="head"><code class="xref cpp cpp-class docutils literal"><span class="pre">dynamic_array</span></code></th>
-<th class="head"><code class="xref cpp cpp-class docutils literal"><span class="pre">fixed_dim_array</span></code></th>
+<th class="head"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">dynamic_array</span></code></th>
+<th class="head"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">fixed_dim_array</span></code></th>
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td><code class="xref cpp cpp-any docutils literal"><span class="pre">a*=b</span></code></td>
+<tr class="row-even"><td><code class="xref cpp cpp-any docutils literal notranslate"><span class="pre">a*=b</span></code></td>
 <td>1.00</td>
 <td>1.00</td>
 </tr>
-<tr class="row-odd"><td><code class="xref cpp cpp-any docutils literal"><span class="pre">a*=s</span></code></td>
+<tr class="row-odd"><td><code class="xref cpp cpp-any docutils literal notranslate"><span class="pre">a*=s</span></code></td>
 <td>0.77</td>
 <td>0.77</td>
 </tr>
-<tr class="row-even"><td><code class="xref cpp cpp-any docutils literal"><span class="pre">a/=b</span></code></td>
+<tr class="row-even"><td><code class="xref cpp cpp-any docutils literal notranslate"><span class="pre">a/=b</span></code></td>
 <td>1.00</td>
 <td>1.00</td>
 </tr>
-<tr class="row-odd"><td><code class="xref cpp cpp-any docutils literal"><span class="pre">a/=s</span></code></td>
+<tr class="row-odd"><td><code class="xref cpp cpp-any docutils literal notranslate"><span class="pre">a/=s</span></code></td>
 <td>1.00</td>
 <td>1.00</td>
 </tr>
-<tr class="row-even"><td><code class="xref cpp cpp-any docutils literal"><span class="pre">a+=b</span></code></td>
+<tr class="row-even"><td><code class="xref cpp cpp-any docutils literal notranslate"><span class="pre">a+=b</span></code></td>
 <td>1.00</td>
 <td>1.00</td>
 </tr>
-<tr class="row-odd"><td><code class="xref cpp cpp-any docutils literal"><span class="pre">a+=s</span></code></td>
+<tr class="row-odd"><td><code class="xref cpp cpp-any docutils literal notranslate"><span class="pre">a+=s</span></code></td>
 <td>0.77</td>
 <td>0.77</td>
 </tr>
-<tr class="row-even"><td><code class="xref cpp cpp-any docutils literal"><span class="pre">a-=b</span></code></td>
+<tr class="row-even"><td><code class="xref cpp cpp-any docutils literal notranslate"><span class="pre">a-=b</span></code></td>
 <td>1.00</td>
 <td>1.00</td>
 </tr>
-<tr class="row-odd"><td><code class="xref cpp cpp-any docutils literal"><span class="pre">a-=s</span></code></td>
+<tr class="row-odd"><td><code class="xref cpp cpp-any docutils literal notranslate"><span class="pre">a-=s</span></code></td>
 <td>0.77</td>
 <td>0.77</td>
 </tr>
@@ -371,33 +361,33 @@ benchmarked the array/array versions of the operators.</p>
 </colgroup>
 <thead valign="bottom">
 <tr class="row-odd"><th class="head">operation</th>
-<th class="head"><code class="xref cpp cpp-class docutils literal"><span class="pre">dynamic_array</span></code></th>
-<th class="head"><code class="xref cpp cpp-class docutils literal"><span class="pre">fixed_dim_array</span></code></th>
+<th class="head"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">dynamic_array</span></code></th>
+<th class="head"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">fixed_dim_array</span></code></th>
 <th class="head">Fortran</th>
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td><code class="xref cpp cpp-any docutils literal"><span class="pre">a+b</span></code></td>
+<tr class="row-even"><td><code class="xref cpp cpp-any docutils literal notranslate"><span class="pre">a+b</span></code></td>
 <td>1.04</td>
 <td>1.00</td>
 <td>2.18</td>
 </tr>
-<tr class="row-odd"><td><code class="xref cpp cpp-any docutils literal"><span class="pre">a-b</span></code></td>
+<tr class="row-odd"><td><code class="xref cpp cpp-any docutils literal notranslate"><span class="pre">a-b</span></code></td>
 <td>1.02</td>
 <td>1.00</td>
 <td>2.18</td>
 </tr>
-<tr class="row-even"><td><code class="xref cpp cpp-any docutils literal"><span class="pre">a*b</span></code></td>
+<tr class="row-even"><td><code class="xref cpp cpp-any docutils literal notranslate"><span class="pre">a*b</span></code></td>
 <td>1.05</td>
 <td>1.00</td>
 <td>2.24</td>
 </tr>
-<tr class="row-odd"><td><code class="xref cpp cpp-any docutils literal"><span class="pre">a/b</span></code></td>
+<tr class="row-odd"><td><code class="xref cpp cpp-any docutils literal notranslate"><span class="pre">a/b</span></code></td>
 <td>1.02</td>
 <td>1.00</td>
 <td>1.46</td>
 </tr>
-<tr class="row-even"><td><code class="xref cpp cpp-any docutils literal"><span class="pre">a*b</span> <span class="pre">+</span> <span class="pre">(d-e)/f</span></code></td>
+<tr class="row-even"><td><code class="xref cpp cpp-any docutils literal notranslate"><span class="pre">a*b</span> <span class="pre">+</span> <span class="pre">(d-e)/f</span></code></td>
 <td>1.04</td>
 <td>1.00</td>
 <td>1.49</td>
@@ -410,8 +400,8 @@ their equivalent C expressions Fortran has also been included in the benchmark.
 This is in so far of importance as Fortran is, until today, considered the
 ultimate language for numerics.
 The first conclusion which can be drawn from
-this table is the fact that <code class="xref cpp cpp-class docutils literal"><span class="pre">dynamic_array</span></code> shows an up to 5 %
-performance penalty over C code while <code class="xref cpp cpp-class docutils literal"><span class="pre">fixed_dim_array</span></code> is virtually as
+this table is the fact that <code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">dynamic_array</span></code> shows an up to 5 %
+performance penalty over C code while <code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">fixed_dim_array</span></code> is virtually as
 fast as the C implementation of the tested operations.
 The most astonishing result is, however, the rather low performance of Fortran
 not only in comparison with the C++ types but also with respect to the C
@@ -420,7 +410,7 @@ table.</p>
 <p>The reason for the bad performance is not yet clear. It might be due to the poor
 quality of the compiler (we only tested with <strong class="program">gfortran</strong> from the GNU
 compiler collection). Thus the tests should be repeated using for instance
-Intel&#8217;s compiler suite. On the other handside: the GNU compiler collection is
+Intel’s compiler suite. On the other handside: the GNU compiler collection is
 the most important for our uses which makes the results for this set of
 compilers the most relevant. Another reason might be that the benchmark code is
 written in C++ and the Fortran functions are linked into the C++ code
@@ -457,7 +447,7 @@ may can help to push C++ in the field of scientific computing.</p>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2016, Eugen Wintersberger.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.9.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.4.
     </div>
   </body>
 </html>

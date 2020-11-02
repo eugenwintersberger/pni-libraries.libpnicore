@@ -2,42 +2,30 @@
 
 <!doctype html>
 
-
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
     <title>Program configuration utilities &#8212; libpnicore 1.1.1 documentation</title>
-    
     <link rel="stylesheet" href="../_static/bizstyle.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../',
-        VERSION:     '1.1.1',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
-      };
-    </script>
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="../_static/bizstyle.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="libpnicore 1.1.1 documentation" href="../index.html" />
-    <link rel="up" title="Users guide" href="index.html" />
     <link rel="next" title="Benchmarks" href="benchmarks.html" />
     <link rel="prev" title="Type erasures" href="type_erasures.html" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <!--[if lt IE 9]>
     <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
     <![endif]-->
-  </head>
-  <body role="document">
+  </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -56,7 +44,7 @@
     </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <h3><a href="../index.html">Table of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Program configuration utilities</a><ul>
 <li><a class="reference internal" href="#command-line-options-and-arguments">Command line options and arguments</a><ul>
@@ -79,18 +67,20 @@
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="../_sources/users_guide/configuration.txt"
+      <li><a href="../_sources/users_guide/configuration.rst.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -114,7 +104,7 @@ about input arguments and parameters</p>
 <p>It is important to note that this is information the program has only read-only
 access too. <em>libpnicore</em> provides some simple functions to make programs aware
 of command line options and arguments as well as of configuration files. The
-facility provided by <em>libpnicore</em> is based on the <code class="xref cpp cpp-any docutils literal"><span class="pre">boost::program_options</span></code>
+facility provided by <em>libpnicore</em> is based on the <code class="xref cpp cpp-any docutils literal notranslate"><span class="pre">boost::program_options</span></code>
 library. However, its interface is much easier to use.
 What makes this facility so interesting for scientific applications is the fact
 that every option or argument can be given a distinct data type.</p>
@@ -140,19 +130,19 @@ command. This token determines the meaning of a particular option. Thus options
 can appear in any order after the name of the program.
 To get a better feeling about arguments and options lets have a look on a
 typical command line call on a Unix or Linux system</p>
-<div class="highlight-bash"><div class="highlight"><pre><span></span>&gt; program -oresult.dat --wavelength<span class="o">=</span><span class="m">1</span>.234 in1.dat in2.dat in3.dat
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>&gt; program -oresult.dat --wavelength<span class="o">=</span><span class="m">1</span>.234 in1.dat in2.dat in3.dat
 </pre></div>
 </div>
-<p>The three input files at the end of the call (<code class="file docutils literal"><span class="pre">in1.dat</span></code>, <code class="file docutils literal"><span class="pre">in2.dat</span></code>, and
-<code class="file docutils literal"><span class="pre">in3.dat</span></code>) are passed as arguments. They can appear in any order and there
+<p>The three input files at the end of the call (<code class="file docutils literal notranslate"><span class="pre">in1.dat</span></code>, <code class="file docutils literal notranslate"><span class="pre">in2.dat</span></code>, and
+<code class="file docutils literal notranslate"><span class="pre">in3.dat</span></code>) are passed as arguments. They can appear in any order and there
 is no way to distinguish one from the other and will be processed in the order
-of their appearance. This is in contrast to <code class="file docutils literal"><span class="pre">result.dat</span></code> and <cite>1.234</cite>
+of their appearance. This is in contrast to <code class="file docutils literal notranslate"><span class="pre">result.dat</span></code> and <cite>1.234</cite>
 which are passed as options. An option can be identified by a <em>short name</em> (by
-convention this must be a single character) as it is the case for <code class="file docutils literal"><span class="pre">result.dat</span></code>
+convention this must be a single character) as it is the case for <code class="file docutils literal notranslate"><span class="pre">result.dat</span></code>
 or by a <em>long name</em>, like for <cite>1.234</cite>, which must be a
 string without whitespaces. Short names are are introduced by a single <cite>-</cite>
 and followed immediately by the value of the option. Long names start with
-<cite>&#8211;</cite> followed by a <cite>=</cite> and the value of the option. An option can have both,
+<cite>–</cite> followed by a <cite>=</cite> and the value of the option. An option can have both,
 a long and a short name. While short names are typically used when a program is
 called interactively by a user to minimize the typing effort, long names are
 mostly used when a program is called from a script. As they are not limited to a
@@ -165,13 +155,13 @@ used options have only a long name.</p>
 <h3>Creating a simple program configuration<a class="headerlink" href="#creating-a-simple-program-configuration" title="Permalink to this headline">¶</a></h3>
 <p>Creating a configuration for a program involves three classes</p>
 <ul class="simple">
-<li><code class="xref cpp cpp-class docutils literal"><span class="pre">configuration</span></code> which, in the end, will hold the configuration data and provide access to it.</li>
-<li><code class="xref cpp cpp-class docutils literal"><span class="pre">config_option</span></code> describing a single command line option</li>
-<li><code class="xref cpp cpp-class docutils literal"><span class="pre">config_argument</span></code> which we will use to describe command line arguments</li>
+<li><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">configuration</span></code> which, in the end, will hold the configuration data and provide access to it.</li>
+<li><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">config_option</span></code> describing a single command line option</li>
+<li><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">config_argument</span></code> which we will use to describe command line arguments</li>
 </ul>
 <p>Lets start with the above example. The source code of the program would maybe
 look like this</p>
-<div class="highlight-cpp"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp"></span>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&lt;pni/core/types.hpp&gt;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&lt;pni/core/config/configuration.hpp&gt;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&lt;pni/core/config/config_parser.hpp&gt;</span><span class="cp"></span>
@@ -200,7 +190,7 @@ look like this</p>
 <p>Configuration files handled by <em>libpnicore</em> follow the <cite>INI</cite>-file syntax as
 used by Windows.
 An example file would look like this</p>
-<div class="highlight-ini"><div class="highlight"><pre><span></span><span class="c1">#experiment.cfg</span>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="c1">#experiment.cfg</span>
 <span class="k">[beam]</span>
 <span class="na">wavelength</span> <span class="o">=</span> <span class="s">1.543</span>
 <span class="na">divergence</span> <span class="o">=</span> <span class="s">0.12</span>
@@ -212,7 +202,7 @@ An example file would look like this</p>
 </pre></div>
 </div>
 <p>To read this file create the following configuration in the program</p>
-<div class="highlight-cpp"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;pni/core/types.hpp&gt;</span><span class="cp"></span>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;pni/core/types.hpp&gt;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&lt;pni/core/configuration.hpp&gt;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&lt;pni/core/config_parser.hpp&gt;</span><span class="cp"></span>
 
@@ -264,7 +254,7 @@ An example file would look like this</p>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2016, Eugen Wintersberger.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.9.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.4.
     </div>
   </body>
 </html>

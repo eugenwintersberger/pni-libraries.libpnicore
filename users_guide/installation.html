@@ -2,42 +2,30 @@
 
 <!doctype html>
 
-
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
     <title>Installation &#8212; libpnicore 1.1.1 documentation</title>
-    
     <link rel="stylesheet" href="../_static/bizstyle.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../',
-        VERSION:     '1.1.1',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
-      };
-    </script>
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="../_static/bizstyle.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="libpnicore 1.1.1 documentation" href="../index.html" />
-    <link rel="up" title="Users guide" href="index.html" />
     <link rel="next" title="Using libpnicore" href="using.html" />
     <link rel="prev" title="The PNI library stack" href="introduction.html" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <!--[if lt IE 9]>
     <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
     <![endif]-->
-  </head>
-  <body role="document">
+  </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -56,7 +44,7 @@
     </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <h3><a href="../index.html">Table of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Installation</a><ul>
 <li><a class="reference internal" href="#installing-pre-built-binary-packages">Installing pre-built binary packages</a><ul>
@@ -84,18 +72,20 @@
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="../_sources/users_guide/installation.txt"
+      <li><a href="../_sources/users_guide/installation.rst.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -130,26 +120,26 @@ package sources you need to login as <cite>root</cite> user. Use <strong class="
 <strong class="command">sudo su</strong> on Debian and Ubuntu respectively.
 The first task is to add the GPG key of the HDRI repository to your local
 keyring</p>
-<div class="highlight-bash"><div class="highlight"><pre><span></span>$ wget -q -O - http://repos.pni-hdri.de/debian_repo.pub.gpg <span class="p">|</span> apt-key add -
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ wget -q -O - http://repos.pni-hdri.de/debian_repo.pub.gpg <span class="p">|</span> apt-key add -
 </pre></div>
 </div>
 <p>The return value of this command line should be <cite>OK</cite>.
 In a next step you have to add new package sources to your system. For this
-purpose go to <code class="file docutils literal"><span class="pre">/etc/apt/sources.list.d</span></code> and download the sources file.
+purpose go to <code class="file docutils literal notranslate"><span class="pre">/etc/apt/sources.list.d</span></code> and download the sources file.
 For Debian use</p>
-<div class="highlight-bash"><div class="highlight"><pre><span></span>$ wget http://repos.pni-hdri.de/wheezy-pni-hdri.list
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ wget http://repos.pni-hdri.de/wheezy-pni-hdri.list
 </pre></div>
 </div>
 <p>and for Ubuntu (Precise)</p>
-<div class="highlight-bash"><div class="highlight"><pre><span></span>$ wget http://repos.pni-hdri.de/precise-pni-hdri.list
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ wget http://repos.pni-hdri.de/precise-pni-hdri.list
 </pre></div>
 </div>
 <p>Once you have downloaded the file use</p>
-<div class="highlight-bash"><div class="highlight"><pre><span></span>$ apt-get update
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ apt-get update
 </pre></div>
 </div>
 <p>to update your package list and</p>
-<div class="highlight-bash"><div class="highlight"><pre><span></span>$ apt-get install libpnicore1 libpnicore1-dev libpnicore1-doc
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ apt-get install libpnicore1 libpnicore1-dev libpnicore1-doc
 </pre></div>
 </div>
 <p>to install the library. Dependencies will be resolved automatically so you can
@@ -166,14 +156,14 @@ usually requires some expert knowledge keep be prepared to get your hands dirty.
 <p>For a successful build some requirements must be satisfied</p>
 <ul class="simple">
 <li><dl class="first docutils">
-<dt><cite>gcc</cite> &gt;= 4.7 &#8211; since version 1.0.0 <cite>libpnicore</cite> requires a mostly C++11</dt>
+<dt><cite>gcc</cite> &gt;= 4.7 – since version 1.0.0 <cite>libpnicore</cite> requires a mostly C++11</dt>
 <dd>compliant compiler. For the gcc familiy this is 4.7 and upwards</dd>
 </dl>
 </li>
 <li><cite>BOOST</cite> &gt;= 4.1</li>
-<li><cite>doxygen</cite> cite{web:doxygen} &#8211; used to build the API documentation</li>
-<li><cite>cmake</cite> cite{web:cmake} $&gt;=$ 2.4.8 &#8211; the build software used by the libpnicore</li>
-<li><cite>pkg-config</cite> cite{web:pkgconfig} &#8211; program to manage libraries</li>
+<li><cite>doxygen</cite> cite{web:doxygen} – used to build the API documentation</li>
+<li><cite>cmake</cite> cite{web:cmake} $&gt;=$ 2.4.8 – the build software used by the libpnicore</li>
+<li><cite>pkg-config</cite> cite{web:pkgconfig} – program to manage libraries</li>
 </ul>
 </div>
 <div class="section" id="obtaining-the-sources">
@@ -190,23 +180,23 @@ provided via Google Drive.</p>
 <div class="section" id="building-the-code">
 <h3>Building the code<a class="headerlink" href="#building-the-code" title="Permalink to this headline">¶</a></h3>
 <p>Once downloaded unpack the tarball in a temporary location.</p>
-<div class="highlight-bash"><div class="highlight"><pre><span></span>$ tar xzf libpnicore*.tar.gz
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ tar xzf libpnicore*.tar.gz
 </pre></div>
 </div>
-<p>which will result in a new directory named <code class="file docutils literal"><span class="pre">libpnicore</span></code>. As we use
+<p>which will result in a new directory named <code class="file docutils literal notranslate"><span class="pre">libpnicore</span></code>. As we use
 <strong class="command">cmake</strong> for
 building the library, out of place builds are recommended. For this purpose
 create a new directory where the code will be built and change to this directory</p>
-<div class="highlight-bash"><div class="highlight"><pre><span></span>$ mkdir libpnicore-build
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ mkdir libpnicore-build
 $ <span class="nb">cd</span> libpnicore-build
 </pre></div>
 </div>
 <p>Now call <strong class="command">cmake</strong> with a path to the original source directory</p>
-<div class="highlight-bash"><div class="highlight"><pre><span></span>$ cmake ../libpnicore
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ cmake ../libpnicore
 </pre></div>
 </div>
 <p>A subsequent <strong class="command">make</strong> finally build the library</p>
-<div class="highlight-bash"><div class="highlight"><pre><span></span>$ make
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ make
 </pre></div>
 </div>
 <p>This may take a while. Actually building the library is quite fast as
@@ -218,7 +208,7 @@ However, building the test suite is rather time consuming.</p>
 <p>Once the build has finished you should definitely run the tests.
 <cite>libpnicore</cite> uses the <strong class="command">ctest</strong> facility of <strong class="command">cmake</strong>. To build
 and run the tests just type</p>
-<div class="highlight-bash"><div class="highlight"><pre><span></span>$ make check
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ make check
 </pre></div>
 </div>
 </div>
@@ -226,16 +216,16 @@ and run the tests just type</p>
 <h3>Installation<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
 <p>If the build has passed the test suite <cite>libpnicore</cite> can be installed from within
 the build directory with</p>
-<div class="highlight-bash"><div class="highlight"><pre><span></span>$ make install
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ make install
 </pre></div>
 </div>
-<p>By default the installation prefix is <code class="file docutils literal"><span class="pre">/usr/local</span></code>. If another prefix should
-be used the <span class="target" id="index-0"></span><code class="xref std std-envvar docutils literal"><span class="pre">CMAKE_INSTALL_PREFIX</span></code> variable must be set when running
+<p>By default the installation prefix is <code class="file docutils literal notranslate"><span class="pre">/usr/local</span></code>. If another prefix should
+be used the <span class="target" id="index-0"></span><code class="xref std std-envvar docutils literal notranslate"><span class="pre">CMAKE_INSTALL_PREFIX</span></code> variable must be set when running
 <strong class="command">cmake</strong> with</p>
-<div class="highlight-bash"><div class="highlight"><pre><span></span>$ cmake -DCMAKE_INSTALL_PREFIX<span class="o">=</span>/opt/pni ../libpnicore
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ cmake -DCMAKE_INSTALL_PREFIX<span class="o">=</span>/opt/pni ../libpnicore
 </pre></div>
 </div>
-<p>which causes the installation prefix to be <code class="file docutils literal"><span class="pre">/opt/pni</span></code>.</p>
+<p>which causes the installation prefix to be <code class="file docutils literal notranslate"><span class="pre">/opt/pni</span></code>.</p>
 </div>
 </div>
 </div>
@@ -264,7 +254,7 @@ be used the <span class="target" id="index-0"></span><code class="xref std std-e
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2016, Eugen Wintersberger.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.9.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.4.
     </div>
   </body>
 </html>

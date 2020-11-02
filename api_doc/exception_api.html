@@ -2,42 +2,30 @@
 
 <!doctype html>
 
-
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
     <title>Exceptions &#8212; libpnicore 1.1.1 documentation</title>
-    
     <link rel="stylesheet" href="../_static/bizstyle.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../',
-        VERSION:     '1.1.1',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
-      };
-    </script>
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="../_static/bizstyle.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="libpnicore 1.1.1 documentation" href="../index.html" />
-    <link rel="up" title="API documentation" href="index.html" />
     <link rel="next" title="Type erasures" href="type_erasure_api.html" />
     <link rel="prev" title="Data types and type management" href="type_api.html" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <!--[if lt IE 9]>
     <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
     <![endif]-->
-  </head>
-  <body role="document">
+  </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -56,11 +44,11 @@
     </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <h3><a href="../index.html">Table of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Exceptions</a><ul>
-<li><a class="reference internal" href="#pni-core-exception-record"><code class="docutils literal"><span class="pre">pni::core::exception_record</span></code></a></li>
-<li><a class="reference internal" href="#pni-core-exception"><code class="docutils literal"><span class="pre">pni::core::exception</span></code></a><ul>
+<li><a class="reference internal" href="#pni-core-exception-record"><code class="docutils literal notranslate"><span class="pre">pni::core::exception_record</span></code></a></li>
+<li><a class="reference internal" href="#pni-core-exception"><code class="docutils literal notranslate"><span class="pre">pni::core::exception</span></code></a><ul>
 <li><a class="reference internal" href="#exception-classes">Exception classes</a></li>
 </ul>
 </li>
@@ -79,18 +67,20 @@
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="../_sources/api_doc/exception_api.txt"
+      <li><a href="../_sources/api_doc/exception_api.rst.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -104,45 +94,45 @@
   <div class="section" id="exceptions">
 <h1>Exceptions<a class="headerlink" href="#exceptions" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="pni-core-exception-record">
-<h2><a class="reference internal" href="#_CPPv2N3pni4core16exception_recordE" title="pni::core::exception_record"><code class="xref cpp cpp-class docutils literal"><span class="pre">pni::core::exception_record</span></code></a><a class="headerlink" href="#pni-core-exception-record" title="Permalink to this headline">¶</a></h2>
+<h2><a class="reference internal" href="#_CPPv4N3pni4core16exception_recordE" title="pni::core::exception_record"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">pni::core::exception_record</span></code></a><a class="headerlink" href="#pni-core-exception-record" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
-<dt id="_CPPv2N3pni4core16exception_recordE">
-<span id="pni::core::exception_record"></span><span class="target" id="pnicoreclasspni_1_1core_1_1exception__record"></span><em class="property">class </em><code class="descclassname">pni::core::</code><code class="descname">exception_record</code><a class="headerlink" href="#_CPPv2N3pni4core16exception_recordE" title="Permalink to this definition">¶</a></dt>
+<dt id="_CPPv4N3pni4core16exception_recordE">
+<span id="_CPPv3N3pni4core16exception_recordE"></span><span id="_CPPv2N3pni4core16exception_recordE"></span><span id="pni::core::exception_record"></span><span class="target" id="classpni_1_1core_1_1exception__record"></span><em class="property">class </em><code class="descname">exception_record</code><a class="headerlink" href="#_CPPv4N3pni4core16exception_recordE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>exception record </p>
 <p>Contains the basic information where an exception has been thrown. This information consists of the source file, the line in the file, and the signature of the function where the error occurred. Using the BOOST_CURRENT_FUNCTION macro defined in boost/current_function.hpp such a record can easily be constructed with</p>
-<p><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">exception_record</span> <span class="n">r</span><span class="p">(</span><span class="n">__FILE__</span><span class="p">,</span><span class="n">__LINE__</span><span class="p">,</span><span class="n">BOOST_CURRENT_FUNCTION</span><span class="p">);</span>
+<p><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">exception_record</span> <span class="n">r</span><span class="p">(</span><span class="n">__FILE__</span><span class="p">,</span><span class="n">__LINE__</span><span class="p">,</span><span class="n">BOOST_CURRENT_FUNCTION</span><span class="p">);</span>
 </pre></div>
 </div>
  </p>
 <div class="breathe-sectiondef docutils container">
 <p class="breathe-sectiondef-title rubric">Public Functions</p>
 <dl class="function">
-<dt id="_CPPv2N3pni4core16exception_record16exception_recordEv">
-<span id="pni::core::exception_record::exception_record"></span><span class="target" id="pnicoreclasspni_1_1core_1_1exception__record_1a60e7bdabafc7a5e5b439c0299b87ffc9"></span><code class="descname">exception_record</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3pni4core16exception_record16exception_recordEv" title="Permalink to this definition">¶</a></dt>
+<dt id="_CPPv4N3pni4core16exception_record16exception_recordEv">
+<span id="_CPPv3N3pni4core16exception_record16exception_recordEv"></span><span id="_CPPv2N3pni4core16exception_record16exception_recordEv"></span><span id="pni::core::exception_record::exception_record"></span><span class="target" id="classpni_1_1core_1_1exception__record_1a60e7bdabafc7a5e5b439c0299b87ffc9"></span><code class="descname">exception_record</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3pni4core16exception_record16exception_recordEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>no default constructor </p>
 </dd></dl>
 
 <dl class="function">
-<dt id="_CPPv2N3pni4core16exception_record16exception_recordERK6string6size_tRK6string">
-<span id="pni::core::exception_record::exception_record__stringCR.s.stringCR"></span><span class="target" id="pnicoreclasspni_1_1core_1_1exception__record_1acd892a4457f0f29228b6f2461e4833a9"></span><code class="descname">exception_record</code><span class="sig-paren">(</span><em class="property">const</em> string &amp;<em>file</em>, size_t <em>line</em>, <em class="property">const</em> string &amp;<em>func</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3pni4core16exception_record16exception_recordERK6string6size_tRK6string" title="Permalink to this definition">¶</a></dt>
+<dt id="_CPPv4N3pni4core16exception_record16exception_recordERK6string6size_tRK6string">
+<span id="_CPPv3N3pni4core16exception_record16exception_recordERK6string6size_tRK6string"></span><span id="_CPPv2N3pni4core16exception_record16exception_recordERK6string6size_tRK6string"></span><span id="pni::core::exception_record::exception_record__stringCR.s.stringCR"></span><span class="target" id="classpni_1_1core_1_1exception__record_1acd892a4457f0f29228b6f2461e4833a9"></span><code class="descname">exception_record</code><span class="sig-paren">(</span><em class="property">const</em> string &amp;<em>file</em>, size_t <em>line</em>, <em class="property">const</em> string &amp;<em>func</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3pni4core16exception_record16exception_recordERK6string6size_tRK6string" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>constructor </p>
 </dd></dl>
 
 <dl class="function">
-<dt id="_CPPv2NK3pni4core16exception_record4fileEv">
-<span id="pni::core::exception_record::fileC"></span><span class="target" id="pnicoreclasspni_1_1core_1_1exception__record_1a1e716216b32c1d2892f40580360fff67"></span><em class="property">const</em> string &amp;<code class="descname">file</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv2NK3pni4core16exception_record4fileEv" title="Permalink to this definition">¶</a></dt>
+<dt id="_CPPv4NK3pni4core16exception_record4fileEv">
+<span id="_CPPv3NK3pni4core16exception_record4fileEv"></span><span id="_CPPv2NK3pni4core16exception_record4fileEv"></span><span id="pni::core::exception_record::fileC"></span><span class="target" id="classpni_1_1core_1_1exception__record_1a1e716216b32c1d2892f40580360fff67"></span><em class="property">const</em> string &amp;<code class="descname">file</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK3pni4core16exception_record4fileEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>get file name </p>
 </dd></dl>
 
 <dl class="function">
-<dt id="_CPPv2NK3pni4core16exception_record4lineEv">
-<span id="pni::core::exception_record::lineC"></span><span class="target" id="pnicoreclasspni_1_1core_1_1exception__record_1a164b27c45984a2207cf8289713c19d4a"></span>size_t <code class="descname">line</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv2NK3pni4core16exception_record4lineEv" title="Permalink to this definition">¶</a></dt>
+<dt id="_CPPv4NK3pni4core16exception_record4lineEv">
+<span id="_CPPv3NK3pni4core16exception_record4lineEv"></span><span id="_CPPv2NK3pni4core16exception_record4lineEv"></span><span id="pni::core::exception_record::lineC"></span><span class="target" id="classpni_1_1core_1_1exception__record_1a164b27c45984a2207cf8289713c19d4a"></span>size_t <code class="descname">line</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK3pni4core16exception_record4lineEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>get file line number </p>
 </dd></dl>
 
 <dl class="function">
-<dt id="_CPPv2NK3pni4core16exception_record8functionEv">
-<span id="pni::core::exception_record::functionC"></span><span class="target" id="pnicoreclasspni_1_1core_1_1exception__record_1a98a1be634dc0a80ed5805dff1f135cf6"></span><em class="property">const</em> string &amp;<code class="descname">function</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv2NK3pni4core16exception_record8functionEv" title="Permalink to this definition">¶</a></dt>
+<dt id="_CPPv4NK3pni4core16exception_record8functionEv">
+<span id="_CPPv3NK3pni4core16exception_record8functionEv"></span><span id="_CPPv2NK3pni4core16exception_record8functionEv"></span><span id="pni::core::exception_record::functionC"></span><span class="target" id="classpni_1_1core_1_1exception__record_1a98a1be634dc0a80ed5805dff1f135cf6"></span><em class="property">const</em> string &amp;<code class="descname">function</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK3pni4core16exception_record8functionEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>get function </p>
 </dd></dl>
 
@@ -151,14 +141,14 @@
 
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
-<p>doxygenfunction: Unable to resolve multiple matches for function &#8220;operator&lt;&lt;&#8221; with arguments (std::ostream &amp;, const exception_record &amp;) in doxygen xml output for project &#8220;pnicore&#8221; from directory: /home/jkotan/sources/libpnicore-build/doc/api_doc/xml.
+<p>doxygenfunction: Unable to resolve multiple matches for function “operator&lt;&lt;” with arguments (std::ostream &amp;, const exception_record &amp;) in doxygen xml output for project “pnicore” from directory: /home/jkotan/sources/libpnicore-build/doc/api_doc/xml.
 Potential matches:
 </p>
-<div class="last highlight-default"><div class="highlight"><pre><span></span><span class="o">-</span> <span class="n">PNICORE_EXPORT</span> <span class="n">std</span><span class="p">::</span><span class="n">ostream</span> <span class="o">&amp;</span> <span class="n">pni</span><span class="p">::</span><span class="n">core</span><span class="p">::</span><span class="n">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">std</span><span class="p">::</span><span class="n">ostream</span> <span class="o">&amp;</span><span class="p">,</span> <span class="n">const</span>  <span class="n">bool_t</span>  <span class="o">&amp;</span><span class="p">)</span>
-<span class="o">-</span> <span class="n">PNICORE_EXPORT</span> <span class="n">std</span><span class="p">::</span><span class="n">ostream</span> <span class="o">&amp;</span> <span class="n">pni</span><span class="p">::</span><span class="n">core</span><span class="p">::</span><span class="n">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">std</span><span class="p">::</span><span class="n">ostream</span> <span class="o">&amp;</span><span class="p">,</span> <span class="n">const</span>  <span class="n">exception_record</span>  <span class="o">&amp;</span><span class="p">)</span>
-<span class="o">-</span> <span class="n">PNICORE_EXPORT</span> <span class="n">std</span><span class="p">::</span><span class="n">ostream</span> <span class="o">&amp;</span> <span class="n">pni</span><span class="p">::</span><span class="n">core</span><span class="p">::</span><span class="n">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">std</span><span class="p">::</span><span class="n">ostream</span> <span class="o">&amp;</span><span class="p">,</span> <span class="n">const</span>  <span class="n">none</span>  <span class="o">&amp;</span><span class="p">)</span>
-<span class="o">-</span> <span class="n">PNICORE_EXPORT</span> <span class="n">std</span><span class="p">::</span><span class="n">ostream</span> <span class="o">&amp;</span> <span class="n">pni</span><span class="p">::</span><span class="n">core</span><span class="p">::</span><span class="n">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">std</span><span class="p">::</span><span class="n">ostream</span> <span class="o">&amp;</span><span class="p">,</span> <span class="n">const</span>  <span class="nb">slice</span>  <span class="o">&amp;</span><span class="p">)</span>
-<span class="o">-</span> <span class="n">PNICORE_EXPORT</span> <span class="n">std</span><span class="p">::</span><span class="n">ostream</span> <span class="o">&amp;</span> <span class="n">pni</span><span class="p">::</span><span class="n">core</span><span class="p">::</span><span class="n">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">std</span><span class="p">::</span><span class="n">ostream</span> <span class="o">&amp;</span><span class="p">,</span> <span class="n">const</span>  <span class="n">type_id_t</span>  <span class="o">&amp;</span><span class="p">)</span>
+<div class="last highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span> <span class="n">PNICORE_EXPORT</span> <span class="n">std</span><span class="p">::</span><span class="n">ostream</span> <span class="o">&amp;</span><span class="n">pni</span><span class="p">::</span><span class="n">core</span><span class="p">::</span><span class="n">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">std</span><span class="p">::</span><span class="n">ostream</span><span class="o">&amp;</span><span class="p">,</span> <span class="n">const</span> <span class="n">bool_t</span><span class="o">&amp;</span><span class="p">)</span>
+<span class="o">-</span> <span class="n">PNICORE_EXPORT</span> <span class="n">std</span><span class="p">::</span><span class="n">ostream</span> <span class="o">&amp;</span><span class="n">pni</span><span class="p">::</span><span class="n">core</span><span class="p">::</span><span class="n">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">std</span><span class="p">::</span><span class="n">ostream</span><span class="o">&amp;</span><span class="p">,</span> <span class="n">const</span> <span class="n">exception_record</span><span class="o">&amp;</span><span class="p">)</span>
+<span class="o">-</span> <span class="n">PNICORE_EXPORT</span> <span class="n">std</span><span class="p">::</span><span class="n">ostream</span> <span class="o">&amp;</span><span class="n">pni</span><span class="p">::</span><span class="n">core</span><span class="p">::</span><span class="n">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">std</span><span class="p">::</span><span class="n">ostream</span><span class="o">&amp;</span><span class="p">,</span> <span class="n">const</span> <span class="n">none</span><span class="o">&amp;</span><span class="p">)</span>
+<span class="o">-</span> <span class="n">PNICORE_EXPORT</span> <span class="n">std</span><span class="p">::</span><span class="n">ostream</span> <span class="o">&amp;</span><span class="n">pni</span><span class="p">::</span><span class="n">core</span><span class="p">::</span><span class="n">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">std</span><span class="p">::</span><span class="n">ostream</span><span class="o">&amp;</span><span class="p">,</span> <span class="n">const</span> <span class="nb">slice</span><span class="o">&amp;</span><span class="p">)</span>
+<span class="o">-</span> <span class="n">PNICORE_EXPORT</span> <span class="n">std</span><span class="p">::</span><span class="n">ostream</span> <span class="o">&amp;</span><span class="n">pni</span><span class="p">::</span><span class="n">core</span><span class="p">::</span><span class="n">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">std</span><span class="p">::</span><span class="n">ostream</span><span class="o">&amp;</span><span class="p">,</span> <span class="n">const</span> <span class="n">type_id_t</span><span class="o">&amp;</span><span class="p">)</span>
 <span class="o">-</span> <span class="n">std</span><span class="p">::</span><span class="n">ostream</span> <span class="o">&amp;</span><span class="n">pni</span><span class="p">::</span><span class="n">core</span><span class="p">::</span><span class="n">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">std</span><span class="p">::</span><span class="n">ostream</span><span class="o">&amp;</span><span class="p">,</span> <span class="n">const</span> <span class="n">array_selection</span><span class="o">&amp;</span><span class="p">)</span>
 <span class="o">-</span> <span class="n">std</span><span class="p">::</span><span class="n">ostream</span> <span class="o">&amp;</span><span class="n">pni</span><span class="p">::</span><span class="n">core</span><span class="p">::</span><span class="n">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">std</span><span class="p">::</span><span class="n">ostream</span><span class="o">&amp;</span><span class="p">,</span> <span class="n">const</span> <span class="n">benchmark_result</span><span class="o">&amp;</span><span class="p">)</span>
 <span class="o">-</span> <span class="n">std</span><span class="p">::</span><span class="n">ostream</span> <span class="o">&amp;</span><span class="n">pni</span><span class="p">::</span><span class="n">core</span><span class="p">::</span><span class="n">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">std</span><span class="p">::</span><span class="n">ostream</span><span class="o">&amp;</span><span class="p">,</span> <span class="n">const</span> <span class="n">cli_args</span><span class="o">&amp;</span><span class="p">)</span>
@@ -193,19 +183,18 @@ Potential matches:
 </div>
 </div>
 <div class="section" id="pni-core-exception">
-<h2><a class="reference internal" href="#_CPPv2N3pni4core9exceptionE" title="pni::core::exception"><code class="xref cpp cpp-class docutils literal"><span class="pre">pni::core::exception</span></code></a><a class="headerlink" href="#pni-core-exception" title="Permalink to this headline">¶</a></h2>
+<h2><a class="reference internal" href="#_CPPv4N3pni4core9exceptionE" title="pni::core::exception"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">pni::core::exception</span></code></a><a class="headerlink" href="#pni-core-exception" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
-<dt id="_CPPv2N3pni4core9exceptionE">
-<span id="pni::core::exception"></span><span class="target" id="pnicoreclasspni_1_1core_1_1exception"></span><em class="property">class </em><code class="descclassname">pni::core::</code><code class="descname">exception</code><a class="headerlink" href="#_CPPv2N3pni4core9exceptionE" title="Permalink to this definition">¶</a></dt>
+<dt id="_CPPv4N3pni4core9exceptionE">
+<span id="_CPPv3N3pni4core9exceptionE"></span><span id="_CPPv2N3pni4core9exceptionE"></span><span id="pni::core::exception"></span><span class="target" id="classpni_1_1core_1_1exception"></span><em class="property">class </em><code class="descname">exception</code> : <em class="property">public</em> std::exception<a class="headerlink" href="#_CPPv4N3pni4core9exceptionE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Exceptions base class. </p>
 <p>This is the base class for all exceptions used in this library. </p>
-<p>Inherits from std::exception</p>
-<p>Subclassed by <a class="reference internal" href="#pnicoreclasspni_1_1core_1_1cli__argument__error"><span class="std std-ref">pni::core::cli_argument_error</span></a>, <a class="reference internal" href="#pnicoreclasspni_1_1core_1_1cli__error"><span class="std std-ref">pni::core::cli_error</span></a>, pni::core::cli_help_request, <a class="reference internal" href="#pnicoreclasspni_1_1core_1_1cli__option__error"><span class="std std-ref">pni::core::cli_option_error</span></a>, <a class="reference internal" href="#pnicoreclasspni_1_1core_1_1file__error"><span class="std std-ref">pni::core::file_error</span></a>, <a class="reference internal" href="#pnicoreclasspni_1_1core_1_1index__error"><span class="std std-ref">pni::core::index_error</span></a>, <a class="reference internal" href="#pnicoreclasspni_1_1core_1_1iterator__error"><span class="std std-ref">pni::core::iterator_error</span></a>, <a class="reference internal" href="#pnicoreclasspni_1_1core_1_1key__error"><span class="std std-ref">pni::core::key_error</span></a>, <a class="reference internal" href="#pnicoreclasspni_1_1core_1_1memory__allocation__error"><span class="std std-ref">pni::core::memory_allocation_error</span></a>, <a class="reference internal" href="#pnicoreclasspni_1_1core_1_1memory__not__allocated__error"><span class="std std-ref">pni::core::memory_not_allocated_error</span></a>, <a class="reference internal" href="#pnicoreclasspni_1_1core_1_1not__implemented__error"><span class="std std-ref">pni::core::not_implemented_error</span></a>, <a class="reference internal" href="#pnicoreclasspni_1_1core_1_1range__error"><span class="std std-ref">pni::core::range_error</span></a>, <a class="reference internal" href="#pnicoreclasspni_1_1core_1_1shape__mismatch__error"><span class="std std-ref">pni::core::shape_mismatch_error</span></a>, <a class="reference internal" href="#pnicoreclasspni_1_1core_1_1size__mismatch__error"><span class="std std-ref">pni::core::size_mismatch_error</span></a>, <a class="reference internal" href="#pnicoreclasspni_1_1core_1_1type__error"><span class="std std-ref">pni::core::type_error</span></a>, <a class="reference internal" href="#pnicoreclasspni_1_1core_1_1value__error"><span class="std std-ref">pni::core::value_error</span></a></p>
+<p>Subclassed by <a class="reference internal" href="#classpni_1_1core_1_1cli__argument__error"><span class="std std-ref">pni::core::cli_argument_error</span></a>, <a class="reference internal" href="#classpni_1_1core_1_1cli__error"><span class="std std-ref">pni::core::cli_error</span></a>, pni::core::cli_help_request, <a class="reference internal" href="#classpni_1_1core_1_1cli__option__error"><span class="std std-ref">pni::core::cli_option_error</span></a>, <a class="reference internal" href="#classpni_1_1core_1_1file__error"><span class="std std-ref">pni::core::file_error</span></a>, <a class="reference internal" href="#classpni_1_1core_1_1index__error"><span class="std std-ref">pni::core::index_error</span></a>, <a class="reference internal" href="#classpni_1_1core_1_1iterator__error"><span class="std std-ref">pni::core::iterator_error</span></a>, <a class="reference internal" href="#classpni_1_1core_1_1key__error"><span class="std std-ref">pni::core::key_error</span></a>, <a class="reference internal" href="#classpni_1_1core_1_1memory__allocation__error"><span class="std std-ref">pni::core::memory_allocation_error</span></a>, <a class="reference internal" href="#classpni_1_1core_1_1memory__not__allocated__error"><span class="std std-ref">pni::core::memory_not_allocated_error</span></a>, <a class="reference internal" href="#classpni_1_1core_1_1not__implemented__error"><span class="std std-ref">pni::core::not_implemented_error</span></a>, <a class="reference internal" href="#classpni_1_1core_1_1range__error"><span class="std std-ref">pni::core::range_error</span></a>, <a class="reference internal" href="#classpni_1_1core_1_1shape__mismatch__error"><span class="std std-ref">pni::core::shape_mismatch_error</span></a>, <a class="reference internal" href="#classpni_1_1core_1_1size__mismatch__error"><span class="std std-ref">pni::core::size_mismatch_error</span></a>, <a class="reference internal" href="#classpni_1_1core_1_1type__error"><span class="std std-ref">pni::core::type_error</span></a>, <a class="reference internal" href="#classpni_1_1core_1_1value__error"><span class="std std-ref">pni::core::value_error</span></a></p>
 <div class="breathe-sectiondef docutils container">
 <p class="breathe-sectiondef-title rubric">Public Types</p>
 <dl class="type">
-<dt id="_CPPv2N3pni4core9exception14const_iteratorE">
-<span id="pni::core::exception::const_iterator"></span><span class="target" id="pnicoreclasspni_1_1core_1_1exception_1a6c70f845f35673d3ec2f40c5da59b099"></span><em class="property">typedef </em>std::list&lt;<a class="reference internal" href="#_CPPv2N3pni4core16exception_recordE" title="pni::core::exception_record">exception_record</a>&gt;::const_iterator <code class="descname">const_iterator</code><a class="headerlink" href="#_CPPv2N3pni4core9exception14const_iteratorE" title="Permalink to this definition">¶</a></dt>
+<dt id="_CPPv4N3pni4core9exception14const_iteratorE">
+<span id="_CPPv3N3pni4core9exception14const_iteratorE"></span><span id="_CPPv2N3pni4core9exception14const_iteratorE"></span><span id="pni::core::exception::const_iterator"></span><span class="target" id="classpni_1_1core_1_1exception_1a6c70f845f35673d3ec2f40c5da59b099"></span><em class="property">typedef </em>std::list&lt;<a class="reference internal" href="#_CPPv4N3pni4core16exception_recordE" title="pni::core::exception_record">exception_record</a>&gt;::const_iterator <code class="descname">const_iterator</code><a class="headerlink" href="#_CPPv4N3pni4core9exception14const_iteratorE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>const iterator over the error record </p>
 </dd></dl>
 
@@ -213,19 +202,19 @@ Potential matches:
 <div class="breathe-sectiondef docutils container">
 <p class="breathe-sectiondef-title rubric">Public Functions</p>
 <dl class="function">
-<dt id="_CPPv2N3pni4core9exception9exceptionEv">
-<span id="pni::core::exception::exception"></span><span class="target" id="pnicoreclasspni_1_1core_1_1exception_1a81eabdd8561f098680709958e5e22028"></span><code class="descname">exception</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3pni4core9exception9exceptionEv" title="Permalink to this definition">¶</a></dt>
+<dt id="_CPPv4N3pni4core9exception9exceptionEv">
+<span id="_CPPv3N3pni4core9exception9exceptionEv"></span><span id="_CPPv2N3pni4core9exception9exceptionEv"></span><span id="pni::core::exception::exception"></span><span class="target" id="classpni_1_1core_1_1exception_1a81eabdd8561f098680709958e5e22028"></span><code class="descname">exception</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3pni4core9exception9exceptionEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>default constructor </p>
 </dd></dl>
 
 <dl class="function">
-<dt id="_CPPv2N3pni4core9exception9exceptionERK6string">
-<span id="pni::core::exception::exception__stringCR"></span><span class="target" id="pnicoreclasspni_1_1core_1_1exception_1a288111de46eccabded3abc42e2033e92"></span><code class="descname">exception</code><span class="sig-paren">(</span><em class="property">const</em> string &amp;<em>n</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3pni4core9exception9exceptionERK6string" title="Permalink to this definition">¶</a></dt>
+<dt id="_CPPv4N3pni4core9exception9exceptionERK6string">
+<span id="_CPPv3N3pni4core9exception9exceptionERK6string"></span><span id="_CPPv2N3pni4core9exception9exceptionERK6string"></span><span id="pni::core::exception::exception__stringCR"></span><span class="target" id="classpni_1_1core_1_1exception_1a288111de46eccabded3abc42e2033e92"></span><code class="descname">exception</code><span class="sig-paren">(</span><em class="property">const</em> string &amp;<em>n</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3pni4core9exception9exceptionERK6string" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>constructor </p>
 <p><dl class="docutils">
 <dt><strong>Parameters</strong></dt>
 <dd><ul class="breatheparameterlist first last simple">
-<li><code class="docutils literal"><span class="pre">n</span></code>: name of the exception </li>
+<li><code class="docutils literal notranslate"><span class="pre">n</span></code>: name of the exception </li>
 </ul>
 </dd>
 </dl>
@@ -233,14 +222,14 @@ Potential matches:
 </dd></dl>
 
 <dl class="function">
-<dt id="_CPPv2N3pni4core9exception9exceptionERK6stringRK16exception_record">
-<span id="pni::core::exception::exception__stringCR.exception_recordCR"></span><span class="target" id="pnicoreclasspni_1_1core_1_1exception_1af574a407d204e92276d61c101e6536bd"></span><code class="descname">exception</code><span class="sig-paren">(</span><em class="property">const</em> string &amp;<em>n</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv2N3pni4core16exception_recordE" title="pni::core::exception_record">exception_record</a> &amp;<em>rec</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3pni4core9exception9exceptionERK6stringRK16exception_record" title="Permalink to this definition">¶</a></dt>
+<dt id="_CPPv4N3pni4core9exception9exceptionERK6stringRK16exception_record">
+<span id="_CPPv3N3pni4core9exception9exceptionERK6stringRK16exception_record"></span><span id="_CPPv2N3pni4core9exception9exceptionERK6stringRK16exception_record"></span><span id="pni::core::exception::exception__stringCR.exception_recordCR"></span><span class="target" id="classpni_1_1core_1_1exception_1af574a407d204e92276d61c101e6536bd"></span><code class="descname">exception</code><span class="sig-paren">(</span><em class="property">const</em> string &amp;<em>n</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv4N3pni4core16exception_recordE" title="pni::core::exception_record">exception_record</a> &amp;<em>rec</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3pni4core9exception9exceptionERK6stringRK16exception_record" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>constructor </p>
 <p><dl class="docutils">
 <dt><strong>Parameters</strong></dt>
 <dd><ul class="breatheparameterlist first last simple">
-<li><code class="docutils literal"><span class="pre">n</span></code>: name of the exception </li>
-<li><code class="docutils literal"><span class="pre">rec</span></code>: Exception record of the initial location where the error occured </li>
+<li><code class="docutils literal notranslate"><span class="pre">n</span></code>: name of the exception </li>
+<li><code class="docutils literal notranslate"><span class="pre">rec</span></code>: Exception record of the initial location where the error occured </li>
 </ul>
 </dd>
 </dl>
@@ -248,15 +237,15 @@ Potential matches:
 </dd></dl>
 
 <dl class="function">
-<dt id="_CPPv2N3pni4core9exception9exceptionERK6stringRK16exception_recordRK6string">
-<span id="pni::core::exception::exception__stringCR.exception_recordCR.stringCR"></span><span class="target" id="pnicoreclasspni_1_1core_1_1exception_1a72c7db243a8557fb8d54c5e53e397f58"></span><code class="descname">exception</code><span class="sig-paren">(</span><em class="property">const</em> string &amp;<em>n</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv2N3pni4core16exception_recordE" title="pni::core::exception_record">exception_record</a> &amp;<em>rec</em>, <em class="property">const</em> string &amp;<em>d</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3pni4core9exception9exceptionERK6stringRK16exception_recordRK6string" title="Permalink to this definition">¶</a></dt>
+<dt id="_CPPv4N3pni4core9exception9exceptionERK6stringRK16exception_recordRK6string">
+<span id="_CPPv3N3pni4core9exception9exceptionERK6stringRK16exception_recordRK6string"></span><span id="_CPPv2N3pni4core9exception9exceptionERK6stringRK16exception_recordRK6string"></span><span id="pni::core::exception::exception__stringCR.exception_recordCR.stringCR"></span><span class="target" id="classpni_1_1core_1_1exception_1a72c7db243a8557fb8d54c5e53e397f58"></span><code class="descname">exception</code><span class="sig-paren">(</span><em class="property">const</em> string &amp;<em>n</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv4N3pni4core16exception_recordE" title="pni::core::exception_record">exception_record</a> &amp;<em>rec</em>, <em class="property">const</em> string &amp;<em>d</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3pni4core9exception9exceptionERK6stringRK16exception_recordRK6string" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>constructor </p>
 <p><dl class="docutils">
 <dt><strong>Parameters</strong></dt>
 <dd><ul class="breatheparameterlist first last simple">
-<li><code class="docutils literal"><span class="pre">n</span></code>: name of the exception </li>
-<li><code class="docutils literal"><span class="pre">rec</span></code>: exception record describing the location of the first occurrence of the error </li>
-<li><code class="docutils literal"><span class="pre">d</span></code>: description of the exception </li>
+<li><code class="docutils literal notranslate"><span class="pre">n</span></code>: name of the exception </li>
+<li><code class="docutils literal notranslate"><span class="pre">rec</span></code>: exception record describing the location of the first occurrence of the error </li>
+<li><code class="docutils literal notranslate"><span class="pre">d</span></code>: description of the exception </li>
 </ul>
 </dd>
 </dl>
@@ -264,19 +253,19 @@ Potential matches:
 </dd></dl>
 
 <dl class="function">
-<dt id="_CPPv2N3pni4core9exceptionD0Ev">
-<span id="pni::core::exception::~exception"></span><span class="target" id="pnicoreclasspni_1_1core_1_1exception_1a0213f98b80d748b48ba38dad71f37cd3"></span><em class="property">virtual</em> <code class="descname">~exception</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3pni4core9exceptionD0Ev" title="Permalink to this definition">¶</a></dt>
+<dt id="_CPPv4N3pni4core9exceptionD0Ev">
+<span id="_CPPv3N3pni4core9exceptionD0Ev"></span><span id="_CPPv2N3pni4core9exceptionD0Ev"></span><span id="pni::core::exception::~exception"></span><span class="target" id="classpni_1_1core_1_1exception_1a0213f98b80d748b48ba38dad71f37cd3"></span><em class="property">virtual</em> <code class="descname">~exception</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3pni4core9exceptionD0Ev" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>virtual destructor </p>
 </dd></dl>
 
 <dl class="function">
-<dt id="_CPPv2N3pni4core9exception4nameERKNSt6stringE">
-<span id="pni::core::exception::name__ssCR"></span><span class="target" id="pnicoreclasspni_1_1core_1_1exception_1a6748293e43d098084265dd96273fd90c"></span>void <code class="descname">name</code><span class="sig-paren">(</span><em class="property">const</em> std::string &amp;<em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3pni4core9exception4nameERKNSt6stringE" title="Permalink to this definition">¶</a></dt>
+<dt id="_CPPv4N3pni4core9exception4nameERKNSt6stringE">
+<span id="_CPPv3N3pni4core9exception4nameERKNSt6stringE"></span><span id="_CPPv2N3pni4core9exception4nameERKNSt6stringE"></span><span id="pni::core::exception::name__ssCR"></span><span class="target" id="classpni_1_1core_1_1exception_1a6748293e43d098084265dd96273fd90c"></span>void <code class="descname">name</code><span class="sig-paren">(</span><em class="property">const</em> std::string &amp;<em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3pni4core9exception4nameERKNSt6stringE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>set the exception name </p>
 <p><dl class="docutils">
 <dt><strong>Parameters</strong></dt>
 <dd><ul class="breatheparameterlist first last simple">
-<li><code class="docutils literal"><span class="pre">name</span></code>: exception name </li>
+<li><code class="docutils literal notranslate"><span class="pre">name</span></code>: exception name </li>
 </ul>
 </dd>
 </dl>
@@ -284,8 +273,8 @@ Potential matches:
 </dd></dl>
 
 <dl class="function">
-<dt id="_CPPv2NK3pni4core9exception4nameEv">
-<span id="pni::core::exception::nameC"></span><span class="target" id="pnicoreclasspni_1_1core_1_1exception_1a7182bf165b2826753fc47c0c5950bce6"></span><em class="property">const</em> string &amp;<code class="descname">name</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv2NK3pni4core9exception4nameEv" title="Permalink to this definition">¶</a></dt>
+<dt id="_CPPv4NK3pni4core9exception4nameEv">
+<span id="_CPPv3NK3pni4core9exception4nameEv"></span><span id="_CPPv2NK3pni4core9exception4nameEv"></span><span id="pni::core::exception::nameC"></span><span class="target" id="classpni_1_1core_1_1exception_1a7182bf165b2826753fc47c0c5950bce6"></span><em class="property">const</em> string &amp;<code class="descname">name</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK3pni4core9exception4nameEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>get the exceptions name </p>
 <p><dl class="docutils">
 <dt><strong>Return</strong></dt>
@@ -295,11 +284,11 @@ Potential matches:
 </dd></dl>
 
 <dl class="function">
-<dt id="_CPPv2N3pni4core9exception6appendERK16exception_record">
-<span id="pni::core::exception::append__exception_recordCR"></span><span class="target" id="pnicoreclasspni_1_1core_1_1exception_1ab8580904c0af2404f5856c34150e029b"></span>void <code class="descname">append</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv2N3pni4core16exception_recordE" title="pni::core::exception_record">exception_record</a> &amp;<em>n</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3pni4core9exception6appendERK16exception_record" title="Permalink to this definition">¶</a></dt>
+<dt id="_CPPv4N3pni4core9exception6appendERK16exception_record">
+<span id="_CPPv3N3pni4core9exception6appendERK16exception_record"></span><span id="_CPPv2N3pni4core9exception6appendERK16exception_record"></span><span id="pni::core::exception::append__exception_recordCR"></span><span class="target" id="classpni_1_1core_1_1exception_1ab8580904c0af2404f5856c34150e029b"></span>void <code class="descname">append</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4N3pni4core16exception_recordE" title="pni::core::exception_record">exception_record</a> &amp;<em>n</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3pni4core9exception6appendERK16exception_record" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>add a new issuer </p>
 <p>Use this method to add a new issuer in the case that the exception is re-thrown by an other function or class method.</p>
-<p><div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">...</span>
+<p><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">...</span>
 <span class="n">catch</span><span class="p">(</span><span class="n">exception</span> <span class="o">&amp;</span><span class="n">error</span><span class="p">)</span>
 <span class="p">{</span>
     <span class="n">error</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">EXCEPTION_RECORD</span><span class="p">);</span>
@@ -311,7 +300,7 @@ With this a particular exception can be traced througout the entire code.</p>
 <p><dl class="docutils">
 <dt><strong>Parameters</strong></dt>
 <dd><ul class="breatheparameterlist first last simple">
-<li><code class="docutils literal"><span class="pre">n</span></code>: <a class="reference internal" href="#pnicoreclasspni_1_1core_1_1exception__record"><span class="std std-ref">exception_record</span></a> to append </li>
+<li><code class="docutils literal notranslate"><span class="pre">n</span></code>: <a class="reference internal" href="#classpni_1_1core_1_1exception__record"><span class="std std-ref">exception_record</span></a> to append </li>
 </ul>
 </dd>
 </dl>
@@ -319,13 +308,13 @@ With this a particular exception can be traced througout the entire code.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="_CPPv2N3pni4core9exception11descriptionERKNSt6stringE">
-<span id="pni::core::exception::description__ssCR"></span><span class="target" id="pnicoreclasspni_1_1core_1_1exception_1a037f9cd0159dc7a105164f646a34dc96"></span>void <code class="descname">description</code><span class="sig-paren">(</span><em class="property">const</em> std::string &amp;<em>desc</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N3pni4core9exception11descriptionERKNSt6stringE" title="Permalink to this definition">¶</a></dt>
+<dt id="_CPPv4N3pni4core9exception11descriptionERKNSt6stringE">
+<span id="_CPPv3N3pni4core9exception11descriptionERKNSt6stringE"></span><span id="_CPPv2N3pni4core9exception11descriptionERKNSt6stringE"></span><span id="pni::core::exception::description__ssCR"></span><span class="target" id="classpni_1_1core_1_1exception_1a037f9cd0159dc7a105164f646a34dc96"></span>void <code class="descname">description</code><span class="sig-paren">(</span><em class="property">const</em> std::string &amp;<em>desc</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3pni4core9exception11descriptionERKNSt6stringE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>set exception desccription </p>
 <p><dl class="docutils">
 <dt><strong>Parameters</strong></dt>
 <dd><ul class="breatheparameterlist first last simple">
-<li><code class="docutils literal"><span class="pre">desc</span></code>: description of the exception </li>
+<li><code class="docutils literal notranslate"><span class="pre">desc</span></code>: description of the exception </li>
 </ul>
 </dd>
 </dl>
@@ -333,8 +322,8 @@ With this a particular exception can be traced througout the entire code.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="_CPPv2NK3pni4core9exception11descriptionEv">
-<span id="pni::core::exception::descriptionC"></span><span class="target" id="pnicoreclasspni_1_1core_1_1exception_1a029d6796ee03f4a1052bfcc595ae7637"></span><em class="property">const</em> string &amp;<code class="descname">description</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv2NK3pni4core9exception11descriptionEv" title="Permalink to this definition">¶</a></dt>
+<dt id="_CPPv4NK3pni4core9exception11descriptionEv">
+<span id="_CPPv3NK3pni4core9exception11descriptionEv"></span><span id="_CPPv2NK3pni4core9exception11descriptionEv"></span><span id="pni::core::exception::descriptionC"></span><span class="target" id="classpni_1_1core_1_1exception_1a029d6796ee03f4a1052bfcc595ae7637"></span><em class="property">const</em> string &amp;<code class="descname">description</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK3pni4core9exception11descriptionEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>get the exceptions description </p>
 <p><dl class="docutils">
 <dt><strong>Return</strong></dt>
@@ -344,8 +333,8 @@ With this a particular exception can be traced througout the entire code.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="_CPPv2NK3pni4core9exception4sizeEv">
-<span id="pni::core::exception::sizeC"></span><span class="target" id="pnicoreclasspni_1_1core_1_1exception_1aabe5211a8cb412755dbd838e9f4a6e57"></span>size_t <code class="descname">size</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv2NK3pni4core9exception4sizeEv" title="Permalink to this definition">¶</a></dt>
+<dt id="_CPPv4NK3pni4core9exception4sizeEv">
+<span id="_CPPv3NK3pni4core9exception4sizeEv"></span><span id="_CPPv2NK3pni4core9exception4sizeEv"></span><span id="pni::core::exception::sizeC"></span><span class="target" id="classpni_1_1core_1_1exception_1aabe5211a8cb412755dbd838e9f4a6e57"></span>size_t <code class="descname">size</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK3pni4core9exception4sizeEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>get number of record </p>
 <p>Returns the number of records associated with this exception.</p>
 <p><dl class="docutils">
@@ -356,8 +345,8 @@ With this a particular exception can be traced througout the entire code.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="_CPPv2NK3pni4core9exception5beginEv">
-<span id="pni::core::exception::beginC"></span><span class="target" id="pnicoreclasspni_1_1core_1_1exception_1ad436bbbf0f873bc319cf479bd0b53f91"></span><a class="reference internal" href="#_CPPv2N3pni4core9exception14const_iteratorE" title="pni::core::exception::const_iterator">const_iterator</a> <code class="descname">begin</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv2NK3pni4core9exception5beginEv" title="Permalink to this definition">¶</a></dt>
+<dt id="_CPPv4NK3pni4core9exception5beginEv">
+<span id="_CPPv3NK3pni4core9exception5beginEv"></span><span id="_CPPv2NK3pni4core9exception5beginEv"></span><span id="pni::core::exception::beginC"></span><span class="target" id="classpni_1_1core_1_1exception_1ad436bbbf0f873bc319cf479bd0b53f91"></span><a class="reference internal" href="#_CPPv4N3pni4core9exception14const_iteratorE" title="pni::core::exception::const_iterator">const_iterator</a> <code class="descname">begin</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK3pni4core9exception5beginEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>get iterator to first error record </p>
 <p>Return get a const iterator to the first error record in the class.</p>
 <p><dl class="docutils">
@@ -368,8 +357,8 @@ With this a particular exception can be traced througout the entire code.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="_CPPv2NK3pni4core9exception3endEv">
-<span id="pni::core::exception::endC"></span><span class="target" id="pnicoreclasspni_1_1core_1_1exception_1a521184c0aa95c2d2d8652748cdfe368f"></span><a class="reference internal" href="#_CPPv2N3pni4core9exception14const_iteratorE" title="pni::core::exception::const_iterator">const_iterator</a> <code class="descname">end</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv2NK3pni4core9exception3endEv" title="Permalink to this definition">¶</a></dt>
+<dt id="_CPPv4NK3pni4core9exception3endEv">
+<span id="_CPPv3NK3pni4core9exception3endEv"></span><span id="_CPPv2NK3pni4core9exception3endEv"></span><span id="pni::core::exception::endC"></span><span class="target" id="classpni_1_1core_1_1exception_1a521184c0aa95c2d2d8652748cdfe368f"></span><a class="reference internal" href="#_CPPv4N3pni4core9exception14const_iteratorE" title="pni::core::exception::const_iterator">const_iterator</a> <code class="descname">end</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK3pni4core9exception3endEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>get iterator to the last error record </p>
 <p>Return a const iterator pointing to the last+1 element in the exception record list.</p>
 <p><dl class="docutils">
@@ -383,8 +372,8 @@ With this a particular exception can be traced througout the entire code.</p>
 <div class="breathe-sectiondef docutils container">
 <p class="breathe-sectiondef-title rubric">Friends</p>
 <dl class="function">
-<dt>
-<span class="target" id="pnicoreclasspni_1_1core_1_1exception_1ae7694a11ac79c90ab9d21c2756092f8b"></span><code class="descname">PNICORE_EXPORT std::ostream&amp; operator&lt;&lt;(std::ostream &amp; ostr, const  exception  &amp; ex)</code></dt>
+<dt id="_CPPv4lsRNSt7ostreamERK9exception">
+<span id="_CPPv3lsRNSt7ostreamERK9exception"></span><span id="_CPPv2lsRNSt7ostreamERK9exception"></span><span id="lshift-operator__osR.exceptionCR"></span><span class="target" id="classpni_1_1core_1_1exception_1ae7694a11ac79c90ab9d21c2756092f8b"></span>PNICORE_EXPORT std::ostream &amp;<code class="descname">operator&lt;&lt;</code><span class="sig-paren">(</span>std::ostream &amp;<em>ostr</em>, <em class="property">const</em> exception &amp;<em>ex</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4lsRNSt7ostreamERK9exception" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>output operator for exceptions </p>
 </dd></dl>
 
@@ -393,126 +382,111 @@ With this a particular exception can be traced througout the entire code.</p>
 
 <div class="section" id="exception-classes">
 <h3>Exception classes<a class="headerlink" href="#exception-classes" title="Permalink to this headline">¶</a></h3>
-<p>These classes have the same interface as <a class="reference internal" href="#_CPPv2N3pni4core9exceptionE" title="pni::core::exception"><code class="xref cpp cpp-class docutils literal"><span class="pre">pni::core::exception</span></code></a> but
+<p>These classes have the same interface as <a class="reference internal" href="#_CPPv4N3pni4core9exceptionE" title="pni::core::exception"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">pni::core::exception</span></code></a> but
 denote different failure situations.</p>
 <dl class="class">
-<dt id="_CPPv2N3pni4core23memory_allocation_errorE">
-<span id="pni::core::memory_allocation_error"></span><span class="target" id="pnicoreclasspni_1_1core_1_1memory__allocation__error"></span><em class="property">class </em><code class="descclassname">pni::core::</code><code class="descname">memory_allocation_error</code><a class="headerlink" href="#_CPPv2N3pni4core23memory_allocation_errorE" title="Permalink to this definition">¶</a></dt>
+<dt id="_CPPv4N3pni4core23memory_allocation_errorE">
+<span id="_CPPv3N3pni4core23memory_allocation_errorE"></span><span id="_CPPv2N3pni4core23memory_allocation_errorE"></span><span id="pni::core::memory_allocation_error"></span><span class="target" id="classpni_1_1core_1_1memory__allocation__error"></span><em class="property">class </em><code class="descname">memory_allocation_error</code> : <em class="property">public</em> pni::core::<a class="reference internal" href="#_CPPv4N3pni4core9exceptionE" title="pni::core::exception">exception</a><a class="headerlink" href="#_CPPv4N3pni4core23memory_allocation_errorE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>memory allocation error </p>
 <p>This exception is typically raised when allocation of memory on the heap fails. In other words when a call to new leads to a nullptr. </p>
-<p>Inherits from <a class="reference internal" href="#pnicoreclasspni_1_1core_1_1exception"><span class="std std-ref">pni::core::exception</span></a></p>
 </dd></dl>
 
 <dl class="class">
-<dt id="_CPPv2N3pni4core26memory_not_allocated_errorE">
-<span id="pni::core::memory_not_allocated_error"></span><span class="target" id="pnicoreclasspni_1_1core_1_1memory__not__allocated__error"></span><em class="property">class </em><code class="descclassname">pni::core::</code><code class="descname">memory_not_allocated_error</code><a class="headerlink" href="#_CPPv2N3pni4core26memory_not_allocated_errorE" title="Permalink to this definition">¶</a></dt>
+<dt id="_CPPv4N3pni4core26memory_not_allocated_errorE">
+<span id="_CPPv3N3pni4core26memory_not_allocated_errorE"></span><span id="_CPPv2N3pni4core26memory_not_allocated_errorE"></span><span id="pni::core::memory_not_allocated_error"></span><span class="target" id="classpni_1_1core_1_1memory__not__allocated__error"></span><em class="property">class </em><code class="descname">memory_not_allocated_error</code> : <em class="property">public</em> pni::core::<a class="reference internal" href="#_CPPv4N3pni4core9exceptionE" title="pni::core::exception">exception</a><a class="headerlink" href="#_CPPv4N3pni4core26memory_not_allocated_errorE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>memory not allocated error </p>
 <p>This exception is usually thrown if one tries to access not allocated memory. </p>
-<p>Inherits from <a class="reference internal" href="#pnicoreclasspni_1_1core_1_1exception"><span class="std std-ref">pni::core::exception</span></a></p>
 </dd></dl>
 
 <dl class="class">
-<dt id="_CPPv2N3pni4core20shape_mismatch_errorE">
-<span id="pni::core::shape_mismatch_error"></span><span class="target" id="pnicoreclasspni_1_1core_1_1shape__mismatch__error"></span><em class="property">class </em><code class="descclassname">pni::core::</code><code class="descname">shape_mismatch_error</code><a class="headerlink" href="#_CPPv2N3pni4core20shape_mismatch_errorE" title="Permalink to this definition">¶</a></dt>
+<dt id="_CPPv4N3pni4core20shape_mismatch_errorE">
+<span id="_CPPv3N3pni4core20shape_mismatch_errorE"></span><span id="_CPPv2N3pni4core20shape_mismatch_errorE"></span><span id="pni::core::shape_mismatch_error"></span><span class="target" id="classpni_1_1core_1_1shape__mismatch__error"></span><em class="property">class </em><code class="descname">shape_mismatch_error</code> : <em class="property">public</em> pni::core::<a class="reference internal" href="#_CPPv4N3pni4core9exceptionE" title="pni::core::exception">exception</a><a class="headerlink" href="#_CPPv4N3pni4core20shape_mismatch_errorE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Shape mismatch error. </p>
 <p>Raised in cases where the Shape objects of two objects are not equal. </p>
-<p>Inherits from <a class="reference internal" href="#pnicoreclasspni_1_1core_1_1exception"><span class="std std-ref">pni::core::exception</span></a></p>
 </dd></dl>
 
 <dl class="class">
-<dt id="_CPPv2N3pni4core19size_mismatch_errorE">
-<span id="pni::core::size_mismatch_error"></span><span class="target" id="pnicoreclasspni_1_1core_1_1size__mismatch__error"></span><em class="property">class </em><code class="descclassname">pni::core::</code><code class="descname">size_mismatch_error</code><a class="headerlink" href="#_CPPv2N3pni4core19size_mismatch_errorE" title="Permalink to this definition">¶</a></dt>
+<dt id="_CPPv4N3pni4core19size_mismatch_errorE">
+<span id="_CPPv3N3pni4core19size_mismatch_errorE"></span><span id="_CPPv2N3pni4core19size_mismatch_errorE"></span><span id="pni::core::size_mismatch_error"></span><span class="target" id="classpni_1_1core_1_1size__mismatch__error"></span><em class="property">class </em><code class="descname">size_mismatch_error</code> : <em class="property">public</em> pni::core::<a class="reference internal" href="#_CPPv4N3pni4core9exceptionE" title="pni::core::exception">exception</a><a class="headerlink" href="#_CPPv4N3pni4core19size_mismatch_errorE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Size mismatch error. </p>
 <p>This exception will be raised in cases where buffer sizes do not meet the requirements. </p>
-<p>Inherits from <a class="reference internal" href="#pnicoreclasspni_1_1core_1_1exception"><span class="std std-ref">pni::core::exception</span></a></p>
 </dd></dl>
 
 <dl class="class">
-<dt id="_CPPv2N3pni4core11index_errorE">
-<span id="pni::core::index_error"></span><span class="target" id="pnicoreclasspni_1_1core_1_1index__error"></span><em class="property">class </em><code class="descclassname">pni::core::</code><code class="descname">index_error</code><a class="headerlink" href="#_CPPv2N3pni4core11index_errorE" title="Permalink to this definition">¶</a></dt>
+<dt id="_CPPv4N3pni4core11index_errorE">
+<span id="_CPPv3N3pni4core11index_errorE"></span><span id="_CPPv2N3pni4core11index_errorE"></span><span id="pni::core::index_error"></span><span class="target" id="classpni_1_1core_1_1index__error"></span><em class="property">class </em><code class="descname">index_error</code> : <em class="property">public</em> pni::core::<a class="reference internal" href="#_CPPv4N3pni4core9exceptionE" title="pni::core::exception">exception</a><a class="headerlink" href="#_CPPv4N3pni4core11index_errorE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>index error </p>
 <p>Raised if the index passed to a [] operator exceeds the size of the container it belongs to. </p>
-<p>Inherits from <a class="reference internal" href="#pnicoreclasspni_1_1core_1_1exception"><span class="std std-ref">pni::core::exception</span></a></p>
 </dd></dl>
 
 <dl class="class">
-<dt id="_CPPv2N3pni4core9key_errorE">
-<span id="pni::core::key_error"></span><span class="target" id="pnicoreclasspni_1_1core_1_1key__error"></span><em class="property">class </em><code class="descclassname">pni::core::</code><code class="descname">key_error</code><a class="headerlink" href="#_CPPv2N3pni4core9key_errorE" title="Permalink to this definition">¶</a></dt>
+<dt id="_CPPv4N3pni4core9key_errorE">
+<span id="_CPPv3N3pni4core9key_errorE"></span><span id="_CPPv2N3pni4core9key_errorE"></span><span id="pni::core::key_error"></span><span class="target" id="classpni_1_1core_1_1key__error"></span><em class="property">class </em><code class="descname">key_error</code> : <em class="property">public</em> pni::core::<a class="reference internal" href="#_CPPv4N3pni4core9exceptionE" title="pni::core::exception">exception</a><a class="headerlink" href="#_CPPv4N3pni4core9key_errorE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>key error </p>
 <p>Raised in cases where a problem with the key of a hash map occurs. </p>
-<p>Inherits from <a class="reference internal" href="#pnicoreclasspni_1_1core_1_1exception"><span class="std std-ref">pni::core::exception</span></a></p>
 </dd></dl>
 
 <dl class="class">
-<dt id="_CPPv2N3pni4core10file_errorE">
-<span id="pni::core::file_error"></span><span class="target" id="pnicoreclasspni_1_1core_1_1file__error"></span><em class="property">class </em><code class="descclassname">pni::core::</code><code class="descname">file_error</code><a class="headerlink" href="#_CPPv2N3pni4core10file_errorE" title="Permalink to this definition">¶</a></dt>
+<dt id="_CPPv4N3pni4core10file_errorE">
+<span id="_CPPv3N3pni4core10file_errorE"></span><span id="_CPPv2N3pni4core10file_errorE"></span><span id="pni::core::file_error"></span><span class="target" id="classpni_1_1core_1_1file__error"></span><em class="property">class </em><code class="descname">file_error</code> : <em class="property">public</em> pni::core::<a class="reference internal" href="#_CPPv4N3pni4core9exceptionE" title="pni::core::exception">exception</a><a class="headerlink" href="#_CPPv4N3pni4core10file_errorE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>file IO fails </p>
 <p>Raised typically in cases of problems with files. </p>
-<p>Inherits from <a class="reference internal" href="#pnicoreclasspni_1_1core_1_1exception"><span class="std std-ref">pni::core::exception</span></a></p>
 </dd></dl>
 
 <dl class="class">
-<dt id="_CPPv2N3pni4core10type_errorE">
-<span id="pni::core::type_error"></span><span class="target" id="pnicoreclasspni_1_1core_1_1type__error"></span><em class="property">class </em><code class="descclassname">pni::core::</code><code class="descname">type_error</code><a class="headerlink" href="#_CPPv2N3pni4core10type_errorE" title="Permalink to this definition">¶</a></dt>
+<dt id="_CPPv4N3pni4core10type_errorE">
+<span id="_CPPv3N3pni4core10type_errorE"></span><span id="_CPPv2N3pni4core10type_errorE"></span><span id="pni::core::type_error"></span><span class="target" id="classpni_1_1core_1_1type__error"></span><em class="property">class </em><code class="descname">type_error</code> : <em class="property">public</em> pni::core::<a class="reference internal" href="#_CPPv4N3pni4core9exceptionE" title="pni::core::exception">exception</a><a class="headerlink" href="#_CPPv4N3pni4core10type_errorE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>data type error </p>
 <p>This exception is raised in cases of errors concerning data types. </p>
-<p>Inherits from <a class="reference internal" href="#pnicoreclasspni_1_1core_1_1exception"><span class="std std-ref">pni::core::exception</span></a></p>
 </dd></dl>
 
 <dl class="class">
-<dt id="_CPPv2N3pni4core11value_errorE">
-<span id="pni::core::value_error"></span><span class="target" id="pnicoreclasspni_1_1core_1_1value__error"></span><em class="property">class </em><code class="descclassname">pni::core::</code><code class="descname">value_error</code><a class="headerlink" href="#_CPPv2N3pni4core11value_errorE" title="Permalink to this definition">¶</a></dt>
+<dt id="_CPPv4N3pni4core11value_errorE">
+<span id="_CPPv3N3pni4core11value_errorE"></span><span id="_CPPv2N3pni4core11value_errorE"></span><span id="pni::core::value_error"></span><span class="target" id="classpni_1_1core_1_1value__error"></span><em class="property">class </em><code class="descname">value_error</code> : <em class="property">public</em> pni::core::<a class="reference internal" href="#_CPPv4N3pni4core9exceptionE" title="pni::core::exception">exception</a><a class="headerlink" href="#_CPPv4N3pni4core11value_errorE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>data value error </p>
 <p>This exception is raised in cases where a particular variable takes an inappropriate value. </p>
-<p>Inherits from <a class="reference internal" href="#pnicoreclasspni_1_1core_1_1exception"><span class="std std-ref">pni::core::exception</span></a></p>
 </dd></dl>
 
 <dl class="class">
-<dt id="_CPPv2N3pni4core11range_errorE">
-<span id="pni::core::range_error"></span><span class="target" id="pnicoreclasspni_1_1core_1_1range__error"></span><em class="property">class </em><code class="descclassname">pni::core::</code><code class="descname">range_error</code><a class="headerlink" href="#_CPPv2N3pni4core11range_errorE" title="Permalink to this definition">¶</a></dt>
+<dt id="_CPPv4N3pni4core11range_errorE">
+<span id="_CPPv3N3pni4core11range_errorE"></span><span id="_CPPv2N3pni4core11range_errorE"></span><span id="pni::core::range_error"></span><span class="target" id="classpni_1_1core_1_1range__error"></span><em class="property">class </em><code class="descname">range_error</code> : <em class="property">public</em> pni::core::<a class="reference internal" href="#_CPPv4N3pni4core9exceptionE" title="pni::core::exception">exception</a><a class="headerlink" href="#_CPPv4N3pni4core11range_errorE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>data range error </p>
 <p>This exception is raised in cases where data values exceed the range spanned by their data type. </p>
-<p>Inherits from <a class="reference internal" href="#pnicoreclasspni_1_1core_1_1exception"><span class="std std-ref">pni::core::exception</span></a></p>
 </dd></dl>
 
 <dl class="class">
-<dt id="_CPPv2N3pni4core21not_implemented_errorE">
-<span id="pni::core::not_implemented_error"></span><span class="target" id="pnicoreclasspni_1_1core_1_1not__implemented__error"></span><em class="property">class </em><code class="descclassname">pni::core::</code><code class="descname">not_implemented_error</code><a class="headerlink" href="#_CPPv2N3pni4core21not_implemented_errorE" title="Permalink to this definition">¶</a></dt>
+<dt id="_CPPv4N3pni4core21not_implemented_errorE">
+<span id="_CPPv3N3pni4core21not_implemented_errorE"></span><span id="_CPPv2N3pni4core21not_implemented_errorE"></span><span id="pni::core::not_implemented_error"></span><span class="target" id="classpni_1_1core_1_1not__implemented__error"></span><em class="property">class </em><code class="descname">not_implemented_error</code> : <em class="property">public</em> pni::core::<a class="reference internal" href="#_CPPv4N3pni4core9exceptionE" title="pni::core::exception">exception</a><a class="headerlink" href="#_CPPv4N3pni4core21not_implemented_errorE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>not implemented exception </p>
 <p>This exception can be used to mark methods of abstract or base classes as not implemented. Such an approach can be quite useful for debugging and development. </p>
-<p>Inherits from <a class="reference internal" href="#pnicoreclasspni_1_1core_1_1exception"><span class="std std-ref">pni::core::exception</span></a></p>
 </dd></dl>
 
 <dl class="class">
-<dt id="_CPPv2N3pni4core14iterator_errorE">
-<span id="pni::core::iterator_error"></span><span class="target" id="pnicoreclasspni_1_1core_1_1iterator__error"></span><em class="property">class </em><code class="descclassname">pni::core::</code><code class="descname">iterator_error</code><a class="headerlink" href="#_CPPv2N3pni4core14iterator_errorE" title="Permalink to this definition">¶</a></dt>
+<dt id="_CPPv4N3pni4core14iterator_errorE">
+<span id="_CPPv3N3pni4core14iterator_errorE"></span><span id="_CPPv2N3pni4core14iterator_errorE"></span><span id="pni::core::iterator_error"></span><span class="target" id="classpni_1_1core_1_1iterator__error"></span><em class="property">class </em><code class="descname">iterator_error</code> : <em class="property">public</em> pni::core::<a class="reference internal" href="#_CPPv4N3pni4core9exceptionE" title="pni::core::exception">exception</a><a class="headerlink" href="#_CPPv4N3pni4core14iterator_errorE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>iterator error </p>
 <p>Exception thrown in case of iterator errors. </p>
-<p>Inherits from <a class="reference internal" href="#pnicoreclasspni_1_1core_1_1exception"><span class="std std-ref">pni::core::exception</span></a></p>
 </dd></dl>
 
 <dl class="class">
-<dt id="_CPPv2N3pni4core18cli_argument_errorE">
-<span id="pni::core::cli_argument_error"></span><span class="target" id="pnicoreclasspni_1_1core_1_1cli__argument__error"></span><em class="property">class </em><code class="descclassname">pni::core::</code><code class="descname">cli_argument_error</code><a class="headerlink" href="#_CPPv2N3pni4core18cli_argument_errorE" title="Permalink to this definition">¶</a></dt>
+<dt id="_CPPv4N3pni4core18cli_argument_errorE">
+<span id="_CPPv3N3pni4core18cli_argument_errorE"></span><span id="_CPPv2N3pni4core18cli_argument_errorE"></span><span id="pni::core::cli_argument_error"></span><span class="target" id="classpni_1_1core_1_1cli__argument__error"></span><em class="property">class </em><code class="descname">cli_argument_error</code> : <em class="property">public</em> pni::core::<a class="reference internal" href="#_CPPv4N3pni4core9exceptionE" title="pni::core::exception">exception</a><a class="headerlink" href="#_CPPv4N3pni4core18cli_argument_errorE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>command line argument error </p>
 <p>Thrown in cases where a command line argument (do not confuse this with an option has an inapropriate value or is missing). </p>
-<p>Inherits from <a class="reference internal" href="#pnicoreclasspni_1_1core_1_1exception"><span class="std std-ref">pni::core::exception</span></a></p>
 </dd></dl>
 
 <dl class="class">
-<dt id="_CPPv2N3pni4core16cli_option_errorE">
-<span id="pni::core::cli_option_error"></span><span class="target" id="pnicoreclasspni_1_1core_1_1cli__option__error"></span><em class="property">class </em><code class="descclassname">pni::core::</code><code class="descname">cli_option_error</code><a class="headerlink" href="#_CPPv2N3pni4core16cli_option_errorE" title="Permalink to this definition">¶</a></dt>
+<dt id="_CPPv4N3pni4core16cli_option_errorE">
+<span id="_CPPv3N3pni4core16cli_option_errorE"></span><span id="_CPPv2N3pni4core16cli_option_errorE"></span><span id="pni::core::cli_option_error"></span><span class="target" id="classpni_1_1core_1_1cli__option__error"></span><em class="property">class </em><code class="descname">cli_option_error</code> : <em class="property">public</em> pni::core::<a class="reference internal" href="#_CPPv4N3pni4core9exceptionE" title="pni::core::exception">exception</a><a class="headerlink" href="#_CPPv4N3pni4core16cli_option_errorE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>command line option error </p>
 <p>Exception thrown in cases where a command line option is missing or has an inapropriate value. </p>
-<p>Inherits from <a class="reference internal" href="#pnicoreclasspni_1_1core_1_1exception"><span class="std std-ref">pni::core::exception</span></a></p>
 </dd></dl>
 
 <dl class="class">
-<dt id="_CPPv2N3pni4core9cli_errorE">
-<span id="pni::core::cli_error"></span><span class="target" id="pnicoreclasspni_1_1core_1_1cli__error"></span><em class="property">class </em><code class="descclassname">pni::core::</code><code class="descname">cli_error</code><a class="headerlink" href="#_CPPv2N3pni4core9cli_errorE" title="Permalink to this definition">¶</a></dt>
+<dt id="_CPPv4N3pni4core9cli_errorE">
+<span id="_CPPv3N3pni4core9cli_errorE"></span><span id="_CPPv2N3pni4core9cli_errorE"></span><span id="pni::core::cli_error"></span><span class="target" id="classpni_1_1core_1_1cli__error"></span><em class="property">class </em><code class="descname">cli_error</code> : <em class="property">public</em> pni::core::<a class="reference internal" href="#_CPPv4N3pni4core9exceptionE" title="pni::core::exception">exception</a><a class="headerlink" href="#_CPPv4N3pni4core9cli_errorE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>general CLI error </p>
 <p>Thrown in case of a general CLI error not related to arguments or options. </p>
-<p>Inherits from <a class="reference internal" href="#pnicoreclasspni_1_1core_1_1exception"><span class="std std-ref">pni::core::exception</span></a></p>
 </dd></dl>
 
 </div>
@@ -521,16 +495,16 @@ denote different failure situations.</p>
 <h2>Macros<a class="headerlink" href="#macros" title="Permalink to this headline">¶</a></h2>
 <dl class="macro">
 <dt id="c.EXCEPTION_RECORD">
-<span class="target" id="pnicoregroup__error__classes_1ga51dfad546cd33bda661305be8590d6fb"></span><code class="descname">EXCEPTION_RECORD</code><a class="headerlink" href="#c.EXCEPTION_RECORD" title="Permalink to this definition">¶</a></dt>
+<span class="target" id="group__error__classes_1ga51dfad546cd33bda661305be8590d6fb"></span><code class="descname">EXCEPTION_RECORD</code><a class="headerlink" href="#c.EXCEPTION_RECORD" title="Permalink to this definition">¶</a></dt>
 <dd><p>macro creating an instance of ExceptionRecord </p>
 </dd></dl>
 
 <dl class="macro">
 <dt id="c.EXCEPTION_FORWARD">
-<span class="target" id="pnicoregroup__error__classes_1ga22e4136fed8f3773d754cbda93e7e9c2"></span><code class="descname">EXCEPTION_FORWARD</code><span class="sig-paren">(</span>ETYPE<span class="sig-paren">)</span><a class="headerlink" href="#c.EXCEPTION_FORWARD" title="Permalink to this definition">¶</a></dt>
+<span class="target" id="group__error__classes_1ga22e4136fed8f3773d754cbda93e7e9c2"></span><code class="descname">EXCEPTION_FORWARD</code><span class="sig-paren">(</span>ETYPE<span class="sig-paren">)</span><a class="headerlink" href="#c.EXCEPTION_FORWARD" title="Permalink to this definition">¶</a></dt>
 <dd><p>forward an exception </p>
 <p>This macro can be used to forward an exception caught from another function. It appends the exception_record of the current function to the existing exception and throws the exception again. Consider the following examples</p>
-<p><div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">try</span> <span class="p">{</span> <span class="n">value</span> <span class="o">=</span> <span class="n">buffer</span><span class="o">.</span><span class="n">at</span><span class="p">(</span><span class="n">index</span><span class="p">);</span> <span class="p">}</span>
+<p><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">try</span> <span class="p">{</span> <span class="n">value</span> <span class="o">=</span> <span class="n">buffer</span><span class="o">.</span><span class="n">at</span><span class="p">(</span><span class="n">index</span><span class="p">);</span> <span class="p">}</span>
 <span class="n">EXCEPTION_FORWARD</span><span class="p">(</span><span class="ne">IndexError</span><span class="p">)</span>
 <span class="n">EXCEPTION_FORWARD</span><span class="p">(</span><span class="n">MemoryNotAllocatedError</span><span class="p">)</span>
 </pre></div>
@@ -543,10 +517,10 @@ Please note that the MUST NOT BE a semicolon at the end of this macro. </p>
 <h2>Utility functions<a class="headerlink" href="#utility-functions" title="Permalink to this headline">¶</a></h2>
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
-<p>doxygenfunction: Unable to resolve multiple matches for function &#8220;check_equal_size&#8221; with arguments (const A &amp;, const B &amp;) in doxygen xml output for project &#8220;pnicore&#8221; from directory: /home/jkotan/sources/libpnicore-build/doc/api_doc/xml.
+<p>doxygenfunction: Unable to resolve multiple matches for function “check_equal_size” with arguments (const A &amp;, const B &amp;) in doxygen xml output for project “pnicore” from directory: /home/jkotan/sources/libpnicore-build/doc/api_doc/xml.
 Potential matches:
 </p>
-<div class="last highlight-default"><div class="highlight"><pre><span></span><span class="o">-</span> <span class="n">template</span> <span class="o">&lt;</span><span class="n">typename</span> <span class="n">A</span><span class="p">,</span> <span class="n">typename</span> <span class="n">B</span><span class="o">&gt;</span>
+<div class="last highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span> <span class="n">template</span> <span class="o">&lt;</span><span class="n">typename</span> <span class="n">A</span><span class="p">,</span> <span class="n">typename</span> <span class="n">B</span><span class="o">&gt;</span>
   <span class="nb">bool</span> <span class="n">pni</span><span class="p">::</span><span class="n">core</span><span class="p">::</span><span class="n">check_equal_size</span><span class="p">(</span><span class="n">const</span> <span class="n">A</span><span class="o">&amp;</span><span class="p">,</span> <span class="n">const</span> <span class="n">B</span><span class="o">&amp;</span><span class="p">)</span>
 <span class="o">-</span> <span class="n">template</span> <span class="o">&lt;</span><span class="n">typename</span> <span class="n">A</span><span class="p">,</span> <span class="n">typename</span> <span class="n">B</span><span class="o">&gt;</span>
   <span class="n">void</span> <span class="n">pni</span><span class="p">::</span><span class="n">core</span><span class="p">::</span><span class="n">check_equal_size</span><span class="p">(</span><span class="n">const</span> <span class="n">A</span><span class="o">&amp;</span><span class="p">,</span> <span class="n">const</span> <span class="n">B</span><span class="o">&amp;</span><span class="p">,</span> <span class="n">const</span> <span class="n">exception_record</span><span class="o">&amp;</span><span class="p">)</span>
@@ -557,10 +531,10 @@ Potential matches:
 </div>
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
-<p>doxygenfunction: Unable to resolve multiple matches for function &#8220;check_equal_size&#8221; with arguments (const A &amp;, const B &amp;, const exception_record &amp;) in doxygen xml output for project &#8220;pnicore&#8221; from directory: /home/jkotan/sources/libpnicore-build/doc/api_doc/xml.
+<p>doxygenfunction: Unable to resolve multiple matches for function “check_equal_size” with arguments (const A &amp;, const B &amp;, const exception_record &amp;) in doxygen xml output for project “pnicore” from directory: /home/jkotan/sources/libpnicore-build/doc/api_doc/xml.
 Potential matches:
 </p>
-<div class="last highlight-default"><div class="highlight"><pre><span></span><span class="o">-</span> <span class="n">template</span> <span class="o">&lt;</span><span class="n">typename</span> <span class="n">A</span><span class="p">,</span> <span class="n">typename</span> <span class="n">B</span><span class="o">&gt;</span>
+<div class="last highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span> <span class="n">template</span> <span class="o">&lt;</span><span class="n">typename</span> <span class="n">A</span><span class="p">,</span> <span class="n">typename</span> <span class="n">B</span><span class="o">&gt;</span>
   <span class="nb">bool</span> <span class="n">pni</span><span class="p">::</span><span class="n">core</span><span class="p">::</span><span class="n">check_equal_size</span><span class="p">(</span><span class="n">const</span> <span class="n">A</span><span class="o">&amp;</span><span class="p">,</span> <span class="n">const</span> <span class="n">B</span><span class="o">&amp;</span><span class="p">)</span>
 <span class="o">-</span> <span class="n">template</span> <span class="o">&lt;</span><span class="n">typename</span> <span class="n">A</span><span class="p">,</span> <span class="n">typename</span> <span class="n">B</span><span class="o">&gt;</span>
   <span class="n">void</span> <span class="n">pni</span><span class="p">::</span><span class="n">core</span><span class="p">::</span><span class="n">check_equal_size</span><span class="p">(</span><span class="n">const</span> <span class="n">A</span><span class="o">&amp;</span><span class="p">,</span> <span class="n">const</span> <span class="n">B</span><span class="o">&amp;</span><span class="p">,</span> <span class="n">const</span> <span class="n">exception_record</span><span class="o">&amp;</span><span class="p">)</span>
@@ -596,7 +570,7 @@ Potential matches:
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2016, Eugen Wintersberger.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.9.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.4.
     </div>
   </body>
 </html>

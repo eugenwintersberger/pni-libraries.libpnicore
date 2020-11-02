@@ -2,42 +2,30 @@
 
 <!doctype html>
 
-
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
     <title>Multidimensional arrays &#8212; libpnicore 1.1.1 documentation</title>
-    
     <link rel="stylesheet" href="../_static/bizstyle.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../',
-        VERSION:     '1.1.1',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
-      };
-    </script>
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="../_static/bizstyle.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="libpnicore 1.1.1 documentation" href="../index.html" />
-    <link rel="up" title="Users guide" href="index.html" />
     <link rel="next" title="Type erasures" href="type_erasures.html" />
     <link rel="prev" title="Data Types" href="types.html" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <!--[if lt IE 9]>
     <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
     <![endif]-->
-  </head>
-  <body role="document">
+  </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -56,7 +44,7 @@
     </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <h3><a href="../index.html">Table of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Multidimensional arrays</a><ul>
 <li><a class="reference internal" href="#array-construction-and-inquery">Array construction and inquery</a></li>
@@ -84,18 +72,20 @@
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="../_sources/users_guide/arrays.txt"
+      <li><a href="../_sources/users_guide/arrays.rst.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -120,18 +110,18 @@ discussing <cite>libpnicore</cite> s array facilities some terminology should be
 <dd>referes to the data type of the individual elements stored in an MDA. For
 MDAs this will typically be a numeric type like an integer or a floating
 point number.</dd>
-<dt>rank <span class="math">\(r\)</span></dt>
+<dt>rank <span class="math notranslate nohighlight">\(r\)</span></dt>
 <dd>denotes the number of dimensions of an MDA</dd>
-<dt>shape <span class="math">\(\mathbf{s}\)</span></dt>
-<dd>is a vector of dimension <span class="math">\(r\)</span> whose elements are the
-number of elements along each dimension. The elements of <span class="math">\(\mathbf{s}\)</span> are
-denoted as <span class="math">\(s_i\)</span> with <span class="math">\(i=0,\dots,r-1\)</span></dd>
+<dt>shape <span class="math notranslate nohighlight">\(\mathbf{s}\)</span></dt>
+<dd>is a vector of dimension <span class="math notranslate nohighlight">\(r\)</span> whose elements are the
+number of elements along each dimension. The elements of <span class="math notranslate nohighlight">\(\mathbf{s}\)</span> are
+denoted as <span class="math notranslate nohighlight">\(s_i\)</span> with <span class="math notranslate nohighlight">\(i=0,\dots,r-1\)</span></dd>
 </dl>
-<p>The hart of <cite>libpnicore</cite> s MDA support is the <code class="xref cpp cpp-class docutils literal"><span class="pre">mdarray</span></code> template.
-<code class="xref cpp cpp-class docutils literal"><span class="pre">mdarray</span></code> is extremely powerfull. Thus, using <code class="xref cpp cpp-class docutils literal"><span class="pre">mdarray</span></code>
+<p>The hart of <cite>libpnicore</cite> s MDA support is the <code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">mdarray</span></code> template.
+<code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">mdarray</span></code> is extremely powerfull. Thus, using <code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">mdarray</span></code>
 directly to define array types is not for the faint harted.  To simplify the
 usage of multidimensional arrays the library provides three templates derived
-form <code class="xref cpp cpp-class docutils literal"><span class="pre">mdarray</span></code> which are easy to use.</p>
+form <code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">mdarray</span></code> which are easy to use.</p>
 <table border="1" class="docutils">
 <colgroup>
 <col width="46%" />
@@ -141,21 +131,21 @@ form <code class="xref cpp cpp-class docutils literal"><span class="pre">mdarray
 <thead valign="bottom">
 <tr class="row-odd"><th class="head">template alias</th>
 <th class="head">description</th>
-<th class="head">&nbsp;</th>
+<th class="head">&#160;</th>
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td><em>static_array&lt;T,size_t ...N&gt;</em></td>
+<tr class="row-even"><td><em>static_array&lt;T,size_t …N&gt;</em></td>
 <td>a static arrays whose shape, rank,
 and element type are fixed at
 compile time.</td>
-<td>&nbsp;</td>
+<td>&#160;</td>
 </tr>
 <tr class="row-odd"><td><em>fixed_dim_array&lt;T,R&gt;</em></td>
 <td>element type and rank are fixed at
 compile time but the shape can be
 changed at runtime.</td>
-<td>&nbsp;</td>
+<td>&#160;</td>
 </tr>
 <tr class="row-even"><td><em>dynamic_array&lt;T&gt;</em></td>
 <td>a fully dynamic array type where
@@ -163,11 +153,11 @@ only the element type must be
 known at compile time. The rank
 as well as the shape can be
 altered at runtime</td>
-<td>&nbsp;</td>
+<td>&#160;</td>
 </tr>
 </tbody>
 </table>
-<p>These types are all defined in <code class="file docutils literal"><span class="pre">pni/core/arrays.hpp</span></code>.
+<p>These types are all defined in <code class="file docutils literal notranslate"><span class="pre">pni/core/arrays.hpp</span></code>.
 In addition to this two basic templates there are several utility classes and
 templates like</p>
 <table border="1" class="docutils">
@@ -179,22 +169,22 @@ templates like</p>
 <thead valign="bottom">
 <tr class="row-odd"><th class="head">template</th>
 <th class="head">functionality</th>
-<th class="head">&nbsp;</th>
+<th class="head">&#160;</th>
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td><code class="xref cpp cpp-class docutils literal"><span class="pre">arrayview</span></code></td>
+<tr class="row-even"><td><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">arrayview</span></code></td>
 <td>this template provides a view on a
 particular part of an array</td>
-<td>&nbsp;</td>
+<td>&#160;</td>
 </tr>
-<tr class="row-odd"><td><code class="xref cpp cpp-class docutils literal"><span class="pre">arrayerasure</span></code></td>
+<tr class="row-odd"><td><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">arrayerasure</span></code></td>
 <td>type erasure for an array</td>
-<td>&nbsp;</td>
+<td>&#160;</td>
 </tr>
 </tbody>
 </table>
-<p>All array types derived from <code class="xref cpp cpp-class docutils literal"><span class="pre">mdarray</span></code> provide the following features</p>
+<p>All array types derived from <code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">mdarray</span></code> provide the following features</p>
 <ul class="simple">
 <li>unary and binary arithmetics if the element type is a numeric type.</li>
 <li>slicing to extract only a part of a large array</li>
@@ -204,11 +194,11 @@ along with STL algorithms.</li>
 </ul>
 <div class="section" id="array-construction-and-inquery">
 <h2>Array construction and inquery<a class="headerlink" href="#array-construction-and-inquery" title="Permalink to this headline">¶</a></h2>
-<p>Constructing arrays is rather simple by means of the <code class="xref cpp cpp-func docutils literal"><span class="pre">create()</span></code> function
-provided by the array templates. As shown in <code class="file docutils literal"><span class="pre">array_create.cpp</span></code></p>
+<p>Constructing arrays is rather simple by means of the <code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">create()</span></code> function
+provided by the array templates. As shown in <code class="file docutils literal notranslate"><span class="pre">array_create.cpp</span></code></p>
 <div class="literal-block-wrapper docutils container" id="id1">
-<div class="code-block-caption"><span class="caption-number">Listing 1 </span><span class="caption-text">see <code class="file docutils literal"><span class="pre">examples/array_create.cpp</span></code></span><a class="headerlink" href="#id1" title="Permalink to this code">¶</a></div>
-<div class="highlight-cpp"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>28
+<div class="code-block-caption"><span class="caption-number">Listing 1 </span><span class="caption-text">see <code class="file docutils literal notranslate"><span class="pre">examples/array_create.cpp</span></code></span><a class="headerlink" href="#id1" title="Permalink to this code">¶</a></div>
+<div class="highlight-cpp notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>28
 29
 30
 31
@@ -256,9 +246,9 @@ provided by the array templates. As shown in <code class="file docutils literal"
 </pre></div>
 </td></tr></table></div>
 </div>
-<p>In line 35 a concrete array type is defined from the <code class="xref cpp cpp-class docutils literal"><span class="pre">dynamic_array</span></code>
+<p>In line 35 a concrete array type is defined from the <code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">dynamic_array</span></code>
 utility template.
-The <code class="xref cpp cpp-func docutils literal"><span class="pre">create()</span></code> function comes in three flavors as shown in the previous
+The <code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">create()</span></code> function comes in three flavors as shown in the previous
 example</p>
 <table border="1" class="docutils">
 <colgroup>
@@ -277,7 +267,7 @@ is allocated automatically by the constructor.</td>
 </tr>
 <tr class="row-odd"><td>43</td>
 <td>The storage container with initial data is passed as a second
-argument to <code class="xref cpp cpp-func docutils literal"><span class="pre">create()</span></code> along with the shape of the
+argument to <code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">create()</span></code> along with the shape of the
 array.</td>
 </tr>
 <tr class="row-even"><td>47</td>
@@ -289,8 +279,8 @@ initializer lists.</td>
 <p>After an array has been created we may want to retrieve some of its basic
 properties. In the next example we do exactly this</p>
 <div class="literal-block-wrapper docutils container" id="id2">
-<div class="code-block-caption"><span class="caption-number">Listing 2 </span><span class="caption-text">see <code class="file docutils literal"><span class="pre">examples/array_inquery.cpp</span></code> for full code</span><a class="headerlink" href="#id2" title="Permalink to this code">¶</a></div>
-<div class="highlight-cpp"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>28
+<div class="code-block-caption"><span class="caption-number">Listing 2 </span><span class="caption-text">see <code class="file docutils literal notranslate"><span class="pre">examples/array_inquery.cpp</span></code> for full code</span><a class="headerlink" href="#id2" title="Permalink to this code">¶</a></div>
+<div class="highlight-cpp notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>28
 29
 30
 31
@@ -350,19 +340,19 @@ properties. In the next example we do exactly this</p>
 </pre></div>
 </td></tr></table></div>
 </div>
-<p>The important part is the implementation of the <code class="xref cpp cpp-func docutils literal"><span class="pre">show_info()</span></code> function
-template starting at line 37. The function template <code class="xref cpp cpp-func docutils literal"><span class="pre">type_id()</span></code> is used in
-line 40 to retrieve the type ID of the arrays element type. <code class="xref cpp cpp-func docutils literal"><span class="pre">rank()</span></code> in line
-41 returns the number of dimension and <code class="xref cpp cpp-func docutils literal"><span class="pre">size()</span></code> in line 46 the total
+<p>The important part is the implementation of the <code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">show_info()</span></code> function
+template starting at line 37. The function template <code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">type_id()</span></code> is used in
+line 40 to retrieve the type ID of the arrays element type. <code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">rank()</span></code> in line
+41 returns the number of dimension and <code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">size()</span></code> in line 46 the total
 number of elements stored in the array.
-The <code class="xref cpp cpp-func docutils literal"><span class="pre">shape()</span></code> template function in line 43 returns the number of elements
+The <code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">shape()</span></code> template function in line 43 returns the number of elements
 along each dimension stored in a user provided container type.</p>
 <p>The content of arrays can be copied to and from containers using the standard
-<code class="xref cpp cpp-func docutils literal"><span class="pre">std::copy()</span></code> template function from the STL. In addition a version of the
+<code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">std::copy()</span></code> template function from the STL. In addition a version of the
 assignment operator is provided which allows assignment of values from an
 initializer list. This is particularly useful for static arrays which basically
 do not require construction.</p>
-<div class="highlight-cpp"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="n">static_array_type</span> <span class="o">=</span> <span class="p">....;</span>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="n">static_array_type</span> <span class="o">=</span> <span class="p">....;</span>
 
 <span class="n">static_array_type</span> <span class="n">a</span><span class="p">;</span>
 <span class="n">a</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">};</span>
@@ -377,8 +367,8 @@ the iterators required by the STL.
 Before we have a look on STL lets first investigate how to simply access data
 elements in an array</p>
 <div class="literal-block-wrapper docutils container" id="id3">
-<div class="code-block-caption"><span class="caption-number">Listing 3 </span><span class="caption-text">see <code class="file docutils literal"><span class="pre">examples/array_linear_access.cpp</span></code> for full code</span><a class="headerlink" href="#id3" title="Permalink to this code">¶</a></div>
-<div class="highlight-cpp"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>28
+<div class="code-block-caption"><span class="caption-number">Listing 3 </span><span class="caption-text">see <code class="file docutils literal notranslate"><span class="pre">examples/array_linear_access.cpp</span></code> for full code</span><a class="headerlink" href="#id3" title="Permalink to this code">¶</a></div>
+<div class="highlight-cpp notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>28
 29
 30
 31
@@ -448,13 +438,13 @@ elements in an array</p>
 </div>
 <p>For all array types the new C++ <em>for-each</em> construction can be used as shown
 in lines 47 and 57. Unchecked access (no index bounds are checked) is
-provided via the <em>[]</em> operator as demonstrated in line 50 (use <code class="xref cpp cpp-func docutils literal"><span class="pre">at()</span></code>
+provided via the <em>[]</em> operator as demonstrated in line 50 (use <code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">at()</span></code>
 for checked access).
 Some of the operations in this example can be done much more efficient with STL
 algorithms as demonstrated in the next example</p>
 <div class="literal-block-wrapper docutils container" id="id4">
-<div class="code-block-caption"><span class="caption-number">Listing 4 </span><span class="caption-text">see <code class="file docutils literal"><span class="pre">examples/array_stl.cpp</span></code> for full code</span><a class="headerlink" href="#id4" title="Permalink to this code">¶</a></div>
-<div class="highlight-cpp"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>28
+<div class="code-block-caption"><span class="caption-number">Listing 4 </span><span class="caption-text">see <code class="file docutils literal notranslate"><span class="pre">examples/array_stl.cpp</span></code> for full code</span><a class="headerlink" href="#id4" title="Permalink to this code">¶</a></div>
+<div class="highlight-cpp notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>28
 29
 30
 31
@@ -520,8 +510,8 @@ algorithms as demonstrated in the next example</p>
 </pre></div>
 </td></tr></table></div>
 </div>
-<p>In line 42 <code class="xref cpp cpp-func docutils literal"><span class="pre">std::fill()</span></code> is used to initialize the array to 0 and
-<code class="xref cpp cpp-func docutils literal"><span class="pre">std::generate()</span></code> in line 48 fills it with random numbers using a lambda
+<p>In line 42 <code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">std::fill()</span></code> is used to initialize the array to 0 and
+<code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">std::generate()</span></code> in line 48 fills it with random numbers using a lambda
 expression . The rest of the example should be trivial (if not, please lookup a
 good C++ STL reference).</p>
 </div>
@@ -536,8 +526,8 @@ only linear access. It is natural for such objects to think in pixel coordinates
 array. The next example shows how to use this feature to work only on a small
 region of the image data as defined in the last example</p>
 <div class="literal-block-wrapper docutils container" id="id5">
-<div class="code-block-caption"><span class="caption-number">Listing 5 </span><span class="caption-text">see <code class="file docutils literal"><span class="pre">examples/array_multiindex.cpp</span></code> for full code</span><a class="headerlink" href="#id5" title="Permalink to this code">¶</a></div>
-<div class="highlight-cpp"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>28
+<div class="code-block-caption"><span class="caption-number">Listing 5 </span><span class="caption-text">see <code class="file docutils literal notranslate"><span class="pre">examples/array_multiindex.cpp</span></code> for full code</span><a class="headerlink" href="#id5" title="Permalink to this code">¶</a></div>
+<div class="highlight-cpp notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>28
 29
 30
 31
@@ -639,11 +629,11 @@ runtime.</p>
 <p>In the previous example multiindex access was used to do work on only a small
 part of the image data. <em>libpnicore</em> provides view types for arrays which would
 make these operations easier. Views are created by passing instances of
-<code class="xref cpp cpp-class docutils literal"><span class="pre">slice</span></code> to the <em>()</em> operator of an array type. Slices in <em>libpnicore</em> work
+<code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">slice</span></code> to the <em>()</em> operator of an array type. Slices in <em>libpnicore</em> work
 pretty much the same as in python. Lets have a look on the following example</p>
 <div class="literal-block-wrapper docutils container" id="id6">
-<div class="code-block-caption"><span class="caption-number">Listing 6 </span><span class="caption-text">see <code class="file docutils literal"><span class="pre">examples/array_view.cpp</span></code> for full code</span><a class="headerlink" href="#id6" title="Permalink to this code">¶</a></div>
-<div class="highlight-cpp"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>28
+<div class="code-block-caption"><span class="caption-number">Listing 6 </span><span class="caption-text">see <code class="file docutils literal notranslate"><span class="pre">examples/array_view.cpp</span></code> for full code</span><a class="headerlink" href="#id6" title="Permalink to this code">¶</a></div>
+<div class="highlight-cpp notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>28
 29
 30
 31
@@ -719,7 +709,7 @@ pretty much the same as in python. Lets have a look on the following example</p>
 </div>
 <p>The view is created in line 53 where the slices are passed instead of integer
 indices to the <em>()</em> operator. A slice selects an entire index range along a
-dimension. The first argument to the <code class="xref cpp cpp-class docutils literal"><span class="pre">slice</span></code> constructor is the starting
+dimension. The first argument to the <code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">slice</span></code> constructor is the starting
 index and the last the stop index of the range. The stop index is not included
 (just as it is the case with Python slices). If the <em>()</em> operator of an
 array is called with any of its arguments being a slice a view object is
@@ -731,8 +721,8 @@ STL algorithms as shown in lines 54 and 56.</p>
 <p>View types can be copied and moved and thus can be stored in STL containers as
 shown in the next example</p>
 <div class="literal-block-wrapper docutils container" id="id7">
-<div class="code-block-caption"><span class="caption-number">Listing 7 </span><span class="caption-text">see <code class="file docutils literal"><span class="pre">examples/array_view_container.cpp</span></code> for full code</span><a class="headerlink" href="#id7" title="Permalink to this code">¶</a></div>
-<div class="highlight-cpp"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>28
+<div class="code-block-caption"><span class="caption-number">Listing 7 </span><span class="caption-text">see <code class="file docutils literal notranslate"><span class="pre">examples/array_view_container.cpp</span></code> for full code</span><a class="headerlink" href="#id7" title="Permalink to this code">¶</a></div>
+<div class="highlight-cpp notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>28
 29
 30
 31
@@ -845,8 +835,8 @@ Views, arrays and scalars can be mixed within all arithmetic expressions.
 There is nothing magical with expression templates as they work entirely
 transparent to the user. Just use the arithmetic expressions as you are used to</p>
 <div class="literal-block-wrapper docutils container" id="id8">
-<div class="code-block-caption"><span class="caption-number">Listing 8 </span><span class="caption-text">see <code class="file docutils literal"><span class="pre">examples/array_arithmetic1.cpp</span></code></span><a class="headerlink" href="#id8" title="Permalink to this code">¶</a></div>
-<div class="highlight-cpp"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>28
+<div class="code-block-caption"><span class="caption-number">Listing 8 </span><span class="caption-text">see <code class="file docutils literal notranslate"><span class="pre">examples/array_arithmetic1.cpp</span></code></span><a class="headerlink" href="#id8" title="Permalink to this code">¶</a></div>
+<div class="highlight-cpp notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>28
 29
 30
 31
@@ -899,8 +889,8 @@ arithmetic expression.
 One can also mix arrays, selections, and scalars as the next examples
 shows</p>
 <div class="literal-block-wrapper docutils container" id="id9">
-<div class="code-block-caption"><span class="caption-number">Listing 9 </span><span class="caption-text">see <code class="file docutils literal"><span class="pre">examples/array_arithmetic2.cpp</span></code> for full code</span><a class="headerlink" href="#id9" title="Permalink to this code">¶</a></div>
-<div class="highlight-cpp"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>28
+<div class="code-block-caption"><span class="caption-number">Listing 9 </span><span class="caption-text">see <code class="file docutils literal notranslate"><span class="pre">examples/array_arithmetic2.cpp</span></code> for full code</span><a class="headerlink" href="#id9" title="Permalink to this code">¶</a></div>
+<div class="highlight-cpp notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>28
 29
 30
 31
@@ -966,17 +956,17 @@ shows</p>
 </div>
 <p>In line 53 a single image frame is selected from a stack of images and used in
 line 54 in an arithmetic expression. In fact, what we are doing here is,
-we are writing the corrected data back on the stack since <code class="xref cpp cpp-var docutils literal"><span class="pre">curr_frame</span></code> is
+we are writing the corrected data back on the stack since <code class="xref cpp cpp-var docutils literal notranslate"><span class="pre">curr_frame</span></code> is
 just a view on the particular image in the stack.</p>
 </div>
 <div class="section" id="example-matrix-vector-and-matrix-matrix-multiplication">
 <h2>Example: matrix-vector and matrix-matrix multiplication<a class="headerlink" href="#example-matrix-vector-and-matrix-matrix-multiplication" title="Permalink to this headline">¶</a></h2>
 <p>In the last example matrix vector multiplications are treated. The full code can
-be viewed in <code class="file docutils literal"><span class="pre">array_arithmetic3.cpp</span></code> in the source distribution. But lets
+be viewed in <code class="file docutils literal notranslate"><span class="pre">array_arithmetic3.cpp</span></code> in the source distribution. But lets
 first start with the header</p>
 <div class="literal-block-wrapper docutils container" id="id10">
-<div class="code-block-caption"><span class="caption-number">Listing 10 </span><span class="caption-text">see <code class="file docutils literal"><span class="pre">examples/array_arithmetic3.cpp</span></code> for full code</span><a class="headerlink" href="#id10" title="Permalink to this code">¶</a></div>
-<div class="highlight-cpp"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 28
+<div class="code-block-caption"><span class="caption-number">Listing 10 </span><span class="caption-text">see <code class="file docutils literal notranslate"><span class="pre">examples/array_arithmetic3.cpp</span></code> for full code</span><a class="headerlink" href="#id10" title="Permalink to this code">¶</a></div>
+<div class="highlight-cpp notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 28
  29
  30
  31
@@ -1208,12 +1198,12 @@ defined in lines 37 and 38 using the new C++11 template aliasing.</p>
 <h3>Matrix vector multiplication<a class="headerlink" href="#matrix-vector-multiplication" title="Permalink to this headline">¶</a></h3>
 <p>The implementation of the matrix vector multiplication is shown in the next
 block.</p>
-<div class="math">
+<div class="math notranslate nohighlight">
 \[\mathbf{r} = A\mathbf{v} \mbox{ or } r_j = A_{j,i}v_i\]</div>
-<p>with <span class="math">\(\mathbf{A}\)</span> denoting a <span class="math">\(N\times N\)</span> matrix and
-<span class="math">\(\mathbf{r}\)</span> and <span class="math">\(\mathbf{v}\)</span> are
-<span class="math">\(N\)</span>-dimensional vectors. In all formulas Einsteins sum convention is used.</p>
-<div class="highlight-cpp"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>66
+<p>with <span class="math notranslate nohighlight">\(\mathbf{A}\)</span> denoting a <span class="math notranslate nohighlight">\(N\times N\)</span> matrix and
+<span class="math notranslate nohighlight">\(\mathbf{r}\)</span> and <span class="math notranslate nohighlight">\(\mathbf{v}\)</span> are
+<span class="math notranslate nohighlight">\(N\)</span>-dimensional vectors. In all formulas Einsteins sum convention is used.</p>
+<div class="highlight-cpp notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>66
 67
 68
 69
@@ -1240,16 +1230,16 @@ block.</p>
 <span class="p">}</span>
 </pre></div>
 </td></tr></table></div>
-<p>In line 74 we select the <span class="math">\(i\)</span>-th row of the matrix and compute the inner
+<p>In line 74 we select the <span class="math notranslate nohighlight">\(i\)</span>-th row of the matrix and compute the inner
 product of the row vector and the input vector in line 75.</p>
 </div>
 <div class="section" id="vector-matrix-multiplication">
 <h3>Vector matrix multiplication<a class="headerlink" href="#vector-matrix-multiplication" title="Permalink to this headline">¶</a></h3>
 <p>The vector matrix multiplication</p>
-<div class="math">
+<div class="math notranslate nohighlight">
 \[\mathbf{r} = \mathbf{v}A\mbox{ or } r_i = v_j A_{j,i}\]</div>
 <p>is computed analogously</p>
-<div class="highlight-cpp"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>82
+<div class="highlight-cpp notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>82
 83
 84
 85
@@ -1283,9 +1273,9 @@ line 90.</p>
 <h3>Matrix matrix multiplication<a class="headerlink" href="#matrix-matrix-multiplication" title="Permalink to this headline">¶</a></h3>
 <p>Finally we need an implementation for the matrix - matrix
 multiplication</p>
-<div class="math">
+<div class="math notranslate nohighlight">
 \[C = AB \mbox{ or } C_{i,j} = A_{i,k}B_{k,j}\]</div>
-<div class="highlight-cpp"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 98
+<div class="highlight-cpp notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 98
  99
 100
 101
@@ -1326,7 +1316,7 @@ Line 109 finally computes the inner product of the row and column vector.</p>
 <div class="section" id="putting-it-all-together-the-main-function">
 <h3>Putting it all together: the main function<a class="headerlink" href="#putting-it-all-together-the-main-function" title="Permalink to this headline">¶</a></h3>
 <p>Finally the main program shows a simple application of these template functions.</p>
-<div class="highlight-cpp"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>123
+<div class="highlight-cpp notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>123
 124
 125
 126
@@ -1365,7 +1355,7 @@ Line 109 finally computes the inner product of the row and column vector.</p>
 types of the arguments (vector or matrix). This is a rather nice example of how
 to use the typing system of C++ to add meaning to objects.</p>
 <p>The output of the program is</p>
-<div class="highlight-bash"><div class="highlight"><pre><span></span>&gt;./array_arithmetic3
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>&gt;./array_arithmetic3
 <span class="nv">m1</span> <span class="o">=</span>
 <span class="p">|</span> <span class="m">1</span> <span class="m">2</span> <span class="m">3</span> <span class="p">|</span>
 <span class="p">|</span> <span class="m">4</span> <span class="m">5</span> <span class="m">6</span> <span class="p">|</span>
@@ -1425,7 +1415,7 @@ m1.m2 <span class="o">=</span>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2016, Eugen Wintersberger.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.9.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.4.
     </div>
   </body>
 </html>
