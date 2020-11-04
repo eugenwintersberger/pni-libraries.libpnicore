@@ -2,7 +2,7 @@
 Type erasures
 =============
 
-:cpp:class:`pni:core::value`
+:cpp:class:`pni::core::value`
 ============================
 
 .. doxygenclass:: pni::core::value
