@@ -9,7 +9,7 @@ RUN curl http://repos.pni-hdri.de/debian_repo.pub.gpg | apt-key add -
 RUN add-apt-repository "deb http://repos.pni-hdri.de/apt/debian bullseye main" -y
 # RUN apt-get -qq update && apt-get -qq -y dist-upgrade
 
-RUN apt-get -qq update && apt-get -qq -y install cmake ninja-build python3-pip g++ doxygen python3-sphinx git libboost-all-dev gfortran
+RUN apt-get -qq update && apt-get -qq -y install cmake ninja-build python3-pip g++ doxygen python3-sphinx git libboost-all-dev gfortran graphviz libcppunit-dev texlive doxygen pkg-config texlive-latex-extra texlive-latex-recommended texlive-pictures python3-pygments texlive-latex libhdf5-dev libgtest-dev lsb-release python3-breathe texlive-pictures python3-sphinx-rtd-theme libjs-mathjax fonts-mathjax fonts-mathjax-extras
 
 RUN apt-get clean
 RUN pip3 install conan
