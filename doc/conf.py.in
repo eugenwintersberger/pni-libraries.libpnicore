@@ -265,3 +265,8 @@ texinfo_documents = [
 
 # If true, do not generate a @detailmenu in the "Top" node's menu.
 #texinfo_no_detailmenu = False
+
+# workaround fix for qualifiers error
+cpp_id_attributes = ["PNICORE_EXPORT"]
+# cpp_paren_attributes = []
+# mathjax_path = 'file:///usr/share/javascript/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML'

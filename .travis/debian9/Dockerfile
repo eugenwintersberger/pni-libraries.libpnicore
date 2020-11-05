@@ -10,7 +10,7 @@ RUN curl http://repos.pni-hdri.de/debian_repo.pub.gpg | apt-key add -
 RUN add-apt-repository "deb http://repos.pni-hdri.de/apt/debian stretch main" -y
 RUN apt-get -qq update && apt-get -qq -y dist-upgrade
 
-RUN apt-get -qq update && apt-get -qq -y install cmake ninja-build python-pip g++ doxygen python-sphinx git libboost-all-dev gfortran
+RUN apt-get -qq update && apt-get -qq -y install cmake ninja-build python-pip g++ doxygen python-sphinx git libboost-all-dev gfortran graphviz libcppunit-dev texlive doxygen pkg-config texlive-latex-extra texlive-latex-recommended texlive-pictures python-pygments libhdf5-dev libgtest-dev lsb-release python-breathe texlive-pictures python-sphinx-rtd-theme libjs-mathjax fonts-mathjax fonts-mathjax-extras
 
 RUN apt-get clean
 RUN pip install --upgrade jinja2

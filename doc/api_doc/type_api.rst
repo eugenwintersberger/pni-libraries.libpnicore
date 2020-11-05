@@ -47,7 +47,7 @@ Utility functions
 .. doxygenenum:: pni::core::type_class_t
 
 
-:cpp:class:`pni::core:bool_t`
+:cpp:class:`pni::core::bool_t`
 =============================
 
 .. doxygenclass:: pni::core::bool_t
