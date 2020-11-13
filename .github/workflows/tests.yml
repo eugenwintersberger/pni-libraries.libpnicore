@@ -19,28 +19,28 @@ jobs:
         run: docker build -t build .ci/${OS}
       - name: Run the docker
         run: docker run --name build -i -d -v"$PWD:/src" build
-      - name: Update submodules
+      - name: Update git submodules
         run: bash -c "git submodule init && git submodule update --remote && mkdir build"
       - name: Run Ninja
         env:
           BUILDTYPE: ${{ matrix.buildtype }}
         run: docker  exec --user root build /bin/bash -c "cd build && cmake -G Ninja -DCMAKE_BUILD_TYPE=$BUILDTYPE .."
-      - name: Build target all
+      - name: Build: all
         env:
           BUILDTYPE: ${{ matrix.buildtype }}
         run: docker  exec --user root build /bin/bash -c "cd build && cmake --build . --target all --config $BUILDTYPE"
-      - name: Build target api_doc
+      - name: Build: api_doc
         env:
           BUILDTYPE: ${{ matrix.buildtype }}
         run: docker  exec --user root build /bin/bash -c "cd build && cmake --build . --target api_doc --config $BUILDTYPE"
-      - name: Build target html
+      - name: Build: html
         env:
           BUILDTYPE: ${{ matrix.buildtype }}
         run: docker  exec --user root build /bin/bash -c "cd build && cmake --build . --target html --config $BUILDTYPE"
-      - name: Build target check
+      - name: Build: check
         env:
           BUILDTYPE: ${{ matrix.buildtype }}
         run: docker  exec --user root build /bin/bash -c "cd build && cmake --build . --target check --config $BUILDTYPE"
-      - name: Stop docker
+      - name: Stop the docker
         run: docker container stop build
 
