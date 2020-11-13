@@ -16,7 +16,7 @@ jobs:
       - name: Build the docker
         env:
           OS: ${{ matrix.os }}
-        run: docker build -t build .ci/${OS}_py3
+        run: docker build -t build .ci/${OS}
       - name: Run the docker
         run: docker run --name build -i -d -v"$PWD:/src" build
       - name: Update submodules
