@@ -28,19 +28,19 @@ jobs:
       - name: Build target all
         env:
           BUILDTYPE: ${{ matrix.buildtype }}
-        run: docker  exec --user root build /bin/bash -c "ccd build && cmake --build . --target all --config $BUILDTYPE"
+        run: docker  exec --user root build /bin/bash -c "cd build && cmake --build . --target all --config $BUILDTYPE"
       - name: Build target api_doc
         env:
           BUILDTYPE: ${{ matrix.buildtype }}
-        run: docker  exec --user root build /bin/bash -c "ccd build && cmake --build . --target api_doc --config $BUILDTYPE"
+        run: docker  exec --user root build /bin/bash -c "cd build && cmake --build . --target api_doc --config $BUILDTYPE"
       - name: Build target html
         env:
           BUILDTYPE: ${{ matrix.buildtype }}
-        run: docker  exec --user root build /bin/bash -c "ccd build && cmake --build . --target html --config $BUILDTYPE"
+        run: docker  exec --user root build /bin/bash -c "cd build && cmake --build . --target html --config $BUILDTYPE"
       - name: Build target check
         env:
           BUILDTYPE: ${{ matrix.buildtype }}
-        run: docker  exec --user root build /bin/bash -c "ccd build && cmake --build . --target check --config $BUILDTYPE"
+        run: docker  exec --user root build /bin/bash -c "cd build && cmake --build . --target check --config $BUILDTYPE"
       - name: Stop docker
         run: docker container stop build
 
