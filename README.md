@@ -76,4 +76,4 @@ is not automatically looking for packages you may have to set the
 More information can be found at [online documentation](https://pni-libraries.github.io/libpnicore/index.html).
 
 Changes for a specific version of libpnicore can be found
-at [ChangeLog](https://raw.githubusercontent.com/pni-libraries/libpnicore/develop/ChangeLog).
+at [CHANGELOG](https://github.com/pni-libraries/libpnicore/blob/develop/CHANGELOG.md).
