@@ -1,0 +1,10 @@
+2020-11-02 Jan Kotanski <jankotan@gmail.com>
+	* fix warnings for newer compiler versions, i.e. g++9
+	* issues: #32, #35, #36, #37, #38, #40, #42, #43, #44, #45
+	* tagged as 1.1.1
+
+2018-02-26 Jan Kotanski <jankotan@gmail.com>
+	* addopt pninexus to h5cpp,
+	* issues: #17, #21, #22, #23, #24, #26
+	* tagged as 1.1.0
+
