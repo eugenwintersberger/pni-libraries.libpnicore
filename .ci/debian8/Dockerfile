@@ -19,7 +19,7 @@ RUN easy_install pip
 RUN pip install conan
 RUN pip install gitpython
 
-RUN conan remote remove conan-center
+# RUN conan remote remove conan-center
 RUN conan remote add conan-community https://api.bintray.com/conan/conan-community/conan
 RUN conan remote add conan-center https://conan.bintray.com
 RUN conan remote add conan-transit https://conan-transit.bintray.com
