@@ -2,7 +2,7 @@
 
 Before you building \libpnicore\ from sources one should first check if
 pre-built binary packages are available. Building the library from the sources
-requires a certain level of expertise which not all users posess. 
+requires a certain level of expertise which not all users posess.
 As
 \libpnicore\ is mostly a template library only a few non performance critical
 components have to be compiled. Therefore, custom builds of the libraries
@@ -11,18 +11,18 @@ binaries are not necessary in order to get optimum performance.
 %%%============================================================================
 \section{Installing pre-built binary packages}
 
-Binary packages are currently available for the following platforms 
+Binary packages are currently available for the following platforms
 \begin{itemize}
-\item Debian/GNU Linux 
-\item Ubuntu Linux 
+\item Debian/GNU Linux
+\item Ubuntu Linux
 \end{itemize}
 
 \subsection{Debian and Ubuntu users}
 
-As Debian and Ubuntu are closely related the installation is quite similar. 
+As Debian and Ubuntu are closely related the installation is quite similar.
 The packages are provided by a special Debian repository. To work on the package
 sources you need to login as \texttt{root} user. Use \texttt{su} or \texttt{sudo su} on
-Debian and Ubuntu respectively. 
+Debian and Ubuntu respectively.
 The first task is to add the GPG key of the HDRI repository to your local
 keyring
 \begin{minted}{bash}
@@ -30,20 +30,20 @@ keyring
 \end{minted}
 The return value of this command line should be \texttt{OK}.
 In a next step you have to add new package sources to your system. For this
-purpose go to \texttt{/etc/apt/sources.list.d} and download the sources file. 
-For Debian use
+purpose go to \texttt{/etc/apt/sources.list.d} and download the sources file.
+For Debian (Bookworm) use
 \begin{minted}{bash}
 > wget http://repos.pni-hdri.de/bookworm-pni-hdri.list
 \end{minted}
-and for Ubuntu (Precise) 
+and for Ubuntu (Jammy)
 \begin{minted}{bash}
-> wget http://repos.pni-hdri.de/focal-pni-hdri.list
+> wget http://repos.pni-hdri.de/jammy-pni-hdri.list
 \end{minted}
-Once you have downloaded the file use 
+Once you have downloaded the file use
 \begin{minted}{bash}
 > apt-get update
 \end{minted}
-to update your package list and 
+to update your package list and
 \begin{minted}{bash}
 > apt-get install libpnicore1 libpnicore1-dev libpnicore1-doc
 \end{minted}
@@ -60,12 +60,12 @@ usually requires some expert knowledge keep be prepared to get your hands dirty.
 
 \subsection{Requirements}
 
-For a successful build some requirements must be satisfied 
-\begin{itemize} 
+For a successful build some requirements must be satisfied
+\begin{itemize}
 \item \gcc\ $>=$ 4.7 -- since version 1.0.0 \libpnicore\ requires a mostly C++11
-compliant compiler. For the gcc familiy this is 4.7 and upwards 
-\item \texttt{BOOST} \cite{web:boostsite} $>=$ 4.1 
-\item \texttt{doxygen} \cite{web:doxygen} -- used to build the API documentation 
+compliant compiler. For the gcc familiy this is 4.7 and upwards
+\item \texttt{BOOST} \cite{web:boostsite} $>=$ 4.1
+\item \texttt{doxygen} \cite{web:doxygen} -- used to build the API documentation
 \item \texttt{cmake} \cite{web:cmake} $>=$ 2.4.8 -- the build software used by the \libpnicore
 \item \texttt{pkg-config} \cite{web:pkgconfig} -- program to manage libraries
 \item \texttt{cppunit} \cite{web:cppunit} -- a unit test library used for the tests
@@ -77,20 +77,20 @@ There are basically two sources from where to obtain the code: either directly
 from the Git repository on Google Code or a release tarball. The former one
 should be used if you not only want to use the library but plan to contribute
 code to it. The latter one is the suggested source if you just want to use the
-library. 
+library.
 As Google Code ceased its download service in January 2014 the tarballs are
-provided via Google Drive. 
+provided via Google Drive.
 
-For the next steps we assume that the code from the tarball is used. 
+For the next steps we assume that the code from the tarball is used.
 
 \subsection{Building the code}
 
-Once downloaded unpack the tarball in a temporary location. 
+Once downloaded unpack the tarball in a temporary location.
 \begin{minted}{bash}
 > tar xzf libpnicore*.tar.gz
 \end{minted}
 which will lead to a new directory named \texttt{libpnicore}. As we use \cmake\ for
-building the library, out of place builds are recommended. For this purpose 
+building the library, out of place builds are recommended. For this purpose
 create a new directory where the code will be built and change to this directory
 \begin{minted}{bash}
 > mkdir libpnicore-build
@@ -105,13 +105,13 @@ A subsequent \texttt{make} finally build the library
 > make
 \end{minted}
 This may take a while. Actually building the library is quite fast as
-\libpnicore\ is mostly a template, and thus header-only, library. 
-However, building the test suite is rather time consuming. 
+\libpnicore\ is mostly a template, and thus header-only, library.
+However, building the test suite is rather time consuming.
 
 \subsection{Testing the build}
 
 Once the build has finished you should definitely run the tests. For this
-purpose change to the \texttt{test} subdirectory in the build directory and run 
+purpose change to the \texttt{test} subdirectory in the build directory and run
 the test script
 \begin{minted}{bash}
 > cd test
@@ -133,4 +133,4 @@ be used the \texttt{CMAKE\_INSTALL\_PREFIX} variable must be set when running
 \begin{minted}{bash}
 > cmake -DCMAKE_INSTALL_PREFIX=/opt/pni ../libpnicore
 \end{minted}
-which causes the installation prefix to be \texttt{/opt/pni}. 
+which causes the installation prefix to be \texttt{/opt/pni}.
