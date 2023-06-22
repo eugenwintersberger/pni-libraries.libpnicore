@@ -13,17 +13,11 @@ RUN cd /etc/apt/sources.list.d && wget http://repos.pni-hdri.de/bookworm-pni-hdr
 
 RUN apt-get -qq update && apt-get -qq -y dist-upgrade
 
-RUN apt-get -qq update && apt-get -y install cmake ninja-build python3-pip g++ doxygen python3-sphinx git libboost-all-dev gfortran graphviz libcppunit-dev texlive doxygen pkg-config texlive-latex-extra texlive-latex-recommended texlive-pictures python3-pygments libhdf5-dev libgtest-dev lsb-release python3-breathe texlive-pictures python3-sphinx-rtd-theme libjs-mathjax fonts-mathjax fonts-mathjax-extras
+RUN apt-get -qq update && apt-get -y install cmake ninja-build python3-pip g++ doxygen python3-sphinx git libboost-all-dev   gfortran graphviz libcppunit-dev texlive doxygen pkg-config  python3-pygments libhdf5-dev libgtest-dev lsb-release python3-breathe  texlive-pictures python3-sphinx-rtd-theme libjs-mathjax fonts-mathjax fonts-mathjax-extras
 
-RUN apt-get clean
-RUN pip3 install conan
-RUN pip3 install gitpython
+# add p00user
+RUN useradd -rm -d /home/p00user -s /bin/bash p00user
+USER p00user
+RUN mkdir -p /home/p00user/src
+WORKDIR /home/p00user/src
 
-# RUN conan remote remove conan-center
-RUN conan remote add conan-community https://api.bintray.com/conan/conan-community/conan
-RUN conan remote add conan-center https://conan.bintray.com
-RUN conan remote add conan-transit https://conan-transit.bintray.com
-
-RUN conan user
-RUN mkdir /src
-WORKDIR /src

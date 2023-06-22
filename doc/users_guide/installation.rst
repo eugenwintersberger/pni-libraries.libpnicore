@@ -46,11 +46,11 @@ For Debian (Bookworm) use
 
    $ wget http://repos.pni-hdri.de/bookworm-pni-hdri.list
 
-and for Ubuntu (Focal)
+and for Ubuntu (Jammy)
 
 .. code-block:: bash
 
-   $ wget http://repos.pni-hdri.de/focal-pni-hdri.list
+   $ wget http://repos.pni-hdri.de/jammy-pni-hdri.list
 
 The packages are also available for Debian Bullseye, Buster, Stretch and Focal, Bionic. 
 
