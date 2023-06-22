@@ -19,15 +19,9 @@ RUN apt-get -qq update && apt-get -y install   texlive-latex-extra texlive-latex
 RUN apt-get -qq update && apt-get -y install   python3-pygments libhdf5-dev libgtest-dev lsb-release python3-breathe
 RUN apt-get -qq update && apt-get -y install   texlive-pictures python3-sphinx-rtd-theme libjs-mathjax fonts-mathjax fonts-mathjax-extras
 
-RUN apt-get clean
-RUN pip3 install conan
-RUN pip3 install gitpython
+# add p00user
+RUN useradd -rm -d /home/p00user -s /bin/bash p00user
+USER p00user
+RUN mkdir -p /home/p00user/src
+WORKDIR /home/p00user/src
 
-# RUN conan remote remove conan-center
-RUN conan remote add conan-community https://api.bintray.com/conan/conan-community/conan
-RUN conan remote add conan-center https://conan.bintray.com
-RUN conan remote add conan-transit https://conan-transit.bintray.com
-
-RUN conan user
-RUN mkdir /src
-WORKDIR /src

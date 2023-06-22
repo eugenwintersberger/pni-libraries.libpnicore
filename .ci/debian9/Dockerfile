@@ -15,16 +15,8 @@ RUN apt-get -qq update && apt-get -qq -y dist-upgrade
 
 RUN apt-get -qq update && apt-get -qq -y install cmake ninja-build python-pip g++ doxygen python-sphinx git libboost-all-dev gfortran graphviz libcppunit-dev texlive doxygen pkg-config texlive-latex-extra texlive-latex-recommended texlive-pictures python-pygments libhdf5-dev libgtest-dev lsb-release python-breathe texlive-pictures python-sphinx-rtd-theme libjs-mathjax fonts-mathjax fonts-mathjax-extras
 
-RUN apt-get clean
-RUN pip install --upgrade jinja2
-RUN pip install conan
-RUN pip install gitpython
-
-# RUN conan remote remove conan-center
-RUN conan remote add conan-community https://api.bintray.com/conan/conan-community/conan
-RUN conan remote add conan-center https://conan.bintray.com
-RUN conan remote add conan-transit https://conan-transit.bintray.com
-
-RUN conan user
-RUN mkdir /src
-WORKDIR /src
+# add p00user
+RUN useradd -rm -d /home/p00user -s /bin/bash p00user
+USER p00user
+RUN mkdir -p /home/p00user/src
+WORKDIR /home/p00user/src
