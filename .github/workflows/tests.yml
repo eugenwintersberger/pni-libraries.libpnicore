@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        os: [debian12, debian11, debian10, ubuntu21.10, ubuntu20.04]
+        os: [debian12, debian11, debian10, ubuntu22.04, ubuntu20.04]
         buildtype: [Debug, Release]
     steps:
       - uses: actions/checkout@v2
